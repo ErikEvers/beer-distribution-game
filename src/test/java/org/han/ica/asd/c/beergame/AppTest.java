@@ -49,6 +49,11 @@ public class AppTest
 
     }
 
+    @Test
+    public void testTheFunctionThatWillBeNotTested() {
+        app.notTestedFunction();
+        assertEquals("Oops, this function is not tested!", outContent.toString());
+    }
     @After
     public void tearDown(){
         System.setOut(originalOut);
