@@ -20,6 +20,6 @@ public class App
     }
 
     public void notTestedFunction(){
-        System.out.println("Oops, this function is not tested!");
+        System.out.println("Oops, this function is not tested!!");
     }
 }
