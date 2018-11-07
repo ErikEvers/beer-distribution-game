@@ -63,6 +63,17 @@
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.2</version>
+          <configuration>
+            <destFile>${basedir}/target/jacoco.exec</destFile>
+            <dataFile>${basedir}/target/jacoco.exec</dataFile>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
