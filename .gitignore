@@ -1,8 +1,25 @@
+# GIT
+.git
+
+# Java
+*.class
+
+# packages 
+*.jar
+*.war
+*.ear
+
 # IDEA
 *.iml
 .idea
 *.iws
 *.ipr
+
+# Eclipse
+.settings/
+.buildpath
+.classpath
+.project
 
 # OS
 .DS_Store
@@ -10,6 +27,8 @@ Thumbs.db
 
 # Maven
 **/target/
+/target/
+*/target/*
 
 # Gradle
 .gradle
