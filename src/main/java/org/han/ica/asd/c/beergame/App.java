@@ -8,8 +8,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
-
+        //Empty because reasons
     }
 
     public boolean returnTrue(){

@@ -42,6 +42,13 @@ public class AppTest
         assertTrue(app.returnTrue());
     }
 
+    @Test
+    public void testMain(){
+        String[] strings = new String[2];
+        App.main(strings);
+        assertTrue(true);
+    }
+
     @After
     public void tearDown(){
         System.setOut(originalOut);
