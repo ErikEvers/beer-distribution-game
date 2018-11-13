@@ -42,13 +42,6 @@ public class AppTest
         assertTrue(app.returnTrue());
     }
 
-    @Test
-    public void testSentenceShouldBePrinted(){
-        app.printSentence();
-        assertEquals("Test sentence\n", outContent.toString());
-
-    }
-
     @After
     public void tearDown(){
         System.setOut(originalOut);
