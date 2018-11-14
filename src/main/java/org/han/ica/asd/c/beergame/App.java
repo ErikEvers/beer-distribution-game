@@ -8,18 +8,10 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        //Empty because reasons
     }
 
     public boolean returnTrue(){
         return true;
-    }
-
-    public void printSentence(){
-        System.out.println("Test sentence");
-    }
-
-    public void notTestedFunction(){
-        System.out.println("Oops, this function is not tested!");
     }
 }
