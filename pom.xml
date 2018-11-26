@@ -26,6 +26,7 @@
         <module>player</module>
         <module>replay</module>
         <module>bootstrap</module>
+        <module>gui</module>
     </modules>
 
 
