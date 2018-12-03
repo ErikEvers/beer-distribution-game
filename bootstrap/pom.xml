@@ -113,7 +113,28 @@
 
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
-            <artifactId>gui</artifactId>
+            <artifactId>gui_agent_programmeren</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.han.ica.asd.c</groupId>
+            <artifactId>gui_spel_naspelen</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.han.ica.asd.c</groupId>
+            <artifactId>gui_spel_opstellen</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.han.ica.asd.c</groupId>
+            <artifactId>gui_spel_spelen</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
