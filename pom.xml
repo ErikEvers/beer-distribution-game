@@ -26,10 +26,10 @@
         <module>player</module>
         <module>replay</module>
         <module>bootstrap</module>
-        <module>gui_agent_programmeren</module>
-        <module>gui_spel_spelen</module>
-        <module>gui_spel_opstellen</module>
-        <module>gui_spel_naspelen</module>
+        <module>gui_program_agent</module>
+        <module>gui_play_game</module>
+        <module>gui_configure_game</module>
+        <module>gui_replay_game</module>
         <module>persistence</module>
     </modules>
 
