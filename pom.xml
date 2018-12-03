@@ -4,9 +4,35 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.han.ica.asd.c.beergame</groupId>
+    <groupId>org.han.ica.asd.c</groupId>
     <artifactId>beergame</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
+
+    <modules>
+        <module>agent</module>
+        <module>businessrule</module>
+        <module>communication</module>
+        <module>gameconfiguration</module>
+        <module>gameleader</module>
+        <module>gamelogic</module>
+        <module>hostmigration</module>
+        <module>localization</module>
+        <module>player</module>
+        <module>replay</module>
+        <module>bootstrap</module>
+        <module>gui_program_agent</module>
+        <module>gui_play_game</module>
+        <module>gui_configure_game</module>
+        <module>gui_replay_game</module>
+        <module>persistence</module>
+    </modules>
+
 
     <dependencies>
         <dependency>
@@ -25,6 +51,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12.4</version>
                 <configuration>
+                    <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
@@ -51,21 +78,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- Build an executable JAR -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.han.ica.asd.c.beergame.App</mainClass>
-                        </manifest>
-                    </archive>
                 </configuration>
             </plugin>
         </plugins>
