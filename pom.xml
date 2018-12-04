@@ -75,7 +75,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <!--<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>-->
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
                 <dependencies>
