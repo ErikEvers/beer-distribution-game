@@ -1,29 +1,75 @@
 package org.han.ica.asd.c;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.util.converter.IntegerStringConverter;
+
+import java.util.function.UnaryOperator;
 
 public class PlayGameFactoryController {
     @FXML
-    GridPane playGridPane;
+    private GridPane playGridPane;
 
     @FXML
-    AnchorPane mainContainer;
+    private AnchorPane mainContainer;
 
     @FXML
-    TextField incomingOrderTextField;
+    private TextField incomingOrderTextField;
 
     @FXML
-    TextField step1TextField;
+    private TextField step1TextField;
 
     @FXML
-    TextField step2TextField;
+    private TextField step2TextField;
 
-    public void initialize(){
+    @FXML
+    private TextField outgoingOrderTextField;
+
+    @FXML
+    private Label inventory;
+
+    public void initialize() {
         mainContainer.getChildren().addAll();
         playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
         incomingOrderTextField.setText("50");
+
+        UnaryOperator<TextFormatter.Change> textFieldFilter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("-?([1-9][0-9]*)?")){
+                return change;
+            }
+            return null;
+        };
+
+        outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
+    }
+
+
+
+    public void handleSendOrderButtonClick() {
+        if (!outgoingOrderTextField.getText().trim().isEmpty()) {
+            if (!step2TextField.getText().trim().isEmpty()) {
+                inventory.setText(calculateInventory());
+            }
+            if (!step1TextField.getText().trim().isEmpty()) {
+                step2TextField.setText(step1TextField.getText());
+            }
+            step1TextField.setText(outgoingOrderTextField.getText());
+            outgoingOrderTextField.clear();
+
+        }
+    }
+
+    public String calculateInventory(){
+        int inventoryValue = Integer.parseInt(inventory.getText());
+        int step2Value = Integer.parseInt(step2TextField.getText());
+        int result = inventoryValue + step2Value;
+
+        return Integer.toString(result);
     }
 }
