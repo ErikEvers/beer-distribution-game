@@ -5,7 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-public class SpelSpelenFabriekController {
+public class PlayGameFactoryController {
     @FXML
     GridPane playGridPane;
 
