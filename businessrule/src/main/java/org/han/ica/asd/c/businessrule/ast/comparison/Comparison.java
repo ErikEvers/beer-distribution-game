@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Comparison extends Expression{
+public class Comparison extends Expression {
     private ComparisonValue left;
     private ComparisonOperator comparisonOperator;
     private ComparisonValue right;
@@ -19,10 +19,10 @@ public class Comparison extends Expression{
 
     @Override
     public ASTNode addChild(ASTNode child) {
-        if(child instanceof  ComparisonOperator){
+        if (child instanceof ComparisonOperator) {
             this.comparisonOperator = (ComparisonOperator) child;
         } else {
-            if(left == null){
+            if (left == null) {
                 this.left = (ComparisonValue) child;
             } else {
                 this.right = (ComparisonValue) child;
@@ -35,7 +35,7 @@ public class Comparison extends Expression{
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
-        if(comparisonOperator != null && right != null){
+        if (comparisonOperator != null && right != null) {
             list.add(comparisonOperator);
             list.add(right);
         }
@@ -58,6 +58,6 @@ public class Comparison extends Expression{
 
     @Override
     public int hashCode() {
-        return Objects.hash(left,comparisonOperator,right);
+        return Objects.hash(left, comparisonOperator, right);
     }
 }

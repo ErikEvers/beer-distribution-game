@@ -12,13 +12,12 @@ public class ComparisonStatement extends Expression {
     private BooleanOperator booleanOperator;
     private Expression right;
 
-
     @Override
     public ASTNode addChild(ASTNode child) {
-        if(child instanceof BooleanOperator){
-          this.booleanOperator = (BooleanOperator) child;
+        if (child instanceof BooleanOperator) {
+            this.booleanOperator = (BooleanOperator) child;
         } else {
-            if(left == null){
+            if (left == null) {
                 this.left = (Expression) child;
             } else {
                 this.right = (Expression) child;
@@ -29,18 +28,18 @@ public class ComparisonStatement extends Expression {
 
     @Override
     public String toString() {
-         if(right == null){
+        if (right == null) {
             return "CS(" + left.toString() + ")";
-        }else{
-            return  "CS(" + left.toString() + booleanOperator + right.toString() + ")";
-         }
+        } else {
+            return "CS(" + left.toString() + booleanOperator + right.toString() + ")";
+        }
     }
 
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
-        if(booleanOperator != null && right != null){
+        if (booleanOperator != null && right != null) {
             list.add(booleanOperator);
             list.add(right);
         }
@@ -63,6 +62,6 @@ public class ComparisonStatement extends Expression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(left,booleanOperator,right);
+        return Objects.hash(left, booleanOperator, right);
     }
 }

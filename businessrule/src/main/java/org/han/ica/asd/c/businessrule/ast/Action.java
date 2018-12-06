@@ -12,7 +12,7 @@ public class Action extends ASTNode {
 
     @Override
     public ASTNode addChild(ASTNode child) {
-        if(child instanceof ActionReference){
+        if (child instanceof ActionReference) {
             this.actionName = (ActionReference) child;
         } else {
             this.operation = (OperationValue) child;
@@ -48,6 +48,6 @@ public class Action extends ASTNode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(actionName,operation);
+        return Objects.hash(actionName, operation);
     }
 }

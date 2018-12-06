@@ -7,17 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Operation extends OperationValue{
+public abstract class Operation extends OperationValue {
     OperationValue left;
     CalculationOperator calculationOperator;
     OperationValue right;
 
     @Override
     public ASTNode addChild(ASTNode child) {
-        if(child instanceof CalculationOperator){
+        if (child instanceof CalculationOperator) {
             calculationOperator = (CalculationOperator) child;
         } else {
-            if(left == null){
+            if (left == null) {
                 left = (OperationValue) child;
             } else {
                 right = (OperationValue) child;
@@ -30,7 +30,7 @@ public abstract class Operation extends OperationValue{
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
-        if(calculationOperator != null && right != null){
+        if (calculationOperator != null && right != null) {
             list.add(calculationOperator);
             list.add(right);
         }
@@ -53,6 +53,6 @@ public abstract class Operation extends OperationValue{
 
     @Override
     public int hashCode() {
-        return Objects.hash(left,calculationOperator,right);
+        return Objects.hash(left, calculationOperator, right);
     }
 }

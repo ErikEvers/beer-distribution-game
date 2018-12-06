@@ -16,7 +16,6 @@ class AddOperationTest {
         addOperation.addChild(new CalculationOperator("+"));
         addOperation.addChild(new Value("4"));
 
-
         String res = addOperation.toString();
 
         String exp = "Add(V(20)CalO(+)V(4))";

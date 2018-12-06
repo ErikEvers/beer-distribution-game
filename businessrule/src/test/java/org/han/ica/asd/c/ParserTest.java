@@ -18,8 +18,6 @@ import java.util.List;
 class ParserTest {
 
     BusinessRule parseString(String input) {
-
-
         CharStream inputStream = CharStreams.fromString(input);
         PrototypeLexer lexer = new PrototypeLexer(inputStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -110,5 +108,4 @@ class ParserTest {
         BusinessRule exp = Fixtures.RuleWithRound();
         assertEquals(exp, sut);
     }
-
 }

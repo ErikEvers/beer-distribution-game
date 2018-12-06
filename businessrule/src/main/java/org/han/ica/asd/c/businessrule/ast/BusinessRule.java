@@ -10,7 +10,7 @@ public class BusinessRule extends ASTNode {
 
     @Override
     public ASTNode addChild(ASTNode child) {
-        if(condition == null){
+        if (condition == null) {
             this.condition = (Condition) child;
         } else {
             this.action = (Action) child;
@@ -46,6 +46,6 @@ public class BusinessRule extends ASTNode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(condition,action);
+        return Objects.hash(condition, action);
     }
 }

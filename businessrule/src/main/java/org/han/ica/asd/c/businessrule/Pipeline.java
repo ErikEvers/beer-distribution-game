@@ -15,7 +15,7 @@ import java.util.*;
 public class Pipeline {
     private List<String> businessRulesInput = new ArrayList<>();
     private List<BusinessRule> businessRulesParsed;
-    private Map<String,String> businessRulesMap = new HashMap<>();
+    private Map<String, String> businessRulesMap = new HashMap<>();
 
     public void parseString(String input) {
         //Lex (with Antlr's generated lexer)
@@ -38,18 +38,18 @@ public class Pipeline {
         generate();
     }
 
-    private void generate(){
+    private void generate() {
         for (int i = 0; i < businessRulesInput.size(); i++) {
-            businessRulesMap.put(businessRulesInput.get(i),businessRulesParsed.get(i).toString());
+            businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).toString());
         }
 
         // For testing purposes
-        for (BusinessRule businessRule:businessRulesParsed) {
+        for (BusinessRule businessRule : businessRulesParsed) {
             System.out.println(businessRule.toString());
         }
     }
 
-    private void evaluate(){
+    private void evaluate() {
         Evaluator evaluator = new Evaluator();
         evaluator.evaluate(businessRulesParsed);
     }

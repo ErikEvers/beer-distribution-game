@@ -16,7 +16,6 @@ import static junit.framework.TestCase.*;
 class ComparisonStatementTest {
     private ComparisonStatement comparisonStatement = new ComparisonStatement();
 
-
     @Test
     void testComparisonStatement_Equals_True() {
         comparisonStatement.addChild(new Comparison()
@@ -60,7 +59,6 @@ class ComparisonStatementTest {
                 .addChild(new ComparisonOperator("is"))
                 .addChild(new ComparisonValue().addChild(new Value("11"))));
 
-
         List<ASTNode> res = comparisonStatement.getChildren();
 
         List<ASTNode> exp = new ArrayList<>();
@@ -71,6 +69,4 @@ class ComparisonStatementTest {
 
         assertEquals(exp, res);
     }
-
-
 }

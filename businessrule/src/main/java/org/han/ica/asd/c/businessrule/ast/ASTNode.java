@@ -8,7 +8,7 @@ public abstract class ASTNode {
         return this;
     }
 
-    public List<ASTNode> getChildren(){
+    public List<ASTNode> getChildren() {
         return new ArrayList<>();
     }
 
@@ -19,14 +19,14 @@ public abstract class ASTNode {
 
     @Override
     public boolean equals(Object o) {
-        if(! (o instanceof ASTNode))
+        if (!(o instanceof ASTNode))
             return false;
         List<ASTNode> thisChildren = this.getChildren();
         List<ASTNode> otherChildren = ((ASTNode) o).getChildren();
-        if(otherChildren.size() != thisChildren.size())
+        if (otherChildren.size() != thisChildren.size())
             return false;
-        for(int i = 0; i < thisChildren.size(); i++ ) {
-            if(!thisChildren.get(i).equals(otherChildren.get(i))) {
+        for (int i = 0; i < thisChildren.size(); i++) {
+            if (!thisChildren.get(i).equals(otherChildren.get(i))) {
                 return false;
             }
         }

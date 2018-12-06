@@ -18,7 +18,7 @@ public class ComparisonValue extends ASTNode {
 
     @Override
     public String toString() {
-          return operationValue.toString();
+        return operationValue.toString();
     }
 
     @Override

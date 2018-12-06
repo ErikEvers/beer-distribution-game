@@ -111,6 +111,7 @@ class Fixtures {
         return businessRule;
     }
 
+    //Setup a businessrule to test Default rule
     static BusinessRule RuleDefault() {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new Default())
@@ -120,6 +121,7 @@ class Fixtures {
         return businessRule;
     }
 
+    //Setup a businessrule to test Round rule
     static BusinessRule RuleWithRound() {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
@@ -133,6 +135,7 @@ class Fixtures {
         return businessRule;
     }
 
+    //Setup a businessrule to test Percentage rule
     static BusinessRule RulePercentage() {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()

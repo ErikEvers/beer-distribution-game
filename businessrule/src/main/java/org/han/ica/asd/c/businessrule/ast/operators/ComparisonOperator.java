@@ -11,12 +11,12 @@ public class ComparisonOperator extends ASTNode {
         this.operator = findComparisonOperator(operator);
     }
 
-    private String findComparisonOperator(String operator){
-        if("is".equals(operator) || "=".equals(operator) || "equal".equals(operator)){
+    private String findComparisonOperator(String operator) {
+        if ("is".equals(operator) || "=".equals(operator) || "equal".equals(operator)) {
             return "==";
-        } else if("!=".equals(operator) || operator.contains("not equal")){
+        } else if ("!=".equals(operator) || operator.contains("not equal")) {
             return "!=";
-        } else if(operator.contains("greater") || operator.contains("higher")){
+        } else if (operator.contains("greater") || operator.contains("higher")) {
             return ">";
         } else {
             return "<";

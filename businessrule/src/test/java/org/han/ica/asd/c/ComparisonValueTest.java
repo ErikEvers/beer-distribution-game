@@ -13,7 +13,6 @@ import static junit.framework.TestCase.*;
 class ComparisonValueTest {
     private ComparisonValue comparisonValue = new ComparisonValue();
 
-
     @Test
     void testComparisonValue_Equals_True() {
         comparisonValue.addChild(new Value("hello"));
@@ -43,7 +42,6 @@ class ComparisonValueTest {
     @Test
     void testComparisonValue_getChilderen_False() {
         comparisonValue.addChild(new Value("hello"));
-
 
         List<ASTNode> res = comparisonValue.getChildren();
 

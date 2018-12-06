@@ -12,7 +12,7 @@ public class Value extends OperationValue {
         this.value = value;
     }
 
-    public void addValue(String value){
+    public void addValue(String value) {
         if (this.value == null) {
             this.value = value;
         } else {
@@ -25,7 +25,7 @@ public class Value extends OperationValue {
         return "V(" + value + ")";
     }
 
-    public String getValue(){
+    public String getValue() {
         return this.value;
     }
 

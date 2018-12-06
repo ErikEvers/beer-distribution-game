@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import static junit.framework.TestCase.fail;
 
 class EvaluatorTest {
-
     Evaluator evaluator = new Evaluator();
 
     @Test

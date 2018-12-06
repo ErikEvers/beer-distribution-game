@@ -53,8 +53,8 @@ class OperationTest {
     void testOpertation_getChilderen_False() {
         operation.addChild(new Value("20"));
         operation.addChild(new CalculationOperator("-"));
-        operation.addChild(new Value("4"));
 
+        operation.addChild(new Value("4"));
 
         List<ASTNode> res = operation.getChildren();
 

@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         Pipeline pipeline = new Pipeline();
         pipeline.parseString("if round is inventory then order 40\n" +
-                             "default order 10");
+                "default order 10");
 
         // For testing purposes
         System.out.println("---- The given input ----");

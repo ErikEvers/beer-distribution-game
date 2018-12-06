@@ -7,7 +7,7 @@ public class Counter {
         this.countedValue = 0;
     }
 
-    public void addOne(){
+    public void addOne() {
         this.countedValue++;
     }
 

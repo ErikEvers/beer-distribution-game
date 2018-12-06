@@ -11,8 +11,8 @@ public class BooleanOperator extends ASTNode {
         this.operator = findBooleanOperator(operator);
     }
 
-    private String findBooleanOperator(String operator){
-        if("and".equals(operator)){
+    private String findBooleanOperator(String operator) {
+        if ("and".equals(operator)) {
             return "&&";
         } else {
             return "||";

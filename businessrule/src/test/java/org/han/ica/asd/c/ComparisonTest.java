@@ -13,9 +13,7 @@ import java.util.List;
 import static junit.framework.TestCase.*;
 
 class ComparisonTest {
-
     private Comparison comparison = new Comparison();
-
 
     @Test
     void testComparison_Equals_True() {
@@ -56,7 +54,6 @@ class ComparisonTest {
         comparison.addChild(new ComparisonOperator("is"));
         comparison.addChild(new ComparisonValue().addChild(new Value("30")));
 
-
         List<ASTNode> res = comparison.getChildren();
 
         List<ASTNode> exp = new ArrayList<>();
@@ -66,5 +63,4 @@ class ComparisonTest {
 
         assertEquals(exp, res);
     }
-
 }
