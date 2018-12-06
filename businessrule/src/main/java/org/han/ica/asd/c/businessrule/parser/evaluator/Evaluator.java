@@ -52,11 +52,14 @@ public class Evaluator {
     }
 
     private void checkRoundIsComparedToInt(ASTNode current, int lineNumber) throws BusinessRuleException {
-        if (current instanceof Comparison && current.getChildren().get(0) != null && current.getChildren().get(2) != null) {
-            if (current.getChildren().get(0).getChildren().get(0).toString().contains("round")) {
-                checkSubTreeNotInt(current, lineNumber, 2);
-            } else if (current.getChildren().get(2).getChildren().get(0).toString().contains("round")) {
-                checkSubTreeNotInt(current, lineNumber, 0);
+        int left = 0;
+        int right = 2;
+
+        if (current instanceof Comparison && current.getChildren().get(left) != null && current.getChildren().get(2) != null) {
+            if (current.getChildren().get(left).getChildren().get(left).toString().contains("round")) {
+                checkSubTreeNotInt(current, lineNumber, right);
+            } else if (current.getChildren().get(right).getChildren().get(left).toString().contains("round")) {
+                checkSubTreeNotInt(current, lineNumber, left);
             }
         }
     }
