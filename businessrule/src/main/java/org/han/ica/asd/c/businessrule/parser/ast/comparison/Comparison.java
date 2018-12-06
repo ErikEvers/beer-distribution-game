@@ -14,9 +14,8 @@ public class Comparison extends Expression {
     private ComparisonOperator comparisonOperator;
     private ComparisonValue right;
 
-    @Override
-    public String toString() {
-        return prefix + left.toString() + comparisonOperator.toString() + right.toString() + suffix;
+    public void encode(StringBuilder stringBuilder) {
+        super.encode(stringBuilder,getChildren(),prefix,suffix);
     }
 
     @Override

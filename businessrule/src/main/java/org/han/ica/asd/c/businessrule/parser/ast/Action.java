@@ -24,8 +24,8 @@ public class Action extends ASTNode {
     }
 
     @Override
-    public String toString() {
-        return prefix + actionName.toString() + operation.toString() + suffix;
+    public void encode(StringBuilder stringBuilder) {
+        super.encode(stringBuilder,getChildren(),prefix,suffix);
     }
 
     @Override

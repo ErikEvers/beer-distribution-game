@@ -55,4 +55,8 @@ public abstract class Operation extends OperationValue {
     public int hashCode() {
         return Objects.hash(left, calculationOperator, right);
     }
+
+    public void encode(StringBuilder stringBuilder, String prefix, String suffix) {
+        super.encode(stringBuilder,getChildren(),prefix,suffix);
+    }
 }

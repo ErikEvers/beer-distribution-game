@@ -3,9 +3,8 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 public class Default extends Condition {
     private String prefix = "D()";
 
-    @Override
-    public String toString() {
-        return prefix;
+    public void encode(StringBuilder stringBuilder) {
+        stringBuilder.append(prefix);
     }
 
     @Override

@@ -20,9 +20,10 @@ public class BusinessRule extends ASTNode {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return prefix + condition.toString() + action.toString() + suffix;
+    public String encode() {
+        StringBuilder stringBuilder = new StringBuilder();
+        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        return stringBuilder.toString();
     }
 
     @Override

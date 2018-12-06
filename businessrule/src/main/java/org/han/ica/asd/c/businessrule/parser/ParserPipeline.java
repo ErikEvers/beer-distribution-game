@@ -39,7 +39,7 @@ public class ParserPipeline {
 
     private void generate() {
         for (int i = 0; i < businessRulesInput.size(); i++) {
-            businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).toString());
+            businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).encode());
         }
     }
 

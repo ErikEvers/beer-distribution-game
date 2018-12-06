@@ -28,13 +28,8 @@ public class ComparisonStatement extends Expression {
         return this;
     }
 
-    @Override
-    public String toString() {
-        if (right == null) {
-            return prefix + left.toString() + suffix;
-        } else {
-            return prefix + left.toString() + booleanOperator + right.toString() + suffix;
-        }
+    public void encode(StringBuilder stringBuilder) {
+        super.encode(stringBuilder,getChildren(),prefix,suffix);
     }
 
     @Override

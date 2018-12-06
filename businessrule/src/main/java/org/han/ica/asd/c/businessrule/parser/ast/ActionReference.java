@@ -10,9 +10,8 @@ public class ActionReference extends ASTNode {
         this.action = action;
     }
 
-    @Override
-    public String toString() {
-        return action + suffix;
+    public void encode(StringBuilder stringBuilder) {
+       stringBuilder.append(action).append(suffix);
     }
 
     @Override

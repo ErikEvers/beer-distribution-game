@@ -22,9 +22,8 @@ public class Value extends OperationValue {
         }
     }
 
-    @Override
-    public String toString() {
-        return prefix + value + suffix;
+    public void encode(StringBuilder stringBuilder) {
+        stringBuilder.append(prefix).append(value).append(suffix);
     }
 
     public String getValue() {

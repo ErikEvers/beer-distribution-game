@@ -25,9 +25,8 @@ public class ComparisonOperator extends ASTNode {
         }
     }
 
-    @Override
-    public String toString() {
-        return prefix + operator + suffix;
+    public void encode(StringBuilder stringBuilder) {
+        stringBuilder.append(prefix).append(operator).append(suffix);
     }
 
     @Override

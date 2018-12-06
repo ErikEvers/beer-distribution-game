@@ -12,9 +12,18 @@ public abstract class ASTNode {
         return new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
+    public void encode(StringBuilder stringBuilder, List<ASTNode> children, String prefix, String suffix) {
+        stringBuilder.append(prefix);
+        for (ASTNode child : children) {
+            if(child != null){
+                child.encode(stringBuilder);
+            }
+        }
+        stringBuilder.append(suffix);
+    }
+
+    public void encode(StringBuilder stringBuilder) {
+
     }
 
     @Override

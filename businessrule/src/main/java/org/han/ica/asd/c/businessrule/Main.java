@@ -9,10 +9,11 @@ public class Main {
         parserPipeline.parseString("if round is inventory then order 40\n" +
                 "default order 10");
 
-        // For testing purposes
+//         For testing purposes
         System.out.println("---- The given input ----");
         System.out.println(parserPipeline.getBusinessRulesInput());
         System.out.println("---- The generated Businessrules Map ----");
         System.out.println(parserPipeline.getBusinessRulesMap());
     }
+
 }

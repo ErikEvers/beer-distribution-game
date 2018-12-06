@@ -10,8 +10,7 @@ public class DivideOperation extends Operation {
         super.calculationOperator = new CalculationOperator("/");
     }
 
-    @Override
-    public String toString() {
-        return prefix + left.toString() + calculationOperator.toString() + right.toString() + suffix;
+    public void encode(StringBuilder stringBuilder) {
+        super.encode(stringBuilder, prefix, suffix);
     }
 }
