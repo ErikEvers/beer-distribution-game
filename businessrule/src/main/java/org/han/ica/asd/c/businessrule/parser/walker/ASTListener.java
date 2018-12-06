@@ -94,7 +94,7 @@ public class ASTListener extends PrototypeBaseListener {
             parent.addChild(comparisonValue);
         }
         if("round".equals(ctx.getChild(0).toString())){
-            comparisonValue.addChild(new Value("round"));
+            comparisonValue.addChild(new Value().addValue("round"));
         }
         currentContainer.push(comparisonValue);
     }

@@ -17,15 +17,15 @@ class OperationTest {
 
     @Test
     void testComparisonValue_Equals_True() {
-        operation.addChild(new Value("20"));
+        operation.addChild(new Value().addValue("20"));
         operation.addChild(new CalculationOperator("-"));
-        operation.addChild(new Value("4"));
+        operation.addChild(new Value().addValue("4"));
 
         Operation equalsOperation = new AddOperation();
 
-        equalsOperation.addChild(new Value("20"));
+        equalsOperation.addChild(new Value().addValue("20"));
         equalsOperation.addChild(new CalculationOperator("-"));
-        equalsOperation.addChild(new Value("4"));
+        equalsOperation.addChild(new Value().addValue("4"));
 
         boolean res = operation.equals(equalsOperation);
 
@@ -34,15 +34,15 @@ class OperationTest {
 
     @Test
     void testComparisonValue_Equals_False() {
-        operation.addChild(new Value("20"));
+        operation.addChild(new Value().addValue("20"));
         operation.addChild(new CalculationOperator("-"));
-        operation.addChild(new Value("4"));
+        operation.addChild(new Value().addValue("4"));
 
         Operation equalsOperation = new AddOperation();
 
-        equalsOperation.addChild(new Value("20"));
+        equalsOperation.addChild(new Value().addValue("20"));
         equalsOperation.addChild(new CalculationOperator("-"));
-        equalsOperation.addChild(new Value("8"));
+        equalsOperation.addChild(new Value().addValue("8"));
 
         boolean res = operation.equals(equalsOperation);
 
@@ -51,17 +51,17 @@ class OperationTest {
 
     @Test
     void testOpertation_getChilderen_False() {
-        operation.addChild(new Value("20"));
+        operation.addChild(new Value().addValue("20"));
         operation.addChild(new CalculationOperator("-"));
 
-        operation.addChild(new Value("4"));
+        operation.addChild(new Value().addValue("4"));
 
         List<ASTNode> res = operation.getChildren();
 
         List<ASTNode> exp = new ArrayList<>();
-        exp.add(new Value("20"));
+        exp.add(new Value().addValue("20"));
         exp.add(new CalculationOperator("-"));
-        exp.add(new Value("4"));
+        exp.add(new Value().addValue("4"));
 
         assertEquals(exp, res);
     }

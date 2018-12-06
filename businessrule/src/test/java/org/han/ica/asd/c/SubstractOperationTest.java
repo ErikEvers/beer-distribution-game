@@ -12,9 +12,9 @@ class SubstractOperationTest {
 
     @Test
     void testComparisonStatement_Equals_True() {
-        subtractOperation.addChild(new Value("20"));
+        subtractOperation.addChild(new Value().addValue("20"));
         subtractOperation.addChild(new CalculationOperator("-"));
-        subtractOperation.addChild(new Value("4"));
+        subtractOperation.addChild(new Value().addValue("4"));
 
         String res = subtractOperation.toString();
 

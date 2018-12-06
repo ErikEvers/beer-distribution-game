@@ -7,19 +7,13 @@ public class Value extends OperationValue {
     private String suffix = ")";
     private String value;
 
-    public Value() {
-    }
-
-    public Value(String value) {
-        this.value = value;
-    }
-
-    public void addValue(String value) {
+    public Value addValue(String value) {
         if (this.value == null) {
             this.value = value;
         } else {
             this.value += (" " + value);
         }
+        return this;
     }
 
     public void encode(StringBuilder stringBuilder) {

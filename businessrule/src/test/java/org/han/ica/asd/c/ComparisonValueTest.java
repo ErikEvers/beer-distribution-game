@@ -15,11 +15,11 @@ class ComparisonValueTest {
 
     @Test
     void testComparisonValue_Equals_True() {
-        comparisonValue.addChild(new Value("hello"));
+        comparisonValue.addChild(new Value().addValue("hello"));
 
         ComparisonValue equalComparisonValue = new ComparisonValue();
 
-        equalComparisonValue.addChild(new Value("hello"));
+        equalComparisonValue.addChild(new Value().addValue("hello"));
 
         boolean res = comparisonValue.equals(equalComparisonValue);
 
@@ -28,11 +28,11 @@ class ComparisonValueTest {
 
     @Test
     void testComparisonValue_Equals_False() {
-        comparisonValue.addChild(new Value("hello"));
+        comparisonValue.addChild(new Value().addValue("hello"));
 
         ComparisonValue equalComparisonValue = new ComparisonValue();
 
-        equalComparisonValue.addChild(new Value("bye"));
+        equalComparisonValue.addChild(new Value().addValue("bye"));
 
         boolean res = comparisonValue.equals(equalComparisonValue);
 
@@ -41,12 +41,12 @@ class ComparisonValueTest {
 
     @Test
     void testComparisonValue_getChilderen_False() {
-        comparisonValue.addChild(new Value("hello"));
+        comparisonValue.addChild(new Value().addValue("hello"));
 
         List<ASTNode> res = comparisonValue.getChildren();
 
         List<ASTNode> exp = new ArrayList<>();
-        exp.add(new Value("hello"));
+        exp.add(new Value().addValue("hello"));
 
         assertEquals(exp, res);
     }

@@ -19,15 +19,15 @@ class ComparisonStatementTest {
     @Test
     void testComparisonStatement_Equals_True() {
         comparisonStatement.addChild(new Comparison()
-                .addChild(new ComparisonValue().addChild(new Value("round")))
+                .addChild(new ComparisonValue().addChild(new Value().addValue("round")))
                 .addChild(new ComparisonOperator("is"))
-                .addChild(new ComparisonValue().addChild(new Value("11"))));
+                .addChild(new ComparisonValue().addChild(new Value().addValue("11"))));
 
         ComparisonStatement equalComparison = new ComparisonStatement();
         equalComparison.addChild(new Comparison()
-                .addChild(new ComparisonValue().addChild(new Value("round")))
+                .addChild(new ComparisonValue().addChild(new Value().addValue("round")))
                 .addChild(new ComparisonOperator("is"))
-                .addChild(new ComparisonValue().addChild(new Value("11"))));
+                .addChild(new ComparisonValue().addChild(new Value().addValue("11"))));
 
         boolean res = comparisonStatement.equals(equalComparison);
 
@@ -37,15 +37,15 @@ class ComparisonStatementTest {
     @Test
     void testComparisonStatement_Equals_False() {
         comparisonStatement.addChild(new Comparison()
-                .addChild(new ComparisonValue().addChild(new Value("round")))
+                .addChild(new ComparisonValue().addChild(new Value().addValue("round")))
                 .addChild(new ComparisonOperator("is"))
-                .addChild(new ComparisonValue().addChild(new Value("11"))));
+                .addChild(new ComparisonValue().addChild(new Value().addValue("11"))));
 
         ComparisonStatement equalComparison = new ComparisonStatement();
         equalComparison.addChild(new Comparison()
-                .addChild(new ComparisonValue().addChild(new Value("round")))
+                .addChild(new ComparisonValue().addChild(new Value().addValue("round")))
                 .addChild(new ComparisonOperator("higher"))
-                .addChild(new ComparisonValue().addChild(new Value("11"))));
+                .addChild(new ComparisonValue().addChild(new Value().addValue("11"))));
 
         boolean res = comparisonStatement.equals(equalComparison);
 
@@ -55,17 +55,17 @@ class ComparisonStatementTest {
     @Test
     void testComparisonStatement_getChilderen_False() {
         comparisonStatement.addChild(new Comparison()
-                .addChild(new ComparisonValue().addChild(new Value("round")))
+                .addChild(new ComparisonValue().addChild(new Value().addValue("round")))
                 .addChild(new ComparisonOperator("is"))
-                .addChild(new ComparisonValue().addChild(new Value("11"))));
+                .addChild(new ComparisonValue().addChild(new Value().addValue("11"))));
 
         List<ASTNode> res = comparisonStatement.getChildren();
 
         List<ASTNode> exp = new ArrayList<>();
         exp.add(new Comparison()
-                .addChild(new ComparisonValue().addChild(new Value("round")))
+                .addChild(new ComparisonValue().addChild(new Value().addValue("round")))
                 .addChild(new ComparisonOperator("is"))
-                .addChild(new ComparisonValue().addChild(new Value("11"))));
+                .addChild(new ComparisonValue().addChild(new Value().addValue("11"))));
 
         assertEquals(exp, res);
     }

@@ -21,12 +21,12 @@ class Fixtures {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value("inventory")))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
                         .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new Value("20")))))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("30")));
+                        .addChild(new Value().addValue("30")));
 
         return businessRule;
     }
@@ -36,18 +36,18 @@ class Fixtures {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value("inventory")))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
                         .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new Value("20"))))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20"))))
                 .addChild(new BooleanOperator("and"))
                 .addChild(new ComparisonStatement()
                         .addChild(new Comparison()
-                                .addChild(new ComparisonValue().addChild(new Value("backlog")))
+                                .addChild(new ComparisonValue().addChild(new Value().addValue("backlog")))
                                 .addChild(new ComparisonOperator("higher than"))
-                                .addChild(new ComparisonValue().addChild(new Value("20"))))))
+                                .addChild(new ComparisonValue().addChild(new Value().addValue("20"))))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("30")));
+                        .addChild(new Value().addValue("30")));
         return businessRule;
     }
 
@@ -56,18 +56,18 @@ class Fixtures {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value("inventory")))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
                         .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new Value("20"))))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20"))))
                 .addChild(new BooleanOperator("or"))
                 .addChild(new ComparisonStatement()
                         .addChild(new Comparison()
-                                .addChild(new ComparisonValue().addChild(new Value("backlog")))
+                                .addChild(new ComparisonValue().addChild(new Value().addValue("backlog")))
                                 .addChild(new ComparisonOperator("higher than"))
-                                .addChild(new ComparisonValue().addChild(new Value("20"))))))
+                                .addChild(new ComparisonValue().addChild(new Value().addValue("20"))))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("30")));
+                        .addChild(new Value().addValue("30")));
         return businessRule;
     }
 
@@ -76,15 +76,15 @@ class Fixtures {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value("inventory")))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
                         .addChild(new ComparisonOperator("is"))
                         .addChild(new ComparisonValue().addChild(new AddOperation()
-                                .addChild(new Value("20"))
+                                .addChild(new Value().addValue("20"))
                                 .addChild(new CalculationOperator("+"))
-                                .addChild(new Value("4"))))))
+                                .addChild(new Value().addValue("4"))))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("30")));
+                        .addChild(new Value().addValue("30")));
         return businessRule;
     }
 
@@ -93,18 +93,18 @@ class Fixtures {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value("inventory")))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
                         .addChild(new ComparisonOperator("is"))
                         .addChild(new ComparisonValue().addChild(new SubtractOperation()
                                 .addChild(new DivideOperation()
-                                        .addChild(new Value("20"))
+                                        .addChild(new Value().addValue("20"))
                                         .addChild(new CalculationOperator("/"))
-                                        .addChild(new Value("4")))
+                                        .addChild(new Value().addValue("4")))
                                 .addChild(new CalculationOperator("-"))
-                                .addChild(new Value("3"))))))
+                                .addChild(new Value().addValue("3"))))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("30")));
+                        .addChild(new Value().addValue("30")));
         return businessRule;
     }
 
@@ -114,7 +114,7 @@ class Fixtures {
         businessRule.addChild(new Default())
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("40")));
+                        .addChild(new Value().addValue("40")));
         return businessRule;
     }
 
@@ -123,12 +123,12 @@ class Fixtures {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value("round")))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("round")))
                         .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new Value("11")))))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("11")))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("30")));
+                        .addChild(new Value().addValue("30")));
         return businessRule;
     }
 
@@ -137,12 +137,12 @@ class Fixtures {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value("inventory")))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
                         .addChild(new ComparisonOperator("is higher than"))
-                        .addChild(new ComparisonValue().addChild(new Value("20% backlog")))))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20% backlog")))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
-                        .addChild(new Value("30")));
+                        .addChild(new Value().addValue("30")));
         return businessRule;
     }
 }

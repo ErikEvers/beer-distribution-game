@@ -12,9 +12,9 @@ class MultiplyOperationTest {
 
     @Test
     void testComparisonStatement_Equals_True() {
-        multiplyOperation.addChild(new Value("20"));
+        multiplyOperation.addChild(new Value().addValue("20"));
         multiplyOperation.addChild(new CalculationOperator("*"));
-        multiplyOperation.addChild(new Value("4"));
+        multiplyOperation.addChild(new Value().addValue("4"));
 
         String res = multiplyOperation.toString();
 

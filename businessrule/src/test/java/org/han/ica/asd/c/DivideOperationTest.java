@@ -12,9 +12,9 @@ class DivideOperationTest {
 
     @Test
     void testComparisonStatement_Equals_True() {
-        divideOperation.addChild(new Value("20"));
+        divideOperation.addChild(new Value().addValue("20"));
         divideOperation.addChild(new CalculationOperator("/"));
-        divideOperation.addChild(new Value("4"));
+        divideOperation.addChild(new Value().addValue("4"));
 
         String res = divideOperation.toString();
 

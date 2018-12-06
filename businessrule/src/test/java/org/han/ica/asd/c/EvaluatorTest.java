@@ -18,9 +18,9 @@ class EvaluatorTest {
     @Test
     void testCheckSubTreeNotInt_ExceptionThrownRoundWithGameObject_SideRight() {
         Comparison comparison = new Comparison();
-        comparison.addChild(new ComparisonValue().addChild(new Value("round")));
+        comparison.addChild(new ComparisonValue().addChild(new Value().addValue("round")));
         comparison.addChild(new ComparisonOperator("is"));
-        comparison.addChild(new ComparisonValue().addChild(new Value("inventory")));
+        comparison.addChild(new ComparisonValue().addChild(new Value().addValue("inventory")));
         try {
             evaluator.checkSubTreeNotInt(comparison, 1, 2);
             fail("expected exception was not occured.");
@@ -31,9 +31,9 @@ class EvaluatorTest {
     @Test
     void testCheckSubTreeNotInt_ExceptionThrownRoundWithGameObject_SideLeft() {
         Comparison comparison = new Comparison();
-        comparison.addChild(new ComparisonValue().addChild(new Value("inventory")));
+        comparison.addChild(new ComparisonValue().addChild(new Value().addValue("inventory")));
         comparison.addChild(new ComparisonOperator("is"));
-        comparison.addChild(new ComparisonValue().addChild(new Value("round")));
+        comparison.addChild(new ComparisonValue().addChild(new Value().addValue("round")));
         try {
             evaluator.checkSubTreeNotInt(comparison, 1, 2);
             fail("expected exception was not occured.");
@@ -44,9 +44,9 @@ class EvaluatorTest {
     @Test
     void testCheckSubTreeNotInt_NoExceptionThrown_RoundWithValue() {
         Comparison comparison = new Comparison();
-        comparison.addChild(new ComparisonValue().addChild(new Value("inventory")));
+        comparison.addChild(new ComparisonValue().addChild(new Value().addValue("inventory")));
         comparison.addChild(new ComparisonOperator("is"));
-        comparison.addChild(new ComparisonValue().addChild(new Value("20")));
+        comparison.addChild(new ComparisonValue().addChild(new Value().addValue("20")));
         try {
             evaluator.checkSubTreeNotInt(comparison, 1, 2);
         } catch (BusinessRuleException e) {
