@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.evaluator;
+package org.han.ica.asd.c.businessrule.parser.evaluator;
 
 public class Counter {
     private int countedValue;

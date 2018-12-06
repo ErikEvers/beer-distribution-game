@@ -1,20 +1,22 @@
-package org.han.ica.asd.c.businessrule.ast.comparison;
+package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Comparison extends Expression {
+    private String prefix = "C(";
+    private String suffix = ")";
     private ComparisonValue left;
     private ComparisonOperator comparisonOperator;
     private ComparisonValue right;
 
     @Override
     public String toString() {
-        return "C(" + left.toString() + comparisonOperator.toString() + right.toString() + ")";
+        return prefix + left.toString() + comparisonOperator.toString() + right.toString() + suffix;
     }
 
     @Override

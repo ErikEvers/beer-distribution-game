@@ -1,10 +1,10 @@
-package org.han.ica.asd.c.businessrule.evaluator;
+package org.han.ica.asd.c.businessrule.parser.evaluator;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.ast.Default;
-import org.han.ica.asd.c.businessrule.ast.comparison.Comparison;
-import org.han.ica.asd.c.businessrule.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.*;
 

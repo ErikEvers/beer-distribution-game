@@ -1,10 +1,11 @@
-package org.han.ica.asd.c.businessrule.ast;
+package org.han.ica.asd.c.businessrule.parser.ast;
 
 public class Default extends Condition {
+    private String prefix = "D()";
 
     @Override
     public String toString() {
-        return "D()";
+        return prefix;
     }
 
     @Override

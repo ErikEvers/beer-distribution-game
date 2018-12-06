@@ -1,13 +1,15 @@
-package org.han.ica.asd.c.businessrule.ast.comparison;
+package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.ast.operators.BooleanOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ComparisonStatement extends Expression {
+    private String prefix = "CS(";
+    private String suffix = ")";
     private Expression left;
     private BooleanOperator booleanOperator;
     private Expression right;
@@ -29,9 +31,9 @@ public class ComparisonStatement extends Expression {
     @Override
     public String toString() {
         if (right == null) {
-            return "CS(" + left.toString() + ")";
+            return prefix + left.toString() + suffix;
         } else {
-            return "CS(" + left.toString() + booleanOperator + right.toString() + ")";
+            return prefix + left.toString() + booleanOperator + right.toString() + suffix;
         }
     }
 

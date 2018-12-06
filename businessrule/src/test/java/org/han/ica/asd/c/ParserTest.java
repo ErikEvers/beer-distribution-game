@@ -2,8 +2,8 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.businessrule.PrototypeLexer;
 import org.han.ica.asd.c.businessrule.PrototypeParser;
-import org.han.ica.asd.c.businessrule.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ASTListener;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,9 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
-
-import java.io.*;
-import java.util.List;
 
 class ParserTest {
 

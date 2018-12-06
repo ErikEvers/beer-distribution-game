@@ -1,7 +1,7 @@
-package org.han.ica.asd.c.businessrule.ast.operations;
+package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,14 +1,14 @@
-package org.han.ica.asd.c.businessrule.parser;
+package org.han.ica.asd.c.businessrule.parser.walker;
 
 import org.han.ica.asd.c.businessrule.PrototypeBaseListener;
 import org.han.ica.asd.c.businessrule.PrototypeParser;
-import org.han.ica.asd.c.businessrule.ast.*;
-import org.han.ica.asd.c.businessrule.ast.comparison.Comparison;
-import org.han.ica.asd.c.businessrule.ast.comparison.ComparisonStatement;
-import org.han.ica.asd.c.businessrule.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.ast.operations.*;
-import org.han.ica.asd.c.businessrule.ast.operators.BooleanOperator;
-import org.han.ica.asd.c.businessrule.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.*;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
 import java.util.ArrayList;
 import java.util.Deque;

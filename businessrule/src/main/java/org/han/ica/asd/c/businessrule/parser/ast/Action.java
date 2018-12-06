@@ -1,12 +1,15 @@
-package org.han.ica.asd.c.businessrule.ast;
+package org.han.ica.asd.c.businessrule.parser.ast;
 
-import org.han.ica.asd.c.businessrule.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Action extends ASTNode {
+    private String prefix = "A(";
+    private String suffix = "))";
+
     private ActionReference actionName;
     private OperationValue operation;
 
@@ -22,7 +25,7 @@ public class Action extends ASTNode {
 
     @Override
     public String toString() {
-        return "A(" + actionName.toString() + operation.toString() + "))";
+        return prefix + actionName.toString() + operation.toString() + suffix;
     }
 
     @Override

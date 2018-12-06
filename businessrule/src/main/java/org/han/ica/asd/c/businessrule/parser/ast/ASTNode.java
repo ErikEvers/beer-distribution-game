@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.ast;
+package org.han.ica.asd.c.businessrule.parser.ast;
 
 import java.util.ArrayList;
 import java.util.List;

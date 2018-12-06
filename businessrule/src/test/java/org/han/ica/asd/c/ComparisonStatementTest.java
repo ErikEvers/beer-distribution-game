@@ -1,11 +1,11 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.ast.comparison.Comparison;
-import org.han.ica.asd.c.businessrule.ast.comparison.ComparisonStatement;
-import org.han.ica.asd.c.businessrule.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

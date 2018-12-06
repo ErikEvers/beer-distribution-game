@@ -1,10 +1,12 @@
-package org.han.ica.asd.c.businessrule.ast.operators;
+package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 
 import java.util.Objects;
 
 public class BooleanOperator extends ASTNode {
+    private String prefix = "BoolO(";
+    private String suffix = ")";
     private String operator;
 
     public BooleanOperator(String operator) {
@@ -21,7 +23,7 @@ public class BooleanOperator extends ASTNode {
 
     @Override
     public String toString() {
-        return "BoolO(" + operator + ")";
+        return prefix + operator + suffix;
     }
 
     @Override

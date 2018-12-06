@@ -1,7 +1,7 @@
-package org.han.ica.asd.c.businessrule.ast.comparison;
+package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 
 import java.util.ArrayList;
 import java.util.List;

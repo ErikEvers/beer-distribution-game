@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.evaluator;
+package org.han.ica.asd.c.businessrule.parser.evaluator;
 
 public class BusinessRuleException extends Exception {
     private final String ERRORMESSAGE;

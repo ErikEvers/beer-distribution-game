@@ -1,8 +1,9 @@
-package org.han.ica.asd.c.businessrule.ast;
+package org.han.ica.asd.c.businessrule.parser.ast;
 
 import java.util.Objects;
 
 public class ActionReference extends ASTNode {
+    private String suffix = "(";
     private String action;
 
     public ActionReference(String action) {
@@ -11,7 +12,7 @@ public class ActionReference extends ASTNode {
 
     @Override
     public String toString() {
-        return action + "(";
+        return action + suffix;
     }
 
     @Override

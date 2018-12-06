@@ -1,8 +1,8 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.ast.operations.MultiplyOperation;
-import org.han.ica.asd.c.businessrule.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.MultiplyOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.assertEquals;

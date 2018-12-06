@@ -1,10 +1,12 @@
-package org.han.ica.asd.c.businessrule.ast;
+package org.han.ica.asd.c.businessrule.parser.ast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class BusinessRule extends ASTNode {
+    private String prefix = "BR(";
+    private String suffix = ")";
     private Condition condition;
     private Action action;
 
@@ -20,7 +22,7 @@ public class BusinessRule extends ASTNode {
 
     @Override
     public String toString() {
-        return "BR(" + condition.toString() + action.toString() + ")";
+        return prefix + condition.toString() + action.toString() + suffix;
     }
 
     @Override

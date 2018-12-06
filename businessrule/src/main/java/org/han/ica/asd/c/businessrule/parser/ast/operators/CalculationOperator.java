@@ -1,10 +1,12 @@
-package org.han.ica.asd.c.businessrule.ast.operators;
+package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 
 import java.util.Objects;
 
 public class CalculationOperator extends ASTNode {
+    private String prefix = "CalO(";
+    private String suffix = ")";
     private String operator;
 
     public CalculationOperator(String operator) {
@@ -13,7 +15,7 @@ public class CalculationOperator extends ASTNode {
 
     @Override
     public String toString() {
-        return "CalO(" + operator + ")";
+        return prefix + operator + suffix;
     }
 
     @Override

@@ -1,8 +1,10 @@
-package org.han.ica.asd.c.businessrule.ast.operations;
+package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
 import java.util.Objects;
 
 public class Value extends OperationValue {
+    private String prefix = "V(";
+    private String suffix = ")";
     private String value;
 
     public Value() {
@@ -22,7 +24,7 @@ public class Value extends OperationValue {
 
     @Override
     public String toString() {
-        return "V(" + value + ")";
+        return prefix + value + suffix;
     }
 
     public String getValue() {

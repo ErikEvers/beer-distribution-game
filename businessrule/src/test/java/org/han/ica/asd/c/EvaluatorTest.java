@@ -1,13 +1,13 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.ast.Default;
-import org.han.ica.asd.c.businessrule.ast.comparison.Comparison;
-import org.han.ica.asd.c.businessrule.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.ast.operators.ComparisonOperator;
-import org.han.ica.asd.c.businessrule.evaluator.BusinessRuleException;
-import org.han.ica.asd.c.businessrule.evaluator.Counter;
-import org.han.ica.asd.c.businessrule.evaluator.Evaluator;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.evaluator.BusinessRuleException;
+import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
+import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.fail;

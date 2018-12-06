@@ -1,22 +1,19 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.ast.Action;
-import org.han.ica.asd.c.businessrule.ast.ActionReference;
-import org.han.ica.asd.c.businessrule.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.ast.Default;
-import org.han.ica.asd.c.businessrule.ast.comparison.Comparison;
-import org.han.ica.asd.c.businessrule.ast.comparison.ComparisonStatement;
-import org.han.ica.asd.c.businessrule.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.ast.operations.AddOperation;
-import org.han.ica.asd.c.businessrule.ast.operations.DivideOperation;
-import org.han.ica.asd.c.businessrule.ast.operations.SubtractOperation;
-import org.han.ica.asd.c.businessrule.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.ast.operators.BooleanOperator;
-import org.han.ica.asd.c.businessrule.ast.operators.CalculationOperator;
-import org.han.ica.asd.c.businessrule.ast.operators.ComparisonOperator;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.han.ica.asd.c.businessrule.parser.ast.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.SubtractOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
 class Fixtures {
     //Setup a businessRule to test a basic rule

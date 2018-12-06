@@ -1,10 +1,12 @@
-package org.han.ica.asd.c.businessrule.ast.operators;
+package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 
 import java.util.Objects;
 
 public class ComparisonOperator extends ASTNode {
+    private String prefix = "ComO(";
+    private String suffix = ")";
     private String operator;
 
     public ComparisonOperator(String operator) {
@@ -25,7 +27,7 @@ public class ComparisonOperator extends ASTNode {
 
     @Override
     public String toString() {
-        return "ComO(" + operator + ")";
+        return prefix + operator + suffix;
     }
 
     @Override

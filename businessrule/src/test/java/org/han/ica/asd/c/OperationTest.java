@@ -1,10 +1,10 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.ast.operations.AddOperation;
-import org.han.ica.asd.c.businessrule.ast.operations.Operation;
-import org.han.ica.asd.c.businessrule.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
