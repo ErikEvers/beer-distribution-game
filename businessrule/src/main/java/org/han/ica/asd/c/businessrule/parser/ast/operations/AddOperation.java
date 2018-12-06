@@ -8,7 +8,7 @@ public class AddOperation extends Operation {
     private String suffix = ")";
 
     public AddOperation() {
-        super.calculationOperator = new CalculationOperator("+");
+        super.calculationOperator = new CalculationOperator(OperationType.ADD.getOperation());
     }
 
     public void encode(StringBuilder stringBuilder) {

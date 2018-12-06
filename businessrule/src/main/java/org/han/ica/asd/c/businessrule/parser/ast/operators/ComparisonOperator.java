@@ -15,13 +15,13 @@ public class ComparisonOperator extends ASTNode {
 
     private String findComparisonOperator(String operator) {
         if ("is".equals(operator) || "=".equals(operator) || "equal".equals(operator)) {
-            return "==";
+            return ComparisonType.EQUAL.getComparisonSymbol();
         } else if ("!=".equals(operator) || operator.contains("not equal")) {
-            return "!=";
+            return ComparisonType.NOT.getComparisonSymbol();
         } else if (operator.contains("greater") || operator.contains("higher")) {
-            return ">";
+            return ComparisonType.GREATER.getComparisonSymbol();
         } else {
-            return "<";
+            return ComparisonType.LESS.getComparisonSymbol();
         }
     }
 

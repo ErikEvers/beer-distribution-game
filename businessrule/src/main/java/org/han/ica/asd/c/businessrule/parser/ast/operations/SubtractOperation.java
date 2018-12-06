@@ -7,7 +7,7 @@ public class SubtractOperation extends Operation {
     private String suffix = ")";
 
     public SubtractOperation() {
-        super.calculationOperator = new CalculationOperator("-");
+        super.calculationOperator = new CalculationOperator(OperationType.SUB.getOperation());
     }
 
     public void encode(StringBuilder stringBuilder) {

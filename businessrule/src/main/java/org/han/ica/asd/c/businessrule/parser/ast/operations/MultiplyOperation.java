@@ -7,7 +7,7 @@ public class MultiplyOperation extends Operation {
     private String suffix = ")";
 
     public MultiplyOperation() {
-        super.calculationOperator = new CalculationOperator("*");
+        super.calculationOperator = new CalculationOperator(OperationType.MUL.getOperation());
     }
 
     public void encode(StringBuilder stringBuilder) {

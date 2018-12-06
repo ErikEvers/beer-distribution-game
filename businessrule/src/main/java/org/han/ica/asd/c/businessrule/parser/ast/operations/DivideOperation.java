@@ -7,7 +7,7 @@ public class DivideOperation extends Operation {
     private String suffix = ")";
 
     public DivideOperation() {
-        super.calculationOperator = new CalculationOperator("/");
+        super.calculationOperator = new CalculationOperator(OperationType.DIV.getOperation());
     }
 
     public void encode(StringBuilder stringBuilder) {

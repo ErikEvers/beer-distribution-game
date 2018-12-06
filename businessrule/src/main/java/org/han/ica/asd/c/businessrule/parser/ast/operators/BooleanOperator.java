@@ -15,9 +15,9 @@ public class BooleanOperator extends ASTNode {
 
     private String findBooleanOperator(String operator) {
         if ("and".equals(operator)) {
-            return "&&";
+            return BooleanType.AND.getBooleanSymbol();
         } else {
-            return "||";
+            return BooleanType.OR.getBooleanSymbol();
         }
     }
 
