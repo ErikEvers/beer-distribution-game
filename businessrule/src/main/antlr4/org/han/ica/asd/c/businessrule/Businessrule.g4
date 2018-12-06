@@ -1,4 +1,4 @@
-grammar Prototype;
+grammar Businessrule;
 
 // Example business rules
 // if inventory is lower than 20 and inventory is higher than 10 then order 40
