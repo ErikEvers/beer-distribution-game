@@ -1,21 +1,22 @@
 package org.han.ica.asd.c;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
-import org.junit.Before;
+import org.han.ica.asd.c.stubs.ICommunicationStub;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
-import static junit.framework.TestCase.*;
+import static org.mockito.Mockito.mock;
 
 
 public class GameLogicTests {
-    GameLogic gameLogic;
+    private GameLogic gameLogic;
+    private ICommunication communication;
 
-    @Mock
-    public ICommunication communication;
-
-    @Before
+    @BeforeEach
     public void setup() {
+        communication = mock(ICommunicationStub.class);
         gameLogic = new GameLogic(communication);
     }
 

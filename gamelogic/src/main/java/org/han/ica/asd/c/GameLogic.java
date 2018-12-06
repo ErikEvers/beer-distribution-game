@@ -12,4 +12,6 @@ public class GameLogic {
     public void placeOrder(int amount) {
         communication.send(amount);
     }
+
+
 }
