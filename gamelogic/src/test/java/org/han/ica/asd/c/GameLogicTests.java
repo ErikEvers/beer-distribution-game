@@ -1,4 +1,5 @@
 package org.han.ica.asd.c;
+import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -21,7 +22,7 @@ public class GameLogicTests {
     @Test
     public void placeOrderSendsToICommunication() {
         gameLogic.placeOrder(4);
-        Mockito.verify(communication, Mockito.times(1)).send();
+        Mockito.verify(communication, Mockito.times(1)).send(4);
     }
 
 }
