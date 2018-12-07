@@ -13,6 +13,12 @@ public class BooleanOperator extends ASTNode {
         this.operator = findBooleanOperator(operator);
     }
 
+    @Override
+    public BooleanOperator addValue(String value) {
+        operator = value;
+        return this;
+    }
+
     private String findBooleanOperator(String operator) {
         if ("and".equals(operator)) {
             return BooleanType.AND.getBooleanSymbol();

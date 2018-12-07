@@ -13,6 +13,12 @@ public class ComparisonOperator extends ASTNode {
         this.operator = findComparisonOperator(operator);
     }
 
+    @Override
+    public ComparisonOperator addValue(String value) {
+        operator = value;
+        return this;
+    }
+
     private String findComparisonOperator(String operator) {
         if ("is".equals(operator) || "=".equals(operator) || "equal".equals(operator)) {
             return ComparisonType.EQUAL.getComparisonSymbol();

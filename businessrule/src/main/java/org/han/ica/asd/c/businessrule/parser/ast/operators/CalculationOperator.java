@@ -14,6 +14,12 @@ public class CalculationOperator extends ASTNode {
     }
 
     @Override
+    public CalculationOperator addValue(String value) {
+        operator = value;
+        return this;
+    }
+
+    @Override
     public void encode(StringBuilder stringBuilder) {
         stringBuilder.append(prefix).append(operator).append(suffix);
     }

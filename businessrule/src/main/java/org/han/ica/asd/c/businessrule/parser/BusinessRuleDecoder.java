@@ -7,7 +7,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public class BusinessRuleParser {
+public class BusinessRuleDecoder {
 	private static final char   LEFT_PARENTHESES                = '(';
 	private static final char   RIGHT_PARENTHESES               = ')';
 	private static final byte   TOKEN_NOT_FOUND                 = -1;
@@ -19,7 +19,7 @@ public class BusinessRuleParser {
 	private static final String LEFT_PARENTHESIS_SPLIT_TOKEN    = "\\(";
 	private static final String RIGHT_PARENTHESIS_SPLIT_TOKEN   = "\\)";
 
-	public BusinessRule parse(String businessRuleString) {
+	public BusinessRule decodeBusinessRule(String businessRuleString) {
 		BusinessRule businessRule = new BusinessRule();
 		Deque<ASTNode> astNodeStack = new LinkedList<>();
 		astNodeStack.push(businessRule);
@@ -64,13 +64,13 @@ public class BusinessRuleParser {
 		return businessRule;
 	}
 
-	public String[] nextIteration(String remainingString) {
+	private String[] nextIteration(String remainingString) {
 		return popOrPush(remainingString) ?
 				remainingString.split(LEFT_PARENTHESIS_SPLIT_TOKEN, SPLIT_IN_TWO) :
 				remainingString.split(RIGHT_PARENTHESIS_SPLIT_TOKEN, SPLIT_IN_TWO);
 	}
 
-	public boolean popOrPush(String businessRuleString) {
+	private boolean popOrPush(String businessRuleString) {
 		return businessRuleString.indexOf(LEFT_PARENTHESES) != TOKEN_NOT_FOUND &&
 				(businessRuleString.indexOf(LEFT_PARENTHESES) < businessRuleString.indexOf(RIGHT_PARENTHESES));
 	}

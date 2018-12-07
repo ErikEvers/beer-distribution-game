@@ -1,25 +1,25 @@
-package nl.han.bre;
+package org.han.ica.asd.c.businessrule.parser;
 
-import nl.han.asd.prototype.parser.ast.*;
-import nl.han.asd.prototype.parser.ast.comparison.Comparison;
-import nl.han.asd.prototype.parser.ast.comparison.ComparisonStatement;
-import nl.han.asd.prototype.parser.ast.comparison.ComparisonValue;
-import nl.han.asd.prototype.parser.ast.operations.*;
-import nl.han.asd.prototype.parser.ast.operators.BooleanOperator;
-import nl.han.asd.prototype.parser.ast.operators.CalculationOperator;
-import nl.han.asd.prototype.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
-public class BusinessRuleFactory {
-    //      BR(CS(C(V(inventory)CO(>)V(20))BO(&&)CS(C(V(round)CO(==)V(3))))A(order V(40)))default order 10, BR(D()A(order V(10)))
-
-    public ASTNode create(Class<?> parentClassType, String identifier) {
+class BusinessRuleFactory {
+    ASTNode create(Class<?> parentClassType, String identifier) {
         switch (identifier) {
             case "A":       return new Action();
             case "C":       return new Comparison();
             case "D":       return new Default();
             case "V":       return (parentClassType == Comparison.class) ? new ComparisonValue().addChild(new Value()) : new Value();
             case "CS":      return new ComparisonStatement();
-            case "DO":      return new DefaultOperation();
             case "Add":     return new AddOperation();
             case "Div":     return new DivideOperation();
             case "Mul":     return new MultiplyOperation();

@@ -17,6 +17,12 @@ public class ComparisonValue extends ASTNode {
     }
 
     @Override
+    public ComparisonValue addValue(String value) {
+        operationValue.addValue(value);
+        return this;
+    }
+
+    @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder,getChildren(),"","");
     }
