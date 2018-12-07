@@ -5,7 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 public class BusinessRuleHandler implements IBusinessRules{
     public static void main(String[] args) {
         ParserPipeline parserPipeline = new ParserPipeline();
-        parserPipeline.parseString("if inventory is 20 then order 40");
+        parserPipeline.parseString("if above is the lowest then order 40");
 
         System.out.println("---- The given input ----");
         System.out.println(parserPipeline.getBusinessRulesInput());

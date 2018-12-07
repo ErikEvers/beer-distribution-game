@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
@@ -9,9 +10,17 @@ import org.han.ica.asd.c.businessrule.parser.evaluator.BusinessRuleException;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.junit.jupiter.api.Test;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.api.mockito.verification.PrivateMethodVerification;
+import org.powermock.reflect.Whitebox;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 
 class EvaluatorTest {
     Evaluator evaluator = new Evaluator();
@@ -84,4 +93,15 @@ class EvaluatorTest {
 
         verify(comparison).getChildren();
     }*/
+
+    @Test
+    void testEvaluate_Called_evaluate() throws Exception {
+        List<BusinessRule> list = new ArrayList<>();
+        list.add(Fixtures.RuleWithRound());
+
+        Evaluator spy = PowerMockito.spy(new Evaluator());
+
+        spy.evaluate(list);
+        PowerMockito.verifyPrivate(spy).invoke("evaluate",any());
+    }
 }
