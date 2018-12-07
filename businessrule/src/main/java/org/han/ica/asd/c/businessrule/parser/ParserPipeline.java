@@ -6,8 +6,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.han.ica.asd.c.businessrule.PrototypeLexer;
-import org.han.ica.asd.c.businessrule.PrototypeParser;
+import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
+import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
@@ -22,10 +22,10 @@ public class ParserPipeline {
     public void parseString(String input) {
         CharStream inputStream = CharStreams.fromString(input);
         businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
-        PrototypeLexer lexer = new PrototypeLexer(inputStream);
+        BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        PrototypeParser parser = new PrototypeParser(tokens);
+        BusinessRuleParser parser = new BusinessRuleParser(tokens);
         ParseTree parseTree = parser.businessrules();
 
         ASTListener listener = new ASTListener();

@@ -1,4 +1,4 @@
-grammar Prototype;
+grammar BusinessRule;
 
 //--- LEXER: ---
 IF: 'if' | 'If';

@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.walker;
 
-import org.han.ica.asd.c.businessrule.PrototypeBaseListener;
-import org.han.ica.asd.c.businessrule.PrototypeParser;
+import org.han.ica.asd.c.businessrule.BusinessRuleBaseListener;
+import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.ast.*;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
@@ -15,7 +15,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ASTListener extends PrototypeBaseListener {
+public class ASTListener extends BusinessRuleBaseListener {
     private List<BusinessRule> businessRules;
     private Deque<ASTNode> currentContainer;
 
@@ -29,7 +29,7 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void enterDefaultRule(PrototypeParser.DefaultRuleContext ctx) {
+    public void enterDefaultRule(BusinessRuleParser.DefaultRuleContext ctx) {
         BusinessRule businessRule = new BusinessRule();
         businessRules.add(businessRule);
         businessRule.addChild(new Default());
@@ -37,24 +37,24 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitDefaultRule(PrototypeParser.DefaultRuleContext ctx) {
+    public void exitDefaultRule(BusinessRuleParser.DefaultRuleContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterIfRule(PrototypeParser.IfRuleContext ctx) {
+    public void enterIfRule(BusinessRuleParser.IfRuleContext ctx) {
         BusinessRule businessRule = new BusinessRule();
         businessRules.add(businessRule);
         currentContainer.push(businessRule);
     }
 
     @Override
-    public void exitIfRule(PrototypeParser.IfRuleContext ctx) {
+    public void exitIfRule(BusinessRuleParser.IfRuleContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterComparisonstatement(PrototypeParser.ComparisonstatementContext ctx) {
+    public void enterComparisonstatement(BusinessRuleParser.ComparisonstatementContext ctx) {
         ComparisonStatement comparisonStatement = new ComparisonStatement();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -67,12 +67,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitComparisonstatement(PrototypeParser.ComparisonstatementContext ctx) {
+    public void exitComparisonstatement(BusinessRuleParser.ComparisonstatementContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterComparison(PrototypeParser.ComparisonContext ctx) {
+    public void enterComparison(BusinessRuleParser.ComparisonContext ctx) {
         Comparison comparison = new Comparison();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -82,12 +82,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitComparison(PrototypeParser.ComparisonContext ctx) {
+    public void exitComparison(BusinessRuleParser.ComparisonContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterComparison_value(PrototypeParser.Comparison_valueContext ctx) {
+    public void enterComparison_value(BusinessRuleParser.Comparison_valueContext ctx) {
         ComparisonValue comparisonValue = new ComparisonValue();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -100,12 +100,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitComparison_value(PrototypeParser.Comparison_valueContext ctx) {
+    public void exitComparison_value(BusinessRuleParser.Comparison_valueContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterComparison_operator(PrototypeParser.Comparison_operatorContext ctx) {
+    public void enterComparison_operator(BusinessRuleParser.Comparison_operatorContext ctx) {
         ComparisonOperator comparisonOperator = new ComparisonOperator(ctx.getChild(0).toString());
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -115,12 +115,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitComparison_operator(PrototypeParser.Comparison_operatorContext ctx) {
+    public void exitComparison_operator(BusinessRuleParser.Comparison_operatorContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterValue(PrototypeParser.ValueContext ctx) {
+    public void enterValue(BusinessRuleParser.ValueContext ctx) {
         Value value = new Value();
         for (int i = 0; i < ctx.getChildCount(); i++) {
             value.addValue(ctx.getChild(i).toString());
@@ -133,12 +133,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitValue(PrototypeParser.ValueContext ctx) {
+    public void exitValue(BusinessRuleParser.ValueContext ctx) {
        currentContainer.pop();
     }
 
     @Override
-    public void enterMulOperation(PrototypeParser.MulOperationContext ctx) {
+    public void enterMulOperation(BusinessRuleParser.MulOperationContext ctx) {
         Operation operation = new MultiplyOperation();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -148,12 +148,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitMulOperation(PrototypeParser.MulOperationContext ctx) {
+    public void exitMulOperation(BusinessRuleParser.MulOperationContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterDivOperation(PrototypeParser.DivOperationContext ctx) {
+    public void enterDivOperation(BusinessRuleParser.DivOperationContext ctx) {
         Operation operation = new DivideOperation();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -163,12 +163,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitDivOperation(PrototypeParser.DivOperationContext ctx) {
+    public void exitDivOperation(BusinessRuleParser.DivOperationContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterMinOperation(PrototypeParser.MinOperationContext ctx) {
+    public void enterMinOperation(BusinessRuleParser.MinOperationContext ctx) {
         Operation operation = new SubtractOperation();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -178,12 +178,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitMinOperation(PrototypeParser.MinOperationContext ctx) {
+    public void exitMinOperation(BusinessRuleParser.MinOperationContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterPlusOperation(PrototypeParser.PlusOperationContext ctx) {
+    public void enterPlusOperation(BusinessRuleParser.PlusOperationContext ctx) {
         Operation operation = new AddOperation();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -193,12 +193,12 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitPlusOperation(PrototypeParser.PlusOperationContext ctx) {
+    public void exitPlusOperation(BusinessRuleParser.PlusOperationContext ctx) {
         currentContainer.pop();
     }
 
     @Override
-    public void enterAction(PrototypeParser.ActionContext ctx) {
+    public void enterAction(BusinessRuleParser.ActionContext ctx) {
         Action action = new Action();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
@@ -209,7 +209,7 @@ public class ASTListener extends PrototypeBaseListener {
     }
 
     @Override
-    public void exitAction(PrototypeParser.ActionContext ctx) {
+    public void exitAction(BusinessRuleParser.ActionContext ctx) {
         currentContainer.pop();
     }
 }
