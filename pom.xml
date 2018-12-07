@@ -31,8 +31,8 @@
         <module>gui_configure_game</module>
         <module>gui_replay_game</module>
         <module>persistence</module>
+        <module>model</module>
     </modules>
-
 
     <dependencies>
         <dependency>
