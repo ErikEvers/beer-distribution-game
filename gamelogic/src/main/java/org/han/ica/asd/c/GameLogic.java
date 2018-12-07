@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.domain.Order;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 
@@ -14,6 +15,6 @@ public class GameLogic {
 
     public void placeOrder(int amount) {
         communication.send(amount);
-        persistence.saveOrder(amount);
+        persistence.saveOrder(new Order(amount));
     }
 }
