@@ -5,11 +5,14 @@ public class CalculationOperator extends Operator {
     private String suffix = ")";
     private String operator;
 
+    public CalculationOperator() {
+        this.operator = "";
+    }
     public CalculationOperator(String operator) {
         this.operator = operator;
     }
 
-    @Override
+	@Override
     public CalculationOperator addValue(String value) {
         operator = value;
         return this;

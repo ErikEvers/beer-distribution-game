@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 
 import java.util.Deque;
@@ -29,45 +28,47 @@ public class BusinessRuleDecoder {
 
 		// When there is an identifier left to parse
 		while (currentIteration[REMAINING_STRING].length() > 1) {
-			// Check if identifier needs to be pushed or popped
-			String previousIterationRemainingString = currentIteration[REMAINING_STRING];
-			currentIteration = nextIteration(currentIteration[REMAINING_STRING]);
-
-			// Create ASTNode of the identifier it's given, if the identifier isn't a ASTNode add it as value to
-			// the ASTNode on the top of the deque(stack)
-			ASTNode node = null;
-			if (!currentIteration[CURRENT_TOKEN].isEmpty()) {
-				node = new BusinessRuleFactory().create(astNodeStack.peek().getClass(),
-						currentIteration[CURRENT_TOKEN]);
-
-				if (node == null) {
-					astNodeStack.peek()
-						.addValue(currentIteration[CURRENT_TOKEN]);
-				} else {
-					astNodeStack.peek()
-						.addChild(node);
-				}
-			}
-
-			// Depending on a opening and closing parentheses it has to pop or push the node
-			if (node != null && popOrPush(previousIterationRemainingString)) {
-				astNodeStack.push(node);
-			} else {
-				astNodeStack.pop();
-			}
-
-			// Have to pop additional time to align the deque with Action for the next Node
-			if (node instanceof ActionReference)
-				astNodeStack.pop();
+			currentIteration = processIteration(astNodeStack, currentIteration);
 		}
 
 		return businessRule;
 	}
 
+	private String[] processIteration(Deque<ASTNode> astNodeDeque, String[] iteration) {
+		// Check if identifier needs to be pushed or popped
+		String previousIterationRemainingString = iteration[REMAINING_STRING];
+		String[] currentIteration = nextIteration(iteration[REMAINING_STRING]);
+
+		// Create ASTNode of the identifier it's given, if the identifier isn't a ASTNode add it as value to
+		// the ASTNode on the top of the deque(stack)
+		ASTNode node = null;
+		if (!currentIteration[CURRENT_TOKEN].isEmpty()) {
+			node = new BusinessRuleFactory().create(currentIteration[CURRENT_TOKEN]);
+
+			if (node == null) {
+				astNodeDeque.peek()
+						.addValue(currentIteration[CURRENT_TOKEN]);
+			} else {
+				astNodeDeque.peek()
+						.addChild(node);
+			}
+		}
+
+		// Depending on a opening and closing parentheses it has to pop or push the node
+		if (node != null && popOrPush(previousIterationRemainingString)) {
+			astNodeDeque.push(node);
+		} else {
+			astNodeDeque.pop();
+		}
+
+		return currentIteration;
+	}
+
 	private String[] nextIteration(String remainingString) {
-		return popOrPush(remainingString) ?
-				remainingString.split(LEFT_PARENTHESIS_SPLIT_TOKEN, SPLIT_IN_TWO) :
-				remainingString.split(RIGHT_PARENTHESIS_SPLIT_TOKEN, SPLIT_IN_TWO);
+		if(popOrPush(remainingString)) {
+			return remainingString.split(LEFT_PARENTHESIS_SPLIT_TOKEN, SPLIT_IN_TWO);
+		}
+		return remainingString.split(RIGHT_PARENTHESIS_SPLIT_TOKEN, SPLIT_IN_TWO);
 	}
 
 	private boolean popOrPush(String businessRuleString) {

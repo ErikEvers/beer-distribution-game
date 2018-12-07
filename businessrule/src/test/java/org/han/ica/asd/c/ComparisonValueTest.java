@@ -70,7 +70,7 @@ class ComparisonValueTest {
     @Test
     void testComparisonValue_encode_Called(){
         ComparisonValue cv = new ComparisonValue();
-        StringBuilder exp = new StringBuilder();
+        StringBuilder exp = new StringBuilder().append("CV()");
         StringBuilder res = new StringBuilder();
 
         cv.encode(res);

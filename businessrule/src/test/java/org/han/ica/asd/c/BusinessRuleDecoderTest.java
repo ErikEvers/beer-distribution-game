@@ -16,42 +16,42 @@ class BusinessRuleDecoderTest {
 
 	@Test
 	void parseBusinessRuleStringWithLesserThanComparisonToBusinessRuleIsEqual() {
-		String businessRuleString = "BR(CS(C(V(inventory)ComO(<)V(10)))A(order(V(0))))";
+		String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(<)CV(V(10))))A(AR(order)V(0)))";
 		BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
 		assertEquals(businessRuleString, businessRuleParsed.encode());
 	}
 
 	@Test
 	void parseBusinessRuleStringWithGreaterThanComparisonToBusinessRuleIsEqual() {
-		String businessRuleString = "BR(CS(C(V(inventory)ComO(>)V(20)))A(order(V(20))))";
+		String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(>)CV(V(20))))A(AR(order)V(20)))";
 		BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
 		assertEquals(businessRuleString, businessRuleParsed.encode());
 	}
 
 	@Test
 	void parseBusinessRuleStringWithAndOperationComparisonToBusinessRuleIsEqual() {
-		String businessRuleString = "BR(CS(C(V(inventory)ComO(<)V(20))BoolO(==)CS(C(V(round)ComO(>)V(3))))A(order(V(20))))";
+		String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(<)CV(V(20)))BoolO(==)CS(C(CV(V(round))ComO(>)CV(V(3)))))A(AR(order)V(20)))";
 		BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
 		assertEquals(businessRuleString, businessRuleParsed.encode());
 	}
 
 	@Test
 	void parseBusinessRuleStringWithOrOperationComparisonToBusinessRuleIsEqual() {
-		String businessRuleString = "BR(CS(C(V(inventory)ComO(<)V(20))BoolO(||)CS(C(V(round)ComO(>)V(3))))A(order(V(20))))";
+		String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(<)CV(V(20)))BoolO(||)CS(C(CV(V(round))ComO(>)CV(V(3)))))A(AR(order)V(20)))";
 		BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
 		assertEquals(businessRuleString, businessRuleParsed.encode());
 	}
 
 	@Test
 	void parseBusinessRuleStringWithEqualsToAndIsNotEqualsToToBusinessRuleIsEqual() {
-		String businessRuleString = "BR(CS(C(V(inventory)ComO(==)V(inventory))BoolO(==)CS(C(V(round)ComO(!=)V(3))))A(order(V(20))))";
+		String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(==)CV(V(inventory)))BoolO(==)CS(C(CV(V(round))ComO(!=)CV(V(3)))))A(AR(order)V(20)))";
 		BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
 		assertEquals(businessRuleString, businessRuleParsed.encode());
 	}
 
 	@Test
 	void parseDefaultOrderBusinessRuleString() {
-		String businessRuleString = "BR(D()A(order(V(10))))";
+		String businessRuleString = "BR(D()A(AR(order)V(10)))";
 		BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
 		assertEquals(businessRuleString, businessRuleParsed.encode());
 	}
@@ -59,15 +59,15 @@ class BusinessRuleDecoderTest {
 	@Test
 	void parseBusinessRuleStringWithAddOperationBusinessRuleIsEqual() {
 		BusinessRule businessRule = (BusinessRule) new BusinessRule()
-				.addChild(new Comparison()
-						.addChild(new ComparisonValue().addChild(new Value().addValue("5")))
-						.addChild(new ComparisonOperator("equal"))
-						.addChild(new ComparisonValue().addChild(new Value().addValue("5"))))
-				.addChild(new Action()
-						.addChild(new ActionReference("order"))
-						.addChild(new AddOperation()
-								.addChild(new Value().addValue("10"))
-								.addChild(new Value().addValue("1"))));
+			.addChild(new Comparison()
+				.addChild(new ComparisonValue().addChild(new Value().addValue("5")))
+				.addChild(new ComparisonOperator("equal"))
+				.addChild(new ComparisonValue().addChild(new Value().addValue("5"))))
+			.addChild(new Action()
+				.addChild(new ActionReference("order"))
+				.addChild(new AddOperation()
+					.addChild(new Value().addValue("10"))
+					.addChild(new Value().addValue("1"))));
 
 		BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRule.encode());
 		assertEquals(businessRule.encode(), businessRuleParsed.encode());
