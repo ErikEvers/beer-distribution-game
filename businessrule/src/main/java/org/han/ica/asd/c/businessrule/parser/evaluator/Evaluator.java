@@ -34,8 +34,8 @@ public class Evaluator {
                 checkOnlyOneDefault(current, lineNumber, defaultCounter);
                 checkRoundIsComparedToInt(current, lineNumber);
             } catch (BusinessRuleException e) {
-                // Needs to be replaced by logger? Or something that gets it to the GUI.
-                e.printStackTrace();
+                // TODO: Needs to be replaced by logger? Or something that gets it to the GUI.
+                // e.printStackTrace();
             }
 
             deque.addAll(current.getChildren());
