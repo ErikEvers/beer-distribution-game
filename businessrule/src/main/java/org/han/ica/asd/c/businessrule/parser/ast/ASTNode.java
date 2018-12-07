@@ -8,6 +8,10 @@ public abstract class ASTNode {
         return this;
     }
 
+    public ASTNode addValue(String value) {
+        return this;
+    }
+
     public List<ASTNode> getChildren() {
         return new ArrayList<>();
     }

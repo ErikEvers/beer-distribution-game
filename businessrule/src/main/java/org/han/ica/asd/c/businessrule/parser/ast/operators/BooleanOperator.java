@@ -4,8 +4,15 @@ public class BooleanOperator extends Operator {
     private String prefix = "BoolO(";
     private String suffix = ")";
 
+    public BooleanOperator() {}
     public BooleanOperator(String operator) {
         this.operatorVal = findBooleanOperator(operator);
+    }
+
+	@Override
+    public BooleanOperator addValue(String value) {
+        operatorVal = value;
+        return this;
     }
 
     private String findBooleanOperator(String operator) {

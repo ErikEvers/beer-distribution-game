@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.*;
 
-public class CounterTest {
-    Counter counter = new Counter();
+class CounterTest {
+    private Counter counter = new Counter();
     @Test
     void testCounter_hashCode_True() {
         Counter testCounter1 = new Counter();

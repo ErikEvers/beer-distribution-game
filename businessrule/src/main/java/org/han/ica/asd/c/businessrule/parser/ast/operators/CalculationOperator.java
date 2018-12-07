@@ -4,8 +4,20 @@ public class CalculationOperator extends Operator {
     private String prefix = "CalO(";
     private String suffix = ")";
 
+    public CalculationOperator() {}
     public CalculationOperator(String operator) {
         this.operatorVal = operator;
+    }
+
+	@Override
+    public CalculationOperator addValue(String value) {
+        operatorVal = value;
+        return this;
+    }
+
+    @Override
+    public void encode(StringBuilder stringBuilder) {
+        stringBuilder.append(prefix).append(operatorVal).append(suffix);
     }
 
     @Override
@@ -16,10 +28,5 @@ public class CalculationOperator extends Operator {
     @Override
     public int hashCode() {
         return super.hashCode();
-    }
-
-    @Override
-    public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(prefix).append(operatorVal).append(suffix);
     }
 }
