@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,6 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
-import org.han.ica.asd.c.businessrule.parser.evaluator.BusinessRuleException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

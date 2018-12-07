@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 class ComparisonValueTest {
     private ComparisonValue comparisonValue = new ComparisonValue();

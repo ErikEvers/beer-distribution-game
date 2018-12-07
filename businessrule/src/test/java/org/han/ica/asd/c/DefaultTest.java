@@ -1,15 +1,10 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class DefaultTest {
     private Default aDefault = new Default();
