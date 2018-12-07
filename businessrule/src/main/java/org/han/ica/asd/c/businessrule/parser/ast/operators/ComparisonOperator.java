@@ -1,16 +1,13 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-
 import java.util.Objects;
 
-public class ComparisonOperator extends ASTNode {
+public class ComparisonOperator extends Operator {
     private String prefix = "ComO(";
     private String suffix = ")";
-    private String operator;
 
     public ComparisonOperator(String operator) {
-        this.operator = findComparisonOperator(operator);
+        this.operatorVal = findComparisonOperator(operator);
     }
 
     private String findComparisonOperator(String operator) {
@@ -26,24 +23,17 @@ public class ComparisonOperator extends ASTNode {
     }
 
     @Override
-    public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(prefix).append(operator).append(suffix);
-    }
-
-    @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        if (!super.equals(o))
-            return false;
-        ComparisonOperator comparisonOperator = (ComparisonOperator) o;
-        return Objects.equals(operator, comparisonOperator.operator);
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(operator);
+        return super.hashCode();
+    }
+
+    @Override
+    public void encode(StringBuilder stringBuilder) {
+        stringBuilder.append(prefix).append(operatorVal).append(suffix);
     }
 }
