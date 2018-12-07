@@ -11,6 +11,7 @@ import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.fail;
+import static org.mockito.Mockito.*;
 
 class EvaluatorTest {
     Evaluator evaluator = new Evaluator();
@@ -77,4 +78,10 @@ class EvaluatorTest {
             fail("Exception was thrown, no exception needed.");
         }
     }
+    /*@Test
+    void testCheckRoundIsComparedToInt_Called_checkSubTreeNotInt() throws BusinessRuleException {
+        Comparison comparison = mock(Comparison.class);
+
+        verify(comparison).getChildren();
+    }*/
 }

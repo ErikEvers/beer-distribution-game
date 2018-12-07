@@ -16,7 +16,11 @@ class SubstractOperationTest {
         subtractOperation.addChild(new CalculationOperator("-"));
         subtractOperation.addChild(new Value().addValue("4"));
 
-        String res = subtractOperation.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        subtractOperation.encode(stringBuilder);
+
+        String res = stringBuilder.toString();
 
         String exp = "Sub(V(20)CalO(-)V(4))";
 

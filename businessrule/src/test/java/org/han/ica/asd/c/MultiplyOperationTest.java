@@ -16,7 +16,11 @@ class MultiplyOperationTest {
         multiplyOperation.addChild(new CalculationOperator("*"));
         multiplyOperation.addChild(new Value().addValue("4"));
 
-        String res = multiplyOperation.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        multiplyOperation.encode(stringBuilder);
+
+        String res = stringBuilder.toString();
 
         String exp = "Mul(V(20)CalO(*)V(4))";
 

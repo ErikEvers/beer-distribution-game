@@ -16,7 +16,11 @@ class DivideOperationTest {
         divideOperation.addChild(new CalculationOperator("/"));
         divideOperation.addChild(new Value().addValue("4"));
 
-        String res = divideOperation.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        divideOperation.encode(stringBuilder);
+
+        String res = stringBuilder.toString();
 
         String exp = "Div(V(20)CalO(/)V(4))";
 

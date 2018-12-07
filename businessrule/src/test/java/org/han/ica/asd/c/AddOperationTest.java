@@ -16,7 +16,11 @@ class AddOperationTest {
         addOperation.addChild(new CalculationOperator("+"));
         addOperation.addChild(new Value().addValue("4"));
 
-        String res = addOperation.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        addOperation.encode(stringBuilder);
+
+        String res = stringBuilder.toString();
 
         String exp = "Add(V(20)CalO(+)V(4))";
 
