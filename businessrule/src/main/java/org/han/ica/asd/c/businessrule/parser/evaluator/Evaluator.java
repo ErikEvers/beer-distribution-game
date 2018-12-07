@@ -7,8 +7,11 @@ import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Evaluator {
+    private final static Logger LOGGER = Logger.getLogger(Logger.class.getName());
     private List<BusinessRule> businessRules;
 
     public void evaluate(List<BusinessRule> businessRules) {
@@ -34,7 +37,7 @@ public class Evaluator {
                 checkOnlyOneDefault(current, lineNumber, defaultCounter);
                 checkRoundIsComparedToInt(current, lineNumber);
             } catch (BusinessRuleException e) {
-
+                LOGGER.log(Level.SEVERE, e.toString());
             }
 
             deque.addAll(current.getChildren());

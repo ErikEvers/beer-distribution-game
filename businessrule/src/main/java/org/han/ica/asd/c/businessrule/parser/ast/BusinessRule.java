@@ -23,8 +23,13 @@ public class BusinessRule extends ASTNode {
 
     public String encode() {
         StringBuilder stringBuilder = new StringBuilder();
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        encode(stringBuilder);
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void encode(StringBuilder stringBuilder) {
+        super.encode(stringBuilder,getChildren(),prefix,suffix);
     }
 
     @Override

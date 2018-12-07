@@ -3,7 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ASTNode {
+public abstract class ASTNode {
     public ASTNode addChild(ASTNode child) {
         return this;
     }
@@ -22,9 +22,7 @@ public class ASTNode {
         stringBuilder.append(suffix);
     }
 
-    public void encode(StringBuilder stringBuilder) {
-
-    }
+    public abstract void encode(StringBuilder stringBuilder);
 
     @Override
     public boolean equals(Object o) {
