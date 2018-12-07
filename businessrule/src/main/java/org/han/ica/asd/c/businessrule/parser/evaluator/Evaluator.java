@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Evaluator {
-    private final static Logger LOGGER = Logger.getLogger(Logger.class.getName());
+    private static final  Logger LOGGER = Logger.getLogger(Logger.class.getName());
     private List<BusinessRule> businessRules;
 
     public void evaluate(List<BusinessRule> businessRules) {
