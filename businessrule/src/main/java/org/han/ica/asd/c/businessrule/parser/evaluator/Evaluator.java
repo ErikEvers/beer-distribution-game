@@ -7,6 +7,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ public class Evaluator {
                 checkOnlyOneDefault(current, lineNumber, defaultCounter);
                 checkRoundIsComparedToInt(current, lineNumber);
             } catch (BusinessRuleException e) {
-                LOGGER.log(Level.SEVERE, e.toString());
+                LOGGER.log(Level.SEVERE, e.toString(), e);
             }
 
             deque.addAll(current.getChildren());
