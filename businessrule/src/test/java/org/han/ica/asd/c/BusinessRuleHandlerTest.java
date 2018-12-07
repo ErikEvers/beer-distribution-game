@@ -35,10 +35,14 @@ class BusinessRuleHandlerTest {
 		BusinessRuleDecoder businessRuleDecoder = mock(BusinessRuleDecoder.class);
 		when(businessRuleDecoder.decodeBusinessRule(businessRule.encode())).thenReturn(businessRule);
 
-		Action expectedAction = (Action) businessRule.getChildren()
-			.get(1);
-		Action actualAction = new BusinessRuleHandler().evaluateBusinessRules(businessRule.encode(), new RoundData());
+		Action expectedAction = (Action) businessRule.getChildren().get(1);
+		StringBuilder expectedStringBuilder = new StringBuilder();
+		expectedAction.encode(expectedStringBuilder);
 
-		assertEquals(expectedAction, actualAction);
+		Action actualAction = new BusinessRuleHandler().evaluateBusinessRules(businessRule.encode(), new RoundData());
+		StringBuilder actualStringBuilder = new StringBuilder();
+		actualAction.encode(actualStringBuilder);
+
+		assertEquals(expectedStringBuilder.toString(), actualStringBuilder.toString());
 	}
 }

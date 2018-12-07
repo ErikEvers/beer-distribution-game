@@ -34,10 +34,10 @@ public class ParserPipeline {
 
         this.businessRulesParsed = listener.getBusinessRules();
         evaluate();
-        generate();
+        encodeBusinessRules();
     }
 
-    private void generate() {
+    private void encodeBusinessRules() {
         for (int i = 0; i < businessRulesInput.size(); i++) {
             businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).encode());
         }

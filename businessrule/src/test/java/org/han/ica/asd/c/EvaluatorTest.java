@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
@@ -9,6 +10,10 @@ import org.han.ica.asd.c.businessrule.parser.evaluator.BusinessRuleException;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.junit.jupiter.api.Test;
+import org.powermock.api.mockito.PowerMockito;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.*;
@@ -78,10 +83,15 @@ class EvaluatorTest {
             fail("Exception was thrown, no exception needed.");
         }
     }
-    /*@Test
-    void testCheckRoundIsComparedToInt_Called_checkSubTreeNotInt() throws BusinessRuleException {
-        Comparison comparison = mock(Comparison.class);
 
-        verify(comparison).getChildren();
-    }*/
+    @Test
+    void testEvaluate_Called_evaluate() throws Exception {
+        List<BusinessRule> list = new ArrayList<>();
+        list.add(Fixtures.RuleWithRound());
+
+        Evaluator spy = PowerMockito.spy(new Evaluator());
+
+        spy.evaluate(list);
+        PowerMockito.verifyPrivate(spy).invoke("evaluate",any());
+    }
 }

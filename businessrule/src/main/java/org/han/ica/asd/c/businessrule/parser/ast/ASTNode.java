@@ -26,9 +26,7 @@ public abstract class ASTNode {
         stringBuilder.append(suffix);
     }
 
-    public void encode(StringBuilder stringBuilder) {
-
-    }
+    public abstract void encode(StringBuilder stringBuilder);
 
     @Override
     public boolean equals(Object o) {

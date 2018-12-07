@@ -8,11 +8,9 @@ import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.RoundData;
 
 public class BusinessRuleHandler implements IBusinessRules{
-
     public void programAgent(String agentName, String businessRules){
         ParserPipeline parserPipeline = new ParserPipeline();
-        parserPipeline.parseString("if inventory is 20 then order 40");
-        // send parsed businessrules to IBusinessRulesStore
+        parserPipeline.parseString(businessRules);
     }
 
     public Action evaluateBusinessRules(String businessRules, RoundData roundData){

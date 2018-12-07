@@ -1,21 +1,16 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-
-import java.util.Objects;
-
-public class BooleanOperator extends ASTNode {
+public class BooleanOperator extends Operator {
     private String prefix = "BoolO(";
     private String suffix = ")";
-    private String operator;
 
     public BooleanOperator(String operator) {
-        this.operator = findBooleanOperator(operator);
+        this.operatorVal = findBooleanOperator(operator);
     }
 
     @Override
     public BooleanOperator addValue(String value) {
-        operator = value;
+        operatorVal = value;
         return this;
     }
 
@@ -28,24 +23,17 @@ public class BooleanOperator extends ASTNode {
     }
 
     @Override
-    public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(prefix).append(operator).append(suffix);
-    }
-
-    @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        if (!super.equals(o))
-            return false;
-        BooleanOperator booleanOperator = (BooleanOperator) o;
-        return Objects.equals(operator, booleanOperator.operator);
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(operator);
+        return super.hashCode();
+    }
+
+    @Override
+    public void encode(StringBuilder stringBuilder) {
+        stringBuilder.append(prefix).append(operatorVal).append(suffix);
     }
 }

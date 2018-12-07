@@ -11,14 +11,13 @@ FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer' | 'below' | 'abo
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';
 INT_VALUE: [0-9]+;
 PERCENTAGE: [0-9]+'%';
+LOWEST: ('lowest' | 'smallest');
+HIGHEST: ('highest' | 'biggest');
 
 NOTEQUAL: '!=' | '<>' | ('is ' | 'are ')? 'not equal';
 GREATER: '>' | ('is ' | 'are ')?  ('greater' | 'higher');
 LESS: '<' | ('is ' | 'are ')?  ('less' | 'lower');
 EQUAL: '=' | ('is ' | 'are ')? 'equal' | 'is' | 'are';
-
-LOWEST: ('is ' | 'are ')? 'the '? ('lowest' | 'smallest');
-HIGHEST: ('is ' | 'are ')? 'the '? ('highest' | 'biggest');
 
 BOOLEAN_OPERATOR: 'and' | 'or';
 PLUS: 'plus' | '+';
@@ -38,6 +37,6 @@ comparison: comparison_value comparison_operator comparison_value;
 comparison_value: operation | ROUND;
 operation: value #defaultOperation | operation PLUS operation #plusOperation | operation MIN operation #minOperation | priority_operation #priorityOperation;
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
-value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY;
+value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | FACILITY | (LOWEST | HIGHEST);
 comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
 action: ACTION operation;

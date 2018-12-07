@@ -1,10 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-
-import java.util.Objects;
-
-public class CalculationOperator extends ASTNode {
+public class CalculationOperator extends Operator {
     private String prefix = "CalO(";
     private String suffix = ")";
     private String operator;
@@ -22,22 +18,16 @@ public class CalculationOperator extends ASTNode {
     @Override
     public void encode(StringBuilder stringBuilder) {
         stringBuilder.append(prefix).append(operator).append(suffix);
+        this.operatorVal = operator;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        if (!super.equals(o))
-            return false;
-        CalculationOperator calculationOperator = (CalculationOperator) o;
-        return Objects.equals(operator, calculationOperator.operator);
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(operator);
+        return super.hashCode();
     }
 }
