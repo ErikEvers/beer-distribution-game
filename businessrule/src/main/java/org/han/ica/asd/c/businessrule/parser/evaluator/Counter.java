@@ -15,7 +15,7 @@ public class Counter {
         this.countedValue++;
     }
 
-    int getCountedValue() {
+    public int getCountedValue() {
         return this.countedValue;
     }
 

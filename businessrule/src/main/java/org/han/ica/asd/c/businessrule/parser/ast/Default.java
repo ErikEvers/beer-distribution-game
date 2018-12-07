@@ -1,8 +1,11 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import java.util.Objects;
+
 public class Default extends Condition {
     private String prefix = "D()";
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         stringBuilder.append(prefix);
     }
@@ -14,6 +17,6 @@ public class Default extends Condition {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(prefix);
     }
 }
