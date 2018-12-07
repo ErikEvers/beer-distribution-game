@@ -10,6 +10,7 @@ public class DivideOperation extends Operation {
         super.calculationOperator = new CalculationOperator(OperationType.DIV.getOperation());
     }
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder, prefix, suffix);
     }

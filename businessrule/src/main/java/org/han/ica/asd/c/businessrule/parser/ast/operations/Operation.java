@@ -4,13 +4,14 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class Operation extends OperationValue {
-    OperationValue left;
+    private OperationValue left;
     CalculationOperator calculationOperator;
-    OperationValue right;
+    private OperationValue right;
 
     @Override
     public ASTNode addChild(ASTNode child) {
@@ -31,8 +32,7 @@ public abstract class Operation extends OperationValue {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
         if (calculationOperator != null && right != null) {
-            list.add(calculationOperator);
-            list.add(right);
+            Collections.addAll(list,calculationOperator,right);
         }
         return list;
     }

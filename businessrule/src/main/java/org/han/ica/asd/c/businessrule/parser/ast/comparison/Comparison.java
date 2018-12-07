@@ -4,6 +4,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public class Comparison extends Expression {
     private ComparisonOperator comparisonOperator;
     private ComparisonValue right;
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder,getChildren(),prefix,suffix);
     }
@@ -35,11 +37,7 @@ public class Comparison extends Expression {
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
-        list.add(left);
-        if (comparisonOperator != null && right != null) {
-            list.add(comparisonOperator);
-            list.add(right);
-        }
+        Collections.addAll(list,left,comparisonOperator,right);
         return list;
     }
 

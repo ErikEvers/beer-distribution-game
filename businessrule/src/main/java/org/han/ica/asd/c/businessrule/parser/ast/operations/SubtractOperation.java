@@ -10,6 +10,7 @@ public class SubtractOperation extends Operation {
         super.calculationOperator = new CalculationOperator(OperationType.SUB.getOperation());
     }
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder, prefix, suffix);
     }

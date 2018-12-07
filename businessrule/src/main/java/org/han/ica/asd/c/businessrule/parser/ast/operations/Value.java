@@ -16,6 +16,7 @@ public class Value extends OperationValue {
         return this;
     }
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         stringBuilder.append(prefix).append(value).append(suffix);
     }

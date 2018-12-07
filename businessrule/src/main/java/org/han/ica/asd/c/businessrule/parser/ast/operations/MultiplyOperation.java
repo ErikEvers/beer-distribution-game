@@ -10,6 +10,7 @@ public class MultiplyOperation extends Operation {
         super.calculationOperator = new CalculationOperator(OperationType.MUL.getOperation());
     }
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder, prefix, suffix);
     }

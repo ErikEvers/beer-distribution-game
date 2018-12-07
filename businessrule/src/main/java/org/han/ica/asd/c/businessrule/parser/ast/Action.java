@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,8 +32,7 @@ public class Action extends ASTNode {
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
-        list.add(actionName);
-        list.add(operation);
+        Collections.addAll(list,actionName,operation);
         return list;
     }
 

@@ -13,6 +13,7 @@ public class CalculationOperator extends ASTNode {
         this.operator = operator;
     }
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         stringBuilder.append(prefix).append(operator).append(suffix);
     }

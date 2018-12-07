@@ -16,6 +16,7 @@ public class ComparisonValue extends ASTNode {
         return this;
     }
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder,getChildren(),"","");
     }

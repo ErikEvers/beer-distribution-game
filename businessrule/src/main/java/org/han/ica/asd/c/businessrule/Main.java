@@ -6,8 +6,7 @@ import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 public class Main {
     public static void main(String[] args) {
         ParserPipeline parserPipeline = new ParserPipeline();
-        parserPipeline.parseString("if round is inventory then order 40\n" +
-                "default order 10");
+        parserPipeline.parseString("if inventory is 20 then order 40");
 
 //         For testing purposes
         System.out.println("---- The given input ----");

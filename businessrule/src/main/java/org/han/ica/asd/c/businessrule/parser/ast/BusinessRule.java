@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,8 +30,7 @@ public class BusinessRule extends ASTNode {
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
-        list.add(condition);
-        list.add(action);
+        Collections.addAll(list,condition,action);
         return list;
     }
 

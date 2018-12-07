@@ -4,6 +4,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +29,7 @@ public class ComparisonStatement extends Expression {
         return this;
     }
 
+    @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder,getChildren(),prefix,suffix);
     }
@@ -37,8 +39,7 @@ public class ComparisonStatement extends Expression {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
         if (booleanOperator != null && right != null) {
-            list.add(booleanOperator);
-            list.add(right);
+            Collections.addAll(list,booleanOperator,right);
         }
         return list;
     }
