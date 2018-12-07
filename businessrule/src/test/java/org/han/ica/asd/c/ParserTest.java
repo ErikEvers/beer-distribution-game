@@ -1,7 +1,7 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.PrototypeLexer;
-import org.han.ica.asd.c.businessrule.PrototypeParser;
+import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
+import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.junit.jupiter.api.Test;
@@ -16,10 +16,10 @@ class ParserTest {
 
     BusinessRule parseString(String input) {
         CharStream inputStream = CharStreams.fromString(input);
-        PrototypeLexer lexer = new PrototypeLexer(inputStream);
+        BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-        PrototypeParser parser = new PrototypeParser(tokens);
+        BusinessRuleParser parser = new BusinessRuleParser(tokens);
         parser.setErrorHandler(new BailErrorStrategy());
 
         //Setup collection of the parse error messages
