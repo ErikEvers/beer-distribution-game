@@ -9,6 +9,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,7 @@ class BusinessRuleHandlerTest {
 					.addChild(new ActionReference("order"))
 					.addChild(new AddOperation()
 							.addChild(new Value().addValue("10"))
+							.addChild(new CalculationOperator("+"))
 							.addChild(new Value().addValue("1"))));
 
 		BusinessRuleDecoder businessRuleDecoder = mock(BusinessRuleDecoder.class);
@@ -42,6 +44,8 @@ class BusinessRuleHandlerTest {
 		Action actualAction = new BusinessRuleHandler().evaluateBusinessRules(businessRule.encode(), new RoundData());
 		StringBuilder actualStringBuilder = new StringBuilder();
 		actualAction.encode(actualStringBuilder);
+
+		System.out.println(actualStringBuilder.toString());
 
 		assertEquals(expectedStringBuilder.toString(), actualStringBuilder.toString());
 	}

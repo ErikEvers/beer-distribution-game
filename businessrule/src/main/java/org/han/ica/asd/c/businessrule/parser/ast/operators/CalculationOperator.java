@@ -4,9 +4,7 @@ public class CalculationOperator extends Operator {
     private String prefix = "CalO(";
     private String suffix = ")";
 
-    public CalculationOperator() {
-        this.operatorVal = "";
-    }
+    public CalculationOperator() {}
     public CalculationOperator(String operator) {
         this.operatorVal = operator;
     }

@@ -23,10 +23,7 @@ public class BusinessRuleDecoder {
 		Deque<ASTNode> astNodeStack = new LinkedList<>();
 		astNodeStack.push(businessRule);
 
-		// Skip first iteration because it's always the object BusinessRule
 		String[] currentIteration = nextIteration(businessRuleString);
-
-		// When there is an identifier left to parse
 		while (currentIteration[REMAINING_STRING].length() > 1) {
 			currentIteration = processIteration(astNodeStack, currentIteration);
 		}
@@ -35,12 +32,8 @@ public class BusinessRuleDecoder {
 	}
 
 	private String[] processIteration(Deque<ASTNode> astNodeDeque, String[] iteration) {
-		// Check if identifier needs to be pushed or popped
-		String previousIterationRemainingString = iteration[REMAINING_STRING];
 		String[] currentIteration = nextIteration(iteration[REMAINING_STRING]);
 
-		// Create ASTNode of the identifier it's given, if the identifier isn't a ASTNode add it as value to
-		// the ASTNode on the top of the deque(stack)
 		ASTNode node = null;
 		if (!currentIteration[CURRENT_TOKEN].isEmpty()) {
 			node = new BusinessRuleFactory().create(currentIteration[CURRENT_TOKEN]);
@@ -54,8 +47,7 @@ public class BusinessRuleDecoder {
 			}
 		}
 
-		// Depending on a opening and closing parentheses it has to pop or push the node
-		if (node != null && popOrPush(previousIterationRemainingString)) {
+		if (node != null && popOrPush(iteration[REMAINING_STRING])) {
 			astNodeDeque.push(node);
 		} else {
 			astNodeDeque.pop();

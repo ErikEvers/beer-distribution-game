@@ -4,9 +4,7 @@ public class ComparisonOperator extends Operator {
     private String prefix = "ComO(";
     private String suffix = ")";
 
-    public ComparisonOperator() {
-        this.operatorVal = "";
-    }
+    public ComparisonOperator() {}
     public ComparisonOperator(String operator) {
         this.operatorVal = findComparisonOperator(operator);
     }
