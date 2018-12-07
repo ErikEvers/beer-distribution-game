@@ -1,7 +1,6 @@
 package org.han.ica.asd.c;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
-import org.han.ica.asd.c.stubs.ICommunicationStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,8 +17,9 @@ public class GameLogicTests {
 
     @BeforeEach
     public void setup() {
-        communication = mock(ICommunicationStub.class);
-        gameLogic = new GameLogic(communication);
+        communication = mock(ICommunication.class);
+        persistence = mock(IPersistence.class);
+        gameLogic = new GameLogic(communication, persistence);
     }
 
     @Test
