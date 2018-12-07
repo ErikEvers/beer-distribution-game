@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
+import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.han.ica.asd.c.stubs.ICommunicationStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
