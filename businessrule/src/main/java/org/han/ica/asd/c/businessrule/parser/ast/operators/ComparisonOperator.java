@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import java.util.Objects;
-
 public class ComparisonOperator extends Operator {
     private String prefix = "ComO(";
     private String suffix = ")";

@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.evaluator;
 
-import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-
 import java.util.Objects;
 
 public class Counter {

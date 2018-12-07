@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import java.util.Objects;
-
 public class BooleanOperator extends Operator {
     private String prefix = "BoolO(";
     private String suffix = ")";

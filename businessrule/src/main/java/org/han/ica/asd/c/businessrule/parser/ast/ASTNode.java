@@ -3,7 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ASTNode {
+public class ASTNode {
     public ASTNode addChild(ASTNode child) {
         return this;
     }

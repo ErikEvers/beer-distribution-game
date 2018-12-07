@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
-import java.util.Objects;
-
 public class CalculationOperator extends Operator {
     private String prefix = "CalO(";
     private String suffix = ")";

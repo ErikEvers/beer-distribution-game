@@ -1,16 +1,16 @@
 package org.han.ica.asd.c.businessrule.parser.evaluator;
 
 public class BusinessRuleException extends Exception {
-    private final String ERRORMESSAGE;
-    private final int LINENUMBER;
+    private final String errorMessage;
+    private final int lineNumber;
 
     BusinessRuleException(String errorMessage, int lineNumber) {
-        this.ERRORMESSAGE = errorMessage;
-        this.LINENUMBER = lineNumber;
+        this.errorMessage = errorMessage;
+        this.lineNumber = lineNumber;
     }
 
     @Override
     public String toString() {
-        return ("BusinessRuleException occurred on line " + LINENUMBER + ": " + ERRORMESSAGE);
+        return ("BusinessRuleException occurred on line " + lineNumber + ": " + errorMessage);
     }
 }
