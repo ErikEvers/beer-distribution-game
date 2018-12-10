@@ -20,6 +20,7 @@ public class ParserPipeline {
     private Map<String, String> businessRulesMap = new HashMap<>();
 
     public void parseString(String input) {
+        input =  input.replaceAll("(?m)^[ \t]*\r?\n", "");
         CharStream inputStream = CharStreams.fromString(input);
         businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
         BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
@@ -38,7 +39,7 @@ public class ParserPipeline {
     }
 
     private void encodeBusinessRules() {
-        for (int i = 0; i < businessRulesInput.size(); i++) {
+        for (int i = 0; i < businessRulesParsed.size(); i++) {
             businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).encode());
         }
     }

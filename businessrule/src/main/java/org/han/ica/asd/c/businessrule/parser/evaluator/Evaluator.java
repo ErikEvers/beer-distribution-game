@@ -12,10 +12,10 @@ import java.util.logging.Logger;
 
 public class Evaluator {
     private static final  Logger LOGGER = Logger.getLogger(Logger.class.getName());
-    private List<BusinessRule> businessRules;
+    private List<BusinessRule> businessRules = new ArrayList<>();
 
     public void evaluate(List<BusinessRule> businessRules) {
-        this.businessRules = businessRules;
+        this.businessRules.addAll(businessRules);
         evaluate();
     }
 
