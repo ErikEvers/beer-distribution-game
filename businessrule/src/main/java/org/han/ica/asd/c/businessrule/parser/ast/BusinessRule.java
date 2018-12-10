@@ -1,5 +1,9 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,15 +31,33 @@ public class BusinessRule extends ASTNode {
         return stringBuilder.toString();
     }
 
+    public void evaluateBusinessRule() {
+        transformChild(this);
+    }
+
+    private void transformChild(ASTNode node) {
+
+        if (node instanceof ComparisonValue) {
+            ComparisonValue comparisonValue = (ComparisonValue) node;
+            OperationValue operationValue = comparisonValue.getOperationValue();
+            if (operationValue instanceof Operation) {
+                Operation operation = (Operation) operationValue;
+                comparisonValue.setOperationValue(operation.resolveOperation());
+            }
+        }
+
+        node.getChildren().forEach(this::transformChild);
+    }
+
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
 
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
-        Collections.addAll(list,condition,action);
+        Collections.addAll(list, condition, action);
         return list;
     }
 

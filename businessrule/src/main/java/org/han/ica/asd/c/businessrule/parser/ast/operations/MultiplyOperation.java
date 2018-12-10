@@ -14,4 +14,9 @@ public class MultiplyOperation extends Operation {
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder, prefix, suffix);
     }
+
+    @Override
+    public Value executeOperation(int left, int right) {
+        return new Value(left * right);
+    }
 }

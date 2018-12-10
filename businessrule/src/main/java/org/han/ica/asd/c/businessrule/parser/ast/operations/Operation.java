@@ -32,7 +32,7 @@ public abstract class Operation extends OperationValue {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
         if (calculationOperator != null && right != null) {
-            Collections.addAll(list,calculationOperator,right);
+            Collections.addAll(list, calculationOperator, right);
         }
         return list;
     }
@@ -57,6 +57,23 @@ public abstract class Operation extends OperationValue {
     }
 
     public void encode(StringBuilder stringBuilder, String prefix, String suffix) {
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
+
+    public OperationValue resolveOperation() {
+        if (this.left instanceof Operation) {
+            this.left = ((Operation) this.left).resolveOperation();
+        }
+
+        if (this.right instanceof Operation) {
+            this.right = ((Operation) this.right).resolveOperation();
+        }
+
+        Value leftValue = (Value) this.left;
+        Value rightValue = (Value) this.right;
+
+        return this.executeOperation(Integer.parseInt(leftValue.getValue()), Integer.parseInt(rightValue.getValue()));
+    }
+
+    public abstract Value executeOperation(int left, int right);
 }

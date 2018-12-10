@@ -12,6 +12,14 @@ public class ComparisonValue extends ASTNode {
     private String suffix = ")";
     private OperationValue operationValue;
 
+    public OperationValue getOperationValue() {
+        return this.operationValue;
+    }
+
+    public void setOperationValue(OperationValue operationValue) {
+        this.operationValue = operationValue;
+    }
+
     @Override
     public ASTNode addChild(ASTNode child) {
         operationValue = (OperationValue) child;
@@ -26,7 +34,7 @@ public class ComparisonValue extends ASTNode {
 
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
 
     @Override

@@ -7,6 +7,13 @@ public class Value extends OperationValue {
     private String suffix = ")";
     private String value;
 
+    public Value() {
+    }
+
+    public Value(int value) {
+        this.value = Integer.toString(value);
+    }
+
     @Override
     public Value addValue(String value) {
         if (this.value == null) {
