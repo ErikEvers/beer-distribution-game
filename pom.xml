@@ -15,6 +15,7 @@
     </properties>
 
     <modules>
+        <module>model</module>
         <module>agent</module>
         <module>businessrule</module>
         <module>communication</module>
@@ -32,7 +33,6 @@
         <module>gui_replay_game</module>
         <module>persistence</module>
     </modules>
-
 
     <dependencies>
         <dependency>
@@ -63,6 +63,18 @@
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-runner</artifactId>
             <version>1.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.inject/guice -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
