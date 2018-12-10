@@ -7,29 +7,29 @@ package org.han.ica.asd.c.gameleader.componentInterfaces;
 public interface IPersistence {
 
     /**
-     * Store the actions of a player in a specific round.
+     * Store the actions of a facility in a specific round.
      * @param data, the info to be saved.
      */
-    public void savePlayerTurn(PlayerTurn data);
+    public void savePlayerTurn(FacilityTurnModel data);
 
     /**
-     * Retrieve the data of a players turn.
+     * Retrieve the data of a turn of a facility.
      * @param roundId, the identifier of the turn to retrieve.
-     * @param playerId, the identifier of the player of which the round actions are to be retrieved.
-     * @return the round data for that player in that round.
+     * @param facilityId, the identifier of the facility of which the round actions are to be retrieved.
+     * @return the round data for that facility in that round.
      */
-    public PlayerTurn fetchPlayerTurn(int roundId, String playerId);
+    public FacilityTurnModel fetchPlayerTurn(int roundId, int facilityId);
 
     /**
-     * Store the actions of the game up until a specific round.
+     * Store the actions of a specific round.
      * @param data, the info to be saved.
      */
     public void saveRoundData(RoundData data);
 
     /**
-     * The data of the game up until a specific round gets fetched by it's id.
+     * The data of a specific round gets fetched by its id.
      * @param roundId, the id of the round that has to be fetched.
-     * @return the game data at that round.
+     * @return the round data at that round.
      */
     public RoundData fetchRoundData(int roundId);
 }
