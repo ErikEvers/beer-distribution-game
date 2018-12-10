@@ -142,6 +142,36 @@ public class EvaluateBusinessRuleTest {
     }
 
     @Test
+    public void testResolvingDivideOperationWithRoundedResult() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
+                        .addChild(new ComparisonOperator("is"))
+                        .addChild(new ComparisonValue().addChild(new DivideOperation()
+                                .addChild(new Value().addValue("17"))
+                                .addChild(new CalculationOperator("/"))
+                                .addChild(new Value().addValue("2"))))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
+                        .addChild(new ComparisonOperator("is"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("8")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertTrue(businessRuleBefore.equals(businessRuleAfter));
+    }
+
+    @Test
     public void testResolvingMultiplyOperation() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()

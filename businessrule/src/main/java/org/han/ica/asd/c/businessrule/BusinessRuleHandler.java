@@ -23,10 +23,4 @@ public class BusinessRuleHandler implements IBusinessRules {
         return (Action) businessRule.getChildren()
                 .get(1);
     }
-
-    public static void main(String[] args) {
-        BusinessRuleHandler handler = new BusinessRuleHandler();
-        handler.evaluateBusinessRules("BR(CS(C(CV(Add(V(20)CalO(+)V(3)))ComO(>)CV(Add(V(10)CalO(+)V(1)))))A(AR(order)V(10)))", null);
-
-    }
 }
