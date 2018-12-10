@@ -1,5 +1,7 @@
 package org.han.ica.asd.c;
+import org.han.ica.asd.c.domain.Facility;
 import org.han.ica.asd.c.domain.Order;
+import org.han.ica.asd.c.domain.PlayerRoundData;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,5 +39,14 @@ public class GameLogicTests {
         gameLogic.placeOrder(4);
         verify(persistence, times(1)).saveOrder(givenOrder.capture());
         assertEquals(4, givenOrder.getValue().getAmount());
+    }
+
+    @Test
+    public void getRoundDataFromFacilityCallsPersistence() {
+        Facility facility = new Facility(1, "");
+        gameLogic.getRoundDataFromFacility(facility);
+        ArgumentCaptor<Facility> givenFacility = ArgumentCaptor.forClass(Facility.class);
+        verify(persistence, times(1)).getRoundData(givenFacility.capture());
+        assertEquals(facility, givenFacility.getValue());
     }
 }
