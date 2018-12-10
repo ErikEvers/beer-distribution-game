@@ -4,7 +4,8 @@ grammar BusinessRule;
 IF: 'if' | 'If';
 THEN: 'then';
 DEFAULT: 'default' | 'Default';
-ACTION: 'order' | 'deliver';
+ORDER: 'order';
+DELIVER: 'deliver';
 ROUND : 'round';
 
 FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer' | 'below' | 'above';
@@ -37,6 +38,6 @@ comparison: comparison_value comparison_operator comparison_value;
 comparison_value: operation | ROUND;
 operation: value #defaultOperation | operation PLUS operation #plusOperation | operation MIN operation #minOperation | priority_operation #priorityOperation;
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
-value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | FACILITY | (LOWEST | HIGHEST);
+value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | (LOWEST | HIGHEST);
 comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
-action: ACTION operation;
+action: ORDER operation | DELIVER;

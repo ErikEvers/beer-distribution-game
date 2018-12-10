@@ -8,6 +8,12 @@ public class Value extends OperationValue {
     private String value;
 
     public Value addValue(String value) {
+        if(value.equals("smallest") || value.equals("lowest")){
+            value = "lowest";
+        } else if (value.equals("biggest") || value.equals("highest")){
+            value = "highest";
+        }
+
         if (this.value == null) {
             this.value = value;
         } else {
