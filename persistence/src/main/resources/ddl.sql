@@ -76,6 +76,9 @@ CREATE TABLE FacilityTurn (
   GameId varchar(36) NOT NULL,
   Stock smallint NOT NULL,
   RemainingBudget smallint NOT NULL,
+  OrderAmount int NOT NULL,
+  OpenOrderAmount int NOT NULL,
+  OutgoingGoodsAmount int NOT NULL,
   CONSTRAINT PK_FacilityTurn PRIMARY KEY (RoundId, FacilityIdOrder, GameId, FacilityIdDeliver),
   CONSTRAINT FK_FacilityTurn_Facility FOREIGN KEY (FacilityIdOrder, FacilityIdDeliver, GameId) REFERENCES FacilityLinkedTo(FacilityIdOrder, FacilityIdDeliver, GameId),
   CONSTRAINT FK_FacilityTurn_Round FOREIGN KEY (RoundId) REFERENCES Round(RoundId)
@@ -120,36 +123,6 @@ CREATE TABLE FacilityTurn_GameBusinessRules (
   CONSTRAINT PK_FacilityTurn_GameBusinessRules PRIMARY KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId, GameAgentName, GameBusinessRule),
   CONSTRAINT FK_FacilityTurn_GameBusinessRules_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule),
   CONSTRAINT FK_FacilityTurn_GameBusinessRules_FacilityTurn FOREIGN KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId) REFERENCES FacilityTurn(RoundId, FacilityIdDeliver, FacilityIdOrder, GameId)
-);
-
-CREATE TABLE 'Order' (
-  GameId varchar(36) NOT NULL,
-  FacilityIdOrder smallint NOT NULL,
-  RoundId smallint NOT NULL,
-  FacilityIdDeliver smallint NOT NULL,
-  OrderAmount smallint NOT NULL,
-  CONSTRAINT PK_Order PRIMARY KEY (GameId, FacilityIdOrder, RoundId, FacilityIdDeliver),
-  CONSTRAINT FK_Order_FacilityTurn  FOREIGN KEY (RoundId, GameId, FacilityIdOrder, FacilityIdDeliver) REFERENCES FacilityTurn(RoundId, GameId, FacilityIdOrder, FacilityIdDeliver)
-);
-
-CREATE TABLE OpenOrder (
-  GameId varchar(36) NOT NULL,
-  FacilityIdOrder smallint NOT NULL,
-  RoundId smallint NOT NULL,
-  FacilityIdDeliver smallint NOT NULL,
-  OpenOrderAmount smallint NOT NULL,
-  CONSTRAINT PK_OpenOrder PRIMARY KEY (GameId, FacilityIdOrder, FacilityIdDeliver, RoundId),
-  CONSTRAINT FK_OpenOrder_FacilityTurn FOREIGN KEY (RoundId, GameId, FacilityIdOrder, FacilityIdDeliver) REFERENCES FacilityTurn(RoundId, GameId, FacilityIdOrder, FacilityIdDeliver)
-);
-
-CREATE TABLE OutgoingGoods (
-  GameId varchar(36) NOT NULL,
-  FacilityIdOrder smallint NOT NULL,
-  RoundId smallint NOT NULL,
-  FacilityIdDeliver smallint NOT NULL,
-  OutgoingGoodsAmount smallint NOT NULL,
-  CONSTRAINT PK_OutgoingGoods PRIMARY KEY (GameId, FacilityIdOrder, FacilityIdDeliver, RoundId),
-  CONSTRAINT FK_OutgoingGoods_FacilityTurn FOREIGN KEY (RoundId, GameId, FacilityIdOrder, FacilityIdDeliver) REFERENCES FacilityTurn(RoundId, GameId, FacilityIdOrder, FacilityIdDeliver)
 );
 
 CREATE TABLE GameBusinessRules (
