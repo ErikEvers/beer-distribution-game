@@ -19,4 +19,9 @@ public class Default extends Condition {
     public int hashCode() {
         return Objects.hash(prefix);
     }
+
+    @Override
+    public BooleanLiteral resolveCondition() {
+        return new BooleanLiteral(true);
+    }
 }

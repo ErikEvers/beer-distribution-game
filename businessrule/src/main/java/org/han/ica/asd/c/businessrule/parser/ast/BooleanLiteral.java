@@ -31,4 +31,9 @@ public class BooleanLiteral extends Expression {
         BooleanLiteral booleanLiteralObject = (BooleanLiteral) o;
         return Objects.equals(this.value, booleanLiteralObject.value);
     }
+
+    @Override
+    public BooleanLiteral resolveCondition() {
+        return this;
+    }
 }

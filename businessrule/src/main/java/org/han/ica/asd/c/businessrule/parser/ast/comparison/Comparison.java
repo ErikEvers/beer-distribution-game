@@ -61,7 +61,8 @@ public class Comparison extends Expression {
         return Objects.hash(left, comparisonOperator, right);
     }
 
-    public BooleanLiteral resolveComparison() {
+    @Override
+    public BooleanLiteral resolveCondition() {
         return new BooleanLiteral(true);
     }
 }

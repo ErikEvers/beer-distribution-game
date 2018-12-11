@@ -64,42 +64,19 @@ public class ComparisonStatement extends Expression {
         return Objects.hash(left, booleanOperator, right);
     }
 
-    public BooleanLiteral resolveComparisonStatement() {
-        boolean result = false;
-
-        if (this.left instanceof ComparisonStatement) {
-            this.left = ((ComparisonStatement) this.left).resolveComparisonStatement();
-        } else if (this.left instanceof Comparison) {
-            this.left = ((Comparison) this.left).resolveComparison();
-        }
-
-        if (this.right instanceof ComparisonStatement) {
-            this.right = ((ComparisonStatement) this.right).resolveComparisonStatement();
-        } else if (this.right instanceof Comparison) {
-            this.right = ((Comparison) this.right).resolveComparison();
-        }
-
+    @Override
+    public BooleanLiteral resolveCondition() {
         if (this.booleanOperator != null) {
-            if (this.left instanceof BooleanLiteral && this.right instanceof BooleanLiteral) {
-                BooleanLiteral booleanLiteralLeft = (BooleanLiteral) this.left;
-                BooleanLiteral booleanLiteralRight = (BooleanLiteral) this.right;
-
-                switch (booleanOperator.getValue()) {
-                    case AND:
-                        result = booleanLiteralLeft.getValue() && booleanLiteralRight.getValue();
-                        break;
-                    case OR:
-                        result = booleanLiteralLeft.getValue() || booleanLiteralRight.getValue();
-                        break;
-                    default:
-                        break;
-                }
+            switch(booleanOperator.getValue()){
+                case AND:
+                    return new BooleanLiteral(this.left.resolveCondition().getValue() && this.right.resolveCondition().getValue());
+                case OR:
+                    return new BooleanLiteral(this.left.resolveCondition().getValue() || this.right.resolveCondition().getValue());
             }
         } else {
-            BooleanLiteral booleanLiteral = (BooleanLiteral) this.left;
-            result = booleanLiteral.getValue();
+            return this.left.resolveCondition();
         }
 
-        return new BooleanLiteral(result);
+        return null;
     }
 }

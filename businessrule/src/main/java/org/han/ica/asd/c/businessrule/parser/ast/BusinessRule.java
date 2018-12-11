@@ -46,12 +46,7 @@ public class BusinessRule extends ASTNode {
             }
         } else if (node instanceof BusinessRule) {
             BusinessRule businessRule = (BusinessRule) node;
-            if (businessRule.condition instanceof ComparisonStatement) {
-                ComparisonStatement comparisonStatement = (ComparisonStatement) businessRule.condition;
-                businessRule.condition = comparisonStatement.resolveComparisonStatement();
-            } else if (businessRule.condition instanceof Default) {
-                businessRule.condition = new BooleanLiteral(true);
-            }
+            businessRule.condition = businessRule.condition.resolveCondition();
         }
 
         node.getChildren().forEach(this::transformChild);
