@@ -49,4 +49,9 @@ public class GameLogicTests {
         verify(persistence, times(1)).getRoundData(givenFacility.capture());
         assertEquals(facility, givenFacility.getValue());
     }
+
+    @Test(expected = FacilityNotFoundException.class)
+    public void getRoundDataFromFacilityThrowsWhenFacilityIsNull() {
+        gameLogic.getRoundDataFromFacility(null);
+    }
 }
