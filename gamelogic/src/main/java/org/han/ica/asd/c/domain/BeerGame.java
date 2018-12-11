@@ -1,4 +1,4 @@
 package org.han.ica.asd.c.domain;
 
-public class BeerGameModel {
+public class BeerGame {
 }
