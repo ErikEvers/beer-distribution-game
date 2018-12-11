@@ -1,24 +1,20 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.ComponentInterfaces.IGameLeader;
+import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.Round;
 
 public class GameLeader implements IGameLeader {
+    public Round currentRoundData;
     private TurnHandler turnHandler;
 
-    @Override
-    public void receiveFacilityTurn(FacilityTurnModel turnInformation) {
+
+    public void turnDataReceived(FacilityTurn turnInformation) {
         turnHandler.processFacilityTurn(turnInformation);
     }
 
-    @Override
-    public void startGame(int port) {
+    public void playerDisconnected(String playerId) {
 
     }
-
-    @Override
-    public void playerLeft(String PlayerId) {
-
-    }
-
 
 }

@@ -1,5 +1,9 @@
 package org.han.ica.asd.c.model;
 
+import org.han.ica.asd.c.OpenOrder;
+import org.han.ica.asd.c.Order;
+import org.han.ica.asd.c.OutgoingGoods;
+
 public class FacilityTurn {
     private int roundId;
     private Facility facilityOrder;
@@ -7,11 +11,11 @@ public class FacilityTurn {
     private String gameId;
     private int stock;
     private int remainingBudget;
-    private int order;
-    private int openOrder;
-    private int outgoingGoods;
+    private Order order;
+    private OpenOrder openOrder;
+    private OutgoingGoods outgoingGoods;
 
-    public FacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
+    public FacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
         this.roundId = roundId;
         this.facilityOrder = facilityLinkedTo.getFacilityOrder();
         this.facilityDeliver = facilityLinkedTo.getFacilityDeliver();
@@ -21,6 +25,10 @@ public class FacilityTurn {
         this.order = order;
         this.openOrder = openOrder;
         this.outgoingGoods = outgoingGoods;
+    }
+
+    public FacilityTurn() {
+
     }
 
     public int getRoundId() {
@@ -71,27 +79,27 @@ public class FacilityTurn {
         this.remainingBudget = remainingBudget;
     }
 
-    public int getOrder() {
+    public Order getOrder() {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(Order order) {
         this.order = order;
     }
 
-    public int getOpenOrder() {
+    public OpenOrder getOpenOrder() {
         return openOrder;
     }
 
-    public void setOpenOrder(int openOrder) {
+    public void setOpenOrder(OpenOrder openOrder) {
         this.openOrder = openOrder;
     }
 
-    public int getOutgoingGoods() {
+    public OutgoingGoods getOutgoingGoods() {
         return outgoingGoods;
     }
 
-    public void setOutgoingGoods(int outgoingGoods) {
+    public void setOutgoingGoods(OutgoingGoods outgoingGoods) {
         this.outgoingGoods = outgoingGoods;
     }
 }
