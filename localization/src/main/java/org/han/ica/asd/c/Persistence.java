@@ -30,10 +30,13 @@ public class Persistence implements IPersistence {
 		return beergameDAO.getGameLog(gameId);
 	}
 
-	public void logUsedBusinessRuleToCreateOrder(int facilityID, String gameID,String businessRule,
-												 FacilityLinkedTo facility, int outGoingOrderAmount)
+	public void logUsedBusinessRuleToCreateOrder(int roundId, String gameID, String businessRule,
+												 FacilityLinkedTo facility)
 	{
-
+		if(!(beergameDAO instanceof FacilityTurn_GameBusinessRules)){
+			beergameDAO = new FacilityTurn_GameBusinessRules();
+		}
+		beergameDAO.createRT_GameBusinessRules_Turn(roundId,gameID,facility.FacilityIdDeliver, facility.FacilityIdOrder, businessRule);
 
 	}
 
