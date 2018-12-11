@@ -13,7 +13,7 @@ public class BusinessRuleHandler implements IBusinessRules{
         parserPipeline.parseString(businessRules);
     }
 
-    public Action evaluateBusinessRules(String businessRules){
+    public Action evaluateBusinessRules(String businessRules, RoundData roundData){
         BusinessRule businessRule =  new BusinessRuleDecoder().decodeBusinessRule(businessRules);
 
         // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)
