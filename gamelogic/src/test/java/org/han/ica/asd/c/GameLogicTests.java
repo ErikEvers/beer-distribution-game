@@ -42,7 +42,7 @@ public class GameLogicTests {
     }
 
     @Test
-    public void getRoundDataFromFacilityCallsPersistence() throws RoundDataNotFoundException {
+    public void getRoundDataFromFacilityGivesPersistenceFacility() throws RoundDataNotFoundException {
         Facility facility = new Facility(1, "");
         RoundData fakeRoundData = new RoundData(
                 new PlayerRoundData("",0,0,0,0,0)
@@ -58,5 +58,13 @@ public class GameLogicTests {
     public void getRoundDataFromFacilityThrowsWhenRoundDataIsNull() {
         when(persistence.getRoundData(any())).thenReturn(null);
         Assertions.assertThrows(RoundDataNotFoundException.class, () -> gameLogic.getRoundDataFromFacility(any()));
+    }
+
+    public void getHistoryFromFacilityCallsPersistence() {
+        Facility facility = new Facility(1, "");
+        ArgumentCaptor<Facility> givenFacility = ArgumentCaptor.forClass(Facility.class);
+        gameLogic.getHistoryFromFacility(facility);
+        verify(persistence, times(1)).getHistory(givenFacility.capture());
+        assertEquals(4, givenFacility.getValue().getAmount());
     }
 }
