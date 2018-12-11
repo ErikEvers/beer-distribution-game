@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
@@ -50,7 +51,7 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 	 * A method which returns all BeerGames which are inserted in the database
 	 * @return An Arraylist of BeerGames
 	 */
-	public ArrayList<Beergame> readBeergames() {
+	public List<Beergame> readBeergames() {
 		Connection conn = null;
 		ArrayList<Beergame> beerGames = new ArrayList<>();
 		try {
@@ -93,9 +94,4 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 			RollBackTransaction(conn);
 		}
 	}
-
-
-
-
-
 }
