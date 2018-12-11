@@ -1,6 +1,8 @@
 package org.han.ica.asd.c;
 import org.han.ica.asd.c.domain.Facility;
 import org.han.ica.asd.c.domain.Order;
+import org.han.ica.asd.c.domain.PlayerRoundData;
+import org.han.ica.asd.c.domain.RoundData;
 import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
@@ -42,6 +44,10 @@ public class GameLogicTests {
     @Test
     public void getRoundDataFromFacilityCallsPersistence() throws RoundDataNotFoundException {
         Facility facility = new Facility(1, "");
+        RoundData fakeRoundData = new RoundData(
+                new PlayerRoundData("",0,0,0,0,0)
+        );
+        when(persistence.getRoundData(any())).thenReturn(fakeRoundData);
         gameLogic.getRoundDataFromFacility(facility);
         ArgumentCaptor<Facility> givenFacility = ArgumentCaptor.forClass(Facility.class);
         verify(persistence, times(1)).getRoundData(givenFacility.capture());
