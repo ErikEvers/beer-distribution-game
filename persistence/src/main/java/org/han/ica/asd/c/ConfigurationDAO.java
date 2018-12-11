@@ -17,7 +17,7 @@ public class ConfigurationDAO {
 	private static final String CREATE_CONFIGURATION = "INSERT INTO Configuration VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 	private static final String READ_CONFIGURATION = "SELECT* FROM Configuration;";
 	private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesales = ?, AmountOfDistributors = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?";
-	private static final String DELETE_CONFIGURATION = "";
+	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?";
 
 	public void createConfiguration(String GameId, int AmountOfRounds, int AmountOfFactories, int AmountOfWholesales, int AmountOfDistributors, int AmountOfRetailers, int MinimalOrderRetail, int MaximumOrderRetail, boolean ContinuePlayingWhenBankrupt, boolean InsightFacilities) {
 		Connection conn = null;
@@ -93,5 +93,20 @@ public class ConfigurationDAO {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public void deleteConfigurations(String gameId){
+		Connection conn = null;
+		try {
+			conn = connect();
+			if (conn == null)
+				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_CONFIGURATION)) {
+					conn.setAutoCommit(false);
+					pstmt.setString(1,gameId);
+				}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 }
