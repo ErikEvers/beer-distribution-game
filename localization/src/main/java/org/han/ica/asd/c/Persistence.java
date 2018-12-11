@@ -2,19 +2,19 @@ package org.han.ica.asd.c;
 
 public class Persistence implements IPersistence {
 
-	public void storeRoundData(Round rounddata)
+	public void saveRoundData(Round rounddata)
 	{
+
+	}
+
+	public Round fetchRoundData(String gameID)
+	{
+
 
 	}
 
 	public Beergame getGameLog(String gameID)
 	{
-
-	}
-
-	public Round getRoundData(String gameID)
-	{
-
 
 	}
 
@@ -25,13 +25,14 @@ public class Persistence implements IPersistence {
 
 	}
 
-	public Turn fetchTurnData()
+	public FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility)
 	{
 
 	}
 
-	public void saveTurnData(Turn turn)
+	public void saveTurnData(FacilityTurn turn)
 	{
 
 
-	}}
+	}
+}
