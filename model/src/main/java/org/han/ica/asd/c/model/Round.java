@@ -1,11 +1,12 @@
 package org.han.ica.asd.c.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Round {
     private String gameId;
     private int roundId;
-    private ArrayList<FacilityTurn> turns;
+    private List<FacilityTurn> turns;
 
     public Round(String gameId, int roundId) {
         this.gameId = gameId;
@@ -29,11 +30,11 @@ public class Round {
         this.roundId = roundId;
     }
 
-    public ArrayList<FacilityTurn> getTurns() {
+    public List<FacilityTurn> getTurns() {
         return turns;
     }
 
-    public void setTurns(ArrayList<FacilityTurn> turns) {
+    public void setTurns(List<FacilityTurn> turns) {
         this.turns = turns;
     }
 

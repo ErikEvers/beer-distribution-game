@@ -11,11 +11,11 @@ public class FacilityTurn {
     private OpenOrder openOrder;
     private OutgoingGoods outgoingGoods;
 
-    public FacilityTurn(int roundId, Facility facilityIdOrder, Facility facilityIdDeliver, String gameId, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
+    public FacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
         this.roundId = roundId;
-        this.facilityOrder = facilityIdOrder;
-        this.facilityDeliver = facilityIdDeliver;
-        this.gameId = gameId;
+        this.facilityOrder = facilityLinkedTo.getFacilityOrder();
+        this.facilityDeliver = facilityLinkedTo.getFacilityDeliver();
+        this.gameId = facilityLinkedTo.getGameId();
         this.stock = stock;
         this.remainingBudget = remainingBudget;
         this.order = order;

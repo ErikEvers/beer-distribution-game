@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.model;
 
 public class FacilityType {
-    private String facilityType;
+    private String facilityName;
     private String gameId;
     private int valueIncomingGoods;
     private int valueOutgoingGoods;
@@ -10,8 +10,8 @@ public class FacilityType {
     private int startingBudget;
     private int startingOrder;
 
-    public FacilityType(String facilityType, String gameId, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder) {
-        this.facilityType = facilityType;
+    public FacilityType(String facilityName, String gameId, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder) { //NOSONAR
+        this.facilityName = facilityName;
         this.gameId = gameId;
         this.valueIncomingGoods = valueIncomingGoods;
         this.valueOutgoingGoods = valueOutgoingGoods;
@@ -21,12 +21,12 @@ public class FacilityType {
         this.startingOrder = startingOrder;
     }
 
-    public String getFacilityType() {
-        return facilityType;
+    public String getFacilityName() {
+        return facilityName;
     }
 
-    public void setFacilityType(String facilityType) {
-        this.facilityType = facilityType;
+    public void setFacilityName(String facilityName) {
+        this.facilityName = facilityName;
     }
 
     public String getGameId() {

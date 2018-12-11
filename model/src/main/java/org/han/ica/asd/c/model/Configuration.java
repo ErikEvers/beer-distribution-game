@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Configuration {
     private String gameId;
@@ -13,11 +14,11 @@ public class Configuration {
     private int maximumOrderRetail;
     private boolean continuePlayingWhenBankrupt;
     private boolean insightFacilities;
-    private ArrayList<Facility> facilities;
-    private ArrayList<FacilityLinkedTo> facilitiesLinkedTo;
-    private ArrayList<FacilityType> facilityTypes;
+    private List<Facility> facilities;
+    private List<FacilityLinkedTo> facilitiesLinkedTo;
+    private List<FacilityType> facilityTypes;
 
-    public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) {
+    public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
         this.gameId = gameId;
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
@@ -113,11 +114,11 @@ public class Configuration {
         this.insightFacilities = insightFacilities;
     }
 
-    public ArrayList<Facility> getFacilities() {
+    public List<Facility> getFacilities() {
         return facilities;
     }
 
-    public void setFacilities(ArrayList<Facility> facilities) {
+    public void setFacilities(List<Facility> facilities) {
         this.facilities = facilities;
     }
 
@@ -125,11 +126,11 @@ public class Configuration {
         facilities.add(facility);
     }
 
-    public ArrayList<FacilityLinkedTo> getFacilitiesLinkedTo() {
+    public List<FacilityLinkedTo> getFacilitiesLinkedTo() {
         return facilitiesLinkedTo;
     }
 
-    public void setFacilitiesLinkedTo(ArrayList<FacilityLinkedTo> facilitiesLinkedTo) {
+    public void setFacilitiesLinkedTo(List<FacilityLinkedTo> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
@@ -137,11 +138,11 @@ public class Configuration {
         facilitiesLinkedTo.add(facilityLinkedTo);
     }
 
-    public ArrayList<FacilityType> getFacilityTypes() {
+    public List<FacilityType> getFacilityTypes() {
         return facilityTypes;
     }
 
-    public void setFacilityTypes(ArrayList<FacilityType> facilityTypes) {
+    public void setFacilityTypes(List<FacilityType> facilityTypes) {
         this.facilityTypes = facilityTypes;
     }
 
