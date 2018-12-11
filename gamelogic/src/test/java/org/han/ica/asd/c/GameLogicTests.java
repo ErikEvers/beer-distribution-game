@@ -1,20 +1,16 @@
 package org.han.ica.asd.c;
 import org.han.ica.asd.c.domain.Facility;
 import org.han.ica.asd.c.domain.Order;
-import org.han.ica.asd.c.domain.PlayerRoundData;
-import org.han.ica.asd.c.exceptions.FacilityNotFoundException;
+import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 public class GameLogicTests {
@@ -53,7 +49,8 @@ public class GameLogicTests {
     }
 
     @Test
-    public void getRoundDataFromFacilityThrowsWhenFacilityIsNull() {
-        Assertions.assertThrows(FacilityNotFoundException.class, () -> gameLogic.getRoundDataFromFacility(null));
+    public void getRoundDataFromFacilityThrowsWhenRoundDataIsNull() {
+        when(persistence.getRoundData(any())).thenReturn(null);
+        Assertions.assertThrows(RoundDataNotFoundException.class, () -> gameLogic.getRoundDataFromFacility(any()));
     }
 }
