@@ -79,21 +79,27 @@ public class ComparisonStatement extends Expression {
             this.right = ((Comparison) this.right).resolveComparison();
         }
 
-        if (this.left instanceof BooleanLiteral && this.right instanceof BooleanLiteral) {
-            BooleanLiteral booleanLiteralLeft = (BooleanLiteral) left;
-            BooleanLiteral booleanLiteralRight = (BooleanLiteral) right;
+        if (this.booleanOperator != null) {
+            if (this.left instanceof BooleanLiteral && this.right instanceof BooleanLiteral) {
+                BooleanLiteral booleanLiteralLeft = (BooleanLiteral) this.left;
+                BooleanLiteral booleanLiteralRight = (BooleanLiteral) this.right;
 
-            switch (booleanOperator.getValue()) {
-                case AND:
-                    result = booleanLiteralLeft.getValue() && booleanLiteralRight.getValue();
-                    break;
-                case OR:
-                    result = booleanLiteralLeft.getValue() || booleanLiteralRight.getValue();
-                    break;
-                default:
-                    break;
+                switch (booleanOperator.getValue()) {
+                    case AND:
+                        result = booleanLiteralLeft.getValue() && booleanLiteralRight.getValue();
+                        break;
+                    case OR:
+                        result = booleanLiteralLeft.getValue() || booleanLiteralRight.getValue();
+                        break;
+                    default:
+                        break;
+                }
             }
+        } else {
+            BooleanLiteral booleanLiteral = (BooleanLiteral) this.left;
+            result = booleanLiteral.getValue();
         }
+
         return new BooleanLiteral(result);
     }
 }

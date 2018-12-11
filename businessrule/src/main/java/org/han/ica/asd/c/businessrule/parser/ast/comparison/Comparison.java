@@ -62,6 +62,6 @@ public class Comparison extends Expression {
     }
 
     public BooleanLiteral resolveComparison() {
-        return null;
+        return new BooleanLiteral(true);
     }
 }

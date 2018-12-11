@@ -136,7 +136,7 @@ public class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingComparisonStatementCondition() {
+    public void testResolvingComparisonStatementWithOneComparisonCondition() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
