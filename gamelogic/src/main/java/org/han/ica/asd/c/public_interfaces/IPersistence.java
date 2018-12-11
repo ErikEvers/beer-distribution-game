@@ -1,13 +1,16 @@
 package org.han.ica.asd.c.public_interfaces;
 
-import org.han.ica.asd.c.domain.*;
+import org.han.ica.asd.c.model.BeerGame;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.Round;
 
 public interface IPersistence {
     void saveRoundData(Round roundData);
     Round fetchRoundData(String gameId, int roundId);
 
     void saveTurnData(FacilityTurn turn);
-    Turn fetchTurnData(Round round, FacilityLinkedTo facility);
+    FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility);
 
     BeerGame getGameLog(String gameId);
 
