@@ -13,7 +13,7 @@ public interface IRetrieveReplayData {
      * @return
      * Returns a Beergame object for a full replay
      */
-    Beergame retrieveGameData(int gameID);
+    Beergame retrieveGameData(String gameID);
 
     /**
      * @param gameID
@@ -21,5 +21,5 @@ public interface IRetrieveReplayData {
      * @return
      * Returns a single round for in-game replays
      */
-    Round retrieveSingleRoundData(int gameID);
+    Round retrieveSingleRoundData(String gameID);
 }
