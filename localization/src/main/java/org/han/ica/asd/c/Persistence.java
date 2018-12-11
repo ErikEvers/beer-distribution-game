@@ -1,9 +1,15 @@
 package org.han.ica.asd.c;
 
 public class Persistence implements IPersistence {
+	BeerDistributionGameDAO beergameDAO;
 
 	public void saveRoundData(Round rounddata)
 	{
+		if(!beergameDAO instanceof(RoundDAO)){
+			beergameDAO = new RoundDAO();
+		}
+
+		beergameDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
 
 	}
 
