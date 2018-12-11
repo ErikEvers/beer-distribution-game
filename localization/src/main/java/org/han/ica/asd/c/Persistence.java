@@ -1,11 +1,11 @@
 package org.han.ica.asd.c;
 
 public class Persistence implements IPersistence {
-	BeerDistributionGameDAO beergameDAO;
+	private BeerDistributionGameDAO beergameDAO;
 
 	public void saveRoundData(Round rounddata)
 	{
-		if(!beergameDAO instanceof(RoundDAO)){
+		if(!(beergameDAO instanceof RoundDAO)){
 			beergameDAO = new RoundDAO();
 		}
 
@@ -13,15 +13,18 @@ public class Persistence implements IPersistence {
 
 	}
 
-	public Round fetchRoundData(String gameID)
+	public Round fetchRoundData(String gameId, int roundId)
 	{
-
+		if(!(beergameDAO instanceof RoundDAO)){
+			beergameDAO = new RoundDAO();
+		}
+		return beergameDAO.getRound(gameId,roundId);
 
 	}
 
-	public Beergame getGameLog(String gameID)
+	public Beergame getGameLog(String gameId)
 	{
-
+		
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(int facilityID, String gameID,String businessRule,
