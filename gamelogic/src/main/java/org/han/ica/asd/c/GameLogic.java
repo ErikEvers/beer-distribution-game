@@ -7,8 +7,9 @@ import org.han.ica.asd.c.domain.RoundData;
 import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
+import org.han.ica.asd.c.public_interfaces.IPlayerGameLogic;
 
-public class GameLogic {
+public class GameLogic implements IPlayerGameLogic {
     private ICommunication communication;
     private IPersistence persistence;
 
