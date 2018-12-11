@@ -3,9 +3,7 @@ package org.han.ica.asd.c.model;
 import java.util.ArrayList;
 
 public class Configuration {
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesales;
@@ -19,10 +17,8 @@ public class Configuration {
     private ArrayList<FacilityLinkedTo> facilitiesLinkedTo;
     private ArrayList<FacilityType> facilityTypes;
 
-    public Configuration(String gameName, String gameDate, String gameEndDate, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) {
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+    public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) {
+        this.gameId = gameId;
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
         this.amountOfWholesales = amountOfWholesales;
@@ -37,28 +33,12 @@ public class Configuration {
         facilityTypes = new ArrayList<>();
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public int getAmountOfRounds() {

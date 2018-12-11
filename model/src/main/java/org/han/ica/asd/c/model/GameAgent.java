@@ -1,42 +1,22 @@
 package org.han.ica.asd.c.model;
 
 public class GameAgent {
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private String gameAgentName;
     private int facilityId;
 
-    public GameAgent(String gameName, String gameDate, String gameEndDate, String gameAgentName, int facilityId) {
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+    public GameAgent(String gameId, String gameAgentName, int facilityId) {
+        this.gameId = gameId;
         this.gameAgentName = gameAgentName;
         this.facilityId = facilityId;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public String getGameAgentName() {

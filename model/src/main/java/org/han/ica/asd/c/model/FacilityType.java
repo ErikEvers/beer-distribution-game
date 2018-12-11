@@ -2,9 +2,7 @@ package org.han.ica.asd.c.model;
 
 public class FacilityType {
     private String facilityType;
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private int valueIncomingGoods;
     private int valueOutgoingGoods;
     private int stockHoldingCosts;
@@ -12,11 +10,9 @@ public class FacilityType {
     private int startingBudget;
     private int startingOrder;
 
-    public FacilityType(String facilityType, String gameName, String gameDate, String gameEndDate, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder) {
+    public FacilityType(String facilityType, String gameId, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder) {
         this.facilityType = facilityType;
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+        this.gameId = gameId;
         this.valueIncomingGoods = valueIncomingGoods;
         this.valueOutgoingGoods = valueOutgoingGoods;
         this.stockHoldingCosts = stockHoldingCosts;
@@ -33,28 +29,12 @@ public class FacilityType {
         this.facilityType = facilityType;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public int getValueIncomingGoods() {

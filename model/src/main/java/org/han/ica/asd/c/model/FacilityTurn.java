@@ -4,22 +4,18 @@ public class FacilityTurn {
     private int roundId;
     private int facilityIdOrder;
     private int facilityIdDeliver;
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private int stock;
     private int remainingBudget;
     private Order order;
     private OpenOrder openOrder;
     private OutgoingGoods outgoingGoods;
 
-    public FacilityTurn(int roundID, int facilityIdOrder, int facilityIdDeliver, String gameName, String gameDate, String gameEndDate, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
-        this.roundId = roundID;
+    public FacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
+        this.roundId = roundId;
         this.facilityIdOrder = facilityIdOrder;
         this.facilityIdDeliver = facilityIdDeliver;
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+        this.gameId = gameId;
         this.stock = stock;
         this.remainingBudget = remainingBudget;
         this.order = order;
@@ -51,28 +47,12 @@ public class FacilityTurn {
         this.facilityIdDeliver = facilityIdDeliver;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public int getStock() {

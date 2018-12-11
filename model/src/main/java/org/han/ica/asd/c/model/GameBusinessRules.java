@@ -2,18 +2,14 @@ package org.han.ica.asd.c.model;
 
 public class GameBusinessRules {
     private int facilityId;
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private String gameAgentName;
     private String gameBusinessRule;
     private String gameAST;
 
-    public GameBusinessRules(int facilityId, String gameName, String gameDate, String gameEndDate, String gameAgentName, String gameBusinessRule, String gameAST) {
+    public GameBusinessRules(int facilityId, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
         this.facilityId = facilityId;
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+        this.gameId = gameId;
         this.gameAgentName = gameAgentName;
         this.gameBusinessRule = gameBusinessRule;
         this.gameAST = gameAST;
@@ -27,28 +23,12 @@ public class GameBusinessRules {
         this.facilityId = facilityId;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public String getGameAgentName() {

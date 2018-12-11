@@ -1,48 +1,28 @@
 package org.han.ica.asd.c.model;
 
 public class Player {
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private String playerId;
     private String ipAddress;
     private int facilityId;
     private String name;
     private boolean isConnected;
 
-    public Player(String gameName, String gameDate, String gameEndDate, String playerId, String ipaddress, int facilityId, String name, boolean isConnected) {
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+    public Player(String gameId, String playerId, String ipAddress, int facilityId, String name, boolean isConnected) {
+        this.gameId = gameId;
         this.playerId = playerId;
-        this.ipAddress = ipaddress;
+        this.ipAddress = ipAddress;
         this.facilityId = facilityId;
         this.name = name;
         this.isConnected = isConnected;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public String getPlayerId() {
