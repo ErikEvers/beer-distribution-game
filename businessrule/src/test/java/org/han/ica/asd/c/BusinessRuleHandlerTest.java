@@ -42,7 +42,7 @@ class BusinessRuleHandlerTest {
 		StringBuilder expectedStringBuilder = new StringBuilder();
 		expectedAction.encode(expectedStringBuilder);
 
-		Action actualAction = new BusinessRuleHandler().evaluateBusinessRules(businessRule.encode(), new Round());
+		Action actualAction = new BusinessRuleHandler().evaluateBusinessRules(businessRule.encode(), new Round("1", 1));
 		StringBuilder actualStringBuilder = new StringBuilder();
 		actualAction.encode(actualStringBuilder);
 
