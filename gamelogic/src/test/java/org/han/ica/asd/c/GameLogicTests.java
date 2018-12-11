@@ -60,11 +60,12 @@ public class GameLogicTests {
         Assertions.assertThrows(RoundDataNotFoundException.class, () -> gameLogic.getRoundDataFromFacility(any()));
     }
 
+    @Test
     public void getHistoryFromFacilityCallsPersistence() {
         Facility facility = new Facility(1, "");
         ArgumentCaptor<Facility> givenFacility = ArgumentCaptor.forClass(Facility.class);
         gameLogic.getHistoryFromFacility(facility);
         verify(persistence, times(1)).getHistory(givenFacility.capture());
-        assertEquals(4, givenFacility.getValue().getAmount());
+        assertEquals(facility, givenFacility.getValue());
     }
 }

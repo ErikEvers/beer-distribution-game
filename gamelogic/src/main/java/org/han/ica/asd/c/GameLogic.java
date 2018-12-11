@@ -9,6 +9,8 @@ import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.han.ica.asd.c.public_interfaces.IPlayerGameLogic;
 
+import java.util.List;
+
 public class GameLogic implements IPlayerGameLogic {
     private ICommunication communication;
     private IPersistence persistence;
@@ -21,6 +23,11 @@ public class GameLogic implements IPlayerGameLogic {
     public void placeOrder(int amount) {
         communication.send(amount);
         persistence.saveOrder(new Order(amount));
+    }
+
+    @Override
+    public List<RoundData> getHistoryFromFacility(Facility facility) {
+        return persistence.getHistory(facility);
     }
 
     public RoundData getRoundDataFromFacility(Facility facility) throws RoundDataNotFoundException {
