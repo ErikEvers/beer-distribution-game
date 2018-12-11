@@ -113,16 +113,16 @@ CREATE TABLE Leader (
   CONSTRAINT FK_Leader_Player FOREIGN KEY (GameId, PlayerId) REFERENCES Player(GameId, PlayerId)
 );
 
-CREATE TABLE FacilityTurn_GameBusinessRules (
+CREATE TABLE GameBusinessRulesInFacilityTurn (
   RoundId smallint NOT NULL,
   FacilityIdDeliver smallint NOT NULL,
   FacilityIdOrder smallint NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
   GameBusinessRule varchar NOT NULL,
-  CONSTRAINT PK_FacilityTurn_GameBusinessRules PRIMARY KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId, GameAgentName, GameBusinessRule),
-  CONSTRAINT FK_FacilityTurn_GameBusinessRules_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule),
-  CONSTRAINT FK_FacilityTurn_GameBusinessRules_FacilityTurn FOREIGN KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId) REFERENCES FacilityTurn(RoundId, FacilityIdDeliver, FacilityIdOrder, GameId)
+  CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId, GameAgentName, GameBusinessRule),
+  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule),
+  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_FacilityTurn FOREIGN KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId) REFERENCES FacilityTurn(RoundId, FacilityIdDeliver, FacilityIdOrder, GameId)
 );
 
 CREATE TABLE GameBusinessRules (
