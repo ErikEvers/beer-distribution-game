@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 
 
-public class ProgramAgentInfoController implements ProgramAgentSharedController {
+public class ProgramAgentInfoController implements IProgramAgentSharedController {
     @FXML
     AnchorPane mainContainer;
 

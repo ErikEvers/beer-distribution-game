@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 
 public class ProgramAgentController {
-
     @FXML
     AnchorPane mainContainer;
 

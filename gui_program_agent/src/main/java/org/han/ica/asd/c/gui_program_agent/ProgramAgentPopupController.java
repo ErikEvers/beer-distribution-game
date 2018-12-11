@@ -6,8 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
-public class ProgramAgentPopupController implements ProgramAgentSharedController {
-
+public class ProgramAgentPopupController implements IProgramAgentSharedController {
     @FXML
     AnchorPane mainContainer;
 

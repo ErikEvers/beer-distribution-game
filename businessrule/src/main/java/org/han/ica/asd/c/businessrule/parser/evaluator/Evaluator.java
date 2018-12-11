@@ -11,20 +11,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Evaluator {
-    private static final  Logger LOGGER = Logger.getLogger(Logger.class.getName());
-    private List<BusinessRule> businessRules = new ArrayList<>();
+    private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
+
 
     public void evaluate(List<BusinessRule> businessRules) {
-        this.businessRules.addAll(businessRules);
-        evaluate();
-    }
-
-    private void evaluate() {
+        List<BusinessRule> businessRulesList = new ArrayList<>();
+        businessRulesList.addAll(businessRules);
         Counter defaultCounter = new Counter();
         int lineNumber = 0;
 
-        Collections.reverse(businessRules);
-        Deque<ASTNode> deque = new LinkedList<>(businessRules);
+        Collections.reverse(businessRulesList);
+        Deque<ASTNode> deque = new LinkedList<>(businessRulesList);
 
         while (!deque.isEmpty()) {
             ASTNode current = deque.pop();
@@ -32,7 +29,6 @@ public class Evaluator {
             if (current instanceof BusinessRule) {
                 lineNumber++;
             }
-
             try {
                 checkOnlyOneDefault(current, lineNumber, defaultCounter);
                 checkRoundIsComparedToInt(current, lineNumber);
