@@ -1,5 +1,5 @@
 package org.han.ica.asd.c.gameleader.componentInterfaces;
-import org.han.ica.asd.c.RoundData;
+import org.han.ica.asd.c.model.Round;
 
 /**
  * Interface for the communication component
@@ -17,5 +17,5 @@ public interface IConnectorForLeader {
      * The data of a specific round gets sent to the participants of said game.
      * @param allData, the game data of a specific round.
      */
-    public void sendRoundDataToAllPlayers(RoundData allData);
+    public void sendRoundDataToAllPlayers(Round allData);
 }
