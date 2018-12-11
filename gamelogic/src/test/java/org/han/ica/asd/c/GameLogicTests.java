@@ -40,7 +40,7 @@ public class GameLogicTests {
     }
 
     @Test
-    public void getRoundDataFromFacilityCallsPersistence() {
+    public void getRoundDataFromFacilityCallsPersistence() throws RoundDataNotFoundException {
         Facility facility = new Facility(1, "");
         gameLogic.getRoundDataFromFacility(facility);
         ArgumentCaptor<Facility> givenFacility = ArgumentCaptor.forClass(Facility.class);
