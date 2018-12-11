@@ -1,5 +1,3 @@
-package org.han.ica.asd.c;
-
 public class Persistence implements IPersistence {
 	private BeerDistributionGameDAO beergameDAO;
 
