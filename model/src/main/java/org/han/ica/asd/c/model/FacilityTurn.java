@@ -7,11 +7,11 @@ public class FacilityTurn {
     private String gameId;
     private int stock;
     private int remainingBudget;
-    private Order order;
-    private OpenOrder openOrder;
-    private OutgoingGoods outgoingGoods;
+    private int order;
+    private int openOrder;
+    private int outgoingGoods;
 
-    public FacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
+    public FacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
         this.roundId = roundId;
         this.facilityOrder = facilityLinkedTo.getFacilityOrder();
         this.facilityDeliver = facilityLinkedTo.getFacilityDeliver();
@@ -71,27 +71,27 @@ public class FacilityTurn {
         this.remainingBudget = remainingBudget;
     }
 
-    public Order getOrder() {
+    public int getOrder() {
         return order;
     }
 
-    public void setOrder(Order order) {
+    public void setOrder(int order) {
         this.order = order;
     }
 
-    public OpenOrder getOpenOrder() {
+    public int getOpenOrder() {
         return openOrder;
     }
 
-    public void setOpenOrder(OpenOrder openOrder) {
+    public void setOpenOrder(int openOrder) {
         this.openOrder = openOrder;
     }
 
-    public OutgoingGoods getOutgoingGoods() {
+    public int getOutgoingGoods() {
         return outgoingGoods;
     }
 
-    public void setOutgoingGoods(OutgoingGoods outgoingGoods) {
+    public void setOutgoingGoods(int outgoingGoods) {
         this.outgoingGoods = outgoingGoods;
     }
 }
