@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.DBConnection;
+package org.han.ica.asd.c.dbconnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
