@@ -38,6 +38,16 @@ public class ProgramAgentController {
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
+    private String agentNameErrorHeader = "Agent name Error";
+    private String agentNameErrorBody = "You have to set a agent name.";
+
+    private String businessRuleErrorHeader = "Business rule Error";
+    private String businessRuleErrorBody = "There are no business rules given.\n Please enter them end try again.";
+
+    private String businessRuleSuccessHeader = "Saved Successfully";
+    private String businessRuleSuccessBody = "The business rules are saved successfully.";
+
+
     public ProgramAgentController() {
         iBusinessRules = new BusinessRuleHandler();
     }
@@ -82,12 +92,12 @@ public class ProgramAgentController {
             String agentName = agentNameInput.getText();
             String businessRules = businessRuleInput.getText();
             if (agentName == null || agentName.trim().isEmpty()) {
-                setProgramAgentPopup("Agent name Error", "You have to set a agent name.", Color.RED);
+                setProgramAgentPopup(agentNameErrorHeader,agentNameErrorBody, Color.RED);
             } else if (businessRules == null || businessRules.trim().isEmpty()) {
-                setProgramAgentPopup("Business rule Error", "There are no business rules given.\n Please enter them end try again.", Color.RED);
+                setProgramAgentPopup(businessRuleErrorHeader, businessRuleErrorBody , Color.RED);
             } else {
                 iBusinessRules.programAgent(agentName, businessRules);
-                setProgramAgentPopup("Saved Successfully", "The business rules are saved successfully.", Color.GREEN);
+                setProgramAgentPopup(businessRuleSuccessHeader,businessRuleSuccessBody , Color.GREEN);
             }
         });
     }
