@@ -1,8 +1,12 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.model.Beergame;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -41,5 +45,31 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 			RollBackTransaction(conn);
 		}
 	}
+
+	/**
+	 * A method which returns all BeerGames which are inserted in the database
+	 * @return An Arraylist of BeerGames
+	 */
+	public ArrayList<Beergame> readBeergames() {
+		Connection conn = null;
+		ArrayList<Beergame> beerGames = new ArrayList<>();
+		try {
+			conn = connect();
+			if (conn == null) return null;
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+
+				try (ResultSet rs = pstmt.executeQuery()) {
+					while (rs.next()) {
+						beerGames.add(new Beergame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+					}
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return beerGames;
+	}
+
+
 
 }
