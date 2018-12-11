@@ -11,10 +11,9 @@ public class BusinessRuleHandler implements IBusinessRules{
     public void programAgent(String agentName, String businessRules){
         ParserPipeline parserPipeline = new ParserPipeline();
         parserPipeline.parseString(businessRules);
-        System.out.println(parserPipeline.getBusinessRulesMap());
     }
 
-    public Action evaluateBusinessRules(String businessRules, RoundData roundData){
+    public Action evaluateBusinessRules(String businessRules){
         BusinessRule businessRule =  new BusinessRuleDecoder().decodeBusinessRule(businessRules);
 
         // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)

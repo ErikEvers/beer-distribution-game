@@ -48,19 +48,37 @@ public class ProgramAgentController {
      */
     public void initialize() {
         mainContainer.getChildren().addAll();
+        setMoreInfoButtonAction();
+        setSaveButtonAction();
+    }
 
-        moreInfo.setOnAction(event -> {
-            Parent root;
-            try {
-                root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"));
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root, 1000, 800));
-                stage.show();
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
-            }
-        });
+    /***
+     * For making a popup with a user defined message. Opens a new stage window.
+     * @param headerText The text for the header of the popup
+     * @param bodyText  The text for the body of the popup
+     * @param headerColor   The color of the header text. To set for example red if its a error.
+     */
+    private void setProgramAgentPopup(String headerText, String bodyText, Color headerColor) {
+        Parent root;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProgramAgentPopup.fxml"));
+            root = loader.load();
+            ProgramAgentPopupController programAgentPopupController = loader.getController();
+            programAgentPopupController.setHeaderLabelText(headerText, headerColor);
+            programAgentPopupController.setBodyLabelText(bodyText);
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 400, 200));
+            stage.show();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
 
+    /***
+     * Set the button save to have the action that sets the popup.
+     * And communicates with the IBusinessRules to program the agent.
+     */
+    private void setSaveButtonAction() {
         save.setOnAction(event -> {
             String agentName = agentNameInput.getText();
             String businessRules = businessRuleInput.getText();
@@ -76,24 +94,20 @@ public class ProgramAgentController {
     }
 
     /***
-     * For making a popup with a user defined message. Opens a new stage window.
-     * @param headerText The text for the header of the popup
-     * @param bodyText  The text for the body of the popup
-     * @param headerColor   The color of the header text. To set for example red if its a error.
+     * Set the action for the MoreInfo Button.
+     * It opens the new info stage.
      */
-    private void setProgramAgentPopup(String headerText, String bodyText, Color headerColor){
-        Parent root;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProgramAgentPopup.fxml"));
-            root = loader.load();
-            ProgramAgentPopupController programAgentPopupController = loader.getController();
-            programAgentPopupController.setHeaderLabelText(headerText,headerColor);
-            programAgentPopupController.setBodyLabelText(bodyText);
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root,400, 200));
-            stage.show();
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
+    private void setMoreInfoButtonAction() {
+        moreInfo.setOnAction(event -> {
+            Parent root;
+            try {
+                root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root, 1000, 800));
+                stage.show();
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+            }
+        });
     }
 }
