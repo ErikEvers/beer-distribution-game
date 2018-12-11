@@ -70,6 +70,32 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 		return beerGames;
 	}
 
+	/**
+	 * Deletes a BeerGame from the SQLite Database
+	 * @param gameId The specified Id of the game which needs to be deleted
+	 */
+	public void deleteBeergame(String gameId) {
+		Connection conn = null;
+		try {
+			conn = connect();
+			if (conn == null) return;
+			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
+
+				conn.setAutoCommit(false);
+
+				pstmt.setString(1, gameId);
+
+				pstmt.executeUpdate();
+			}
+			conn.commit();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			RollBackTransaction(conn);
+		}
+	}
+
+
+
 
 
 }
