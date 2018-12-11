@@ -2,24 +2,20 @@ package org.han.ica.asd.c.model;
 
 public class FacilityTurn {
     private int roundId;
-    private int facilityIdOrder;
-    private int facilityIdDeliver;
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private Facility facilityOrder;
+    private Facility facilityDeliver;
+    private String gameId;
     private int stock;
     private int remainingBudget;
-    private Order order;
-    private OpenOrder openOrder;
-    private OutgoingGoods outgoingGoods;
+    private int order;
+    private int openOrder;
+    private int outgoingGoods;
 
-    public FacilityTurn(int roundID, int facilityIdOrder, int facilityIdDeliver, String gameName, String gameDate, String gameEndDate, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
-        this.roundId = roundID;
-        this.facilityIdOrder = facilityIdOrder;
-        this.facilityIdDeliver = facilityIdDeliver;
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+    public FacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
+        this.roundId = roundId;
+        this.facilityOrder = facilityLinkedTo.getFacilityOrder();
+        this.facilityDeliver = facilityLinkedTo.getFacilityDeliver();
+        this.gameId = facilityLinkedTo.getGameId();
         this.stock = stock;
         this.remainingBudget = remainingBudget;
         this.order = order;
@@ -35,44 +31,28 @@ public class FacilityTurn {
         this.roundId = roundId;
     }
 
-    public int getFacilityIdOrder() {
-        return facilityIdOrder;
+    public Facility getFacilityOrder() {
+        return facilityOrder;
     }
 
-    public void setFacilityIdOrder(int facilityIdOrder) {
-        this.facilityIdOrder = facilityIdOrder;
+    public void setFacilityOrder(Facility facilityOrder) {
+        this.facilityOrder = facilityOrder;
     }
 
-    public int getFacilityIdDeliver() {
-        return facilityIdDeliver;
+    public Facility getFacilityDeliver() {
+        return facilityDeliver;
     }
 
-    public void setFacilityIdDeliver(int facilityIdDeliver) {
-        this.facilityIdDeliver = facilityIdDeliver;
+    public void setFacilityDeliver(Facility facilityDeliver) {
+        this.facilityDeliver = facilityDeliver;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public int getStock() {
@@ -91,27 +71,27 @@ public class FacilityTurn {
         this.remainingBudget = remainingBudget;
     }
 
-    public Order getOrder() {
+    public int getOrder() {
         return order;
     }
 
-    public void setOrder(Order order) {
+    public void setOrder(int order) {
         this.order = order;
     }
 
-    public OpenOrder getOpenOrder() {
+    public int getOpenOrder() {
         return openOrder;
     }
 
-    public void setOpenOrder(OpenOrder openOrder) {
+    public void setOpenOrder(int openOrder) {
         this.openOrder = openOrder;
     }
 
-    public OutgoingGoods getOutgoingGoods() {
+    public int getOutgoingGoods() {
         return outgoingGoods;
     }
 
-    public void setOutgoingGoods(OutgoingGoods outgoingGoods) {
+    public void setOutgoingGoods(int outgoingGoods) {
         this.outgoingGoods = outgoingGoods;
     }
 }

@@ -1,23 +1,20 @@
 package org.han.ica.asd.c.model;
 
-public class FacilityTurn_GameBusinessRules {
+public class GameBusinessRulesInFaciltyTurn {
     private int roundId;
     private int facilityIdDeliver;
     private int facilityIdOrder;
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private String gameAgentName;
     private String gameBusinessRule;
 
-    public FacilityTurn_GameBusinessRules(int roundID, int facilityIdDeliver, int facilityIdOrder, String gameName, String gameDate, String gameEndDate, String gameAgentName, String gameBusinessRule) {
-        this.roundId = roundID;
+    public GameBusinessRulesInFaciltyTurn(int roundId, int facilityIdDeliver, int facilityIdOrder, String gameId, String gameAgentName, String gameBusinessRule) {
+        this.roundId = roundId;
         this.facilityIdDeliver = facilityIdDeliver;
         this.facilityIdOrder = facilityIdOrder;
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+        this.gameId = gameId;
         this.gameAgentName = gameAgentName;
+
         this.gameBusinessRule = gameBusinessRule;
     }
 
@@ -45,28 +42,12 @@ public class FacilityTurn_GameBusinessRules {
         this.facilityIdOrder = facilityIdOrder;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public String getGameAgentName() {

@@ -1,46 +1,26 @@
 package org.han.ica.asd.c.model;
 
 public class Facility {
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private int facilityId;
     private String facilityType;
     private String ipAddress;
     private String gameAgentName;
 
-    public Facility(String gameName, String gameDate, String gameEndDate, int facilityId, String facilityType, String ipAddress, String gameAgentName) {
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+    public Facility(String gameId, int facilityId, String facilityType, String ipAddress, String gameAgentName) {
+        this.gameId = gameId;
         this.facilityId = facilityId;
         this.facilityType = facilityType;
         this.ipAddress = ipAddress;
         this.gameAgentName = gameAgentName;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public int getFacilityId() {

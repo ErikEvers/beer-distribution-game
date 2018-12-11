@@ -1,60 +1,40 @@
 package org.han.ica.asd.c.model;
 
 public class FacilityLinkedTo {
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
-    private int facilityIdOrder;
-    private int facilityIdDeliver;
+    private String gameId;
+    private Facility facilityOrder;
+    private Facility facilityDeliver;
     private boolean active;
 
-    public FacilityLinkedTo(String gameName, String gameDate, String gameEndDate, int facilityIdOrder, int facilityIdDeliver, boolean active) {
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
-        this.facilityIdOrder = facilityIdOrder;
-        this.facilityIdDeliver = facilityIdDeliver;
+    public FacilityLinkedTo(String gameId, Facility facilityOrder, Facility facilityDeliver, boolean active) {
+        this.gameId = gameId;
+        this.facilityOrder = facilityOrder;
+        this.facilityDeliver = facilityDeliver;
         this.active = active;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
-    public String getGameDate() {
-        return gameDate;
+    public Facility getFacilityOrder() {
+        return facilityOrder;
     }
 
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
+    public void setFacilityOrder(Facility facilityOrder) {
+        this.facilityOrder = facilityOrder;
     }
 
-    public String getGameEndDate() {
-        return gameEndDate;
+    public Facility getFacilityDeliver() {
+        return facilityDeliver;
     }
 
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
-    }
-
-    public int getFacilityIdOrder() {
-        return facilityIdOrder;
-    }
-
-    public void setFacilityIdOrder(int facilityIdOrder) {
-        this.facilityIdOrder = facilityIdOrder;
-    }
-
-    public int getFacilityIdDeliver() {
-        return facilityIdDeliver;
-    }
-
-    public void setFacilityIdDeliver(int facilityIdDeliver) {
-        this.facilityIdDeliver = facilityIdDeliver;
+    public void setFacilityDeliver(Facility facilityDeliver) {
+        this.facilityDeliver = facilityDeliver;
     }
 
     public boolean isActive() {

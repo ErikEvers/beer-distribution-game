@@ -3,42 +3,22 @@ package org.han.ica.asd.c.model;
 import java.sql.Timestamp;
 
 public class Leader {
-    private String gameName;
-    private String gameDate;
-    private String gameEndDate;
+    private String gameId;
     private String playerId;
     private Timestamp timestamp;
 
-    public Leader(String gameName, String gameDate, String gameEndDate, String playerId, Timestamp timestamp) {
-        this.gameName = gameName;
-        this.gameDate = gameDate;
-        this.gameEndDate = gameEndDate;
+    public Leader(String gameId, String playerId, Timestamp timestamp) {
+        this.gameId = gameId;
         this.playerId = playerId;
         this.timestamp = timestamp;
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameDate() {
-        return gameDate;
-    }
-
-    public void setGameDate(String gameDate) {
-        this.gameDate = gameDate;
-    }
-
-    public String getGameEndDate() {
-        return gameEndDate;
-    }
-
-    public void setGameEndDate(String gameEndDate) {
-        this.gameEndDate = gameEndDate;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public String getPlayerId() {
