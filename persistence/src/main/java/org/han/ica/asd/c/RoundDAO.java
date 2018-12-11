@@ -41,9 +41,11 @@ public class RoundDAO {
 		}
 	}
 
-	public Round fetchRoundData(String gameId, int roundId){
+	public Round getRound(String gameId, int roundId){
 		Round round = new Round(gameId,roundId);
 		round.setTurns(turnDAO.fetchTurns(gameId,roundId));
 		return round;
 	}
+
+
 }
