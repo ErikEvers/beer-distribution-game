@@ -2,6 +2,8 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.*;
@@ -11,24 +13,25 @@ public class TurnHandlerTest {
 
     private FacilityTurn facilityTurnModel;
 
-    /*@Before
-    public void setUp() {
-        turnHandler = new TurnHandler();
-        facilityTurnModel = new FacilityTurnModel();
-        facilityTurnModel.setOrder(new Order());
-
-        facilityTurnModel.getOrder().setOrderAmount(0);
-    }*/
-
-    @Test
-    public void testDoesValidateFacilityTurnReturnTrue() {
+    @BeforeEach
+    public void onSetUp() {
         turnHandler = new TurnHandler();
         facilityTurnModel = new FacilityTurn();
-        facilityTurnModel.setOrder(new Order());
+    }
 
-        facilityTurnModel.getOrder().setOrderAmount(0);
+    @Test
+    public void testDoValidate_OrderAmountIsZero_ReturnTrue() {
+        facilityTurnModel.setOrder(0);
         facilityTurnModel.setStock(10);
-        //turnHandler.validateFacilityTurn(facilityTurnModel);
+
         assertTrue(turnHandler.validateFacilityTurn(facilityTurnModel));
+    }
+
+    @Test
+    public void testDoValidate_OrderAmountIsMoreThanStock_ReturnFalse() {
+        facilityTurnModel.setOrder(11);
+        facilityTurnModel.setStock(10);
+
+        assertFalse(turnHandler.validateFacilityTurn(facilityTurnModel));
     }
 }

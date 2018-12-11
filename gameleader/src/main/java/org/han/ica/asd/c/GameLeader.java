@@ -11,10 +11,12 @@ public class GameLeader implements IGameLeader {
 
     public void turnDataReceived(FacilityTurn turnInformation) {
         turnHandler.processFacilityTurn(turnInformation);
+
     }
 
     public void playerDisconnected(String playerId) {
 
     }
+
 
 }
