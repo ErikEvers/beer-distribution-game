@@ -38,7 +38,7 @@ public class ParserPipeline {
     }
 
     private void encodeBusinessRules() {
-        for (int i = 0; i < businessRulesInput.size(); i++) {
+        for (int i = 0; i < businessRulesParsed.size(); i++) {
             businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).encode());
         }
     }

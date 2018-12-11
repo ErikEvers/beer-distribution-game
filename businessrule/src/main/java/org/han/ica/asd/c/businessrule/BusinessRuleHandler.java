@@ -5,7 +5,8 @@ import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 public class BusinessRuleHandler implements IBusinessRules{
     public static void main(String[] args) {
         ParserPipeline parserPipeline = new ParserPipeline();
-        parserPipeline.parseString("if\t20\tis the smallest\tthen\tdeliver to that facility\t");
+        parserPipeline.parseString("default order 20\n if inventory is 20 then order 20");
+        System.out.println(parserPipeline.getBusinessRulesMap());
     }
 
     public void programAgent(String agentName, String businessRules){

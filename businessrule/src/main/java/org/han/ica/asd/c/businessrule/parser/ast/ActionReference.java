@@ -14,6 +14,10 @@ public class ActionReference extends ASTNode {
        stringBuilder.append(action).append(suffix);
     }
 
+    public String getAction() {
+        return action;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

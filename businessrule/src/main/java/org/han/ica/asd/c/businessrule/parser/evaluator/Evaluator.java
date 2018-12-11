@@ -1,8 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser.evaluator;
 
-import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.Default;
+import org.han.ica.asd.c.businessrule.parser.ast.*;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
@@ -21,6 +19,7 @@ public class Evaluator {
 
     private void evaluate() {
         Counter defaultCounter = new Counter();
+        Counter belowAboveCounter = new Counter();
         int lineNumber = 0;
 
         Collections.reverse(businessRules);
@@ -38,6 +37,7 @@ public class Evaluator {
                     checkOnlyOneDefault(current, lineNumber, defaultCounter);
                     checkRoundIsComparedToInt(current, lineNumber);
                     checkLowHighOnlyUsedWithGameValue(current, lineNumber);
+                    checkDeliverOnlyUsedWithBelowAbove(current, lineNumber, belowAboveCounter);
                 } catch (BusinessRuleException e) {
                     // TODO: Level.SEVERE vervangen door FINE.
                     LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -109,8 +109,25 @@ public class Evaluator {
         }
     }
 
-    // Deliver mag alleen gebruikt worden als er below/above is gebruikt.
+    private void checkDeliverOnlyUsedWithBelowAbove(ASTNode current, int lineNumber, Counter belowAboveCounter) throws BusinessRuleException {
+        int left = 0;
+        int right = 2;
 
+        if (current instanceof Comparison && current.getChildren().get(left) != null && current.getChildren().get(right) != null) {
+            if (((Value) current.getChildren().get(left).getChildren().get(left)).getValue().equals("lowest") || ((Value) current.getChildren().get(left).getChildren().get(left)).getValue().equals("highest")) {
+                belowAboveCounter.addOne();
+            }
+        }
+
+        if (current instanceof ActionReference) {
+            if(((ActionReference) current).getAction().equals("deliver")){
+                if(belowAboveCounter.getCountedValue() == 0){
+                    throw new BusinessRuleException("Deliver can only be used with a businessrule that uses above/below", lineNumber);
+                }
+            }
+        }
+    }
 
     // Smallest/biggest mag alleen gebruikt worden als er below/above is gebruikt.
+    // Smallest/biggest mag alleen gebruikt worden in een vergelijking (geen operaties en niet in een order).
 }
