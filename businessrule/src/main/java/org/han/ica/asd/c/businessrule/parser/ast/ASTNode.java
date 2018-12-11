@@ -13,6 +13,10 @@ public abstract class ASTNode {
         return this;
     }
 
+    public ASTNode addValue(String value) {
+        return this;
+    }
+
     /**
      * Return the children that are assigned to the ASTNode
      * @return Return the children

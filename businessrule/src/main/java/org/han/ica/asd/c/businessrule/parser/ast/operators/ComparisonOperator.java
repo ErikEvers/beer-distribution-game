@@ -6,10 +6,21 @@ public class ComparisonOperator extends Operator {
 
     /**
      * Constructor
+     */
+    public ComparisonOperator() {}
+
+    /**
+     * Constructor
      * @param operator The comparison operator as a word
      */
     public ComparisonOperator(String operator) {
         this.operatorVal = findComparisonOperator(operator);
+    }
+
+	@Override
+    public ComparisonOperator addValue(String value) {
+        operatorVal = value;
+        return this;
     }
 
     /**

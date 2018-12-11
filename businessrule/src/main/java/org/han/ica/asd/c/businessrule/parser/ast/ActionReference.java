@@ -3,8 +3,14 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import java.util.Objects;
 
 public class ActionReference extends ASTNode {
-    private String suffix = "(";
+    private String prefix = "AR(";
+    private String suffix = ")";
     private String action;
+
+    /**
+     * Constructor
+     */
+    public ActionReference() {}
 
     /**
      * Constructor
@@ -14,12 +20,21 @@ public class ActionReference extends ASTNode {
         this.action = action;
     }
 
+
+
+    @Override
+    public ActionReference addValue(String value) {
+        this.action = value;
+        return this;
+    }
+
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
+    @Override
     public void encode(StringBuilder stringBuilder) {
-       stringBuilder.append(action).append(suffix);
+        super.encode(stringBuilder,getChildren(), prefix + action, suffix);
     }
 
     /**

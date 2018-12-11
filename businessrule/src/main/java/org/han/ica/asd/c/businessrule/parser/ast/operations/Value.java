@@ -12,6 +12,8 @@ public class Value extends OperationValue {
      * @param value Value to be added to the value string
      * @return Returns itself so that it can be used immediately
      */
+
+    @Override
     public Value addValue(String value) {
         if(value.equals("smallest") || value.equals("lowest")){
             value = "lowest";

@@ -6,10 +6,21 @@ public class BooleanOperator extends Operator {
 
     /**
      * Constructor
+     */
+    public BooleanOperator() {}
+
+    /**
+     * Constructor
      * @param operator The boolean operator as a word
      */
     public BooleanOperator(String operator) {
         this.operatorVal = findBooleanOperator(operator);
+    }
+
+	@Override
+    public BooleanOperator addValue(String value) {
+        operatorVal = value;
+        return this;
     }
 
     /**

@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class Action extends ASTNode {
     private String prefix = "A(";
-    private String suffix = "))";
+    private String suffix = ")";
 
     private ActionReference actionName;
     private OperationValue operation;

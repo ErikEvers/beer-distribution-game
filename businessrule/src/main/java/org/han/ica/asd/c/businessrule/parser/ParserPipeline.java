@@ -18,12 +18,14 @@ public class ParserPipeline {
     private List<String> businessRulesInput = new ArrayList<>();
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
+    private static final String DELETEEMPTYLINES = "(?m)^[ \t]*\r?\n";
 
     /**
      * Parses the business rules that are provided
      * @param businessRules Business rules that need to be parsed
      */
     public void parseString(String businessRules) {
+        businessRules = businessRules.replaceAll(DELETEEMPTYLINES, "");
         CharStream inputStream = CharStreams.fromString(businessRules);
         businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
         BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);

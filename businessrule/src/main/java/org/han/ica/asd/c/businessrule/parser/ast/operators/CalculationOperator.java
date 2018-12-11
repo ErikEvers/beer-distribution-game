@@ -4,12 +4,20 @@ public class CalculationOperator extends Operator {
     private String prefix = "CalO(";
     private String suffix = ")";
 
+    public CalculationOperator() {}
+
     /**
      * Constructor
      * @param operator The calculation operator
      */
     public CalculationOperator(String operator) {
         this.operatorVal = operator;
+    }
+
+	@Override
+    public CalculationOperator addValue(String value) {
+        operatorVal = value;
+        return this;
     }
 
     /**
@@ -39,4 +47,5 @@ public class CalculationOperator extends Operator {
     public void encode(StringBuilder stringBuilder) {
         stringBuilder.append(prefix).append(operatorVal).append(suffix);
     }
+
 }
