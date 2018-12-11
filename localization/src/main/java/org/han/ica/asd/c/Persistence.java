@@ -36,13 +36,16 @@ public class Persistence implements IPersistence {
 		if(!(beergameDAO instanceof FacilityTurn_GameBusinessRules)){
 			beergameDAO = new FacilityTurn_GameBusinessRules();
 		}
-		beergameDAO.createRT_GameBusinessRules_Turn(roundId,gameID,facility.FacilityIdDeliver, facility.FacilityIdOrder, businessRule);
+		beergameDAO.createRT_GameBusinessRules_Turn(roundId,gameID,facility.getFacilityIdDeliver(), facility.getFacilityIdOrder(), businessRule);
 
 	}
 
 	public FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility)
 	{
-
+		if(!(beergameDAO instanceof FacilityTurnDAO)){
+			beergameDAO = new FacilityTurnDAO();
+		}
+		return beergameDAO.fetchTurn(round.getRoundId(),facility.getFacilityIdOrder(),round.getGameId(),facility.getFacilityIdDeliver());
 	}
 
 	public void saveTurnData(FacilityTurn turn)
