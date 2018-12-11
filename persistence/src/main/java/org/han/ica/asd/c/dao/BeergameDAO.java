@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
@@ -15,10 +16,10 @@ import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 
 public class BeergameDAO {
     //CRUD - Create, read, update, delete
-    private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameName, GameDate) VALUES (?,?)";
-    private static final String READ_BEERGAME = "SELECT GameName, GameDate FROM Beergame";
+    private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?)";
+    private static final String READ_BEERGAME = "SELECT * FROM Beergame";
     //Updating is not possible for this table
-    private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameName = ? AND GameDate = ? AND GameEndDate = ?";
+    private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?";
 
 
     /**
@@ -34,8 +35,9 @@ public class BeergameDAO {
 
                 conn.setAutoCommit(false);
 
-                pstmt.setString(1, gameName);
-                pstmt.setString(2, new Date().toString());
+                pstmt.setString(1, UUID.randomUUID().toString());
+                pstmt.setString(2, gameName);
+                pstmt.setString(3, new Date().toString());
 
                 pstmt.executeUpdate();
             }
@@ -60,7 +62,7 @@ public class BeergameDAO {
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        beerGames.add(new Beergame(rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+                        beerGames.add(new Beergame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
                     }
                 }
             }
@@ -72,10 +74,9 @@ public class BeergameDAO {
 
     /**
      * Deletes a BeerGame from the SQLite Database
-     * @param gameName The specified name of the game which needs to be deleted
-     * @param gameDate The specified date of the game which needs to be deleted
+     * @param gameId The specified Id of the game which needs to be deleted
      */
-    public void deleteBeergame(String gameName, String gameDate, String gameEndDate) {
+    public void deleteBeergame(String gameId) {
         Connection conn = null;
         try {
             conn = connect();
@@ -84,9 +85,7 @@ public class BeergameDAO {
 
                 conn.setAutoCommit(false);
 
-                pstmt.setString(1, gameName);
-                pstmt.setString(2, gameDate);
-                pstmt.setString(3, gameEndDate);
+                pstmt.setString(1, gameId);
 
                 pstmt.executeUpdate();
             }

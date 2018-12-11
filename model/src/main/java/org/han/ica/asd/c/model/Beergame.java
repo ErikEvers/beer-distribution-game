@@ -10,13 +10,12 @@ public class Beergame {
     private ArrayList<Round> rounds;
     private Configuration configuration;
 
-    public Beergame(String gameId, String gameName, String gameDate, String gameEndDate, Configuration configuration) {
+    public Beergame(String gameId, String gameName, String gameDate, String gameEndDate) {
         this.gameId = gameId;
         this.gameName = gameName;
         this.gameDate = gameDate;
         this.gameEndDate = gameEndDate;
         this.rounds = new ArrayList<>();
-        this.configuration = configuration;
     }
 
     public String getGameId() {
