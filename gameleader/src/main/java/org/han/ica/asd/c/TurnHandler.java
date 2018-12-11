@@ -7,7 +7,9 @@ public class TurnHandler {
 
 
     public void processFacilityTurn(FacilityTurn turnInformation) {
-        validateFacilityTurn(turnInformation);
+        if(validateFacilityTurn(turnInformation) == true) {
+
+        }
     }
 
     public boolean validateFacilityTurn(FacilityTurn turnInformation) {
