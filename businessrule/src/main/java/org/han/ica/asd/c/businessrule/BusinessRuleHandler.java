@@ -6,7 +6,6 @@ import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.model.Round;
 
-
 public class BusinessRuleHandler implements IBusinessRules{
     public void programAgent(String agentName, String businessRules){
         ParserPipeline parserPipeline = new ParserPipeline();
