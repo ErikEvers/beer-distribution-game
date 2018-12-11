@@ -4,7 +4,7 @@ import org.han.ica.asd.c.model.FacilityTurn_GameBusinessRules;
 
 import java.util.ArrayList;
 
-public class FacilityTurn_GameBusinessRules {
+public class FacilityTurn_GameBusinessRulesDAO {
     //CRUD - Create, read, update, delete
     private static final String CREATE_RT_GAMEBUSINESSRULES_TURN = "";
     private static final String READ_RT_GAMEBUSINESSRULES_TURN = "";
