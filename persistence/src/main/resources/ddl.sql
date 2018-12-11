@@ -32,30 +32,30 @@ CREATE TABLE Configuration (
 );
 
 CREATE TABLE FacilityType (
-  FacilityType varchar(24) NOT NULL,
   GameId varchar(36) NOT NULL,
+  FacilityName varchar(24) NOT NULL,
   ValueIncomingGoods smallint NOT NULL,
   ValueOutgoingGoods smallint NOT NULL,
   StockHoldingCosts smallint NOT NULL,
   OpenOrderCosts smallint NOT NULL,
   StartingBudget smallint NOT NULL,
   StartingOrder smallint NOT NULL,
-  CONSTRAINT PK_FacilityType PRIMARY KEY (FacilityType, GameId),
+  CONSTRAINT PK_FacilityType PRIMARY KEY (FacilityName, GameId),
   CONSTRAINT FK_FacilityType FOREIGN KEY (GameId) REFERENCES Configuration(GameId)
 );
 
 CREATE TABLE Facility  (
-  GameId varchar(36) NOT NULL,
   FacilityId smallint NOT NULL,
-  FacilityType varchar(24) NOT NULL,
-  PlayerId varchar(36) NULL,
+  GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
+  PlayerId varchar(36) NULL,
+  FacilityName varchar(24) NOT NULL,
   Bankrupt bit NOT NULL,
+  CONSTRAINT PK_Facility PRIMARY KEY (GameId, FacilityId),
   CONSTRAINT FK_Facility_Configuration FOREIGN KEY (GameId) REFERENCES  Configuration(GameId),
-  CONSTRAINT FK_Facility_FacilityType FOREIGN KEY (FacilityType) REFERENCES FacilityType(FacilityType),
+  CONSTRAINT FK_Facility_FacilityType FOREIGN KEY (FacilityName) REFERENCES FacilityType(FacilityName),
   CONSTRAINT FK_Facility_GameAgent FOREIGN KEY (GameAgentName) REFERENCES GameAgent (GameAgentName),
-  CONSTRAINT FK_Facility_Player FOREIGN KEY (PlayerId) REFERENCES Player (PlayerId),
-  CONSTRAINT PK_Facility PRIMARY KEY (GameId, FacilityId)
+  CONSTRAINT FK_Facility_Player FOREIGN KEY (PlayerId) REFERENCES Player (PlayerId)
 );
 
 CREATE TABLE FacilityLinkedTo (
@@ -63,19 +63,19 @@ CREATE TABLE FacilityLinkedTo (
   FacilityIdOrder smallint NOT NULL,
   FacilityIdDeliver smallint NOT NULL,
   Active bit NOT NULL,
+  CONSTRAINT PK_FacilityLinkedTo PRIMARY KEY (GameId, FacilityIdOrder, FacilityIdDeliver),
   CONSTRAINT FK_FacilityLinkedTo_Configuration FOREIGN KEY (GameId) REFERENCES Configuration(GameId),
   CONSTRAINT FK_FacilityLinkedTo_Facility_Deliver FOREIGN KEY (FacilityIdDeliver) REFERENCES Facility(FacilityId),
-  CONSTRAINT FK_FacilityLinkedTo_Facility_Order FOREIGN KEY (FacilityIdOrder) REFERENCES Facility(FacilityId),
-  CONSTRAINT PK_FacilityLinkedTo PRIMARY KEY (GameId, FacilityIdOrder, FacilityIdDeliver)
+  CONSTRAINT FK_FacilityLinkedTo_Facility_Order FOREIGN KEY (FacilityIdOrder) REFERENCES Facility(FacilityId)
 );
 
 CREATE TABLE FacilityTurn (
+  GameId varchar(36) NOT NULL,
   RoundId smallint NOT NULL,
   FacilityIdOrder smallint NOT NULL,
   FacilityIdDeliver smallint NOT NULL,
-  GameId varchar(36) NOT NULL,
-  Stock smallint NOT NULL,
-  RemainingBudget smallint NOT NULL,
+  Stock int NOT NULL,
+  RemainingBudget int NOT NULL,
   OrderAmount int NOT NULL,
   OpenOrderAmount int NOT NULL,
   OutgoingGoodsAmount int NOT NULL,
@@ -85,9 +85,9 @@ CREATE TABLE FacilityTurn (
 );
 
 CREATE TABLE GameAgent (
+  FacilityId smallint NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
-  FacilityId smallint NOT NULL,
   CONSTRAINT PK_GameAgent PRIMARY KEY (GameId, GameAgentName, FacilityId),
   CONSTRAINT FK_GameAgent_Facility FOREIGN KEY (GameId, FacilityId) REFERENCES Facility(GameId, FacilityId)
 );
@@ -95,8 +95,8 @@ CREATE TABLE GameAgent (
 CREATE TABLE Player (
   GameId varchar(36) NOT NULL,
   PlayerId varchar(36) NOT NULL,
-  IpAddress varchar(45) NOT NULL,
   FacilityId smallint NOT NULL,
+  IpAddress varchar(45) NOT NULL,
   Name varchar(255) NOT NULL,
   IsConnected bit NOT NULL,
   CONSTRAINT PK_Player PRIMARY KEY (GameId, PlayerId),
@@ -107,7 +107,6 @@ CREATE TABLE Player (
 CREATE TABLE Leader (
   GameId varchar(36) NOT NULL,
   PlayerId varchar(36) NOT NULL,
-  IsLeader bit NOT NULL,
   Timestamp timestamp NOT NULL,
   CONSTRAINT PK_Leader PRIMARY KEY (GameId, PlayerId),
   CONSTRAINT FK_Leader_Player FOREIGN KEY (GameId, PlayerId) REFERENCES Player(GameId, PlayerId)
@@ -115,13 +114,14 @@ CREATE TABLE Leader (
 
 CREATE TABLE GameBusinessRulesInFacilityTurn (
   RoundId smallint NOT NULL,
-  FacilityIdDeliver smallint NOT NULL,
   FacilityIdOrder smallint NOT NULL,
+  FacilityIdDeliver smallint NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
   GameBusinessRule varchar NOT NULL,
-  CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId, GameAgentName, GameBusinessRule),
-  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule),
+  GameAST varchar NOT NULL,
+  CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId, GameAgentName, GameBusinessRule, GameAST),
+  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule, GameAST) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule, GameAST),
   CONSTRAINT FK_GameBusinessRulesInFacilityTurn_FacilityTurn FOREIGN KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId) REFERENCES FacilityTurn(RoundId, FacilityIdDeliver, FacilityIdOrder, GameId)
 );
 
@@ -131,7 +131,7 @@ CREATE TABLE GameBusinessRules (
   GameAgentName varchar(255) NOT NULL,
   GameBusinessRule varchar NOT NULL,
   GameAST varchar NOT NULL,
-  CONSTRAINT PK_GameBusinessRules PRIMARY KEY (FacilityId, GameId, GameAgentName, GameBusinessRule),
+  CONSTRAINT PK_GameBusinessRules PRIMARY KEY (FacilityId, GameId, GameAgentName, GameBusinessRule, GameAST),
   CONSTRAINT FK_GameBusinessRules_GameAgent FOREIGN KEY (FacilityId, GameId, GameAgentName) REFERENCES GameAgent(FacilityId, GameId, GameAgentName)
 );
 
