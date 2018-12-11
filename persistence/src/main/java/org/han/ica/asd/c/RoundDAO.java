@@ -1,8 +1,12 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.Round;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
@@ -12,6 +16,8 @@ public class RoundDAO {
 	private static final String READ_ROUND = "";
 	private static final String UPDATE_ROUND = "";
 	private static final String DELETE_ROUND = "";
+
+	private FacilityTurnDAO turnDAO;
 
 
 	public void createRound(String gameId, int roundId){
@@ -33,5 +39,11 @@ public class RoundDAO {
 			System.out.println(e.getMessage());
 			RollBackTransaction(conn);
 		}
+	}
+
+	public Round fetchRoundData(String gameId, int roundId){
+		Round round = new Round(gameId,roundId);
+		round.setTurns(turnDAO.fetchTurns(gameId,roundId));
+		return round;
 	}
 }
