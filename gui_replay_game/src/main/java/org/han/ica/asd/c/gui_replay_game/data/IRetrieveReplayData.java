@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.gui_replay_game.data;
 
-import org.han.ica.asd.c.model.Beergame;
+import org.han.ica.asd.c.model.BeerGame;
 import org.han.ica.asd.c.model.Round;
 
 /**
@@ -11,9 +11,9 @@ public interface IRetrieveReplayData {
      * @param gameID
      * Primary identifier to retrieve a game
      * @return
-     * Returns a Beergame object for a full replay
+     * Returns a BeerGame object for a full replay
      */
-    Beergame retrieveGameData(String gameID);
+    BeerGame retrieveGameData(String gameID);
 
     /**
      * @param gameID
