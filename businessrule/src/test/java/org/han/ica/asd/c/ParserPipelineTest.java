@@ -21,17 +21,4 @@ public class ParserPipelineTest {
 
         assertEquals(res, exp);
     }
-
-    @Test
-    void testParserPipelineTest_parseString_IndexOutOfBound() {
-
-        try {
-            parserPipeline.parseString("-------");
-            fail("ParserPipeline parseString, Should be IndexOutOfBound");
-        }catch (IndexOutOfBoundsException e){
-
-        }
-        List<String> exp = new ArrayList<>();
-
-    }
 }
