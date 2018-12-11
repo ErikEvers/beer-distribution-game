@@ -6,18 +6,35 @@ public class ActionReference extends ASTNode {
     private String suffix = "(";
     private String action;
 
+    /**
+     * Constructor
+     * @param action The action that has to be executed for this businessrule
+     */
     public ActionReference(String action) {
         this.action = action;
     }
 
+    /**
+     * Encodes the parsed tree in a single string so that it can be stored in the database
+     * @param stringBuilder Stringbuilder that is used to encode the tree
+     */
     public void encode(StringBuilder stringBuilder) {
        stringBuilder.append(action).append(suffix);
     }
 
+    /**
+     * Getter
+     * @return Returns the action
+     */
     public String getAction() {
         return action;
     }
 
+    /**
+     * Equals function used for unit testing
+     * @param o Object that needs to be checked if it's equal to this object
+     * @return Returns true or false depending on if it's equal or not
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -30,6 +47,10 @@ public class ActionReference extends ASTNode {
         return Objects.equals(action, actionReference.action);
     }
 
+    /**
+     * Hash function used for unit testing
+     * @return Returns the hashcode
+     */
     @Override
     public int hashCode() {
         return Objects.hash(action);

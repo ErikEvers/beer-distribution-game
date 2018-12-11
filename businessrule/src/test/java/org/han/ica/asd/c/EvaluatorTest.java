@@ -97,7 +97,7 @@ class EvaluatorTest {
         comparison.addChild(new ComparisonValue().addChild(new Value().addValue("lowest")));
 
         try {
-            Whitebox.invokeMethod(evaluator, "checkLowHighOnlyUsedWithGameValueAndAboveBelow", comparison,1);
+            Whitebox.invokeMethod(evaluator, "checkLowHighOnlyComparedToGameValueAndAboveBelow", comparison,1);
             fail("Expected exception has not occured.");
         } catch (Exception e) {
         }
@@ -111,7 +111,7 @@ class EvaluatorTest {
         comparison.addChild(new ComparisonValue().addChild(new Value().addValue("inventory")));
 
         try {
-            Whitebox.invokeMethod(evaluator, "checkLowHighOnlyUsedWithGameValueAndAboveBelow", comparison,1);
+            Whitebox.invokeMethod(evaluator, "checkLowHighOnlyComparedToGameValueAndAboveBelow", comparison,1);
             fail("Expected exception has not occured.");
         } catch (Exception e) {
         }

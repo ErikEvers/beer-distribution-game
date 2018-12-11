@@ -3,11 +3,11 @@ package org.han.ica.asd.c.businessrule;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 
 public class BusinessRuleHandler implements IBusinessRules{
-    public static void main(String[] args) {
-        ParserPipeline parserPipeline = new ParserPipeline();
-        parserPipeline.parseString("if inventory is lowest then order 20\ndefault order 20");
-    }
-
+    /**
+     * Parses the business rules and sends it to the persistence component
+     * @param agentName Name for the agent
+     * @param businessRules Business rules for the agent
+     */
     public void programAgent(String agentName, String businessRules){
         ParserPipeline parserPipeline = new ParserPipeline();
         parserPipeline.parseString(businessRules);

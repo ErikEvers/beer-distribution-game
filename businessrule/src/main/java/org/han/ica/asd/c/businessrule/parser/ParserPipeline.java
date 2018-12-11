@@ -19,8 +19,12 @@ public class ParserPipeline {
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
 
-    public void parseString(String input) {
-        CharStream inputStream = CharStreams.fromString(input);
+    /**
+     * Parses the business rules that are provided
+     * @param businessRules Business rules that need to be parsed
+     */
+    public void parseString(String businessRules) {
+        CharStream inputStream = CharStreams.fromString(businessRules);
         businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
         BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -37,21 +41,35 @@ public class ParserPipeline {
         encodeBusinessRules();
     }
 
+    /**
+     * Encodes the business rules and puts them in a map so that they can be sent and stored in the database.
+     */
     private void encodeBusinessRules() {
         for (int i = 0; i < businessRulesParsed.size(); i++) {
             businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).encode());
         }
     }
 
+    /**
+     * Evaluates the business rules so that they are correct and usable
+     */
     private void evaluate() {
         Evaluator evaluator = new Evaluator();
         evaluator.evaluate(businessRulesParsed);
     }
 
+    /**
+     * Getter
+     * @return Returns the business rules map that is stored in the database
+     */
     public Map<String, String> getBusinessRulesMap() {
         return businessRulesMap;
     }
 
+    /**
+     * Getter
+     * @return Returns the business rules that were put in parseString function
+     */
     public List<String> getBusinessRulesInput() {
         return businessRulesInput;
     }
