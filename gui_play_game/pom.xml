@@ -10,6 +10,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <parent>
+        <groupId>model</groupId>
+        <artifactId>beergame</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>gui_play_game</artifactId>
     <version>1.0-SNAPSHOT</version>
 

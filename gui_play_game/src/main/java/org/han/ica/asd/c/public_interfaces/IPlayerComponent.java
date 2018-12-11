@@ -1,14 +1,14 @@
 package org.han.ica.asd.c.public_interfaces;
 
-import org.han.ica.asd.c.domain.Agent;
-import org.han.ica.asd.c.domain.Facility;
-import org.han.ica.asd.c.domain.Player;
 
-import java.util.List;
+import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.GameAgent;
 
 public interface IPlayerComponent {
-    void insertPlayer(Player player);
-    void insertAgent(Agent agent);
-    void seeOtherFacilities(List<Facility> facilities);
+    void insertPlayer();
+    void insertAgent();
+    void seeOtherFacilities();
     void placeOrder(int amount);
+    void selectAgent(GameAgent agent);
+    void chooseFacility(Facility facility);
 }
