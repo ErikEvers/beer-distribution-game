@@ -2,8 +2,10 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.domain.Facility;
 import org.han.ica.asd.c.domain.Order;
 import org.han.ica.asd.c.domain.PlayerRoundData;
+import org.han.ica.asd.c.exceptions.FacilityNotFoundException;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -50,8 +52,8 @@ public class GameLogicTests {
         assertEquals(facility, givenFacility.getValue());
     }
 
-    @Test(expected = FacilityNotFoundException.class)
+    @Test
     public void getRoundDataFromFacilityThrowsWhenFacilityIsNull() {
-        gameLogic.getRoundDataFromFacility(null);
+        Assertions.assertThrows(FacilityNotFoundException.class, () -> gameLogic.getRoundDataFromFacility(null));
     }
 }
