@@ -1,5 +1,9 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Value extends OperationValue {
