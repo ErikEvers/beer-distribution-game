@@ -33,7 +33,7 @@ public class ConfigurationDAO {
 	 * @param ContinuePlayingWhenBankrupt A boolean which represents if a player can keep on playing if they are bankrupt
 	 * @param InsightFacilities A boolean which represents if a player can see the status and orders of other facilities
 	 */
-	public void createConfiguration(String GameId, int AmountOfRounds, int AmountOfFactories, int AmountOfWholesales, int AmountOfDistributors, int AmountOfRetailers, int MinimalOrderRetail, int MaximumOrderRetail, boolean ContinuePlayingWhenBankrupt, boolean InsightFacilities) {
+	public void createConfiguration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) {
 		Connection conn = null;
 		try {
 			conn = connect();
@@ -42,16 +42,16 @@ public class ConfigurationDAO {
 
 				conn.setAutoCommit(false);
 
-				pstmt.setString(1, GameId);
-				pstmt.setInt(2, AmountOfRounds);
-				pstmt.setInt(3, AmountOfFactories);
-				pstmt.setInt(4, AmountOfWholesales);
-				pstmt.setInt(5, AmountOfDistributors);
-				pstmt.setInt(6, AmountOfRetailers);
-				pstmt.setInt(7, MinimalOrderRetail);
-				pstmt.setInt(8, MaximumOrderRetail);
-				pstmt.setBoolean(9, ContinuePlayingWhenBankrupt);
-				pstmt.setBoolean(10, InsightFacilities);
+				pstmt.setString(1, gameId);
+				pstmt.setInt(2, amountOfRounds);
+				pstmt.setInt(3, amountOfFactories);
+				pstmt.setInt(4, amountOfWholesales);
+				pstmt.setInt(5, amountOfDistributors);
+				pstmt.setInt(6, amountOfRetailers);
+				pstmt.setInt(7, minimalOrderRetail);
+				pstmt.setInt(8, maximumOrderRetail);
+				pstmt.setBoolean(9, continuePlayingWhenBankrupt);
+				pstmt.setBoolean(10, insightFacilities);
 
 				pstmt.executeUpdate();
 			}
