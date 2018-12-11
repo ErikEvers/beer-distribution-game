@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.RoundData;
 import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
