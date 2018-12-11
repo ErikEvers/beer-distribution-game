@@ -42,7 +42,6 @@ public class Evaluator {
                     checkDeliverOnlyUsedWithBelowAbove(current, lineNumber, belowAboveCounter);
                     checkLowHighOnlyUsedInComparison(current, lineNumber, previous);
                 } catch (BusinessRuleException e) {
-                    // TODO: Level.SEVERE vervangen door FINE.
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
 
@@ -114,11 +113,11 @@ public class Evaluator {
         q.add(current.getChildren().get(side));
         while (!q.isEmpty()) {
             ASTNode qVal = q.remove();
-            if (qVal instanceof Value){
+            if (qVal instanceof Value) {
                 for (String gameValue : gameValues) {
-                    if(((Value) qVal).getValue().contains(gameValue)
-                            && !((((Value) qVal).getValue().contains(EvaluatorType.ABOVE.getEvaluatorSymbol()))
-                            || ((Value) qVal).getValue().contains(EvaluatorType.BELOW.getEvaluatorSymbol()))){
+                    if (!((Value) qVal).getValue().contains(gameValue)
+                            || !((((Value) qVal).getValue().contains(EvaluatorType.ABOVE.getEvaluatorSymbol()))
+                            || ((Value) qVal).getValue().contains(EvaluatorType.BELOW.getEvaluatorSymbol()))) {
                         throw new BusinessRuleException("Lowest and highest can only be used with a game value combined with an above/below", lineNumber);
                     }
                 }
@@ -137,7 +136,7 @@ public class Evaluator {
             if (leftSide.contains(EvaluatorType.BELOW.getEvaluatorSymbol())
                     || leftSide.contains(EvaluatorType.ABOVE.getEvaluatorSymbol())
                     || rightSide.contains(EvaluatorType.BELOW.getEvaluatorSymbol())
-                    || rightSide.contains(EvaluatorType.ABOVE.getEvaluatorSymbol())){
+                    || rightSide.contains(EvaluatorType.ABOVE.getEvaluatorSymbol())) {
                 belowAboveCounter.addOne();
             }
         }
@@ -150,10 +149,10 @@ public class Evaluator {
     }
 
     private void checkLowHighOnlyUsedInComparison(ASTNode current, int lineNumber, ASTNode previous) throws BusinessRuleException {
-        if(current instanceof Value
+        if (current instanceof Value
                 && (((Value) current).getValue().contains(EvaluatorType.LOWEST.getEvaluatorSymbol())
                 || ((Value) current).getValue().contains(EvaluatorType.HIGHEST.getEvaluatorSymbol()))
-                && !(previous instanceof ComparisonValue)){
+                && !(previous instanceof ComparisonValue)) {
             throw new BusinessRuleException("Lowest and highest can only be used in a comparison", lineNumber);
         }
     }
