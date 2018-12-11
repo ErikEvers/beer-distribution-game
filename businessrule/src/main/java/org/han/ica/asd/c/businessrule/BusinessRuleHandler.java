@@ -5,9 +5,10 @@ import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.model.RoundData;
 
-public class BusinessRuleHandler implements IBusinessRules {
-    public void programAgent(String agentName, String businessRules) {
+public class BusinessRuleHandler implements IBusinessRules{
+    public void programAgent(String agentName, String businessRules){
         ParserPipeline parserPipeline = new ParserPipeline();
         parserPipeline.parseString(businessRules);
     }
