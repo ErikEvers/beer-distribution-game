@@ -19,6 +19,12 @@
             <artifactId>gameconfiguration</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.han.ica.asd.c</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>java</scope>
+        </dependency>
     </dependencies>
     
 </project>
