@@ -7,11 +7,20 @@ public enum BooleanType {
 
     private String booleanSymbol;
 
-    BooleanType(String booleanSymbol){
+    BooleanType(String booleanSymbol) {
         this.booleanSymbol = booleanSymbol;
     }
 
-    public String getBooleanSymbol(){
+    public String getBooleanSymbol() {
         return booleanSymbol;
+    }
+
+    public static BooleanType getBooleanTypeFromBooleanSymbol(String booleanSymbol) {
+        for (BooleanType booleanType : BooleanType.values()) {
+            if (booleanType.booleanSymbol.equalsIgnoreCase(booleanSymbol)) {
+                return booleanType;
+            }
+        }
+        return null;
     }
 }

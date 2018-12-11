@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Comparison extends Expression {
 
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class Comparison extends Expression {
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
-        Collections.addAll(list,left,comparisonOperator,right);
+        Collections.addAll(list, left, comparisonOperator, right);
         return list;
     }
 
@@ -58,5 +59,9 @@ public class Comparison extends Expression {
     @Override
     public int hashCode() {
         return Objects.hash(left, comparisonOperator, right);
+    }
+
+    public BooleanLiteral resolveComparison() {
+        return null;
     }
 }

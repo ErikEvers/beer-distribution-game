@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class ComparisonStatement extends Expression {
 
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class ComparisonStatement extends Expression {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
         if (booleanOperator != null && right != null) {
-            Collections.addAll(list,booleanOperator,right);
+            Collections.addAll(list, booleanOperator, right);
         }
         return list;
     }
@@ -61,5 +62,38 @@ public class ComparisonStatement extends Expression {
     @Override
     public int hashCode() {
         return Objects.hash(left, booleanOperator, right);
+    }
+
+    public BooleanLiteral resolveComparisonStatement() {
+        boolean result = false;
+
+        if (this.left instanceof ComparisonStatement) {
+            this.left = ((ComparisonStatement) this.left).resolveComparisonStatement();
+        } else if (this.left instanceof Comparison) {
+            this.left = ((Comparison) this.left).resolveComparison();
+        }
+
+        if (this.right instanceof ComparisonStatement) {
+            this.right = ((ComparisonStatement) this.right).resolveComparisonStatement();
+        } else if (this.right instanceof Comparison) {
+            this.right = ((Comparison) this.right).resolveComparison();
+        }
+
+        if (this.left instanceof BooleanLiteral && this.right instanceof BooleanLiteral) {
+            BooleanLiteral booleanLiteralLeft = (BooleanLiteral) left;
+            BooleanLiteral booleanLiteralRight = (BooleanLiteral) right;
+
+            switch (booleanOperator.getValue()) {
+                case AND:
+                    result = booleanLiteralLeft.getValue() && booleanLiteralRight.getValue();
+                    break;
+                case OR:
+                    result = booleanLiteralLeft.getValue() || booleanLiteralRight.getValue();
+                    break;
+                default:
+                    break;
+            }
+        }
+        return new BooleanLiteral(result);
     }
 }

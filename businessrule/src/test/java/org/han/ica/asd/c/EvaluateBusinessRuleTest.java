@@ -1,8 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
-import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
-import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.*;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
@@ -293,6 +291,48 @@ public class EvaluateBusinessRuleTest {
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
                         .addChild(new Value().addValue("30")));
+
+        assertTrue(businessRuleBefore.equals(businessRuleAfter));
+    }
+
+    @Test
+    public void testResolvingComparisonStatementCondition() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
+                        .addChild(new ComparisonOperator("is"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertTrue(businessRuleBefore.equals(businessRuleAfter));
+    }
+
+    @Test
+    public void testResolvingDefaultCondition() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new Default())
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
 
         assertTrue(businessRuleBefore.equals(businessRuleAfter));
     }

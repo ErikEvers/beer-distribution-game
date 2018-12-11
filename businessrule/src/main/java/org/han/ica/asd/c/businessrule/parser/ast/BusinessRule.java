@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
@@ -36,13 +37,20 @@ public class BusinessRule extends ASTNode {
     }
 
     private void transformChild(ASTNode node) {
-
         if (node instanceof ComparisonValue) {
             ComparisonValue comparisonValue = (ComparisonValue) node;
             OperationValue operationValue = comparisonValue.getOperationValue();
             if (operationValue instanceof Operation) {
                 Operation operation = (Operation) operationValue;
                 comparisonValue.setOperationValue(operation.resolveOperation());
+            }
+        } else if (node instanceof BusinessRule) {
+            BusinessRule businessRule = (BusinessRule) node;
+            if (businessRule.condition instanceof ComparisonStatement) {
+                ComparisonStatement comparisonStatement = (ComparisonStatement) businessRule.condition;
+                businessRule.condition = comparisonStatement.resolveComparisonStatement();
+            } else if (businessRule.condition instanceof Default) {
+                businessRule.condition = new BooleanLiteral(true);
             }
         }
 
