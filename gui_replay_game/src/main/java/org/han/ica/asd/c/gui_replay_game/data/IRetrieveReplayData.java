@@ -21,5 +21,5 @@ public interface IRetrieveReplayData {
      * @return
      * Returns a single round for in-game replays
      */
-    Round retrieveSingleRoundData(String gameID);
+    Round retrieveSingleRoundData(String gameID, int roundID);
 }
