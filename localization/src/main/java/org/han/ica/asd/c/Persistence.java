@@ -50,7 +50,13 @@ public class Persistence implements IPersistence {
 
 	public void saveTurnData(FacilityTurn turn)
 	{
+		if(!(beergameDAO instanceof FacilityTurnDAO)){
+			beergameDAO = new FacilityTurnDAO();
+		}
 
+		beergameDAO.createTurn(turn.getRoundId(),turn.getFacilityIdOrder(),turn.getGameId(),
+				facility.getFacilityIdDeliver(), turn.getStock(), turn.getRemainingBudget(),
+				turn.getOrder(), turn.getOpenOrder(),turn.getOutgoingGoods());
 
 	}
 }
