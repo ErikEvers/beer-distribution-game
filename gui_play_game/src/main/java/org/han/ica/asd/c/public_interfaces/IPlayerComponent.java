@@ -2,13 +2,13 @@ package org.han.ica.asd.c.public_interfaces;
 
 
 import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.model.GameAgent;
+import org.han.ica.asd.c.model.ProgrammedAgent;
 
 public interface IPlayerComponent {
-    void insertPlayer();
-    void insertAgent();
+    void activatePlayer();
+    void activateGameAgent();
     void seeOtherFacilities();
     void placeOrder(int amount);
-    void selectAgent(GameAgent agent);
+    void selectProgrammedAgent(ProgrammedAgent programmedagent);
     void chooseFacility(Facility facility);
 }
