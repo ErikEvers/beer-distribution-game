@@ -2,8 +2,8 @@ package org.han.ica.asd.c.model;
 
 public class FacilityTurn {
     private int roundId;
-    private int facilityIdOrder;
-    private int facilityIdDeliver;
+    private Facility facilityOrder;
+    private Facility facilityDeliver;
     private String gameId;
     private int stock;
     private int remainingBudget;
@@ -11,10 +11,10 @@ public class FacilityTurn {
     private OpenOrder openOrder;
     private OutgoingGoods outgoingGoods;
 
-    public FacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
+    public FacilityTurn(int roundId, Facility facilityIdOrder, Facility facilityIdDeliver, String gameId, int stock, int remainingBudget, Order order, OpenOrder openOrder, OutgoingGoods outgoingGoods) {
         this.roundId = roundId;
-        this.facilityIdOrder = facilityIdOrder;
-        this.facilityIdDeliver = facilityIdDeliver;
+        this.facilityOrder = facilityIdOrder;
+        this.facilityDeliver = facilityIdDeliver;
         this.gameId = gameId;
         this.stock = stock;
         this.remainingBudget = remainingBudget;
@@ -31,20 +31,20 @@ public class FacilityTurn {
         this.roundId = roundId;
     }
 
-    public int getFacilityIdOrder() {
-        return facilityIdOrder;
+    public Facility getFacilityOrder() {
+        return facilityOrder;
     }
 
-    public void setFacilityIdOrder(int facilityIdOrder) {
-        this.facilityIdOrder = facilityIdOrder;
+    public void setFacilityOrder(Facility facilityOrder) {
+        this.facilityOrder = facilityOrder;
     }
 
-    public int getFacilityIdDeliver() {
-        return facilityIdDeliver;
+    public Facility getFacilityDeliver() {
+        return facilityDeliver;
     }
 
-    public void setFacilityIdDeliver(int facilityIdDeliver) {
-        this.facilityIdDeliver = facilityIdDeliver;
+    public void setFacilityDeliver(Facility facilityDeliver) {
+        this.facilityDeliver = facilityDeliver;
     }
 
     public String getGameId() {
