@@ -1,8 +1,7 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.gameleader.componentInterfaces;
 
 import org.han.ica.asd.c.model.Round;
 
 public interface IConnectorForLeader {
-    void addObserver(IMessageObserver observer);
     void sendRoundDataToAllPlayers(Round allData);
 }
