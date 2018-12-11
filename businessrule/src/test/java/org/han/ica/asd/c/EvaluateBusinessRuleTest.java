@@ -155,7 +155,7 @@ public class EvaluateBusinessRuleTest {
 
         businessRuleBefore.evaluateBusinessRule();
 
-        assertTrue(businessRuleBefore.equals(businessRuleAfter));
+        assertEquals(businessRuleAfter, businessRuleBefore);
     }
 
     @Test
@@ -174,11 +174,11 @@ public class EvaluateBusinessRuleTest {
 
         businessRuleBefore.evaluateBusinessRule();
 
-        assertTrue(businessRuleBefore.equals(businessRuleAfter));
+        assertEquals(businessRuleAfter, businessRuleBefore);
     }
 
     @Test
-    public void testResolvingComparisonStatement() {
+    public void testResolvingAndComparisonStatement() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new BooleanLiteral(true))
@@ -196,6 +196,28 @@ public class EvaluateBusinessRuleTest {
 
         businessRuleBefore.evaluateBusinessRule();
 
-        assertTrue(businessRuleBefore.equals(businessRuleAfter));
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    public void testResolvingOrComparisonStatement() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new BooleanLiteral(false))
+                .addChild(new BooleanOperator("or"))
+                .addChild(new BooleanLiteral(false)))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(false))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
     }
 }

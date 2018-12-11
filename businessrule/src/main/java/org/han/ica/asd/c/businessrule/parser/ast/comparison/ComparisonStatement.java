@@ -73,10 +73,8 @@ public class ComparisonStatement extends Expression {
                 case OR:
                     return new BooleanLiteral(this.left.resolveCondition().getValue() || this.right.resolveCondition().getValue());
             }
-        } else {
-            return this.left.resolveCondition();
         }
 
-        return null;
+        return this.left.resolveCondition();
     }
 }
