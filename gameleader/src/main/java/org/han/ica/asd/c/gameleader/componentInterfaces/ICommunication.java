@@ -2,10 +2,10 @@ package org.han.ica.asd.c.gameleader.componentInterfaces;
 import org.han.ica.asd.c.RoundData;
 
 /**
- * interface for the communication component
+ * Interface for the communication component
  * which is responsible for sending and receiving information, and maintaining connections throughout a game.
  */
-public interface ICommunication {
+public interface IConnectorForLeader {
 
     /**
      * Register an instance of a IMessageObserver as an observer that listens to the communication component.
