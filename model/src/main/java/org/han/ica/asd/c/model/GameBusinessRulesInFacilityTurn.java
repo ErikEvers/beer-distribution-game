@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model;
 
-public class FacilityTurn_GameBusinessRules {
+public class GameBusinessRulesInFacilityTurn {
     private int roundId;
     private int facilityIdDeliver;
     private int facilityIdOrder;
@@ -10,7 +10,7 @@ public class FacilityTurn_GameBusinessRules {
     private String gameAgentName;
     private String gameBusinessRule;
 
-    public FacilityTurn_GameBusinessRules(int roundID, int facilityIdDeliver, int facilityIdOrder, String gameName, String gameDate, String gameEndDate, String gameAgentName, String gameBusinessRule) {
+    public GameBusinessRulesInFacilityTurn(int roundID, int facilityIdDeliver, int facilityIdOrder, String gameName, String gameDate, String gameEndDate, String gameAgentName, String gameBusinessRule) {
         this.roundId = roundID;
         this.facilityIdDeliver = facilityIdDeliver;
         this.facilityIdOrder = facilityIdOrder;

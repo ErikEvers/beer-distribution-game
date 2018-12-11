@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.dao;
 
-import org.han.ica.asd.c.model.FacilityTurn_GameBusinessRules;
+import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ public class FacilityTurn_GameBusinessRules {
 
     }
 
-    public ArrayList<org.han.ica.asd.c.model.FacilityTurn_GameBusinessRules> readRT_GameBusinessRules_Turn(){
+    public ArrayList<GameBusinessRulesInFacilityTurn> readRT_GameBusinessRules_Turn(){
         return null;
     }
 
