@@ -40,4 +40,10 @@ public class GameLogicTests {
         gameLogic.placeOrder(facilityTurn);
         verify(communication, times(1)).sendTurnData(facilityTurn);
     }
+
+    @Test
+    public void seeOtherFacilitiesCallsPersistence() {
+        gameLogic.seeOtherFacilities();
+        verify(persistence, times(1)).fetchRoundData(anyString(), anyInt());
+    }
 }
