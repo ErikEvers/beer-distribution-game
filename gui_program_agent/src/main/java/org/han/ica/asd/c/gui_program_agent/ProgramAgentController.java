@@ -9,11 +9,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.businessrule.IBusinessRules;
+import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
+import org.han.ica.asd.c.businessrule.parser.UserInputException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,21 +38,28 @@ public class ProgramAgentController {
     TextArea businessRuleInput;
 
     @FXML
+    TextArea businessRuleErrorTextArea;
+
+    @FXML
+    TextFlow businessRuleTexFlow;
+
+    @FXML
     Button save;
 
     private IBusinessRules iBusinessRules;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
-    private String agentNameErrorHeader = "Agent name Error";
-    private String agentNameErrorBody = "You have to set a agent name.";
+    private static final String AGENT_NAME_ERROR_HEADER = "Agent name Error";
+    private static final String AGENT_NAME_ERROR_BODY = "You have to set a agent name.";
 
-    private String businessRuleErrorHeader = "Business rule Error";
-    private String businessRuleErrorBody = "There are no business rules given.\n Please enter them end try again.";
+    private static final String BUSINESS_RULE_ERROR_HEADER = "Business rule Error";
+    private static final String BUSINESS_RULE_ERROR_BODY = "There are no business rules given.\n Please enter them end try again.";
 
-    private String businessRuleSuccessHeader = "Saved Successfully";
-    private String businessRuleSuccessBody = "The business rules are saved successfully.";
+    private static final String BUSINESS_RULE_SUCCESS_HEADER = "Saved Successfully";
+    private static final String BUSINESS_RULE_SUCCESS_BODY = "The business rules are saved successfully.";
 
+    private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
 
     public ProgramAgentController() {
         iBusinessRules = new BusinessRuleHandler();
@@ -76,7 +89,7 @@ public class ProgramAgentController {
             programAgentPopupController.setHeaderLabelText(headerText, headerColor);
             programAgentPopupController.setBodyLabelText(bodyText);
             Stage stage = new Stage();
-            stage.setScene(new Scene(root, 400, 200));
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -90,14 +103,36 @@ public class ProgramAgentController {
     private void setSaveButtonAction() {
         save.setOnAction(event -> {
             String agentName = agentNameInput.getText();
-            String businessRules = businessRuleInput.getText();
+            String businessRulesUserInput = businessRuleInput.getText();
+
             if (agentName == null || agentName.trim().isEmpty()) {
-                setProgramAgentPopup(agentNameErrorHeader,agentNameErrorBody, Color.RED);
-            } else if (businessRules == null || businessRules.trim().isEmpty()) {
-                setProgramAgentPopup(businessRuleErrorHeader, businessRuleErrorBody , Color.RED);
+                setProgramAgentPopup(AGENT_NAME_ERROR_HEADER, AGENT_NAME_ERROR_BODY, Color.RED);
+            } else if (businessRulesUserInput == null || businessRulesUserInput.trim().isEmpty()) {
+                setProgramAgentPopup(BUSINESS_RULE_ERROR_HEADER, BUSINESS_RULE_ERROR_BODY, Color.RED);
             } else {
-                iBusinessRules.programAgent(agentName, businessRules);
-                setProgramAgentPopup(businessRuleSuccessHeader,businessRuleSuccessBody , Color.GREEN);
+                String[] lines = businessRulesUserInput.split(REGEX_SPLIT_ON_NEW_LINE);
+                List<UserInputBusinessRule> businessRules = new ArrayList<>();
+                for (int i = 0; i < lines.length; i++) {
+                    businessRules.add(new UserInputBusinessRule(lines[i], i) {
+                    });
+                }
+                    iBusinessRules.programAgent(agentName, businessRules);
+                    setProgramAgentPopup(BUSINESS_RULE_SUCCESS_HEADER, BUSINESS_RULE_SUCCESS_BODY, Color.GREEN);
+
+                    List<Integer> errorLines = e.getLinesWithError();
+                    List<Text> textObjects = new ArrayList<>();
+                    for (int i = 0; i < lines.length; i++) {
+                        Text text = new Text(lines[i] + "\n");
+                        if (errorLines.contains(i + 1)) {
+                            text.setFill(Color.RED);
+                        }
+                        textObjects.add(text);
+                    }
+                    businessRuleErrorTextArea.clear();
+                    businessRuleErrorTextArea.setText(e.toString());
+                    businessRuleTexFlow.getChildren().clear();
+                    businessRuleTexFlow.getChildren().addAll(textObjects);
+                }
             }
         });
     }
@@ -112,7 +147,7 @@ public class ProgramAgentController {
             try {
                 root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"));
                 Stage stage = new Stage();
-                stage.setScene(new Scene(root, 1000, 800));
+                stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);

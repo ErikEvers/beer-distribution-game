@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,20 @@ public class UserInputException extends Exception {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<Integer,String> entry : inputErrors.entrySet()) {
-            stringBuilder.append("Input syntax error: ").append(entry.getValue()).append(" on line ").append(entry.getKey()).append(".\n");
+            stringBuilder.append("Input syntax error occurred on line ").append(entry.getKey()).append(": ").append(entry.getValue()).append(".\n");
         }
         return stringBuilder.toString();
+    }
+
+    /***
+     * Gets a list with all the lines that contains a error.
+     * @return List with ints that stand for the lines with error's.
+     */
+    public List<Integer> getLinesWithError(){
+        List<Integer> lines = new ArrayList<>();
+        for (Map.Entry<Integer,String> entry : inputErrors.entrySet()) {
+            lines.add(entry.getKey());
+        }
+        return lines;
     }
 }

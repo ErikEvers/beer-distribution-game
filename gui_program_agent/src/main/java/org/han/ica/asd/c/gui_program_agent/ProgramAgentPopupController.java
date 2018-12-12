@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gui_program_agent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
@@ -14,10 +15,10 @@ public class ProgramAgentPopupController implements IProgramAgentSharedControlle
     Label headerLabel;
 
     @FXML
-    Label bodyLabel;
+    Button close;
 
     @FXML
-    Button close;
+    TextArea errorTextArea;
 
     /***
      *  Function for initialising the current ProgramAgentInfo FXML. It also sets the actions of the button to close current window on click.
@@ -42,8 +43,6 @@ public class ProgramAgentPopupController implements IProgramAgentSharedControlle
      * @param text The text that the label should get.
      */
     void setBodyLabelText(String text) {
-        bodyLabel.setText(text);
+        errorTextArea.setText(text);
     }
-
-
 }
