@@ -1,7 +1,5 @@
-/*
-We changed the data type of datetime to varchar because SQLite doesn't support the data type datetime.
- */
-CREATE TABLE Beergame (
+-- #createDatabase
+CREATE TABLE IF NOT EXISTS Beergame (
   GameId varchar(36) NOT NULL,
   GameName varchar(255) NOT NULL,
   GameDate varchar NOT NULL,
@@ -9,7 +7,7 @@ CREATE TABLE Beergame (
   CONSTRAINT PK_Beergame PRIMARY KEY (GameId)
 );
 
-CREATE TABLE Round (
+CREATE TABLE IF NOT EXISTS Round (
   GameId varchar(36) NOT NULL,
   RoundId smallint NOT NULL,
   CONSTRAINT PK_Round PRIMARY KEY (GameId, RoundId),
@@ -17,7 +15,7 @@ CREATE TABLE Round (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE Configuration (
+CREATE TABLE IF NOT EXISTS  Configuration (
   GameId varchar(36) NOT NULL,
   AmountOfRounds smallint NOT NULL,
   AmountOfFactories smallint NOT NULL,
@@ -33,7 +31,7 @@ CREATE TABLE Configuration (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE FacilityType (
+CREATE TABLE IF NOT EXISTS  FacilityType (
   GameId varchar(36) NOT NULL,
   FacilityName varchar(24) NOT NULL,
   ValueIncomingGoods smallint NOT NULL,
@@ -47,7 +45,7 @@ CREATE TABLE FacilityType (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE Facility  (
+CREATE TABLE IF NOT EXISTS  Facility  (
   FacilityId smallint NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
@@ -65,7 +63,7 @@ CREATE TABLE Facility  (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE FacilityLinkedTo (
+CREATE TABLE IF NOT EXISTS  FacilityLinkedTo (
   GameId varchar(36) NOT NULL,
   FacilityIdOrder smallint NOT NULL,
   FacilityIdDeliver smallint NOT NULL,
@@ -79,7 +77,7 @@ CREATE TABLE FacilityLinkedTo (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE FacilityTurn (
+CREATE TABLE IF NOT EXISTS FacilityTurn (
   GameId varchar(36) NOT NULL,
   RoundId smallint NOT NULL,
   FacilityIdOrder smallint NOT NULL,
@@ -96,7 +94,7 @@ CREATE TABLE FacilityTurn (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE GameAgent (
+CREATE TABLE IF NOT EXISTS GameAgent (
   FacilityId smallint NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
@@ -105,7 +103,7 @@ CREATE TABLE GameAgent (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE Player (
+CREATE TABLE IF NOT EXISTS Player (
   GameId varchar(36) NOT NULL,
   PlayerId varchar(36) NOT NULL,
   FacilityId smallint NOT NULL,
@@ -119,7 +117,7 @@ CREATE TABLE Player (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE Leader (
+CREATE TABLE IF NOT EXISTS Leader (
   GameId varchar(36) NOT NULL,
   PlayerId varchar(36) NOT NULL,
   Timestamp timestamp NOT NULL,
@@ -128,7 +126,7 @@ CREATE TABLE Leader (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE GameBusinessRulesInFacilityTurn (
+CREATE TABLE IF NOT EXISTS GameBusinessRulesInFacilityTurn (
   RoundId smallint NOT NULL,
   FacilityIdOrder smallint NOT NULL,
   FacilityIdDeliver smallint NOT NULL,
@@ -143,7 +141,7 @@ CREATE TABLE GameBusinessRulesInFacilityTurn (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE GameBusinessRules (
+CREATE TABLE IF NOT EXISTS GameBusinessRules (
   FacilityId smallint NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
@@ -154,12 +152,12 @@ CREATE TABLE GameBusinessRules (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE ProgrammedAgent (
+CREATE TABLE IF NOT EXISTS ProgrammedAgent (
   ProgrammedAgentName varchar(255) NOT NULL,
   CONSTRAINT PK_ProgrammedAgent PRIMARY KEY (ProgrammedAgentName)
 );
 
-CREATE TABLE ProgrammedBusinessRules (
+CREATE TABLE IF NOT EXISTS  ProgrammedBusinessRules (
   ProgrammedAgentName varchar(255) NOT NULL,
   ProgrammedBusinessRule varchar NOT NULL,
   ProgrammedAST varchar NOT NULL,
