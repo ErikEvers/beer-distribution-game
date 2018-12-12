@@ -1,6 +1,7 @@
 package org.han.ica.asd.c;
 import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
@@ -24,5 +25,13 @@ public class GameLogicTests {
         communication = mock(ICommunication.class);
         persistence = mock(IPersistence.class);
         gameLogic = new GameLogic("test", communication, persistence);
+    }
+
+    @Test
+    public void placeOrderCallsPersistence() {
+        FacilityTurn facilityTurn = mock(FacilityTurn.class);
+        when(persistence.saveTurnData(any(FacilityTurn.class))).thenReturn(null);
+        gameLogic.placeOrder(facilityTurn);
+        verify(persistence, times(1)).saveTurnData(facilityTurn);
     }
 }
