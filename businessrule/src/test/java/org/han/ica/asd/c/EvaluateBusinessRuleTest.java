@@ -11,6 +11,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EvaluateBusinessRuleTest {
@@ -219,5 +220,55 @@ public class EvaluateBusinessRuleTest {
         businessRuleBefore.evaluateBusinessRule();
 
         assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    public void testResolvingEqualsComparison() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("19")))
+                        .addChild(new ComparisonOperator("is"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertNotEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    public void testResolvingEqualsComparisonWithOperation() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
+                        .addChild(new ComparisonOperator("is"))
+                        .addChild(new ComparisonValue().addChild(new SubtractOperation()
+                                .addChild(new Value().addValue("30"))
+                                .addChild(new CalculationOperator("-"))
+                                .addChild(new Value().addValue("10"))))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertNotEquals(businessRuleAfter, businessRuleBefore);
     }
 }
