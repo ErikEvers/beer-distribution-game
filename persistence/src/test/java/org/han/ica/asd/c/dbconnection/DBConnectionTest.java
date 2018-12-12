@@ -9,18 +9,21 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
+import static org.han.ica.asd.c.dbconnection.DBConnection.rollBackTransaction;
+
 public class DBConnectionTest {
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/test/resources/";
 	private static final String DATABASENAME = "BeerGameDBTest.db";
 	public static final Logger LOGGER = Logger.getLogger(DBConnectionTest.class.getName());
 
-	private DBConnectionTest(){
+	private DBConnectionTest() {
 		throw new IllegalStateException("Utility class");
 	}
 
 	public static void createNewDatabase() {
 
-		String url = CONNECTIONSTRING+DATABASENAME;
+		String url = CONNECTIONSTRING + DATABASENAME;
 
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
@@ -32,7 +35,7 @@ public class DBConnectionTest {
 		}
 	}
 
-	public static void insertDatabase(){
+	public static void insertDatabase() {
 		DBConnectionTest.createNewDatabase();
 		Connection conn = DBConnectionTest.connect();
 		PreparedStatement pstm;
@@ -66,7 +69,7 @@ public class DBConnectionTest {
 		try {
 			conn = DriverManager.getConnection(url);
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 		return conn;
 	}
@@ -75,7 +78,33 @@ public class DBConnectionTest {
 		try {
 			conn.rollback();
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	}
+
+	public static void cleanup() {
+		Connection conn = DBConnectionTest.connect();
+		PreparedStatement pstm;
+
+
+		FileInputStream pathname = null;
+		try {
+			pathname = new FileInputStream("src/test/resources/cleanup.sql");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		SQLFile sqlFile = new SQLFile(pathname);
+		String query = sqlFile.query("cleanup");
+		try {
+			conn.setAutoCommit(false);
+			pstm = conn.prepareStatement(query);
+			pstm.execute();
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 }
