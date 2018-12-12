@@ -1,19 +1,61 @@
 package org.han.ica.asd.c.dbconnection;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.douglasjose.tech.SQLFile;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DBConnection {
-	private static final String CONNECTIONSTRING = "jdbc:sqlite::resource:";
-	private static final String DATABASENAME = "BeerGameDB";
+	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/main/resources/";
+	private static final String DATABASENAME = "BeerGameDB.db";
 	public static final Logger LOGGER = Logger.getLogger(DBConnection.class.getName());
 
-	private DBConnection(){
+	private void DBConnectionTest(){
 		throw new IllegalStateException("Utility class");
+	}
+
+	public static void createNewDatabase() {
+
+		String url = CONNECTIONSTRING+DATABASENAME;
+
+		try (Connection conn = DriverManager.getConnection(url)) {
+			if (conn != null) {
+				DatabaseMetaData meta = conn.getMetaData();
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void insertDatabase(){
+		DBConnection.createNewDatabase();
+		Connection conn = DBConnection.connect();
+		PreparedStatement pstm;
+
+
+		FileInputStream ddlPathName = null;
+		try {
+			ddlPathName = new FileInputStream("src/test/resources/ddl.sql");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		SQLFile sqlFile = new SQLFile(ddlPathName);
+		String query = sqlFile.query("createDatabase");
+		try {
+			conn.setAutoCommit(false);
+			pstm = conn.prepareStatement(query);
+			pstm.execute();
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public static Connection connect() {

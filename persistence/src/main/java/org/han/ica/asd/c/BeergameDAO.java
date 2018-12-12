@@ -1,6 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.Beergame;
+import org.han.ica.asd.c.model.BeerGame;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,9 +55,9 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 *
 	 * @return An Arraylist of BeerGames
 	 */
-	public List<Beergame> readBeergames() {
+	public List<BeerGame> readBeergames() {
 		Connection conn = null;
-		ArrayList<Beergame> beerGames = new ArrayList<>();
+		ArrayList<BeerGame> beerGames = new ArrayList<>();
 		try {
 			conn = connect();
 			if (conn != null) {
@@ -65,7 +65,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							beerGames.add(new Beergame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+							beerGames.add(new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
 						}
 					}
 				}
@@ -101,16 +101,16 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		}
 	}
 
-	public Beergame getGameLog(String gameId) {
+	public BeerGame getGameLog(String gameId) {
 		Connection conn = null;
-		Beergame beergame = null;
+		BeerGame beergame = null;
 		try {
 			conn = connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 
 					try (ResultSet rs = pstmt.executeQuery()) {
-						beergame = new Beergame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 					}
 				}
 			}
