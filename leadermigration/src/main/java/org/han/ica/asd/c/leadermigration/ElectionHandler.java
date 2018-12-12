@@ -1,7 +1,10 @@
 package org.han.ica.asd.c.leadermigration;
 
+import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,13 +12,17 @@ public class ElectionHandler {
 
   private ElectionModel electionModel;
   private static Logger LOGGER;
-  private iCommunication communication;
+  @Inject private IConnectorForLeaderElection communication;
 
 
   public ElectionHandler() {
 
   }
 
+  /**
+   * Setup the algorithm in de electionModel.
+   * @param players -> All connected players to send a message.
+   */
   public void setupAlgorithm(Player[] players) {
     electionModel = new ElectionModel();
     electionModel.setCurrentPlayer(getPlayerBiIp(players));
@@ -27,11 +34,16 @@ public class ElectionHandler {
    * Send every player an election message to be elected as the leader of the network
    * @param players -> All the connected players (without the current player)
    */
-  public void sendElectionMessage(Player[] players) {
+  public List<ElectionModel> sendElectionMessage(Player[] players) {
+    List<ElectionModel> elections = new ArrayList<>();
     for(Player player: players) {
-      electionModel.setReceivingPlayer(player);
-      communication.sendMessage(this.electionModel, player);
+      // This if statement ensures to not send this to yourself.
+      if(!electionModel.getCurrentPlayer().equals(player)) {
+        electionModel.setReceivingPlayer(player);
+        elections.add(communication.sendElectionMessage(this.electionModel, player));
+      }
     }
+    return elections;
   }
 
   /**
@@ -42,34 +54,46 @@ public class ElectionHandler {
    *  positive number and returns true.
    * @param receivedModel -> The electionModel of the sending player.
    */
-  public void sendAliveMessage(ElectionModel receivedModel) {
+  public ElectionModel sendAliveMessage(ElectionModel receivedModel) {
     Player receivingPlayer = receivedModel.getReceivingPlayer();
     if (electionModel.getConcattedIp().compareTo(receivingPlayer.concatIpId()) > 0) {
       electionModel.setElected(true);
     }
-    communication.sendMessage(electionModel, electionModel.getCurrentPlayer());
-  }
-
-  public void sendVictoryMessage(ElectionModel winningModel, Player[] players) {
-//    if (electionModel.isVictory()) {
-//      for(Player player: players) {
-//      }
-//    }
+    return this.electionModel;
   }
 
   /**
-   * To get own ip-address
+   * This message will be sent by the device who has won the election.
+   * @param winningModel -> This instance of electionModel has the winner of the bully algorithm
+   * @param players -> To send it to all players.
+   */
+  public void sendVictoryMessage(ElectionModel winningModel, Player[] players) {
+    for(Player player: players) {
+      // This if statement ensures to not this to yourself
+      if(!electionModel.getCurrentPlayer().equals(player)) {
+        communication.sendVictoryMessage(this.electionModel.getCurrentPlayer(), player);
+      }
+    }
+  }
+
+  /**
+   * Get own ip address
    * @return -> ipAddress as String, when not found return NULL.
    */
   private String getOwnIpAddress() {
     try {
       return InetAddress.getLocalHost().getHostAddress();
     } catch (UnknownHostException e) {
-      LOGGER.log(Level.SEVERE, e.getMessage());
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
     return null;
   }
 
+  /**
+   * Get current player by its ip address
+   * @param players -> All players in an array
+   * @return the current player
+   */
   private Player getPlayerBiIp(Player[] players) {
     for(Player player: players) {
       if(player.getIpAddress().equals(this.getOwnIpAddress())) {
@@ -78,5 +102,6 @@ public class ElectionHandler {
     }
     return null;
   }
+
 
 }
