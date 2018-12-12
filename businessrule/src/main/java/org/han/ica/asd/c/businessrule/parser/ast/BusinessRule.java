@@ -33,7 +33,17 @@ public class BusinessRule extends ASTNode {
     }
 
     public void evaluateBusinessRule() {
-        transformChild(this);
+        transformCondition(this);
+        transformAction(this.action);
+    }
+
+    private void transformCondition(BusinessRule businessRule){
+        //Check if there are operations in the condition
+        businessRule.condition = businessRule.condition.resolveCondition();
+    }
+
+    private void transformAction(Action action){
+        transformChild(action);
     }
 
     private void transformChild(ASTNode node) {
@@ -45,10 +55,6 @@ public class BusinessRule extends ASTNode {
                 Operation operation = (Operation) operationValue;
                 comparisonValue.setOperationValue(operation.resolveOperation());
             }
-        } else if (node instanceof BusinessRule) {
-            //Check if there are operations in the condition.
-            BusinessRule businessRule = (BusinessRule) node;
-            businessRule.condition = businessRule.condition.resolveCondition();
         }
 
         node.getChildren().forEach(this::transformChild);

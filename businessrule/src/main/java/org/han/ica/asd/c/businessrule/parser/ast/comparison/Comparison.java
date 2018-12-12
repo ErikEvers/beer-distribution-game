@@ -2,6 +2,7 @@ package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
@@ -65,18 +66,32 @@ public class Comparison extends Expression {
 
     @Override
     public BooleanLiteral resolveCondition() {
-        int operationValueLeft = ((Value) this.left.getOperationValue()).getIntegerValue();
-        int operationValueRight = ((Value) this.right.getOperationValue()).getIntegerValue();
+        OperationValue operationValueLeft = this.left.getOperationValue();
+        OperationValue operationValueRight = this.right.getOperationValue();
+
+        if (operationValueLeft instanceof Operation) {
+            Operation operation = (Operation) operationValueLeft;
+            operationValueLeft = operation.resolveOperation();
+        }
+
+        if (operationValueRight instanceof Operation){
+            Operation operation = (Operation) operationValueRight;
+            operationValueRight = operation.resolveOperation();
+        }
+
+
+        int valueLeft = ((Value) operationValueLeft).getIntegerValue();
+        int valueRight = ((Value) operationValueRight).getIntegerValue();
 
         switch (this.comparisonOperator.getValue()){
             case NOT:
-                return new BooleanLiteral(operationValueLeft != operationValueRight);
+                return new BooleanLiteral(valueLeft != valueRight);
             case LESS:
-                return new BooleanLiteral(operationValueLeft < operationValueRight);
+                return new BooleanLiteral(valueLeft < valueRight);
             case EQUAL:
-                return new BooleanLiteral(operationValueLeft == operationValueRight);
+                return new BooleanLiteral(valueLeft == valueRight);
             case GREATER:
-                return new BooleanLiteral(operationValueLeft > operationValueRight);
+                return new BooleanLiteral(valueLeft > valueRight);
             default:
                 return new BooleanLiteral(false);
         }
