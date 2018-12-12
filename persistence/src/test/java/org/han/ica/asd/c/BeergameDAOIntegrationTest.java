@@ -1,12 +1,21 @@
 package org.han.ica.asd.c;
 
+import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-class BeergameDAOTest {
+@RunWith(MockitoJUnitRunner.class)
+class BeergameDAOIntegrationTest {
+
+
+	@Before
+	void setUpDatabase(){
+
+	}
 
 	@BeforeEach
 	void setUp() {
