@@ -3,6 +3,7 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.Round;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.han.ica.asd.c.public_interfaces.IPlayerGameLogic;
@@ -26,5 +27,10 @@ public class GameLogic implements IPlayerGameLogic {
     public void placeOrder(FacilityTurn turn) {
         persistence.saveTurnData(turn);
         communication.sendTurnData(turn);
+    }
+
+    @Override
+    public Round seeOtherFacilities() {
+        return persistence.fetchRoundData(gameId, round);
     }
 }
