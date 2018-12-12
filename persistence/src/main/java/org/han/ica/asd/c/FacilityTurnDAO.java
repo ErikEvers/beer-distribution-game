@@ -15,9 +15,13 @@ public class FacilityTurnDAO {
 	private static final String CREATE_TURN = "INSERT INTO FacilityTurn VALUES (?,?,?,?,?,?,?,?,?);";
 	private static final String UPDATE_TURN = "UPDATE FacilityTurn SET Stock = ?,RemainingBudget = ?,OrderAmount = ?, OpenOrderAmount = ?, OutgoingGoodsAmount = ? WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?)";
 	private static final String READ_TURNS = "SELECT * FROM FacilityTurn WHERE GameId = ? && RoundId = ?;";
-	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? && RoundId = ?;";
+	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?;";
+	
 
-
+	/**
+	 * A method to create a FacilityTurn in the SQLite Database
+	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be inserted in the SQLite Database
+	 */
 	public void createTurn(FacilityTurn facilityTurn){
 		Connection conn;
 		try {
@@ -42,6 +46,13 @@ public class FacilityTurnDAO {
 		}
 	}
 
+	/**
+	 * A method which returns all the turns from a specific round from the SQLite Database
+	 * @param gameId The id of the game of the turn which needs to be returned
+	 * @param roundId The id of the specific round which needs to be returned
+	 * @return Returns a list of all the turns in a specific round in a specific game
+	 */
+
 	public List<FacilityTurn> fetchTurns(String gameId, int roundId) {
 		Connection conn;
 		ArrayList<FacilityTurn> turns = new ArrayList<>();
@@ -63,6 +74,11 @@ public class FacilityTurnDAO {
 		return turns;
 	}
 
+
+	/**
+	 * A method which updates a specific turn in the SQLite Database
+	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be updated in the SQLite Database
+	 */
 	public void updateTurn(FacilityTurn facilityTurn){
 		Connection conn;
 		try {
@@ -87,6 +103,10 @@ public class FacilityTurnDAO {
 		}
 	}
 
+	/**
+	 * A method which deletes a specific turn in the SQLite Database
+	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be inserted in the SQLite Database
+	 */
 	public void deleteTurn(FacilityTurn facilityTurn){
 		Connection conn;
 		try {
@@ -94,6 +114,8 @@ public class FacilityTurnDAO {
 			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_TURN)) {
 				pstmt.setString(1,facilityTurn.getGameId());
 				pstmt.setInt(2,facilityTurn.getRoundId());
+				pstmt.setInt(3,facilityTurn.getFacilityIdOrder());
+				pstmt.setInt(4,facilityTurn.getFacilityIdDeliver());
 
 				pstmt.executeUpdate();
 			}
