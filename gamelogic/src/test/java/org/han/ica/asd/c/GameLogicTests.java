@@ -57,4 +57,10 @@ public class GameLogicTests {
         gameLogic.letPlayerTakeOverAgent();
         verify(participantsPool, times(1)).replaceAgentWithPlayer();
     }
+
+    public void addLocalParticipantCallsParticipantsPool() {
+        IParticipant participant = mock(IParticipant.class);
+        gameLogic.addLocalParticipant(participant);
+        verify(participantsPool, times(1)).addParticipant(participant);
+    }
 }
