@@ -29,5 +29,4 @@ public class BusinessRuleHandler implements IBusinessRules{
         return (Action) businessRuleAST.getChildren()
                 .get(1);
     }
-
 }

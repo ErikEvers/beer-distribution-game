@@ -4,6 +4,7 @@ package org.han.ica.asd.c.businessrule.parser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
@@ -18,6 +19,7 @@ public class ParserPipeline {
     private List<String> businessRulesInput = new ArrayList<>();
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
+    private List<BusinessRuleException> exceptions = new ArrayList<>();
     private static final String DELETEEMPTYLINES = "(?m)^[ \t]*\r?\n";
 
     /**
@@ -28,18 +30,30 @@ public class ParserPipeline {
         businessRules = businessRules.replaceAll(DELETEEMPTYLINES, "");
         CharStream inputStream = CharStreams.fromString(businessRules);
         businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
+
         BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(ParseErrorListener.INSTANCE);
+
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
         BusinessRuleParser parser = new BusinessRuleParser(tokens);
-        ParseTree parseTree = parser.businessrules();
+        parser.removeErrorListeners();
+        parser.addErrorListener(ParseErrorListener.INSTANCE);
 
+        ParseTree parseTree = parser.businessrules();
         ASTListener listener = new ASTListener();
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, parseTree);
 
         this.businessRulesParsed = listener.getBusinessRules();
-        evaluate();
+
+        exceptions.addAll(ParseErrorListener.INSTANCE.getExceptions());
+        exceptions.addAll(evaluate());
+        if(!exceptions.isEmpty()){
+            throw new UserInputException(exceptions);
+        }
+
         encodeBusinessRules();
     }
 
@@ -55,12 +69,10 @@ public class ParserPipeline {
     /**
      * Evaluates the business rules so that they are correct and usable
      */
-    private void evaluate() throws UserInputException {
+    private List<BusinessRuleException> evaluate() {
         Evaluator evaluator = new Evaluator();
         evaluator.evaluate(businessRulesParsed);
-        if(!evaluator.getExceptions().isEmpty()){
-            throw new UserInputException(evaluator.getExceptions());
-        }
+        return evaluator.getExceptions();
     }
 
     /**

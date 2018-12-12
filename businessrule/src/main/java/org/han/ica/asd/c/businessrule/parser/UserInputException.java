@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser;
 
-import org.han.ica.asd.c.businessrule.parser.evaluator.BusinessRuleException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.parser.evaluator;
+package org.han.ica.asd.c.businessrule.parser;
 
 public class BusinessRuleException extends Exception {
     private final String errorMessage;
@@ -9,7 +9,7 @@ public class BusinessRuleException extends Exception {
      * @param errorMessage Error message that explains what is wrong with the business rule
      * @param lineNumber Line number where the error took place
      */
-    BusinessRuleException(String errorMessage, int lineNumber) {
+    public BusinessRuleException(String errorMessage, int lineNumber) {
         this.errorMessage = errorMessage;
         this.lineNumber = lineNumber;
     }
