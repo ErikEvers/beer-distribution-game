@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
+import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -9,7 +10,7 @@ public class ElectionHandler {
 
   private ElectionModel electionModel;
   private static Logger LOGGER;
-  private iCommunication communication;
+  @Inject private IConnectorForLeaderElection communication;
 
 
   public ElectionHandler() {
@@ -30,7 +31,7 @@ public class ElectionHandler {
   public void sendElectionMessage(Player[] players) {
     for(Player player: players) {
       electionModel.setReceivingPlayer(player);
-      communication.sendMessage(this.electionModel, player);
+      communication.sendElectionMessage(this.electionModel, player);
     }
   }
 
@@ -42,12 +43,12 @@ public class ElectionHandler {
    *  positive number and returns true.
    * @param receivedModel -> The electionModel of the sending player.
    */
-  public void sendAliveMessage(ElectionModel receivedModel) {
+  public ElectionModel sendAliveMessage(ElectionModel receivedModel) {
     Player receivingPlayer = receivedModel.getReceivingPlayer();
     if (electionModel.getConcattedIp().compareTo(receivingPlayer.concatIpId()) > 0) {
       electionModel.setElected(true);
     }
-    communication.sendMessage(electionModel, electionModel.getCurrentPlayer());
+    return this.electionModel;
   }
 
   public void sendVictoryMessage(ElectionModel winningModel, Player[] players) {

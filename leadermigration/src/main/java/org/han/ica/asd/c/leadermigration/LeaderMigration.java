@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
-public class LeaderMigration implements iLeaderMigration{
+public class LeaderMigration implements ILeaderMigration {
 
   private Player leader;
   private Player[] players;
@@ -16,10 +16,13 @@ public class LeaderMigration implements iLeaderMigration{
     electionHandler.sendElectionMessage(players);
   }
 
-  public void receiveElectionMessage(ElectionModel electionModel){
+  public ElectionModel receiveElectionMessage(ElectionModel electionModel){
     ElectionHandler electionHandler = new ElectionHandler();
-    electionHandler.sendAliveMessage(electionModel);
+    return electionHandler.sendAliveMessage(electionModel);
   }
 
+  public void receiveVictoryMessage(ElectionModel electionModel) {
+
+  }
 
 }
