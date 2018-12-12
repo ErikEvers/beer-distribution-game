@@ -1,6 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.junit.Before;
+import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,16 +9,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 
 @RunWith(MockitoJUnitRunner.class)
-class BeergameDAOIntegrationTest {
-
-
-	@Before
-	void setUpDatabase(){
-
-	}
+class BeerGameDAOIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
+		setUpDatabase();
 	}
 
 	@AfterEach
@@ -27,6 +22,7 @@ class BeergameDAOIntegrationTest {
 
 	@Test
 	void createBeergame() {
+		System.out.println("SQLLite created");
 	}
 
 	@Test
@@ -40,4 +36,10 @@ class BeergameDAOIntegrationTest {
 	@Test
 	void getGameLog() {
 	}
+
+	public void setUpDatabase(){
+		DBConnectionTest.createNewDatabase();
+		DBConnectionTest.insertDatabase();
+	}
+
 }

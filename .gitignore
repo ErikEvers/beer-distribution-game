@@ -12,6 +12,8 @@
 # IDEA
 *.iml
 .idea
+*/resources/BeerGameDBTest.db
+*/resources/BeerGameDB.db
 *.iws
 *.ipr
 
