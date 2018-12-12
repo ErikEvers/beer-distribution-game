@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
-import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
@@ -18,6 +17,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
+     *
      * @param child Child that has the be added to this ASTNode
      * @return Returns itself so that it can be used immediately
      */
@@ -33,6 +33,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Start of the encoding of a tree
+     *
      * @return Returns encoded tree
      */
     public String encode() {
@@ -46,17 +47,16 @@ public class BusinessRule extends ASTNode {
         transformAction(this.action);
     }
 
-    private void transformCondition(BusinessRule businessRule){
+    private void transformCondition(BusinessRule businessRule) {
         //Check if there are operations in the condition
         businessRule.condition = businessRule.condition.resolveCondition();
     }
 
-    private void transformAction(Action action){
+    private void transformAction(Action action) {
         transformChild(action);
     }
 
     private void transformChild(ASTNode node) {
-        //Links condition doorlopen zoals het nu gaat. Alle childs steeds bekijken is niet meer nodig. Rechts kan ik wel alle childs doorlopen om operaties te resolven.
         if (node instanceof ComparisonValue) {
             ComparisonValue comparisonValue = (ComparisonValue) node;
             OperationValue operationValue = comparisonValue.getOperationValue();
@@ -71,6 +71,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override
@@ -80,6 +81,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Return the children that are assigned to the ASTNode
+     *
      * @return Return the children
      */
     @Override
@@ -91,6 +93,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -109,6 +112,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override

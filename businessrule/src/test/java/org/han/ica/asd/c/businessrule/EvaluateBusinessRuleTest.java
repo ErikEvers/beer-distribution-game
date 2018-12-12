@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class EvaluateBusinessRuleTest {
 
     @Test
-    public void testResolvingComparisonStatementWithOneComparisonCondition() {
+    void testResolvingComparisonStatementWithOneComparisonCondition() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
@@ -41,7 +41,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingComparisonStatementWithOperationOnRightSide() {
+    void testResolvingComparisonStatementWithOperationOnRightSide() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
@@ -67,7 +67,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingComparisonStatementWithOperationOnLeftSide() {
+    void testResolvingComparisonStatementWithOperationOnLeftSide() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
@@ -93,7 +93,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingDefaultCondition() {
+    void testResolvingDefaultCondition() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new Default())
                 .addChild(new Action()
@@ -112,7 +112,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingAndComparisonStatement() {
+    void testResolvingAndComparisonStatement() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new BooleanLiteral(true))
@@ -134,7 +134,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingOrComparisonStatement() {
+    void testResolvingOrComparisonStatement() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new BooleanLiteral(false))
@@ -156,7 +156,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingEqualsComparison() {
+    void testResolvingEqualsComparison() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
@@ -179,7 +179,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingNotEqualsComparison() {
+    void testResolvingNotEqualsComparison() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
@@ -202,7 +202,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingHigherThanComparison() {
+    void testResolvingHigherThanComparison() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
@@ -225,7 +225,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingLowerThanComparison() {
+    void testResolvingLowerThanComparison() {
         BusinessRule businessRuleBefore = new BusinessRule();
         businessRuleBefore.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
@@ -248,7 +248,7 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
-    public void testResolvingEqualsComparisonWithOperation() {
+    void testResolvingEqualsComparisonWithOperation() {
         BusinessRule businessRuleBefore = new BusinessRule();
 
         businessRuleBefore.addChild(new ComparisonStatement()
