@@ -83,29 +83,46 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 	}
 
+	/**
+	 * A method which returns a single turn of a round from a facililty
+	 * @param round The specific round of the turn
+	 * @param facilityLinkedTo The link between the facilities
+	 * @return
+	 */
 	public FacilityTurn fetchTurn(Round round, FacilityLinkedTo facilityLinkedTo) {
 		Connection conn;
 		FacilityTurn facilityTurn = null;
 		try {
 			conn = connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURN)) {
-					pstmt.setString(1, round.getGameId());
-					pstmt.setInt(2, round.getRoundId());
-					pstmt.setInt(3, facilityLinkedTo.getFacilityIdOrder());
-					pstmt.setInt(4, facilityLinkedTo.getFacilityIdDeliver());
-					try (ResultSet rs = pstmt.executeQuery()) {
-						facilityTurn = new FacilityTurn(rs.getString("GameId"), rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
+			if (conn != null) try (PreparedStatement pstmt = conn.prepareStatement(READ_TURN)) {
+				pstmt.setString(1, round.getGameId());
+				pstmt.setInt(2, round.getRoundId());
+				pstmt.setInt(3, facilityLinkedTo.getFacilityIdOrder());
+				pstmt.setInt(4, facilityLinkedTo.getFacilityIdDeliver());
 
-					} catch (SQLException e) {
-						LOGGER.log(Level.SEVERE, e.toString(), e);
-					}
-				}
+				facilityTurn = executePreparedStatement(pstmt);
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString());
 		}
 		return facilityTurn;
+	}
+
+
+	/**
+	 * Helper method which executes a prepared statement in the SQLite Database to retrieve a single FacilityTurn
+	 * @param pstmt The prepared statement which needs to be executed
+	 * @return
+	 */
+	private FacilityTurn executePreparedStatement(PreparedStatement pstmt) {
+		FacilityTurn FacilityTurn = null;
+		try (ResultSet rs = pstmt.executeQuery()) {
+			FacilityTurn = new FacilityTurn(rs.getString("GameId"), rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
+
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
+		}
+		return FacilityTurn;
 	}
 
 
