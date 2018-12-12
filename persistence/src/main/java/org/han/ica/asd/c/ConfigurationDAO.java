@@ -22,16 +22,16 @@ public class ConfigurationDAO {
 
 	/**
 	 * A method which creates a configuration in the SQLite Database
-	 * @param GameId The Id of the game which the configuration has to be set
-	 * @param AmountOfRounds The amount of rounds that are going to be played in a game
-	 * @param AmountOfFactories The amount of Factories that are available in a game
-	 * @param AmountOfWholesales The amount of Wholesales that are going to be available in a game
-	 * @param AmountOfDistributors The amount of Distributors that are going to be available in a game
-	 * @param AmountOfRetailers The amount of Retailers that are going to be available in a game
-	 * @param MinimalOrderRetail The minimal amount that a retailer must order at another facility
-	 * @param MaximumOrderRetail The minimal amount that a retailer can order at another facility
-	 * @param ContinuePlayingWhenBankrupt A boolean which represents if a player can keep on playing if they are bankrupt
-	 * @param InsightFacilities A boolean which represents if a player can see the status and orders of other facilities
+	 * @param gameId The Id of the game which the configuration has to be set
+	 * @param amountOfRounds The amount of rounds that are going to be played in a game
+	 * @param amountOfFactories The amount of Factories that are available in a game
+	 * @param amountOfWholesales The amount of Wholesales that are going to be available in a game
+	 * @param amountOfDistributors The amount of Distributors that are going to be available in a game
+	 * @param amountOfRetailers The amount of Retailers that are going to be available in a game
+	 * @param minimalOrderRetail The minimal amount that a retailer must order at another facility
+	 * @param maximumOrderRetail The minimal amount that a retailer can order at another facility
+	 * @param continuePlayingWhenBankrupt A boolean which represents if a player can keep on playing if they are bankrupt
+	 * @param insightFacilities A boolean which represents if a player can see the status and orders of other facilities
 	 */
 	public void createConfiguration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) {
 		Connection conn = null;
