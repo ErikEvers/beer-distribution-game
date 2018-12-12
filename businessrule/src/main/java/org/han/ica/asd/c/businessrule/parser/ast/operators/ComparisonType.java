@@ -16,4 +16,14 @@ public enum ComparisonType {
     public String getComparisonSymbol(){
         return comparisonSymbol;
     }
+
+    public static ComparisonType getComparisonTypeFromComparisonSymbol(String comparisonSymbol) {
+        for (ComparisonType comparisonType : ComparisonType.values()) {
+            if (comparisonType.comparisonSymbol.equalsIgnoreCase(comparisonSymbol)) {
+                return comparisonType;
+            }
+        }
+        return null;
+    }
+
 }

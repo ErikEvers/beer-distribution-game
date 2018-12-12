@@ -2,6 +2,8 @@ package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
 import java.util.ArrayList;
@@ -63,6 +65,20 @@ public class Comparison extends Expression {
 
     @Override
     public BooleanLiteral resolveCondition() {
-        return new BooleanLiteral(true);
+        int operationValueLeft = ((Value) this.left.getOperationValue()).getIntegerValue();
+        int operationValueRight = ((Value) this.right.getOperationValue()).getIntegerValue();
+
+        switch (this.comparisonOperator.getValue()){
+            case NOT:
+                return new BooleanLiteral(operationValueLeft != operationValueRight);
+            case LESS:
+                return new BooleanLiteral(operationValueLeft < operationValueRight);
+            case EQUAL:
+                return new BooleanLiteral(operationValueLeft == operationValueRight);
+            case GREATER:
+                return new BooleanLiteral(operationValueLeft > operationValueRight);
+            default:
+                return new BooleanLiteral(false);
+        }
     }
 }

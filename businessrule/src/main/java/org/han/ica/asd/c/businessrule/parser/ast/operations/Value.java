@@ -37,6 +37,10 @@ public class Value extends OperationValue {
         return this.value;
     }
 
+    public Integer getIntegerValue() {
+        return Integer.parseInt(this.value);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

@@ -37,6 +37,7 @@ public class BusinessRule extends ASTNode {
     }
 
     private void transformChild(ASTNode node) {
+        //Links condition doorlopen zoals het nu gaat. Alle childs steeds bekijken is niet meer nodig. Rechts kan ik wel alle childs doorlopen om operaties te resolven.
         if (node instanceof ComparisonValue) {
             ComparisonValue comparisonValue = (ComparisonValue) node;
             OperationValue operationValue = comparisonValue.getOperationValue();
@@ -45,6 +46,7 @@ public class BusinessRule extends ASTNode {
                 comparisonValue.setOperationValue(operation.resolveOperation());
             }
         } else if (node instanceof BusinessRule) {
+            //Check if there are operations in the condition.
             BusinessRule businessRule = (BusinessRule) node;
             businessRule.condition = businessRule.condition.resolveCondition();
         }

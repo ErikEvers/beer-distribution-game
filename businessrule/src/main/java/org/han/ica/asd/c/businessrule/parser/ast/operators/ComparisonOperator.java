@@ -27,6 +27,10 @@ public class ComparisonOperator extends Operator {
         }
     }
 
+    public ComparisonType getValue(){
+        return ComparisonType.getComparisonTypeFromComparisonSymbol(this.operatorVal);
+    }
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
