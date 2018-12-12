@@ -12,8 +12,9 @@
 # IDEA
 *.iml
 .idea
-*/resources/BeerGameDBTest.db
-*/resources/BeerGameDB.db
+persistence/src/test/resources/BeerGameDBTest.db
+persistence/src/main/resources/BeerGameDB.db
+
 *.iws
 *.ipr
 
