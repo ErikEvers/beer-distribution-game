@@ -58,9 +58,16 @@ public class GameLogicTests {
         verify(participantsPool, times(1)).replaceAgentWithPlayer();
     }
 
+    @Test
     public void addLocalParticipantCallsParticipantsPool() {
         IParticipant participant = mock(IParticipant.class);
         gameLogic.addLocalParticipant(participant);
         verify(participantsPool, times(1)).addParticipant(participant);
+    }
+
+    @Test
+    public void removeAgentByPlayedIdGetsPlayerFromDatabase() {
+        gameLogic.removeAgentByPlayedId(anyString());
+        verify(persistence, times(1)).getPlayerById(anyString());
     }
 }
