@@ -30,7 +30,6 @@ public class GameLogicTests {
     @Test
     public void placeOrderCallsPersistence() {
         FacilityTurn facilityTurn = mock(FacilityTurn.class);
-        when(persistence.saveTurnData(any(FacilityTurn.class))).thenReturn(null);
         gameLogic.placeOrder(facilityTurn);
         verify(persistence, times(1)).saveTurnData(facilityTurn);
     }
