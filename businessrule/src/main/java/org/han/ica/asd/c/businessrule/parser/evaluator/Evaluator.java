@@ -13,7 +13,7 @@ public class Evaluator {
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
     /**
-     * Main evaluate function that executes all checks and logs an error when it occurs
+     * Main evaluate function that walks through all business rules and nodes and let's them get checked
      * @param businessRules Business rules that need to be evaluated
      */
     public void evaluate(List<BusinessRule> businessRules) {
@@ -34,15 +34,7 @@ public class Evaluator {
                     lineNumber++;
                 }
 
-                try {
-                    checkOnlyOneDefault(current, lineNumber, defaultCounter);
-                    checkRoundIsComparedToInt(current, lineNumber);
-                    checkLowHighOnlyComparedToGameValueAndAboveBelow(current, lineNumber);
-                    checkDeliverOnlyUsedWithBelowAbove(current, lineNumber, belowAboveCounter);
-                    checkLowHighOnlyUsedInComparison(current, lineNumber, previous);
-                } catch (BusinessRuleException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
+                logErrors(defaultCounter, belowAboveCounter, lineNumber, previous, current);
 
                 previous = current;
                 List<ASTNode> children = current.getChildren();
@@ -51,6 +43,26 @@ public class Evaluator {
                     deque.push(child);
                 }
             }
+        }
+    }
+
+    /**
+     * Executes all functions that check if the business rules are correct and logs an error if it occurs
+     * @param defaultCounter Counter that counts the amount of defaults
+     * @param belowAboveCounter Counter that counts the amount of below/above's
+     * @param lineNumber Line number that it is currently on
+     * @param previous Previous node that is above the current one
+     * @param current Current node that it is checking
+     */
+    private void logErrors(Counter defaultCounter, Counter belowAboveCounter, int lineNumber, ASTNode previous, ASTNode current) {
+        try {
+            checkOnlyOneDefault(current, lineNumber, defaultCounter);
+            checkRoundIsComparedToInt(current, lineNumber);
+            checkLowHighOnlyComparedToGameValueAndAboveBelow(current, lineNumber);
+            checkDeliverOnlyUsedWithBelowAbove(current, lineNumber, belowAboveCounter);
+            checkLowHighOnlyUsedInComparison(current, lineNumber, previous);
+        } catch (BusinessRuleException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
     }
 
@@ -84,9 +96,9 @@ public class Evaluator {
         if (current instanceof Comparison
                 && current.getChildren().get(left) != null
                 && current.getChildren().get(2) != null) {
-            if (((Value) current.getChildren().get(left).getChildren().get(left)).getValue().equals("round")) {
+            if ("round".equals(((Value) current.getChildren().get(left).getChildren().get(left)).getValue())) {
                 checkRoundIsComparedToInt(current, lineNumber, right);
-            } else if (((Value) current.getChildren().get(right).getChildren().get(left)).getValue().equals("round")) {
+            } else if ("round".equals(((Value) current.getChildren().get(right).getChildren().get(left)).getValue())) {
                 checkRoundIsComparedToInt(current, lineNumber, left);
             }
         }
@@ -136,34 +148,46 @@ public class Evaluator {
 
     /**
      * Main: Checks that when a round is used it is compared to an int and nothing else
-     * Checks if a value in the sub tree is not a game value combined with an above/below and throws an error if that's the case
+     * Queue to loop through the sub tree
      * @param current Current node that it is checking
      * @param lineNumber Line number that it is currently on
      * @param side The side that it needs to check
      * @throws BusinessRuleException The error that occurs is thrown
      */
     private void checkLowHighOnlyComparedToGameValueAndAboveBelow(ASTNode current, int lineNumber, int side) throws BusinessRuleException {
-        List<String> gameValues = new ArrayList<>();
-        Collections.addAll(gameValues, "inventory", "stock", "backlog", "incoming order", "back orders");
         Queue<ASTNode> q = new LinkedList<>();
         q.add(current.getChildren().get(side));
         while (!q.isEmpty()) {
             ASTNode qVal = q.remove();
             if (qVal instanceof Value) {
-                for (String gameValue : gameValues) {
-                    if (!((Value) qVal).getValue().contains(gameValue)
-                            || !((((Value) qVal).getValue().contains(EvaluatorType.ABOVE.getEvaluatorSymbol()))
-                            || ((Value) qVal).getValue().contains(EvaluatorType.BELOW.getEvaluatorSymbol()))) {
-                        throw new BusinessRuleException("Lowest and highest can only be used with a game value combined with an above/below", lineNumber);
-                    }
-                }
+                checkLowHighOnlyComparedToGameValueAndAboveBelow(lineNumber, (Value) qVal);
             }
             q.addAll(qVal.getChildren());
         }
     }
 
     /**
-     * Checks, when deliver action is used, if a below/above is also used in the comparison
+     * Main: Checks that when a round is used it is compared to an int and nothing else
+     * Checks if game value combined with below/above is not used and throws error if that's the case
+     * @param lineNumber Line number that it is currently on
+     * @param qVal Current node in the queue
+     * @throws BusinessRuleException The error that occurs is thrown
+     */
+    private void checkLowHighOnlyComparedToGameValueAndAboveBelow(int lineNumber, Value qVal) throws BusinessRuleException {
+        List<String> gameValues = new ArrayList<>();
+        Collections.addAll(gameValues, "inventory", "stock", "backlog", "incoming order", "back orders");
+        for (String gameValue : gameValues) {
+            if (!qVal.getValue().contains(gameValue)
+                    || !((qVal.getValue().contains(EvaluatorType.ABOVE.getEvaluatorSymbol()))
+                    || qVal.getValue().contains(EvaluatorType.BELOW.getEvaluatorSymbol()))) {
+                throw new BusinessRuleException("Lowest and highest can only be used with a game value combined with an above/below", lineNumber);
+            }
+        }
+    }
+
+    /**
+     * Main: Checks, when deliver action is used, if a below/above is also used in the comparison
+     * Counts the amount of below/above used in the comparison
      * @param current Current node that it is checking
      * @param lineNumber Line number that it is currently on
      * @param belowAboveCounter Counter that counts the amount of below/above's
@@ -184,6 +208,18 @@ public class Evaluator {
             }
         }
 
+        checkDeliverOnlyUsedWithBelowAboveError(current, lineNumber, belowAboveCounter);
+    }
+
+    /**
+     * Main: Checks, when deliver action is used, if a below/above is also used in the comparison
+     * Checks if a deliver is used and if there are no below/above, if this is the case it throws an error
+     * @param current Current node that it is checking
+     * @param lineNumber Line number that it is currently on
+     * @param belowAboveCounter Counter that counts the amount of below/above's
+     * @throws BusinessRuleException The error that occurs is thrown
+     */
+    private void checkDeliverOnlyUsedWithBelowAboveError(ASTNode current, int lineNumber, Counter belowAboveCounter) throws BusinessRuleException {
         if (current instanceof ActionReference
                 && ((ActionReference) current).getAction().equals(EvaluatorType.DELIVER.getEvaluatorSymbol())
                 && belowAboveCounter.getCountedValue() == 0) {

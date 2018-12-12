@@ -15,9 +15,9 @@ public class Value extends OperationValue {
 
     @Override
     public Value addValue(String value) {
-        if(value.equals("smallest") || value.equals("lowest")){
+        if("smallest".equals(value) || "lowest".equals(value)){
             value = "lowest";
-        } else if (value.equals("biggest") || value.equals("highest")){
+        } else if ("biggest".equals(value) || "highest".equals(value)){
             value = "highest";
         }
 
