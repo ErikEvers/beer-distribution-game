@@ -38,6 +38,6 @@ public class GameLogicTests {
     public void placeOrderCallsCommunication() {
         FacilityTurn facilityTurn = mock(FacilityTurn.class);
         gameLogic.placeOrder(facilityTurn);
-        verify(communication, times(1)).send(facilityTurn);
+        verify(communication, times(1)).sendTurnData(facilityTurn);
     }
 }

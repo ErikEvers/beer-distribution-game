@@ -25,5 +25,6 @@ public class GameLogic implements IPlayerGameLogic {
     @Override
     public void placeOrder(FacilityTurn turn) {
         persistence.saveTurnData(turn);
+        communication.sendTurnData(turn);
     }
 }
