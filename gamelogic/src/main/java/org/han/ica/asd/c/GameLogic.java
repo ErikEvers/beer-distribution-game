@@ -5,6 +5,7 @@ import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.GameAgent;
 import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.participants.IParticipant;
 import org.han.ica.asd.c.participants.ParticipantsPool;
 import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
@@ -18,7 +19,7 @@ public class GameLogic implements IPlayerGameLogic {
     private ICommunication communication;
     private IPersistence persistence;
     private ParticipantsPool participantsPool;
-    int round;
+    private int round;
 
     public GameLogic(String gameId, ICommunication communication, IPersistence persistence, ParticipantsPool participantsPool) {
         this.gameId = gameId;
