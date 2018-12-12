@@ -153,7 +153,7 @@ class EvaluatorTest {
 
         Evaluator spy = PowerMockito.spy(new Evaluator());
 
-        spy.evaluate(list);
+        spy.evaluate(list, businessRulesInput);
         PowerMockito.verifyPrivate(spy).invoke("evaluate",any());
     }
 }

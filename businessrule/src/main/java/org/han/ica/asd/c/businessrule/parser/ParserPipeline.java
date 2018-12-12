@@ -4,7 +4,6 @@ package org.han.ica.asd.c.businessrule.parser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
@@ -16,20 +15,19 @@ import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import java.util.*;
 
 public class ParserPipeline {
-    private List<String> businessRulesInput = new ArrayList<>();
+    private List<UserInputBusinessRule> businessRulesInput;
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
-    private List<BusinessRuleException> exceptions = new ArrayList<>();
+    private boolean hasErrors = false;
     private static final String DELETEEMPTYLINES = "(?m)^[ \t]*\r?\n";
 
     /**
      * Parses the business rules that are provided
      * @param businessRules Business rules that need to be parsed
      */
-    public void parseString(String businessRules) throws UserInputException {
-        businessRules = businessRules.replaceAll(DELETEEMPTYLINES, "");
-        CharStream inputStream = CharStreams.fromString(businessRules);
-        businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
+    public void parseString(List<UserInputBusinessRule> businessRules) {
+        this.businessRulesInput = businessRules;
+        CharStream inputStream = CharStreams.fromString(userInputToString(businessRules));
 
         BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
         lexer.removeErrorListeners();
@@ -47,14 +45,16 @@ public class ParserPipeline {
         walker.walk(listener, parseTree);
 
         this.businessRulesParsed = listener.getBusinessRules();
-
-        exceptions.addAll(ParseErrorListener.INSTANCE.getExceptions());
-        exceptions.addAll(evaluate());
-        if(!exceptions.isEmpty()){
-            throw new UserInputException(exceptions);
-        }
-
+        evaluate();
         encodeBusinessRules();
+    }
+
+    private String userInputToString(List<UserInputBusinessRule> businessRules) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (UserInputBusinessRule businessRule : businessRules) {
+            stringBuilder.append(businessRule.getBusinessRule());
+        }
+        return stringBuilder.toString().replaceAll(DELETEEMPTYLINES, "");
     }
 
     /**
@@ -62,17 +62,21 @@ public class ParserPipeline {
      */
     private void encodeBusinessRules() {
         for (int i = 0; i < businessRulesParsed.size(); i++) {
-            businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).encode());
+            businessRulesMap.put(businessRulesInput.get(i).getBusinessRule(), businessRulesParsed.get(i).encode());
         }
     }
 
     /**
      * Evaluates the business rules so that they are correct and usable
      */
-    private List<BusinessRuleException> evaluate() {
+    private void evaluate() {
         Evaluator evaluator = new Evaluator();
-        evaluator.evaluate(businessRulesParsed);
-        return evaluator.getExceptions();
+        Map<UserInputBusinessRule,BusinessRule> map = new HashMap<>();
+        for (int i = 0; i < businessRulesParsed.size(); i++) {
+            map.put(businessRulesInput.get(i), businessRulesParsed.get(i));
+        }
+
+        this.hasErrors = evaluator.evaluate(map);
     }
 
     /**
@@ -83,11 +87,11 @@ public class ParserPipeline {
         return businessRulesMap;
     }
 
-    /**
-     * Getter
-     * @return Returns the business rules that were put in parseString function
-     */
-    public List<String> getBusinessRulesInput() {
+    public List<UserInputBusinessRule> getBusinessRulesInput() {
         return businessRulesInput;
+    }
+
+    public boolean hasErrors() {
+        return hasErrors;
     }
 }

@@ -21,4 +21,12 @@ public class UserInputBusinessRule {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    public String getBusinessRule() {
+        return businessRule;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
 }

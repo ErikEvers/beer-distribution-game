@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.businessrule.IBusinessRules;
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
-import org.han.ica.asd.c.businessrule.parser.UserInputException;
 
 import java.io.IOException;
 import java.util.ArrayList;
