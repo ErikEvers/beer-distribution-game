@@ -22,10 +22,11 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="262.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="568.0" minHeight="10.0" prefHeight="155.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="504.0" minHeight="10.0" prefHeight="224.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="414.0" minHeight="10.0" prefHeight="222.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="222.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="568.0" minHeight="10.0" prefHeight="132.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="504.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="414.0" minHeight="10.0" prefHeight="187.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="146.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="148.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Button mnemonicParsing="false" text="Create game" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
@@ -44,7 +45,7 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
-            <Button mnemonicParsing="false" text="Close game" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+            <Button mnemonicParsing="false" text="Close game" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets right="10.0" top="10.0" />
                </GridPane.margin>
