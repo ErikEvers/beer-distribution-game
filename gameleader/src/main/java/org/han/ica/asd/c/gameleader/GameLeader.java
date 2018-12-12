@@ -35,7 +35,8 @@ public class GameLeader implements ITurnModelObserver {
         currentRoundData.addTurn(turnModel);
         turnsReceived++;
 
-        if(turnsReceived == turnsExpected) allTurnDataReceived();
+        if(turnsReceived == turnsExpected)
+            allTurnDataReceived();
     }
 
     private void allTurnDataReceived() {
