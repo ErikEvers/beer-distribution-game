@@ -10,16 +10,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 
 public class BeergameDAO extends BeerDisitributionGameDAO {
-	//CRUD - Create, read, update, delete
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?)";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame";
-	//Updating is not possible for this table
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?";
+
+	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 
 	/**
 	 * A method which creates a BeerGame in the Database
@@ -42,7 +44,7 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 			RollBackTransaction(conn);
 		}
 	}
@@ -66,7 +68,7 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 				}
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 		}
 		return beerGames;
 	}
@@ -90,7 +92,7 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 			RollBackTransaction(conn);
 		}
 	}

@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
@@ -18,7 +20,7 @@ public class ConfigurationDAO {
 	private static final String READ_CONFIGURATION = "SELECT* FROM Configuration WHERE GameId = ?;";
 	private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesales = ?, AmountOfDistributors = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?";
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?";
-
+	public static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
 	/**
 	 * A method which creates a configuration in the SQLite Database
@@ -57,7 +59,7 @@ public class ConfigurationDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 			RollBackTransaction(conn);
 		}
 	}
@@ -85,7 +87,7 @@ public class ConfigurationDAO {
 				}
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 		}
 		return configurations;
 	}
@@ -114,7 +116,7 @@ public class ConfigurationDAO {
 					pstmt.setString(10, configuration.getGameId());
 				}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 		}
 	}
 
@@ -133,7 +135,7 @@ public class ConfigurationDAO {
 					pstmt.setString(1,gameId);
 				}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 
 	}

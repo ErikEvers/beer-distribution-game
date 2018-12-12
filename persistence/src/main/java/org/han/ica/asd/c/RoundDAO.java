@@ -5,6 +5,8 @@ import org.han.ica.asd.c.model.Round;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
@@ -12,6 +14,7 @@ import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 public class RoundDAO {
 	private static final String CREATE_ROUND = "INSERT INTO ROUND VALUES(?,?);";
 	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? && RoundId = ?;";
+	public static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
 
 	private FacilityTurnDAO turnDAO;
 
@@ -71,7 +74,7 @@ public class RoundDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 			RollBackTransaction(conn);
 		}
 	}

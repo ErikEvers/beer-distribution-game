@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 
@@ -16,7 +18,7 @@ public class FacilityTurnDAO {
 	private static final String UPDATE_TURN = "UPDATE FacilityTurn SET Stock = ?,RemainingBudget = ?,OrderAmount = ?, OpenOrderAmount = ?, OutgoingGoodsAmount = ? WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?)";
 	private static final String READ_TURNS = "SELECT * FROM FacilityTurn WHERE GameId = ? && RoundId = ?;";
 	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?;";
-	
+	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAO.class.getName());
 
 	/**
 	 * A method to create a FacilityTurn in the SQLite Database
@@ -42,7 +44,7 @@ public class FacilityTurnDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 	}
 
@@ -69,7 +71,7 @@ public class FacilityTurnDAO {
 					}
 				}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 		}
 		return turns;
 	}
@@ -99,7 +101,7 @@ public class FacilityTurnDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 		}
 	}
 
@@ -121,7 +123,7 @@ public class FacilityTurnDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString());
 		}
 	}
 }
