@@ -2,6 +2,7 @@ package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
+import org.han.ica.asd.c.businessrule.parser.UserInputException;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.model.Round;
@@ -12,7 +13,7 @@ public class BusinessRuleHandler implements IBusinessRules{
      * @param agentName Name for the agent
      * @param businessRules Business rules for the agent
      */
-    public void programAgent(String agentName, String businessRules){
+    public void programAgent(String agentName, String businessRules) throws UserInputException {
         ParserPipeline parserPipeline = new ParserPipeline();
         parserPipeline.parseString(businessRules);
         // TO-DO: 12/7/2018 send parsed businessrules to IBusinessRulesStore

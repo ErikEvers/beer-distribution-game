@@ -24,7 +24,7 @@ public class ParserPipeline {
      * Parses the business rules that are provided
      * @param businessRules Business rules that need to be parsed
      */
-    public void parseString(String businessRules) {
+    public void parseString(String businessRules) throws UserInputException {
         businessRules = businessRules.replaceAll(DELETEEMPTYLINES, "");
         CharStream inputStream = CharStreams.fromString(businessRules);
         businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
@@ -55,9 +55,12 @@ public class ParserPipeline {
     /**
      * Evaluates the business rules so that they are correct and usable
      */
-    private void evaluate() {
+    private void evaluate() throws UserInputException {
         Evaluator evaluator = new Evaluator();
         evaluator.evaluate(businessRulesParsed);
+        if(!evaluator.getExceptions().isEmpty()){
+            throw new UserInputException(evaluator.getExceptions());
+        }
     }
 
     /**

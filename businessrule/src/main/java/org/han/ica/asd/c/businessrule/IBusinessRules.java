@@ -1,9 +1,10 @@
 package org.han.ica.asd.c.businessrule;
 
+import org.han.ica.asd.c.businessrule.parser.UserInputException;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.model.Round;
 
 public interface IBusinessRules {
-    void programAgent(String agentName, String businessRules);
+    void programAgent(String agentName, String businessRules) throws UserInputException;
     Action evaluateBusinessRule(String businessRule, Round roundData);
 }

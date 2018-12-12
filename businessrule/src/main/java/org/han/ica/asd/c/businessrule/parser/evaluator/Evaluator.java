@@ -6,11 +6,9 @@ import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Evaluator {
-    private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
+    private List<BusinessRuleException> exceptions = new ArrayList<>();
 
     /**
      * Main evaluate function that walks through all business rules and nodes and let's them get checked
@@ -62,7 +60,7 @@ public class Evaluator {
             checkDeliverOnlyUsedWithBelowAbove(current, lineNumber, belowAboveCounter);
             checkLowHighOnlyUsedInComparison(current, lineNumber, previous);
         } catch (BusinessRuleException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            exceptions.add(e);
         }
     }
 
@@ -241,5 +239,9 @@ public class Evaluator {
                 && !(previous instanceof ComparisonValue)) {
             throw new BusinessRuleException("Lowest and highest can only be used in a comparison", lineNumber);
         }
+    }
+
+    public List<BusinessRuleException> getExceptions() {
+        return exceptions;
     }
 }

@@ -22,4 +22,12 @@ public class BusinessRuleException extends Exception {
     public String toString() {
         return ("BusinessRuleException occurred on line " + lineNumber + ": " + errorMessage);
     }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
 }
