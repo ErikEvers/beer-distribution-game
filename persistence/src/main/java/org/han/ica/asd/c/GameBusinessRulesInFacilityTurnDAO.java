@@ -14,8 +14,9 @@ import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRuleInFacility VALUES (?,?,?,?,?,?,?);";
 	private static final String READ_BUSINESSRULETURN = "SELECT FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
-
+	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
+
 
 	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 		Connection conn;
@@ -57,6 +58,26 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	return gameBusinessRulesInFacilityTurn;
+	}
+
+	public void deleteTurn(String gameId, int roundId, int facililtyIdOrder, int facilityIdDeliver){
+		Connection conn;
+		try {
+			conn = connect();
+			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
+				pstmt.setString(1,gameId);
+				pstmt.setInt(2,roundId);
+				pstmt.setInt(3,facililtyIdOrder);
+				pstmt.setInt(4,facilityIdDeliver);
+
+
+				pstmt.executeUpdate();
+			}
+			conn.commit();
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
+		}
+
 	}
 
 	private GameBusinessRulesInFacilityTurn getGame(PreparedStatement pstmt) {
