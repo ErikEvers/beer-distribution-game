@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
+import static org.han.ica.asd.c.dbconnection.DBConnection.rollBackTransaction;
 
-public class RoundDAO {
+public class RoundDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_ROUND = "INSERT INTO ROUND VALUES(?,?);";
 	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? && RoundId = ?;";
 	public static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
@@ -25,7 +25,7 @@ public class RoundDAO {
 	 * @param roundId The id of the round that the players have played
 	 */
 	public void createRound(String gameId, int roundId){
-		Connection conn = null;
+		Connection conn = connect();
 		executePreparedStatement(gameId, roundId, conn, CREATE_ROUND);
 	}
 
@@ -35,7 +35,7 @@ public class RoundDAO {
 	 * @param roundId The id of the round which needs to be deleted
 	 */
 	public void deleteRound(String gameId, int roundId){
-		Connection conn = null;
+		Connection conn = connect();
 		executePreparedStatement(gameId, roundId, conn, DELETE_ROUND);
 	}
 
@@ -61,23 +61,22 @@ public class RoundDAO {
 	 */
 	private void executePreparedStatement(String gameId, int roundId, Connection conn, String sqlStatement) {
 		try {
-			conn = connect();
-			if (conn == null) return;
-			try (PreparedStatement pstmt = conn.prepareStatement(sqlStatement)) {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(sqlStatement)) {
 
-				conn.setAutoCommit(false);
+					conn.setAutoCommit(false);
 
-				pstmt.setString(1, gameId);
-				pstmt.setInt(2, roundId);
+					pstmt.setString(1, gameId);
+					pstmt.setInt(2, roundId);
 
-				pstmt.executeUpdate();
+					pstmt.executeUpdate();
+				}
+
+				conn.commit();
 			}
-			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString(),e);
-			RollBackTransaction(conn);
+			rollBackTransaction(conn);
 		}
 	}
-
-
 }

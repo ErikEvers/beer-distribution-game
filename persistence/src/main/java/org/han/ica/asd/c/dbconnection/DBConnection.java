@@ -4,10 +4,17 @@ package org.han.ica.asd.c.dbconnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnection {
 	private static final String CONNECTIONSTRING = "jdbc:sqlite::resource:";
 	private static final String DATABASENAME = "BeerGameDB";
+	public static final Logger LOGGER = Logger.getLogger(DBConnection.class.getName());
+
+	private DBConnection(){
+		throw new IllegalStateException("Utility class");
+	}
 
 	public static Connection connect() {
 		// SQLite connection string
@@ -17,16 +24,16 @@ public class DBConnection {
 		try {
 			conn = DriverManager.getConnection(url);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return conn;
 	}
 
-	public static void RollBackTransaction(Connection conn) {
+	public static void rollBackTransaction(Connection conn) {
 		try {
 			conn.rollback();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 	}
 }

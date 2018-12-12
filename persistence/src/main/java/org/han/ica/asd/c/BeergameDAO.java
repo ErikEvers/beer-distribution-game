@@ -13,10 +13,10 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.han.ica.asd.c.dbconnection.DBConnection.RollBackTransaction;
+import static org.han.ica.asd.c.dbconnection.DBConnection.rollBackTransaction;
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 
-public class BeergameDAO extends BeerDisitributionGameDAO {
+public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?)";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame";
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?";
@@ -45,7 +45,7 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString(),e);
-			RollBackTransaction(conn);
+			rollBackTransaction(conn);
 		}
 	}
 
@@ -58,12 +58,13 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 		ArrayList<Beergame> beerGames = new ArrayList<>();
 		try {
 			conn = connect();
-			if (conn == null) return null;
-			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 
-				try (ResultSet rs = pstmt.executeQuery()) {
-					while (rs.next()) {
-						beerGames.add(new Beergame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+					try (ResultSet rs = pstmt.executeQuery()) {
+						while (rs.next()) {
+							beerGames.add(new Beergame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+						}
 					}
 				}
 			}
@@ -93,7 +94,7 @@ public class BeergameDAO extends BeerDisitributionGameDAO {
 			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString());
-			RollBackTransaction(conn);
+			rollBackTransaction(conn);
 		}
 	}
 }

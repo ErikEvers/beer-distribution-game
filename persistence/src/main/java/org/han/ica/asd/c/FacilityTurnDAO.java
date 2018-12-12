@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 
-public class FacilityTurnDAO {
+public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_TURN = "INSERT INTO FacilityTurn VALUES (?,?,?,?,?,?,?,?,?);";
 	private static final String UPDATE_TURN = "UPDATE FacilityTurn SET Stock = ?,RemainingBudget = ?,OrderAmount = ?, OpenOrderAmount = ?, OutgoingGoodsAmount = ? WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?)";
 	private static final String READ_TURNS = "SELECT * FROM FacilityTurn WHERE GameId = ? && RoundId = ?;";
@@ -60,20 +60,22 @@ public class FacilityTurnDAO {
 		ArrayList<FacilityTurn> turns = new ArrayList<>();
 		try {
 			conn = connect();
-			if (conn == null)
+			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURNS)) {
-					pstmt.setString(1,gameId);
-					pstmt.setInt(2,roundId);
+					pstmt.setString(1, gameId);
+					pstmt.setInt(2, roundId);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							turns.add(new FacilityTurn(rs.getString("GameId"), rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("Stock"),rs.getInt("RemainingBudget"),rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"),rs.getInt("OutgoingGoodsAmount")));
+							turns.add(new FacilityTurn(rs.getString("GameId"), rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount")));
 						}
 					}
 				}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString());
-		}
-		return turns;
+			}
+			} catch(SQLException e){
+				LOGGER.log(Level.SEVERE, e.toString());
+			}
+			return turns;
+
 	}
 
 
@@ -85,6 +87,7 @@ public class FacilityTurnDAO {
 		Connection conn;
 		try {
 			conn = connect();
+			if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TURN)) {
 
 				pstmt.setInt(1,facilityTurn.getStock());
@@ -100,6 +103,7 @@ public class FacilityTurnDAO {
 				pstmt.executeUpdate();
 			}
 			conn.commit();
+			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString());
 		}
