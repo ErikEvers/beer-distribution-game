@@ -21,4 +21,9 @@ public class GameLogic implements IPlayerGameLogic {
         this.persistence = persistence;
         this.round = 0;
     }
+
+    @Override
+    public void placeOrder(FacilityTurn turn) {
+        persistence.saveTurnData(turn);
+    }
 }
