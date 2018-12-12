@@ -8,6 +8,10 @@ public class Player {
   private boolean isConnected;
   private boolean isLeader;
 
+  public Player(){
+
+  }
+
   public Player(String playerId, String ipAddress) {
     this.playerId = playerId;
     this.ipAddress = ipAddress;
