@@ -34,7 +34,7 @@ public class Evaluator {
                     lineNumber++;
                 }
 
-                logErrors(defaultCounter, belowAboveCounter, lineNumber, previous, current);
+                executeChecksAndLog(defaultCounter, belowAboveCounter, lineNumber, previous, current);
 
                 previous = current;
                 List<ASTNode> children = current.getChildren();
@@ -54,7 +54,7 @@ public class Evaluator {
      * @param previous Previous node that is above the current one
      * @param current Current node that it is checking
      */
-    private void logErrors(Counter defaultCounter, Counter belowAboveCounter, int lineNumber, ASTNode previous, ASTNode current) {
+    private void executeChecksAndLog(Counter defaultCounter, Counter belowAboveCounter, int lineNumber, ASTNode previous, ASTNode current) {
         try {
             checkOnlyOneDefault(current, lineNumber, defaultCounter);
             checkRoundIsComparedToInt(current, lineNumber);

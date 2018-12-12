@@ -19,14 +19,14 @@ public class BusinessRuleHandler implements IBusinessRules{
         // TO-DO: 12/7/2018 send parsed businessrules to IBusinessRulesStore
     }
 
-    public Action evaluateBusinessRules(String businessRules, Round roundData){
-        BusinessRule businessRule =  new BusinessRuleDecoder().decodeBusinessRule(businessRules);
+    public Action evaluateBusinessRule(String businessRule, Round roundData){
+        BusinessRule businessRuleAST =  new BusinessRuleDecoder().decodeBusinessRule(businessRule);
 
         // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)
 
         // TO-DO: 12/7/2018 Transform comparisons to true and false
 
-        return (Action) businessRule.getChildren()
+        return (Action) businessRuleAST.getChildren()
                 .get(1);
     }
 
