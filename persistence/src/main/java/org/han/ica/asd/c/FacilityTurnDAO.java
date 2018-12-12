@@ -115,14 +115,14 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	 * @return
 	 */
 	private FacilityTurn executePreparedStatement(PreparedStatement pstmt) {
-		FacilityTurn FacilityTurn = null;
+		FacilityTurn facilityTurn = null;
 		try (ResultSet rs = pstmt.executeQuery()) {
-			FacilityTurn = new FacilityTurn(rs.getString("GameId"), rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
+			facilityTurn = new FacilityTurn(rs.getString("GameId"), rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
 
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
-		return FacilityTurn;
+		return facilityTurn;
 	}
 
 
