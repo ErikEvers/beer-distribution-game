@@ -12,4 +12,6 @@ public interface IPlayerGameLogic {
     Round seeOtherFacilities();
 
     void letAgentTakeOverPlayer(AgentParticipant agent);
+
+    void letPlayerTakeOverAgent();
 }

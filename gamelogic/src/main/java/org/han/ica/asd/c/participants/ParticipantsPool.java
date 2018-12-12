@@ -17,6 +17,14 @@ public class ParticipantsPool {
         player = playerParticipant;
     }
 
+    public void addParticipant(IParticipant participant) {
+        participants.add(participant);
+    }
+
+    public List<IParticipant> getParticipants() {
+        return participants;
+    }
+
     public void replacePlayerWithAgent(AgentParticipant agent) {
         participants.remove(player);
         participants.add(agent);
@@ -40,13 +48,5 @@ public class ParticipantsPool {
                 return;
             }
         }
-    }
-
-    public void addParticipant(IParticipant participant) {
-        participants.add(participant);
-    }
-
-    public List<IParticipant> getParticipants() {
-        return participants;
     }
 }

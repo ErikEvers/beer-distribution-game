@@ -42,7 +42,11 @@ public class GameLogic implements IPlayerGameLogic {
 
     @Override
     public void letAgentTakeOverPlayer(AgentParticipant agent) {
-        participantsPool.removeParticipant(agent.getParticipantId());
-        participantsPool.addParticipant(agent);
+        participantsPool.replacePlayerWithAgent(agent);
+    }
+
+    @Override
+    public void letPlayerTakeOverAgent() {
+        participantsPool.replaceAgentWithPlayer();
     }
 }
