@@ -1,14 +1,14 @@
 package org.han.ica.asd.c;
 import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.model.*;
+import org.han.ica.asd.c.participants.IParticipant;
+import org.han.ica.asd.c.participants.ParticipantsPool;
+import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 
@@ -23,7 +23,7 @@ public class GameLogicTests {
         communication = mock(ICommunication.class);
         persistence = mock(IPersistence.class);
         participantsPool = mock(ParticipantsPool.class);
-        gameLogic = new GameLogic("test", communication, persistence);
+        gameLogic = new GameLogic("test", communication, persistence, participantsPool);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class GameLogicTests {
 
     @Test
     public void letAgentTakeOverPlayerRemovesPlayer() {
-        gameLogic.letAgentTakeOverPlayer(any(GameAgent.class));
+        gameLogic.letAgentTakeOverPlayer(any(AgentParticipant.class));
         verify(participantsPool, times(1)).removeParticipant(any(IParticipant.class));
     }
 }
