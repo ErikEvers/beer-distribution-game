@@ -52,7 +52,7 @@ public class ParserPipeline {
     private String userInputToString(List<UserInputBusinessRule> businessRules) {
         StringBuilder stringBuilder = new StringBuilder();
         for (UserInputBusinessRule businessRule : businessRules) {
-            stringBuilder.append(businessRule.getBusinessRule());
+            stringBuilder.append(businessRule.getBusinessRule()).append("\n");
         }
         return stringBuilder.toString().replaceAll(DELETEEMPTYLINES, "");
     }
