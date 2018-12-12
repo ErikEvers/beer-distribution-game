@@ -25,6 +25,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * A method which creates a BeerGame in the Database
+	 *
 	 * @param gameName The specified name of the game
 	 */
 	public void createBeergame(String gameName) {
@@ -44,13 +45,14 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString(),e);
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 			rollBackTransaction(conn);
 		}
 	}
 
 	/**
 	 * A method which returns all BeerGames which are inserted in the database
+	 *
 	 * @return An Arraylist of BeerGames
 	 */
 	public List<Beergame> readBeergames() {
@@ -69,13 +71,14 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString());
+			LOGGER.log(Level.SEVERE, e.toString());
 		}
 		return beerGames;
 	}
 
 	/**
 	 * Deletes a BeerGame from the SQLite Database
+	 *
 	 * @param gameId The specified Id of the game which needs to be deleted
 	 */
 	public void deleteBeergame(String gameId) {
@@ -93,8 +96,30 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString());
+			LOGGER.log(Level.SEVERE, e.toString());
 			rollBackTransaction(conn);
 		}
 	}
+
+	public Beergame getGameLog(String gameId) {
+		Connection conn = null;
+		Beergame beergame = null;
+		try {
+			conn = connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+
+					try (ResultSet rs = pstmt.executeQuery()) {
+						beergame = new Beergame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+					}
+				}
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.toString());
+		}
+		return beergame;
+	}
+
 }
+
+
