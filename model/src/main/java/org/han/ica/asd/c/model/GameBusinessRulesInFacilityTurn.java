@@ -1,17 +1,17 @@
 package org.han.ica.asd.c.model;
 
-public class GameBusinessRulesInFaciltyTurn {
+public class GameBusinessRulesInFacilityTurn {
     private int roundId;
-    private int facilityIdDeliver;
-    private int facilityIdOrder;
+    private Facility facilityIdDeliver;
+    private Facility facilityIdOrder;
     private String gameId;
     private String gameAgentName;
     private String gameBusinessRule;
 
-    public GameBusinessRulesInFaciltyTurn(int roundId, int facilityIdDeliver, int facilityIdOrder, String gameId, String gameAgentName, String gameBusinessRule) {
+    public GameBusinessRulesInFacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, String gameId, String gameAgentName, String gameBusinessRule) {
         this.roundId = roundId;
-        this.facilityIdDeliver = facilityIdDeliver;
-        this.facilityIdOrder = facilityIdOrder;
+        this.facilityIdDeliver = facilityLinkedTo.getFacilityDeliver();
+        this.facilityIdOrder = facilityLinkedTo.getFacilityOrder();
         this.gameId = gameId;
         this.gameAgentName = gameAgentName;
 
@@ -26,19 +26,19 @@ public class GameBusinessRulesInFaciltyTurn {
         this.roundId = roundId;
     }
 
-    public int getFacilityIdDeliver() {
+    public Facility getFacilityDeliver() {
         return facilityIdDeliver;
     }
 
-    public void setFacilityIdDeliver(int facilityIdDeliver) {
+    public void setFacilityDeliver(Facility facilityIdDeliver) {
         this.facilityIdDeliver = facilityIdDeliver;
     }
 
-    public int getFacilityIdOrder() {
+    public Facility getFacilityOrder() {
         return facilityIdOrder;
     }
 
-    public void setFacilityIdOrder(int facilityIdOrder) {
+    public void setFacilityOrder(Facility facilityIdOrder) {
         this.facilityIdOrder = facilityIdOrder;
     }
 
