@@ -35,7 +35,7 @@ public class GameLogicTests {
     }
 
     @Test
-    public void placeOrderCallsPersistence() {
+    public void placeOrderCallsCommunication() {
         FacilityTurn facilityTurn = mock(FacilityTurn.class);
         gameLogic.placeOrder(facilityTurn);
         verify(communication, times(1)).send(facilityTurn);
