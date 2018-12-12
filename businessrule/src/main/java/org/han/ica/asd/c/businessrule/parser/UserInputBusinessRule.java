@@ -10,8 +10,8 @@ public class UserInputBusinessRule {
         this.lineNumber = lineNumber;
     }
 
-    public boolean HasError(){
-        return !errorMessage.isEmpty();
+    public boolean hasError(){
+        return errorMessage != null;
     }
 
     public String getErrorMessage() {
@@ -26,7 +26,15 @@ public class UserInputBusinessRule {
         return businessRule;
     }
 
+    public void setBusinessRule(String businessRule) {
+        this.businessRule = businessRule;
+    }
+
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 }

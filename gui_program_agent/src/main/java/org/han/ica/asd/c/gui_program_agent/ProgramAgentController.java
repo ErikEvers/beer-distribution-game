@@ -18,6 +18,7 @@ import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -101,39 +102,52 @@ public class ProgramAgentController {
      */
     private void setSaveButtonAction() {
         save.setOnAction(event -> {
+            businessRuleErrorTextArea.clear();
+            businessRuleTexFlow.getChildren().clear();
             String agentName = agentNameInput.getText();
             String businessRulesUserInput = businessRuleInput.getText();
-
-            if (agentName == null || agentName.trim().isEmpty()) {
+            if (checkIfStringEmpty(agentName)) {
                 setProgramAgentPopup(AGENT_NAME_ERROR_HEADER, AGENT_NAME_ERROR_BODY, Color.RED);
-            } else if (businessRulesUserInput == null || businessRulesUserInput.trim().isEmpty()) {
+            } else if (checkIfStringEmpty(businessRulesUserInput)) {
                 setProgramAgentPopup(BUSINESS_RULE_ERROR_HEADER, BUSINESS_RULE_ERROR_BODY, Color.RED);
             } else {
-                String[] lines = businessRulesUserInput.split(REGEX_SPLIT_ON_NEW_LINE);
-                List<UserInputBusinessRule> businessRules = new ArrayList<>();
-                for (int i = 0; i < lines.length; i++) {
-                    businessRules.add(new UserInputBusinessRule(lines[i], i) {
-                    });
-                }
-                    iBusinessRules.programAgent(agentName, businessRules);
-                    setProgramAgentPopup(BUSINESS_RULE_SUCCESS_HEADER, BUSINESS_RULE_SUCCESS_BODY, Color.GREEN);
+                List<UserInputBusinessRule> result = programAgentWithUserInput(businessRulesUserInput, agentName);
 
-                    List<Integer> errorLines = e.getLinesWithError();
-                    List<Text> textObjects = new ArrayList<>();
-                    for (int i = 0; i < lines.length; i++) {
-                        Text text = new Text(lines[i] + "\n");
-                        if (errorLines.contains(i + 1)) {
-                            text.setFill(Color.RED);
-                        }
-                        textObjects.add(text);
+                List<String> errors = new ArrayList<>();
+                List<Text> textFlow = new ArrayList<>();
+                for (UserInputBusinessRule businessRule : result) {
+                    Text text = new Text(businessRule.getBusinessRule() + "\n");
+                    if (businessRule.hasError()) {
+                        errors.add("User input error on line " + businessRule.getLineNumber()+": " +businessRule.getErrorMessage());
+                        text.setFill(Color.RED);
                     }
-                    businessRuleErrorTextArea.clear();
-                    businessRuleErrorTextArea.setText(e.toString());
-                    businessRuleTexFlow.getChildren().clear();
-                    businessRuleTexFlow.getChildren().addAll(textObjects);
+                    textFlow.add(text);
+                }
+                businessRuleTexFlow.getChildren().addAll(textFlow);
+                if (errors.isEmpty()) {
+                    setProgramAgentPopup(BUSINESS_RULE_SUCCESS_HEADER, BUSINESS_RULE_SUCCESS_BODY, Color.GREEN);
+                } else {
+                    businessRuleErrorTextArea.setText(errors.toString());
                 }
             }
         });
+    }
+
+    /***
+     * Setup the agent to be programed.
+     * Makes a list of userInputBusinessRule with the parameters.
+     * @param businessRuleUserInput This is a string with all the given business rules
+     * @param agentName The name of the agent.
+     * @return Gives the result of programming a agent.
+     */
+    private List<UserInputBusinessRule> programAgentWithUserInput(String businessRuleUserInput, String agentName) {
+        String[] lines = businessRuleUserInput.split(REGEX_SPLIT_ON_NEW_LINE);
+        List<UserInputBusinessRule> businessRules = new ArrayList<>();
+        for (int i = 0; i < lines.length; i++) {
+            businessRules.add(new UserInputBusinessRule(lines[i], i + 1) {
+            });
+        }
+        return iBusinessRules.programAgent(agentName, businessRules);
     }
 
     /***
@@ -152,5 +166,9 @@ public class ProgramAgentController {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
             }
         });
+    }
+
+    private boolean checkIfStringEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

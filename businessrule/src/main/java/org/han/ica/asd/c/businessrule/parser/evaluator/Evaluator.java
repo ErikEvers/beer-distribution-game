@@ -14,8 +14,8 @@ public class Evaluator {
 
     public boolean evaluate(Map<UserInputBusinessRule,BusinessRule> businessRulesMap) {
         this.businessRulesInput.addAll(businessRulesMap.keySet());
+        Counter defaultCounter = new Counter();
         for (Map.Entry<UserInputBusinessRule,BusinessRule> entry : businessRulesMap.entrySet()) {
-            Counter defaultCounter = new Counter();
             Counter belowAboveCounter = new Counter();
             Deque<ASTNode> deque = new LinkedList<>();
             deque.push(entry.getValue());

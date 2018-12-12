@@ -71,7 +71,7 @@ public class ParserPipeline {
      */
     private void evaluate() {
         Evaluator evaluator = new Evaluator();
-        Map<UserInputBusinessRule,BusinessRule> map = new HashMap<>();
+        Map<UserInputBusinessRule,BusinessRule> map = new LinkedHashMap<>();
         for (int i = 0; i < businessRulesParsed.size(); i++) {
             map.put(businessRulesInput.get(i), businessRulesParsed.get(i));
         }
