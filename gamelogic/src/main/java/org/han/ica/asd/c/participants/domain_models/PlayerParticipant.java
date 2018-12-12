@@ -13,4 +13,9 @@ public class PlayerParticipant extends Player implements IParticipant {
     public FacilityTurn doOrder() {
         return null;
     }
+
+    @Override
+    public String getParticipantId() {
+        return this.getPlayerId();
+    }
 }

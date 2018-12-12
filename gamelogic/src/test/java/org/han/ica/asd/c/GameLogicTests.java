@@ -48,7 +48,7 @@ public class GameLogicTests {
 
     @Test
     public void letAgentTakeOverPlayerRemovesPlayer() {
-        gameLogic.letAgentTakeOverPlayer(any(AgentParticipant.class));
-        verify(participantsPool, times(1)).removeParticipant(any(IParticipant.class));
+        gameLogic.letAgentTakeOverPlayer(mock(AgentParticipant.class));
+        verify(participantsPool, times(1)).removeParticipant(any());
     }
 }

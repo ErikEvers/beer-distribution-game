@@ -13,4 +13,9 @@ public class AgentParticipant extends GameAgent implements IParticipant {
     public FacilityTurn doOrder() {
         return null;
     }
+
+    @Override
+    public String getParticipantId() {
+        return this.getGameAgentName();
+    }
 }

@@ -2,7 +2,8 @@ package org.han.ica.asd.c.participants;
 
 import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.participants.domain_models.PlayerParticipant;
-import org.junit.Before;
+import org.han.ica.asd.c.participants.fakes.PlayerParticipantFake;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 
@@ -11,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ParticipantsPoolTest {
     private ParticipantsPool participantsPool;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        participantsPool = new ParticipantsPool(any(PlayerParticipant));
+        participantsPool = new ParticipantsPool(new PlayerParticipantFake());
     }
 
     @Test
@@ -24,6 +25,6 @@ class ParticipantsPoolTest {
         participantsPool.addParticipant(localAgent);
         int sizeBeforeRemoval = participantsPool.getParticipants().size();
         participantsPool.removeParticipant("firstAgent");
-        assertEquals(participantsPool.getParticipants().size() - 1, sizeBeforeRemoval);
+        assertEquals(sizeBeforeRemoval, participantsPool.getParticipants().size() + 1);
     }
 }
