@@ -14,6 +14,7 @@ CREATE TABLE Round (
   RoundId smallint NOT NULL,
   CONSTRAINT PK_Round PRIMARY KEY (GameId, RoundId),
   CONSTRAINT FK_Round_Beergame FOREIGN KEY (GameId) REFERENCES Beergame(GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE Configuration (
@@ -29,6 +30,7 @@ CREATE TABLE Configuration (
   InsightFacilities bit NOT NULL,
   CONSTRAINT PK_Configuration PRIMARY KEY (GameId),
   CONSTRAINT FK_Configuration_Beergame FOREIGN KEY (GameId) REFERENCES Beergame(GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE FacilityType (
@@ -42,6 +44,7 @@ CREATE TABLE FacilityType (
   StartingOrder smallint NOT NULL,
   CONSTRAINT PK_FacilityType PRIMARY KEY (FacilityName, GameId),
   CONSTRAINT FK_FacilityType FOREIGN KEY (GameId) REFERENCES Configuration(GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE Facility  (
@@ -52,10 +55,14 @@ CREATE TABLE Facility  (
   FacilityName varchar(24) NOT NULL,
   Bankrupt bit NOT NULL,
   CONSTRAINT PK_Facility PRIMARY KEY (GameId, FacilityId),
-  CONSTRAINT FK_Facility_Configuration FOREIGN KEY (GameId) REFERENCES  Configuration(GameId),
-  CONSTRAINT FK_Facility_FacilityType FOREIGN KEY (FacilityName) REFERENCES FacilityType(FacilityName),
-  CONSTRAINT FK_Facility_GameAgent FOREIGN KEY (GameAgentName) REFERENCES GameAgent (GameAgentName),
+  CONSTRAINT FK_Facility_Configuration FOREIGN KEY (GameId) REFERENCES  Configuration(GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT FK_Facility_FacilityType FOREIGN KEY (FacilityName) REFERENCES FacilityType(FacilityName)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT FK_Facility_GameAgent FOREIGN KEY (GameAgentName) REFERENCES GameAgent (GameAgentName)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT FK_Facility_Player FOREIGN KEY (PlayerId) REFERENCES Player (PlayerId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE FacilityLinkedTo (
@@ -64,9 +71,12 @@ CREATE TABLE FacilityLinkedTo (
   FacilityIdDeliver smallint NOT NULL,
   Active bit NOT NULL,
   CONSTRAINT PK_FacilityLinkedTo PRIMARY KEY (GameId, FacilityIdOrder, FacilityIdDeliver),
-  CONSTRAINT FK_FacilityLinkedTo_Configuration FOREIGN KEY (GameId) REFERENCES Configuration(GameId),
-  CONSTRAINT FK_FacilityLinkedTo_Facility_Deliver FOREIGN KEY (FacilityIdDeliver) REFERENCES Facility(FacilityId),
+  CONSTRAINT FK_FacilityLinkedTo_Configuration FOREIGN KEY (GameId) REFERENCES Configuration(GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT FK_FacilityLinkedTo_Facility_Deliver FOREIGN KEY (FacilityIdDeliver) REFERENCES Facility(FacilityId)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT FK_FacilityLinkedTo_Facility_Order FOREIGN KEY (FacilityIdOrder) REFERENCES Facility(FacilityId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE FacilityTurn (
@@ -80,8 +90,10 @@ CREATE TABLE FacilityTurn (
   OpenOrderAmount int NOT NULL,
   OutgoingGoodsAmount int NOT NULL,
   CONSTRAINT PK_FacilityTurn PRIMARY KEY (RoundId, FacilityIdOrder, GameId, FacilityIdDeliver),
-  CONSTRAINT FK_FacilityTurn_Facility FOREIGN KEY (FacilityIdOrder, FacilityIdDeliver, GameId) REFERENCES FacilityLinkedTo(FacilityIdOrder, FacilityIdDeliver, GameId),
+  CONSTRAINT FK_FacilityTurn_Facility FOREIGN KEY (FacilityIdOrder, FacilityIdDeliver, GameId) REFERENCES FacilityLinkedTo(FacilityIdOrder, FacilityIdDeliver, GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT FK_FacilityTurn_Round FOREIGN KEY (RoundId) REFERENCES Round(RoundId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE GameAgent (
@@ -90,6 +102,7 @@ CREATE TABLE GameAgent (
   GameAgentName varchar(255) NOT NULL,
   CONSTRAINT PK_GameAgent PRIMARY KEY (GameId, GameAgentName, FacilityId),
   CONSTRAINT FK_GameAgent_Facility FOREIGN KEY (GameId, FacilityId) REFERENCES Facility(GameId, FacilityId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE Player (
@@ -100,8 +113,10 @@ CREATE TABLE Player (
   Name varchar(255) NOT NULL,
   IsConnected bit NOT NULL,
   CONSTRAINT PK_Player PRIMARY KEY (GameId, PlayerId),
-  CONSTRAINT FK_Player_Beergame FOREIGN KEY (GameId) REFERENCES Beergame(GameId),
+  CONSTRAINT FK_Player_Beergame FOREIGN KEY (GameId) REFERENCES Beergame(GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT FK_Player_Facility FOREIGN KEY (FacilityId) REFERENCES Facility(FacilityId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE Leader (
@@ -110,6 +125,7 @@ CREATE TABLE Leader (
   Timestamp timestamp NOT NULL,
   CONSTRAINT PK_Leader PRIMARY KEY (GameId, PlayerId),
   CONSTRAINT FK_Leader_Player FOREIGN KEY (GameId, PlayerId) REFERENCES Player(GameId, PlayerId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE GameBusinessRulesInFacilityTurn (
@@ -121,8 +137,10 @@ CREATE TABLE GameBusinessRulesInFacilityTurn (
   GameBusinessRule varchar NOT NULL,
   GameAST varchar NOT NULL,
   CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId, GameAgentName, GameBusinessRule, GameAST),
-  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule, GameAST) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule, GameAST),
+  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule, GameAST) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule, GameAST)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT FK_GameBusinessRulesInFacilityTurn_FacilityTurn FOREIGN KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId) REFERENCES FacilityTurn(RoundId, FacilityIdDeliver, FacilityIdOrder, GameId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE GameBusinessRules (
@@ -133,6 +151,7 @@ CREATE TABLE GameBusinessRules (
   GameAST varchar NOT NULL,
   CONSTRAINT PK_GameBusinessRules PRIMARY KEY (FacilityId, GameId, GameAgentName, GameBusinessRule, GameAST),
   CONSTRAINT FK_GameBusinessRules_GameAgent FOREIGN KEY (FacilityId, GameId, GameAgentName) REFERENCES GameAgent(FacilityId, GameId, GameAgentName)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE ProgrammedAgent (
@@ -146,4 +165,5 @@ CREATE TABLE ProgrammedBusinessRules (
   ProgrammedAST varchar NOT NULL,
   CONSTRAINT PK_ProgrammedBusinessRules PRIMARY KEY (ProgrammedAgentName, ProgrammedBusinessRule, ProgrammedAST),
   CONSTRAINT FK_ProgrammedBusinessRules_ProgrammedAgent FOREIGN KEY (ProgrammedAgentName) REFERENCES ProgrammedAgent(ProgrammedAgentName)
+  ON UPDATE CASCADE ON DELETE RESTRICT
 );
