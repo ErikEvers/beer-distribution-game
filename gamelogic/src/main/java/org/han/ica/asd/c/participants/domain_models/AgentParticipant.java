@@ -15,7 +15,7 @@ public class AgentParticipant extends GameAgent implements IParticipant {
     }
 
     @Override
-    public String getParticipantId() {
-        return this.getGameAgentName();
+    public int getParticipantId() {
+        return this.getFacilityId();
     }
 }

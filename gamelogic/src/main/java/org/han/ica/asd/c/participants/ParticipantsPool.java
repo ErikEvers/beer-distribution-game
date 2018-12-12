@@ -32,7 +32,7 @@ public class ParticipantsPool {
 
     public void replaceAgentWithPlayer() {
         for (IParticipant participant : participants) {
-            if (participant.getParticipantId().equals(player.getParticipantId())) {
+            if (participant.getParticipantId() == player.getParticipantId()) {
                 participants.remove(participant);
                 participants.add(player);
                 return;
@@ -40,7 +40,7 @@ public class ParticipantsPool {
         }
     }
 
-    public void removeParticipant(String participantId) {
+    public void removeParticipant(int participantId) {
         for (IParticipant participant : participants) {
             //TODO: Do this with facility id.
             if (participant.getParticipantId() == participantId) {

@@ -43,7 +43,7 @@ class ParticipantsPoolTest {
     @Test
     public void replaceAgentWithPlayerRemovesAgent() {
         AgentParticipant agent = mock(AgentParticipant.class);
-        when(agent.getParticipantId()).thenReturn("WrongOne");
+        when(agent.getParticipantId()).thenReturn(123);
         participantsPool.replaceAgentWithPlayer();
         assertFalse(participantsPool.getParticipants().contains(agent));
     }
@@ -52,10 +52,10 @@ class ParticipantsPoolTest {
     public void removeParticipantRemovesParticipantFromList() {
         AgentParticipant localAgent = mock(AgentParticipant.class);
         //TODO: De agent moet een participantId hebben. Misschien dit met het team / persistance praten.
-        when(localAgent.getParticipantId()).thenReturn("firstAgent");
+        when(localAgent.getParticipantId()).thenReturn(1);
         participantsPool.addParticipant(localAgent);
         int sizeBeforeRemoval = participantsPool.getParticipants().size();
-        participantsPool.removeParticipant("firstAgent");
+        participantsPool.removeParticipant(1);
         assertEquals(sizeBeforeRemoval - 1, participantsPool.getParticipants().size());
     }
 }

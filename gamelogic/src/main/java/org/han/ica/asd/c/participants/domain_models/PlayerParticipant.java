@@ -15,7 +15,7 @@ public class PlayerParticipant extends Player implements IParticipant {
     }
 
     @Override
-    public String getParticipantId() {
-        return this.getPlayerId();
+    public int getParticipantId() {
+        return this.getFacilityId();
     }
 }
