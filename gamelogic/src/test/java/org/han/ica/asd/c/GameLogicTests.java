@@ -57,11 +57,4 @@ public class GameLogicTests {
         gameLogic.letPlayerTakeOverAgent();
         verify(participantsPool, times(1)).replaceAgentWithPlayer();
     }
-
-    @Test
-    public void getFacilityTurnOfFetchesRoundAndFacilityTurn() {
-        gameLogic.getFacilityTurnOf(any(Facility.class));
-        verify(persistence, times(1)).fetchRoundData(anyString(), anyInt());
-        verify(persistence, times(1)).fetchTurnData(any(Round.class), any(FacilityLinkedTo.class));
-    }
 }
