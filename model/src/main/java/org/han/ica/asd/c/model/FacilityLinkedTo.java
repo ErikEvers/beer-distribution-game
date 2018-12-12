@@ -21,19 +21,19 @@ public class FacilityLinkedTo {
         this.gameId = gameId;
     }
 
-    public int getFacilityOrder() {
+    public int getFacilityIdOrder() {
         return facilityIdOrder;
     }
 
-    public void setFacilityOrder(int facilityOrder) {
+    public void setFacilityIdOrder(int facilityOrder) {
         this.facilityIdOrder = facilityOrder;
     }
 
-    public int getFacilityDeliver() {
+    public int getFacilityIdDeliver() {
         return facilityIdDeliver;
     }
 
-    public void setFacilityDeliver(int facilityDeliver) {
+    public void setFacilityIdDeliver(int facilityDeliver) {
         this.facilityIdDeliver = facilityIdDeliver;
     }
 
