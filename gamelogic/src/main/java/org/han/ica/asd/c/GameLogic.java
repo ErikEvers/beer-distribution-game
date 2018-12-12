@@ -1,10 +1,8 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.domain.Facility;
-import org.han.ica.asd.c.domain.Order;
-import org.han.ica.asd.c.domain.PlayerRoundData;
-import org.han.ica.asd.c.domain.RoundData;
 import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
+import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.han.ica.asd.c.public_interfaces.IPlayerGameLogic;
@@ -12,29 +10,15 @@ import org.han.ica.asd.c.public_interfaces.IPlayerGameLogic;
 import java.util.List;
 
 public class GameLogic implements IPlayerGameLogic {
+    String gameId;
     private ICommunication communication;
     private IPersistence persistence;
+    int round;
 
-    public GameLogic(ICommunication communication, IPersistence persistence) {
+    public GameLogic(String gameId, ICommunication communication, IPersistence persistence) {
+        this.gameId = gameId;
         this.communication = communication;
         this.persistence = persistence;
-    }
-
-    public void placeOrder(int amount) {
-        communication.send(amount);
-        persistence.saveOrder(new Order(amount));
-    }
-
-    @Override
-    public List<RoundData> getHistoryFromFacility(Facility facility) {
-        return persistence.getHistory(facility);
-    }
-
-    public RoundData getRoundDataFromFacility(Facility facility) throws RoundDataNotFoundException {
-        RoundData roundData = persistence.getRoundData(facility);
-        if (roundData == null) {
-            throw new RoundDataNotFoundException();
-        }
-        return roundData;
+        this.round = 0;
     }
 }

@@ -1,15 +1,19 @@
 package org.han.ica.asd.c.public_interfaces;
 
-import org.han.ica.asd.c.domain.Facility;
-import org.han.ica.asd.c.domain.Order;
-import org.han.ica.asd.c.domain.RoundData;
-
-import java.util.List;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.Beergame;
 
 public interface IPersistence {
-    void saveOrder(Order order);
+    void saveRoundData(Round roundData);
+    Round fetchRoundData(String gameId, int roundId);
 
-    RoundData getRoundData(Facility facility);
+    void saveTurnData(FacilityTurn turn);
+    FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility);
 
-    List<RoundData> getHistory(Facility facility);
+    Beergame getGameLog(String gameId);
+
+    void logUsedBusinessRuleToCreateOrder(int facilityID, String gameId, FacilityLinkedTo facility,
+                                          String businessRuleString, int outGoingOrderAmount);
 }
