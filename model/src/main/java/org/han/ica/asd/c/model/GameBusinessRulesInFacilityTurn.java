@@ -27,19 +27,19 @@ public class GameBusinessRulesInFacilityTurn {
         this.roundId = roundId;
     }
 
-    public int getFacilityDeliver() {
+    public int getFacilityIdDeliver() {
         return facilityIdDeliver;
     }
 
-    public void setFacilityDeliver(int facilityIdDeliver) {
+    public void setFacilityIdDeliver(int facilityIdDeliver) {
         this.facilityIdDeliver = facilityIdDeliver;
     }
 
-    public int getFacilityOrder() {
+    public int getFacilityIdOrder() {
         return facilityIdOrder;
     }
 
-    public void setFacilityOrder(int facilityIdOrder) {
+    public void setFacilityIdOrder(int facilityIdOrder) {
         this.facilityIdOrder = facilityIdOrder;
     }
 
