@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gameleader.componentInterfaces;
 import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.observers.IConnectorObserver;
 
 /**
  * Interface for the communication component
@@ -11,7 +12,7 @@ public interface IConnectorForLeader {
      * Register an instance of a IMessageObserver as an observer that listens to the communication component.
      * @param observer, instance of IMessageObserver.
      */
-    public void addObserver(IMessageObserver observer);
+    public void addObserver(IConnectorObserver observer);
 
     /**
      * The data of a specific round gets sent to the participants of said game.
