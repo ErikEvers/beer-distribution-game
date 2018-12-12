@@ -18,8 +18,10 @@ public class ParserPipeline {
     private List<String> businessRulesInput = new ArrayList<>();
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
+    private static final String DELETEEMPTYLINES = "(?m)^[ \t]*\r?\n";
 
     public void parseString(String input) {
+        input = input.replaceAll(DELETEEMPTYLINES, "");
         CharStream inputStream = CharStreams.fromString(input);
         businessRulesInput.addAll(Arrays.asList(inputStream.toString().split("\n")));
         BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
@@ -38,7 +40,7 @@ public class ParserPipeline {
     }
 
     private void encodeBusinessRules() {
-        for (int i = 0; i < businessRulesInput.size(); i++) {
+        for (int i = 0; i < businessRulesParsed.size(); i++) {
             businessRulesMap.put(businessRulesInput.get(i), businessRulesParsed.get(i).encode());
         }
     }
