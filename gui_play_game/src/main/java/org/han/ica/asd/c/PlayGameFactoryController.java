@@ -4,16 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-public class PlayGameFactoryController {
-    @FXML
-    GridPane playGridPane;
-
-    @FXML
-    AnchorPane mainContainer;
-
+public class PlayGameFactoryController extends PlayGame {
     public void initialize(){
-        mainContainer.getChildren().addAll();
-        playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
-
+        super.superInitialize();
     }
 }
