@@ -31,16 +31,16 @@ public class ComparisonValue extends ASTNode {
         return this;
     }
 
-    /**
-     * Encodes the parsed tree in a single string so that it can be stored in the database
-     * @param stringBuilder Stringbuilder that is used to encode the tree
-     */
     @Override
     public ComparisonValue addValue(String value) {
         operationValue.addValue(value);
         return this;
     }
 
+    /**
+     * Encodes the parsed tree in a single string so that it can be stored in the database
+     * @param stringBuilder Stringbuilder that is used to encode the tree
+     */
     @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder, getChildren(), prefix, suffix);

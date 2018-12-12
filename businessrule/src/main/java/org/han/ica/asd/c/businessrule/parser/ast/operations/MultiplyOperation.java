@@ -15,6 +15,7 @@ public class MultiplyOperation extends Operation {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override

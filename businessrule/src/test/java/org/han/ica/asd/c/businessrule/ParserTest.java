@@ -1,7 +1,5 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
-import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.junit.jupiter.api.Test;
