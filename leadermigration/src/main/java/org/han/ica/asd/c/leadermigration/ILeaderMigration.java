@@ -1,7 +1,8 @@
 package org.han.ica.asd.c.leadermigration;
 
-public interface iLeaderMigration {
+public interface ILeaderMigration {
 
   void startMigration(Player[] players);
+
 
 }
