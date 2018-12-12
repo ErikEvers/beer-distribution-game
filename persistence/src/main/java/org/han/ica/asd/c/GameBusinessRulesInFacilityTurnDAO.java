@@ -17,7 +17,10 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
-
+	/**
+	 * A method which creates a GameBusinessRulesInFacilityTurn object in the SQLite Database
+	 * @param gameBusinessRulesInFacilityTurn A GameBusinessRuleInFacilityTurn object which contains data which needs to be inserted in to the SQLite Database
+	 */
 	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 		Connection conn;
 		try {
@@ -38,6 +41,14 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		}
 	}
 
+	/**
+	 * A method which returns a GameBusinessRulesInFacilityTurn object from the SQLite Database
+	 * @param gameId The Id of the game where the specific turns are located
+	 * @param roundId The Id of the round where the specific turns are located
+	 * @param facililtyIdOrder The Id of the Facility which placed an order
+	 * @param facilityIdDeliver The Id of the Facility which delivered an order
+	 * @return A GameBusinessRulesInFacilityTurn object which contains data from the database according to the search parameters
+	 */
 	public GameBusinessRulesInFacilityTurn readTurn(String gameId, int roundId, int facililtyIdOrder, int facilityIdDeliver){
 		Connection conn;
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
@@ -51,7 +62,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 
 
 				pstmt.executeUpdate();
-				gameBusinessRulesInFacilityTurn = getGame(pstmt);
+				gameBusinessRulesInFacilityTurn = getGameBusinessRulesInFacilityTurn(pstmt);
 			}
 			conn.commit();
 		} catch (SQLException e) {
@@ -60,6 +71,13 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	return gameBusinessRulesInFacilityTurn;
 	}
 
+	/**
+	 * A method which deletes a specific turn from the SQLite Database
+	 * @param gameId The Id of the game where the specific turns are located
+	 * @param roundId The Id of the round where the specific turns are located
+	 * @param facililtyIdOrder The Id of the Facility which placed an order
+	 * @param facilityIdDeliver The Id of the Facility which delivered an order
+	 */
 	public void deleteTurn(String gameId, int roundId, int facililtyIdOrder, int facilityIdDeliver){
 		Connection conn;
 		try {
@@ -80,7 +98,12 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 
 	}
 
-	private GameBusinessRulesInFacilityTurn getGame(PreparedStatement pstmt) {
+	/**
+	 * A helper method which executes an prepared statement which returns a GameBusinessRuleInFacilityTurn
+	 * @param pstmt A prepared statement string which needs to be executed
+	 * @return A GameBusinessRulesInFacilityTurn object which contains data from the database according to the search parameters given in the prepared statement
+	 */
+	private GameBusinessRulesInFacilityTurn getGameBusinessRulesInFacilityTurn(PreparedStatement pstmt) {
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 		try (ResultSet rs = pstmt.executeQuery()) {
 			gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getString("GameId"),  rs.getString("AgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
