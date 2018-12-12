@@ -9,12 +9,13 @@ import org.han.ica.asd.c.participants.IParticipant;
 import org.han.ica.asd.c.participants.ParticipantsPool;
 import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
+import org.han.ica.asd.c.public_interfaces.ILeaderGameLogic;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 import org.han.ica.asd.c.public_interfaces.IPlayerGameLogic;
 
 import java.util.List;
 
-public class GameLogic implements IPlayerGameLogic {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     String gameId;
     private ICommunication communication;
     private IPersistence persistence;
@@ -48,5 +49,10 @@ public class GameLogic implements IPlayerGameLogic {
     @Override
     public void letPlayerTakeOverAgent() {
         participantsPool.replaceAgentWithPlayer();
+    }
+
+    @Override
+    public void addLocalParticipant(IParticipant participant) {
+        participantsPool.addParticipant(participant);
     }
 }
