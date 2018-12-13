@@ -71,7 +71,7 @@ public class DBConnection implements DatabaseConnection {
 					// in order to not execute empty statements
 					String strings = inst[i];
 					if (!strings.equals("")) {
-						st.executeUpdate(strings);
+						st.executeUpdate(strings); //NOSONAR because the SQL Scripts are written by ourselves. SQLInjection not applicable
 					}
 				}
 			}
