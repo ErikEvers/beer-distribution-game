@@ -21,6 +21,7 @@ public class Comparison extends Expression {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override
@@ -30,6 +31,7 @@ public class Comparison extends Expression {
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
+     *
      * @param child Child that has the be added to this ASTNode
      * @return Returns itself so that it can be used immediately
      */
@@ -49,6 +51,7 @@ public class Comparison extends Expression {
 
     /**
      * Return the children that are assigned to the ASTNode
+     *
      * @return Return the children
      */
     @Override
@@ -60,6 +63,7 @@ public class Comparison extends Expression {
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -79,6 +83,7 @@ public class Comparison extends Expression {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override
@@ -86,6 +91,11 @@ public class Comparison extends Expression {
         return Objects.hash(left, comparisonOperator, right);
     }
 
+    /**
+     * Resolves the {@link Comparison} to a single {@link BooleanLiteral}
+     *
+     * @return Return the {@link BooleanLiteral} that resolves from the Comparison
+     */
     @Override
     public BooleanLiteral resolveCondition() {
         OperationValue operationValueLeft = this.left.getOperationValue();
@@ -96,7 +106,7 @@ public class Comparison extends Expression {
             operationValueLeft = operation.resolveOperation();
         }
 
-        if (operationValueRight instanceof Operation){
+        if (operationValueRight instanceof Operation) {
             Operation operation = (Operation) operationValueRight;
             operationValueRight = operation.resolveOperation();
         }
@@ -105,7 +115,7 @@ public class Comparison extends Expression {
         int valueLeft = ((Value) operationValueLeft).getIntegerValue();
         int valueRight = ((Value) operationValueRight).getIntegerValue();
 
-        switch (this.comparisonOperator.getValue()){
+        switch (this.comparisonOperator.getValue()) {
             case NOT:
                 return new BooleanLiteral(valueLeft != valueRight);
             case LESS:

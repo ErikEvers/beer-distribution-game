@@ -15,6 +15,7 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
+     *
      * @param child Child that has the be added to this ASTNode
      * @return Returns itself so that it can be used immediately
      */
@@ -34,6 +35,7 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Return the children that are assigned to the ASTNode
+     *
      * @return Return the children
      */
     @Override
@@ -48,6 +50,7 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -67,6 +70,7 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override
@@ -76,12 +80,18 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     public void encode(StringBuilder stringBuilder, String prefix, String suffix) {
         super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
 
+    /**
+     * Resolves the operation to an {@link OperationValue}
+     *
+     * @return OperationValue that is made up from the
+     */
     public OperationValue resolveOperation() {
         if (this.left instanceof Operation) {
             this.left = ((Operation) this.left).resolveOperation();
@@ -97,5 +107,12 @@ public abstract class Operation extends OperationValue {
         return this.executeOperation(Integer.parseInt(leftValue.getValue()), Integer.parseInt(rightValue.getValue()));
     }
 
+    /**
+     * Executes the operation and returns the result of the operation
+     *
+     * @param left  the left value of the operation
+     * @param right the right value of the operation
+     * @return Returns the result of the Operation as a {@link Value}
+     */
     public abstract Value executeOperation(int left, int right);
 }

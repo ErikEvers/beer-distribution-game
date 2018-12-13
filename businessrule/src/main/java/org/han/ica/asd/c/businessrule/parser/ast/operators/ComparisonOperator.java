@@ -7,17 +7,25 @@ public class ComparisonOperator extends Operator {
     /**
      * Constructor
      */
-    public ComparisonOperator() {}
+    public ComparisonOperator() {
+    }
 
     /**
      * Constructor
+     *
      * @param operator The comparison operator as a word
      */
     public ComparisonOperator(String operator) {
         this.operatorVal = findComparisonOperator(operator);
     }
 
-	@Override
+    /**
+     * Sets the operatorValue of the {@link Operator}
+     *
+     * @param value The operatorValue to add
+     * @return Returns the instance of the {@link ComparisonOperator}
+     */
+    @Override
     public ComparisonOperator addValue(String value) {
         operatorVal = value;
         return this;
@@ -25,6 +33,7 @@ public class ComparisonOperator extends Operator {
 
     /**
      * Converts the comparison operator from a word to code
+     *
      * @param operator The comparison operator as a word
      * @return The comparison operator as code
      */
@@ -40,12 +49,18 @@ public class ComparisonOperator extends Operator {
         }
     }
 
-    public ComparisonType getValue(){
+    /**
+     * Gets the value of the ComparisonOperator
+     *
+     * @return Returns the {@link ComparisonType} of the {@link ComparisonOperator}
+     */
+    public ComparisonType getValue() {
         return ComparisonType.getComparisonTypeFromComparisonSymbol(this.operatorVal);
     }
 
     /**
      * Calls the equals function of its super class
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -56,6 +71,7 @@ public class ComparisonOperator extends Operator {
 
     /**
      * Calls the hashCode function of its super class
+     *
      * @return Returns the hashcode
      */
     @Override
@@ -65,6 +81,7 @@ public class ComparisonOperator extends Operator {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override

@@ -42,20 +42,33 @@ public class BusinessRule extends ASTNode {
         return stringBuilder.toString();
     }
 
+    /**
+     * Evaluates the businessRule to a businessRule with a single condition and action.
+     */
     public void evaluateBusinessRule() {
-        transformCondition(this);
-        transformAction(this.action);
+        transformCondition();
+        transformAction();
     }
 
-    private void transformCondition(BusinessRule businessRule) {
-        //Check if there are operations in the condition
-        businessRule.condition = businessRule.condition.resolveCondition();
+    /**
+     * Transforms the condition of the businessRule to a single {@link BooleanLiteral}
+     */
+    private void transformCondition() {
+        this.condition = this.condition.resolveCondition();
     }
 
-    private void transformAction(Action action) {
-        transformChild(action);
+    /**
+     * Transforms the action of the businessRule to a single {@link Action}
+     */
+    private void transformAction() {
+        transformChild(this.action);
     }
 
+    /**
+     * Transforms an {@link ASTNode} based on his type
+     *
+     * @param node The node to transform
+     */
     private void transformChild(ASTNode node) {
         if (node instanceof ComparisonValue) {
             ComparisonValue comparisonValue = (ComparisonValue) node;

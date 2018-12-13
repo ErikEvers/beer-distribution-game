@@ -7,9 +7,17 @@ public class Value extends OperationValue {
     private String suffix = ")";
     private String value;
 
+    /**
+     * Constructor
+     */
     public Value() {
     }
 
+    /**
+     * Constructor
+     *
+     * @param value the value to be saved in the object
+     */
     public Value(int value) {
         this.value = Integer.toString(value);
     }
@@ -55,6 +63,11 @@ public class Value extends OperationValue {
         return this.value;
     }
 
+    /**
+     * Returns the {@link Integer} representation of the value
+     *
+     * @return {@link Integer}
+     */
     public Integer getIntegerValue() {
         return Integer.parseInt(this.value);
     }

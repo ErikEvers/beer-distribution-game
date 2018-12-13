@@ -10,16 +10,17 @@ public class ActionReference extends ASTNode {
     /**
      * Constructor
      */
-    public ActionReference() {}
+    public ActionReference() {
+    }
 
     /**
      * Constructor
+     *
      * @param action The action that has to be executed for this businessrule
      */
     public ActionReference(String action) {
         this.action = action;
     }
-
 
 
     @Override
@@ -30,15 +31,17 @@ public class ActionReference extends ASTNode {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder,getChildren(), prefix + action, suffix);
+        super.encode(stringBuilder, getChildren(), prefix + action, suffix);
     }
 
     /**
      * Getter
+     *
      * @return Returns the action
      */
     public String getAction() {
@@ -47,6 +50,7 @@ public class ActionReference extends ASTNode {
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -64,6 +68,7 @@ public class ActionReference extends ASTNode {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override

@@ -11,13 +11,33 @@ public class BooleanLiteral extends Expression {
         this.value = b;
     }
 
+    /**
+     * Gets the boolean value
+     *
+     * @return Returns the boolean value of the {@link BooleanLiteral}
+     */
     public boolean getValue() {
         return this.value;
     }
 
+    /**
+     * Not supported for {@link BooleanLiteral}
+     *
+     * @param stringBuilder Stringbuilder that is used to encode the tree
+     */
     @Override
     public void encode(StringBuilder stringBuilder) {
+        throw new UnsupportedOperationException();
+    }
 
+    /**
+     * Resolves the {@link BooleanLiteral} to a single {@link BooleanLiteral}
+     *
+     * @return Return the {@link BooleanLiteral} that resolves from the {@link BooleanLiteral}
+     */
+    @Override
+    public BooleanLiteral resolveCondition() {
+        return this;
     }
 
     @Override
@@ -32,8 +52,13 @@ public class BooleanLiteral extends Expression {
         return Objects.equals(this.value, booleanLiteralObject.value);
     }
 
+    /**
+     * Hash function used for unit testing
+     *
+     * @return Returns the hashcode
+     */
     @Override
-    public BooleanLiteral resolveCondition() {
-        return this;
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }
