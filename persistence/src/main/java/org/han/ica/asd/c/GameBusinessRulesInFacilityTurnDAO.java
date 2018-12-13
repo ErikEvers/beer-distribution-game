@@ -12,9 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGameDAO {
-	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRuleInFacility VALUES (?,?,?,?,?,?,?);";
-	private static final String READ_BUSINESSRULETURN = "SELECT FROM GameBusinessRuleInFacility WHERE GameId = ? AND RoundId = ? AND FacillityIdOrder = ? AND FacilityIdDeliver = ? ;";
-	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRuleInFacility WHERE GameId = ? AND RoundId = ? AND FacillityIdOrder = ? ANDFacilityIdDeliver = ? ;";
+	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRulesInFacilityTurn VALUES (?,?,?,?,?,?,?);";
+	private static final String READ_BUSINESSRULETURN = "SELECT * FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ? ;";
+	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ? ;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
 	private DatabaseConnection databaseConnection;
@@ -31,15 +31,19 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		Connection conn;
 		try {
 			conn = databaseConnection.connect();
-			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
-				pstmt.setInt(1,gameBusinessRulesInFacilityTurn.getRoundId());
-				pstmt.setInt(2,gameBusinessRulesInFacilityTurn.getFacilityIdOrder());
-				pstmt.setInt(3,gameBusinessRulesInFacilityTurn.getFacilityIdDeliver());
-				pstmt.setString(4,gameBusinessRulesInFacilityTurn.getGameId());
-				pstmt.setString(5,gameBusinessRulesInFacilityTurn.getGameAgentName());
-				pstmt.setString(6,gameBusinessRulesInFacilityTurn.getGameAST());
+			if(conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
+					conn.setAutoCommit(false);
+					pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
+					pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityIdOrder());
+					pstmt.setInt(3, gameBusinessRulesInFacilityTurn.getFacilityIdDeliver());
+					pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameId());
+					pstmt.setString(5, gameBusinessRulesInFacilityTurn.getGameAgentName());
+					pstmt.setString(6,gameBusinessRulesInFacilityTurn.getGameBusinessRule());
+					pstmt.setString(7, gameBusinessRulesInFacilityTurn.getGameAST());
 
-				pstmt.executeUpdate();
+					pstmt.executeUpdate();
+				}
 			}
 			conn.commit();
 		} catch (SQLException e) {
@@ -51,11 +55,11 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	 * A method which returns a GameBusinessRulesInFacilityTurn object from the SQLite Database
 	 * @param gameId The Id of the game where the specific turns are located
 	 * @param roundId The Id of the round where the specific turns are located
-	 * @param facililtyIdOrder The Id of the Facility which placed an order
+	 * @param facilityIdOrder The Id of the Facility which placed an order
 	 * @param facilityIdDeliver The Id of the Facility which delivered an order
 	 * @return A GameBusinessRulesInFacilityTurn object which contains data from the database according to the search parameters
 	 */
-	public GameBusinessRulesInFacilityTurn readTurn(String gameId, int roundId, int facililtyIdOrder, int facilityIdDeliver){
+	public GameBusinessRulesInFacilityTurn readTurn(String gameId, int roundId, int facilityIdOrder, int facilityIdDeliver){
 		Connection conn;
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 		try {
@@ -63,7 +67,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
 				pstmt.setString(1,gameId);
 				pstmt.setInt(2,roundId);
-				pstmt.setInt(3,facililtyIdOrder);
+				pstmt.setInt(3,facilityIdOrder);
 				pstmt.setInt(4,facilityIdDeliver);
 
 
