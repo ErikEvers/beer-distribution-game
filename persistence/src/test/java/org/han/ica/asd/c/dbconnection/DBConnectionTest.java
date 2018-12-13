@@ -3,14 +3,10 @@ package org.han.ica.asd.c.dbconnection;
 
 import com.douglasjose.tech.SQLFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
-import static org.han.ica.asd.c.dbconnection.DBConnection.rollBackTransaction;
 
 public class DBConnectionTest {
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/test/resources/";
@@ -28,35 +24,55 @@ public class DBConnectionTest {
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
+				runSQLScript("ddl.sql");
 			}
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+
 	}
 
-	public static void insertDatabase() {
-		DBConnectionTest.createNewDatabase();
-		Connection conn = DBConnectionTest.connect();
-		PreparedStatement pstm;
+	public static void runSQLScript(String scriptname)
+	{
+		String s = new String();
+		StringBuffer sb = new StringBuffer();
+
+		try
+		{
+
+			FileReader fr = new FileReader(new File(Thread.currentThread().getContextClassLoader().getResource(scriptname).toURI()));
 
 
-		FileInputStream ddlPathName = null;
-		try {
-			ddlPathName = new FileInputStream("src/test/resources/ddl.sql");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			BufferedReader br = new BufferedReader(fr);
+
+			while((s = br.readLine()) != null)
+			{
+				sb.append(s);
+			}
+			br.close();
+
+			// here is our splitter ! We use ";" as a delimiter for each request
+			// then we are sure to have well formed statements
+			String[] inst = sb.toString().split(";");
+
+			Connection connect = connect();
+			Statement st = connect.createStatement();
+
+			for(int i = 0; i<inst.length; i++)
+			{
+				// we ensure that there is no spaces before or after the request string
+				// in order to not execute empty statements
+				if(!inst[i].trim().equals(""))
+				{
+					st.executeUpdate(inst[i]);
+				}
+			}
+
 		}
-
-		SQLFile sqlFile = new SQLFile(ddlPathName);
-		String query = sqlFile.query("createDatabase");
-		try {
-			conn.setAutoCommit(false);
-			pstm = conn.prepareStatement(query);
-			pstm.execute();
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		catch(Exception e)
+		{
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 
 	}
@@ -83,28 +99,7 @@ public class DBConnectionTest {
 	}
 
 	public static void cleanup() {
-		Connection conn = DBConnectionTest.connect();
-		PreparedStatement pstm;
-
-
-		FileInputStream pathname = null;
-		try {
-			pathname = new FileInputStream("src/test/resources/cleanup.sql");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		SQLFile sqlFile = new SQLFile(pathname);
-		String query = sqlFile.query("cleanup");
-		try {
-			conn.setAutoCommit(false);
-			pstm = conn.prepareStatement(query);
-			pstm.execute();
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+	runSQLScript("cleanup.sql");
 	}
 
 }

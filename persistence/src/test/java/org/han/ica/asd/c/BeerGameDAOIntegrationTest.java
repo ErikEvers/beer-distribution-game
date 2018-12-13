@@ -1,7 +1,6 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
-import org.han.ica.asd.c.model.BeerGame;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 class BeerGameDAOIntegrationTest {
 	private BeergameDAO beergameDAO = new BeergameDAO();
-	private BeerGame beergame = new BeerGame("BEERGAME12122018","BeergameZutphen","12/12/2018","");
 
 
 	@BeforeEach
@@ -24,7 +22,7 @@ class BeerGameDAOIntegrationTest {
 	void tearDown() {
 		DBConnectionTest.cleanup();
 	}
-	
+
 	@Test
 	void createBeergame() {
 		//beergameDAO.createBeergame("BeergameZutphen");
@@ -43,7 +41,7 @@ class BeerGameDAOIntegrationTest {
 	}
 
 	public void setUpDatabase(){
-		DBConnectionTest.insertDatabase();
+		DBConnectionTest.createNewDatabase();
 	}
 
 }

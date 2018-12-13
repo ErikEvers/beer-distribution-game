@@ -20,12 +20,6 @@
             <version>2.8.9</version>
             <scope>test</scope>
         </dependency>
-            <dependency>
-                <groupId>com.douglasjose.tech</groupId>
-                <artifactId>sql-file-reader</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-
     </dependencies>
 
     <parent>
