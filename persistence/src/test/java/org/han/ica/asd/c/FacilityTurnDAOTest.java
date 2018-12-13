@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +19,8 @@ import java.util.logging.Logger;
 
 class FacilityTurnDAOTest {
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAOTest.class.getName());
-	public static final FacilityTurn FACILITY_TURN = new FacilityTurn("BeerGameZutphen13_12_2018",1,1,2,50,50,50,50,50);
+	private static final FacilityTurn FACILITY_TURN = new FacilityTurn("BeerGameZutphen13_12_2018",1,1,2,50,50,50,50,50);
+	private static final FacilityTurn FACILITY_TURN2 = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,3,50,50,50,50,50);
 
 	private FacilityTurnDAO facilityTurnDAO;
 	private RoundDAO roundDAO;
@@ -67,10 +69,20 @@ class FacilityTurnDAOTest {
 
 	@Test
 	void fetchTurnsTest() {
-	}
+		facilityTurnDAO = new FacilityTurnDAO();
+		roundDAO = new RoundDAO();
 
-	@Test
-	void fetchTurnTest() {
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		setDatabaseConnection(facilityTurnDAO, connection);
+		setDatabaseConnection(roundDAO,connection);
+
+		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
+		facilityTurnDAO.createTurn(FACILITY_TURN);
+		facilityTurnDAO.createTurn(FACILITY_TURN2);
+
+
+		List<FacilityTurn> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
+		Assert.assertEquals(2,facilityTurnDb.size());
 	}
 
 	@Test
