@@ -27,12 +27,9 @@ public class ASTListener extends BusinessRuleBaseListener {
     private List<BusinessRule> businessRules;
     private Deque<ASTNode> currentContainer;
 
-<<<<<<< Updated upstream
     /**
      * Constructor
      */
-    public ASTListener() {
-=======
     @Inject
     public ASTListener(Provider<BusinessRule> bussinessRuleProvider,
                        Provider<Default> defaultProvider,
@@ -46,7 +43,6 @@ public class ASTListener extends BusinessRuleBaseListener {
         this.comparisonStatementProvider = comparisonStatementProvider;
         this.comparisonValueProvider = comparisonValueProvider;
         this.valueProvider = valueProvider;
->>>>>>> Stashed changes
         businessRules  = new ArrayList<>();
         currentContainer = new LinkedList<>();
     }
