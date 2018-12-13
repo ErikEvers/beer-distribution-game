@@ -25,7 +25,7 @@ class ConfigurationDAOTest {
 
 	@BeforeEach
 	public void setUp() {
-		setUpDatabase();
+		DBConnectionTest.getInstance().createNewDatabase();
 	}
 
 	@AfterEach
@@ -104,11 +104,6 @@ class ConfigurationDAOTest {
 		configurationDAO.createConfiguration(CONFIGURATION);
 		configurationDAO.deleteConfigurations("BeerGameZutphen13_12_2018");
 		Assert.assertEquals(0,configurationDAO.readConfigurations().size());
-	}
-
-
-	private void setUpDatabase(){
-		DBConnectionTest.getInstance().createNewDatabase();
 	}
 
 	private void setDatabaseConnection(ConfigurationDAO configurationDAO, DatabaseConnection connection) {

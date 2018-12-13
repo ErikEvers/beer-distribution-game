@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 
 public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRuleInFacility VALUES (?,?,?,?,?,?,?);";
-	private static final String READ_BUSINESSRULETURN = "SELECT FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
-	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
+	private static final String READ_BUSINESSRULETURN = "SELECT FROM GameBusinessRuleInFacility WHERE GameId = ? AND RoundId = ? AND FacillityIdOrder = ? AND FacilityIdDeliver = ? ;";
+	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRuleInFacility WHERE GameId = ? AND RoundId = ? AND FacillityIdOrder = ? ANDFacilityIdDeliver = ? ;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
 	private DatabaseConnection databaseConnection;
@@ -112,7 +112,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private GameBusinessRulesInFacilityTurn getGameBusinessRulesInFacilityTurn(PreparedStatement pstmt) {
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 		try (ResultSet rs = pstmt.executeQuery()) {
-			gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(rs.getInt("RoundId"), rs.getInt("FaciltyIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getString("GameId"),  rs.getString("AgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
+			gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getString("GameId"),  rs.getString("AgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
 
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);

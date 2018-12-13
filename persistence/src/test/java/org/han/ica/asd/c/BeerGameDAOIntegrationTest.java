@@ -20,7 +20,7 @@ public class BeerGameDAOIntegrationTest {
 
 	@BeforeEach
 	public void setUp() {
-		setUpDatabase();
+		DBConnectionTest.getInstance().createNewDatabase();
 	}
 
 	@AfterEach
@@ -73,10 +73,6 @@ public class BeerGameDAOIntegrationTest {
 		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog("BeergameZutphen").getGameName());
 	}
 
-
-	private void setUpDatabase(){
-		DBConnectionTest.getInstance().createNewDatabase();
-	}
 
 	private void setDatabaseConnection(BeergameDAO beergameDAO, DatabaseConnection connection) {
 		try {
