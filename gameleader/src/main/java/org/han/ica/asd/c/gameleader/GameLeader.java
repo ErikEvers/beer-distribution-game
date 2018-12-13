@@ -12,7 +12,7 @@ public class GameLeader implements IPlayerDisconnectedObserver {
 
     @Override
     public void notifyPlayerDisconnected(String playerId) {
-        IParticipant participant = new AgentParticipant();
+        IParticipant participant = new AgentParticipant(facilityId);
         gameLogic.addLocalParticipant(participant);
     }
 
