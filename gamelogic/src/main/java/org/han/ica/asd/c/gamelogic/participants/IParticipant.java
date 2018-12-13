@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.participants;
+package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.model.FacilityTurn;
 

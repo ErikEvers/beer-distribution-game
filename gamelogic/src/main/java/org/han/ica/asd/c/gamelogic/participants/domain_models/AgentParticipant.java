@@ -1,8 +1,8 @@
-package org.han.ica.asd.c.participants.domain_models;
+package org.han.ica.asd.c.gamelogic.participants.domain_models;
 
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.GameAgent;
-import org.han.ica.asd.c.participants.IParticipant;
+import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 
 /**
  * Wrapper for the agent domain class. This wrapper implements the IParticipant interface.

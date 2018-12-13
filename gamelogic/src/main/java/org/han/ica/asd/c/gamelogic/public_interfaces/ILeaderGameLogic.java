@@ -1,6 +1,6 @@
-package org.han.ica.asd.c.public_interfaces;
+package org.han.ica.asd.c.gamelogic.public_interfaces;
 
-import org.han.ica.asd.c.participants.IParticipant;
+import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 
 public interface ILeaderGameLogic {
     /**

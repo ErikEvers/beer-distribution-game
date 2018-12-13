@@ -1,9 +1,8 @@
-package org.han.ica.asd.c.participants;
+package org.han.ica.asd.c.gamelogic.participants;
 
-import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
-import org.han.ica.asd.c.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -1,17 +1,14 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.model.*;
-import org.han.ica.asd.c.participants.IParticipant;
-import org.han.ica.asd.c.participants.ParticipantsPool;
-import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
-import org.han.ica.asd.c.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.public_interfaces.ICommunication;
-import org.han.ica.asd.c.public_interfaces.ILeaderGameLogic;
-import org.han.ica.asd.c.public_interfaces.IPersistence;
-import org.han.ica.asd.c.public_interfaces.IPlayerGameLogic;
-
-import java.util.List;
+import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.gamelogic.public_interfaces.ICommunication;
+import org.han.ica.asd.c.gamelogic.public_interfaces.ILeaderGameLogic;
+import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
+import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:

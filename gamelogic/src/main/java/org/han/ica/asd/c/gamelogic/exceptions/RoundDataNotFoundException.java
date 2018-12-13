@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.exceptions;
+package org.han.ica.asd.c.gamelogic.exceptions;
 
 public class RoundDataNotFoundException extends Exception {
     public RoundDataNotFoundException() {

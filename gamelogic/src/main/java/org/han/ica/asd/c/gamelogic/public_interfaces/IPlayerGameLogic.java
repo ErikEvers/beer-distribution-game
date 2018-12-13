@@ -1,10 +1,8 @@
-package org.han.ica.asd.c.public_interfaces;
+package org.han.ica.asd.c.gamelogic.public_interfaces;
 
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
-import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
-
-import java.util.List;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 
 public interface IPlayerGameLogic {
     /**

@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.participants.fakes;
+package org.han.ica.asd.c.gamelogic.participants.fakes;
 
 import org.han.ica.asd.c.model.Player;
 

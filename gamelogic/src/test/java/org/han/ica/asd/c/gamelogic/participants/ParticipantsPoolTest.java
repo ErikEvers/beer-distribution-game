@@ -1,8 +1,7 @@
-package org.han.ica.asd.c.participants;
+package org.han.ica.asd.c.gamelogic.participants;
 
-import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
-import org.han.ica.asd.c.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.participants.fakes.PlayerParticipantFake;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerParticipantFake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
