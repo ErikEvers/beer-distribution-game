@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.businessrule.parser;
 
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -34,7 +36,8 @@ public class ParserPipeline {
         BusinessRuleParser parser = new BusinessRuleParser(tokens);
         ParseTree parseTree = parser.businessrules();
 
-        ASTListener listener = new ASTListener();
+        Injector injector = Guice.createInjector();
+        ASTListener listener = injector.getInstance(ASTListener.class);
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, parseTree);
 

@@ -10,19 +10,43 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ASTListener extends BusinessRuleBaseListener {
+    private final Provider<BusinessRule> bussinessRuleProvider;
+    private final Provider<Default> defaultProvider;
+    private final Provider<Comparison> comparisonProvider;
+    private final Provider<ComparisonStatement> comparisonStatementProvider;
+    private final Provider<ComparisonValue> comparisonValueProvider;
+    private final Provider<Value> valueProvider;
     private List<BusinessRule> businessRules;
     private Deque<ASTNode> currentContainer;
 
+<<<<<<< Updated upstream
     /**
      * Constructor
      */
     public ASTListener() {
+=======
+    @Inject
+    public ASTListener(Provider<BusinessRule> bussinessRuleProvider,
+                       Provider<Default> defaultProvider,
+                       Provider<Comparison> comparisonProvider,
+                       Provider<ComparisonStatement> comparisonStatementProvider,
+                       Provider<ComparisonValue> comparisonValueProvider,
+                       Provider<Value> valueProvider) {
+        this.bussinessRuleProvider = bussinessRuleProvider;
+        this.defaultProvider = defaultProvider;
+        this.comparisonProvider = comparisonProvider;
+        this.comparisonStatementProvider = comparisonStatementProvider;
+        this.comparisonValueProvider = comparisonValueProvider;
+        this.valueProvider = valueProvider;
+>>>>>>> Stashed changes
         businessRules  = new ArrayList<>();
         currentContainer = new LinkedList<>();
     }
@@ -41,9 +65,9 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterDefaultRule(BusinessRuleParser.DefaultRuleContext ctx) {
-        BusinessRule businessRule = new BusinessRule();
+        BusinessRule businessRule = bussinessRuleProvider.get();
         businessRules.add(businessRule);
-        businessRule.addChild(new Default());
+        businessRule.addChild(defaultProvider.get());
         currentContainer.push(businessRule);
     }
 
@@ -82,7 +106,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterComparisonstatement(BusinessRuleParser.ComparisonstatementContext ctx) {
-        ComparisonStatement comparisonStatement = new ComparisonStatement();
+        ComparisonStatement comparisonStatement = comparisonStatementProvider.get();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
             parent.addChild(comparisonStatement);
@@ -108,7 +132,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterComparison(BusinessRuleParser.ComparisonContext ctx) {
-        Comparison comparison = new Comparison();
+        Comparison comparison = comparisonProvider.get();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
             parent.addChild(comparison);
@@ -131,13 +155,13 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterComparison_value(BusinessRuleParser.Comparison_valueContext ctx) {
-        ComparisonValue comparisonValue = new ComparisonValue();
+        ComparisonValue comparisonValue = comparisonValueProvider.get();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
             parent.addChild(comparisonValue);
         }
         if("round".equals(ctx.getChild(0).toString())){
-            comparisonValue.addChild(new Value().addValue("round"));
+            comparisonValue.addChild(valueProvider.get().addValue("round"));
         }
         currentContainer.push(comparisonValue);
     }
@@ -180,7 +204,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterValue(BusinessRuleParser.ValueContext ctx) {
-        Value value = new Value();
+        Value value = valueProvider.get();
         for (int i = 0; i < ctx.getChildCount(); i++) {
             value.addValue(ctx.getChild(i).toString());
         }
