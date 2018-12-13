@@ -6,11 +6,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"));
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResources");
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"), resourceBundle);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
