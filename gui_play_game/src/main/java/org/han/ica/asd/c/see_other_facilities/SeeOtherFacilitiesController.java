@@ -41,6 +41,14 @@ public class SeeOtherFacilitiesController {
         drawFacilities();
     }
 
+    /**
+     * Method that draws facilities with correct location & color.
+     *
+     * Throws facilityloadingerror when a facility is of an unknown type.
+     *
+     * @throws FacilityLoadingError
+     */
+
     private void drawFacilities() throws FacilityLoadingError {
         Facility[] facilities = playerComponent.seeOtherFacilities();
 

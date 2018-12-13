@@ -1,21 +1,31 @@
 package org.han.ica.asd.c.fakes;
 
 import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
 
 public class PlayerComponentFake {
     //Stub
 
-    public Facility[] seeOtherFacilities() {
+    public FacilityLinkedTo[] seeOtherFacilities() {
         //Fake method for testing purposes
-        Facility[] facilities;
+        FacilityLinkedTo[] array;
 
         Facility factory = new Facility("", 1, "Factory", "", "");
-        Facility regionalWarehouse = new Facility("", 1, "Regional warehouse", "", "");
-        Facility wholesale = new Facility("", 1, "Wholesale", "", "");
+        Facility regionalWarehouse1 = new Facility("", 1, "Regional warehouse", "", "");
+        Facility regionalWarehouse2 = new Facility("", 1, "Regional warehouse", "", "");
+        Facility wholesale1 = new Facility("", 1, "Wholesale", "", "");
+        Facility wholesale2 = new Facility("", 1, "Wholesale", "", "");
         Facility retailer = new Facility("", 1, "Retailer", "", "");
 
-        facilities = new Facility[]{factory, regionalWarehouse, wholesale, retailer};
+        FacilityLinkedTo link1 = new FacilityLinkedTo("", regionalWarehouse1, factory, true);
+        FacilityLinkedTo link2 = new FacilityLinkedTo("", regionalWarehouse2, factory, true);
+        FacilityLinkedTo link3 = new FacilityLinkedTo("", wholesale1, regionalWarehouse1, true);
+        FacilityLinkedTo link4 = new FacilityLinkedTo("", wholesale2, regionalWarehouse2, true);
+        FacilityLinkedTo link5 = new FacilityLinkedTo("", retailer, wholesale1, true);
+        FacilityLinkedTo link6 = new FacilityLinkedTo("", retailer, wholesale2, true);
 
-        return facilities;
+        array = new FacilityLinkedTo[]{link1, link2, link3, link4, link5, link6};
+
+        return array;
     }
 }

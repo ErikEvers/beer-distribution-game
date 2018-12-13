@@ -68,7 +68,7 @@
             </Label>
             <ScrollPane prefHeight="497.0" prefWidth="714.0" GridPane.columnIndex="1">
               <content>
-                <AnchorPane fx:id="facilitiesContainer" prefHeight="467.0" prefWidth="666.0">
+                <AnchorPane fx:id="facilitiesContainer" prefHeight="483.0" prefWidth="662.0">
 
                 </AnchorPane>
               </content>
