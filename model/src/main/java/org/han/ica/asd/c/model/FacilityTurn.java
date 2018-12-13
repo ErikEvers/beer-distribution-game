@@ -23,6 +23,10 @@ public class FacilityTurn {
         this.outgoingGoods = outgoingGoods;
     }
 
+    public FacilityTurn() {
+
+    }
+
     public int getRoundId() {
         return roundId;
     }
