@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
 
 import java.sql.Connection;
@@ -10,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
 
 public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     private static final String CREATE_FACILITYTYPE = "INSERT INTO FacilityType Values (?, ?, ?, ?, ?, ?, ?, ?);";
@@ -25,6 +24,8 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
             "StockHoldingCosts, OpenOrderCosts, StartingBudget, StartingOrder FROM FacilityType WHERE GameId = ?;";
     private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
 
+    private DatabaseConnection databaseConnection;
+
     /**
      * A method to insert a new FacilityType in the database.
      *
@@ -33,7 +34,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     public void createFacilityType(FacilityType facilityType) {
         Connection conn;
         try {
-            conn = connect();
+            conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
 
                 pstmt.setString(1, facilityType.getGameId());
@@ -61,7 +62,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     public void updateFacilityType(FacilityType facilityType) {
         Connection conn;
         try {
-            conn = connect();
+            conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTYPE)) {
 
                 pstmt.setInt(1, facilityType.getValueIncomingGoods());
@@ -89,7 +90,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     public void deleteAllFacilitytypesForABeergame(String gameId) {
         Connection conn;
         try {
-            conn = connect();
+            conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
 
                 pstmt.setString(1, gameId);
@@ -111,7 +112,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     public void deleteSpecificFacilityType(String gameId, String facilityName) {
         Connection conn;
         try {
-            conn = connect();
+            conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
 
                 pstmt.setString(1, gameId);
@@ -135,7 +136,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         Connection conn;
         ArrayList<FacilityType> types = new ArrayList<>();
         try {
-            conn = connect();
+            conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
                 pstmt.setString(1, gameId);
                 try (ResultSet rs = pstmt.executeQuery()) {
