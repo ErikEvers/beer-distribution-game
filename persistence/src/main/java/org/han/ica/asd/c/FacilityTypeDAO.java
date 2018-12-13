@@ -1,0 +1,156 @@
+package org.han.ica.asd.c;
+
+import org.han.ica.asd.c.model.FacilityType;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
+
+public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
+    private static final String CREATE_FACILITYTYPE = "INSERT INTO FacilityType Values (?, ?, ?, ?, ?, ?, ?, ?);";
+    private static final String UPDATE_FACILITYTYPE = "UPDATE FacilityType SET " +
+            "ValueIncomingGoods = ?, ValueOutgoingGoods = ?, StockHoldingCosts = ?, " +
+            "OpenOrderCosts = ?, StartingBudget = ?, StartingOrder = ? " +
+            "WHERE GameId = ? AND FacilityName = ?;";
+    private static final String DELETE_SPECIFIC_FACILITYTYPE = "DELETE FROM FacilityType WHERE GameId = ? AND FacilityName = ?;";
+    private static final String DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME = "DELETE FROM FacilityType WHERE GameId = ?;";
+    private static final String READ_FACILITYTYPES_FOR_A_BEERGAME = "SELECT FacilityName, ValueIncomingGoods, ValueOutgoingGoods, " +
+            "StockHoldingCosts, OpenOrderCosts, StartingBudget, StartingOrder FROM FacilityType WHERE GameId = ?;";
+    private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
+
+    /**
+     * A method to insert a new FacilityType in the database.
+     *
+     * @param facilityType A FacilityType model that contains all the data needed to create a new FacilityType.
+     */
+    public void createFacilityType(FacilityType facilityType) {
+        Connection conn;
+        try {
+            conn = connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
+
+                pstmt.setString(1, facilityType.getGameId());
+                pstmt.setString(2, facilityType.getFacilityName());
+                pstmt.setInt(3, facilityType.getValueIncomingGoods());
+                pstmt.setInt(4, facilityType.getValueOutgoingGoods());
+                pstmt.setInt(5, facilityType.getStockHoldingCosts());
+                pstmt.setInt(6, facilityType.getOpenOrderCosts());
+                pstmt.setInt(7, facilityType.getStartingBudget());
+                pstmt.setInt(8, facilityType.getStartingBudget());
+
+                pstmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+    /**
+     * A method to update an existing FacilityType.
+     *
+     * @param facilityType A FacilityType model that contains all the data needed to update an existing FacilityType.
+     */
+    public void updateFacilityType(FacilityType facilityType) {
+        Connection conn;
+        try {
+            conn = connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTYPE)) {
+
+                pstmt.setInt(1, facilityType.getValueIncomingGoods());
+                pstmt.setInt(2, facilityType.getValueOutgoingGoods());
+                pstmt.setInt(3, facilityType.getStockHoldingCosts());
+                pstmt.setInt(4, facilityType.getOpenOrderCosts());
+                pstmt.setInt(5, facilityType.getStartingBudget());
+                pstmt.setInt(6, facilityType.getStartingBudget());
+                pstmt.setString(7, facilityType.getGameId());
+                pstmt.setString(8, facilityType.getFacilityName());
+
+                pstmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+    /**
+     * A method to delete all FacilityTypes linked to a specific game.
+     *
+     * @param gameId The identifier of the game from witch all FacilityTypes have to be deleted.
+     */
+    public void deleteAllFacilitytypesForABeergame(String gameId) {
+        Connection conn;
+        try {
+            conn = connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
+
+                pstmt.setString(1, gameId);
+
+                pstmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+    /**
+     * A method to delete a specific FacilityType within a specific game.
+     *
+     * @param gameId       The first part of the identifier of the FacilityType from witch a FacilityTypes has to be deleted.
+     * @param facilityName The second part of the identifier of the FacilityType from witch a FacilityTypes has to be deleted.
+     */
+    public void deleteSpecificFacilityType(String gameId, String facilityName) {
+        Connection conn;
+        try {
+            conn = connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
+
+                pstmt.setString(1, gameId);
+                pstmt.setString(1, facilityName);
+
+                pstmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+    /**
+     * A method to retrieve all the FacilityTypes from a specific game.
+     *
+     * @param gameId The identifier of a game from witch the FacilityTypes need to be retrieved.
+     * @return A list of FacilityTypes from a specific game.
+     */
+    public List<FacilityType> readAllFacilityTypes(String gameId) {
+        Connection conn;
+        ArrayList<FacilityType> types = new ArrayList<>();
+        try {
+            conn = connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
+                pstmt.setString(1, gameId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        types.add(new FacilityType(rs.getString("GameId"),
+                                rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"),
+                                rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
+                                rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
+                                rs.getInt("StartingOrder")));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString());
+        }
+        return types;
+    }
+}
