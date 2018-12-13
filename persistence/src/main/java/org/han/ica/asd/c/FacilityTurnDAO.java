@@ -126,24 +126,6 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 		return facilityTurn;
 	}
 
-
-	/**
-	 * Helper method which executes a prepared statement in the SQLite Database to retrieve a single FacilityTurn
-	 * @param pstmt The prepared statement which needs to be executed
-	 * @return
-	 */
-	private FacilityTurn executePreparedStatement(PreparedStatement pstmt) {
-		FacilityTurn facilityTurn = null;
-		try (ResultSet rs = pstmt.executeQuery()) {
-			facilityTurn = new FacilityTurn(rs.getString("GameId"), rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
-		}
-
-		return facilityTurn;
-	}
-
-
 	/**
 	 * A method which updates a specific turn in the SQLite Database
 	 *
