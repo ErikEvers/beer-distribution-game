@@ -1,4 +1,3 @@
--- #cleanup
 DROP TABLE Beergame;
 DROP TABLE ProgrammedBusinessRules;
 DROP TABLE ProgrammedAgent;
@@ -13,6 +12,7 @@ DROP TABLE Facility;
 DROP TABLE FacilityType;
 DROP TABLE Configuration;
 DROP TABLE Round;
+
 
 
 

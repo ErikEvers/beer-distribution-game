@@ -1,5 +1,7 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 
 import java.sql.Connection;
@@ -9,13 +11,17 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
-
 public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRuleInFacility VALUES (?,?,?,?,?,?,?);";
 	private static final String READ_BUSINESSRULETURN = "SELECT FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
 	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
+
+	public static DatabaseConnection databaseConnection;
+
+	public GameBusinessRulesInFacilityTurnDAO(){
+		databaseConnection = DBConnectionFactory.getInstance("");
+	}
 
 	/**
 	 * A method which creates a GameBusinessRulesInFacilityTurn object in the SQLite Database
@@ -24,7 +30,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 		Connection conn;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
 				pstmt.setInt(1,gameBusinessRulesInFacilityTurn.getRoundId());
 				pstmt.setInt(2,gameBusinessRulesInFacilityTurn.getFacilityIdOrder());
@@ -53,7 +59,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		Connection conn;
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
 				pstmt.setString(1,gameId);
 				pstmt.setInt(2,roundId);
@@ -81,7 +87,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	public void deleteTurn(String gameId, int roundId, int facililtyIdOrder, int facilityIdDeliver){
 		Connection conn;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
 				pstmt.setString(1,gameId);
 				pstmt.setInt(2,roundId);

@@ -1,5 +1,7 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.Configuration;
 
 import java.sql.Connection;
@@ -11,9 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.han.ica.asd.c.dbconnection.DBConnection.rollBackTransaction;
-import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
-
 public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	
 	private static final String CREATE_CONFIGURATION = "INSERT INTO Configuration VALUES (?,?,?,?,?,?,?,?,?,?,?);";
@@ -22,6 +21,12 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?";
 	public static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
+	public static DatabaseConnection databaseConnection;
+
+	public ConfigurationDAO(){
+		databaseConnection = DBConnectionFactory.getInstance("");
+
+	}
 	/**
 	 * A method which creates a configuration in the SQLite Database
 	 @param configuration A Configuration Object which ineeds to be inserted in the SQLite Database
@@ -29,7 +34,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	public void createConfiguration(Configuration configuration) {
 		Connection conn = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn == null) return;
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_CONFIGURATION)) {
 
@@ -51,7 +56,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString());
-			rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -63,7 +68,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 		Connection conn = null;
 		ArrayList<Configuration> configurations = new ArrayList<>();
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATION)) {
 					pstmt.setString(1, gameId);
@@ -92,7 +97,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	public void updateConfigurations(Configuration configuration) {
 		Connection conn = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null)
 				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_CONFIGURATION)) {
 					conn.setAutoCommit(false);
@@ -120,7 +125,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	public void deleteConfigurations(String gameId){
 		Connection conn = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null)
 				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_CONFIGURATION)) {
 					conn.setAutoCommit(false);

@@ -1,47 +1,62 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.lang.reflect.Field;
 
 
-@RunWith(MockitoJUnitRunner.class)
-class BeerGameDAOIntegrationTest {
+@RunWith(PowerMockRunner.class)
+public class BeerGameDAOIntegrationTest {
+
+
 	private BeergameDAO beergameDAO = new BeergameDAO();
 
 
-	@BeforeEach
-	void setUp() {
+	@Before
+	public void setUp() {
 		setUpDatabase();
 	}
 
-	@AfterEach
-	void tearDown() {
-		DBConnectionTest.cleanup();
+	@After
+	public void tearDown() {
+		DBConnectionTest.getInstance().cleanup();
 	}
 
 	@Test
-	void createBeergame() {
-		//beergameDAO.createBeergame("BeergameZutphen");
+	public void createBeergame() {
+		BeergameDAO beergameDAO = new BeergameDAO();
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		try {
+			Field connField = beergameDAO.getClass().getDeclaredField("databaseConnection");
+			connField.setAccessible(true);
+			connField.set(beergameDAO, connection);
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+
+		beergameDAO.createBeergame("BeergameZutphen");
 	}
 
 	@Test
-	void readBeergames() {
+	public void readBeergames() {
 	}
 
 	@Test
-	void deleteBeergame() {
+	public void deleteBeergame() {
 	}
 
 	@Test
-	void getGameLog() {
+	public void getGameLog() {
 	}
 
 	public void setUpDatabase(){
-		DBConnectionTest.createNewDatabase();
+		DBConnectionTest.getInstance().createNewDatabase();
 	}
 
 }

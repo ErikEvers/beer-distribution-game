@@ -1,4 +1,3 @@
--- #createDatabase
 CREATE TABLE IF NOT EXISTS Beergame (
   GameId varchar(36) NOT NULL,
   GameName varchar(255) NOT NULL,

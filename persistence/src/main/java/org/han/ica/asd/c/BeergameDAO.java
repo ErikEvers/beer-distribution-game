@@ -1,5 +1,8 @@
 package org.han.ica.asd.c;
 
+
+import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.BeerGame;
 
 import java.sql.Connection;
@@ -13,15 +16,20 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.han.ica.asd.c.dbconnection.DBConnection.rollBackTransaction;
-import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
+
 
 public class BeergameDAO implements IBeerDisitributionGameDAO {
-	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?)";
-	private static final String READ_BEERGAME = "SELECT * FROM Beergame";
-	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?";
+	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
+	private static final String READ_BEERGAME = "SELECT * FROM Beergame;";
+	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
 
 	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
+	public DatabaseConnection databaseConnection;
+
+
+	public BeergameDAO(){
+		databaseConnection = DBConnectionFactory.getInstance("");
+	}
 
 	/**
 	 * A method which creates a BeerGame in the Database
@@ -31,22 +39,23 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	public void createBeergame(String gameName) {
 		Connection conn = null;
 		try {
-			conn = connect();
-			if (conn == null) return;
-			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
+			conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
 
-				conn.setAutoCommit(false);
+					conn.setAutoCommit(false);
 
-				pstmt.setString(1, UUID.randomUUID().toString());
-				pstmt.setString(2, gameName);
-				pstmt.setString(3, new Date().toString());
+					pstmt.setString(1, UUID.randomUUID().toString());
+					pstmt.setString(2, gameName);
+					pstmt.setString(3, new Date().toString());
 
-				pstmt.executeUpdate();
+					pstmt.executeUpdate();
+				}
+				conn.commit();
 			}
-			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
-			rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -59,7 +68,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		Connection conn = null;
 		ArrayList<BeerGame> beerGames = new ArrayList<>();
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 
@@ -84,7 +93,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	public void deleteBeergame(String gameId) {
 		Connection conn = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn == null) return;
 			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
 
@@ -97,7 +106,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString());
-			rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -105,7 +114,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		Connection conn = null;
 		BeerGame beergame = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 
