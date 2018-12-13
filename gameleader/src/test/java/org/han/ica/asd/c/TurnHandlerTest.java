@@ -17,11 +17,12 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( TurnHandler.class )
 class TurnHandlerTest {
+
     private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
 
-    private FacilityTurn facilityTurnModel;
-
     private TurnHandler turnHandler;
+
+    private FacilityTurn facilityTurnModel;
 
     private Method m;
 
@@ -124,5 +125,8 @@ class TurnHandlerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        assertTrue(turnHandler.validateFacilityTurn(facilityTurnModel));
     }
+
+
 }

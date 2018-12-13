@@ -13,15 +13,16 @@ public class TurnHandler {
     @Inject
     private IPersistence persistenceLayer;
 
-    protected void processFacilityTurn(FacilityTurn turnModel) {
-        if (!validateFacilityTurn(turnModel)) {
-            LOGGER.log(Level.WARNING, "Incoming orders can't be higher than the available stock.");
-        } else {
+    void processFacilityTurn(FacilityTurn turnModel) {
+        if(validateFacilityTurn(turnModel)) {
             persistenceLayer.savePlayerTurn(turnModel);
+        } else {
+            LOGGER.log(Level.WARNING, "Incoming orders can't be higher than the available stock.");
         }
     }
 
-    private boolean validateFacilityTurn(FacilityTurn turnModel) {
+//Currently public for testing purporses
+    public boolean validateFacilityTurn(FacilityTurn turnModel) {
         return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
     }
 }
