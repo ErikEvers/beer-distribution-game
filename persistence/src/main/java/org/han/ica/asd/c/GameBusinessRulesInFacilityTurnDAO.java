@@ -25,7 +25,6 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 
 	/**
 	 * A method which creates a GameBusinessRulesInFacilityTurn object in the SQLite Database
-	 *
 	 * @param gameBusinessRulesInFacilityTurn A GameBusinessRuleInFacilityTurn object which contains data which needs to be inserted in to the SQLite Database
 	 */
 	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
@@ -55,7 +54,6 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 
 	/**
 	 * A method which returns a GameBusinessRulesInFacilityTurn object from the SQLite Database
-	 *
 	 * @param gameId            The Id of the game where the specific turns are located
 	 * @param roundId           The Id of the round where the specific turns are located
 	 * @param facilityIdOrder   The Id of the Facility which placed an order
@@ -88,14 +86,11 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 
 		/**
 		 * A method which deletes a specific turn from the SQLite Database
-		 *
 		 * @param gameId            The Id of the game where the specific turns are located
 		 * @param roundId           The Id of the round where the specific turns are located
 		 * @param facilityIdOrder  The Id of the Facility which placed an order
 		 * @param facilityIdDeliver The Id of the Facility which delivered an order
 		 */
-
-
 		public void deleteTurn (String gameId,int roundId, int facilityIdOrder, int facilityIdDeliver){
 			Connection conn = null;
 			try {

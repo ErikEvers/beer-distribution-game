@@ -31,7 +31,6 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * A method to create a FacilityTurn in the SQLite Database
-	 *
 	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be inserted in the SQLite Database
 	 */
 	public void createTurn(FacilityTurn facilityTurn) {
@@ -66,7 +65,6 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * A method which returns all the turns from a specific round from the SQLite Database
-	 *
 	 * @param gameId  The id of the game of the turn which needs to be returned
 	 * @param roundId The id of the specific round which needs to be returned
 	 * @return Returns a list of all the turns in a specific round in a specific game
@@ -128,7 +126,6 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * A method which updates a specific turn in the SQLite Database
-	 *
 	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be updated in the SQLite Database
 	 */
 	public void updateTurn(FacilityTurn facilityTurn) {
@@ -159,7 +156,6 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * A method which deletes a specific turn in the SQLite Database
-	 *
 	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be inserted in the SQLite Database
 	 */
 	public void deleteTurn(FacilityTurn facilityTurn) {

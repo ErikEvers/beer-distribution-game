@@ -111,6 +111,11 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		}
 	}
 
+	/**
+	 * A method which returns a single beergame according to the given parameters
+	 * @param gameName The name of the game which needs to be returned
+	 * @return A beergame object
+	 */
 	public BeerGame getGameLog(String gameName) {
 		Connection conn = null;
 		BeerGame beergame = null;
