@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.leadermigration.testutil;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.leadermigration.*;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 
@@ -9,7 +12,14 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
     private LeaderMigration migrationObj;
 
     public Player startElection(Player[] players) {
-        this.migrationObj = new LeaderMigration();
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
+            }
+        });
+
+        this.migrationObj = injector.getInstance(LeaderMigration.class);
         this.migrationObj.startMigration(players);
         return this.elected;
     }
@@ -29,7 +39,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
         if(!player.isConnected()) {
             System.out.println("TODO: disconnect na elected");
         }
-        new LeaderMigration().receiveVictoryMessage(victory);
+        new LeaderMigration().receiveVictoryMessage(new ElectionModel());
         this.elected = victory;
     }
 }
