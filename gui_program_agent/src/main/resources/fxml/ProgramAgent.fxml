@@ -42,7 +42,7 @@
                <children>
                   <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <content>
-                        <TextFlow fx:id="businessRuleTexFlow" prefHeight="200.0" prefWidth="200.0" />
+                        <TextFlow fx:id="businessRuleTexFlow" prefHeight="342.0" prefWidth="433.0" />
                      </content>
                   </ScrollPane>
                   <TextArea fx:id="businessRuleInput" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />

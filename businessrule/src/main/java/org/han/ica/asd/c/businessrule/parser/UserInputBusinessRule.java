@@ -5,12 +5,12 @@ public class UserInputBusinessRule {
     private String errorMessage;
     private int lineNumber;
 
-    public UserInputBusinessRule(String businessRule,int lineNumber){
+    public UserInputBusinessRule(String businessRule, int lineNumber) {
         this.businessRule = businessRule;
         this.lineNumber = lineNumber;
     }
 
-    public boolean hasError(){
+    public boolean hasError() {
         return errorMessage != null;
     }
 
@@ -19,7 +19,11 @@ public class UserInputBusinessRule {
     }
 
     public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+        if (this.errorMessage != null) {
+            this.errorMessage = this.errorMessage + "\n" + errorMessage;
+        } else {
+            this.errorMessage = errorMessage;
+        }
     }
 
     public String getBusinessRule() {

@@ -7,6 +7,6 @@ import org.han.ica.asd.c.model.Round;
 import java.util.List;
 
 public interface IBusinessRules {
-    List<UserInputBusinessRule> programAgent(String agentName, List<UserInputBusinessRule> businessRules);
+    List<UserInputBusinessRule> programAgent(String agentName, String businessRules);
     Action evaluateBusinessRule(String businessRule, Round roundData);
 }
