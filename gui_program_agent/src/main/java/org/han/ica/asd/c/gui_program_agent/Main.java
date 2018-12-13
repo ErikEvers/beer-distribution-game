@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.gui_program_agent;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,12 +10,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"));
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
-    }
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgent.fxml"));
 
-    public static void main(String[] args) {
-        launch(args);
+        primaryStage.setScene(new Scene(root, 1000, 800));
+        primaryStage.show();
     }
 }

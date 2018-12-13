@@ -11,6 +11,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.model.Round;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +42,7 @@ class BusinessRuleHandlerTest {
 		StringBuilder expectedStringBuilder = new StringBuilder();
 		expectedAction.encode(expectedStringBuilder);
 
-		Action actualAction = new BusinessRuleHandler().evaluateBusinessRules(businessRule.encode(), new RoundData());
+		Action actualAction = new BusinessRuleHandler().evaluateBusinessRules(businessRule.encode(), new Round("1", 1));
 		StringBuilder actualStringBuilder = new StringBuilder();
 		actualAction.encode(actualStringBuilder);
 
