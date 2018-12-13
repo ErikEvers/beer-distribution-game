@@ -1,8 +1,5 @@
 package org.han.ica.asd.c.leadermigration;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.han.ica.asd.c.leadermigration.testutil.CommunicationHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,11 +7,6 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( ElectionHandler.class )

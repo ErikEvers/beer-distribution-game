@@ -8,7 +8,7 @@ public class LeaderMigration implements ILeaderMigration {
   private Player[] players;
 
   @Inject
-  ElectionHandler electionHandler;
+  private ElectionHandler electionHandler;
 
   public LeaderMigration() {
 
