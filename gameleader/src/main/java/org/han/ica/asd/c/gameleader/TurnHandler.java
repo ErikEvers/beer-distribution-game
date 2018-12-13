@@ -12,7 +12,7 @@ public class TurnHandler {
     @Inject
     private IPersistence persistenceLayer;
 
-    protected void processFacilityTurn(FacilityTurn turnModel) {
+    void processFacilityTurn(FacilityTurn turnModel) {
         if(validateFacilityTurn(turnModel)) {
             persistenceLayer.savePlayerTurn(turnModel);
         } else {
@@ -20,7 +20,7 @@ public class TurnHandler {
         }
     }
 
-    private boolean validateFacilityTurn(FacilityTurn turnModel) {
-        return (turnModel.getOrder() < turnModel.getStock() && turnModel.getOrder() >= 0);
+    public boolean validateFacilityTurn(FacilityTurn turnModel) {
+        return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
     }
 }
