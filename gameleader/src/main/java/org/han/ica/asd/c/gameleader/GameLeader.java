@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
-import org.han.ica.asd.c.gameleader.componentInterfaces.IParticipant;
 import org.han.ica.asd.c.model.BeerGame;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
