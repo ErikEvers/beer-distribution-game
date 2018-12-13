@@ -5,9 +5,35 @@ import org.han.ica.asd.c.model.Round;
 import java.util.List;
 
 public interface IReplay {
+    /**
+     * Request data for total graph overview for a game
+     * @param gameId
+     * Primary identifier to locate a given game.
+     * @return
+     * A List of Rounds which contain the data for each facility.
+     */
     List<Round> showGraphOverview(String gameId);
     //TODO: implementeer showGraphDetails() Onbekend wat de "details" nou zijn
+
+    /**
+     * Request data for a graph overview up to a specified round
+     * @param gameId
+     * Primary identifier to locate a given game.
+     * @param roundId
+     * Primary identifier to locate a round within a game
+     * @return
+     * All Round data up to the given roundId where the index of the List corresponds with the round
+     */
     List<Round> showRoundGraph(String gameId, int roundId);
-    List<Round> stepForward();
-    List<Round> stepBackwards();
+
+    /**
+     * Get data for next Round.
+     * @param gameId
+     * Primary identifier to locate a given game.
+     * @param currentRoundId
+     * Primary identifier to locate a round within a game
+     * @return
+     * Round data for the next Round
+     */
+    Round stepForward(String gameId, int currentRoundId);
 }
