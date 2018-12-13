@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.SeeOtherFacilitiesController">
+   <children>
+      <GridPane layoutX="10.0" layoutY="167.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="991.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="167.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.0" minWidth="0.0" prefWidth="159.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="667.0" minWidth="10.0" prefWidth="654.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="167.0" minWidth="10.0" prefWidth="145.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="486.0" minHeight="10.0" prefHeight="486.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="112.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="81.0" minHeight="56.0" prefHeight="76.0" />
+        </rowConstraints>
+        <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <GridPane.margin>
+                    <Insets left="5.0" top="15.0" />
+                </GridPane.margin>
+            </Rectangle>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="25.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <GridPane.margin>
+                    <Insets bottom="15.0" left="5.0" />
+                </GridPane.margin>
+            </Rectangle>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="25.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                <GridPane.margin>
+                    <Insets bottom="15.0" left="5.0" />
+                </GridPane.margin>
+            </Rectangle>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="142.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <GridPane.margin>
+                    <Insets left="5.0" top="15.0" />
+                </GridPane.margin>
+            </Rectangle>
+            <Label prefHeight="17.0" prefWidth="52.0" text="Fabriek" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="66.0" />
+               </GridPane.margin>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="65.0" text="Distributeur" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="66.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Groothandel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="66.0" />
+               </GridPane.margin>
+            </Label>
+            <Label layoutX="207.0" layoutY="516.0" text="Detailhandel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="66.0" />
+               </GridPane.margin>
+            </Label>
+            <ScrollPane prefHeight="497.0" prefWidth="714.0" GridPane.columnIndex="1">
+              <content>
+                <AnchorPane />
+              </content>
+            </ScrollPane>
+        </children>
+      </GridPane>
+      <HBox layoutX="14.0" layoutY="14.0" prefHeight="163.0" prefWidth="1000.0" AnchorPane.bottomAnchor="637.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="Andere Faciliteiten">
+               <font>
+                  <Font size="50.0" />
+               </font>
+               <padding>
+                  <Insets left="20.0" top="25.0" />
+               </padding>
+            </Label>
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Terug naar spel">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="350.0" top="40.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
