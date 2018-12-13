@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_TURN = "INSERT INTO FacilityTurn VALUES (?,?,?,?,?,?,?,?,?);";
-	private static final String UPDATE_TURN = "UPDATE FacilityTurn SET Stock = ?,RemainingBudget = ?,OrderAmount = ?, OpenOrderAmount = ?, OutgoingGoodsAmount = ? WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?)";
+	private static final String UPDATE_TURN = "UPDATE FacilityTurn SET Stock = ?,RemainingBudget = ?,OrderAmount = ?, OpenOrderAmount = ?, OutgoingGoodsAmount = ? WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
 	private static final String READ_TURNS = "SELECT * FROM FacilityTurn WHERE GameId = ? AND RoundId = ?;";
 	private static final String READ_TURN = "SELECT * FROM FacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
 	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
@@ -155,7 +155,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TURN)) {
-
+					conn.setAutoCommit(false);
 					pstmt.setInt(1, facilityTurn.getStock());
 					pstmt.setInt(2, facilityTurn.getRemainingBudget());
 					pstmt.setInt(3, facilityTurn.getOrder());

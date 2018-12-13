@@ -17,10 +17,12 @@ import java.util.logging.Logger;
 
 
 
-class FacilityTurnDAOTest {
-	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAOTest.class.getName());
+class FacilityTurnDAOIntegrationTest {
+	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAOIntegrationTest.class.getName());
 	private static final FacilityTurn FACILITY_TURN = new FacilityTurn("BeerGameZutphen13_12_2018",1,1,2,50,50,50,50,50);
 	private static final FacilityTurn FACILITY_TURN2 = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,3,50,50,50,50,50);
+	private static final FacilityTurn FACILITY_TURN3 = new FacilityTurn("BeerGameZutphen13_12_2018",1,1,2,150,150,150,150,150);
+
 
 	private FacilityTurnDAO facilityTurnDAO;
 	private RoundDAO roundDAO;
@@ -87,6 +89,33 @@ class FacilityTurnDAOTest {
 
 	@Test
 	void updateTurnTest() {
+		facilityTurnDAO = new FacilityTurnDAO();
+		roundDAO = new RoundDAO();
+
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		setDatabaseConnection(facilityTurnDAO, connection);
+		setDatabaseConnection(roundDAO,connection);
+
+		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
+		facilityTurnDAO.createTurn(FACILITY_TURN);
+		facilityTurnDAO.updateTurn(FACILITY_TURN3);
+
+
+		FacilityTurn facilityTurnDb = facilityTurnDAO.fetchTurn(new Round("BeerGameZutphen13_12_2018",1),new FacilityLinkedTo("BeerGameZutphen13_12_2018",1,2,false));
+
+		//Validate if the data is not inserted but updated
+		Assert.assertEquals(1,facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1).size());
+
+		//Test if the data is updated
+		Assert.assertEquals(FACILITY_TURN3.getGameId(),facilityTurnDb.getGameId());
+		Assert.assertEquals(FACILITY_TURN3.getFacilityIdDeliver(),facilityTurnDb.getFacilityIdDeliver());
+		Assert.assertEquals(FACILITY_TURN3.getFacilityIdOrder(),facilityTurnDb.getFacilityIdOrder());
+		Assert.assertEquals(FACILITY_TURN3.getOpenOrder(),facilityTurnDb.getOrder());
+		Assert.assertEquals(FACILITY_TURN3.getOrder(),facilityTurnDb.getOrder());
+		Assert.assertEquals(FACILITY_TURN3.getOutgoingGoods(),facilityTurnDb.getOutgoingGoods());
+		Assert.assertEquals(FACILITY_TURN3.getStock(),facilityTurnDb.getStock());
+		Assert.assertEquals(FACILITY_TURN3.getRemainingBudget(),facilityTurnDb.getRemainingBudget());
+		Assert.assertEquals(FACILITY_TURN3.getRoundId(),facilityTurnDb.getRoundId());
 	}
 
 	@Test

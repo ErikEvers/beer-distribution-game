@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-class ConfigurationDAOTest {
+class ConfigurationDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(BeerGameDAOIntegrationTest.class.getName());
 
 	private ConfigurationDAO configurationDAO;
