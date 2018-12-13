@@ -11,6 +11,7 @@ import java.util.*;
 public class Evaluator {
     private List<UserInputBusinessRule> businessRulesInput = new ArrayList<>();
     private boolean hasErrors = false;
+    private boolean defaultBool = false;
 
     public boolean evaluate(Map<UserInputBusinessRule,BusinessRule> businessRulesMap) {
         this.businessRulesInput.addAll(businessRulesMap.keySet());
@@ -26,13 +27,12 @@ public class Evaluator {
     private void evaluateBusinessRule(Counter defaultCounter, Deque<ASTNode> deque, UserInputBusinessRule inputBusinessRule) {
         Counter belowCounter = new Counter();
         ASTNode previous = null;
-        Counter defaultBool = new Counter();
 
         while (!deque.isEmpty()) {
             ASTNode current = deque.pop();
 
             if (current != null) {
-                executeChecksAndLog(defaultCounter, belowCounter, defaultBool, inputBusinessRule, previous, current);
+                executeChecksAndLog(defaultCounter, belowCounter, inputBusinessRule, previous, current);
 
                 previous = current;
                 List<ASTNode> children = current.getChildren();
@@ -44,10 +44,10 @@ public class Evaluator {
         }
     }
 
-    private void executeChecksAndLog(Counter defaultCounter, Counter belowCounter, Counter defaultBool, UserInputBusinessRule inputBusinessRule, ASTNode previous, ASTNode current) {
+    private void executeChecksAndLog(Counter defaultCounter, Counter belowCounter, UserInputBusinessRule inputBusinessRule, ASTNode previous, ASTNode current) {
         checkOnlyOneDefault(current, inputBusinessRule, defaultCounter);
         checkRoundIsComparedToInt(current, inputBusinessRule);
-        checkDeliverOnlyUsedInIfRule(current, inputBusinessRule, defaultBool);
+        checkDeliverOnlyUsedInIfRule(current, inputBusinessRule);
         checkLowHighOnlyComparedToGameValueAndAboveBelow(current, inputBusinessRule);
         checkDeliverOnlyUsedWithBelow(current, inputBusinessRule, belowCounter);
         checkLowHighOnlyUsedInComparison(current, inputBusinessRule, previous);
@@ -225,13 +225,13 @@ public class Evaluator {
         }
     }
 
-    private void checkDeliverOnlyUsedInIfRule(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter defaultBool){
+    private void checkDeliverOnlyUsedInIfRule(ASTNode current, UserInputBusinessRule inputBusinessRule){
         if(current instanceof Default){
-            defaultBool.addOne();
+            defaultBool = true;
         }
 
         if(current instanceof ActionReference
-                && defaultBool.getCountedValue() > 0
+                && defaultBool
                 && ((ActionReference) current).getAction().equals("deliver")){
             inputBusinessRule.setErrorMessage("Deliver can not be used in a default statement");
         }
