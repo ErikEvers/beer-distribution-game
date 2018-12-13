@@ -34,30 +34,24 @@ public class DBConnection implements DatabaseConnection {
 
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
-				DatabaseMetaData meta = conn.getMetaData();
 				runSQLScript("ddl.sql");
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 
 	}
 
 	public void runSQLScript(String scriptname) {
-		String s = new String();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		findFileAndRun(scriptname, sb, connect(), LOGGER);
 
 	}
 
-	static void findFileAndRun(String scriptname, StringBuffer sb, Connection connect2, Logger logger) {
+	static void findFileAndRun(String scriptname, StringBuilder sb, Connection connect2, Logger logger) {
 		String s;
-		try {
-
-			FileReader fr = new FileReader(new File(Thread.currentThread().getContextClassLoader().getResource(scriptname).toURI()));
-
-
+		try(FileReader fr = new FileReader(new File(Thread.currentThread().getContextClassLoader().getResource(scriptname).toURI()))){
 			BufferedReader br = new BufferedReader(fr);
 
 			while ((s = br.readLine()) != null) {
@@ -70,13 +64,15 @@ public class DBConnection implements DatabaseConnection {
 			String[] inst = sb.toString().split(";");
 
 			Connection connect = connect2;
-			Statement st = connect.createStatement();
+			try (Statement st = connect.createStatement()) {
 
-			for (int i = 0; i < inst.length; i++) {
-				// we ensure that there is no spaces before or after the request string
-				// in order to not execute empty statements
-				if (!inst[i].trim().equals("")) {
-					st.executeUpdate(inst[i]);
+				for (int i = 0; i < inst.length; i++) {
+					// we ensure that there is no spaces before or after the request string
+					// in order to not execute empty statements
+					String strings = inst[i];
+					if (!strings.equals("")) {
+						st.executeUpdate(strings);
+					}
 				}
 			}
 
@@ -107,7 +103,7 @@ public class DBConnection implements DatabaseConnection {
 	}
 
 	public void cleanup() {
-
+	throw new UnsupportedOperationException();
 	}
 
 }

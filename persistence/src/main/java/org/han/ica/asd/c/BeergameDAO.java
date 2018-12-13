@@ -25,7 +25,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameName = ?;";
 
 	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
-	public DatabaseConnection databaseConnection;
+	private DatabaseConnection databaseConnection;
 
 
 	public BeergameDAO(){

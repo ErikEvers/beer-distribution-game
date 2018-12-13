@@ -23,7 +23,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?;";
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAO.class.getName());
 
-	public static DatabaseConnection databaseConnection;
+	private DatabaseConnection databaseConnection;
 
 	public FacilityTurnDAO(){
 		databaseConnection = DBConnectionFactory.getInstance("");

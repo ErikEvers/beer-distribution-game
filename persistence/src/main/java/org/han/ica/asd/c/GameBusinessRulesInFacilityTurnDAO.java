@@ -17,7 +17,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRuleInFacility WHERE GameId = ? && RoundId = ? && FacillityIdOrder = ?, FacilityIdDeliver = ? ;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
-	public static DatabaseConnection databaseConnection;
+	private DatabaseConnection databaseConnection;
 
 	public GameBusinessRulesInFacilityTurnDAO(){
 		databaseConnection = DBConnectionFactory.getInstance("");

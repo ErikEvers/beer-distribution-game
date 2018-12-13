@@ -20,6 +20,7 @@ class ConfigurationDAOTest {
 
 	private ConfigurationDAO configurationDAO;
 	private static final Configuration CONFIGURATION = new Configuration("BeerGameZutphen13_12_2018",40,1,1,1,1,1,99,false,false);
+	private static final Configuration CONFIGURATION2 = new Configuration("BeerGameArnhem13_12_2018",40,1,1,1,1,1,99,false,false);
 
 
 
@@ -43,7 +44,7 @@ class ConfigurationDAOTest {
 		configurationDAO.createConfiguration(CONFIGURATION);
 		Configuration configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
 
-		//Test if object values are the same
+		//Test if object values are the equal
 		Assert.assertEquals(CONFIGURATION.getGameId(),configurationDb.getGameId());
 		Assert.assertEquals(CONFIGURATION.getAmountOfRounds(),configurationDb.getAmountOfRounds());
 		Assert.assertEquals(CONFIGURATION.getMaximumOrderRetail(),configurationDb.getMaximumOrderRetail());
@@ -58,6 +59,13 @@ class ConfigurationDAOTest {
 
 	@Test
 	void readConfigurationsTest() {
+		configurationDAO = new ConfigurationDAO();
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		setDatabaseConnection(configurationDAO, connection);
+
+		configurationDAO.createConfiguration(CONFIGURATION);
+		configurationDAO.createConfiguration(CONFIGURATION2);
+		Assert.assertEquals(2,configurationDAO.readConfigurations().size());
 	}
 
 	@Test

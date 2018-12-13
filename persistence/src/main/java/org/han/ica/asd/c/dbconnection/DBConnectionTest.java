@@ -30,20 +30,18 @@ public class DBConnectionTest implements DatabaseConnection {
 
 		try (Connection conn = DriverManager.getConnection(url)) {
 			if (conn != null) {
-				DatabaseMetaData meta = conn.getMetaData();
 				runSQLScript("ddl.sql");
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 
 	}
 
 	public void runSQLScript(String scriptname)
 	{
-		String s = new String();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		DBConnection.findFileAndRun(scriptname, sb, connect(), LOGGER);
 

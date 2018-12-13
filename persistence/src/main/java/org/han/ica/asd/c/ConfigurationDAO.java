@@ -22,7 +22,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?";
 	public static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
-	public static DatabaseConnection databaseConnection;
+	private DatabaseConnection databaseConnection;
 
 	public ConfigurationDAO(){
 		databaseConnection = DBConnectionFactory.getInstance("");
