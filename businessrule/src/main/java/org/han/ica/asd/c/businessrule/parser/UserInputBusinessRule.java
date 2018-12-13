@@ -20,7 +20,7 @@ public class UserInputBusinessRule {
 
     public void setErrorMessage(String errorMessage) {
         if (this.errorMessage != null) {
-            this.errorMessage = this.errorMessage + "\n" + errorMessage;
+            this.errorMessage += " & " + errorMessage;
         } else {
             this.errorMessage = errorMessage;
         }

@@ -16,21 +16,23 @@ public class Evaluator {
         this.businessRulesInput.addAll(businessRulesMap.keySet());
         Counter defaultCounter = new Counter();
         for (Map.Entry<UserInputBusinessRule,BusinessRule> entry : businessRulesMap.entrySet()) {
-            Counter belowAboveCounter = new Counter();
             Deque<ASTNode> deque = new LinkedList<>();
             deque.push(entry.getValue());
-            evaluateBusinessRule(defaultCounter, belowAboveCounter, deque, entry.getKey());
+            evaluateBusinessRule(defaultCounter, deque, entry.getKey());
         }
         return hasErrors;
     }
 
-    private void evaluateBusinessRule(Counter defaultCounter, Counter belowAboveCounter, Deque<ASTNode> deque, UserInputBusinessRule inputBusinessRule) {
+    private void evaluateBusinessRule(Counter defaultCounter, Deque<ASTNode> deque, UserInputBusinessRule inputBusinessRule) {
+        Counter belowCounter = new Counter();
         ASTNode previous = null;
+        Counter defaultBool = new Counter();
+
         while (!deque.isEmpty()) {
             ASTNode current = deque.pop();
 
             if (current != null) {
-                executeChecksAndLog(defaultCounter, belowAboveCounter, inputBusinessRule, previous, current);
+                executeChecksAndLog(defaultCounter, belowCounter, defaultBool, inputBusinessRule, previous, current);
 
                 previous = current;
                 List<ASTNode> children = current.getChildren();
@@ -42,11 +44,12 @@ public class Evaluator {
         }
     }
 
-    private void executeChecksAndLog(Counter defaultCounter, Counter belowAboveCounter, UserInputBusinessRule inputBusinessRule, ASTNode previous, ASTNode current) {
+    private void executeChecksAndLog(Counter defaultCounter, Counter belowCounter, Counter defaultBool, UserInputBusinessRule inputBusinessRule, ASTNode previous, ASTNode current) {
         checkOnlyOneDefault(current, inputBusinessRule, defaultCounter);
         checkRoundIsComparedToInt(current, inputBusinessRule);
+        checkDeliverOnlyUsedInIfRule(current, inputBusinessRule, defaultBool);
         checkLowHighOnlyComparedToGameValueAndAboveBelow(current, inputBusinessRule);
-        checkDeliverOnlyUsedWithBelowAbove(current, inputBusinessRule, belowAboveCounter);
+        checkDeliverOnlyUsedWithBelow(current, inputBusinessRule, belowCounter);
         checkLowHighOnlyUsedInComparison(current, inputBusinessRule, previous);
     }
 
@@ -129,7 +132,7 @@ public class Evaluator {
     }
 
     /**
-     * Main: Checks that when a round is used it is compared to an int and nothing else
+     * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
      * Queue to loop through the sub tree
      * @param current Current node that it is checking
      * @param inputBusinessRule Line number that it is currently on
@@ -148,7 +151,7 @@ public class Evaluator {
     }
 
     /**
-     * Main: Checks that when a round is used it is compared to an int and nothing else
+     * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
      * Checks if game value combined with below/above is not used and throws error if that's the case
      * @param inputBusinessRule Line number that it is currently on
      * @param qVal Current node in the queue
@@ -158,10 +161,11 @@ public class Evaluator {
         Collections.addAll(gameValues, "inventory", "stock", "backlog", "incoming order", "back orders");
         for (String gameValue : gameValues) {
             if (!qVal.getValue().contains(gameValue)
-                    || !((qVal.getValue().contains(EvaluatorType.ABOVE.getEvaluatorSymbol()))
+                    && !((qVal.getValue().contains(EvaluatorType.ABOVE.getEvaluatorSymbol()))
                     || qVal.getValue().contains(EvaluatorType.BELOW.getEvaluatorSymbol()))) {
                 this.hasErrors = true;
                 inputBusinessRule.setErrorMessage("Lowest and highest can only be used with a game value combined with an above/below");
+                break;
             }
         }
     }
@@ -171,9 +175,9 @@ public class Evaluator {
      * Counts the amount of below/above used in the comparison
      * @param current Current node that it is checking
      * @param inputBusinessRule Line number that it is currently on
-     * @param belowAboveCounter Counter that counts the amount of below/above's
+     * @param belowCounter Counter that counts the amount of belows
      */
-    private void checkDeliverOnlyUsedWithBelowAbove(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowAboveCounter) {
+    private void checkDeliverOnlyUsedWithBelow(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowCounter) {
         int left = 0;
         int right = 2;
 
@@ -181,14 +185,12 @@ public class Evaluator {
             String leftSide = ((Value) current.getChildren().get(left).getChildren().get(left)).getValue();
             String rightSide = ((Value) current.getChildren().get(right).getChildren().get(left)).getValue();
             if (leftSide.contains(EvaluatorType.BELOW.getEvaluatorSymbol())
-                    || leftSide.contains(EvaluatorType.ABOVE.getEvaluatorSymbol())
-                    || rightSide.contains(EvaluatorType.BELOW.getEvaluatorSymbol())
-                    || rightSide.contains(EvaluatorType.ABOVE.getEvaluatorSymbol())) {
-                belowAboveCounter.addOne();
+                    || rightSide.contains(EvaluatorType.BELOW.getEvaluatorSymbol())) {
+                belowCounter.addOne();
             }
         }
 
-        checkDeliverOnlyUsedWithBelowAboveError(current, inputBusinessRule, belowAboveCounter);
+        checkDeliverOnlyUsedWithBelowError(current, inputBusinessRule, belowCounter);
     }
 
     /**
@@ -196,14 +198,14 @@ public class Evaluator {
      * Checks if a deliver is used and if there are no below/above, if this is the case it throws an error
      * @param current Current node that it is checking
      * @param inputBusinessRule Line number that it is currently on
-     * @param belowAboveCounter Counter that counts the amount of below/above's
+     * @param belowCounter Counter that counts the amount of belows
      */
-    private void checkDeliverOnlyUsedWithBelowAboveError(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowAboveCounter) {
+    private void checkDeliverOnlyUsedWithBelowError(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowCounter) {
         if (current instanceof ActionReference
                 && ((ActionReference) current).getAction().equals(EvaluatorType.DELIVER.getEvaluatorSymbol())
-                && belowAboveCounter.getCountedValue() == 0) {
+                && belowCounter.getCountedValue() == 0) {
             this.hasErrors = true;
-            inputBusinessRule.setErrorMessage("Deliver can only be used with a businessrule that uses above/below");
+            inputBusinessRule.setErrorMessage("Deliver can only be used with a businessrule that uses below");
         }
     }
 
@@ -220,6 +222,18 @@ public class Evaluator {
                 && !(previous instanceof ComparisonValue)) {
             this.hasErrors = true;
             inputBusinessRule.setErrorMessage("Lowest and highest can only be used in a comparison");
+        }
+    }
+
+    private void checkDeliverOnlyUsedInIfRule(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter defaultBool){
+        if(current instanceof Default){
+            defaultBool.addOne();
+        }
+
+        if(current instanceof ActionReference
+                && defaultBool.getCountedValue() > 0
+                && ((ActionReference) current).getAction().equals("deliver")){
+            inputBusinessRule.setErrorMessage("Deliver can not be used in a default statement");
         }
     }
 
