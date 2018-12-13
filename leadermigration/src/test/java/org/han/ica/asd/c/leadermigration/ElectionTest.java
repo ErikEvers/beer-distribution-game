@@ -65,4 +65,17 @@ public class ElectionTest {
         Player elected = communicationHelper.startElection(players);
         Assert.assertEquals(players[0], elected);
     }
+
+    @Test
+    public void playerDisconnectDuringElectionTest() {
+        Player[] players = new Player[3];
+        players[0] = new Player("1", "111");
+        players[1] = new Player("2", "222");
+        players[2] = new Player("3", "333");
+
+        players[2].setConnected(false);
+
+        Player elected = communicationHelper.startElection(players);
+        Assert.assertEquals(players[1], elected);
+    }
 }

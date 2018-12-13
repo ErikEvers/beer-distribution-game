@@ -19,10 +19,16 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
     }
 
     public ElectionModel sendElectionMessage(ElectionModel election, Player player) {
+        if(!player.isConnected()) {
+            return null;
+        }
         return new LeaderMigration().receiveElectionMessage(election);
     }
 
     public void sendVictoryMessage(Player victory, Player player) {
+        if(!player.isConnected()) {
+            System.out.println("TODO: disconnect na elected");
+        }
         new LeaderMigration().receiveVictoryMessage(victory);
         this.elected = victory;
     }
