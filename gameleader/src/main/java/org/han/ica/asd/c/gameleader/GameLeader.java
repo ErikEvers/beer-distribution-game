@@ -1,7 +1,10 @@
 package org.han.ica.asd.c.gameleader;
 
+import com.google.common.annotations.VisibleForTesting;
+import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
 import org.han.ica.asd.c.model.BeerGame;
+import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 import org.han.ica.asd.c.observers.ITurnModelObserver;
@@ -32,7 +35,6 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     }
 
     public void notifyPlayerDisconnected(String playerId) {
-        //TO-DO get facilityId from gameConfiguration based on playerId
         IParticipant participant = new AgentParticipant(Integer.parseInt(playerId));
         gameLogic.addLocalParticipant(participant);
     }
