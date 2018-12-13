@@ -51,7 +51,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * A method which returns a specific round with all the turns from the SQLite Database
 	 * @param gameId The id of the game of the round which needs to be returned
 	 * @param roundId The id of the specific round which needs to be returned
-	 * @return A round object with turns
+	 * @return A round object
 	 */
 	public Round getRound(String gameId, int roundId){
 		Connection conn = databaseConnection.connect();
