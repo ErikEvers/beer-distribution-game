@@ -4,10 +4,7 @@ import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-<<<<<<< HEAD
-=======
 import org.han.ica.asd.c.model.Round;
->>>>>>> bc343e718f8f015d33e57a900f8f154015caea8e
 
 public class BusinessRuleHandler implements IBusinessRules{
     public void programAgent(String agentName, String businessRules){

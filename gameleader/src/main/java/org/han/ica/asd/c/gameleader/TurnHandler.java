@@ -20,6 +20,7 @@ public class TurnHandler {
         }
     }
 
+//Currently public for testing purporses
     public boolean validateFacilityTurn(FacilityTurn turnModel) {
         return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
     }
