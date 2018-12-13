@@ -20,8 +20,9 @@ import java.util.logging.Logger;
 
 public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
-	private static final String READ_BEERGAME = "SELECT * FROM Beergame;";
-	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
+	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
+	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameName = ?;";
+	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameName = ?;";
 
 	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 	public DatabaseConnection databaseConnection;
@@ -70,7 +71,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES)) {
 
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
@@ -87,37 +88,37 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * Deletes a BeerGame from the SQLite Database
-	 *
-	 * @param gameId The specified Id of the game which needs to be deleted
+	 * @param gameName The specified Name of the game which needs to be deleted
 	 */
-	public void deleteBeergame(String gameId) {
+	public void deleteBeergame(String gameName) {
 		Connection conn = null;
 		try {
 			conn = databaseConnection.connect();
-			if (conn == null) return;
-			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
 
-				conn.setAutoCommit(false);
+					conn.setAutoCommit(false);
 
-				pstmt.setString(1, gameId);
+					pstmt.setString(1, gameName);
 
-				pstmt.executeUpdate();
+					pstmt.executeUpdate();
+				}
+				conn.commit();
 			}
-			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString());
 			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
-	public BeerGame getGameLog(String gameId) {
+	public BeerGame getGameLog(String gameName) {
 		Connection conn = null;
 		BeerGame beergame = null;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
-
+					pstmt.setString(1,gameName);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 					}
