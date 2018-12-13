@@ -1,5 +1,7 @@
 package org.han.ica.asd.c;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
@@ -38,7 +40,8 @@ class ParserTest {
         parser.addErrorListener(errorListener);
 
         //Parse & extract AST
-        ASTListener listener = new ASTListener();
+        Injector injector = Guice.createInjector();
+        ASTListener listener = injector.getInstance(ASTListener.class);
         try {
             ParseTree parseTree = parser.businessrule();
             ParseTreeWalker walker = new ParseTreeWalker();
