@@ -1,13 +1,11 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
-import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.GameAgent;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.participants.IParticipant;
 import org.han.ica.asd.c.participants.ParticipantsPool;
 import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.ILeaderGameLogic;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
@@ -54,5 +52,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     @Override
     public void addLocalParticipant(IParticipant participant) {
         participantsPool.addParticipant(participant);
+    }
+
+    @Override
+    public void removeAgentByPlayerId(String playerId) {
+        Player player = persistence.getPlayerById(playerId);
+        participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
     }
 }

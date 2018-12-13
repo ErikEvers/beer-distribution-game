@@ -1,12 +1,12 @@
 package org.han.ica.asd.c;
-import org.han.ica.asd.c.exceptions.RoundDataNotFoundException;
 import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.participants.IParticipant;
 import org.han.ica.asd.c.participants.ParticipantsPool;
 import org.han.ica.asd.c.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.public_interfaces.ICommunication;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
@@ -66,8 +66,16 @@ public class GameLogicTests {
     }
 
     @Test
-    public void removeAgentByPlayedIdGetsPlayerFromDatabase() {
-        gameLogic.removeAgentByPlayedId(anyString());
+    public void removeAgentByPlayerIdGetsPlayerFromDatabase() {
+        when(persistence.getPlayerById(anyString())).thenReturn(new PlayerFake());
+        gameLogic.removeAgentByPlayerId(anyString());
         verify(persistence, times(1)).getPlayerById(anyString());
+    }
+
+    @Test
+    public void removeAgentByPlayerIdReplacesAgentAtParticipantsPool() {
+        when(persistence.getPlayerById(anyString())).thenReturn(new PlayerFake());
+        gameLogic.removeAgentByPlayerId(anyString());
+        verify(participantsPool, times(1)).replaceAgentWithPlayer(any(PlayerParticipant.class));
     }
 }

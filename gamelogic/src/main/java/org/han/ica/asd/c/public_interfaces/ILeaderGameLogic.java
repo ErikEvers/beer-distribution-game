@@ -4,4 +4,5 @@ import org.han.ica.asd.c.participants.IParticipant;
 
 public interface ILeaderGameLogic {
     void addLocalParticipant(IParticipant participant);
+    void removeAgentByPlayerId(String playerId);
 }

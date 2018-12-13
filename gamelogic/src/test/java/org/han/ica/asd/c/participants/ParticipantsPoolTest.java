@@ -51,7 +51,6 @@ class ParticipantsPoolTest {
     @Test
     public void removeParticipantRemovesParticipantFromList() {
         AgentParticipant localAgent = mock(AgentParticipant.class);
-        //TODO: De agent moet een participantId hebben. Misschien dit met het team / persistance praten.
         when(localAgent.getParticipantId()).thenReturn(1);
         participantsPool.addParticipant(localAgent);
         int sizeBeforeRemoval = participantsPool.getParticipants().size();

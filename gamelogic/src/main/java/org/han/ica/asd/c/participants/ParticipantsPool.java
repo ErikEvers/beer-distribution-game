@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ParticipantsPool {
     private List<IParticipant> participants;
-    private IParticipant player;
+    private PlayerParticipant player;
 
     public ParticipantsPool(PlayerParticipant playerParticipant) {
         participants = new LinkedList<>();
@@ -31,8 +31,16 @@ public class ParticipantsPool {
     }
 
     public void replaceAgentWithPlayer() {
+        replaceParticipantWithPlayer(player);
+    }
+
+    public void replaceAgentWithPlayer(PlayerParticipant playerParticipant) {
+        replaceParticipantWithPlayer(playerParticipant);
+    }
+
+    private void replaceParticipantWithPlayer(PlayerParticipant playerParticipant) {
         for (IParticipant participant : participants) {
-            if (participant.getParticipantId() == player.getParticipantId()) {
+            if (participant.getParticipantId() == playerParticipant.getParticipantId()) {
                 participants.remove(participant);
                 participants.add(player);
                 return;
@@ -42,7 +50,6 @@ public class ParticipantsPool {
 
     public void removeParticipant(int participantId) {
         for (IParticipant participant : participants) {
-            //TODO: Do this with facility id.
             if (participant.getParticipantId() == participantId) {
                 participants.remove(participant);
                 return;

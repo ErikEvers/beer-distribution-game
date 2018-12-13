@@ -9,8 +9,20 @@ public class PlayerParticipant extends Player implements IParticipant {
         super(gameId, playerId, ipAddress, facilityId, name, isConnected);
     }
 
+    public PlayerParticipant(Player player) {
+        super(
+                player.getGameId(),
+                player.getPlayerId(),
+                player.getIpAddress(),
+                player.getFacilityId(),
+                player.getName(),
+                player.isConnected()
+        );
+    }
+
     @Override
     public FacilityTurn doOrder() {
+        //TODO: Implement this method.
         return null;
     }
 
