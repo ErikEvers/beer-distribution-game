@@ -32,12 +32,12 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     }
 
     public void notifyPlayerDisconnected(String playerId) {
-        IParticipant participant = new AgentParticipant(facilityId);
-        gameLogic.addLocalParticipant(participant);
+//        IParticipant participant = new AgentParticipant(facilityId);
+//        gameLogic.addLocalParticipant(participant);
     }
 
     public void notifyPlayerReconnected(String playerId) {
-        gameLogic.removeAgentByPlayerId(playerId);
+//        gameLogic.removeAgentByPlayerId(playerId);
     }
 
     public void turnModelReceived(FacilityTurn turnModel) {
