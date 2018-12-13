@@ -185,6 +185,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 		try {
 			conn = databaseConnection.connect();
 			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_TURN)) {
+				conn.setAutoCommit(false);
 				pstmt.setString(1, facilityTurn.getGameId());
 				pstmt.setInt(2, facilityTurn.getRoundId());
 				pstmt.setInt(3, facilityTurn.getFacilityIdOrder());

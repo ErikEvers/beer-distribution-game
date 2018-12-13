@@ -91,6 +91,20 @@ class FacilityTurnDAOTest {
 
 	@Test
 	void deleteTurnTest() {
+		facilityTurnDAO = new FacilityTurnDAO();
+		roundDAO = new RoundDAO();
+
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		setDatabaseConnection(facilityTurnDAO, connection);
+		setDatabaseConnection(roundDAO,connection);
+
+		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
+		facilityTurnDAO.createTurn(FACILITY_TURN);
+		facilityTurnDAO.deleteTurn(FACILITY_TURN);
+
+
+		List<FacilityTurn> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
+		Assert.assertEquals(0,facilityTurnDb.size());
 	}
 
 	private void setDatabaseConnection(IBeerDisitributionGameDAO gameDAO, DatabaseConnection connection) {
