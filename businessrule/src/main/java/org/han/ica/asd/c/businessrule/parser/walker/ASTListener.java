@@ -23,12 +23,13 @@ public class ASTListener extends BusinessRuleBaseListener {
      * Constructor
      */
     public ASTListener() {
-        businessRules  = new ArrayList<>();
+        businessRules = new ArrayList<>();
         currentContainer = new LinkedList<>();
     }
 
     /**
      * Getter
+     *
      * @return Returns the businessrules
      */
     public List<BusinessRule> getBusinessRules() {
@@ -37,6 +38,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters DefaultRule. Adds default businessrule to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -49,6 +51,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits DefaultRule
+     *
      * @param ctx Context
      */
     @Override
@@ -58,6 +61,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters IfRule. Adds a comparison businessrule to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -69,6 +73,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits IfRule
+     *
      * @param ctx Context
      */
     @Override
@@ -78,6 +83,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters ComparisonStatement. Adds comparison statement to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -87,7 +93,7 @@ public class ASTListener extends BusinessRuleBaseListener {
         if (parent != null) {
             parent.addChild(comparisonStatement);
         }
-        if(ctx.getChildCount() > 1){
+        if (ctx.getChildCount() > 1) {
             comparisonStatement.addChild(new BooleanOperator(ctx.getChild(1).toString()));
         }
         currentContainer.push(comparisonStatement);
@@ -95,6 +101,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits ComparisonStatement
+     *
      * @param ctx Context
      */
     @Override
@@ -104,6 +111,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters Comparison. Adds comparison to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -118,6 +126,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits Comparison
+     *
      * @param ctx Context
      */
     @Override
@@ -127,6 +136,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters ComparisonValue. Adds comparison value to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -136,7 +146,7 @@ public class ASTListener extends BusinessRuleBaseListener {
         if (parent != null) {
             parent.addChild(comparisonValue);
         }
-        if("round".equals(ctx.getChild(0).toString())){
+        if ("round".equals(ctx.getChild(0).toString())) {
             comparisonValue.addChild(new Value().addValue("round"));
         }
         currentContainer.push(comparisonValue);
@@ -144,6 +154,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits ComparisonValue
+     *
      * @param ctx Context
      */
     @Override
@@ -153,6 +164,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters ComparisonOperator. Adds comparison operator to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -167,6 +179,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits ComparisonOperator
+     *
      * @param ctx Context
      */
     @Override
@@ -176,6 +189,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters Value. Adds value to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -193,15 +207,17 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits Value
+     *
      * @param ctx Context
      */
     @Override
     public void exitValue(BusinessRuleParser.ValueContext ctx) {
-       currentContainer.pop();
+        currentContainer.pop();
     }
 
     /**
      * Called when walker enters MulOperation. Adds a multiply operation to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -216,6 +232,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits MulOperation
+     *
      * @param ctx Context
      */
     @Override
@@ -225,6 +242,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters DivOperation. Adds divide operation to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -239,6 +257,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits DivOperation
+     *
      * @param ctx Context
      */
     @Override
@@ -248,6 +267,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters MinOperation. Adds minus operation to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -262,6 +282,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits MinOperation
+     *
      * @param ctx Context
      */
     @Override
@@ -271,6 +292,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters PlusOperation. Adds plus operation to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -285,6 +307,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits PlusOperation
+     *
      * @param ctx Context
      */
     @Override
@@ -294,6 +317,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker enters Action. Adds action to the AST
+     *
      * @param ctx Context
      */
     @Override
@@ -309,6 +333,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     /**
      * Called when walker exits Action
+     *
      * @param ctx Context
      */
     @Override

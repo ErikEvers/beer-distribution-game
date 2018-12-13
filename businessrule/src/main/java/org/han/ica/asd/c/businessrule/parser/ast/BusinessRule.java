@@ -13,6 +13,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
+     *
      * @param child Child that has the be added to this ASTNode
      * @return Returns itself so that it can be used immediately
      */
@@ -28,6 +29,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Start of the encoding of a tree
+     *
      * @return Returns encoded tree
      */
     public String encode() {
@@ -38,26 +40,29 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
 
     /**
      * Return the children that are assigned to the ASTNode
+     *
      * @return Return the children
      */
     @Override
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
-        Collections.addAll(list,condition,action);
+        Collections.addAll(list, condition, action);
         return list;
     }
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -76,6 +81,7 @@ public class BusinessRule extends ASTNode {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override

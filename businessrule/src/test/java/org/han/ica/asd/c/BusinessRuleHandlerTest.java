@@ -15,39 +15,38 @@ import org.han.ica.asd.c.model.Round;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class BusinessRuleHandlerTest {
 
-	@Test
-	void evaluateBusinessRulesOfBusinessRuleHandlerReturnsActionOfBusinessRule() {
-		BusinessRule businessRule = (BusinessRule) new BusinessRule()
-			.addChild(new Comparison()
-					.addChild(new ComparisonValue().addChild(new Value().addValue("5")))
-					.addChild(new ComparisonOperator("equal"))
-					.addChild(new ComparisonValue().addChild(new Value().addValue("5"))))
-			.addChild(new Action()
-					.addChild(new ActionReference("order"))
-					.addChild(new AddOperation()
-							.addChild(new Value().addValue("10"))
-							.addChild(new CalculationOperator("+"))
-							.addChild(new Value().addValue("1"))));
+    @Test
+    void evaluateBusinessRulesOfBusinessRuleHandlerReturnsActionOfBusinessRule() {
+        BusinessRule businessRule = (BusinessRule) new BusinessRule()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("5")))
+                        .addChild(new ComparisonOperator("equal"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("5"))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new AddOperation()
+                                .addChild(new Value().addValue("10"))
+                                .addChild(new CalculationOperator("+"))
+                                .addChild(new Value().addValue("1"))));
 
-		BusinessRuleDecoder businessRuleDecoder = mock(BusinessRuleDecoder.class);
-		when(businessRuleDecoder.decodeBusinessRule(businessRule.encode())).thenReturn(businessRule);
+        BusinessRuleDecoder businessRuleDecoder = mock(BusinessRuleDecoder.class);
+        when(businessRuleDecoder.decodeBusinessRule(businessRule.encode())).thenReturn(businessRule);
 
-		Action expectedAction = (Action) businessRule.getChildren().get(1);
-		StringBuilder expectedStringBuilder = new StringBuilder();
-		expectedAction.encode(expectedStringBuilder);
+        Action expectedAction = (Action) businessRule.getChildren().get(1);
+        StringBuilder expectedStringBuilder = new StringBuilder();
+        expectedAction.encode(expectedStringBuilder);
 
-		Action actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new Round("1", 1));
-		StringBuilder actualStringBuilder = new StringBuilder();
-		actualAction.encode(actualStringBuilder);
+        Action actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new Round("1", 1));
+        StringBuilder actualStringBuilder = new StringBuilder();
+        actualAction.encode(actualStringBuilder);
 
-		System.out.println(actualStringBuilder.toString());
+        System.out.println(actualStringBuilder.toString());
 
-		assertEquals(expectedStringBuilder.toString(), actualStringBuilder.toString());
-	}
+        assertEquals(expectedStringBuilder.toString(), actualStringBuilder.toString());
+    }
 }

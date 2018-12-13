@@ -18,6 +18,11 @@ public class UserInputBusinessRule {
         return errorMessage;
     }
 
+    /**
+     * Sets the error of a UserBusinessRule, If there is more than one error than add to that.
+     *
+     * @param errorMessage The message that needs to be set.
+     */
     public void setErrorMessage(String errorMessage) {
         if (this.errorMessage != null) {
             this.errorMessage += " & " + errorMessage;

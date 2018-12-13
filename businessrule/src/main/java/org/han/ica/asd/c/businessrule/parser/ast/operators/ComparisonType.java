@@ -11,17 +11,19 @@ public enum ComparisonType {
 
     /**
      * Constructor
+     *
      * @param comparisonSymbol The comparison symbol
      */
-    ComparisonType(String comparisonSymbol){
+    ComparisonType(String comparisonSymbol) {
         this.comparisonSymbol = comparisonSymbol;
     }
 
     /**
      * Getter
+     *
      * @return Returns the comparison symbol
      */
-    public String getComparisonSymbol(){
+    public String getComparisonSymbol() {
         return comparisonSymbol;
     }
 }

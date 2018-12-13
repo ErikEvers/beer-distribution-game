@@ -5,7 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
 
 class AddOperationTest {
     private AddOperation addOperation = new AddOperation();

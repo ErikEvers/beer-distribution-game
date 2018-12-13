@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser;
 
 import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
@@ -18,7 +17,9 @@ public class ParseErrorListener extends BaseErrorListener {
         lines.add(line);
     }
 
-    public List<Integer> getExceptions(){return  lines;}
+    public List<Integer> getExceptions() {
+        return lines;
+    }
 
     public void setLines(List<Integer> lines) {
         this.lines = lines;

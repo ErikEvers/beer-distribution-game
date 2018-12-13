@@ -7,17 +7,19 @@ public class BooleanOperator extends Operator {
     /**
      * Constructor
      */
-    public BooleanOperator() {}
+    public BooleanOperator() {
+    }
 
     /**
      * Constructor
+     *
      * @param operator The boolean operator as a word
      */
     public BooleanOperator(String operator) {
         this.operatorVal = findBooleanOperator(operator);
     }
 
-	@Override
+    @Override
     public BooleanOperator addValue(String value) {
         operatorVal = value;
         return this;
@@ -25,6 +27,7 @@ public class BooleanOperator extends Operator {
 
     /**
      * Converts the boolean operator from a word to code
+     *
      * @param operator The boolean operator as a word
      * @return Returns the boolean operator as code
      */
@@ -38,6 +41,7 @@ public class BooleanOperator extends Operator {
 
     /**
      * Calls the equals function of its super class
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -48,6 +52,7 @@ public class BooleanOperator extends Operator {
 
     /**
      * Calls the hashCode function of its super class
+     *
      * @return Returns the hashcode
      */
     @Override
@@ -57,6 +62,7 @@ public class BooleanOperator extends Operator {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override

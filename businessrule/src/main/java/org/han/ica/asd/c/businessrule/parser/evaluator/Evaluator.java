@@ -1,7 +1,10 @@
 package org.han.ica.asd.c.businessrule.parser.evaluator;
 
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.*;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
@@ -13,17 +16,29 @@ public class Evaluator {
     private boolean hasErrors = false;
     private boolean defaultBool = false;
 
-    public boolean evaluate(Map<UserInputBusinessRule,BusinessRule> businessRulesMap) {
+    /**
+     * Evaluates the business rules. and checks if there are any errors.
+     *
+     * @param businessRulesMap A map that combines the BusinessRule and UserInputBusinessRule
+     * @return Returns if the businessRule has a error.
+     */
+    public boolean evaluate(Map<UserInputBusinessRule, BusinessRule> businessRulesMap) {
         this.businessRulesInput.addAll(businessRulesMap.keySet());
         Counter defaultCounter = new Counter();
-        for (Map.Entry<UserInputBusinessRule,BusinessRule> entry : businessRulesMap.entrySet()) {
+        for (Map.Entry<UserInputBusinessRule, BusinessRule> entry : businessRulesMap.entrySet()) {
             Deque<ASTNode> deque = new LinkedList<>();
             deque.push(entry.getValue());
             evaluateBusinessRule(defaultCounter, deque, entry.getKey());
         }
         return hasErrors;
     }
-
+    /**
+     *
+     *
+     * @param defaultCounter    The counter that is used for counting the times default is called.
+     * @param deque             The deque with all the AST nodes of the tree.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     */
     private void evaluateBusinessRule(Counter defaultCounter, Deque<ASTNode> deque, UserInputBusinessRule inputBusinessRule) {
         Counter belowCounter = new Counter();
         ASTNode previous = null;
@@ -44,6 +59,15 @@ public class Evaluator {
         }
     }
 
+    /**
+     * Execute all functions that check if node is correct.
+     *
+     * @param defaultCounter    The counter that is used for counting the times default is called.
+     * @param belowCounter      The counter that is used for counting the times below is called.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param previous          Previous node that it is checking.
+     * @param current           Current node that it is checking.
+     */
     private void executeChecksAndLog(Counter defaultCounter, Counter belowCounter, UserInputBusinessRule inputBusinessRule, ASTNode previous, ASTNode current) {
         checkOnlyOneDefault(current, inputBusinessRule, defaultCounter);
         checkRoundIsComparedToInt(current, inputBusinessRule);
@@ -55,9 +79,10 @@ public class Evaluator {
 
     /**
      * Checks that there is only one default business rule in the collection of business rules
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
-     * @param defaultCounter Counter that counts the amount of defaults
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param defaultCounter    Counter that counts the amount of defaults.
      */
     private void checkOnlyOneDefault(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter defaultCounter) {
         if (current instanceof Default) {
@@ -72,8 +97,9 @@ public class Evaluator {
     /**
      * Main: Checks that when a round is used it is compared to an int and nothing else
      * Checks if round is used in the left or right side of the comparison and calls the other side to check
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
      */
     private void checkRoundIsComparedToInt(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         int left = 0;
@@ -93,9 +119,10 @@ public class Evaluator {
     /**
      * Main: Checks that when a round is used it is compared to an int and nothing else
      * Checks if a value in the sub tree is not an int and throws an error if that's the case
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
-     * @param side The side that it needs to check
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param side              The side that it needs to check.
      */
     private void checkRoundIsComparedToInt(ASTNode current, UserInputBusinessRule inputBusinessRule, int side) {
         Queue<ASTNode> q = new LinkedList<>();
@@ -113,8 +140,9 @@ public class Evaluator {
     /**
      * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
      * Checks if lowest/highest is used in the left or right side of the comparison and calls the other side to check
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
      */
     private void checkLowHighOnlyComparedToGameValueAndAboveBelow(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         int left = 0;
@@ -132,11 +160,12 @@ public class Evaluator {
     }
 
     /**
-     * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
+     * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below.
      * Queue to loop through the sub tree
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
-     * @param side The side that it needs to check
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param side              The side of the tree that it needs to check
      */
     private void checkLowHighOnlyComparedToGameValueAndAboveBelow(ASTNode current, UserInputBusinessRule inputBusinessRule, int side) {
         Queue<ASTNode> q = new LinkedList<>();
@@ -153,8 +182,9 @@ public class Evaluator {
     /**
      * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
      * Checks if game value combined with below/above is not used and throws error if that's the case
-     * @param inputBusinessRule Line number that it is currently on
-     * @param qVal Current node in the queue
+     *
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param qVal              Current node in the queue.
      */
     private void checkLowHighOnlyComparedToGameValueAndAboveBelow(UserInputBusinessRule inputBusinessRule, Value qVal) {
         List<String> gameValues = new ArrayList<>();
@@ -171,11 +201,12 @@ public class Evaluator {
     }
 
     /**
-     * Main: Checks, when deliver action is used, if a below/above is also used in the comparison
+     * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
      * Counts the amount of below/above used in the comparison
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
-     * @param belowCounter Counter that counts the amount of belows
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param belowCounter      Counter that counts the amount of belows.
      */
     private void checkDeliverOnlyUsedWithBelow(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowCounter) {
         int left = 0;
@@ -194,11 +225,12 @@ public class Evaluator {
     }
 
     /**
-     * Main: Checks, when deliver action is used, if a below/above is also used in the comparison
+     * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
      * Checks if a deliver is used and if there are no below/above, if this is the case it throws an error
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
-     * @param belowCounter Counter that counts the amount of belows
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param belowCounter      Counter that counts the amount of belows.
      */
     private void checkDeliverOnlyUsedWithBelowError(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowCounter) {
         if (current instanceof ActionReference
@@ -211,9 +243,10 @@ public class Evaluator {
 
     /**
      * Checks if lowest/highest is only used in a comparison
-     * @param current Current node that it is checking
-     * @param inputBusinessRule Line number that it is currently on
-     * @param previous Previous node that is above the current one
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param previous          Previous node that is above the current one.
      */
     private void checkLowHighOnlyUsedInComparison(ASTNode current, UserInputBusinessRule inputBusinessRule, ASTNode previous) {
         if (current instanceof Value
@@ -225,14 +258,20 @@ public class Evaluator {
         }
     }
 
-    private void checkDeliverOnlyUsedInIfRule(ASTNode current, UserInputBusinessRule inputBusinessRule){
-        if(current instanceof Default){
+    /**
+     * Checks if a default rule is not used with delivered.
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets a the error if check fails.
+     */
+    private void checkDeliverOnlyUsedInIfRule(ASTNode current, UserInputBusinessRule inputBusinessRule) {
+        if (current instanceof Default) {
             defaultBool = true;
         }
 
-        if(current instanceof ActionReference
+        if (current instanceof ActionReference
                 && defaultBool
-                && ((ActionReference) current).getAction().equals("deliver")){
+                && ((ActionReference) current).getAction().equals("deliver")) {
             inputBusinessRule.setErrorMessage("Deliver can not be used in a default statement");
         }
     }

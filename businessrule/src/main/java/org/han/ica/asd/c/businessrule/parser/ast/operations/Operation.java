@@ -15,6 +15,7 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
+     *
      * @param child Child that has the be added to this ASTNode
      * @return Returns itself so that it can be used immediately
      */
@@ -34,6 +35,7 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Return the children that are assigned to the ASTNode
+     *
      * @return Return the children
      */
     @Override
@@ -41,13 +43,14 @@ public abstract class Operation extends OperationValue {
         List<ASTNode> list = new ArrayList<>();
         list.add(left);
         if (calculationOperator != null && right != null) {
-            Collections.addAll(list,calculationOperator,right);
+            Collections.addAll(list, calculationOperator, right);
         }
         return list;
     }
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -67,6 +70,7 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override
@@ -76,9 +80,10 @@ public abstract class Operation extends OperationValue {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     public void encode(StringBuilder stringBuilder, String prefix, String suffix) {
-        super.encode(stringBuilder,getChildren(),prefix,suffix);
+        super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
 }

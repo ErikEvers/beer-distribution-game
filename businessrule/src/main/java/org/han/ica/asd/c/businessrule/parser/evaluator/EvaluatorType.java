@@ -11,17 +11,19 @@ public enum EvaluatorType {
 
     /**
      * Constructor
+     *
      * @param evaluatorSymbol The evaluator symbol
      */
-    EvaluatorType(String evaluatorSymbol){
+    EvaluatorType(String evaluatorSymbol) {
         this.evaluatorSymbol = evaluatorSymbol;
     }
 
     /**
      * Getter
+     *
      * @return Returns the evaluator symbol
      */
-    public String getEvaluatorSymbol(){
+    public String getEvaluatorSymbol() {
         return evaluatorSymbol;
     }
 }

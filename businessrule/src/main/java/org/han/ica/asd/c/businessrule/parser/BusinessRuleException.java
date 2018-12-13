@@ -6,8 +6,9 @@ public class BusinessRuleException extends Exception {
 
     /**
      * Constructor
+     *
      * @param errorMessage Error message that explains what is wrong with the business rule
-     * @param lineNumber Line number where the error took place
+     * @param lineNumber   Line number where the error took place
      */
     public BusinessRuleException(String errorMessage, int lineNumber) {
         this.errorMessage = errorMessage;
@@ -16,6 +17,7 @@ public class BusinessRuleException extends Exception {
 
     /**
      * toString
+     *
      * @return Returns the error message together with where the error occurred
      */
     @Override

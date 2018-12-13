@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface IBusinessRules {
     List<UserInputBusinessRule> programAgent(String agentName, String businessRules);
+
     Action evaluateBusinessRule(String businessRule, Round roundData);
 }

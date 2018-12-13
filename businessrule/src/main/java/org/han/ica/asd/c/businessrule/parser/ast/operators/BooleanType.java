@@ -9,17 +9,19 @@ public enum BooleanType {
 
     /**
      * Constructor
+     *
      * @param booleanSymbol The boolean symbol
      */
-    BooleanType(String booleanSymbol){
+    BooleanType(String booleanSymbol) {
         this.booleanSymbol = booleanSymbol;
     }
 
     /**
      * Getter
+     *
      * @return Returns the boolean symbol
      */
-    public String getBooleanSymbol(){
+    public String getBooleanSymbol() {
         return booleanSymbol;
     }
 }

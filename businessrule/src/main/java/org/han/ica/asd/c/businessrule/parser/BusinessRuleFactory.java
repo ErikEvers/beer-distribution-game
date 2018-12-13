@@ -15,21 +15,36 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 class BusinessRuleFactory {
     ASTNode create(String identifier) {
         switch (identifier) {
-            case "A":       return new Action();
-            case "C":       return new Comparison();
-            case "D":       return new Default();
-            case "V":       return new Value();
-            case "AR":      return new ActionReference();
-            case "CV":      return new ComparisonValue();
-            case "CS":      return new ComparisonStatement();
-            case "Add":     return new AddOperation();
-            case "Div":     return new DivideOperation();
-            case "Mul":     return new MultiplyOperation();
-            case "Sub":     return new SubtractOperation();
-            case "CalO":    return new CalculationOperator();
-            case "ComO":    return new ComparisonOperator();
-            case "BoolO":   return new BooleanOperator();
-            default:        return null;
+            case "A":
+                return new Action();
+            case "C":
+                return new Comparison();
+            case "D":
+                return new Default();
+            case "V":
+                return new Value();
+            case "AR":
+                return new ActionReference();
+            case "CV":
+                return new ComparisonValue();
+            case "CS":
+                return new ComparisonStatement();
+            case "Add":
+                return new AddOperation();
+            case "Div":
+                return new DivideOperation();
+            case "Mul":
+                return new MultiplyOperation();
+            case "Sub":
+                return new SubtractOperation();
+            case "CalO":
+                return new CalculationOperator();
+            case "ComO":
+                return new ComparisonOperator();
+            case "BoolO":
+                return new BooleanOperator();
+            default:
+                return null;
         }
     }
 }

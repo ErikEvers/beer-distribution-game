@@ -74,6 +74,7 @@ public class ProgramAgentController {
 
     /***
      * For making a popup with a user defined message. Opens a new stage window.
+     *
      * @param headerText The text for the header of the popup
      * @param bodyText  The text for the body of the popup
      * @param headerColor   The color of the header text. To set for example red if its a error.
