@@ -7,20 +7,19 @@ import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@RunWith(PowerMockRunner.class)
+
 class ConfigurationDAOTest {
 	private static final Logger LOGGER = Logger.getLogger(BeerGameDAOIntegrationTest.class.getName());
 
 	private ConfigurationDAO configurationDAO;
 	private static final Configuration CONFIGURATION = new Configuration("BeerGameZutphen13_12_2018",40,1,1,1,1,1,99,false,false);
 	private static final Configuration CONFIGURATION2 = new Configuration("BeerGameArnhem13_12_2018",40,1,1,1,1,1,99,false,false);
+	private static final Configuration CONFIGURATION3 = new Configuration("BeerGameZutphen13_12_2018",50,51,51,51,51,51,599,true,true);
 
 
 
@@ -70,11 +69,43 @@ class ConfigurationDAOTest {
 
 	@Test
 	void updateConfigurationsTest() {
+		configurationDAO = new ConfigurationDAO();
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		setDatabaseConnection(configurationDAO, connection);
+
+		configurationDAO.createConfiguration(CONFIGURATION);
+		configurationDAO.updateConfigurations(CONFIGURATION3);
+
+		Configuration configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
+
+		//Test if there an insert in not triggered instead of an update
+		Assert.assertEquals(1,configurationDAO.readConfigurations().size());
+
+		//Test if the DAO updated the data correctly
+		Assert.assertEquals(CONFIGURATION3.getGameId(),configurationDb.getGameId());
+		Assert.assertEquals(CONFIGURATION3.getAmountOfRounds(),configurationDb.getAmountOfRounds());
+		Assert.assertEquals(CONFIGURATION3.getMaximumOrderRetail(),configurationDb.getMaximumOrderRetail());
+		Assert.assertEquals(CONFIGURATION3.getMinimalOrderRetail(),configurationDb.getMinimalOrderRetail());
+		Assert.assertEquals(CONFIGURATION3.getAmountOfFactories(),configurationDb.getAmountOfFactories());
+		Assert.assertEquals(CONFIGURATION3.getAmountOfDistributors(),configurationDb.getAmountOfDistributors());
+		Assert.assertEquals(CONFIGURATION3.getAmountOfWholesales(),configurationDb.getAmountOfWholesales());
+		Assert.assertEquals(CONFIGURATION3.getAmountOfRetailers(),configurationDb.getAmountOfRetailers());
+		Assert.assertEquals(CONFIGURATION3.isContinuePlayingWhenBankrupt(),configurationDb.isContinuePlayingWhenBankrupt());
+		Assert.assertEquals(CONFIGURATION3.isInsightFacilities(),configurationDb.isInsightFacilities());
+
 	}
 
 	@Test
 	void deleteConfigurationsTest() {
+		configurationDAO = new ConfigurationDAO();
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		setDatabaseConnection(configurationDAO, connection);
+
+		configurationDAO.createConfiguration(CONFIGURATION);
+		configurationDAO.deleteConfigurations("BeerGameZutphen13_12_2018");
+		Assert.assertEquals(0,configurationDAO.readConfigurations().size());
 	}
+
 
 	private void setUpDatabase(){
 		DBConnectionTest.getInstance().createNewDatabase();
