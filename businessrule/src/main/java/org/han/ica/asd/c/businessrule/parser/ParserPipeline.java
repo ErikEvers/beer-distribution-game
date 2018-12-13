@@ -45,6 +45,7 @@ public class ParserPipeline {
         walker.walk(listener, parseTree);
 
         this.businessRulesParsed = listener.getBusinessRules();
+
         evaluate();
         encodeBusinessRules();
     }
@@ -55,6 +56,14 @@ public class ParserPipeline {
             stringBuilder.append(businessRule.getBusinessRule()).append("\n");
         }
         return stringBuilder.toString().replaceAll(DELETEEMPTYLINES, "");
+    }
+
+    private void removeEmptyLinesBusinessRulesInput(){
+        for (UserInputBusinessRule businessRule : businessRulesInput) {
+            if(businessRule.getBusinessRule().isEmpty()){
+                businessRulesInput.remove(businessRule);
+            }
+        }
     }
 
     /**
