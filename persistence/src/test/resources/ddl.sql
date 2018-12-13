@@ -1,4 +1,3 @@
--- #createDatabase
 CREATE TABLE IF NOT EXISTS Beergame (
   GameId varchar(36) NOT NULL,
   GameName varchar(255) NOT NULL,
@@ -15,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Round (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS  Configuration (
+CREATE TABLE IF NOT EXISTS Configuration (
   GameId varchar(36) NOT NULL,
   AmountOfRounds smallint NOT NULL,
   AmountOfFactories smallint NOT NULL,

@@ -1,5 +1,7 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
@@ -13,15 +15,19 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
-
 public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_TURN = "INSERT INTO FacilityTurn VALUES (?,?,?,?,?,?,?,?,?);";
 	private static final String UPDATE_TURN = "UPDATE FacilityTurn SET Stock = ?,RemainingBudget = ?,OrderAmount = ?, OpenOrderAmount = ?, OutgoingGoodsAmount = ? WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?)";
 	private static final String READ_TURNS = "SELECT * FROM FacilityTurn WHERE GameId = ? && RoundId = ?;";
-	public static final String READ_TURN = "SELECT FROM FacilityTurn WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?;";
+	private static final String READ_TURN = "SELECT FROM FacilityTurn WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?;";
 	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? && RoundId = ? && FacilityIdOrder = ? && FacilityIdDeliver = ?;";
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAO.class.getName());
+
+	private DatabaseConnection databaseConnection;
+
+	public FacilityTurnDAO(){
+		databaseConnection = DBConnectionFactory.getInstance("");
+	}
 
 	/**
 	 * A method to create a FacilityTurn in the SQLite Database
@@ -31,7 +37,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	public void createTurn(FacilityTurn facilityTurn) {
 		Connection conn;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_TURN)) {
 
 				pstmt.setString(1, facilityTurn.getGameId());
@@ -64,7 +70,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 		Connection conn;
 		ArrayList<FacilityTurn> turns = new ArrayList<>();
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURNS)) {
 					pstmt.setString(1, gameId);
@@ -93,7 +99,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 		Connection conn;
 		FacilityTurn facilityTurn = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) try (PreparedStatement pstmt = conn.prepareStatement(READ_TURN)) {
 				pstmt.setString(1, round.getGameId());
 				pstmt.setInt(2, round.getRoundId());
@@ -134,7 +140,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	public void updateTurn(FacilityTurn facilityTurn) {
 		Connection conn;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TURN)) {
 
@@ -165,7 +171,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	public void deleteTurn(FacilityTurn facilityTurn) {
 		Connection conn;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_TURN)) {
 				pstmt.setString(1, facilityTurn.getGameId());
 				pstmt.setInt(2, facilityTurn.getRoundId());

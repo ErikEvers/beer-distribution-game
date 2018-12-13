@@ -1,5 +1,8 @@
 package org.han.ica.asd.c;
 
+
+import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.BeerGame;
 
 import java.sql.Connection;
@@ -13,15 +16,21 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.han.ica.asd.c.dbconnection.DBConnection.rollBackTransaction;
-import static org.han.ica.asd.c.dbconnection.DBConnection.connect;
+
 
 public class BeergameDAO implements IBeerDisitributionGameDAO {
-	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?)";
-	private static final String READ_BEERGAME = "SELECT * FROM Beergame";
-	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?";
+	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
+	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
+	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameName = ?;";
+	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameName = ?;";
 
 	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
+	private DatabaseConnection databaseConnection;
+
+
+	public BeergameDAO(){
+		databaseConnection = DBConnectionFactory.getInstance("");
+	}
 
 	/**
 	 * A method which creates a BeerGame in the Database
@@ -31,22 +40,23 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	public void createBeergame(String gameName) {
 		Connection conn = null;
 		try {
-			conn = connect();
-			if (conn == null) return;
-			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
+			conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
 
-				conn.setAutoCommit(false);
+					conn.setAutoCommit(false);
 
-				pstmt.setString(1, UUID.randomUUID().toString());
-				pstmt.setString(2, gameName);
-				pstmt.setString(3, new Date().toString());
+					pstmt.setString(1, UUID.randomUUID().toString());
+					pstmt.setString(2, gameName);
+					pstmt.setString(3, new Date().toString());
 
-				pstmt.executeUpdate();
+					pstmt.executeUpdate();
+				}
+				conn.commit();
 			}
-			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
-			rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -59,9 +69,9 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		Connection conn = null;
 		ArrayList<BeerGame> beerGames = new ArrayList<>();
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES)) {
 
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
@@ -78,37 +88,37 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * Deletes a BeerGame from the SQLite Database
-	 *
-	 * @param gameId The specified Id of the game which needs to be deleted
+	 * @param gameName The specified Name of the game which needs to be deleted
 	 */
-	public void deleteBeergame(String gameId) {
+	public void deleteBeergame(String gameName) {
 		Connection conn = null;
 		try {
-			conn = connect();
-			if (conn == null) return;
-			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
+			conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
 
-				conn.setAutoCommit(false);
+					conn.setAutoCommit(false);
 
-				pstmt.setString(1, gameId);
+					pstmt.setString(1, gameName);
 
-				pstmt.executeUpdate();
+					pstmt.executeUpdate();
+				}
+				conn.commit();
 			}
-			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString());
-			rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
-	public BeerGame getGameLog(String gameId) {
+	public BeerGame getGameLog(String gameName) {
 		Connection conn = null;
 		BeerGame beergame = null;
 		try {
-			conn = connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
-
+					pstmt.setString(1,gameName);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 					}
