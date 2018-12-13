@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gameleader;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
 import org.han.ica.asd.c.model.BeerGame;
