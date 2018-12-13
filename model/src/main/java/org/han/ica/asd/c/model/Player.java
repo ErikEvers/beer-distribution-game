@@ -4,11 +4,11 @@ public class Player {
     private String gameId;
     private String playerId;
     private String ipAddress;
-    private int facilityId;
+    private Facility facilityId;
     private String name;
     private boolean isConnected;
 
-    public Player(String gameId, String playerId, String ipAddress, int facilityId, String name, boolean isConnected) {
+    public Player(String gameId, String playerId, String ipAddress, Facility facilityId, String name, boolean isConnected) {
         this.gameId = gameId;
         this.playerId = playerId;
         this.ipAddress = ipAddress;
@@ -41,11 +41,11 @@ public class Player {
         this.ipAddress = ipAddress;
     }
 
-    public int getFacilityId() {
+    public Facility getFacilityId() {
         return facilityId;
     }
 
-    public void setFacilityId(int facilityId) {
+    public void setFacilityId(Facility facilityId) {
         this.facilityId = facilityId;
     }
 
