@@ -89,6 +89,11 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 		return configurations;
 	}
 
+	/**
+	 * A method which returns a single configuration according to the gameId
+	 * @param gameId The Id of a game
+	 * @return A configuration according to the gameId
+	 */
 	public Configuration readConfiguration(String gameId){
 		Connection conn;
 		Configuration configuration = null;

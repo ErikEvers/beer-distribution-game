@@ -6,13 +6,16 @@ import org.han.ica.asd.c.model.Round;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RoundDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_ROUND = "INSERT INTO ROUND VALUES(?,?);";
-	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? && RoundId = ?;";
+	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? AND RoundId = ?;";
+	private static final String READ_ROUND = "SELECT * FROM ROUND WHERE GameId = ? AND RoundId = ?;";
+
 	private static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
 
 	private FacilityTurnDAO turnDAO;
@@ -51,10 +54,33 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @return A round object with turns
 	 */
 	public Round getRound(String gameId, int roundId){
-		Round round = new Round(gameId,roundId);
-		round.setTurns(turnDAO.fetchTurns(gameId,roundId));
-		return round;
-	}
+		Connection conn = databaseConnection.connect();
+		Round round = null;
+		try {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
+
+					conn.setAutoCommit(false);
+
+					pstmt.setString(1, gameId);
+					pstmt.setInt(2, roundId);
+
+					try (ResultSet rs = pstmt.executeQuery()) {
+						while (rs.next()) {
+							round = new Round(rs.getString("GameId"), rs.getInt("RoundId"));
+						}
+					}
+					conn.commit();
+				}
+			}
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
+
+				return round;
+			}
+
 
 
 	/**
