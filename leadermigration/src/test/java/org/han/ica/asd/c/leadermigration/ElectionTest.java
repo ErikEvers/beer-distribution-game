@@ -47,4 +47,22 @@ public class ElectionTest {
         Player elected = communicationHelper.startElection(players);
         Assert.assertEquals(players[2], elected);
     }
+
+    @Test
+    public void secondBasicElectionTest() {
+        Player[] players = new Player[3];
+        players[0] = new Player("3", "333");
+        players[1] = new Player("1", "111");
+        players[2] = new Player("2", "222");
+        Player elected = communicationHelper.startElection(players);
+        Assert.assertEquals(players[0], elected);
+    }
+
+    @Test
+    public void singlePlayerElectionTest() {
+        Player[] players = new Player[1];
+        players[0] = new Player("1", "111");
+        Player elected = communicationHelper.startElection(players);
+        Assert.assertEquals(players[0], elected);
+    }
 }
