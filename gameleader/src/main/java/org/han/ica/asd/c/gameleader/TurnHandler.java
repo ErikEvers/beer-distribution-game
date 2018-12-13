@@ -13,6 +13,10 @@ public class TurnHandler {
     @Inject
     private IPersistence persistenceLayer;
 
+    /**
+     * Saves the incoming turn using the persistence layer if the turn is valid.
+     * @param turnModel a turn sent by a game participant.
+     */
     void processFacilityTurn(FacilityTurn turnModel) {
         if(validateFacilityTurn(turnModel)) {
             persistenceLayer.savePlayerTurn(turnModel);
@@ -21,7 +25,13 @@ public class TurnHandler {
         }
     }
 
-//Currently public for testing purposes
+    /**
+     * Currently public for testing purposes.
+     *
+     * Checks if the incoming turn is valid.
+     * @param turnModel a turn sent by a game participant.
+     * @return true if the turn is valid, false otherwise.
+     */
     public boolean validateFacilityTurn(FacilityTurn turnModel) {
         return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
     }

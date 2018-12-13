@@ -26,6 +26,10 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private int turnsExpected;
     private int turnsReceived;
 
+    /**
+     * creates a new Game Leader instance for a beer game.
+     * @param game
+     */
     public GameLeader(BeerGame game) {
         connectorForLeader.addObserver(this);
         this.turnHandler = new TurnHandler();
@@ -34,15 +38,31 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         this.turnsReceived = 0;
     }
 
+    /**
+     * This method is called when a player disconnects, which this class is notified of by the IPlayerDisconnected interface.
+     * Using this playerId an IParticipant object is created with the facilityId corresponding to the playerId, which is sent to the Game Logic component.
+     * @param playerId the Id of the player that disconnected.
+     */
     public void notifyPlayerDisconnected(String playerId) {
         IParticipant participant = new AgentParticipant(Integer.parseInt(playerId));
         gameLogic.addLocalParticipant(participant);
     }
 
+    /**
+     * This method is called when a player reconnects, which this class is notified of by the IPlayerReconnected interface (which is going to be implemented in a next sprint)
+     * @param playerId the Id of the player that reconnected.
+     */
     public void notifyPlayerReconnected(String playerId) {
         gameLogic.removeAgentByPlayerId(playerId);
     }
 
+    /**
+     * This method is called when a turn is received from the ITurnModelObserver.
+     * The turn is processed by the TurnHandler and the amount of turns received this round is incremented.
+     *
+     * Once all turns have been received, allTurnDataReceived is called.
+     * @param turnModel an incoming turn from a facility
+     */
     public void turnModelReceived(FacilityTurn turnModel) {
         turnHandler.processFacilityTurn(turnModel);
         currentRoundData.addTurn(turnModel);
@@ -52,6 +72,11 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
             allTurnDataReceived();
     }
 
+    /**
+     * Uses the ILeaderGameLogic interface to calculate the round based on the supplied Round object.
+     * Afterwards it sends the Round containing the calculated Round information to all players using the IConnectorForLeader interface.
+     * Then it starts a new round.
+     */
     private void allTurnDataReceived() {
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData);
         game.addRound(currentRoundData);
@@ -59,6 +84,11 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         startNextRound();
     }
 
+    /**
+     * Starts a new round of the beer game.
+     * Sets the amount of received turns from players to zero.
+     * Creates a new Round for the beer game, setting the roundId the last roundId plus one.
+     */
     private void startNextRound() {
         currentRoundData = new Round(game.getGameId(), game.getRounds().size() + 1);
         turnsReceived = 0;
