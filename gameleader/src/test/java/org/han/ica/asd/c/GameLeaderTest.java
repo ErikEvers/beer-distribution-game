@@ -8,6 +8,7 @@ import org.han.ica.asd.c.model.BeerGame;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -26,14 +27,19 @@ public class GameLeaderTest {
     @Mock
     private Round currentRoundData;
 
-    FacilityTurn facilityTurnModel;
+    private FacilityTurn facilityTurnModel;
 
     @InjectMocks
+    private
     GameLeader gameLeader;
 
     private int turnsExpected;
     private int turnsReceived;
 
+    @BeforeAll
+    public void setUp() {
+        this.facilityTurnModel = new FacilityTurn();
+    }
 
     @Test
     public void IsANextRoundAdded() {
