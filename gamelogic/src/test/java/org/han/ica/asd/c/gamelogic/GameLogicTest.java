@@ -1,4 +1,5 @@
 package org.han.ica.asd.c.gamelogic;
+import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 
 
-public class GameLogicTests {
+public class GameLogicTest {
     private GameLogic gameLogic;
     private ParticipantsPool participantsPool;
     private ICommunication communication;
