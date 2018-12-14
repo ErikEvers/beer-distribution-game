@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,8 +60,8 @@ public class BeerGameDAOIntegrationTest {
 
 		beergameDAO.createBeergame("BeergameZutphen");
 		beergameDAO.createBeergame("BeergameArnhem");
-		BeerGame beergame = beergameDAO.getGameLog("BeergameArnhem");
-		beergameDAO.deleteBeergame(beergame.getGameId());
+		List<BeerGame> beergames = beergameDAO.readBeergames();
+		beergameDAO.deleteBeergame(beergames.get(0).getGameId());
 		Assert.assertEquals(1,beergameDAO.readBeergames().size());
 	}
 
@@ -72,7 +73,8 @@ public class BeerGameDAOIntegrationTest {
 		setDatabaseConnection(beergameDAO, connection);
 
 		beergameDAO.createBeergame("BeergameZutphen");
-		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog("BeergameZutphen").getGameName());
+		List<BeerGame> beergames = beergameDAO.readBeergames();
+		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog(beergames.get(0).getGameId()).getGameName());
 	}
 
 

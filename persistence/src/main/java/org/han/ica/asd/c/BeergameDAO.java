@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
-	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameName = ?;";
+	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameId = ?;";
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
 
 	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
@@ -116,14 +116,14 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 * @param gameName The name of the game which needs to be returned
 	 * @return A beergame object
 	 */
-	public BeerGame getGameLog(String gameName) {
+	public BeerGame getGameLog(String gameId) {
 		Connection conn = null;
 		BeerGame beergame = null;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
-					pstmt.setString(1,gameName);
+					pstmt.setString(1,gameId);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 					}
