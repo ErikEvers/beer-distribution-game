@@ -1,18 +1,23 @@
 package org.han.ica.asd.c.leadermigration;
 
+import org.han.ica.asd.c.model.Player;
+
 import javax.inject.Inject;
 
 public class ElectionModel {
 
   private String concattedIp;
-  private boolean elected = false;
+  private boolean elected;
   @Inject private Player currentPlayer;
   @Inject private Player receivingPlayer;
 
 
+  public ElectionModel() {
+    this.elected = false;
+  }
   /**
    * Ensures that every Player has a unique ID for the bully algorithm
-   * @return
+   * @return -> String, a concatenation of playerID and Ip-Address.
    */
   public String getConcattedIp() {
     return concattedIp;

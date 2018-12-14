@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.leadermigration;
 
+import org.han.ica.asd.c.model.Player;
+
 import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
