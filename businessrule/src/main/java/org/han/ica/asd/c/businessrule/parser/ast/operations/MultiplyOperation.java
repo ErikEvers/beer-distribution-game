@@ -5,8 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import java.util.Objects;
 
 public class MultiplyOperation extends Operation {
-    private final String prefix = "Mul(";
-    private final String suffix = ")";
+    private static final String prefix = "Mul(";
 
     /**
      * Constructor

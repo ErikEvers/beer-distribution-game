@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ComparisonValue extends ASTNode {
-    private final String prefix = "CV(";
-    private final String suffix = ")";
+    private static final String prefix = "CV(";
     private OperationValue operationValue;
 
     /**

@@ -1,8 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class ComparisonOperator extends Operator {
-    private final String prefix = "ComO(";
-    private final String suffix = ")";
+    private static final String prefix = "ComO(";
 
     /**
      * Constructor

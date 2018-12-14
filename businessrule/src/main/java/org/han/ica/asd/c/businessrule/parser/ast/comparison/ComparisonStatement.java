@@ -10,12 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-/**
- *
- */
 public class ComparisonStatement extends Expression {
-    private final String prefix = "CS(";
-    private final String suffix = ")";
+    private static final String prefix = "CS(";
     private Expression left;
     private BooleanOperator booleanOperator;
     private Expression right;

@@ -1,8 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class BooleanOperator extends Operator {
-    private final String prefix = "BoolO(";
-    private final String suffix = ")";
+    private static final String prefix = "BoolO(";
 
     /**
      * Constructor
@@ -49,9 +48,11 @@ public class BooleanOperator extends Operator {
     private String findBooleanOperator(String operator) {
         if ("and".equals(operator)) {
             return BooleanType.AND.getBooleanSymbol();
-        } else {
+        } else if ("or".equals(operator)){
             return BooleanType.OR.getBooleanSymbol();
         }
+
+        return null;
     }
 
     /**
