@@ -78,7 +78,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return gameBusinessRulesInFacilityTurn;
 	}
@@ -110,7 +110,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 					conn.commit();
 				}
 			} catch (SQLException e) {
-				LOGGER.log(Level.SEVERE, e.toString());
+				LOGGER.log(Level.SEVERE, e.toString(),e);
 				databaseConnection.rollBackTransaction(conn);
 			}
 		}

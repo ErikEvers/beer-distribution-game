@@ -15,14 +15,12 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_ROUND = "INSERT INTO ROUND VALUES(?,?);";
 	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? AND RoundId = ?;";
 	private static final String READ_ROUND = "SELECT * FROM ROUND WHERE GameId = ? AND RoundId = ?;";
-
 	private static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
 
-	private FacilityTurnDAO turnDAO;
+
 	private DatabaseConnection databaseConnection;
 
 	public RoundDAO(){
-		turnDAO = new FacilityTurnDAO();
 		databaseConnection = DBConnection.getInstance();
 	}
 

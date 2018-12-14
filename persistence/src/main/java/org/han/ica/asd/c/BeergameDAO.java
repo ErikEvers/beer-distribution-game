@@ -23,8 +23,8 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameId = ?;";
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
+	private static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 
-	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 	private DatabaseConnection databaseConnection;
 
 
@@ -81,7 +81,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return beerGames;
 	}
@@ -106,14 +106,14 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 				conn.commit();
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
 	/**
 	 * A method which returns a single beergame according to the given parameters
-	 * @param gameName The name of the game which needs to be returned
+	 * @param gameId The name of the game which needs to be returned
 	 * @return A beergame object
 	 */
 	public BeerGame getGameLog(String gameId) {
@@ -130,7 +130,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return beergame;
 	}

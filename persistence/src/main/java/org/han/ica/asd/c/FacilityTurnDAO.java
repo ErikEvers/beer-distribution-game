@@ -89,7 +89,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 				conn.commit();
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return turns;
 
@@ -119,7 +119,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return facilityTurn;
 	}
@@ -150,7 +150,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 				conn.commit();
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 	}
 }

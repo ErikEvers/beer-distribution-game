@@ -20,7 +20,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	private static final String READ_CONFIGURATIONS = "SELECT * FROM Configuration;";
 	private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesales = ?, AmountOfDistributors = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?;";
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
-	public static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
 	private DatabaseConnection databaseConnection;
 
@@ -47,7 +47,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 				conn.commit();
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 			databaseConnection.rollBackTransaction(conn);
 		}
 	}
@@ -88,7 +88,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 		return configurations;
 	}
@@ -118,7 +118,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 		return configuration;
 	}
@@ -152,7 +152,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 				conn.commit();
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString());
+			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 	}
 
