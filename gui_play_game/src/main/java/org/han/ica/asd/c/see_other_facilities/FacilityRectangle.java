@@ -23,10 +23,10 @@ public class FacilityRectangle extends Rectangle {
         String color = "#FFFFFF";
 
         if ("Factory".equals(facilityType)) {
-            color = "DODGERBLUE";
+            color = "#1fff34";
 
         } else if ("Regional warehouse".equals(facilityType)) {
-            color = "#1fff34";
+            color = "DODGERBLUE";
 
         } else if ("Wholesale".equals(facilityType)) {
             color = "#ffbc1f";
