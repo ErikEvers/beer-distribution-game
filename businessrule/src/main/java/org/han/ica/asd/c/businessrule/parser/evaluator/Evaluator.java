@@ -147,11 +147,11 @@ public class Evaluator {
         int right = 2;
 
         if (current instanceof Comparison && current.getChildren().get(left) != null && current.getChildren().get(right) != null) {
-            if (((Value) current.getChildren().get(left).getChildren().get(left)).getValue().equals(EvaluatorType.LOWEST.getEvaluatorSymbol())
-                    || ((Value) current.getChildren().get(left).getChildren().get(left)).getValue().equals(EvaluatorType.HIGHEST.getEvaluatorSymbol())) {
+            if (getValueFromComparisonOnSide(current,left).equals(EvaluatorType.LOWEST.getEvaluatorSymbol())
+                    || getValueFromComparisonOnSide(current,left).equals(EvaluatorType.HIGHEST.getEvaluatorSymbol())) {
                 checkLowHighOnlyComparedToGameValueAndAboveBelow(current, inputBusinessRule, right);
-            } else if (((Value) current.getChildren().get(right).getChildren().get(left)).getValue().equals(EvaluatorType.LOWEST.getEvaluatorSymbol())
-                    || ((Value) current.getChildren().get(right).getChildren().get(left)).getValue().equals(EvaluatorType.HIGHEST.getEvaluatorSymbol())) {
+            } else if (getValueFromComparisonOnSide(current,right).equals(EvaluatorType.LOWEST.getEvaluatorSymbol())
+                    || getValueFromComparisonOnSide(current,right).equals(EvaluatorType.HIGHEST.getEvaluatorSymbol())) {
                 checkLowHighOnlyComparedToGameValueAndAboveBelow(current, inputBusinessRule, left);
             }
         }
@@ -211,10 +211,8 @@ public class Evaluator {
         int right = 2;
 
         if (current instanceof Comparison && current.getChildren().get(left) != null && current.getChildren().get(right) != null) {
-            String leftSide = ((Value) current.getChildren().get(left).getChildren().get(left)).getValue();
-            String rightSide = ((Value) current.getChildren().get(right).getChildren().get(left)).getValue();
-            if (leftSide.contains(EvaluatorType.BELOW.getEvaluatorSymbol())
-                    || rightSide.contains(EvaluatorType.BELOW.getEvaluatorSymbol())) {
+            if (getValueFromComparisonOnSide(current,left).contains(EvaluatorType.BELOW.getEvaluatorSymbol())
+                    || getValueFromComparisonOnSide(current,right).contains(EvaluatorType.BELOW.getEvaluatorSymbol())) {
                 belowCounter.addOne();
             }
         }
@@ -272,5 +270,16 @@ public class Evaluator {
                 && ((ActionReference) current).getAction().equals("deliver")) {
             inputBusinessRule.setErrorMessage("Deliver can not be used in a default statement");
         }
+    }
+
+    /**
+     * Returns the value of the left or right side of a Comparison
+     *
+     * @param current Comparison node it needs to get value from
+     * @param side Side of which it needs to retrieve the value
+     * @return Returns value as a string
+     */
+    private String getValueFromComparisonOnSide(ASTNode current, int side){
+        return ((Value) current.getChildren().get(side).getChildren().get(0)).getValue();
     }
 }
