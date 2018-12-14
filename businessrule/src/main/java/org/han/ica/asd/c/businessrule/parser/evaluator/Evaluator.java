@@ -64,7 +64,7 @@ public class Evaluator {
      *
      * @param defaultCounter    The counter that is used for counting the times default is called.
      * @param belowCounter      The counter that is used for counting the times below is called.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param previous          Previous node that it is checking.
      * @param current           Current node that it is checking.
      */
@@ -81,7 +81,7 @@ public class Evaluator {
      * Checks that there is only one default business rule in the collection of business rules
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param defaultCounter    Counter that counts the amount of defaults.
      */
     private void checkOnlyOneDefault(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter defaultCounter) {
@@ -99,7 +99,7 @@ public class Evaluator {
      * Checks if round is used in the left or right side of the comparison and calls the other side to check
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkRoundIsComparedToInt(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         int left = 0;
@@ -121,7 +121,7 @@ public class Evaluator {
      * Checks if a value in the sub tree is not an int and throws an error if that's the case
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param side              The side that it needs to check.
      */
     private void checkRoundIsComparedToInt(ASTNode current, UserInputBusinessRule inputBusinessRule, int side) {
@@ -142,7 +142,7 @@ public class Evaluator {
      * Checks if lowest/highest is used in the left or right side of the comparison and calls the other side to check
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkLowHighOnlyComparedToGameValueAndAboveBelow(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         int left = 0;
@@ -164,7 +164,7 @@ public class Evaluator {
      * Queue to loop through the sub tree
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param side              The side of the tree that it needs to check
      */
     private void checkLowHighOnlyComparedToGameValueAndAboveBelow(ASTNode current, UserInputBusinessRule inputBusinessRule, int side) {
@@ -183,7 +183,7 @@ public class Evaluator {
      * Main: Checks that when lowest/highest is used in a business rule it is compared to a game value combined with an above/below
      * Checks if game value combined with below/above is not used and throws error if that's the case
      *
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param qVal              Current node in the queue.
      */
     private void checkLowHighOnlyComparedToGameValueAndAboveBelow(UserInputBusinessRule inputBusinessRule, Value qVal) {
@@ -205,7 +205,7 @@ public class Evaluator {
      * Counts the amount of below/above used in the comparison
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param belowCounter      Counter that counts the amount of belows.
      */
     private void checkDeliverOnlyUsedWithBelow(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowCounter) {
@@ -229,7 +229,7 @@ public class Evaluator {
      * Checks if a deliver is used and if there are no below/above, if this is the case it throws an error
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param belowCounter      Counter that counts the amount of belows.
      */
     private void checkDeliverOnlyUsedWithBelowError(ASTNode current, UserInputBusinessRule inputBusinessRule, Counter belowCounter) {
@@ -245,7 +245,7 @@ public class Evaluator {
      * Checks if lowest/highest is only used in a comparison
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      * @param previous          Previous node that is above the current one.
      */
     private void checkLowHighOnlyUsedInComparison(ASTNode current, UserInputBusinessRule inputBusinessRule, ASTNode previous) {
@@ -262,7 +262,7 @@ public class Evaluator {
      * Checks if a default rule is not used with delivered.
      *
      * @param current           Current node that it is checking.
-     * @param inputBusinessRule The rule that gets a the error if check fails.
+     * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkDeliverOnlyUsedInIfRule(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         if (current instanceof Default) {

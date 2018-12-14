@@ -1,7 +1,7 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
-import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
+import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
