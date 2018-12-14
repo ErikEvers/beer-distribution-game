@@ -21,7 +21,6 @@ public class ParserPipeline {
     private List<UserInputBusinessRule> businessRulesInput;
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
-    private boolean hasErrors = false;
     private static final String DELETE_EMPTY_LINES = "(?m)^[ \t]*\r?\n";
     private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
     private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(?i)(if|default)[A-Za-z 0-9]+";
@@ -32,7 +31,7 @@ public class ParserPipeline {
      *
      * @param businessRules Business rules that need to be parsed
      */
-    public void parseString(String businessRules) {
+    public boolean parseString(String businessRules) {
         businessRulesInput = stringToBusinessRules(businessRules);
         businessRules = businessRules.replace(DELETE_EMPTY_LINES, "");
         CharStream inputStream = CharStreams.fromString(businessRules);
@@ -55,21 +54,28 @@ public class ParserPipeline {
         walker.walk(listener, parseTree);
 
         this.businessRulesParsed = listener.getBusinessRules();
-        setSyntaxError();
-        evaluate();
+        if(setSyntaxError() || evaluate()){
+            ParseErrorListener.INSTANCE.getExceptions().clear();
+            return true;
+        }
         encodeBusinessRules();
-        ParseErrorListener.INSTANCE.getExceptions().clear();
+        return false;
     }
 
     /**
      * Sets the syntax Errors of a line.
      */
-    private void setSyntaxError() {
+    private boolean setSyntaxError() {
+        boolean hasErrors = false;
+
         for (int i = 0; i < businessRulesInput.size(); i++) {
             if (ParseErrorListener.INSTANCE.getExceptions().contains(i + 1)) {
                 businessRulesInput.get(i).setErrorMessage("Input error found on '" + businessRulesInput.get(i).getBusinessRule() + "'");
+                hasErrors = true;
             }
         }
+
+        return hasErrors;
     }
 
     /**
@@ -91,7 +97,7 @@ public class ParserPipeline {
     /**
      * Evaluates the business rules so that they are correct and usable.
      */
-    private void evaluate() {
+    private boolean evaluate() {
         Evaluator evaluator = new Evaluator();
         Counter newLineCounter = new Counter();
         Map<UserInputBusinessRule, BusinessRule> map = new LinkedHashMap<>();
@@ -103,8 +109,10 @@ public class ParserPipeline {
                     map.put(businessRulesInput.get(i), businessRulesParsed.get(i - newLineCounter.getCountedValue()));
                 }
             }
-            this.hasErrors = evaluator.evaluate(map);
+
+            return evaluator.evaluate(map);
         }
+        return true;
     }
 
     /***
@@ -134,9 +142,5 @@ public class ParserPipeline {
 
     public List<UserInputBusinessRule> getBusinessRulesInput() {
         return businessRulesInput;
-    }
-
-    public boolean hasErrors() {
-        return hasErrors;
     }
 }

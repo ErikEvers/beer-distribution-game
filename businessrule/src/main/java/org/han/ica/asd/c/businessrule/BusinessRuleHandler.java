@@ -18,8 +18,7 @@ public class BusinessRuleHandler implements IBusinessRules {
      */
     public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
         ParserPipeline parserPipeline = new ParserPipeline();
-        parserPipeline.parseString(businessRules);
-        if (parserPipeline.hasErrors()) {
+        if (parserPipeline.parseString(businessRules)) {
             return parserPipeline.getBusinessRulesInput();
         }
         // TO-DO: 12/7/2018 send parsed businessrules to IBusinessRulesStore
