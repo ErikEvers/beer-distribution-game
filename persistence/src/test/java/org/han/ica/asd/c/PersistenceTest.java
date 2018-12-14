@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.model.BeerGame;
 import org.han.ica.asd.c.model.Round;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,14 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class PersistenceTest {
@@ -22,11 +23,13 @@ class PersistenceTest {
 	private IBeerDisitributionGameDAO beerDisitributionGameDAO;
 	private Persistence persistence;
 	private Round round;
+	private BeerGame beerGame;
 
 	@BeforeEach
 	void setUp() {
 		persistence = new Persistence();
 		round = new Round("Beergame",1);
+		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
 	}
 
 	@AfterEach
@@ -54,6 +57,11 @@ class PersistenceTest {
 
 	@Test
 	void getGameLogTest() {
+		beerDisitributionGameDAO = mock(BeergameDAO.class);
+		reflect(persistence,beerDisitributionGameDAO);
+		when(((BeergameDAO)beerDisitributionGameDAO).getGameLog(anyString())).thenReturn(beerGame);
+		persistence.getGameLog(anyString());
+		verify(((BeergameDAO)beerDisitributionGameDAO), times(1)).getGameLog(anyString());
 	}
 
 	@Test
