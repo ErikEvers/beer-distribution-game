@@ -22,7 +22,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameName = ?;";
-	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameName = ?;";
+	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
 
 	public static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 	private DatabaseConnection databaseConnection;
@@ -88,9 +88,9 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * Deletes a BeerGame from the SQLite Database
-	 * @param gameName The specified Name of the game which needs to be deleted
+	 * @param gameId The specified Id of the game which needs to be deleted
 	 */
-	public void deleteBeergame(String gameName) {
+	public void deleteBeergame(String gameId) {
 		Connection conn = null;
 		try {
 			conn = databaseConnection.connect();
@@ -99,7 +99,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 					conn.setAutoCommit(false);
 
-					pstmt.setString(1, gameName);
+					pstmt.setString(1, gameId);
 
 					pstmt.executeUpdate();
 				}

@@ -2,6 +2,7 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.model.BeerGame;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,8 @@ public class BeerGameDAOIntegrationTest {
 
 		beergameDAO.createBeergame("BeergameZutphen");
 		beergameDAO.createBeergame("BeergameArnhem");
-		beergameDAO.deleteBeergame("BeergameArnhem");
+		BeerGame beergame = beergameDAO.getGameLog("BeergameArnhem");
+		beergameDAO.deleteBeergame(beergame.getGameId());
 		Assert.assertEquals(1,beergameDAO.readBeergames().size());
 	}
 
