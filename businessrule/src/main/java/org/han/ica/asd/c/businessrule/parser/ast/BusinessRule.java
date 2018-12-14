@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class BusinessRule extends ASTNode {
-    private String prefix = "BR(";
-    private String suffix = ")";
+    private final String prefix = "BR(";
+    private final String suffix = ")";
     private Condition condition;
     private Action action;
 

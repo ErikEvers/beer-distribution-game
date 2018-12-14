@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class CalculationOperator extends Operator {
-    private String prefix = "CalO(";
-    private String suffix = ")";
+    private final String prefix = "CalO(";
+    private final String suffix = ")";
 
     public CalculationOperator() {
     }

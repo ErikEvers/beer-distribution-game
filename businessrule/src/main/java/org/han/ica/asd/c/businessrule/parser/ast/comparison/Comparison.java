@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Comparison extends Expression {
-    private String prefix = "C(";
-    private String suffix = ")";
+    private final String prefix = "C(";
+    private final String suffix = ")";
     private ComparisonValue left;
     private ComparisonOperator comparisonOperator;
     private ComparisonValue right;

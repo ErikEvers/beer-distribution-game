@@ -3,7 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import java.util.Objects;
 
 public class Default extends Condition {
-    private String prefix = "D()";
+    private final String prefix = "D()";
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database

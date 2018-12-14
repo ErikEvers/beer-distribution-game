@@ -5,8 +5,8 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import java.util.Objects;
 
 public class DivideOperation extends Operation {
-    private String prefix = "Div(";
-    private String suffix = ")";
+    private final String prefix = "Div(";
+    private final String suffix = ")";
 
     /**
      * Constructor

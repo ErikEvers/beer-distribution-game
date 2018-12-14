@@ -14,8 +14,8 @@ import java.util.Objects;
  *
  */
 public class ComparisonStatement extends Expression {
-    private String prefix = "CS(";
-    private String suffix = ")";
+    private final String prefix = "CS(";
+    private final String suffix = ")";
     private Expression left;
     private BooleanOperator booleanOperator;
     private Expression right;

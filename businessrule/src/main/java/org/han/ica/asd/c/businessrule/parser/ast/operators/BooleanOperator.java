@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class BooleanOperator extends Operator {
-    private String prefix = "BoolO(";
-    private String suffix = ")";
+    private final String prefix = "BoolO(";
+    private final String suffix = ")";
 
     /**
      * Constructor

@@ -3,8 +3,8 @@ package org.han.ica.asd.c.businessrule.parser.ast.operations;
 import java.util.Objects;
 
 public class Value extends OperationValue {
-    private String prefix = "V(";
-    private String suffix = ")";
+    private final String prefix = "V(";
+    private final String suffix = ")";
     private String value;
 
     /**

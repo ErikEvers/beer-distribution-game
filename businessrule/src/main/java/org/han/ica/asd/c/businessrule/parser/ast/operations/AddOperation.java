@@ -5,8 +5,8 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import java.util.Objects;
 
 public class AddOperation extends Operation {
-    private String prefix = "Add(";
-    private String suffix = ")";
+    private final String prefix = "Add(";
+    private final String suffix = ")";
 
     /**
      * Constructor

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Action extends ASTNode {
-    private String prefix = "A(";
-    private String suffix = ")";
+    private final String prefix = "A(";
+    private final String suffix = ")";
 
     private ActionReference actionName;
     private OperationValue operation;

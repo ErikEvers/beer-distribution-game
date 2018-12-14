@@ -3,8 +3,8 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import java.util.Objects;
 
 public class ActionReference extends ASTNode {
-    private String prefix = "AR(";
-    private String suffix = ")";
+    private final String prefix = "AR(";
+    private final String suffix = ")";
     private String action;
 
     /**
