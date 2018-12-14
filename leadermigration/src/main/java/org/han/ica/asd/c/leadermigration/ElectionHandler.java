@@ -35,8 +35,11 @@ public class ElectionHandler {
     for(Player player: players) {
       // This if statement ensures to not send this to yourself.
       if(!electionModel.getCurrentPlayer().equals(player)) {
-        electionModel.setReceivingPlayer(player);
-        elections.add(communication.sendElectionMessage(this.electionModel, player));
+				electionModel.setReceivingPlayer(player);
+				ElectionModel model = communication.sendElectionMessage(electionModel, player);
+				if(model != null) {
+					elections.add(new ElectionModel(model));
+				}
       }
     }
     return elections;
@@ -52,7 +55,7 @@ public class ElectionHandler {
    */
   public ElectionModel sendAliveMessage(ElectionModel receivedModel) {
     Player receivingPlayer = receivedModel.getReceivingPlayer();
-    if (receivedModel.getConcattedIp().compareTo(receivingPlayer.concatIpId()) > 0) {
+    if (receivedModel.getConcattedIp().compareTo(receivingPlayer.concatIpId()) < 0) {
       receivedModel.setElected(true);
     }
     return receivedModel;

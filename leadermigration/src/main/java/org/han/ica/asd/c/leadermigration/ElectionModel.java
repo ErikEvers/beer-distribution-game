@@ -8,13 +8,21 @@ public class ElectionModel {
 
   private String concattedIp;
   private boolean elected;
-  @Inject private Player currentPlayer;
-  @Inject private Player receivingPlayer;
+  private Player currentPlayer;
+  private Player receivingPlayer;
 
 
   public ElectionModel() {
     this.elected = false;
   }
+
+  public ElectionModel(ElectionModel old) {
+  	this.setConcattedIp(old.getConcattedIp());
+  	this.setElected(old.isElected());
+		this.setCurrentPlayer(old.getCurrentPlayer());
+		this.setReceivingPlayer(old.getReceivingPlayer());
+	}
+
   /**
    * Ensures that every Player has a unique ID for the bully algorithm
    * @return -> String, a concatenation of playerID and Ip-Address.
