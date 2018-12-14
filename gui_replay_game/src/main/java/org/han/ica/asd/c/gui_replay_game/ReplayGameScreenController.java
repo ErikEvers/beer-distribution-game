@@ -66,16 +66,6 @@ public class ReplayGameScreenController {
 
     @FXML
     void initialize() {
-        assert replayGraph != null : "fx:id=\"replayGraph\" was not injected: check your FXML file 'Untitled'.";
-        assert factoryCheckbox != null : "fx:id=\"factoryCheckbox\" was not injected: check your FXML file 'Untitled'.";
-        assert warehouseCheckBox != null : "fx:id=\"warehouseCheckBox\" was not injected: check your FXML file 'Untitled'.";
-        assert wholesaleCheckbox != null : "fx:id=\"wholesaleCheckbox\" was not injected: check your FXML file 'Untitled'.";
-        assert retailCheckbox != null : "fx:id=\"retailCheckbox\" was not injected: check your FXML file 'Untitled'.";
-        assert facilityCombobox != null : "fx:id=\"facilityCombobox\" was not injected: check your FXML file 'Untitled'.";
-        assert prevRoundButton != null : "fx:id=\"prevRoundButton\" was not injected: check your FXML file 'Untitled'.";
-        assert nextRoundButton != null : "fx:id=\"nextRoundButton\" was not injected: check your FXML file 'Untitled'.";
-        assert currentRoundTextfield != null : "fx:id=\"currentRoundTextfield\" was not injected: check your FXML file 'Untitled'.";
-        assert totalRoundsTextfield != null : "fx:id=\"totalRoundsTextfield\" was not injected: check your FXML file 'Untitled'.";
 
     }
 }
