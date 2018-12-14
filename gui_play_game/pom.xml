@@ -35,6 +35,6 @@
     </dependencies>
 
     <properties>
-        <sonar.coverage.exclusions>beer-distribution-game\gui_play_game\src\main\java\org\han\ica\asd\c\see_other_facilities</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>org/han/ica/asd/c/see_other_facilities/*</sonar.coverage.exclusions>
     </properties>
 </project>
