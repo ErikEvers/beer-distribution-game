@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.see_other_facilities;
+package org.han.ica.asd.c.gui_play_game.see_other_facilities;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Tooltip;

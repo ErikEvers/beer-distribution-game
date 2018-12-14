@@ -33,8 +33,4 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <properties>
-        <sonar.coverage.exclusions>org/han/ica/asd/c/see_other_facilities/*</sonar.coverage.exclusions>
-    </properties>
 </project>

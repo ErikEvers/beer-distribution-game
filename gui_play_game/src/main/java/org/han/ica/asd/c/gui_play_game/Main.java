@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.gui_play_game;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
