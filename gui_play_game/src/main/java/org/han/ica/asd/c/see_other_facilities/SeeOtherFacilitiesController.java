@@ -7,6 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fakes.PlayerComponentFake;
 import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.FacilityType;
 
 import java.util.ArrayList;
 
@@ -22,12 +23,6 @@ public class SeeOtherFacilitiesController {
     private ArrayList<FacilityRectangle> warehouses = new ArrayList<FacilityRectangle>();
     private ArrayList<FacilityRectangle> retailers = new ArrayList<FacilityRectangle>();
     private ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-    private int mouseClickedCount = 0;
-    private static final int NOT_CLICKED_YET = 0;
-    private static final int CLICKED_ONCE = 1;
-    private FacilityRectangle firstRectangleClicked;
-    private double firstRectangleX;
-    private double firstRectangleY;
 
     //Fake player component for testing purposes;
     private PlayerComponentFake playerComponent;
@@ -55,18 +50,21 @@ public class SeeOtherFacilitiesController {
 
         for(FacilityLinkedTo link : links) {
             if(!drawnFacilities.contains(link.getFacilityDeliver())) {
-                drawFacility(link.getFacilityDeliver());
+                FacilityRectangle rectangle1 = drawFacility(link.getFacilityDeliver());
                 drawnFacilities.add(link.getFacilityDeliver());
             }
 
             if(!drawnFacilities.contains(link.getFacilityOrder())) {
-                drawFacility(link.getFacilityOrder());
+                FacilityRectangle rectangle2 = drawFacility(link.getFacilityOrder());
                 drawnFacilities.add(link.getFacilityOrder());
             }
+
+            EdgeLine line = new EdgeLine();
+            line.drawLine(link.getFacilityDeliver(), link.getFacilityOrder(), rectangle1);
         }
     }
 
-    private void drawFacility(Facility facility) throws FacilityLoadingError {
+    private FacilityRectangle drawFacility(Facility facility) throws FacilityLoadingError {
 
         if(facility.getFacilityType().equals("Factory")) {
             drawFactory(facility);
