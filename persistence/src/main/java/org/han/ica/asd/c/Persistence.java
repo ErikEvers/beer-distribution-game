@@ -1,4 +1,5 @@
-import org.han.ica.asd.c.*;
+package org.han.ica.asd.c;
+
 import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 
@@ -54,6 +55,5 @@ public class Persistence implements IPersistence {
 		}
 
 		((FacilityTurnDAO)beergameDAO).createTurn(turn);
-
 	}
 }
