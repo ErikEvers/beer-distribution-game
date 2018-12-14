@@ -18,11 +18,11 @@ public class PlayerComponentFake {
         Facility retailer = new Facility("", 1, "Retailer", "", "");
 
         FacilityLinkedTo link1 = new FacilityLinkedTo("", regionalWarehouse1, factory, true);
-        FacilityLinkedTo link2 = new FacilityLinkedTo("", regionalWarehouse2, factory, true);
+        FacilityLinkedTo link2 = new FacilityLinkedTo("", regionalWarehouse2, factory, false);
         FacilityLinkedTo link3 = new FacilityLinkedTo("", wholesale1, regionalWarehouse1, true);
-        FacilityLinkedTo link4 = new FacilityLinkedTo("", wholesale2, regionalWarehouse2, true);
+        FacilityLinkedTo link4 = new FacilityLinkedTo("", wholesale2, regionalWarehouse2, false);
         FacilityLinkedTo link5 = new FacilityLinkedTo("", retailer, wholesale1, true);
-        FacilityLinkedTo link6 = new FacilityLinkedTo("", retailer, wholesale2, true);
+        FacilityLinkedTo link6 = new FacilityLinkedTo("", retailer, wholesale2, false);
 
         array = new FacilityLinkedTo[]{link1, link2, link3, link4, link5, link6};
 

@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import org.han.ica.asd.c.fakes.PlayerComponentFake;
 import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
@@ -22,7 +23,6 @@ public class SeeOtherFacilitiesController {
     private ArrayList<FacilityRectangle> wholesalers = new ArrayList<FacilityRectangle>();
     private ArrayList<FacilityRectangle> warehouses = new ArrayList<FacilityRectangle>();
     private ArrayList<FacilityRectangle> retailers = new ArrayList<FacilityRectangle>();
-    private ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
 
     //Fake player component for testing purposes;
     private PlayerComponentFake playerComponent;
@@ -47,7 +47,6 @@ public class SeeOtherFacilitiesController {
 
         ArrayList<Facility> drawnFacilities = new ArrayList<>();
         ArrayList<FacilityRectangle> drawnFacilityRectangles = new ArrayList<>();
-        ArrayList<FacilityLinkedTo> drawnEdges = new ArrayList<>();
 
         for(FacilityLinkedTo link : links) {
             if(!drawnFacilities.contains(link.getFacilityDeliver())) {
@@ -59,7 +58,7 @@ public class SeeOtherFacilitiesController {
                 drawnFacilityRectangles.add(drawFacility(link.getFacilityOrder()));
                 drawnFacilities.add(link.getFacilityOrder());
             }
-            
+
             EdgeLine line = new EdgeLine();
             FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,"","",""));
             FacilityRectangle rectangle2 = new FacilityRectangle(new Facility("",0,"","",""));
@@ -74,6 +73,12 @@ public class SeeOtherFacilitiesController {
             }
 
             line.drawLine(rectangle1, rectangle2, rectangle1.getTranslateX(), rectangle1.getTranslateY());
+
+            if(!link.isActive()) {
+                line.setStroke(Color.RED);
+            }
+
+            facilitiesContainer.getChildren().add(line);
         }
     }
 
