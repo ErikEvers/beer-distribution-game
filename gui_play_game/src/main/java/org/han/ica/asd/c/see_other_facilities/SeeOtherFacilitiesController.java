@@ -46,21 +46,34 @@ public class SeeOtherFacilitiesController {
         FacilityLinkedTo[] links = playerComponent.seeOtherFacilities();
 
         ArrayList<Facility> drawnFacilities = new ArrayList<>();
-        ArrayList<Facility> drawnEdges = new ArrayList<>();
+        ArrayList<FacilityRectangle> drawnFacilityRectangles = new ArrayList<>();
+        ArrayList<FacilityLinkedTo> drawnEdges = new ArrayList<>();
 
         for(FacilityLinkedTo link : links) {
             if(!drawnFacilities.contains(link.getFacilityDeliver())) {
-                FacilityRectangle rectangle1 = drawFacility(link.getFacilityDeliver());
+                drawnFacilityRectangles.add(drawFacility(link.getFacilityDeliver()));
                 drawnFacilities.add(link.getFacilityDeliver());
             }
 
             if(!drawnFacilities.contains(link.getFacilityOrder())) {
-                FacilityRectangle rectangle2 = drawFacility(link.getFacilityOrder());
+                drawnFacilityRectangles.add(drawFacility(link.getFacilityOrder()));
                 drawnFacilities.add(link.getFacilityOrder());
             }
-
+            
             EdgeLine line = new EdgeLine();
-            line.drawLine(link.getFacilityDeliver(), link.getFacilityOrder(), rectangle1);
+            FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,"","",""));
+            FacilityRectangle rectangle2 = new FacilityRectangle(new Facility("",0,"","",""));
+
+            for(FacilityRectangle rectangle : drawnFacilityRectangles) {
+                if(rectangle.getFacility() == link.getFacilityDeliver()) {
+                    rectangle1 = rectangle;
+                }
+                if(rectangle.getFacility() == link.getFacilityOrder()) {
+                    rectangle2 = rectangle;
+                }
+            }
+
+            line.drawLine(rectangle1, rectangle2, rectangle1.getTranslateX(), rectangle1.getTranslateY());
         }
     }
 
@@ -68,12 +81,16 @@ public class SeeOtherFacilitiesController {
 
         if(facility.getFacilityType().equals("Factory")) {
             drawFactory(facility);
+            return factories.get(factories.size()-1);
         } else if(facility.getFacilityType().equals("Regional warehouse")) {
             drawRegionalWarehouse(facility);
+            return warehouses.get(warehouses.size()-1);
         } else if(facility.getFacilityType().equals("Wholesale")) {
             drawWholesaler(facility);
+            return wholesalers.get(wholesalers.size()-1);
         } else if(facility.getFacilityType().equals("Retailer")) {
             drawRetailer(facility);
+            return retailers.get(retailers.size()-1);
         } else {
             throw new FacilityLoadingError("Error while drawing facility: "+facility.toString());
         }
