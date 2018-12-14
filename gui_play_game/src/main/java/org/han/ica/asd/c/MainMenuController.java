@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.util.ResourceBundle;
 
 public class MainMenuController {
     @FXML
@@ -25,8 +24,7 @@ public class MainMenuController {
     }
 
     public void handleCreateGameButtonClick() throws Exception{
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResources");
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/PlayGameFactory.fxml"), resourceBundle));
+        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/PlayGameFactory.fxml")));
         Stage stage = (Stage) createGameButton.getScene().getWindow();
         stage.setScene(scene);
     }
