@@ -1,7 +1,10 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.*;
-import org.junit.jupiter.api.AfterEach;
+import org.han.ica.asd.c.model.BeerGame;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,7 +17,9 @@ import java.util.logging.Logger;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class PersistenceTest {

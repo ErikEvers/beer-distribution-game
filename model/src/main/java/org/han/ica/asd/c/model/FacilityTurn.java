@@ -36,7 +36,7 @@ public class FacilityTurn {
         return facilityIdOrder;
     }
 
-    public void setFacilityOrder(int facilityIdOrder) {
+    public void setFacilityIdOrder(int facilityIdOrder) {
         this.facilityIdOrder = facilityIdOrder;
     }
 
