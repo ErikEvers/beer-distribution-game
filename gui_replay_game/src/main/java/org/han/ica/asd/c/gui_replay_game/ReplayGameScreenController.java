@@ -3,14 +3,13 @@ package org.han.ica.asd.c.gui_replay_game;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 
 public class ReplayGameScreenController {
 
@@ -21,34 +20,63 @@ public class ReplayGameScreenController {
     private URL location;
 
     @FXML
-    private AreaChart<String, Number> replayGameGraph;
+    private LineChart<?, ?> replayGraph;
 
     @FXML
-    private CategoryAxis xAxisGraph;
+    private CheckBox factoryCheckbox;
 
     @FXML
-    private NumberAxis yAxisGraph;
+    private CheckBox warehouseCheckBox;
 
     @FXML
-    private Button previousButton;
+    private CheckBox wholesaleCheckbox;
 
     @FXML
-    private Button nextButton;
+    private CheckBox retailCheckbox;
+
+    @FXML
+    private ComboBox<?> facilityCombobox;
+
+    @FXML
+    private Button prevRoundButton;
+
+    @FXML
+    private Button nextRoundButton;
+
+    @FXML
+    private TextField currentRoundTextfield;
+
+    @FXML
+    private TextField totalRoundsTextfield;
+
+    @FXML
+    public void currentRoundEntered(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void nextRoundButtonClicked(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void prevRoundButtonClicked(ActionEvent event) {
+
+    }
 
     @FXML
     void initialize() {
-        assert replayGameGraph != null : "fx:id=\"replayGameGraph\" was not injected: check your FXML file 'ReplayGameScreen.fxml'.";
-        assert xAxisGraph != null : "fx:id=\"xAxisGraph\" was not injected: check your FXML file 'ReplayGameScreen.fxml'.";
-        assert yAxisGraph != null : "fx:id=\"yAxisGraph\" was not injected: check your FXML file 'ReplayGameScreen.fxml'.";
-        assert previousButton != null : "fx:id=\"previousButton\" was not injected: check your FXML file 'ReplayGameScreen.fxml'.";
-        assert nextButton != null : "fx:id=\"nextButton\" was not injected: check your FXML file 'ReplayGameScreen.fxml'.";
+        assert replayGraph != null : "fx:id=\"replayGraph\" was not injected: check your FXML file 'Untitled'.";
+        assert factoryCheckbox != null : "fx:id=\"factoryCheckbox\" was not injected: check your FXML file 'Untitled'.";
+        assert warehouseCheckBox != null : "fx:id=\"warehouseCheckBox\" was not injected: check your FXML file 'Untitled'.";
+        assert wholesaleCheckbox != null : "fx:id=\"wholesaleCheckbox\" was not injected: check your FXML file 'Untitled'.";
+        assert retailCheckbox != null : "fx:id=\"retailCheckbox\" was not injected: check your FXML file 'Untitled'.";
+        assert facilityCombobox != null : "fx:id=\"facilityCombobox\" was not injected: check your FXML file 'Untitled'.";
+        assert prevRoundButton != null : "fx:id=\"prevRoundButton\" was not injected: check your FXML file 'Untitled'.";
+        assert nextRoundButton != null : "fx:id=\"nextRoundButton\" was not injected: check your FXML file 'Untitled'.";
+        assert currentRoundTextfield != null : "fx:id=\"currentRoundTextfield\" was not injected: check your FXML file 'Untitled'.";
+        assert totalRoundsTextfield != null : "fx:id=\"totalRoundsTextfield\" was not injected: check your FXML file 'Untitled'.";
 
-        xAxisGraph.setLabel("Rounds");
-        yAxisGraph.setLabel("Budget");
-
-        XYChart.Series<String, Number> series1 = new XYChart.Series();
-        series1.getData().add(new XYChart.Data( "1", 80));
-        replayGameGraph.getData().add(series1);
     }
 }
 
