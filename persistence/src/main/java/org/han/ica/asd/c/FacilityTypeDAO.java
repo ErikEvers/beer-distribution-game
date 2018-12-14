@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
 
@@ -22,9 +23,15 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     private static final String DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME = "DELETE FROM FacilityType WHERE GameId = ?;";
     private static final String READ_FACILITYTYPES_FOR_A_BEERGAME = "SELECT FacilityName, ValueIncomingGoods, ValueOutgoingGoods, " +
             "StockHoldingCosts, OpenOrderCosts, StartingBudget, StartingOrder FROM FacilityType WHERE GameId = ?;";
+    private static final String READ_SPECIFIC_FACILITYTYPE = "SELECT ValueIncomingGoods, ValueOutgoingGoods, " +
+            "StockHoldingCosts, OpenOrderCosts, StartingBudget, StartingOrder FROM FacilityType WHERE GameId = ? AND FacilityName = ?;";
     private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
 
     private DatabaseConnection databaseConnection;
+
+    public FacilityTypeDAO() {
+        this.databaseConnection = DBConnection.getInstance();
+    }
 
     /**
      * A method to insert a new FacilityType in the database.
@@ -85,22 +92,10 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to delete all FacilityTypes linked to a specific game.
      *
-     * @param gameId The identifier of the game from witch all FacilityTypes have to be deleted.
+     * @param gameId The identifier of the game from which all FacilityTypes have to be deleted.
      */
     public void deleteAllFacilitytypesForABeergame(String gameId) {
-        Connection conn;
-        try {
-            conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
-
-                pstmt.setString(1, gameId);
-
-                pstmt.executeUpdate();
-            }
-            conn.commit();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
+        FacilityDAO.executePreparedStatement(gameId, databaseConnection, DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME, LOGGER);
     }
 
     /**
@@ -141,7 +136,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                 pstmt.setString(1, gameId);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        types.add(new FacilityType(rs.getString("GameId"),
+                        types.add(new FacilityType(gameId,
                                 rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"),
                                 rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
                                 rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
@@ -153,5 +148,28 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
             LOGGER.log(Level.SEVERE, e.toString());
         }
         return types;
+    }
+
+    public FacilityType readSpecificFacilityType(String gameId, String facilityName) {
+        Connection conn;
+        FacilityType type = null;
+        try {
+            conn = databaseConnection.connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
+                pstmt.setString(1, gameId);
+                pstmt.setString(2, facilityName);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        type = new FacilityType(gameId, facilityName, rs.getInt("ValueIncomingGoods"),
+                                rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
+                                rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
+                                rs.getInt("StartingOrder"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString());
+        }
+        return type;
     }
 }
