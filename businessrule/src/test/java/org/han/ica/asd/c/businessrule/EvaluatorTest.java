@@ -1,7 +1,10 @@
 package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.*;
+import org.han.ica.asd.c.businessrule.parser.ast.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
@@ -12,13 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static junit.framework.TestCase.*;
-import static org.mockito.Mockito.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
+import static org.mockito.Mockito.any;
 
 class EvaluatorTest {
     private Evaluator evaluator = new Evaluator();
