@@ -25,16 +25,17 @@ public class FacilityLinkedTo {
         return facilityIdOrder;
     }
 
-    public void setFacilityIdOrder(int facilityOrder) {
-        this.facilityIdOrder = facilityOrder;
+    public void setFacilityIdOrder(int facilityIdOrder) {
+        this.facilityIdOrder = facilityIdOrder;
     }
 
     public int getFacilityIdDeliver() {
         return facilityIdDeliver;
     }
 
-    public void setFacilityIdDeliver(int facilityDeliver) {
+    public void setFacilityIdDeliver(int facilityIdDeliver) {
         this.facilityIdDeliver = facilityIdDeliver;
+
     }
 
     public boolean isActive() {
