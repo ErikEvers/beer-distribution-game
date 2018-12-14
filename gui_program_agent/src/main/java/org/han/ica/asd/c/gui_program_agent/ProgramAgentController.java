@@ -102,8 +102,7 @@ public class ProgramAgentController {
      */
     private void setSaveButtonAction() {
         save.setOnAction(event -> {
-            businessRuleErrorTextArea.clear();
-            businessRuleTexFlow.getChildren().clear();
+            clearOldScreenValues();
             String agentName = agentNameInput.getText();
             String businessRulesUserInput = businessRuleInput.getText();
             if (checkIfStringEmpty(agentName)) {
@@ -112,25 +111,33 @@ public class ProgramAgentController {
                 setProgramAgentPopup(BUSINESS_RULE_ERROR_HEADER, BUSINESS_RULE_ERROR_BODY, Color.RED);
             } else {
                 List<UserInputBusinessRule> result = iBusinessRules.programAgent(agentName, businessRulesUserInput);
-
-                StringBuilder errors = new StringBuilder();
-                List<Text> textFlow = new ArrayList<>();
-                for (UserInputBusinessRule businessRule : result) {
-                    Text text = new Text(businessRule.getBusinessRule() + "\n");
-                    if (businessRule.hasError()) {
-                        errors.append("User input error on line ").append(businessRule.getLineNumber()).append(": ").append(businessRule.getErrorMessage()).append("\n");
-                        text.setFill(Color.RED);
-                    }
-                    textFlow.add(text);
-                }
-                businessRuleTexFlow.getChildren().addAll(textFlow);
-                if (errors.toString().isEmpty()) {
-                    setProgramAgentPopup(BUSINESS_RULE_SUCCESS_HEADER, BUSINESS_RULE_SUCCESS_BODY, Color.GREEN);
-                } else {
-                    businessRuleErrorTextArea.setText(errors.toString());
-                }
+                setScreenValuesBasedOnResult(result);
             }
         });
+    }
+
+    private void setScreenValuesBasedOnResult(List<UserInputBusinessRule> result) {
+        StringBuilder errors = new StringBuilder();
+        List<Text> textFlow = new ArrayList<>();
+        for (UserInputBusinessRule businessRule : result) {
+            Text text = new Text(businessRule.getBusinessRule() + "\n");
+            if (businessRule.hasError()) {
+                errors.append("User input error on line ").append(businessRule.getLineNumber()).append(": ").append(businessRule.getErrorMessage()).append("\n");
+                text.setFill(Color.RED);
+            }
+            textFlow.add(text);
+        }
+        businessRuleTexFlow.getChildren().addAll(textFlow);
+        if (errors.toString().isEmpty()) {
+            setProgramAgentPopup(BUSINESS_RULE_SUCCESS_HEADER, BUSINESS_RULE_SUCCESS_BODY, Color.GREEN);
+        } else {
+            businessRuleErrorTextArea.setText(errors.toString());
+        }
+    }
+
+    private void clearOldScreenValues() {
+        businessRuleErrorTextArea.clear();
+        businessRuleTexFlow.getChildren().clear();
     }
 
     /***
