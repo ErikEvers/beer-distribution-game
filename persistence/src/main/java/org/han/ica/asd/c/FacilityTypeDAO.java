@@ -128,6 +128,29 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     }
 
     /**
+     * A method to delete all facilitytypes that are linked to a game.
+     *
+     * @param gameId The game identifier from which the facilitytypes have to be deleted.
+     */
+    public void deleteAllFacilityTypesForABeergame(String gameId) {
+        Connection conn;
+        try {
+            conn = databaseConnection.connect();
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
+                    conn.setAutoCommit(false);
+                    pstmt.setString(1, gameId);
+
+                    pstmt.executeUpdate();
+                }
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+    /**
      * A method to retrieve all the FacilityTypes from a specific game.
      *
      * @param gameId The identifier of a game from witch the FacilityTypes need to be retrieved.
