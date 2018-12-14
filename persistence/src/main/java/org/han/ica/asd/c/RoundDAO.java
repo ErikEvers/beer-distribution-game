@@ -66,9 +66,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 					pstmt.setInt(2, roundId);
 
 					try (ResultSet rs = pstmt.executeQuery()) {
-						while (rs.next()) {
-							round = new Round(rs.getString("GameId"), rs.getInt("RoundId"));
-						}
+						round = new Round(rs.getString("GameId"), rs.getInt("RoundId"));
 					}
 					conn.commit();
 				}

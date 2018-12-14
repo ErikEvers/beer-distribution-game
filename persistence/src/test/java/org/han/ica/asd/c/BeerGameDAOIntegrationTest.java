@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 
 
 public class BeerGameDAOIntegrationTest {
-
 	private static final Logger LOGGER = Logger.getLogger(BeerGameDAOIntegrationTest.class.getName());
 	private BeergameDAO beergameDAO;
 

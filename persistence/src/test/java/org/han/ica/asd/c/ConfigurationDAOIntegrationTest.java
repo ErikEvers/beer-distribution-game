@@ -15,13 +15,11 @@ import java.util.logging.Logger;
 
 class ConfigurationDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(BeerGameDAOIntegrationTest.class.getName());
-
-	private ConfigurationDAO configurationDAO;
 	private static final Configuration CONFIGURATION = new Configuration("BeerGameZutphen13_12_2018",40,1,1,1,1,1,99,false,false);
 	private static final Configuration CONFIGURATION2 = new Configuration("BeerGameArnhem13_12_2018",40,1,1,1,1,1,99,false,false);
 	private static final Configuration CONFIGURATION3 = new Configuration("BeerGameZutphen13_12_2018",50,51,51,51,51,51,599,true,true);
 
-
+	private ConfigurationDAO configurationDAO;
 
 	@BeforeEach
 	public void setUp() {

@@ -15,15 +15,11 @@ import java.util.logging.Logger;
 
 class RoundDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(RoundDAOIntegrationTest.class.getName());
-
 	private RoundDAO roundDAO;
-
-
 
 	@BeforeEach
 	void setUp() {
 		DBConnectionTest.getInstance().createNewDatabase();
-
 	}
 
 	@AfterEach

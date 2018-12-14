@@ -23,13 +23,8 @@ class FacilityTurnDAOIntegrationTest {
 	private static final FacilityTurn FACILITY_TURN2 = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,3,50,50,50,50,50);
 	private static final FacilityTurn FACILITY_TURN3 = new FacilityTurn("BeerGameZutphen13_12_2018",1,1,2,150,150,150,150,150);
 
-
 	private FacilityTurnDAO facilityTurnDAO;
 	private RoundDAO roundDAO;
-
-
-
-
 
 	@BeforeEach
 	void setUp() {
@@ -46,15 +41,12 @@ class FacilityTurnDAOIntegrationTest {
 		facilityTurnDAO = new FacilityTurnDAO();
 		roundDAO = new RoundDAO();
 
-
-
 		DatabaseConnection connection = DBConnectionTest.getInstance();
 		setDatabaseConnection(facilityTurnDAO, connection);
 		setDatabaseConnection(roundDAO,connection);
 
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
-
 
 		FacilityTurn facilityTurnDb = facilityTurnDAO.fetchTurn(new Round("BeerGameZutphen13_12_2018",1),new FacilityLinkedTo("BeerGameZutphen13_12_2018",1,2,false));
 
@@ -82,7 +74,6 @@ class FacilityTurnDAOIntegrationTest {
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.createTurn(FACILITY_TURN2);
 
-
 		List<FacilityTurn> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
 		Assert.assertEquals(2,facilityTurnDb.size());
 	}
@@ -99,7 +90,6 @@ class FacilityTurnDAOIntegrationTest {
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.updateTurn(FACILITY_TURN3);
-
 
 		FacilityTurn facilityTurnDb = facilityTurnDAO.fetchTurn(new Round("BeerGameZutphen13_12_2018",1),new FacilityLinkedTo("BeerGameZutphen13_12_2018",1,2,false));
 

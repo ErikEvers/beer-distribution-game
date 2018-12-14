@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAOIntegrationTest.class.getName());
-	public static final GameBusinessRulesInFacilityTurn GAME_BUSINESS_RULES_IN_FACILITY_TURN = new GameBusinessRulesInFacilityTurn(1,1,2,"BeerGameZutphen13_12_2018","Henk","als voorraad minder dan 10 dan bestellen bij frits","");
+	private static final GameBusinessRulesInFacilityTurn GAME_BUSINESS_RULES_IN_FACILITY_TURN = new GameBusinessRulesInFacilityTurn(1,1,2,"BeerGameZutphen13_12_2018","Henk","als voorraad minder dan 10 dan bestellen bij frits","");
 	private static final GameBusinessRulesInFacilityTurn GAME_BUSINESS_RULES_IN_FACILITY_TURN2 = new GameBusinessRulesInFacilityTurn(2,2,3,"BeerGameZutphen13_12_2018","Henk","als voorraad minder dan 10 dan bestellen bij frits","");;
 
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;

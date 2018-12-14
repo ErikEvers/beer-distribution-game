@@ -40,16 +40,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 
 					conn.setAutoCommit(false);
 
-					pstmt.setString(1, configuration.getGameId());
-					pstmt.setInt(2, configuration.getAmountOfRounds());
-					pstmt.setInt(3, configuration.getAmountOfFactories());
-					pstmt.setInt(4, configuration.getAmountOfWholesales());
-					pstmt.setInt(5, configuration.getAmountOfDistributors());
-					pstmt.setInt(6, configuration.getAmountOfRetailers());
-					pstmt.setInt(7, configuration.getMinimalOrderRetail());
-					pstmt.setInt(8, configuration.getMaximumOrderRetail());
-					pstmt.setBoolean(9, configuration.isContinuePlayingWhenBankrupt());
-					pstmt.setBoolean(10, configuration.isInsightFacilities());
+					setPreparedStatement(configuration, pstmt);
 
 					pstmt.executeUpdate();
 				}
@@ -59,6 +50,19 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 			LOGGER.log(Level.SEVERE,e.toString());
 			databaseConnection.rollBackTransaction(conn);
 		}
+	}
+
+	private void setPreparedStatement(Configuration configuration, PreparedStatement pstmt) throws SQLException {
+		pstmt.setString(1, configuration.getGameId());
+		pstmt.setInt(2, configuration.getAmountOfRounds());
+		pstmt.setInt(3, configuration.getAmountOfFactories());
+		pstmt.setInt(4, configuration.getAmountOfWholesales());
+		pstmt.setInt(5, configuration.getAmountOfDistributors());
+		pstmt.setInt(6, configuration.getAmountOfRetailers());
+		pstmt.setInt(7, configuration.getMinimalOrderRetail());
+		pstmt.setInt(8, configuration.getMaximumOrderRetail());
+		pstmt.setBoolean(9, configuration.isContinuePlayingWhenBankrupt());
+		pstmt.setBoolean(10, configuration.isInsightFacilities());
 	}
 
 	/**
