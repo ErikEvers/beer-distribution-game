@@ -7,6 +7,7 @@ public class Facility {
     private String ipAddress;
     private String gameAgentName;
 
+
     public Facility(String gameId, int facilityId, FacilityType facilityType, String ipAddress, String gameAgentName) {
         this.gameId = gameId;
         this.facilityId = facilityId;
