@@ -27,6 +27,7 @@
         <module>player</module>
         <module>replay</module>
         <module>bootstrap</module>
+        <module>gui_main_menu</module>
         <module>gui_program_agent</module>
         <module>gui_play_game</module>
         <module>gui_configure_game</module>
