@@ -2,8 +2,8 @@ package org.han.ica.asd.c.model;
 
 public class FacilityTurn {
     private int roundId;
-    private Facility facilityOrder;
-    private Facility facilityDeliver;
+    private int facilityIdOrder;
+    private int facilityIdDeliver;
     private String gameId;
     private int stock;
     private int remainingBudget;
@@ -11,11 +11,11 @@ public class FacilityTurn {
     private int openOrder;
     private int outgoingGoods;
 
-    public FacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
+    public FacilityTurn(String gameId, int roundId, int facilityIdOrder, int facilityIdDeliver, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
         this.roundId = roundId;
-        this.facilityOrder = facilityLinkedTo.getFacilityOrder();
-        this.facilityDeliver = facilityLinkedTo.getFacilityDeliver();
-        this.gameId = facilityLinkedTo.getGameId();
+        this.facilityIdOrder = facilityIdOrder;
+        this.facilityIdDeliver = facilityIdDeliver;
+        this.gameId = gameId;
         this.stock = stock;
         this.remainingBudget = remainingBudget;
         this.order = order;
@@ -31,20 +31,20 @@ public class FacilityTurn {
         this.roundId = roundId;
     }
 
-    public Facility getFacilityOrder() {
-        return facilityOrder;
+    public int getFacilityIdOrder() {
+        return facilityIdOrder;
     }
 
-    public void setFacilityOrder(Facility facilityOrder) {
-        this.facilityOrder = facilityOrder;
+    public void setFacilityIdOrder(int facilityIdOrder) {
+        this.facilityIdOrder = facilityIdOrder;
     }
 
-    public Facility getFacilityDeliver() {
-        return facilityDeliver;
+    public int getFacilityIdDeliver() {
+        return facilityIdDeliver;
     }
 
-    public void setFacilityDeliver(Facility facilityDeliver) {
-        this.facilityDeliver = facilityDeliver;
+    public void setFacilityDeliver(int facilityIdDeliver) {
+        this.facilityIdDeliver = facilityIdDeliver;
     }
 
     public String getGameId() {
