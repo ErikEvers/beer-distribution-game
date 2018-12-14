@@ -11,7 +11,7 @@ public class FacilityTurn {
     private int openOrder;
     private int outgoingGoods;
 
-    public FacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
+    public FacilityTurn(String gameId, int facilityIdOrder, int facilityIdDeliver, int roundId, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
         this.roundId = roundId;
         this.facilityIdOrder = facilityIdOrder;
         this.facilityIdDeliver = facilityIdDeliver;

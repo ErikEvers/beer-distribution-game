@@ -82,7 +82,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 					pstmt.setInt(2, roundId);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							turns.add(new FacilityTurn(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getString("GameId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount")));
+							turns.add(new FacilityTurn(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount")));
 						}
 					}
 				}
@@ -111,10 +111,10 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURN)) {
 					pstmt.setString(1,round.getGameId());
 					pstmt.setInt(2,round.getRoundId());
-					pstmt.setInt(3,facilityLinkedTo.getFacilityIdOrder().getFacilityId());
-					pstmt.setInt(4,facilityLinkedTo.getFacilityIdDeliver().getFacilityId());
+					pstmt.setInt(3,facilityLinkedTo.getFacilityIdOrder());
+					pstmt.setInt(4,facilityLinkedTo.getFacilityIdDeliver());
 					try (ResultSet rs = pstmt.executeQuery()){
-						facilityTurn = new FacilityTurn(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getString("GameId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
+						facilityTurn = new FacilityTurn(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
 					}
 				}
 			}
