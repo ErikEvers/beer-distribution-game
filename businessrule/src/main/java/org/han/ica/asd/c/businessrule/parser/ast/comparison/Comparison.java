@@ -102,15 +102,12 @@ public class Comparison extends Expression {
         OperationValue operationValueRight = this.right.getOperationValue();
 
         if (operationValueLeft instanceof Operation) {
-            Operation operation = (Operation) operationValueLeft;
-            operationValueLeft = operation.resolveOperation();
+            operationValueLeft = ((Operation) operationValueLeft).resolveOperation();
         }
 
         if (operationValueRight instanceof Operation) {
-            Operation operation = (Operation) operationValueRight;
-            operationValueRight = operation.resolveOperation();
+            operationValueRight = ((Operation) operationValueRight).resolveOperation();
         }
-
 
         int valueLeft = ((Value) operationValueLeft).getIntegerValue();
         int valueRight = ((Value) operationValueRight).getIntegerValue();
