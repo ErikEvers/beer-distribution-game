@@ -1,7 +1,7 @@
 package org.han.ica.asd.c;
 
 
-import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.BeerGame;
 
@@ -29,7 +29,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 
 	public BeergameDAO(){
-		databaseConnection = DBConnectionFactory.getInstance("");
+		databaseConnection = DBConnection.getInstance();
 	}
 
 	/**

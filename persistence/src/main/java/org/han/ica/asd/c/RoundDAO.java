@@ -1,6 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.Round;
 
@@ -23,7 +23,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 
 	public RoundDAO(){
 		turnDAO = new FacilityTurnDAO();
-		databaseConnection = DBConnectionFactory.getInstance("");
+		databaseConnection = DBConnection.getInstance();
 	}
 
 

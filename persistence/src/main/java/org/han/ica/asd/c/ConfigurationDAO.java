@@ -1,6 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.Configuration;
 
@@ -25,7 +25,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	private DatabaseConnection databaseConnection;
 
 	public ConfigurationDAO(){
-		databaseConnection = DBConnectionFactory.getInstance("");
+		databaseConnection = DBConnection.getInstance();
 	}
 	/**
 	 * A method which creates a configuration in the SQLite Database
@@ -62,7 +62,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	}
 
 	/**
-	 * A method which reads and returns configurations of a specific game
+	 * A method which reads and returns all configurations
 	 * @return A list of configurations of the found configurations of a specific game
 	 */
 	public List<Configuration> readConfigurations() {

@@ -1,6 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 
@@ -20,7 +20,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private DatabaseConnection databaseConnection;
 
 	public GameBusinessRulesInFacilityTurnDAO() {
-		databaseConnection = DBConnectionFactory.getInstance("");
+		databaseConnection = DBConnection.getInstance();
 	}
 
 	/**
