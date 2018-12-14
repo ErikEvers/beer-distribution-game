@@ -7,8 +7,20 @@ public class Value extends OperationValue {
     private String suffix = ")";
     private String value;
 
+    /**
+     * Adds a value to the value string
+     * @param value Value to be added to the value string
+     * @return Returns itself so that it can be used immediately
+     */
+
     @Override
     public Value addValue(String value) {
+        if("smallest".equals(value) || "lowest".equals(value)){
+            value = "lowest";
+        } else if ("biggest".equals(value) || "highest".equals(value)){
+            value = "highest";
+        }
+
         if (this.value == null) {
             this.value = value;
         } else {
@@ -17,15 +29,28 @@ public class Value extends OperationValue {
         return this;
     }
 
+    /**
+     * Encodes the parsed tree in a single string so that it can be stored in the database
+     * @param stringBuilder Stringbuilder that is used to encode the tree
+     */
     @Override
     public void encode(StringBuilder stringBuilder) {
         stringBuilder.append(prefix).append(value).append(suffix);
     }
 
+    /**
+     * Getter
+     * @return Returns the value
+     */
     public String getValue() {
         return this.value;
     }
 
+    /**
+     * Equals function used for unit testing
+     * @param o Object that needs to be checked if it's equal to this object
+     * @return Returns true or false depending on if it's equal or not
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -38,6 +63,10 @@ public class Value extends OperationValue {
         return Objects.equals(value, valueObject.value);
     }
 
+    /**
+     * Hash function used for unit testing
+     * @return Returns the hashcode
+     */
     @Override
     public int hashCode() {
         return Objects.hash(value);

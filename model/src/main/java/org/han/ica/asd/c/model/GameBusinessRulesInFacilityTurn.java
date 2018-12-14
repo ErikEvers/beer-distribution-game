@@ -2,20 +2,21 @@ package org.han.ica.asd.c.model;
 
 public class GameBusinessRulesInFacilityTurn {
     private int roundId;
-    private Facility facilityIdDeliver;
-    private Facility facilityIdOrder;
+    private int facilityIdDeliver;
+    private int facilityIdOrder;
     private String gameId;
     private String gameAgentName;
     private String gameBusinessRule;
+    private String gameAST;
 
-    public GameBusinessRulesInFacilityTurn(int roundId, FacilityLinkedTo facilityLinkedTo, String gameId, String gameAgentName, String gameBusinessRule) {
+    public GameBusinessRulesInFacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
         this.roundId = roundId;
-        this.facilityIdDeliver = facilityLinkedTo.getFacilityDeliver();
-        this.facilityIdOrder = facilityLinkedTo.getFacilityOrder();
+        this.facilityIdDeliver = facilityIdDeliver;
+        this.facilityIdOrder = facilityIdOrder;
         this.gameId = gameId;
         this.gameAgentName = gameAgentName;
-
         this.gameBusinessRule = gameBusinessRule;
+        this.gameAST = gameAST;
     }
 
     public int getRoundId() {
@@ -26,19 +27,19 @@ public class GameBusinessRulesInFacilityTurn {
         this.roundId = roundId;
     }
 
-    public Facility getFacilityDeliver() {
+    public int getFacilityIdDeliver() {
         return facilityIdDeliver;
     }
 
-    public void setFacilityDeliver(Facility facilityIdDeliver) {
+    public void setFacilityIdDeliver(int facilityIdDeliver) {
         this.facilityIdDeliver = facilityIdDeliver;
     }
 
-    public Facility getFacilityOrder() {
+    public int getFacilityIdOrder() {
         return facilityIdOrder;
     }
 
-    public void setFacilityOrder(Facility facilityIdOrder) {
+    public void setFacilityIdOrder(int facilityIdOrder) {
         this.facilityIdOrder = facilityIdOrder;
     }
 
@@ -64,5 +65,13 @@ public class GameBusinessRulesInFacilityTurn {
 
     public void setGameBusinessRule(String gameBusinessRule) {
         this.gameBusinessRule = gameBusinessRule;
+    }
+
+    public String getGameAST() {
+        return gameAST;
+    }
+
+    public void setGameAST(String gameAST) {
+        this.gameAST = gameAST;
     }
 }

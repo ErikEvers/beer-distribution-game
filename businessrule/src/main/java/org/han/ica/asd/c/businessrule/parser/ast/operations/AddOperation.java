@@ -7,10 +7,17 @@ public class AddOperation extends Operation {
     private String prefix = "Add(";
     private String suffix = ")";
 
+    /**
+     * Constructor
+     */
     public AddOperation() {
         super.calculationOperator = new CalculationOperator(OperationType.ADD.getOperation());
     }
 
+    /**
+     * Encodes the parsed tree in a single string so that it can be stored in the database
+     * @param stringBuilder Stringbuilder that is used to encode the tree
+     */
     @Override
     public void encode(StringBuilder stringBuilder) {
         super.encode(stringBuilder, prefix, suffix);
