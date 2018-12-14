@@ -12,7 +12,6 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import java.util.*;
 
 public class Evaluator {
-    private List<UserInputBusinessRule> businessRulesInput = new ArrayList<>();
     private boolean hasErrors = false;
     private boolean defaultBool = false;
 
@@ -23,7 +22,6 @@ public class Evaluator {
      * @return Returns if the businessRule has a error.
      */
     public boolean evaluate(Map<UserInputBusinessRule, BusinessRule> businessRulesMap) {
-        this.businessRulesInput.addAll(businessRulesMap.keySet());
         Counter defaultCounter = new Counter();
         for (Map.Entry<UserInputBusinessRule, BusinessRule> entry : businessRulesMap.entrySet()) {
             Deque<ASTNode> deque = new LinkedList<>();
@@ -274,9 +272,5 @@ public class Evaluator {
                 && ((ActionReference) current).getAction().equals("deliver")) {
             inputBusinessRule.setErrorMessage("Deliver can not be used in a default statement");
         }
-    }
-
-    public List<UserInputBusinessRule> getBusinessRulesInput() {
-        return businessRulesInput;
     }
 }
