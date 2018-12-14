@@ -4,6 +4,7 @@ import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
 
 public class PlayerComponentFake {
+    //TODO: Implement actual playercomponent
     //Stub
 
     public FacilityLinkedTo[] seeOtherFacilities() {
@@ -27,5 +28,9 @@ public class PlayerComponentFake {
         array = new FacilityLinkedTo[]{link1, link2, link3, link4, link5, link6};
 
         return array;
+    }
+
+    public String requestFacilityInfo(Facility facility) {
+        return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
     }
 }

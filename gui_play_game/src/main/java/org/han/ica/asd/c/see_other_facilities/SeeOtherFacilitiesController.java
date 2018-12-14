@@ -1,15 +1,12 @@
 package org.han.ica.asd.c.see_other_facilities;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.han.ica.asd.c.fakes.PlayerComponentFake;
 import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityType;
-
 import java.util.ArrayList;
 
 public class SeeOtherFacilitiesController {
@@ -19,10 +16,10 @@ public class SeeOtherFacilitiesController {
     @FXML
     private AnchorPane facilitiesContainer;
 
-    private ArrayList<FacilityRectangle> factories = new ArrayList<FacilityRectangle>();
-    private ArrayList<FacilityRectangle> wholesalers = new ArrayList<FacilityRectangle>();
-    private ArrayList<FacilityRectangle> warehouses = new ArrayList<FacilityRectangle>();
-    private ArrayList<FacilityRectangle> retailers = new ArrayList<FacilityRectangle>();
+    private ArrayList<FacilityRectangle> factories = new ArrayList<>();
+    private ArrayList<FacilityRectangle> wholesalers = new ArrayList<>();
+    private ArrayList<FacilityRectangle> warehouses = new ArrayList<>();
+    private ArrayList<FacilityRectangle> retailers = new ArrayList<>();
 
     //Fake player component for testing purposes;
     private PlayerComponentFake playerComponent;
@@ -36,6 +33,8 @@ public class SeeOtherFacilitiesController {
 
     /**
      * Method that loads facilities with its relevant edges.
+     *
+     * First it draws the facilities connected through the edge (if they haven't been drawn yet). Then it draws the corresponding edge between the facilities.
      *
      * Throws facilityloadingerror when a facility is of an unknown type.
      *
@@ -82,6 +81,15 @@ public class SeeOtherFacilitiesController {
         }
     }
 
+    /**
+     * Draws the individual facility according to their type.
+     *
+     *
+     * @param facility
+     * @return
+     * @throws FacilityLoadingError
+     */
+
     private FacilityRectangle drawFacility(Facility facility) throws FacilityLoadingError {
 
         if(facility.getFacilityType().equals("Factory")) {
@@ -106,7 +114,10 @@ public class SeeOtherFacilitiesController {
      * @return New FacilityRectangle.
      */
     private FacilityRectangle createRectangle(Facility facility) {
-        return new FacilityRectangle(facility);
+        FacilityRectangle rectangle = new FacilityRectangle(facility);
+        Tooltip tooltip = new Tooltip(playerComponent.requestFacilityInfo(facility));
+        Tooltip.install(rectangle, tooltip);
+        return rectangle;
     }
 
     /**

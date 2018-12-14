@@ -78,6 +78,7 @@
             <Line endX="100.0" startX="-100.0" stroke="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label text="Actieve verbinding" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
             <Label text="Inactieve verbinding" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Label text="Houd de muis boven een faciliteit om diens status weer te geven" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
         </children>
       </GridPane>
       <HBox layoutX="14.0" layoutY="14.0" prefHeight="163.0" prefWidth="1000.0" AnchorPane.bottomAnchor="637.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
