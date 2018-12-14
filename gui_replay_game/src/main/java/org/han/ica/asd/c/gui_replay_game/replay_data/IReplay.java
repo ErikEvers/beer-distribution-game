@@ -13,7 +13,6 @@ public interface IReplay {
      * A List of Rounds which contain the data for each facility.
      */
     List<Round> showGraphOverview(String gameId);
-    //TODO: implementeer showGraphDetails() Onbekend wat de "details" nou zijn
 
     /**
      * Request data for a graph overview up to a specified round
@@ -25,15 +24,4 @@ public interface IReplay {
      * All Round data up to the given roundId where the index of the List corresponds with the round
      */
     List<Round> showRoundGraph(String gameId, int roundId);
-
-    /**
-     * Get data for next Round.
-     * @param gameId
-     * Primary identifier to locate a given game.
-     * @param currentRoundId
-     * Primary identifier to locate a round within a game
-     * @return
-     * Round data for the next Round
-     */
-    Round stepForward(String gameId, int currentRoundId);
 }
