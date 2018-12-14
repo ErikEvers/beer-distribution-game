@@ -2,13 +2,11 @@ package org.han.ica.asd.c.see_other_facilities;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fakes.PlayerComponentFake;
 import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.public_interfaces.IPlayerComponent;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
 
 import java.util.ArrayList;
 
@@ -38,32 +36,48 @@ public class SeeOtherFacilitiesController {
         mainContainer.getChildren().addAll();
         playerComponent = new PlayerComponentFake();
 
-        drawFacilities();
+        loadFacilityView();
     }
 
     /**
-     * Method that draws facilities with correct location & color.
+     * Method that loads facilities with its relevant edges.
      *
      * Throws facilityloadingerror when a facility is of an unknown type.
      *
      * @throws FacilityLoadingError
      */
 
-    private void drawFacilities() throws FacilityLoadingError {
-        Facility[] facilities = playerComponent.seeOtherFacilities();
+    private void loadFacilityView() throws FacilityLoadingError {
+        FacilityLinkedTo[] links = playerComponent.seeOtherFacilities();
 
-        for(Facility f : facilities) {
-            if(f.getFacilityType().equals("Factory")) {
-                drawFactory(f);
-            } else if(f.getFacilityType().equals("Regional warehouse")) {
-                drawRegionalWarehouse(f);
-            } else if(f.getFacilityType().equals("Wholesale")) {
-                drawWholesaler(f);
-            } else if(f.getFacilityType().equals("Retailer")) {
-                drawRetailer(f);
-            } else {
-                throw new FacilityLoadingError("Error while drawing facility: "+f.toString());
+        ArrayList<Facility> drawnFacilities = new ArrayList<>();
+        ArrayList<Facility> drawnEdges = new ArrayList<>();
+
+        for(FacilityLinkedTo link : links) {
+            if(!drawnFacilities.contains(link.getFacilityDeliver())) {
+                drawFacility(link.getFacilityDeliver());
+                drawnFacilities.add(link.getFacilityDeliver());
             }
+
+            if(!drawnFacilities.contains(link.getFacilityOrder())) {
+                drawFacility(link.getFacilityOrder());
+                drawnFacilities.add(link.getFacilityOrder());
+            }
+        }
+    }
+
+    private void drawFacility(Facility facility) throws FacilityLoadingError {
+
+        if(facility.getFacilityType().equals("Factory")) {
+            drawFactory(facility);
+        } else if(facility.getFacilityType().equals("Regional warehouse")) {
+            drawRegionalWarehouse(facility);
+        } else if(facility.getFacilityType().equals("Wholesale")) {
+            drawWholesaler(facility);
+        } else if(facility.getFacilityType().equals("Retailer")) {
+            drawRetailer(facility);
+        } else {
+            throw new FacilityLoadingError("Error while drawing facility: "+facility.toString());
         }
     }
 
