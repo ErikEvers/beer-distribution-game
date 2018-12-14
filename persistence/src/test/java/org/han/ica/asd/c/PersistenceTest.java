@@ -14,6 +14,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class PersistenceTest {
@@ -43,6 +44,12 @@ class PersistenceTest {
 
 	@Test
 	void fetchRoundDataTest() {
+		beerDisitributionGameDAO = mock(RoundDAO.class);
+		reflect(persistence,beerDisitributionGameDAO);
+		when(((RoundDAO)beerDisitributionGameDAO).getRound(anyString(),anyInt())).thenReturn(round);
+		persistence.fetchRoundData(anyString(),anyInt());
+		verify(((RoundDAO)beerDisitributionGameDAO), times(1)).getRound(anyString(),anyInt());
+
 	}
 
 	@Test
