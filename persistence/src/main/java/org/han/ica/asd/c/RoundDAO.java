@@ -1,26 +1,27 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnectionFactory;
+import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.Round;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RoundDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_ROUND = "INSERT INTO ROUND VALUES(?,?);";
-	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? && RoundId = ?;";
+	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? AND RoundId = ?;";
+	private static final String READ_ROUND = "SELECT * FROM ROUND WHERE GameId = ? AND RoundId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
 
-	private FacilityTurnDAO turnDAO;
+
 	private DatabaseConnection databaseConnection;
 
 	public RoundDAO(){
-		turnDAO = new FacilityTurnDAO();
-		databaseConnection = DBConnectionFactory.getInstance("");
+		databaseConnection = DBConnection.getInstance();
 	}
 
 
@@ -48,13 +49,34 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * A method which returns a specific round with all the turns from the SQLite Database
 	 * @param gameId The id of the game of the round which needs to be returned
 	 * @param roundId The id of the specific round which needs to be returned
-	 * @return A round object with turns
+	 * @return A round object
 	 */
 	public Round getRound(String gameId, int roundId){
-		Round round = new Round(gameId,roundId);
-		round.setTurns(turnDAO.fetchTurns(gameId,roundId));
-		return round;
-	}
+		Connection conn = databaseConnection.connect();
+		Round round = null;
+		try {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
+
+					conn.setAutoCommit(false);
+
+					pstmt.setString(1, gameId);
+					pstmt.setInt(2, roundId);
+
+					try (ResultSet rs = pstmt.executeQuery()) {
+						round = new Round(rs.getString("GameId"), rs.getInt("RoundId"));
+					}
+					conn.commit();
+				}
+			}
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
+
+				return round;
+			}
+
 
 
 	/**

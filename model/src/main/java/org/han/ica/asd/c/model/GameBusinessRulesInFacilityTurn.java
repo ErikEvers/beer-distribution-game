@@ -9,7 +9,7 @@ public class GameBusinessRulesInFacilityTurn {
     private String gameBusinessRule;
     private String gameAST;
 
-    public GameBusinessRulesInFacilityTurn(int roundId, int facilityIdDeliver, int facilityIdOrder, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
+    public GameBusinessRulesInFacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
         this.roundId = roundId;
         this.facilityIdDeliver = facilityIdDeliver;
         this.facilityIdOrder = facilityIdOrder;
