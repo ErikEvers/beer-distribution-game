@@ -19,6 +19,7 @@ import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,7 +83,7 @@ public class ProgramAgentController {
     private void setProgramAgentPopup(String headerText, String bodyText, Color headerColor) {
         Parent root;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProgramAgentPopup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProgramAgentPopup.fxml"), ResourceBundle.getBundle("languageResources"));
             root = loader.load();
             ProgramAgentPopupController programAgentPopupController = loader.getController();
             programAgentPopupController.setHeaderLabelText(headerText, headerColor);
@@ -117,7 +118,7 @@ public class ProgramAgentController {
                 for (UserInputBusinessRule businessRule : result) {
                     Text text = new Text(businessRule.getBusinessRule() + "\n");
                     if (businessRule.hasError()) {
-                        errors.append("User input error on line " + businessRule.getLineNumber() + ": " + businessRule.getErrorMessage()+ "\n");
+                        errors.append("User input error on line ").append(businessRule.getLineNumber()).append(": ").append(businessRule.getErrorMessage()).append("\n");
                         text.setFill(Color.RED);
                     }
                     textFlow.add(text);
@@ -140,7 +141,7 @@ public class ProgramAgentController {
         moreInfo.setOnAction(event -> {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"), ResourceBundle.getBundle("languageResources"));
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.show();

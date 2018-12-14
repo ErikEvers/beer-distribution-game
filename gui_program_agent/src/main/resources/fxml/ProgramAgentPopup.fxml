@@ -28,7 +28,9 @@
                <font>
                   <Font size="36.0" />
                </font></Label>
-            <Button fx:id="close" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: ff8000;" text="Close" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+             <Button fx:id="close" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                     style="-fx-background-color: ff8000;" text="%close_button" textFill="WHITE"
+                     GridPane.columnIndex="1" GridPane.rowIndex="4"/>
             <Line endX="400.0" startX="-100.0" strokeWidth="0.5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
              <Label fx:id="errorTextArea" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
          </children>
