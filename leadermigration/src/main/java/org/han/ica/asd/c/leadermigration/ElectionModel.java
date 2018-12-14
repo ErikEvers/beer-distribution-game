@@ -6,13 +6,14 @@ public class ElectionModel {
 
   private String concattedIp;
   private boolean elected = false;
-  private boolean victory = false;
   @Inject private Player currentPlayer;
   @Inject private Player receivingPlayer;
-  @Inject private Player newLeader;
-  @Inject private Player[] players;
 
 
+  /**
+   * Ensures that every Player has a unique ID for the bully algorithm
+   * @return
+   */
   public String getConcattedIp() {
     return concattedIp;
   }
@@ -29,36 +30,12 @@ public class ElectionModel {
     this.elected = elected;
   }
 
-  public boolean isVictory() {
-    return victory;
-  }
-
-  public void setVictory(boolean victory) {
-    this.victory = victory;
-  }
-
   public Player getCurrentPlayer() {
     return currentPlayer;
   }
 
   public void setCurrentPlayer(Player currentPlayer) {
     this.currentPlayer = currentPlayer;
-  }
-
-  public Player getNewLeader() {
-    return newLeader;
-  }
-
-  public void setNewLeader(Player newLeader) {
-    this.newLeader = newLeader;
-  }
-
-  public Player[] getPlayers() {
-    return players;
-  }
-
-  public void setPlayers(Player[] players) {
-    this.players = players;
   }
 
   public Player getReceivingPlayer() {

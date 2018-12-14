@@ -10,9 +10,10 @@ import java.util.logging.Logger;
 
 public class ElectionHandler {
 
-  private ElectionModel electionModel;
   private static Logger LOGGER;
+  @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
+  @Inject private List<ElectionModel> elections;
 
 
   public ElectionHandler() {
@@ -24,7 +25,6 @@ public class ElectionHandler {
    * @param players -> All connected players to send a message.
    */
   public void setupAlgorithm(Player[] players) {
-    electionModel = new ElectionModel();
     electionModel.setCurrentPlayer(getPlayerBiIp(players));
     Player currentPlayer = electionModel.getCurrentPlayer();
     electionModel.setConcattedIp(currentPlayer.concatIpId());
@@ -35,7 +35,6 @@ public class ElectionHandler {
    * @param players -> All the connected players (without the current player)
    */
   public List<ElectionModel> sendElectionMessage(Player[] players) {
-    List<ElectionModel> elections = new ArrayList<>();
     for(Player player: players) {
       // This if statement ensures to not send this to yourself.
       if(!electionModel.getCurrentPlayer().equals(player)) {
@@ -71,7 +70,7 @@ public class ElectionHandler {
     for(Player player: players) {
       // This if statement ensures to not this to yourself
       if(!electionModel.getCurrentPlayer().equals(player)) {
-        communication.sendVictoryMessage(this.electionModel.getCurrentPlayer(), player);
+        communication.sendVictoryMessage(winningModel.getCurrentPlayer(), player);
       }
     }
   }

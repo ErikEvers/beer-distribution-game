@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
 
-  private Player leader;
-  private Player[] players;
   private List<ElectionModel> answeredPlayers;
   @Inject IConnectorForLeaderElection communicator;
+  @Inject IPersistenceLeaderMigration iPersistenceLeaderMigration;
+  @Inject ElectionHandler electionHandler;
 
   public LeaderMigration() {
 
@@ -26,19 +26,11 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
    */
   public void startMigration(Player[] players) {
     answeredPlayers = new ArrayList<>();
-    this.players = players;
-    ElectionHandler electionHandler = new ElectionHandler();
     electionHandler.setupAlgorithm(players);
     answeredPlayers = electionHandler.sendElectionMessage(players);
-    int notElected = 0;
-    for(ElectionModel election: answeredPlayers) {
-      if(!election.isElected()) {
-        ++notElected;
-      }
-    }
-    if(notElected == 0) {
-      //TODO niet helemaal zeker over hoe ik dit aan ga pakken.
+    if(isWinner(answeredPlayers)){
       electionHandler.sendVictoryMessage(answeredPlayers.get(0), players);
+      iPersistenceLeaderMigration.saveNewLeader(answeredPlayers.get(0).getCurrentPlayer());
     }
   }
 
@@ -51,25 +43,34 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
     return electionHandler.sendAliveMessage(electionModel);
   }
 
+  /**
+   * Add this object to Observer.
+   */
   public void initialize() {
     communicator.addObserver(this);
   }
 
-//  /**
-//   * Receiving the Alive message of the receiving device
-//   * @param electionModel -> The electionModel with the elected state.
-//   */
-//  public void receiveAliveMessage(ElectionModel electionModel) {
-//    answeredPlayers.add(electionModel.getReceivingPlayer());
-//
-//  }
+  /**
+   * Checks if this device is the winner.
+   * @param players -> checks all returned electionModels
+   * @return -> true if all elected booleans are true
+   *         -> false if one of the elected booleans is false
+   */
+  private boolean isWinner(List<ElectionModel> players) {
+    for(ElectionModel model: players) {
+      if(!model.isElected()) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   /**
-   * Receiving the player who won the bully algorithm and becomes the leader of the network.
+   * Receiving the player who won the bully algorithm and calls the database.
    * @param electedPlayer -> The elected player.
    */
   public void receiveVictoryMessage(Player electedPlayer){
-    
+    iPersistenceLeaderMigration.saveNewLeader(electedPlayer);
   }
 
 }

@@ -4,5 +4,4 @@ public interface ILeaderMigration {
 
   void startMigration(Player[] players);
 
-
 }
