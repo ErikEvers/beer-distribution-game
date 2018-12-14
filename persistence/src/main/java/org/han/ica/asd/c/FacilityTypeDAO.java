@@ -42,18 +42,20 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         Connection conn;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
+            if(conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
+                    conn.setAutoCommit(false);
+                    pstmt.setString(1, facilityType.getGameId());
+                    pstmt.setString(2, facilityType.getFacilityName());
+                    pstmt.setInt(3, facilityType.getValueIncomingGoods());
+                    pstmt.setInt(4, facilityType.getValueOutgoingGoods());
+                    pstmt.setInt(5, facilityType.getStockHoldingCosts());
+                    pstmt.setInt(6, facilityType.getOpenOrderCosts());
+                    pstmt.setInt(7, facilityType.getStartingBudget());
+                    pstmt.setInt(8, facilityType.getStartingOrder());
 
-                pstmt.setString(1, facilityType.getGameId());
-                pstmt.setString(2, facilityType.getFacilityName());
-                pstmt.setInt(3, facilityType.getValueIncomingGoods());
-                pstmt.setInt(4, facilityType.getValueOutgoingGoods());
-                pstmt.setInt(5, facilityType.getStockHoldingCosts());
-                pstmt.setInt(6, facilityType.getOpenOrderCosts());
-                pstmt.setInt(7, facilityType.getStartingBudget());
-                pstmt.setInt(8, facilityType.getStartingBudget());
-
-                pstmt.executeUpdate();
+                    pstmt.executeUpdate();
+                }
             }
             conn.commit();
         } catch (SQLException e) {
@@ -160,7 +162,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                 pstmt.setString(2, facilityName);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        type = new FacilityType(gameId, facilityName, rs.getInt("ValueIncomingGoods"),
+                        type = new FacilityType(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
                                 rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
                                 rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
                                 rs.getInt("StartingOrder"));
