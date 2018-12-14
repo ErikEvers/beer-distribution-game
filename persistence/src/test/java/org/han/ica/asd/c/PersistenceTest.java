@@ -1,8 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.BeerGame;
-import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +24,8 @@ class PersistenceTest {
 	private Round round;
 	private BeerGame beerGame;
 	private GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn;
+	private FacilityTurn facilityTurn;
+	private FacilityLinkedTo facilityLinkedTo;
 
 	@BeforeEach
 	void setUp() {
@@ -33,10 +33,8 @@ class PersistenceTest {
 		round = new Round("Beergame",1);
 		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
 		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1,1,1,"Beergame","Henk","Test","Test");
-	}
-
-	@AfterEach
-	void tearDown() {
+		facilityTurn = new FacilityTurn("Beergame",1,1,1,1,1,1,1,1);
+		facilityLinkedTo = new FacilityLinkedTo("Beergame",1,1,true);
 	}
 
 	@Test
@@ -78,6 +76,11 @@ class PersistenceTest {
 
 	@Test
 	void fetchTurnDataTest() {
+		beerDisitributionGameDAO = mock(FacilityTurnDAO.class);
+		reflect(persistence,beerDisitributionGameDAO);
+		when(((FacilityTurnDAO)beerDisitributionGameDAO).fetchTurn(round,facilityLinkedTo)).thenReturn(facilityTurn);
+		persistence.fetchTurnData(round,facilityLinkedTo);
+		verify(((FacilityTurnDAO)beerDisitributionGameDAO), times(1)).fetchTurn(round,facilityLinkedTo);
 	}
 
 	@Test
