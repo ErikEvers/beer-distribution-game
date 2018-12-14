@@ -1,6 +1,7 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.model.BeerGame;
+import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.Round;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,12 +25,14 @@ class PersistenceTest {
 	private Persistence persistence;
 	private Round round;
 	private BeerGame beerGame;
+	private GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn;
 
 	@BeforeEach
 	void setUp() {
 		persistence = new Persistence();
 		round = new Round("Beergame",1);
 		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
+		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1,1,1,"Beergame","Henk","Test","Test");
 	}
 
 	@AfterEach
@@ -66,6 +69,11 @@ class PersistenceTest {
 
 	@Test
 	void logUsedBusinessRuleToCreateOrderTest() {
+		beerDisitributionGameDAO = mock(GameBusinessRulesInFacilityTurnDAO.class);
+		reflect(persistence,beerDisitributionGameDAO);
+		when(((GameBusinessRulesInFacilityTurnDAO)beerDisitributionGameDAO).readTurn(anyString(),anyInt(),anyInt(),anyInt())).thenReturn(gameBusinessRulesInFacilityTurn);
+		persistence.logUsedBusinessRuleToCreateOrder(gameBusinessRulesInFacilityTurn);
+		verify(((GameBusinessRulesInFacilityTurnDAO)beerDisitributionGameDAO), times(1)).createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
 	@Test
