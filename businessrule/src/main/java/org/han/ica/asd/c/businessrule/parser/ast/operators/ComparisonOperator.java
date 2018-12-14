@@ -1,8 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class ComparisonOperator extends Operator {
-    private String prefix = "ComO(";
-    private String suffix = ")";
+    private static final String prefix = "ComO(";
 
     /**
      * Constructor
@@ -19,6 +18,12 @@ public class ComparisonOperator extends Operator {
         this.operatorVal = findComparisonOperator(operator);
     }
 
+    /**
+     * Sets the operatorValue of the {@link Operator}
+     *
+     * @param value The operatorValue to add
+     * @return Returns the instance of the {@link ComparisonOperator}
+     */
     @Override
     public ComparisonOperator addValue(String value) {
         operatorVal = value;
@@ -41,6 +46,15 @@ public class ComparisonOperator extends Operator {
         } else {
             return ComparisonType.LESS.getComparisonSymbol();
         }
+    }
+
+    /**
+     * Gets the value of the ComparisonOperator
+     *
+     * @return Returns the {@link ComparisonType} of the {@link ComparisonOperator}
+     */
+    public ComparisonType getValue() {
+        return ComparisonType.getComparisonTypeFromComparisonSymbol(this.operatorVal);
     }
 
     /**

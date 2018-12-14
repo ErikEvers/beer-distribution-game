@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;

@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.junit.jupiter.api.Test;

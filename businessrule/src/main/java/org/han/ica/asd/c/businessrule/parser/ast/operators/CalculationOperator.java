@@ -1,9 +1,11 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class CalculationOperator extends Operator {
-    private String prefix = "CalO(";
-    private String suffix = ")";
+    private static final String prefix = "CalO(";
 
+    /**
+     * Constructor
+     */
     public CalculationOperator() {
     }
 
@@ -16,6 +18,12 @@ public class CalculationOperator extends Operator {
         this.operatorVal = operator;
     }
 
+    /**
+     * Sets the operatorValue of the {@link Operator}
+     *
+     * @param value The operator value to add
+     * @return Returns the instance of the {@link CalculationOperator}
+     */
     @Override
     public CalculationOperator addValue(String value) {
         operatorVal = value;

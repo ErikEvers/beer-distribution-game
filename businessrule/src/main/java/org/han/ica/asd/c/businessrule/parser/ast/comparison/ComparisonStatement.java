@@ -1,7 +1,9 @@
 package org.han.ica.asd.c.businessrule.parser.ast.comparison;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ComparisonStatement extends Expression {
-    private String prefix = "CS(";
-    private String suffix = ")";
+    private static final String prefix = "CS(";
     private Expression left;
     private BooleanOperator booleanOperator;
     private Expression right;
@@ -88,5 +89,23 @@ public class ComparisonStatement extends Expression {
     @Override
     public int hashCode() {
         return Objects.hash(left, booleanOperator, right);
+    }
+
+    /**
+     * Resolves the {@link ComparisonStatement} to a single {@link BooleanLiteral}
+     *
+     * @return the {@link BooleanLiteral} that resolves from the ComparisonStatement
+     */
+    @Override
+    public BooleanLiteral resolveCondition() {
+        if (this.booleanOperator != null) {
+            if (booleanOperator.getValue() == BooleanType.AND) {
+                return new BooleanLiteral(this.left.resolveCondition().getValue() && this.right.resolveCondition().getValue());
+            } else if (booleanOperator.getValue() == BooleanType.OR) {
+                return new BooleanLiteral(this.left.resolveCondition().getValue() || this.right.resolveCondition().getValue());
+            }
+        }
+
+        return this.left.resolveCondition();
     }
 }

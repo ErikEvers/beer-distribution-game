@@ -86,4 +86,33 @@ public abstract class Operation extends OperationValue {
     public void encode(StringBuilder stringBuilder, String prefix, String suffix) {
         super.encode(stringBuilder, getChildren(), prefix, suffix);
     }
+
+    /**
+     * Resolves the operation to an {@link OperationValue}
+     *
+     * @return OperationValue that is made up from the
+     */
+    public OperationValue resolveOperation() {
+        if (this.left instanceof Operation) {
+            this.left = ((Operation) this.left).resolveOperation();
+        }
+
+        if (this.right instanceof Operation) {
+            this.right = ((Operation) this.right).resolveOperation();
+        }
+
+        Value leftValue = (Value) this.left;
+        Value rightValue = (Value) this.right;
+
+        return this.executeOperation(Integer.parseInt(leftValue.getValue()), Integer.parseInt(rightValue.getValue()));
+    }
+
+    /**
+     * Executes the operation and returns the result of the operation
+     *
+     * @param left  the left value of the operation
+     * @param right the right value of the operation
+     * @return Returns the result of the Operation as a {@link Value}
+     */
+    public abstract Value executeOperation(int left, int right);
 }

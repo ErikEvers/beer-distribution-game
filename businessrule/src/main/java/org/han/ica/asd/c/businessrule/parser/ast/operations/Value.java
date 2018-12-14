@@ -3,9 +3,23 @@ package org.han.ica.asd.c.businessrule.parser.ast.operations;
 import java.util.Objects;
 
 public class Value extends OperationValue {
-    private String prefix = "V(";
-    private String suffix = ")";
+    private static final String prefix = "V(";
     private String value;
+
+    /**
+     * Constructor
+     */
+    public Value() {
+    }
+
+    /**
+     * Constructor
+     *
+     * @param value the value to be saved in the object
+     */
+    public Value(int value) {
+        this.value = Integer.toString(value);
+    }
 
     /**
      * Adds a value to the value string
@@ -13,7 +27,6 @@ public class Value extends OperationValue {
      * @param value Value to be added to the value string
      * @return Returns itself so that it can be used immediately
      */
-
     @Override
     public Value addValue(String value) {
         if ("smallest".equals(value) || "lowest".equals(value)) {
@@ -47,6 +60,15 @@ public class Value extends OperationValue {
      */
     public String getValue() {
         return this.value;
+    }
+
+    /**
+     * Returns the {@link Integer} representation of the value
+     *
+     * @return {@link Integer}
+     */
+    public Integer getIntegerValue() {
+        return Integer.parseInt(this.value);
     }
 
     /**

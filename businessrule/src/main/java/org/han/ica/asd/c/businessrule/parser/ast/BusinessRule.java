@@ -1,13 +1,16 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class BusinessRule extends ASTNode {
-    private String prefix = "BR(";
-    private String suffix = ")";
+    private static final String prefix = "BR(";
     private Condition condition;
     private Action action;
 
@@ -36,6 +39,46 @@ public class BusinessRule extends ASTNode {
         StringBuilder stringBuilder = new StringBuilder();
         encode(stringBuilder);
         return stringBuilder.toString();
+    }
+
+    /**
+     * Evaluates the businessRule to a businessRule with a single condition and action.
+     */
+    public void evaluateBusinessRule() {
+        transformCondition();
+        transformAction();
+    }
+
+    /**
+     * Transforms the condition of the businessRule to a single {@link BooleanLiteral}
+     */
+    private void transformCondition() {
+        this.condition = this.condition.resolveCondition();
+    }
+
+    /**
+     * Transforms the action of the businessRule to a single {@link Action}
+     */
+    private void transformAction() {
+        transformChild(this.action);
+    }
+
+    /**
+     * Transforms an {@link ASTNode} based on his type
+     *
+     * @param node The node to transform
+     */
+    private void transformChild(ASTNode node) {
+        if (node instanceof ComparisonValue) {
+            ComparisonValue comparisonValue = (ComparisonValue) node;
+            OperationValue operationValue = comparisonValue.getOperationValue();
+            if (operationValue instanceof Operation) {
+                Operation operation = (Operation) operationValue;
+                comparisonValue.setOperationValue(operation.resolveOperation());
+            }
+        }
+
+        node.getChildren().forEach(this::transformChild);
     }
 
     /**

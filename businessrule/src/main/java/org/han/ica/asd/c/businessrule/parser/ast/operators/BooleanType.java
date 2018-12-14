@@ -24,4 +24,19 @@ public enum BooleanType {
     public String getBooleanSymbol() {
         return booleanSymbol;
     }
+
+    /**
+     * Gets the {@link BooleanType} belonging to the given booleanSymbol
+     *
+     * @param booleanSymbol The booleanSymbol representation of the {@link BooleanType}
+     * @return Returns the {@link BooleanType} belonging tot the given booleanSymbol
+     */
+    public static BooleanType getBooleanTypeFromBooleanSymbol(String booleanSymbol) {
+        for (BooleanType booleanType : BooleanType.values()) {
+            if (booleanType.booleanSymbol.equalsIgnoreCase(booleanSymbol)) {
+                return booleanType;
+            }
+        }
+        return null;
+    }
 }

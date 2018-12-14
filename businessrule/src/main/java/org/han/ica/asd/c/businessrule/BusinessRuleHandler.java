@@ -32,6 +32,7 @@ public class BusinessRuleHandler implements IBusinessRules {
         // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)
 
         // TO-DO: 12/7/2018 Transform comparisons to true and false
+        businessRuleAST.evaluateBusinessRule();
 
         return (Action) businessRuleAST.getChildren()
                 .get(1);

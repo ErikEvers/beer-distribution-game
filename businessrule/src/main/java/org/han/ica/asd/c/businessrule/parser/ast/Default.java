@@ -3,7 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import java.util.Objects;
 
 public class Default extends Condition {
-    private String prefix = "D()";
+    private static final String prefix = "D()";
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
@@ -34,5 +34,15 @@ public class Default extends Condition {
     @Override
     public int hashCode() {
         return Objects.hash(prefix);
+    }
+
+    /**
+     * Resolves the {@link BooleanLiteral} to a single {@link BooleanLiteral}
+     *
+     * @return Return the {@link BooleanLiteral} that resolves from the Default
+     */
+    @Override
+    public BooleanLiteral resolveCondition() {
+        return new BooleanLiteral(true);
     }
 }

@@ -1,8 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class BooleanOperator extends Operator {
-    private String prefix = "BoolO(";
-    private String suffix = ")";
+    private static final String prefix = "BoolO(";
 
     /**
      * Constructor
@@ -19,10 +18,25 @@ public class BooleanOperator extends Operator {
         this.operatorVal = findBooleanOperator(operator);
     }
 
+    /**
+     * Sets the operatorValue of the {@link Operator}
+     *
+     * @param value the booleanOperator to be set
+     * @return Returns the instance of {@link BooleanOperator}
+     */
     @Override
     public BooleanOperator addValue(String value) {
         operatorVal = value;
         return this;
+    }
+
+    /**
+     * Gets the {@link BooleanType} of the {@link BooleanOperator}
+     *
+     * @return Returns the {@link BooleanType} of the {@link BooleanOperator}
+     */
+    public BooleanType getValue() {
+        return BooleanType.getBooleanTypeFromBooleanSymbol(this.operatorVal);
     }
 
     /**
@@ -34,9 +48,11 @@ public class BooleanOperator extends Operator {
     private String findBooleanOperator(String operator) {
         if ("and".equals(operator)) {
             return BooleanType.AND.getBooleanSymbol();
-        } else {
+        } else if ("or".equals(operator)){
             return BooleanType.OR.getBooleanSymbol();
         }
+
+        return null;
     }
 
     /**
