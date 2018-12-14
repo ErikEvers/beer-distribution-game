@@ -3,7 +3,7 @@ package org.han.ica.asd.c.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Beergame {
+public class BeerGame {
     private String gameId;
     private String gameName;
     private String gameDate;
@@ -11,7 +11,7 @@ public class Beergame {
     private List<Round> rounds;
     private Configuration configuration;
 
-    public Beergame(String gameId, String gameName, String gameDate, String gameEndDate) {
+    public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate) {
         this.gameId = gameId;
         this.gameName = gameName;
         this.gameDate = gameDate;

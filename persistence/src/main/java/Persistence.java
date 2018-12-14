@@ -1,14 +1,15 @@
+import org.han.ica.asd.c.*;
+import org.han.ica.asd.c.model.*;
+
 public class Persistence implements IPersistence {
-	private BeerDistributionGameDAO beergameDAO;
+	private IBeerDisitributionGameDAO beergameDAO;
 
 	public void saveRoundData(Round rounddata)
 	{
-		if(!(beergameDAO instanceof RoundDAO)){
+		if(!(beergameDAO instanceof RoundDAO)) {
 			beergameDAO = new RoundDAO();
 		}
-
-		beergameDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
-
+		((RoundDAO) beergameDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
 	}
 
 	public Round fetchRoundData(String gameId, int roundId)
@@ -16,25 +17,24 @@ public class Persistence implements IPersistence {
 		if(!(beergameDAO instanceof RoundDAO)){
 			beergameDAO = new RoundDAO();
 		}
-		return beergameDAO.getRound(gameId,roundId);
+		return ((RoundDAO) beergameDAO).getRound(gameId,roundId);
 
 	}
 
-	public Beergame getGameLog(String gameId)
+	public BeerGame getGameLog(String gameId)
 	{
-		if(!(beergameDAO instanceof BeerGameDAO)){
-			beergameDAO = new BeerGameDAO();
+		if(!(beergameDAO instanceof BeergameDAO)){
+			beergameDAO = new BeergameDAO();
 		}
-		return beergameDAO.getGameLog(gameId);
+		return ((BeergameDAO)beergameDAO).getGameLog(gameId);
 	}
 
-	public void logUsedBusinessRuleToCreateOrder(int roundId, String gameID, String businessRule,
-												 FacilityLinkedTo facility)
+	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn)
 	{
-		if(!(beergameDAO instanceof FacilityTurn_GameBusinessRules)){
-			beergameDAO = new FacilityTurn_GameBusinessRules();
+		if(!(beergameDAO instanceof GameBusinessRulesInFacilityTurnDAO)){
+			beergameDAO = new GameBusinessRulesInFacilityTurnDAO();
 		}
-		beergameDAO.createRT_GameBusinessRules_Turn(roundId,gameID,facility.getFacilityIdDeliver(), facility.getFacilityIdOrder(), businessRule);
+		((GameBusinessRulesInFacilityTurnDAO)beergameDAO).createTurn(gameBusinessRulesInFacilityTurn);
 
 	}
 
@@ -43,7 +43,7 @@ public class Persistence implements IPersistence {
 		if(!(beergameDAO instanceof FacilityTurnDAO)){
 			beergameDAO = new FacilityTurnDAO();
 		}
-		return beergameDAO.fetchTurn(round.getRoundId(),facility.getFacilityIdOrder(),round.getGameId(),facility.getFacilityIdDeliver());
+		return ((FacilityTurnDAO)beergameDAO).fetchTurn(round,facility);
 	}
 
 	public void saveTurnData(FacilityTurn turn)
@@ -52,9 +52,7 @@ public class Persistence implements IPersistence {
 			beergameDAO = new FacilityTurnDAO();
 		}
 
-		beergameDAO.createTurn(turn.getRoundId(),turn.getFacilityIdOrder(),turn.getGameId(),
-				facility.getFacilityIdDeliver(), turn.getStock(), turn.getRemainingBudget(),
-				turn.getOrder(), turn.getOpenOrder(),turn.getOutgoingGoods());
+		((FacilityTurnDAO)beergameDAO).createTurn(turn);
 
 	}
 }

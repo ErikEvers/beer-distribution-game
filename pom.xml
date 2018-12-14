@@ -15,6 +15,7 @@
     </properties>
 
     <modules>
+        <module>model</module>
         <module>agent</module>
         <module>businessrule</module>
         <module>communication</module>
@@ -31,7 +32,6 @@
         <module>gui_configure_game</module>
         <module>gui_replay_game</module>
         <module>persistence</module>
-        <module>model</module>
     </modules>
 
     <dependencies>
@@ -71,6 +71,20 @@
             <artifactId>guice</artifactId>
             <version>4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

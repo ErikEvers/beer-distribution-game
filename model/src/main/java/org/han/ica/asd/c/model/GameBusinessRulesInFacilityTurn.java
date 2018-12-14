@@ -1,21 +1,22 @@
 package org.han.ica.asd.c.model;
 
-public class GameBusinessRulesInFaciltyTurn {
+public class GameBusinessRulesInFacilityTurn {
     private int roundId;
     private int facilityIdDeliver;
     private int facilityIdOrder;
     private String gameId;
     private String gameAgentName;
     private String gameBusinessRule;
+    private String gameAST;
 
-    public GameBusinessRulesInFaciltyTurn(int roundId, int facilityIdDeliver, int facilityIdOrder, String gameId, String gameAgentName, String gameBusinessRule) {
+    public GameBusinessRulesInFacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
         this.roundId = roundId;
         this.facilityIdDeliver = facilityIdDeliver;
         this.facilityIdOrder = facilityIdOrder;
         this.gameId = gameId;
         this.gameAgentName = gameAgentName;
-
         this.gameBusinessRule = gameBusinessRule;
+        this.gameAST = gameAST;
     }
 
     public int getRoundId() {
@@ -64,5 +65,13 @@ public class GameBusinessRulesInFaciltyTurn {
 
     public void setGameBusinessRule(String gameBusinessRule) {
         this.gameBusinessRule = gameBusinessRule;
+    }
+
+    public String getGameAST() {
+        return gameAST;
+    }
+
+    public void setGameAST(String gameAST) {
+        this.gameAST = gameAST;
     }
 }
