@@ -4,6 +4,7 @@ import org.han.ica.asd.c.model.Player;
 import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,14 +12,9 @@ import java.util.logging.Logger;
 public class ElectionHandler {
 
   private static Logger LOGGER;
+  private List<ElectionModel> elections;
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
-  @Inject private List<ElectionModel> elections;
-
-
-  public ElectionHandler() {
-
-  }
 
   /**
    * Setup the algorithm in de electionModel.
@@ -28,6 +24,7 @@ public class ElectionHandler {
     electionModel.setCurrentPlayer(getPlayerBiIp(players));
     Player currentPlayer = electionModel.getCurrentPlayer();
     electionModel.setConcattedIp(currentPlayer.concatIpId());
+    elections = new ArrayList<>();
   }
 
   /**

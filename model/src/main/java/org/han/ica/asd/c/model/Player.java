@@ -8,6 +8,8 @@ public class Player {
     private String name;
     private boolean isConnected;
 
+    public Player() {}
+
     public Player(String gameId, String playerId, String ipAddress, int facilityId, String name, boolean isConnected) {
         this.gameId = gameId;
         this.playerId = playerId;

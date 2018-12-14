@@ -14,10 +14,6 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
   @Inject IPersistenceLeaderMigration iPersistenceLeaderMigration;
   @Inject ElectionHandler electionHandler;
 
-  public LeaderMigration() {
-
-  }
-
   /**
    * Start the bully algorithm to get new Leader of the network
    * @param players -> all the connected player
@@ -26,7 +22,7 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
     answeredPlayers = new ArrayList<>();
     electionHandler.setupAlgorithm(players);
     answeredPlayers = electionHandler.sendElectionMessage(players);
-    if(isWinner(answeredPlayers)){
+    if(answeredPlayers.size() > 0 && isWinner(answeredPlayers)){
       electionHandler.sendVictoryMessage(answeredPlayers.get(0), players);
       iPersistenceLeaderMigration.saveNewLeader(answeredPlayers.get(0).getCurrentPlayer());
     }
@@ -37,7 +33,6 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
    * @param electionModel -> The electionModel of the sending device
    */
   public ElectionModel receiveElectionMessage(ElectionModel electionModel){
-    ElectionHandler electionHandler = new ElectionHandler();
     return electionHandler.sendAliveMessage(electionModel);
   }
 
