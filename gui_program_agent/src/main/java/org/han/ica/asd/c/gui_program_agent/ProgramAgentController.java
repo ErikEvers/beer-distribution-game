@@ -116,6 +116,11 @@ public class ProgramAgentController {
         });
     }
 
+    /**
+     * Set the onscreen values based on the result from parsing.
+     *
+     * @param result The result from parsing.
+     */
     private void setScreenValuesBasedOnResult(List<UserInputBusinessRule> result) {
         StringBuilder errors = new StringBuilder();
         List<Text> textFlow = new ArrayList<>();
@@ -135,6 +140,9 @@ public class ProgramAgentController {
         }
     }
 
+    /**
+     * Clears the text from the screen textflow and textarea.
+     */
     private void clearOldScreenValues() {
         businessRuleErrorTextArea.clear();
         businessRuleTexFlow.getChildren().clear();
