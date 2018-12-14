@@ -51,6 +51,28 @@ public class FacilityTypeDAOIntegrationTest {
         Assert.assertEquals(FACILITY_TYPE.getValueOutgoingGoods(), facilityTypeFromDB.getValueOutgoingGoods());
     }
 
+    @Test
+    public void updateFacilityTypeTest() {
+        facilityTypeDAO = new FacilityTypeDAO();
+
+        DatabaseConnection connection = DBConnectionTest.getInstance();
+        setDatabaseConnection(facilityTypeDAO, connection);
+
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+        facilityTypeDAO.updateFacilityType(FACILITY_TYPE2_UPDATE);
+
+        FacilityType facilityTypeFromDB = facilityTypeDAO.readSpecificFacilityType("gameId1", "Wholesale");
+
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getFacilityName(), facilityTypeFromDB.getFacilityName());
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getGameId(), facilityTypeFromDB.getGameId());
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getOpenOrderCosts(), facilityTypeFromDB.getOpenOrderCosts());
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getStartingBudget(), facilityTypeFromDB.getStartingBudget());
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getStartingOrder(), facilityTypeFromDB.getStartingOrder());
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getStockHoldingCosts(), facilityTypeFromDB.getStockHoldingCosts());
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getValueIncomingGoods(), facilityTypeFromDB.getValueIncomingGoods());
+        Assert.assertEquals(FACILITY_TYPE2_UPDATE.getValueOutgoingGoods(), facilityTypeFromDB.getValueOutgoingGoods());
+    }
+
 
     private void setDatabaseConnection(IBeerDisitributionGameDAO gameDAO, DatabaseConnection connection) {
         try {

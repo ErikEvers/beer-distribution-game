@@ -42,7 +42,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         Connection conn;
         try {
             conn = databaseConnection.connect();
-            if(conn != null) {
+            if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
                     conn.setAutoCommit(false);
                     pstmt.setString(1, facilityType.getGameId());
@@ -72,18 +72,20 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         Connection conn;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTYPE)) {
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTYPE)) {
+                    conn.setAutoCommit(false);
+                    pstmt.setInt(1, facilityType.getValueIncomingGoods());
+                    pstmt.setInt(2, facilityType.getValueOutgoingGoods());
+                    pstmt.setInt(3, facilityType.getStockHoldingCosts());
+                    pstmt.setInt(4, facilityType.getOpenOrderCosts());
+                    pstmt.setInt(5, facilityType.getStartingBudget());
+                    pstmt.setInt(6, facilityType.getStartingBudget());
+                    pstmt.setString(7, facilityType.getGameId());
+                    pstmt.setString(8, facilityType.getFacilityName());
 
-                pstmt.setInt(1, facilityType.getValueIncomingGoods());
-                pstmt.setInt(2, facilityType.getValueOutgoingGoods());
-                pstmt.setInt(3, facilityType.getStockHoldingCosts());
-                pstmt.setInt(4, facilityType.getOpenOrderCosts());
-                pstmt.setInt(5, facilityType.getStartingBudget());
-                pstmt.setInt(6, facilityType.getStartingBudget());
-                pstmt.setString(7, facilityType.getGameId());
-                pstmt.setString(8, facilityType.getFacilityName());
-
-                pstmt.executeUpdate();
+                    pstmt.executeUpdate();
+                }
             }
             conn.commit();
         } catch (SQLException e) {
@@ -110,12 +112,14 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         Connection conn;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
+                    conn.setAutoCommit(false);
+                    pstmt.setString(1, gameId);
+                    pstmt.setString(1, facilityName);
 
-                pstmt.setString(1, gameId);
-                pstmt.setString(1, facilityName);
-
-                pstmt.executeUpdate();
+                    pstmt.executeUpdate();
+                }
             }
             conn.commit();
         } catch (SQLException e) {
@@ -134,15 +138,18 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         ArrayList<FacilityType> types = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
-                pstmt.setString(1, gameId);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        types.add(new FacilityType(gameId,
-                                rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"),
-                                rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
-                                rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
-                                rs.getInt("StartingOrder")));
+            if (conn != null) {
+                conn.setAutoCommit(false);
+                try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
+                    pstmt.setString(1, gameId);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        while (rs.next()) {
+                            types.add(new FacilityType(gameId,
+                                    rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"),
+                                    rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
+                                    rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
+                                    rs.getInt("StartingOrder")));
+                        }
                     }
                 }
             }
@@ -157,15 +164,18 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         FacilityType type = null;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
-                pstmt.setString(1, gameId);
-                pstmt.setString(2, facilityName);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        type = new FacilityType(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
-                                rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
-                                rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
-                                rs.getInt("StartingOrder"));
+            if (conn != null) {
+                conn.setAutoCommit(false);
+                try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
+                    pstmt.setString(1, gameId);
+                    pstmt.setString(2, facilityName);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        while (rs.next()) {
+                            type = new FacilityType(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
+                                    rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
+                                    rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
+                                    rs.getInt("StartingOrder"));
+                        }
                     }
                 }
             }
