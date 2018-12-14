@@ -1,14 +1,13 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.gamelogic.public_interfaces.*;
 import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.gamelogic.public_interfaces.ICommunication;
-import org.han.ica.asd.c.gamelogic.public_interfaces.ILeaderGameLogic;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+
+import java.util.Map;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
@@ -18,12 +17,12 @@ import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
  */
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     String gameId;
-    private ICommunication communication;
+    private IConnectedForPlayer communication;
     private IPersistence persistence;
     private ParticipantsPool participantsPool;
     private int round;
 
-    public GameLogic(String gameId, ICommunication communication, IPersistence persistence, ParticipantsPool participantsPool) {
+    public GameLogic(String gameId, IConnectedForPlayer communication, IPersistence persistence, ParticipantsPool participantsPool) {
         this.gameId = gameId;
         this.communication = communication;
         this.persistence = persistence;
@@ -36,7 +35,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param turn
      */
     @Override
-    public void placeOrder(FacilityTurn turn) {
+    public void placeOrder(Map<Facility, Map<Facility, Integer>> turn) {
         persistence.saveTurnData(turn);
         communication.sendTurnData(turn);
     }

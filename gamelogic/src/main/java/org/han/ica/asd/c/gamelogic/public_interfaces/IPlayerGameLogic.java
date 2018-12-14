@@ -1,15 +1,18 @@
 package org.han.ica.asd.c.gamelogic.public_interfaces;
 
+import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
+
+import java.util.Map;
 
 public interface IPlayerGameLogic {
     /**
      * Sends and saves an order of the player / agent.
      * @param turn
      */
-    void placeOrder(FacilityTurn turn);
+    void placeOrder(Map<Facility, Map<Facility, Integer>> turn);
 
     /**
      * Returns the current state of the game.
