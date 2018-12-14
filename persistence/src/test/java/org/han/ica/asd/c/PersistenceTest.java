@@ -85,6 +85,12 @@ class PersistenceTest {
 
 	@Test
 	void saveTurnDataTest() {
+		beerDisitributionGameDAO = mock(FacilityTurnDAO.class);
+		reflect(persistence,beerDisitributionGameDAO);
+		Mockito.doNothing().when((FacilityTurnDAO)beerDisitributionGameDAO).createTurn(facilityTurn);
+		persistence.saveTurnData(facilityTurn);
+		verify(((FacilityTurnDAO)beerDisitributionGameDAO), times(1)).createTurn(facilityTurn);
+
 	}
 
 	public void reflect(Persistence persistence, IBeerDisitributionGameDAO mock) {
