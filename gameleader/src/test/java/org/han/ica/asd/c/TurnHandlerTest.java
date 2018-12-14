@@ -65,7 +65,6 @@ class TurnHandlerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
@@ -127,6 +126,4 @@ class TurnHandlerTest {
         }
         assertTrue(turnHandler.validateFacilityTurn(facilityTurnModel));
     }
-
-
 }

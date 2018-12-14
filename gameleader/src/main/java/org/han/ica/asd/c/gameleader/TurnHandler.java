@@ -20,9 +20,8 @@ public class TurnHandler {
             LOGGER.log(Level.WARNING, "Incoming orders can't be higher than the available stock.");
         }
     }
-
-//Currently public for testing purporses
-    public boolean validateFacilityTurn(FacilityTurn turnModel) {
+    
+    private boolean validateFacilityTurn(FacilityTurn turnModel) {
         return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
     }
 }
