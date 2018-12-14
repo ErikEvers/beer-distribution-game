@@ -52,10 +52,10 @@ public class ElectionHandler {
    */
   public ElectionModel sendAliveMessage(ElectionModel receivedModel) {
     Player receivingPlayer = receivedModel.getReceivingPlayer();
-    if (electionModel.getConcattedIp().compareTo(receivingPlayer.concatIpId()) > 0) {
-      electionModel.setElected(true);
+    if (receivedModel.getConcattedIp().compareTo(receivingPlayer.concatIpId()) > 0) {
+      receivedModel.setElected(true);
     }
-    return this.electionModel;
+    return receivedModel;
   }
 
   /**
@@ -77,12 +77,13 @@ public class ElectionHandler {
    * @return -> ipAddress as String, when not found return NULL.
    */
   private String getOwnIpAddress() {
-    try {
+    /*try {
       return InetAddress.getLocalHost().getHostAddress();
     } catch (UnknownHostException e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
-    return null;
+    return null;*/
+    return "111";
   }
 
   /**
