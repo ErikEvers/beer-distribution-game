@@ -9,10 +9,18 @@ public enum ComparisonType {
 
     private String comparisonSymbol;
 
+    /**
+     * Constructor
+     * @param comparisonSymbol The comparison symbol
+     */
     ComparisonType(String comparisonSymbol){
         this.comparisonSymbol = comparisonSymbol;
     }
 
+    /**
+     * Getter
+     * @return Returns the comparison symbol
+     */
     public String getComparisonSymbol(){
         return comparisonSymbol;
     }
