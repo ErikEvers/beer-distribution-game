@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.fxml_helper;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.fxml.FXMLLoader;
