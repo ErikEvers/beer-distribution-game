@@ -9,6 +9,7 @@ public abstract class Operator extends ASTNode {
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -26,6 +27,7 @@ public abstract class Operator extends ASTNode {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override

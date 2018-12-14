@@ -1,18 +1,17 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.businessrule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
-import org.han.ica.asd.c.businessrule.BusinessRuleParser;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ParserTest {
 
