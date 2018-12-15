@@ -2,30 +2,32 @@ package org.han.ica.asd.c.leadermigration;
 
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
-
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
 
-  private List<ElectionModel> answeredPlayers;
   @Inject IConnectorForLeaderElection communicator;
-  @Inject IPersistenceLeaderMigration iPersistenceLeaderMigration;
+  @Inject IPersistenceLeaderMigration persistence;
   @Inject ElectionHandler electionHandler;
 
   /**
    * Start the bully algorithm to get new Leader of the network
    * @param players -> all the connected player
    */
-  public void startMigration(Player[] players) {
-    answeredPlayers = new ArrayList<>();
-    electionHandler.setupAlgorithm(players);
-    answeredPlayers = electionHandler.sendElectionMessage(players);
-    if(answeredPlayers.size() > 0 && isWinner(answeredPlayers)){
-      electionHandler.sendVictoryMessage(answeredPlayers.get(0), players);
-      iPersistenceLeaderMigration.saveNewLeader(answeredPlayers.get(0).getCurrentPlayer());
-    }
+  public Player startMigration(Player[] players) {
+    Player currentPlayer = electionHandler.setupAlgorithm(players);
+		Player winner = currentPlayer;
+
+		List<Player> answeredPlayers = electionHandler.sendElectionMessage(players);
+
+    if(!answeredPlayers.isEmpty()) {
+			winner = electionHandler.determineWinner(currentPlayer, answeredPlayers);
+		}
+
+		electionHandler.sendVictoryMessage(winner, players);
+		persistence.saveNewLeader(winner);
+		return winner;
   }
 
   /**
@@ -37,25 +39,11 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
   }
 
   /**
-   * Add this object to Observer.
+   * Register this object as an observer of the communication component.
    */
+	//TODO integrate with comm
   public void initialize() {
     communicator.addObserver(this);
-  }
-
-  /**
-   * Checks if this device is the winner.
-   * @param players -> checks all returned electionModels
-   * @return -> true if all elected booleans are true
-   *         -> false if one of the elected booleans is false
-   */
-  private boolean isWinner(List<ElectionModel> players) {
-    for(ElectionModel model: players) {
-      if(!model.isElected()) {
-        return false;
-      }
-    }
-    return true;
   }
 
   /**
@@ -63,7 +51,7 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
    * @param electedPlayer -> The elected player.
    */
   public void receiveVictoryMessage(Player electedPlayer){
-    iPersistenceLeaderMigration.saveNewLeader(electedPlayer);
+		persistence.saveNewLeader(electedPlayer);
   }
 
 }

@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 public class ElectionHandler {
 
-  private static Logger LOGGER;
-  private List<ElectionModel> elections;
+	private List<Player> receivedPlayers;
+  @Inject private static Logger logger;
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
 
@@ -20,57 +20,69 @@ public class ElectionHandler {
    * Setup the algorithm in de electionModel.
    * @param players -> All connected players to send a message.
    */
-  public void setupAlgorithm(Player[] players) {
+  public Player setupAlgorithm(Player[] players) {
+
     electionModel.setCurrentPlayer(getPlayerBiIp(players));
-    Player currentPlayer = electionModel.getCurrentPlayer();
-    electionModel.setConcattedIp(currentPlayer.concatIpId());
-    elections = new ArrayList<>();
+		receivedPlayers = new ArrayList<>();
+    return electionModel.getCurrentPlayer();
   }
 
   /**
    * Send every player an election message to be elected as the leader of the network
    * @param players -> All the connected players (without the current player)
    */
-  public List<ElectionModel> sendElectionMessage(Player[] players) {
+  public List<Player> sendElectionMessage(Player[] players) {
     for(Player player: players) {
       // This if statement ensures to not send this to yourself.
       if(!electionModel.getCurrentPlayer().equals(player)) {
 				electionModel.setReceivingPlayer(player);
 				ElectionModel model = communication.sendElectionMessage(electionModel, player);
-				if(model != null) {
-					elections.add(new ElectionModel(model));
+				if(model != null && model.isAlive()) {
+					receivedPlayers.add(electionModel.getReceivingPlayer());
 				}
       }
     }
-    return elections;
+    return receivedPlayers;
   }
 
   /**
-   * This function checks the concattedIp of both devices and returns an alive message when connected
-   * If election.concattedIp is lexicographically less than receivingPlayer.concattedIp, the output is a negative number
-   *  and returns false.
-   * If election.concattedIp is lexicographically bigger than receivingPlayer.concattedIp, the output is a
-   *  positive number and returns true.
+   * This function receives and sends the electionmodel as a sign of being alive and a part of the election.
    * @param receivedModel -> The electionModel of the sending player.
    */
   public ElectionModel sendAliveMessage(ElectionModel receivedModel) {
-    Player receivingPlayer = receivedModel.getReceivingPlayer();
-    if (receivedModel.getConcattedIp().compareTo(receivingPlayer.concatIpId()) < 0) {
-      receivedModel.setElected(true);
-    }
+    receivedModel.setAlive(true);
     return receivedModel;
   }
 
+	/**
+	 * Compare the currentPlayer to the other players and return it if it's the biggest in the list.
+	 * If it is the biggest in the list, the currentPlayer gets returned.
+	 * If a bigger player is encountered in the list, the method is called recursively to determine if there are other
+	 * 	even bigger players in the list.
+	 * @param currentPlayer -> the player to compare to the list.
+	 * @param players -> the list of players to go through.
+	 * @return the player with the highest ID
+	 */
+  public Player determineWinner(Player currentPlayer, List<Player> players) {
+		for(Player player : players) {
+			if (currentPlayer.concatIpId().compareTo(player.concatIpId()) < 0) {
+				players.remove(player);
+				return determineWinner(player, players);
+			}
+		}
+		return currentPlayer;
+	}
+
   /**
    * This message will be sent by the device who has won the election.
-   * @param winningModel -> This instance of electionModel has the winner of the bully algorithm
+   * @param winner -> The player that was the winner of the bully algorithm
    * @param players -> To send it to all players.
    */
-  public void sendVictoryMessage(ElectionModel winningModel, Player[] players) {
+  public void sendVictoryMessage(Player winner, Player[] players) {
     for(Player player: players) {
       // This if statement ensures to not this to yourself
       if(!electionModel.getCurrentPlayer().equals(player)) {
-        communication.sendVictoryMessage(winningModel.getCurrentPlayer(), player);
+        communication.sendVictoryMessage(winner, player);
       }
     }
   }
@@ -79,14 +91,13 @@ public class ElectionHandler {
    * Get own ip address
    * @return -> ipAddress as String, when not found return NULL.
    */
-  private String getOwnIpAddress() {
-    /*try {
+  private static String getOwnIpAddress() {
+    try {
       return InetAddress.getLocalHost().getHostAddress();
     } catch (UnknownHostException e) {
-      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			logger.log(Level.SEVERE, e.getMessage(), e);
     }
-    return null;*/
-    return "111";
+    return null;
   }
 
   /**
@@ -96,7 +107,7 @@ public class ElectionHandler {
    */
   private Player getPlayerBiIp(Player[] players) {
     for(Player player: players) {
-      if(player.getIpAddress().equals(this.getOwnIpAddress())) {
+      if(player.getIpAddress().equals(ElectionHandler.getOwnIpAddress())) {
         return player;
       }
     }

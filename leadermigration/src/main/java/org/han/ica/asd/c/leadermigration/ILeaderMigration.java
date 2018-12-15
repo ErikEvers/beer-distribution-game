@@ -4,6 +4,6 @@ import org.han.ica.asd.c.model.Player;
 
 public interface ILeaderMigration {
 
-  void startMigration(Player[] players);
+  Player startMigration(Player[] players);
 
 }

@@ -9,6 +9,5 @@ public interface IConnectorForLeaderElection {
 
 	void sendVictoryMessage(Player victory, Player player);
 
-  //TODO vervangen door de observer
   void addObserver(IConnectorObserver observer);
 }
