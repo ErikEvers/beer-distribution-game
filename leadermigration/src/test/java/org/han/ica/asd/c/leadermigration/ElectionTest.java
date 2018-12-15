@@ -15,18 +15,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class ElectionTest {
 
     private CommunicationHelper communicationHelper;
+    private final String currentPlayerIP = "111";
 
     @Before
     public void testSetup() throws Exception {
         communicationHelper = new CommunicationHelper();
         PowerMockito.spy(ElectionHandler.class);
-        PowerMockito.doReturn("111").when(ElectionHandler.class, "getOwnIpAddress");
+        PowerMockito.doReturn(currentPlayerIP).when(ElectionHandler.class, "getOwnIpAddress");
     }
 
     @Test
     public void basicElectionTest() {
         Player[] players = new Player[3];
-        players[0] = new Player("1","1", "111", 1, "Joost", true);
+        players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         players[1] = new Player("1", "2", "222", 2, "Henk", true);
         players[2] = new Player("1", "3", "333", 3, "Piet", true);
 
@@ -39,7 +40,7 @@ public class ElectionTest {
         Player[] players = new Player[3];
         players[0] = new Player("1", "2", "222", 2, "Henk", true);
         players[1] = new Player("1", "3", "333", 3, "Piet", true);
-        players[2] = new Player("1","1", "111", 1, "Joost", true);
+        players[2] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         Player elected = communicationHelper.startElection(players);
         Assert.assertEquals(players[1], elected);
     }
@@ -47,7 +48,7 @@ public class ElectionTest {
     @Test
     public void singlePlayerElectionTest() {
         Player[] players = new Player[1];
-        players[0] = new Player("1","1", "111", 1, "Joost", true);
+        players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         Player elected = communicationHelper.startElection(players);
         Assert.assertEquals(players[0], elected);
     }
@@ -55,7 +56,7 @@ public class ElectionTest {
     @Test
     public void playerDisconnectDuringElectionTest() {
         Player[] players = new Player[3];
-        players[0] = new Player("1","1", "111", 1, "Joost", true);
+        players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         players[1] = new Player("1", "2", "222", 2, "Henk", true);
         players[2] = new Player("1", "3", "333", 3, "Piet", false);
 
