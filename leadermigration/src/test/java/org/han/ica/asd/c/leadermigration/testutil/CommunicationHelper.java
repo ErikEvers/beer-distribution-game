@@ -8,9 +8,9 @@ import org.han.ica.asd.c.leadermigration.*;
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 
-public class CommunicationHelper implements IConnectorForLeaderElection {
-    private Player elected;
+import java.util.logging.Logger;
 
+public class CommunicationHelper implements IConnectorForLeaderElection {
     private LeaderMigration migrationObj;
     private Injector injector;
 
@@ -20,6 +20,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
 				protected void configure() {
 					bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
 					bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
+					requestStaticInjection(ElectionHandler.class);
 				}
 			});
 		}
@@ -27,8 +28,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
     public Player startElection(Player[] players) {
     		setInjector();
         this.migrationObj = injector.getInstance(LeaderMigration.class);
-        this.migrationObj.startMigration(players);
-        return this.elected;
+				return this.migrationObj.startMigration(players);
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -49,6 +49,5 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
         }
 				setInjector();
 				injector.getInstance(LeaderMigration.class).receiveVictoryMessage(victory);
-        this.elected = victory;
     }
 }

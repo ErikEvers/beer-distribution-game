@@ -10,9 +10,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( ElectionHandler.class )
 public class ElectionTest {
@@ -22,8 +19,8 @@ public class ElectionTest {
     @Before
     public void testSetup() throws Exception {
         communicationHelper = new CommunicationHelper();
-        ElectionHandler spy = PowerMockito.spy(new ElectionHandler());
-        when(spy, method(ElectionHandler.class, "getOwnIpAddress")).withNoArguments().thenReturn("111");
+        PowerMockito.spy(ElectionHandler.class);
+        PowerMockito.doReturn("111").when(ElectionHandler.class, "getOwnIpAddress");
     }
 
     @Test
@@ -40,11 +37,11 @@ public class ElectionTest {
     @Test
     public void secondBasicElectionTest() {
         Player[] players = new Player[3];
-        players[0] = new Player("1", "3", "333", 3, "Piet", true);
-        players[1] = new Player("1","1", "111", 1, "Joost", true);
-        players[2] = new Player("1", "2", "222", 2, "Henk", true);
+        players[0] = new Player("1", "2", "222", 2, "Henk", true);
+        players[1] = new Player("1", "3", "333", 3, "Piet", true);
+        players[2] = new Player("1","1", "111", 1, "Joost", true);
         Player elected = communicationHelper.startElection(players);
-        Assert.assertEquals(players[0], elected);
+        Assert.assertEquals(players[1], elected);
     }
 
     @Test
