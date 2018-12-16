@@ -8,6 +8,7 @@ import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 import org.han.ica.asd.c.observers.ITurnModelObserver;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 public class GameLeader implements ITurnModelObserver {

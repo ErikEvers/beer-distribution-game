@@ -13,12 +13,12 @@ public interface IConnectorForLeader {
      * Register an instance of a IMessageObserver as an observer that listens to the communication component.
      * @param observer, instance of IMessageObserver.
      */
-    public void addObserver(IConnectorObserver observer);
+    void addObserver(IConnectorObserver observer);
 
     /**
      * The data of a specific round gets sent to the participants of said game.
      * @param allData, the game data of a specific round.
      */
-    public void sendRoundDataToAllPlayers(Round allData);
+    void sendRoundDataToAllPlayers(Round allData);
 
 }
