@@ -181,7 +181,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(deleteAllFacilitiesInGame)) {
-
+                conn.setAutoCommit(false);
                 pstmt.setString(1, gameId);
 
                 pstmt.executeUpdate();

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     private static final String CREATE_FACILITYTYPE = "INSERT INTO FacilityType Values (?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String UPDATE_FACILITYTYPE = "UPDATE FacilityType SET " +
@@ -39,12 +40,14 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
      * @param facilityType A FacilityType model that contains all the data needed to create a new FacilityType.
      */
     public void createFacilityType(FacilityType facilityType) {
-        Connection conn;
+        Connection conn = null;
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
+
                     conn.setAutoCommit(false);
+
                     pstmt.setString(1, facilityType.getGameId());
                     pstmt.setString(2, facilityType.getFacilityName());
                     pstmt.setInt(3, facilityType.getValueIncomingGoods());
@@ -56,10 +59,12 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
 
                     pstmt.executeUpdate();
                 }
+                conn.commit();
             }
-            conn.commit();
+
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -176,6 +181,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                                     rs.getInt("StartingOrder")));
                         }
                     }
+                    conn.commit();
                 }
             }
         } catch (SQLException e) {
@@ -185,25 +191,26 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     }
 
     public FacilityType readSpecificFacilityType(String gameId, String facilityName) {
-        Connection conn;
+        Connection conn = null;
         FacilityType type = null;
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
                 conn.setAutoCommit(false);
+
                 try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
                     pstmt.setString(1, gameId);
                     pstmt.setString(2, facilityName);
                     try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
                             type = new FacilityType(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
                                     rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
                                     rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
                                     rs.getInt("StartingOrder"));
                         }
                     }
+                    conn.commit();
                 }
-            }
+
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString());
         }
