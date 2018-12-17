@@ -222,6 +222,11 @@ public class GameLogicTest {
         round.addFacilityStock(40, retailer);
         round.addFacilityStock(10000, demand);
 
+        round.addFacilityRemainingStock(500, manufacturer);
+        round.addFacilityRemainingStock(500, regionalWarehouse);
+        round.addFacilityRemainingStock(500, wholesale);
+        round.addFacilityRemainingStock(500, retailer);
+
         round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(round.getStockByFacility(manufacturer), 65);
