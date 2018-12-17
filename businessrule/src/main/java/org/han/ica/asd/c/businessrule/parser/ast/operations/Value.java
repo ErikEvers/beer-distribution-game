@@ -3,21 +3,35 @@ package org.han.ica.asd.c.businessrule.parser.ast.operations;
 import java.util.Objects;
 
 public class Value extends OperationValue {
-    private String prefix = "V(";
-    private String suffix = ")";
+    private static final String prefix = "V(";
     private String value;
 
     /**
+     * Constructor
+     */
+    public Value() {
+    }
+
+    /**
+     * Constructor
+     *
+     * @param value the value to be saved in the object
+     */
+    public Value(int value) {
+        this.value = Integer.toString(value);
+    }
+
+    /**
      * Adds a value to the value string
+     *
      * @param value Value to be added to the value string
      * @return Returns itself so that it can be used immediately
      */
-
     @Override
     public Value addValue(String value) {
-        if("smallest".equals(value) || "lowest".equals(value)){
+        if ("smallest".equals(value) || "lowest".equals(value)) {
             value = "lowest";
-        } else if ("biggest".equals(value) || "highest".equals(value)){
+        } else if ("biggest".equals(value) || "highest".equals(value)) {
             value = "highest";
         }
 
@@ -31,6 +45,7 @@ public class Value extends OperationValue {
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
+     *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override
@@ -40,6 +55,7 @@ public class Value extends OperationValue {
 
     /**
      * Getter
+     *
      * @return Returns the value
      */
     public String getValue() {
@@ -47,7 +63,17 @@ public class Value extends OperationValue {
     }
 
     /**
+     * Returns the {@link Integer} representation of the value
+     *
+     * @return {@link Integer}
+     */
+    public Integer getIntegerValue() {
+        return Integer.parseInt(this.value);
+    }
+
+    /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -65,6 +91,7 @@ public class Value extends OperationValue {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override

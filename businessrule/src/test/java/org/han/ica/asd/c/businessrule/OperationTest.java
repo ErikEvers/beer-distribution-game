@@ -1,16 +1,16 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OperationTest {
     private Operation operation = new AddOperation();
@@ -64,5 +64,20 @@ class OperationTest {
         exp.add(new Value().addValue("4"));
 
         assertEquals(exp, res);
+    }
+
+    @Test
+    void testResolvingMixedOperations() {
+        Operation subtractOperation = new SubtractOperation();
+        subtractOperation.addChild(new MultiplyOperation()
+                .addChild(new Value().addValue("10"))
+                .addChild(new CalculationOperator("*"))
+                .addChild(new Value().addValue("2")))
+                .addChild(new CalculationOperator("-"))
+                .addChild(new Value().addValue("5"));
+
+        Value value = (Value) subtractOperation.resolveOperation();
+
+        assertEquals("15", value.getValue());
     }
 }
