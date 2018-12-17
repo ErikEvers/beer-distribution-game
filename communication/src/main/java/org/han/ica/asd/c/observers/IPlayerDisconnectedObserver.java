@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.observers;
 
 public interface IPlayerDisconnectedObserver extends IConnectorObserver {
-    void notifyPlayerDisconnected(String playerId);
+	void iAmDisconnected();
+	void playerIsDisconnected(String ip);
 }

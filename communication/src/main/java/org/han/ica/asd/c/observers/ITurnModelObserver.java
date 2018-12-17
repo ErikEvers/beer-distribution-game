@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.observers;
 
-import org.han.ica.asd.c.model.FacilityTurn;
+import domainobjects.TurnModel;
 
-public interface ITurnModelObserver extends IConnectorObserver{
-    void turnModelReceived(FacilityTurn turnModel);
+public interface ITurnModelObserver extends IConnectorObserver {
+    void turnModelReceived(TurnModel turnModel);
 }
