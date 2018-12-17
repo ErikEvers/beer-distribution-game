@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 public class GameLeader implements ITurnModelObserver {
-    @Inject
+
     private IConnectorForLeader connectorForLeader;
     @Inject
     private ILeaderGameLogic gameLogic;
@@ -24,8 +24,10 @@ public class GameLeader implements ITurnModelObserver {
     private int turnsExpected;
     private int turnsReceived;
 
-    public GameLeader(BeerGame game) {
-        connectorForLeader.addObserver(this);
+    @Inject
+    public GameLeader(BeerGame game, IConnectorForLeader connectorForLeader) {
+        this.connectorForLeader = connectorForLeader;
+        this.connectorForLeader.addObserver(this);
         this.turnHandler = new TurnHandler();
         this.currentRoundData = new Round(game.getGameId(), game.getRounds().size());
         this.turnsExpected = game.getConfiguration().getFacilities().size();

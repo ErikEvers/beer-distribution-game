@@ -6,25 +6,14 @@ import org.han.ica.asd.c.model.FacilityTurn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.InvocationTargetException;
+import java.io.ByteArrayOutputStream;;
 import java.lang.reflect.Method;
-import java.util.Formatter;
 import java.util.logging.*;
-
 import static junit.framework.TestCase.*;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.spy;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( TurnHandler.class )
