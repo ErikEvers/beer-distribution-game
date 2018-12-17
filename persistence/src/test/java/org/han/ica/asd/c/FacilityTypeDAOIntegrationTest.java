@@ -1,5 +1,9 @@
 package org.han.ica.asd.c;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
@@ -22,10 +26,17 @@ class FacilityTypeDAOIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(DatabaseConnection.class).to(DBConnectionTest.class);
+			}
+		});
+
 		DBConnectionTest.getInstance().createNewDatabase();
-		facilityTypeDAO = new FacilityTypeDAO();
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(facilityTypeDAO,connection);
+		facilityTypeDAO = injector.getInstance(FacilityTypeDAO.class);
+
+		//setDatabaseConnection(facilityTypeDAO,connection);
 	}
 
 	@AfterEach

@@ -4,6 +4,7 @@ import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,10 +29,10 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
             "StockHoldingCosts, OpenOrderCosts, StartingBudget, StartingOrder FROM FacilityType WHERE GameId = ? AND FacilityName = ?;";
     private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
 
+    @Inject
     private DatabaseConnection databaseConnection;
 
     public FacilityTypeDAO() {
-        this.databaseConnection = DBConnection.getInstance();
     }
 
     /**

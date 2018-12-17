@@ -12,7 +12,7 @@ public class DBConnectionTest implements DatabaseConnection {
 	public static final Logger LOGGER = Logger.getLogger(DBConnectionTest.class.getName());
 	private static volatile DBConnectionTest mInstance;
 
-	private DBConnectionTest() {
+	public DBConnectionTest() {
 	}
 
 	public static DBConnectionTest getInstance() {
