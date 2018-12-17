@@ -98,11 +98,23 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     public Round calculateRound(Round round) {
 
         for (FacilityLinkedTo f : facilitityLinks) {
-            int facilityStock = round.getStockByFacility(f);
-            int ordered = round.getTurnOrderByFacility(f,f);
-            int newFacilityStock = facilityStock - ordered;
-            round.replaceStock(f, 0, newFacilityStock);
-            round.addTurnDeliver(f, f, ordered);
+            Facility facilityOrder = f.getFacilityOrder();
+            Facility facilityDeliver = f.getFacilityDeliver();
+
+          //  if (round.isStockExisting(facilityOrder)) {
+                int facilityStockOrder = round.getStockByFacility(facilityOrder);
+                int ordered = round.getTurnOrderByFacility(facilityOrder, facilityDeliver);
+                int newFacilityStockOrder = facilityStockOrder + ordered;
+
+                if (!facilityOrder.equals(facilityDeliver)) {
+                    int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
+                    int newFacilityStockDeliver = facilityStockDeliver - ordered;
+                    round.replaceStock(facilityDeliver, 0, newFacilityStockDeliver);
+                }
+
+                round.replaceStock(facilityOrder, 0, newFacilityStockOrder);
+                round.addTurnDeliver(facilityOrder, facilityDeliver, ordered);
+         //   }
         }
 
         return round;

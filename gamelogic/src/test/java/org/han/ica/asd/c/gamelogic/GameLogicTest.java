@@ -117,6 +117,7 @@ public class GameLogicTest {
         round.addFacilityStock(40, regionalWarehouse);
         round.addFacilityStock(40, wholesale);
         round.addFacilityStock(40, retailer);
+        round.addFacilityStock(10000, demand);
 
         round = gameLogic.calculateRound(round);
 

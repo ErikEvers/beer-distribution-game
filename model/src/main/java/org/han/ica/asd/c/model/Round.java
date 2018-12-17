@@ -67,6 +67,10 @@ public class Round {
         return stock.get(facility);
     }
 
+    public boolean isStockExisting(Facility facility) {
+        return stock.containsKey(facility);
+    }
+
     public void replaceStock(Facility facility, Integer oldValue, Integer newStock) {
         stock.replace(facility, newStock);
     }
