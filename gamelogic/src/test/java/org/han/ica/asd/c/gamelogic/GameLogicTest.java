@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,18 +25,12 @@ public class GameLogicTest {
     private IConnectedForPlayer communication;
     private IPersistence persistence;
 
-    private Map<Facility, Map<Facility, Integer>> turnOrder;
-    private Map<Facility, Integer> stock;
-
     @BeforeEach
     public void setup() {
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IPersistence.class);
         participantsPool = mock(ParticipantsPool.class);
         gameLogic = new GameLogic("test", communication, persistence, participantsPool);
-
-        stock = new HashMap<>();
-        turnOrder = new HashMap<>();
     }
 
     @Test
@@ -98,16 +93,26 @@ public class GameLogicTest {
         Facility wholesale = new Facility("0", 0, "0", "0", "0");
         Facility retailer = new Facility("0", 0, "0", "0", "0");
 
-        stock.put(manufacturer, 40);
+        FacilityLinkedTo facilityLinkedTo = new FacilityLinkedTo("0", manufacturer, manufacturer, true);
+        FacilityLinkedTo facilityLinkedTo1 = new FacilityLinkedTo("0", manufacturer, distributor, true);
+        FacilityLinkedTo facilityLinkedTo2 = new FacilityLinkedTo("0", distributor, wholesale, true);
+        FacilityLinkedTo facilityLinkedTo3 = new FacilityLinkedTo("0", wholesale, retailer, true);
 
-        turnOrder = new HashMap<>();
-        Map<Facility, Integer> orderTo = new HashMap();
-        orderTo.put(manufacturer, 25);
+        gameLogic.addfacilities(facilityLinkedTo);
+        gameLogic.addfacilities(facilityLinkedTo1);
+        gameLogic.addfacilities(facilityLinkedTo2);
+        gameLogic.addfacilities(facilityLinkedTo3);
 
         Round round = new RoundFake("0", 0);
-        round.addTurnOrder(orderTo, manufacturer);
+        round.addTurnOrder(manufacturer, manufacturer, 25);
+        round.addTurnOrder(manufacturer, distributor, 0);
+        round.addTurnOrder(distributor, wholesale, 30);
+        round.addTurnOrder(wholesale, retailer, 15);
 
         round.addFacilityStock(40, manufacturer);
+        round.addFacilityStock(40, distributor);
+        round.addFacilityStock(40, wholesale);
+        round.addFacilityStock(40, retailer);
 
         round = gameLogic.calculateRound(round);
 

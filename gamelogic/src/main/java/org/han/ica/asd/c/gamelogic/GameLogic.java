@@ -7,6 +7,8 @@ import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -22,12 +24,19 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     private ParticipantsPool participantsPool;
     private int round;
 
+    private ArrayList<FacilityLinkedTo> facilitityLinks;
+
     public GameLogic(String gameId, IConnectedForPlayer communication, IPersistence persistence, ParticipantsPool participantsPool) {
         this.gameId = gameId;
         this.communication = communication;
         this.persistence = persistence;
         this.participantsPool = participantsPool;
         this.round = 0;
+        facilitityLinks = new ArrayList<>();
+    }
+
+    public void addfacilities(FacilityLinkedTo facilityLink) {
+        facilitityLinks.add(facilityLink);
     }
 
     /**
@@ -87,6 +96,15 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     @Override
     public Round calculateRound(Round round) {
+
+        for (FacilityLinkedTo f : facilitityLinks) {
+            int facilityStock = round.getStockByFacility(f);
+            int ordered = round.getTurnOrderByFacility(f,f);
+            int newFacilityStock = facilityStock - ordered;
+            round.replaceStock(f, 0, newFacilityStock);
+            round.addTurnDeliver(f, f, ordered);
+        }
+
         return round;
     }
 }

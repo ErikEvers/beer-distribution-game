@@ -31,12 +31,20 @@ public class Round {
     }
 
 
-    public void addTurnOrder(Map<Facility, Integer> order, Facility facilityFrom) {
-        turnOrder.put(facilityFrom, order);
+    public void addTurnOrder(Facility facilityFrom, Facility facilityTo, Integer OrderAmount) {
+        Map<Facility, Integer> orderTo = new HashMap();
+        orderTo.put(facilityTo, OrderAmount);
+        turnOrder.put(facilityFrom, orderTo);
     }
 
-    public void addTurnDeliver(Map<Facility, Integer> order, Facility facilityFrom) {
-        turnDeliver.put(facilityFrom, order);
+    public int getTurnOrderByFacility(Facility facilityFrom, Facility facilityTo) {
+        return turnOrder.get(facilityFrom).get(facilityTo);
+    }
+
+    public void addTurnDeliver(Facility facilityFrom, Facility facilityTo, Integer OrderAmount) {
+        Map<Facility, Integer> orderTo = new HashMap();
+        orderTo.put(facilityTo, OrderAmount);
+        turnDeliver.put(facilityFrom, orderTo);
     }
 
     public int getTurnDeliverByFacility(Facility facilityFrom, Facility facilityTo) {
@@ -57,6 +65,10 @@ public class Round {
 
     public int getStockByFacility(Facility facility) {
         return stock.get(facility);
+    }
+
+    public void replaceStock(Facility facility, Integer oldValue, Integer newStock) {
+        stock.replace(facility, newStock);
     }
 
     public void addFacilityremainingStock(Integer remainingBudgetNumber, Facility facility) {
