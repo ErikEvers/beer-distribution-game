@@ -6,4 +6,10 @@ public interface ILeaderMigration {
 
   Player startMigration(Player[] players);
 
+  ElectionModel receiveElectionMessage(ElectionModel electionModel);
+
+  void initialize();
+
+  void receiveVictoryMessage(Player electedPlayer);
+
 }
