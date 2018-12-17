@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
+import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 import javax.inject.Inject;
@@ -16,8 +17,13 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
    * @param players -> all the connected player
    */
   public Player startMigration(Player[] players) {
-    Player currentPlayer = electionHandler.setupAlgorithm(players);
-		Player winner = currentPlayer;
+    Player currentPlayer = null;
+    try {
+      currentPlayer = electionHandler.setupAlgorithm(players);
+    } catch (PlayerNotFoundException e) {
+      e.printStackTrace();
+    }
+    Player winner = currentPlayer;
 
 		List<Player> answeredPlayers = electionHandler.sendElectionMessage(players);
 

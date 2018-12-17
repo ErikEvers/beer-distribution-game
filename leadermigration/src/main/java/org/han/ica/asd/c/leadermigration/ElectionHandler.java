@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
+import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.model.Player;
 import javax.inject.Inject;
 import java.net.InetAddress;
@@ -20,9 +21,8 @@ public class ElectionHandler {
    * Setup the algorithm in de electionModel.
    * @param players -> All connected players to send a message.
    */
-  public Player setupAlgorithm(Player[] players) {
-
-    electionModel.setCurrentPlayer(getPlayerBiIp(players));
+  public Player setupAlgorithm(Player[] players) throws PlayerNotFoundException {
+    electionModel.setCurrentPlayer(getPlayerByIp(players));
 		receivedPlayers = new ArrayList<>();
     return electionModel.getCurrentPlayer();
   }
@@ -88,31 +88,21 @@ public class ElectionHandler {
   }
 
   /**
-   * Get own ip address
-   * @return -> ipAddress as String, when not found return NULL.
-   */
-  private static String getOwnIpAddress() {
-    try {
-      return InetAddress.getLocalHost().getHostAddress();
-    } catch (UnknownHostException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-    }
-    return null;
-  }
-
-  /**
    * Get current player by its ip address
    * @param players -> All players in an array
    * @return the current player
    */
-  private Player getPlayerBiIp(Player[] players) {
-    for(Player player: players) {
-      if(player.getIpAddress().equals(ElectionHandler.getOwnIpAddress())) {
-        return player;
+  private Player getPlayerByIp(Player[] players) throws PlayerNotFoundException{
+    try {
+      for(Player player: players) {
+        if(player.getIpAddress().equals(InetAddress.getLocalHost().getHostAddress())) {
+          return player;
+        }
       }
+    } catch(UnknownHostException e) {
+      logger.log(Level.SEVERE, e.getMessage(), e);
     }
-    return null;
+    throw new PlayerNotFoundException();
   }
-
 
 }
