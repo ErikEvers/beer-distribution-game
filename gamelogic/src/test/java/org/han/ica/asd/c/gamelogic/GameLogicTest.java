@@ -92,11 +92,13 @@ public class GameLogicTest {
     }
 
     private void setupCalculateRoundTests() {
-        manufacturer = new Facility("0", 0, "0", "0", "0");
-        regionalWarehouse = new Facility("0", 0, "0", "0", "0");
-        wholesale = new Facility("0", 0, "0", "0", "0");
-        retailer = new Facility("0", 0, "0", "0", "0");
-        demand = new Facility("0", 0, "0", "0", "0");
+        FacilityType facilityType = new FacilityType("", "", 0, 0,5, 25, 500, 50);
+
+        manufacturer = new Facility("0", 0, facilityType, "0", "0");
+        regionalWarehouse = new Facility("0", 0, facilityType, "0", "0");
+        wholesale = new Facility("0", 0, facilityType, "0", "0");
+        retailer = new Facility("0", 0, facilityType, "0", "0");
+        demand = new Facility("0", 0, facilityType, "0", "0");
 
         FacilityLinkedTo facilityLinkedTo = new FacilityLinkedTo("0", manufacturer, manufacturer, true);
         FacilityLinkedTo facilityLinkedTo1 = new FacilityLinkedTo("0", regionalWarehouse, manufacturer, true);
@@ -140,10 +142,28 @@ public class GameLogicTest {
         Assert.assertEquals(round.getTurnDeliverByFacility(wholesale, regionalWarehouse), 30);
         Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
         Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
+
+        Assert.assertEquals(round.getTurnDeliverByFacility(manufacturer, manufacturer), 25);
+        Assert.assertEquals(round.getTurnDeliverByFacility(regionalWarehouse, manufacturer), 0);
+        Assert.assertEquals(round.getTurnDeliverByFacility(wholesale, regionalWarehouse), 30);
+        Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
+        Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
+
+        Assert.assertEquals(round.getTurnReceivedByFacility(manufacturer, manufacturer), 25);
+        Assert.assertEquals(round.getTurnReceivedByFacility(regionalWarehouse, manufacturer), 0);
+        Assert.assertEquals(round.getTurnReceivedByFacility(wholesale, regionalWarehouse), 30);
+        Assert.assertEquals(round.getTurnReceivedByFacility(retailer, wholesale), 15);
+        Assert.assertEquals(round.getTurnReceivedByFacility(demand, retailer), 30);
+
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(manufacturer), false);
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(regionalWarehouse), false);
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(wholesale), false);
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(retailer), false);
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(demand), false);
     }
 
     @Test
-    public void testIfBacklogCalculationGoesCorrectly() {
+    public void testIfBacklogAndDeliverCalculationGoesCorrectly() {
         setupCalculateRoundTests();
 
         Round round = new RoundFake("0", 0);
@@ -172,7 +192,54 @@ public class GameLogicTest {
         Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
         Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
 
-        Assert.assertEquals(round.getTurnBacklogByFacility(regionalWarehouse, manufacturer), 110);
-        Assert.assertEquals(round.getTurnBacklogByFacility(manufacturer, regionalWarehouse), 40);
+        Assert.assertEquals(round.getTurnReceivedByFacility(manufacturer, manufacturer), 25);
+        Assert.assertEquals(round.getTurnReceivedByFacility(regionalWarehouse, manufacturer), 0);
+        Assert.assertEquals(round.getTurnReceivedByFacility(wholesale, regionalWarehouse), 40);
+        Assert.assertEquals(round.getTurnReceivedByFacility(retailer, wholesale), 15);
+        Assert.assertEquals(round.getTurnReceivedByFacility(demand, retailer), 30);
+
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(manufacturer), false);
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(regionalWarehouse), false);
+        Assert.assertEquals(round.getTurnBacklogByFacility(wholesale, regionalWarehouse), 110);
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(retailer), false);
+        Assert.assertEquals(round.isTurnBackLogfilledByFacility(demand), false);
+    }
+
+    @Test
+    public void testIfCalculatingRemainingBudgetGoesCorrectly() {
+        setupCalculateRoundTests();
+
+        Round round = new RoundFake("0", 0);
+        round.addTurnOrder(manufacturer, manufacturer, 25);
+        round.addTurnOrder(regionalWarehouse, manufacturer, 0);
+        round.addTurnOrder(wholesale, regionalWarehouse, 50);
+        round.addTurnOrder(retailer, wholesale, 35);
+        round.addTurnOrder(demand, retailer, 30);
+
+        round.addFacilityStock(40, manufacturer);
+        round.addFacilityStock(40, regionalWarehouse);
+        round.addFacilityStock(40, wholesale);
+        round.addFacilityStock(40, retailer);
+        round.addFacilityStock(10000, demand);
+
+        round = gameLogic.calculateRound(round);
+
+        Assert.assertEquals(round.getStockByFacility(manufacturer), 65);
+        Assert.assertEquals(round.getStockByFacility(regionalWarehouse), 0);
+        Assert.assertEquals(round.getStockByFacility(wholesale), 45);
+        Assert.assertEquals(round.getStockByFacility(retailer), 45);
+        Assert.assertEquals(round.getTurnBacklogByFacility(wholesale, regionalWarehouse), 10);
+
+        //stockcost = 65 * 5 = 325; backlogcost = 0 * 25 = 0; remaining budget = 500 - 325 - 0 = 175
+        Assert.assertEquals(round.getRemainingBudget(manufacturer), 175);
+
+        //stockcost = 0 * 5 = 0; backlogcost = 10 * 25 = 250; remaining budget = 500 - 250 - 0 = 250
+        Assert.assertEquals(round.getRemainingBudget(regionalWarehouse), 250);
+
+        //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0;  remaining budget = 500 - 225 - 0 = 275
+        Assert.assertEquals(round.getRemainingBudget(wholesale), 275);
+
+        //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0;  remaining budget = 500 - 225 - 0 = 275
+        Assert.assertEquals(round.getRemainingBudget(retailer), 275);
     }
 }

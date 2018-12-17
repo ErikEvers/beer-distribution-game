@@ -8,7 +8,6 @@ import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -94,6 +93,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
     }
 
+    /**
+     * Calculates the round.
+     * @param round has the information needed to calculate the round
+     * @return
+     */
     @Override
     public Round calculateRound(Round round) {
 
@@ -101,20 +105,27 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
             Facility facilityOrder = f.getFacilityOrder();
             Facility facilityDeliver = f.getFacilityDeliver();
 
-          //  if (round.isStockExisting(facilityOrder)) {
-                int facilityStockOrder = round.getStockByFacility(facilityOrder);
-                int ordered = round.getTurnOrderByFacility(facilityOrder, facilityDeliver);
-                int newFacilityStockOrder = facilityStockOrder + ordered;
+            int ordered = round.getTurnOrderByFacility(facilityOrder, facilityDeliver);
 
-                if (!facilityOrder.equals(facilityDeliver)) {
-                    int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
-                    int newFacilityStockDeliver = facilityStockDeliver - ordered;
-                    round.replaceStock(facilityDeliver, 0, newFacilityStockDeliver);
+            if (!facilityOrder.equals(facilityDeliver)) {
+                int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
+                int newFacilityStockDeliver = facilityStockDeliver - ordered;
+
+                if (newFacilityStockDeliver < 0) {
+                    ordered = newFacilityStockDeliver + ordered;
+                    round.addTurnBackOrder(facilityOrder, facilityDeliver, -newFacilityStockDeliver);
+                    newFacilityStockDeliver = 0;
                 }
 
-                round.replaceStock(facilityOrder, 0, newFacilityStockOrder);
-                round.addTurnDeliver(facilityOrder, facilityDeliver, ordered);
-         //   }
+                round.updateStock(facilityDeliver, newFacilityStockDeliver);
+            }
+
+            int facilityStockOrder = round.getStockByFacility(facilityOrder);
+            int newFacilityStockOrder = facilityStockOrder + ordered;
+
+            round.addTurnReceived(facilityOrder, facilityDeliver, ordered);
+            round.updateStock(facilityOrder, newFacilityStockOrder);
+            round.addTurnDeliver(facilityOrder, facilityDeliver, ordered);
         }
 
         return round;
