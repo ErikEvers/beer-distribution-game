@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gamelogic.public_interfaces;
+package org.han.ica.asd.c.gui_play_game.public_interfaces;
 
 
 import org.han.ica.asd.c.model.Facility;
