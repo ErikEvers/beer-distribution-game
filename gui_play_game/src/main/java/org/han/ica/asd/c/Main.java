@@ -15,8 +15,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResources");
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"), resourceBundle);
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"), ResourceBundle.getBundle("languageResources", new Locale("ar_SA")));
         primaryStage.setScene(new Scene(root));
         if (!ComponentOrientation.getOrientation(new Locale(System.getProperty("user.language"))).isLeftToRight()){
             root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
