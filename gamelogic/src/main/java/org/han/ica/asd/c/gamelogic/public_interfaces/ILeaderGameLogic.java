@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gamelogic.public_interfaces;
 
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.model.Round;
 
 public interface ILeaderGameLogic {
     /**
@@ -14,4 +15,6 @@ public interface ILeaderGameLogic {
      * @param playerId Identifier of the player to remove.
      */
     void removeAgentByPlayerId(String playerId);
+
+    Round calculateRound(Round round);
 }

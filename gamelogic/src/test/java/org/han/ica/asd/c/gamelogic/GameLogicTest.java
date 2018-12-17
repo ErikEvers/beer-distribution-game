@@ -1,4 +1,5 @@
 package org.han.ica.asd.c.gamelogic;
+import org.han.ica.asd.c.gamelogic.participants.fakes.RoundFake;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IConnectedForPlayer;
 import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
@@ -7,6 +8,7 @@ import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,12 +24,18 @@ public class GameLogicTest {
     private IConnectedForPlayer communication;
     private IPersistence persistence;
 
+    private Map<Facility, Map<Facility, Integer>> turnOrder;
+    private Map<Facility, Integer> stock;
+
     @BeforeEach
     public void setup() {
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IPersistence.class);
         participantsPool = mock(ParticipantsPool.class);
         gameLogic = new GameLogic("test", communication, persistence, participantsPool);
+
+        stock = new HashMap<>();
+        turnOrder = new HashMap<>();
     }
 
     @Test
@@ -81,5 +89,29 @@ public class GameLogicTest {
         when(persistence.getPlayerById(anyString())).thenReturn(new PlayerFake());
         gameLogic.removeAgentByPlayerId(anyString());
         verify(participantsPool, times(1)).replaceAgentWithPlayer(any(PlayerParticipant.class));
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectly() {
+        Facility manufacturer = new Facility("0", 0, "0", "0", "0");
+        Facility distributor = new Facility("0", 0, "0", "0", "0");
+        Facility wholesale = new Facility("0", 0, "0", "0", "0");
+        Facility retailer = new Facility("0", 0, "0", "0", "0");
+
+        stock.put(manufacturer, 40);
+
+        turnOrder = new HashMap<>();
+        Map<Facility, Integer> orderTo = new HashMap();
+        orderTo.put(manufacturer, 25);
+
+        Round round = new RoundFake("0", 0);
+        round.addTurnOrder(orderTo, manufacturer);
+
+        round.addFacilityStock(40, manufacturer);
+
+        round = gameLogic.calculateRound(round);
+
+        Assert.assertEquals(round.getStockByFacility(manufacturer), 15);
+        Assert.assertEquals(round.getTurnDeliverByFacility(manufacturer, manufacturer), 25);
     }
 }

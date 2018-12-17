@@ -84,4 +84,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         Player player = persistence.getPlayerById(playerId);
         participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
     }
+
+    @Override
+    public Round calculateRound(Round round) {
+        return round;
+    }
 }
