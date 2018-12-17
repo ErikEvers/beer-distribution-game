@@ -24,6 +24,11 @@ public class GameLogicTest {
     private ParticipantsPool participantsPool;
     private IConnectedForPlayer communication;
     private IPersistence persistence;
+    Facility manufacturer;
+    Facility regionalWarehouse;
+    Facility wholesale;
+    Facility retailer;
+    Facility demand;
 
     @BeforeEach
     public void setup() {
@@ -86,13 +91,12 @@ public class GameLogicTest {
         verify(participantsPool, times(1)).replaceAgentWithPlayer(any(PlayerParticipant.class));
     }
 
-    @Test
-    public void testIfCalculatingInventoryGoesCorrectly() {
-        Facility manufacturer = new Facility("0", 0, "0", "0", "0");
-        Facility regionalWarehouse = new Facility("0", 0, "0", "0", "0");
-        Facility wholesale = new Facility("0", 0, "0", "0", "0");
-        Facility retailer = new Facility("0", 0, "0", "0", "0");
-        Facility demand = new Facility("0", 0, "0", "0", "0");
+    private void setupCalculateRoundTests() {
+        manufacturer = new Facility("0", 0, "0", "0", "0");
+        regionalWarehouse = new Facility("0", 0, "0", "0", "0");
+        wholesale = new Facility("0", 0, "0", "0", "0");
+        retailer = new Facility("0", 0, "0", "0", "0");
+        demand = new Facility("0", 0, "0", "0", "0");
 
         FacilityLinkedTo facilityLinkedTo = new FacilityLinkedTo("0", manufacturer, manufacturer, true);
         FacilityLinkedTo facilityLinkedTo1 = new FacilityLinkedTo("0", regionalWarehouse, manufacturer, true);
@@ -105,6 +109,11 @@ public class GameLogicTest {
         gameLogic.addfacilities(facilityLinkedTo2);
         gameLogic.addfacilities(facilityLinkedTo3);
         gameLogic.addfacilities(facilityLinkedTo4);
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectly() {
+        setupCalculateRoundTests();
 
         Round round = new RoundFake("0", 0);
         round.addTurnOrder(manufacturer, manufacturer, 25);
@@ -131,5 +140,39 @@ public class GameLogicTest {
         Assert.assertEquals(round.getTurnDeliverByFacility(wholesale, regionalWarehouse), 30);
         Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
         Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
+    }
+
+    @Test
+    public void testIfBacklogCalculationGoesCorrectly() {
+        setupCalculateRoundTests();
+
+        Round round = new RoundFake("0", 0);
+        round.addTurnOrder(manufacturer, manufacturer, 25);
+        round.addTurnOrder(regionalWarehouse, manufacturer, 0);
+        round.addTurnOrder(wholesale, regionalWarehouse, 150);
+        round.addTurnOrder(retailer, wholesale, 15);
+        round.addTurnOrder(demand, retailer, 30);
+
+        round.addFacilityStock(40, manufacturer);
+        round.addFacilityStock(40, regionalWarehouse);
+        round.addFacilityStock(40, wholesale);
+        round.addFacilityStock(40, retailer);
+        round.addFacilityStock(10000, demand);
+
+        round = gameLogic.calculateRound(round);
+
+        Assert.assertEquals(round.getStockByFacility(manufacturer), 65);
+        Assert.assertEquals(round.getStockByFacility(regionalWarehouse), 0);
+        Assert.assertEquals(round.getStockByFacility(wholesale), 65);
+        Assert.assertEquals(round.getStockByFacility(retailer), 25);
+
+        Assert.assertEquals(round.getTurnDeliverByFacility(manufacturer, manufacturer), 25);
+        Assert.assertEquals(round.getTurnDeliverByFacility(regionalWarehouse, manufacturer), 0);
+        Assert.assertEquals(round.getTurnDeliverByFacility(wholesale, regionalWarehouse), 40);
+        Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
+        Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
+
+        Assert.assertEquals(round.getTurnBacklogByFacility(regionalWarehouse, manufacturer), 110);
+        Assert.assertEquals(round.getTurnBacklogByFacility(manufacturer, regionalWarehouse), 40);
     }
 }

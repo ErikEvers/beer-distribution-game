@@ -31,6 +31,7 @@ public class Round {
     }
 
 
+    //Order
     public void addTurnOrder(Facility facilityFrom, Facility facilityTo, Integer OrderAmount) {
         Map<Facility, Integer> orderTo = new HashMap();
         orderTo.put(facilityTo, OrderAmount);
@@ -41,6 +42,7 @@ public class Round {
         return turnOrder.get(facilityFrom).get(facilityTo);
     }
 
+    //Deliver
     public void addTurnDeliver(Facility facilityFrom, Facility facilityTo, Integer OrderAmount) {
         Map<Facility, Integer> orderTo = new HashMap();
         orderTo.put(facilityTo, OrderAmount);
@@ -51,12 +53,22 @@ public class Round {
         return turnDeliver.get(facilityFrom).get(facilityTo);
     }
 
+    //Received
     public void addTurnReceived(Map<Facility, Integer> order, Facility facilityTo) {
         turnReceived.put(facilityTo, order);
     }
 
+    public int getTurnReceivedByFacility(Facility facilityFrom, Facility facilityTo) {
+        return turnReceived.get(facilityFrom).get(facilityTo);
+    }
+
+    //Backlog
     public void addTurnBackOrder(Map<Facility, Integer> order, Facility facilityFrom) {
         turnBackOrder.put(facilityFrom, order);
+    }
+
+    public int getTurnBacklogByFacility(Facility facilityFrom, Facility facilityTo) {
+        return turnBackOrder.get(facilityFrom).get(facilityTo);
     }
 
     public void addFacilityStock(Integer stockNumber, Facility facility) {
@@ -106,6 +118,5 @@ public class Round {
     public void addTurn(FacilityTurn turn){
         turns.add(turn);
     }
-
 
 }
