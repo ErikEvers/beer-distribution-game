@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
 
@@ -142,9 +141,9 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                 }
                 conn.commit();
             }
-
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -164,8 +163,8 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
 
                     pstmt.executeUpdate();
                 }
+                conn.commit();
             }
-            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }

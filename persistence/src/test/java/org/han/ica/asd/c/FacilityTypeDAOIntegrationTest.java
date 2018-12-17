@@ -3,7 +3,6 @@ package org.han.ica.asd.c;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
@@ -12,8 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class FacilityTypeDAOIntegrationTest {
@@ -35,8 +32,6 @@ class FacilityTypeDAOIntegrationTest {
 
 		DBConnectionTest.getInstance().createNewDatabase();
 		facilityTypeDAO = injector.getInstance(FacilityTypeDAO.class);
-
-		//setDatabaseConnection(facilityTypeDAO,connection);
 	}
 
 	@AfterEach
@@ -83,17 +78,26 @@ class FacilityTypeDAOIntegrationTest {
 
 		Assert.assertEquals(0,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
 		facilityTypeDAO.createFacilityType(FACILITY_TYPE);
-		Assert.assertEquals(1,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
+		facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+		Assert.assertEquals(2,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
 		facilityTypeDAO.deleteAllFacilitytypesForABeergame("BeerGameZutphen");
 		Assert.assertEquals(0,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
 	}
 
 	@Test
 	void deleteSpecificFacilityType() {
+
+        Assert.assertEquals(0,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE);
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+        Assert.assertEquals(2,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
+        facilityTypeDAO.deleteSpecificFacilityType(FACILITY_TYPE.getGameId(), FACILITY_TYPE.getFacilityName());
+        Assert.assertEquals(1,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
 	}
 
 	@Test
 	void deleteAllFacilityTypesForABeergame() {
+
 	}
 
 	@Test
@@ -102,15 +106,5 @@ class FacilityTypeDAOIntegrationTest {
 
 	@Test
 	void readSpecificFacilityType() {
-	}
-
-	private void setDatabaseConnection(FacilityTypeDAO facilityTypeDAO, DatabaseConnection connection) {
-		try {
-			Field connField = facilityTypeDAO.getClass().getDeclaredField("databaseConnection");
-			connField.setAccessible(true);
-			connField.set(facilityTypeDAO, connection);
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
-		}
 	}
 }
