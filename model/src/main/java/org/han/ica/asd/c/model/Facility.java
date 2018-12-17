@@ -3,11 +3,12 @@ package org.han.ica.asd.c.model;
 public class Facility {
     private String gameId;
     private int facilityId;
-    private String facilityType;
+    private FacilityType facilityType;
     private String ipAddress;
     private String gameAgentName;
 
-    public Facility(String gameId, int facilityId, String facilityType, String ipAddress, String gameAgentName) {
+
+    public Facility(String gameId, int facilityId, FacilityType facilityType, String ipAddress, String gameAgentName) {
         this.gameId = gameId;
         this.facilityId = facilityId;
         this.facilityType = facilityType;
@@ -31,11 +32,11 @@ public class Facility {
         this.facilityId = facilityId;
     }
 
-    public String getFacilityType() {
+    public FacilityType getFacilityType() {
         return facilityType;
     }
 
-    public void setFacilityType(String facilityType) {
+    public void setFacilityType(FacilityType facilityType) {
         this.facilityType = facilityType;
     }
 
