@@ -106,6 +106,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
             Facility facilityDeliver = f.getFacilityDeliver();
 
             int ordered = round.getTurnOrderByFacility(facilityOrder, facilityDeliver);
+            int backOrders = 0;
 
             if (!facilityOrder.equals(facilityDeliver)) {
                 int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
@@ -113,8 +114,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
                 if (newFacilityStockDeliver < 0) {
                     ordered = newFacilityStockDeliver + ordered;
-                    round.addTurnBackOrder(facilityOrder, facilityDeliver, -newFacilityStockDeliver);
+                    backOrders = -newFacilityStockDeliver;
                     newFacilityStockDeliver = 0;
+                    round.addTurnBackOrder(facilityOrder, facilityDeliver, backOrders);
                 }
 
                 round.updateStock(facilityDeliver, newFacilityStockDeliver);
@@ -128,6 +130,32 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
             round.addTurnDeliver(facilityOrder, facilityDeliver, ordered);
         }
 
+        calculateNewRemainingBudget(round);
         return round;
+    }
+
+    private void calculateNewRemainingBudget(Round round) {
+        for (FacilityLinkedTo f : facilitityLinks) {
+            Facility facilityOrder = f.getFacilityOrder();
+            if (round.isremainingBudgetExisting(facilityOrder)) {
+                //The stock is calculated with the FacilityOrder variable
+                int remainingBudget = round.getRemainingBudget(facilityOrder);
+                int stock = round.getStockByFacility(facilityOrder);
+                FacilityType facilityType = facilityOrder.getFacilityType();
+                int stockCosts = stock * facilityType.getStockHoldingCosts();
+                remainingBudget -= stockCosts;
+                round.updateRemainingBudget(remainingBudget, facilityOrder);
+
+                //The backlog gets calculated with the FacilityDeliver
+                if (round.isTurnBackLogfilledByFacility(facilityOrder)) {
+                    int backOrders = round.getTurnBacklogByFacility(facilityOrder, f.getFacilityDeliver());
+                    int backlogcosts = backOrders * facilityType.getOpenOrderCosts();
+                    Facility facilityDeliver = f.getFacilityDeliver();
+                    int remainingBudgetFacilityDeliver = round.getRemainingBudget(facilityDeliver);
+                    remainingBudgetFacilityDeliver -= backlogcosts;
+                    round.updateRemainingBudget(remainingBudgetFacilityDeliver, f.getFacilityDeliver());
+                }
+            }
+        }
     }
 }

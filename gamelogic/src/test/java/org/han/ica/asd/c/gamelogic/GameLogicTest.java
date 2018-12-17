@@ -24,11 +24,11 @@ public class GameLogicTest {
     private ParticipantsPool participantsPool;
     private IConnectedForPlayer communication;
     private IPersistence persistence;
-    Facility manufacturer;
-    Facility regionalWarehouse;
-    Facility wholesale;
-    Facility retailer;
-    Facility demand;
+    private Facility manufacturer;
+    private Facility regionalWarehouse;
+    private Facility wholesale;
+    private Facility retailer;
+    private Facility demand;
 
     @BeforeEach
     public void setup() {
@@ -92,13 +92,17 @@ public class GameLogicTest {
     }
 
     private void setupCalculateRoundTests() {
-        FacilityType facilityType = new FacilityType("", "", 0, 0,5, 25, 500, 50);
+        FacilityType facilityType = new FacilityType("Manufacturer", "", 0, 0,5, 25, 500, 50);
+        FacilityType facilityType1 = new FacilityType("RegionalWarehouse", "", 0, 0,5, 25, 500, 50);
+        FacilityType facilityType2 = new FacilityType("Wholesale", "", 0, 0,5, 25, 500, 50);
+        FacilityType facilityType3 = new FacilityType("Retailer", "", 0, 0,5, 25, 500, 50);
+        FacilityType facilityType4 = new FacilityType("Demand", "", 0, 0,5, 25, 500, 50);
 
         manufacturer = new Facility("0", 0, facilityType, "0", "0");
-        regionalWarehouse = new Facility("0", 0, facilityType, "0", "0");
-        wholesale = new Facility("0", 0, facilityType, "0", "0");
-        retailer = new Facility("0", 0, facilityType, "0", "0");
-        demand = new Facility("0", 0, facilityType, "0", "0");
+        regionalWarehouse = new Facility("0", 0, facilityType1, "0", "0");
+        wholesale = new Facility("0", 0, facilityType2, "0", "0");
+        retailer = new Facility("0", 0, facilityType3, "0", "0");
+        demand = new Facility("0", 0, facilityType4, "0", "0");
 
         FacilityLinkedTo facilityLinkedTo = new FacilityLinkedTo("0", manufacturer, manufacturer, true);
         FacilityLinkedTo facilityLinkedTo1 = new FacilityLinkedTo("0", regionalWarehouse, manufacturer, true);
@@ -132,34 +136,34 @@ public class GameLogicTest {
 
         round = gameLogic.calculateRound(round);
 
-        Assert.assertEquals(round.getStockByFacility(manufacturer), 65);
-        Assert.assertEquals(round.getStockByFacility(regionalWarehouse), 10);
-        Assert.assertEquals(round.getStockByFacility(wholesale), 55);
-        Assert.assertEquals(round.getStockByFacility(retailer), 25);
+        Assert.assertEquals(65, round.getStockByFacility(manufacturer));
+        Assert.assertEquals(10, round.getStockByFacility(regionalWarehouse));
+        Assert.assertEquals(55, round.getStockByFacility(wholesale));
+        Assert.assertEquals(25, round.getStockByFacility(retailer));
 
-        Assert.assertEquals(round.getTurnDeliverByFacility(manufacturer, manufacturer), 25);
-        Assert.assertEquals(round.getTurnDeliverByFacility(regionalWarehouse, manufacturer), 0);
-        Assert.assertEquals(round.getTurnDeliverByFacility(wholesale, regionalWarehouse), 30);
-        Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
-        Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
+        Assert.assertEquals(25, round.getTurnDeliverByFacility(manufacturer, manufacturer));
+        Assert.assertEquals( 0, round.getTurnDeliverByFacility(regionalWarehouse, manufacturer));
+        Assert.assertEquals(30, round.getTurnDeliverByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(15, round.getTurnDeliverByFacility(retailer, wholesale));
+        Assert.assertEquals(30, round.getTurnDeliverByFacility(demand, retailer));
 
-        Assert.assertEquals(round.getTurnDeliverByFacility(manufacturer, manufacturer), 25);
-        Assert.assertEquals(round.getTurnDeliverByFacility(regionalWarehouse, manufacturer), 0);
-        Assert.assertEquals(round.getTurnDeliverByFacility(wholesale, regionalWarehouse), 30);
-        Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
-        Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
+        Assert.assertEquals(25, round.getTurnDeliverByFacility(manufacturer, manufacturer));
+        Assert.assertEquals( 0, round.getTurnDeliverByFacility(regionalWarehouse, manufacturer));
+        Assert.assertEquals(30, round.getTurnDeliverByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(15, round.getTurnDeliverByFacility(retailer, wholesale));
+        Assert.assertEquals(30, round.getTurnDeliverByFacility(demand, retailer));
 
-        Assert.assertEquals(round.getTurnReceivedByFacility(manufacturer, manufacturer), 25);
-        Assert.assertEquals(round.getTurnReceivedByFacility(regionalWarehouse, manufacturer), 0);
-        Assert.assertEquals(round.getTurnReceivedByFacility(wholesale, regionalWarehouse), 30);
-        Assert.assertEquals(round.getTurnReceivedByFacility(retailer, wholesale), 15);
-        Assert.assertEquals(round.getTurnReceivedByFacility(demand, retailer), 30);
+        Assert.assertEquals(25, round.getTurnReceivedByFacility(manufacturer, manufacturer));
+        Assert.assertEquals( 0, round.getTurnReceivedByFacility(regionalWarehouse, manufacturer));
+        Assert.assertEquals(30, round.getTurnReceivedByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(15, round.getTurnReceivedByFacility(retailer, wholesale));
+        Assert.assertEquals(30, round.getTurnReceivedByFacility(demand, retailer));
 
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(manufacturer), false);
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(regionalWarehouse), false);
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(wholesale), false);
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(retailer), false);
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(demand), false);
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(manufacturer));
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(regionalWarehouse));
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(wholesale));
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(retailer));
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(demand));
     }
 
     @Test
@@ -181,28 +185,28 @@ public class GameLogicTest {
 
         round = gameLogic.calculateRound(round);
 
-        Assert.assertEquals(round.getStockByFacility(manufacturer), 65);
-        Assert.assertEquals(round.getStockByFacility(regionalWarehouse), 0);
-        Assert.assertEquals(round.getStockByFacility(wholesale), 65);
-        Assert.assertEquals(round.getStockByFacility(retailer), 25);
+        Assert.assertEquals(65, round.getStockByFacility(manufacturer));
+        Assert.assertEquals( 0, round.getStockByFacility(regionalWarehouse));
+        Assert.assertEquals(65, round.getStockByFacility(wholesale));
+        Assert.assertEquals(25, round.getStockByFacility(retailer));
 
-        Assert.assertEquals(round.getTurnDeliverByFacility(manufacturer, manufacturer), 25);
-        Assert.assertEquals(round.getTurnDeliverByFacility(regionalWarehouse, manufacturer), 0);
-        Assert.assertEquals(round.getTurnDeliverByFacility(wholesale, regionalWarehouse), 40);
-        Assert.assertEquals(round.getTurnDeliverByFacility(retailer, wholesale), 15);
-        Assert.assertEquals(round.getTurnDeliverByFacility(demand, retailer), 30);
+        Assert.assertEquals(25, round.getTurnDeliverByFacility(manufacturer, manufacturer));
+        Assert.assertEquals( 0, round.getTurnDeliverByFacility(regionalWarehouse, manufacturer));
+        Assert.assertEquals(40, round.getTurnDeliverByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(15, round.getTurnDeliverByFacility(retailer, wholesale));
+        Assert.assertEquals(30, round.getTurnDeliverByFacility(demand, retailer));
 
-        Assert.assertEquals(round.getTurnReceivedByFacility(manufacturer, manufacturer), 25);
-        Assert.assertEquals(round.getTurnReceivedByFacility(regionalWarehouse, manufacturer), 0);
-        Assert.assertEquals(round.getTurnReceivedByFacility(wholesale, regionalWarehouse), 40);
-        Assert.assertEquals(round.getTurnReceivedByFacility(retailer, wholesale), 15);
-        Assert.assertEquals(round.getTurnReceivedByFacility(demand, retailer), 30);
+        Assert.assertEquals(25, round.getTurnReceivedByFacility(manufacturer, manufacturer));
+        Assert.assertEquals( 0, round.getTurnReceivedByFacility(regionalWarehouse, manufacturer));
+        Assert.assertEquals(40, round.getTurnReceivedByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(15, round.getTurnReceivedByFacility(retailer, wholesale));
+        Assert.assertEquals(30, round.getTurnReceivedByFacility(demand, retailer));
 
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(manufacturer), false);
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(regionalWarehouse), false);
-        Assert.assertEquals(round.getTurnBacklogByFacility(wholesale, regionalWarehouse), 110);
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(retailer), false);
-        Assert.assertEquals(round.isTurnBackLogfilledByFacility(demand), false);
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(manufacturer));
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(regionalWarehouse));
+        Assert.assertEquals(110, round.getTurnBacklogByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(retailer));
+        Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(demand));
     }
 
     @Test
@@ -229,22 +233,22 @@ public class GameLogicTest {
 
         round = gameLogic.calculateRound(round);
 
-        Assert.assertEquals(round.getStockByFacility(manufacturer), 65);
-        Assert.assertEquals(round.getStockByFacility(regionalWarehouse), 0);
-        Assert.assertEquals(round.getStockByFacility(wholesale), 45);
-        Assert.assertEquals(round.getStockByFacility(retailer), 45);
-        Assert.assertEquals(round.getTurnBacklogByFacility(wholesale, regionalWarehouse), 10);
+        Assert.assertEquals(65, round.getStockByFacility(manufacturer));
+        Assert.assertEquals(0, round.getStockByFacility(regionalWarehouse));
+        Assert.assertEquals(45, round.getStockByFacility(wholesale));
+        Assert.assertEquals(45, round.getStockByFacility(retailer));
+        Assert.assertEquals(10, round.getTurnBacklogByFacility(wholesale, regionalWarehouse));
 
         //stockcost = 65 * 5 = 325; backlogcost = 0 * 25 = 0; remaining budget = 500 - 325 - 0 = 175
-        Assert.assertEquals(round.getRemainingBudget(manufacturer), 175);
+        Assert.assertEquals(175, round.getRemainingBudget(manufacturer));
 
         //stockcost = 0 * 5 = 0; backlogcost = 10 * 25 = 250; remaining budget = 500 - 250 - 0 = 250
-        Assert.assertEquals(round.getRemainingBudget(regionalWarehouse), 250);
+        Assert.assertEquals(250, round.getRemainingBudget(regionalWarehouse));
 
         //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0;  remaining budget = 500 - 225 - 0 = 275
-        Assert.assertEquals(round.getRemainingBudget(wholesale), 275);
+        Assert.assertEquals(275, round.getRemainingBudget(wholesale));
 
         //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0;  remaining budget = 500 - 225 - 0 = 275
-        Assert.assertEquals(round.getRemainingBudget(retailer), 275);
+        Assert.assertEquals(275, round.getRemainingBudget(retailer));
     }
 }

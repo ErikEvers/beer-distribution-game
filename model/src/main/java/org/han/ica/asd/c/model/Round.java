@@ -83,6 +83,7 @@ public class Round {
         return turnBackOrder.containsKey(facilityFrom);
     }
 
+    //stock
     public void addFacilityStock(Integer stockNumber, Facility facility) {
         stock.put(facility, stockNumber);
     }
@@ -99,6 +100,7 @@ public class Round {
         stock.replace(facility, newStock);
     }
 
+    //Remaining budget
     public void addFacilityRemainingStock(Integer remainingBudgetNumber, Facility facility) {
         remainingBudget.put(facility, remainingBudgetNumber);
     }
@@ -109,6 +111,10 @@ public class Round {
 
     public void updateRemainingBudget(Integer remainingBudgetNumber, Facility facility) {
         remainingBudget.replace(facility, remainingBudgetNumber);
+    }
+
+    public boolean isremainingBudgetExisting(Facility facility) {
+        return remainingBudget.containsKey(facility);
     }
 
     public String getGameId() {
