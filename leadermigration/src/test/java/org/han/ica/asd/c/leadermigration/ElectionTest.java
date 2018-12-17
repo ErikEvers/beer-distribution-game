@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
 import java.net.InetAddress;
+import static org.mockito.Mockito.spy;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( InetAddress.class )
@@ -20,10 +20,8 @@ public class ElectionTest {
     private final String currentPlayerIP = "111";
 
     @Before
-    public void testSetup() throws Exception {
+    public void testSetup() {
         communicationHelper = new CommunicationHelper();
-        PowerMockito.spy(InetAddress.class);
-        PowerMockito.doReturn(currentPlayerIP).when(InetAddress.class, "getLocalHost");
     }
 
     @Test

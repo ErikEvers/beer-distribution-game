@@ -4,6 +4,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import org.han.ica.asd.c.leadermigration.*;
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
@@ -20,6 +22,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
 				protected void configure() {
 					bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
 					bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
+					bind(String.class).annotatedWith(Names.named("localIp")).toInstance("111");
 					requestStaticInjection(ElectionHandler.class);
 				}
 			});
