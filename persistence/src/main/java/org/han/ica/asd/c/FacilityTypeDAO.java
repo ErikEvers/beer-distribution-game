@@ -74,7 +74,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
      * @param facilityType A FacilityType model that contains all the data needed to update an existing FacilityType.
      */
     public void updateFacilityType(FacilityType facilityType) {
-        Connection conn;
+        Connection conn = null;
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
@@ -91,8 +91,8 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
 
                     pstmt.executeUpdate();
                 }
+                conn.commit();
             }
-            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -104,7 +104,20 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
      * @param gameId The identifier of the game from which all FacilityTypes have to be deleted.
      */
     public void deleteAllFacilitytypesForABeergame(String gameId) {
-        FacilityDAO.executePreparedStatement(gameId, databaseConnection, DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME, LOGGER);
+        Connection conn = null;
+        try {
+            conn = databaseConnection.connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
+                conn.setAutoCommit(false);
+
+                pstmt.setString(1, gameId);
+
+                pstmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
     }
 
     /**
@@ -202,14 +215,14 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                     pstmt.setString(1, gameId);
                     pstmt.setString(2, facilityName);
                     try (ResultSet rs = pstmt.executeQuery()) {
-                            type = new FacilityType(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
-                                    rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
-                                    rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
-                                    rs.getInt("StartingOrder"));
-                        }
+                        type = new FacilityType(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
+                                rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
+                                rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
+                                rs.getInt("StartingOrder"));
                     }
-                    conn.commit();
                 }
+                conn.commit();
+            }
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString());

@@ -15,12 +15,17 @@ import java.util.logging.Logger;
 class FacilityTypeDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAOIntegrationTest.class.getName());
 	private static final FacilityType FACILITY_TYPE = new FacilityType("Factory","BeerGameZutphen",50,50,50,50,50,50);
+	private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesale","BeerGameZutphen",50,50,50,50,50,50);
+	private static final FacilityType FACILITY_TYPE2_UPDATE = new FacilityType("Wholesale","BeerGameZutphen",999,999,999,999,999,999);
 
 	private FacilityTypeDAO facilityTypeDAO;
 
 	@BeforeEach
 	void setUp() {
 		DBConnectionTest.getInstance().createNewDatabase();
+		facilityTypeDAO = new FacilityTypeDAO();
+		DatabaseConnection connection = DBConnectionTest.getInstance();
+		setDatabaseConnection(facilityTypeDAO,connection);
 	}
 
 	@AfterEach
@@ -30,10 +35,6 @@ class FacilityTypeDAOIntegrationTest {
 
 	@Test
 	void createFacilityType() {
-		facilityTypeDAO = new FacilityTypeDAO();
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(facilityTypeDAO,connection);
-
 		facilityTypeDAO.createFacilityType(FACILITY_TYPE);
 		FacilityType facilityTypeDb = facilityTypeDAO.readSpecificFacilityType("BeerGameZutphen","Factory");
 
@@ -49,14 +50,25 @@ class FacilityTypeDAOIntegrationTest {
 
 	@Test
 	void updateFacilityType() {
+		facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+		Assert.assertEquals(1,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
+		facilityTypeDAO.updateFacilityType(FACILITY_TYPE2_UPDATE);
+		Assert.assertEquals(1,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
+
+		FacilityType facilityTypeDb = facilityTypeDAO.readSpecificFacilityType("BeerGameZutphen", "Wholesale");
+
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getGameId(),facilityTypeDb.getGameId());
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getFacilityName(),facilityTypeDb.getFacilityName());
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getOpenOrderCosts(),facilityTypeDb.getOpenOrderCosts());
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getStartingBudget(),facilityTypeDb.getStartingBudget());
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getValueIncomingGoods(),facilityTypeDb.getValueIncomingGoods());
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getStockHoldingCosts(),facilityTypeDb.getStockHoldingCosts());
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getValueOutgoingGoods(),facilityTypeDb.getValueOutgoingGoods());
+		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getStartingOrder(),facilityTypeDb.getStartingOrder());
 	}
 
 	@Test
 	void deleteAllFacilitytypesForABeergame() {
-		facilityTypeDAO = new FacilityTypeDAO();
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(facilityTypeDAO,connection);
-
 
 		Assert.assertEquals(0,facilityTypeDAO.readAllFacilityTypes("BeerGameZutphen").size());
 		facilityTypeDAO.createFacilityType(FACILITY_TYPE);

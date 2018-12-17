@@ -35,10 +35,11 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @param facility A model of Facility with all the data required to create a new facility.
      */
     public void createFacility(Facility facility) {
-        Connection conn;
+        Connection conn = null;
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITY)) {
+                conn.setAutoCommit(false);
 
                 pstmt.setInt(1, facility.getFacilityId());
                 pstmt.setString(2, facility.getGameId());
@@ -61,10 +62,11 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @param facility A model of Facility with all the data required to update an existing facility.
      */
     public void updateFacility(Facility facility) {
-        Connection conn;
+        Connection conn = null;
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITY)) {
+                conn.setAutoCommit(false);
 
                 pstmt.setString(1, facility.getGameAgentName());
                 pstmt.setString(2, facility.getPlayerId());
@@ -88,10 +90,11 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @param gameId The second part of the specifications to delete the specific facility.
      */
     public void deleteSpecificFacility(int faciltyId, String gameId) {
-        Connection conn;
+        Connection conn = null;
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITY)) {
+                conn.setAutoCommit(false);
 
                 pstmt.setInt(1, faciltyId);
                 pstmt.setString(2, gameId);
@@ -111,7 +114,20 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @param gameId The game identifier from witch the facilities have to be deleted.
      */
     public void deleteAllFacilitiesInGame(String gameId) {
-        executePreparedStatement(gameId, databaseConnection, DELETE_ALL_FACILITIES_IN_GAME, LOGGER);
+        Connection conn = null;
+        try {
+            conn = databaseConnection.connect();
+            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITIES_IN_GAME)) {
+                conn.setAutoCommit(false);
+
+                pstmt.setString(1, gameId);
+
+                pstmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
     }
 
 
@@ -121,7 +137,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @return The facilities that have been retrieved from the database.
      */
     public List<Facility> readAllFacilitiesInGame(String gameId) {
-        Connection conn;
+        Connection conn = null;
         ArrayList<Facility> facilities = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
@@ -134,6 +150,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
                                 rs.getString("GameAgentName"), rs.getBoolean("Bankrupt")));
                     }
                 }
+                conn.commit();
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString());
@@ -148,7 +165,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @return The retrieved facility from the database.
      */
     public Facility readSpecificFacility(int facilityId, String gameId) {
-        Connection conn;
+        Connection conn = null;
         Facility facilitie = null;
         try {
             conn = databaseConnection.connect();
@@ -162,33 +179,11 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
                                 rs.getString("PlayerId"), rs.getString("GameAgentName"), rs.getBoolean("Bankrupt"));
                     }
                 }
+                conn.commit();
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString());
         }
         return facilitie;
-    }
-
-    /**
-     *A method to execute a prepared statement for the SQLite Database.
-     * @param gameId The identifier of a game.
-     * @param databaseConnection The connection with the database.
-     * @param deleteAllFacilitiesInGame The query that needs to be executed.
-     * @param logger The logger for when the execution goes wrong.
-     */
-    static void executePreparedStatement(String gameId, DatabaseConnection databaseConnection, String deleteAllFacilitiesInGame, Logger logger) {
-        Connection conn;
-        try {
-            conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(deleteAllFacilitiesInGame)) {
-                conn.setAutoCommit(false);
-                pstmt.setString(1, gameId);
-
-                pstmt.executeUpdate();
-            }
-            conn.commit();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
-        }
     }
 }
