@@ -16,20 +16,18 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
     private LeaderMigration migrationObj;
     private Injector injector;
 
-    private void setInjector() {
-			injector = Guice.createInjector(new AbstractModule() {
-				@Override
-				protected void configure() {
-					bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
-					bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
-					bind(String.class).annotatedWith(Names.named("localIp")).toInstance("111");
-					requestStaticInjection(ElectionHandler.class);
-				}
-			});
+    public void setInjector() {
+        this.injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
+                bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
+            }
+        });
 		}
 
     public Player startElection(Player[] players) {
-    		setInjector();
+        this.setInjector();
         this.migrationObj = injector.getInstance(LeaderMigration.class);
 				return this.migrationObj.startMigration(players);
     }
@@ -42,7 +40,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
         if(!player.isConnected()) {
             return null;
         }
-				setInjector();
+        this.setInjector();
         return injector.getInstance(LeaderMigration.class).receiveElectionMessage(election);
     }
 
@@ -50,7 +48,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
         if(!player.isConnected()) {
             System.out.println("TODO: disconnect na elected");
         }
-				setInjector();
+        this.setInjector();
 				injector.getInstance(LeaderMigration.class).receiveVictoryMessage(victory);
     }
 }

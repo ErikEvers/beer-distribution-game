@@ -17,7 +17,6 @@ public class ElectionHandler {
   @Inject private static Logger logger;
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
-  @Inject @Named("localIp") private static String localIp;
 
   /**
    * Setup the algorithm in de electionModel.
@@ -95,12 +94,23 @@ public class ElectionHandler {
    * @return the current player
    */
   private Player getPlayerByIp(Player[] players) throws PlayerNotFoundException{
+		String localIp;
+		try {
+  		localIp = getLocalIp();
+		} catch (UnknownHostException e) {
+			logger.log(Level.SEVERE, "Local IP could not be retrieved", e);
+			throw new PlayerNotFoundException("Local IP could not be retrieved");
+		}
 		for(Player player: players) {
-			if(player.getIpAddress().equals(ElectionHandler.localIp)) {
+			if(player.getIpAddress().equals(localIp)) {
 				return player;
 			}
 		}
     throw new PlayerNotFoundException();
   }
+
+  private static String getLocalIp() throws UnknownHostException {
+  	return InetAddress.getLocalHost().getHostAddress();
+	}
 
 }
