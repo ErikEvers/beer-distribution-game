@@ -3,12 +3,15 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,14 +23,16 @@ public class FacilityTypeDAOIntegrationTest {
 
     private FacilityTypeDAO facilityTypeDAO;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         DBConnectionTest.getInstance().createNewDatabase();
+        System.out.println("Setup");
     }
 
-    @AfterEach
+    @After
     public void tearDown() {
         DBConnectionTest.getInstance().cleanup();
+        System.out.println("Teardown");
     }
 
     @Test
@@ -71,6 +76,26 @@ public class FacilityTypeDAOIntegrationTest {
         Assert.assertEquals(FACILITY_TYPE2_UPDATE.getStockHoldingCosts(), facilityTypeFromDB.getStockHoldingCosts());
         Assert.assertEquals(FACILITY_TYPE2_UPDATE.getValueIncomingGoods(), facilityTypeFromDB.getValueIncomingGoods());
         Assert.assertEquals(FACILITY_TYPE2_UPDATE.getValueOutgoingGoods(), facilityTypeFromDB.getValueOutgoingGoods());
+    }
+
+    @Test
+    public void deleteSpecificFacilityType() {
+        facilityTypeDAO = new FacilityTypeDAO();
+
+        DatabaseConnection connection = DBConnectionTest.getInstance();
+        setDatabaseConnection(facilityTypeDAO, connection);
+
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE);
+
+        List<FacilityType> facilityTypeFromDB = facilityTypeDAO.readAllFacilityTypes(FACILITY_TYPE.getGameId());
+
+        Assert.assertEquals(1, facilityTypeFromDB.size());
+
+        facilityTypeDAO.deleteSpecificFacilityType(FACILITY_TYPE.getGameId(), FACILITY_TYPE.getFacilityName());
+
+        List<FacilityType> facilityTypeFromDBAfterDelete = facilityTypeDAO.readAllFacilityTypes(FACILITY_TYPE.getGameId());
+
+        Assert.assertEquals(0, facilityTypeFromDBAfterDelete.size());
     }
 
 

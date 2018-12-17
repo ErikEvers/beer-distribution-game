@@ -109,19 +109,21 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
      * @param facilityName The second part of the identifier of the FacilityType from witch a FacilityTypes has to be deleted.
      */
     public void deleteSpecificFacilityType(String gameId, String facilityName) {
-        Connection conn;
+        Connection conn = null;
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
                     conn.setAutoCommit(false);
+
                     pstmt.setString(1, gameId);
-                    pstmt.setString(1, facilityName);
+                    pstmt.setString(2, facilityName);
 
                     pstmt.executeUpdate();
                 }
+                conn.commit();
             }
-            conn.commit();
+
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
