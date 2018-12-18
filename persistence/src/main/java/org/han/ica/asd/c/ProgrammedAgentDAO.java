@@ -18,7 +18,7 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
     private static final String UPDATE_PROGRAMMEDAGENT = "UPDATE ProgrammedAgent SET ProgrammedAgentName = ? WHERE ProgrammedAgentName = ?";
     private static final String DELETE_PROGRAMMEDAGENT = "DELETE FROM ProgrammedAgent WHERE ProgrammedAgentName = ?";
     private static final String READ_ALL_PROGRAMMEDAGENTS = "SELECT * FROM ProgrammedAgent";
-    private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProgrammedAgentDAO.class.getName());
 
     @Inject
     IDatabaseConnection databaseConnection;
