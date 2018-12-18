@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.*;
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
@@ -26,7 +27,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
         });
 		}
 
-    public Player startElection(Player[] players) {
+    public Player startElection(Player[] players) throws PlayerNotFoundException {
         this.setInjector();
         this.migrationObj = injector.getInstance(LeaderMigration.class);
 				return this.migrationObj.startMigration(players);

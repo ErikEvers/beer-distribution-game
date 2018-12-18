@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
+import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.testutil.CommunicationHelper;
 import org.han.ica.asd.c.model.Player;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class ElectionTest {
     }
 
     @Test
-    public void basicElectionTest() {
+    public void basicElectionTest() throws PlayerNotFoundException {
         Player[] players = new Player[3];
         players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         players[1] = new Player("1", "2", "222", 2, "Henk", true);
@@ -37,7 +38,7 @@ public class ElectionTest {
     }
 
     @Test
-    public void secondBasicElectionTest() {
+    public void secondBasicElectionTest() throws PlayerNotFoundException {
         Player[] players = new Player[3];
         players[0] = new Player("1", "2", "222", 2, "Henk", true);
         players[1] = new Player("1", "3", "333", 3, "Piet", true);
@@ -47,7 +48,7 @@ public class ElectionTest {
     }
 
     @Test
-    public void singlePlayerElectionTest() {
+    public void singlePlayerElectionTest() throws PlayerNotFoundException {
         Player[] players = new Player[1];
         players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         Player elected = communicationHelper.startElection(players);
@@ -55,7 +56,7 @@ public class ElectionTest {
     }
 
     @Test
-    public void playerDisconnectDuringElectionTest() {
+    public void playerDisconnectDuringElectionTest() throws PlayerNotFoundException {
         Player[] players = new Player[3];
         players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         players[1] = new Player("1", "2", "222", 2, "Henk", true);
@@ -66,7 +67,7 @@ public class ElectionTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void playerNotElected() {
+    public void playerNotElected() throws PlayerNotFoundException {
         Player[] players = new Player[3];
         players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
         players[1] = new Player("1", "2", "222", 2, "Henk", true);
@@ -77,7 +78,7 @@ public class ElectionTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void playerDisconnectAfterElection() {
+    public void playerDisconnectAfterElection() throws PlayerNotFoundException {
         Player[] players = new Player[4];
         players[0] = new Player("2", "1", "111", 1, "Klaas", true);
         players[1] = new Player("2", "2", "222", 2, "Nameless", true);
@@ -91,7 +92,7 @@ public class ElectionTest {
     }
 
     @Test(expected = AssertionError.class)
-    public void playerRejoinAfterElection() {
+    public void playerRejoinAfterElection() throws PlayerNotFoundException {
         Player[] players = new Player[4];
         players[0] = new Player("2", "1", "111", 1, "Klaas", true);
         players[1] = new Player("2", "2", "222", 2, "Nameless", true);

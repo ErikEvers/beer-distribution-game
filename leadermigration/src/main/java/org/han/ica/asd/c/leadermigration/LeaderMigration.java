@@ -19,13 +19,8 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
    * Start the bully algorithm to get new Leader of the network
    * @param players -> all the connected player
    */
-  public Player startMigration(Player[] players) {
-    Player currentPlayer = null;
-    try {
-      currentPlayer = electionHandler.setupAlgorithm(players);
-    } catch (PlayerNotFoundException e) {
-			logger.log(Level.SEVERE, "Local player could not be found", e);
-    }
+  public Player startMigration(Player[] players) throws PlayerNotFoundException {
+    Player currentPlayer = electionHandler.setupAlgorithm(players);
     Player winner = currentPlayer;
 
 		List<Player> answeredPlayers = electionHandler.sendElectionMessage(players);

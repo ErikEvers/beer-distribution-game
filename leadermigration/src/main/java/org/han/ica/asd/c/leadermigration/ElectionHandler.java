@@ -97,15 +97,18 @@ public class ElectionHandler {
 		try {
   		localIp = getLocalIp();
 		} catch (UnknownHostException e) {
-			logger.log(Level.SEVERE, "Local IP could not be retrieved", e);
-			throw new PlayerNotFoundException("Local IP could not be retrieved");
+			logger.log(Level.SEVERE, "The local IP could not be retrieved", e);
+			throw new PlayerNotFoundException("The local IP could not be retrieved");
+		}
+		if (localIp == null || localIp.isEmpty()) {
+			throw new PlayerNotFoundException("The retrieved local IP is not usable");
 		}
 		for(Player player: players) {
 			if(player.getIpAddress().equals(localIp)) {
 				return player;
 			}
 		}
-    throw new PlayerNotFoundException();
+    throw new PlayerNotFoundException("Something went wrong while finding the local player");
   }
 
   private static String getLocalIp() throws UnknownHostException {
