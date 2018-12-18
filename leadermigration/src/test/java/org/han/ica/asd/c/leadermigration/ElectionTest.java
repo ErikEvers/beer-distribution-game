@@ -57,17 +57,6 @@ public class ElectionTest {
         Assert.assertEquals(players[1], elected);
     }
 
-    @Test(expected = AssertionError.class)
-    public void playerNotElected() throws PlayerNotFoundException {
-        Player[] players = new Player[3];
-        players[0] = new Player("1","1", currentPlayerIP, 1, "Joost", true);
-        players[1] = new Player("1", "2", "222", 2, "Henk", true);
-        players[2] = new Player("1", "3", "333", 3, "Piet", true);
-
-        Player elected = communicationHelper.startElection(players);
-        Assert.assertEquals(players[0], elected);
-    }
-
     @Test
     public void playerDisconnectAfterElection() throws PlayerNotFoundException {
         Player[] players = new Player[4];

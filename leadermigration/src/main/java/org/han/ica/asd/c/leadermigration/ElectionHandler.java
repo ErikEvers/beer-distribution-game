@@ -4,6 +4,7 @@ import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
 import org.han.ica.asd.c.model.Player;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,13 @@ public class ElectionHandler {
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
   @Inject private IpHandler ipHandler;
+
+  private final Provider<ElectionMessageRunnable> electionMessageRunnableProvider;
+
+  @Inject
+  public ElectionHandler(Provider<ElectionMessageRunnable> electionMessageRunnableProvider) {
+  	this.electionMessageRunnableProvider = electionMessageRunnableProvider;
+	}
 
   /**
    * Setup the algorithm in de electionModel.
@@ -33,16 +41,20 @@ public class ElectionHandler {
    * @param players -> All the connected players (without the current player)
    */
   public List<Player> sendElectionMessage(Player[] players) {
+  	List<ElectionMessageRunnable> runnableList = new ArrayList<>();
+  	Object lock = new Object();
     for(Player player: players) {
-      // This if statement ensures to not send this to yourself.
-      if(!electionModel.getCurrentPlayer().equals(player)) {
-				electionModel.setReceivingPlayer(player);
-				ElectionModel model = communication.sendElectionMessage(electionModel, player);
-				if(model != null && model.isAlive()) {
-					receivedPlayers.add(electionModel.getReceivingPlayer());
-				}
-      }
+			ElectionMessageRunnable runnable = electionMessageRunnableProvider.get();
+			runnable.start(lock, receivedPlayers, electionModel, player);
+			runnableList.add(runnable);
     }
+		for (ElectionMessageRunnable runnable : runnableList) {
+			try {
+				runnable.join();
+			} catch (InterruptedException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
     return receivedPlayers;
   }
 
