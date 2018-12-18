@@ -119,7 +119,7 @@ public class ElectionTest {
 					requestStaticInjection(ElectionHandler.class);
 				}
 			});
-			ElectionHandler handler = injector.getInstance(ElectionHandler.class);
+			ElectionHandler handler = new ElectionHandler();
 			Player[] players = new Player[4];
 			players[0] = new Player("2", "1", "111", 1, "Klaas", true);
 			players[1] = new Player("2", "2", "222", 2, "Nameless", true);
