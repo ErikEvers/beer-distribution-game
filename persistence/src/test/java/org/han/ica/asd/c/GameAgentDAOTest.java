@@ -1,0 +1,58 @@
+package org.han.ica.asd.c;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.han.ica.asd.c.dbconnection.DBConnectionTest;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.GameAgent;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.logging.Logger;
+
+class GameAgentDAOTest {
+    private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAOIntegrationTest.class.getName());
+    private static final GameAgent GAMEAGENT = new GameAgent("gameId", "name1", 1);
+    private static final GameAgent GAMEAGENT2 = new GameAgent("gameId", "name2", 2);
+    private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("gameId", "name2_Updated", 2);
+
+    private GameAgentDAO gameAgentDAO;
+
+    @BeforeEach
+    void setUp() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IDatabaseConnection.class).to(DBConnectionTest.class);
+            }
+        });
+
+        DBConnectionTest.getInstance().createNewDatabase();
+        gameAgentDAO = injector.getInstance(GameAgentDAO.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        DBConnectionTest.getInstance().cleanup();
+    }
+
+    @Test
+    void createGameAgent() {
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+    }
+
+    @Test
+    void deleteSpecificGameagent() {
+    }
+
+    @Test
+    void deleteAllGameagentsInABeergame() {
+    }
+
+    @Test
+    void updateGameagent() {
+    }
+}
