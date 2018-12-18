@@ -1,10 +1,11 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.BeerGame;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.Round;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.han.ica.asd.c.dbconnection.DBConnectionTest;
+import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,9 +18,7 @@ import java.util.logging.Logger;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class PersistenceTest {
@@ -34,7 +33,13 @@ class PersistenceTest {
 
 	@BeforeEach
 	void setUp() {
-		persistence = new Persistence();
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(DatabaseConnection.class).to(DBConnectionTest.class);
+			}
+		});
+		persistence = injector.getInstance(Persistence.class);
 		round = new Round("Beergame",1);
 		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
 		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1,1,1,"Beergame","Henk","Test","Test");
