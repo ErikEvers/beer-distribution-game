@@ -1,7 +1,7 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.FacilityType;
+import org.han.ica.asd.c.model.dao_model.FacilityType;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -38,7 +38,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to insert a new FacilityType in the database.
      *
-     * @param facilityType A FacilityType model that contains all the data needed to create a new FacilityType.
+     * @param facilityType A FacilityType domain_objects that contains all the data needed to create a new FacilityType.
      */
     public void createFacilityType(FacilityType facilityType) {
         Connection conn = null;
@@ -72,7 +72,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to update an existing FacilityType.
      *
-     * @param facilityType A FacilityType model that contains all the data needed to update an existing FacilityType.
+     * @param facilityType A FacilityType domain_objects that contains all the data needed to update an existing FacilityType.
      */
     public void updateFacilityType(FacilityType facilityType) {
         Connection conn = null;

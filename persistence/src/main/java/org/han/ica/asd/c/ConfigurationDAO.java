@@ -1,7 +1,9 @@
 package org.han.ica.asd.c;
 
+
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.Configuration;
+import org.han.ica.asd.c.model.dao_model.Configuration;
+
 
 import javax.inject.Inject;
 import java.sql.Connection;

@@ -1,7 +1,8 @@
 package org.han.ica.asd.c;
 
+
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.dao_model.Facility;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -35,7 +36,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to create a new facility.
      *
-     * @param facility A model of Facility with all the data required to create a new facility.
+     * @param facility A domain_objects of Facility with all the data required to create a new facility.
      */
     public void createFacility(Facility facility) {
         Connection conn = null;
@@ -64,7 +65,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to update an existing facility within a specific game.
      *
-     * @param facility A model of Facility with all the data required to update an existing facility.
+     * @param facility A domain_objects of Facility with all the data required to update an existing facility.
      */
     public void updateFacility(Facility facility) {
         Connection conn = null;
