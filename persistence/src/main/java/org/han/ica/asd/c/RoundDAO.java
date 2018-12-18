@@ -17,7 +17,6 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	private static final String READ_ROUND = "SELECT * FROM ROUND WHERE GameId = ? AND RoundId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
 
-
 	@Inject
 	private IDatabaseConnection databaseConnection;
 
