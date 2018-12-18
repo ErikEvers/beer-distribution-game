@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.leadermigration;
+package org.han.ica.asd.c.leadermigration.componentInterfaces;
 
 import org.han.ica.asd.c.model.Player;
 

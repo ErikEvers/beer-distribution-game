@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.leadermigration;
 
 import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
+import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
 import org.han.ica.asd.c.model.Player;
 import javax.inject.Inject;
 import java.net.UnknownHostException;

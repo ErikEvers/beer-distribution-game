@@ -5,6 +5,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.*;
+import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
+import org.han.ica.asd.c.leadermigration.componentInterfaces.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 import org.han.ica.asd.c.leadermigration.IpHandler;

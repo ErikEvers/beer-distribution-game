@@ -1,5 +1,6 @@
-package org.han.ica.asd.c.leadermigration;
+package org.han.ica.asd.c.leadermigration.componentInterfaces;
 
+import org.han.ica.asd.c.leadermigration.ElectionModel;
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 
