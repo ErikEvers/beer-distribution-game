@@ -97,5 +97,12 @@ class FacilityDAOIntegrationTest {
 
     @Test
     void deleteAllFacilitiesInGameTest() {
+
+        Assert.assertEquals(0, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
+        facilityDAO.createFacility(FACILITY);
+        facilityDAO.createFacility(FACILITY2);
+        Assert.assertEquals(2, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
+        facilityDAO.deleteAllFacilitiesInGame("BeerGameZutphen");
+        Assert.assertEquals(0, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
     }
 }
