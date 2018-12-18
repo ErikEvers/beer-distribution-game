@@ -5,6 +5,8 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FailLog {
     //TODO make the nodeinfolist the same over every class
@@ -12,6 +14,8 @@ public class FailLog {
     private NodeInfoList nodeInfoList;
     private HashMap<String, Integer> failLogHashMap;
     private int succesSize;
+
+    private static final Logger LOGGER = Logger.getLogger(FailLog.class.getName());
 
     FailLog(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
@@ -29,8 +33,7 @@ public class FailLog {
         putIpInListIfNotAlready(ip);
         failLogHashMap.put(ip, failLogHashMap.get(ip) + 1);
 
-        System.out.println("deze wordt geincrement : " + ip + " met als waarde : " + failLogHashMap.get(ip));
-
+        LOGGER.log(Level.INFO,"deze wordt geincrement : {0} met als waarde : {1}", new Object[] {ip, failLogHashMap.get(ip)});
     }
 
     public void reset(String ip) {

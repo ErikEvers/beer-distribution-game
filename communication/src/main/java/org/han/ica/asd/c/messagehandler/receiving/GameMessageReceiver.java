@@ -47,13 +47,7 @@ public class GameMessageReceiver {
                 break;
             case 1:
                 //do commit
-                if (toBecommittedRound != null) { //in theory, a bug can still occur where we receive a commit message with a different content.
-                    for (IConnectorObserver observer : gameMessageObservers) {
-                        if (observer instanceof IRoundModelObserver) {
-                            ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
-                        }
-                    }
-                }
+                doCommit(roundModelMessage);
                 break;
             case -1:
                 //rollback
@@ -61,6 +55,16 @@ public class GameMessageReceiver {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void doCommit(RoundModelMessage roundModelMessage) {
+        if (toBecommittedRound != null) { //in theory, a bug can still occur where we receive a commit message with a different content.
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof IRoundModelObserver) {
+                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
+                }
+            }
         }
     }
 

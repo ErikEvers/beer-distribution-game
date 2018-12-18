@@ -21,7 +21,7 @@ public class TestFaultHandlerLeader {
 
 	@Mock
 	NodeInfoList nodeInfoList = mock(NodeInfoList.class);
-	ArrayList<IConnectorObserver> observers = mock(ArrayList.class);
+	ArrayList<IConnectorObserver> observers = spy(ArrayList.class);
 
 	@BeforeEach
 	void setUp(){
