@@ -3,6 +3,8 @@ package org.han.ica.asd.c;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.dao.FacilityDAO;
+import org.han.ica.asd.c.dao.FacilityTypeDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.dao_model.Facility;

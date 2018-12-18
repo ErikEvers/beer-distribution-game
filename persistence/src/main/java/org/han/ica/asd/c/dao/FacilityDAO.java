@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
