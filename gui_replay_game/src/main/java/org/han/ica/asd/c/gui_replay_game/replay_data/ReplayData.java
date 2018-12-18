@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.gui_replay_game.replay_data;
 
-import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.model.FacilityType;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 
@@ -64,11 +64,11 @@ public class ReplayData {
         //dus de facilities op te halen
         //Wat hier nu aanwezig is is test code om zo de controller werkend te krijgen
 
-        FacilityType type = new FacilityType("Factory", "GameId", 1, 1, 1, 1, 1, 1);
+        FacilityType type = new FacilityType("Factory", 1, 1, 1, 1, 1, 1);
 
-        Facility facility1 = new Facility("GameId", 1, type, "IpAddress", "gameAgentName");
-        Facility facility2 = new Facility("GameId", 2, type, "IpAddress", "gameAgentName");
-        Facility facility3 = new Facility("GameId", 3, type, "IpAddress", "gameAgentName");
+        Facility facility1 = new Facility(type, null, null, null, 1);
+        Facility facility2 = new Facility(type, null, null, null, 2);
+        Facility facility3 = new Facility(type, null, null, null, 3);
 
         ArrayList<Facility> returnList = new ArrayList<>();
 

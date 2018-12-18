@@ -16,7 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import org.han.ica.asd.c.gui_replay_game.replay_data.ReplayData;
-import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 public class ReplayGameScreenController {
 
@@ -138,6 +138,27 @@ public class ReplayGameScreenController {
         factoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             factoryCheckBoxUpdated(newValue);
         });
+        retailCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            retailCheckBoxUpdated(newValue);
+        });
+        warehouseCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            warehouseCheckBoxUpdated(newValue);
+        });
+        wholesaleCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            wholesaleCheckBoxUpdated(newValue);
+        });
+    }
+
+    private void wholesaleCheckBoxUpdated(Boolean newValue) {
+        clearComboBox(newValue);
+    }
+
+    private void warehouseCheckBoxUpdated(Boolean newValue) {
+        clearComboBox(newValue);
+    }
+
+    private void retailCheckBoxUpdated(Boolean newValue) {
+        clearComboBox(newValue);
     }
 
     private void factoryCheckBoxUpdated(Boolean newValue) {
