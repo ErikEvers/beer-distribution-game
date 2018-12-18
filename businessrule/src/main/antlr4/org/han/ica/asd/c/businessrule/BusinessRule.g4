@@ -7,8 +7,15 @@ DEFAULT: 'default' | 'Default';
 ORDER: 'order';
 DELIVER: 'deliver';
 ROUND : 'round';
+FROM : 'from';
+TO : 'to';
+WHEN: 'when';
+WITH: 'with';
+BELOW: 'below';
+ABOVE: 'above';
+NODE : 'node' (' '?[0-9]+)?;
 
-FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer' | 'below' | 'above';
+FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer';
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';
 INT_VALUE: [0-9]+;
 PERCENTAGE: [0-9]+'%';
@@ -27,7 +34,7 @@ MUL: 'times' | '*';
 DIV: 'divided' | '/';
 
 
-GARBAGE: [a-zA-Z]+ -> skip;
+GARBAGE: [a-zA-Z'.]+ -> skip;
 WS: [ \t\r\n]+ -> skip;
 
 //--- PARSER: ---
@@ -38,6 +45,8 @@ comparison: comparison_value comparison_operator comparison_value;
 comparison_value: operation | ROUND;
 operation: value #defaultOperation | operation PLUS operation #plusOperation | operation MIN operation #minOperation | priority_operation #priorityOperation;
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
-value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | (LOWEST | HIGHEST);
+value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY;
 comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
-action: ORDER operation | DELIVER;
+action: ORDER operation direction? | DELIVER operation direction;
+direction: (FROM | TO) person (WHEN comparisonstatement | WITH (LOWEST | HIGHEST) GAME_VALUE)?;
+person: NODE (ABOVE | BELOW);
