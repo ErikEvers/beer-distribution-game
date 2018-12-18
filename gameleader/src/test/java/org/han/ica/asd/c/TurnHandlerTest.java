@@ -12,8 +12,6 @@ import java.lang.reflect.Method;
 import java.util.logging.*;
 import static junit.framework.TestCase.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( TurnHandler.class )
 class TurnHandlerTest {
     private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
 
@@ -52,9 +50,9 @@ class TurnHandlerTest {
         parameters[0] = facilityTurnModel;
 
         try {
-            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             assertTrue((Boolean) m.invoke(turnHandler, parameters));
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             e.printStackTrace();
         }
     }
@@ -97,9 +95,9 @@ class TurnHandlerTest {
         parameters[0] = facilityTurnModel;
 
         try {
-            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             assertTrue((Boolean) m.invoke(turnHandler, parameters));
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             e.printStackTrace();
         }
     }
