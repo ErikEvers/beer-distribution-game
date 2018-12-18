@@ -54,11 +54,11 @@ public class BeerGame {
         this.gameEndDate = gameEndDate;
     }
 
-    public List<org.han.ica.asd.c.model.domain_objects.Round> getRounds() {
+    public List<Round> getRounds() {
         return rounds;
     }
 
-    public void setRounds(List<org.han.ica.asd.c.model.domain_objects.Round> rounds) {
+    public void setRounds(List<Round> rounds) {
         this.rounds = rounds;
     }
 
@@ -66,7 +66,7 @@ public class BeerGame {
         rounds.add(round);
     }
 
-    public org.han.ica.asd.c.model.domain_objects.Configuration getConfiguration() {
+    public Configuration getConfiguration() {
         return configuration;
     }
 

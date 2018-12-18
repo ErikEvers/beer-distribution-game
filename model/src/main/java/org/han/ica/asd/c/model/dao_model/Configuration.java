@@ -118,11 +118,11 @@ public class Configuration {
         this.insightFacilities = insightFacilities;
     }
 
-    public List<org.han.ica.asd.c.model.domain_objects.Facility> getFacilities() {
+    public List<Facility> getFacilities() {
         return facilities;
     }
 
-    public void setFacilities(List<org.han.ica.asd.c.model.domain_objects.Facility> facilities) {
+    public void setFacilities(List<Facility> facilities) {
         this.facilities = facilities;
     }
 
@@ -130,11 +130,11 @@ public class Configuration {
         facilities.add(facility);
     }
 
-    public List<org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo> getFacilitiesLinkedTo() {
+    public List<FacilityLinkedTo> getFacilitiesLinkedTo() {
         return facilitiesLinkedTo;
     }
 
-    public void setFacilitiesLinkedTo(List<org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo> facilitiesLinkedTo) {
+    public void setFacilitiesLinkedTo(List<FacilityLinkedTo> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
@@ -142,11 +142,11 @@ public class Configuration {
         facilitiesLinkedTo.add(facilityLinkedTo);
     }
 
-    public List<org.han.ica.asd.c.model.domain_objects.FacilityType> getFacilityTypes() {
+    public List<FacilityType> getFacilityTypes() {
         return facilityTypes;
     }
 
-    public void setFacilityTypes(List<org.han.ica.asd.c.model.domain_objects.FacilityType> facilityTypes) {
+    public void setFacilityTypes(List<FacilityType> facilityTypes) {
         this.facilityTypes = facilityTypes;
     }
 
