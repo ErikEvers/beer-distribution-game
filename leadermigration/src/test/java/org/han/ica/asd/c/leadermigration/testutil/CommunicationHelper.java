@@ -2,16 +2,12 @@ package org.han.ica.asd.c.leadermigration.testutil;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.name.Named;
-import com.google.inject.name.Names;
 import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.*;
 import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
-
-import java.util.logging.Logger;
+import org.han.ica.asd.c.leadermigration.IpHandler;
 
 public class CommunicationHelper implements IConnectorForLeaderElection {
     private LeaderMigration migrationObj;
@@ -24,6 +20,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
                 bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
                 bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
                 requestStaticInjection(ElectionHandler.class);
+								bind(IpHandler.class).to(IpHandlerStub.class);
             }
         });
 		}

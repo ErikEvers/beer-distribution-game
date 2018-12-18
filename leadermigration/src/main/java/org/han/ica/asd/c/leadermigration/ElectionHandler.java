@@ -3,7 +3,6 @@ package org.han.ica.asd.c.leadermigration;
 import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.model.Player;
 import javax.inject.Inject;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ public class ElectionHandler {
   @Inject private static Logger logger;
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
+	@Inject private IpHandler ipHandler;
 
   /**
    * Setup the algorithm in de electionModel.
@@ -95,7 +95,7 @@ public class ElectionHandler {
   private Player getPlayerByIp(Player[] players) throws PlayerNotFoundException{
 		String localIp;
 		try {
-  		localIp = getLocalIp();
+  		localIp = ipHandler.getLocalIp();
 		} catch (UnknownHostException e) {
 			logger.log(Level.SEVERE, "The local IP could not be retrieved", e);
 			throw new PlayerNotFoundException("The local IP could not be retrieved");
@@ -110,9 +110,4 @@ public class ElectionHandler {
 		}
     throw new PlayerNotFoundException("Something went wrong while finding the local player");
   }
-
-  private static String getLocalIp() throws UnknownHostException {
-  	return InetAddress.getLocalHost().getHostAddress();
-	}
-
 }
