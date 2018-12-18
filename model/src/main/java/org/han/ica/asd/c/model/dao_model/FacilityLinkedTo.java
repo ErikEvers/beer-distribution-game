@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.model.dao_model;
 
 public class FacilityLinkedTo {
     private String gameId;

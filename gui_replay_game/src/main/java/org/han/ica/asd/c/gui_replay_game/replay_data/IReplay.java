@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.gui_replay_game.replay_data;
 
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
 

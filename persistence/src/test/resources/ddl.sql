@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS Beergame (
 
 CREATE TABLE IF NOT EXISTS Round (
   GameId varchar(36) NOT NULL,
-  RoundId smallint NOT NULL,
+  RoundId int NOT NULL,
   CONSTRAINT PK_Round PRIMARY KEY (GameId, RoundId),
   CONSTRAINT FK_Round_Beergame FOREIGN KEY (GameId) REFERENCES Beergame(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT
@@ -16,13 +16,13 @@ CREATE TABLE IF NOT EXISTS Round (
 
 CREATE TABLE IF NOT EXISTS Configuration (
   GameId varchar(36) NOT NULL,
-  AmountOfRounds smallint NOT NULL,
-  AmountOfFactories smallint NOT NULL,
-  AmountOfWholesales smallint NOT NULL,
-  AmountOfDistributors smallint NOT NULL,
-  AmountOfRetailers smallint NOT NULL,
-  MinimalOrderRetail smallint NOT NULL,
-  MaximumOrderRetail smallint NOT NULL,
+  AmountOfRounds int NOT NULL,
+  AmountOfFactories int NOT NULL,
+  AmountOfWholesales int NOT NULL,
+  AmountOfDistributors int NOT NULL,
+  AmountOfRetailers int NOT NULL,
+  MinimalOrderRetail int NOT NULL,
+  MaximumOrderRetail int NOT NULL,
   ContinuePlayingWhenBankrupt bit NOT NULL,
   InsightFacilities bit NOT NULL,
   CONSTRAINT PK_Configuration PRIMARY KEY (GameId),
@@ -33,19 +33,19 @@ CREATE TABLE IF NOT EXISTS Configuration (
 CREATE TABLE IF NOT EXISTS  FacilityType (
   GameId varchar(36) NOT NULL,
   FacilityName varchar(24) NOT NULL,
-  ValueIncomingGoods smallint NOT NULL,
-  ValueOutgoingGoods smallint NOT NULL,
-  StockHoldingCosts smallint NOT NULL,
-  OpenOrderCosts smallint NOT NULL,
-  StartingBudget smallint NOT NULL,
-  StartingOrder smallint NOT NULL,
+  ValueIncomingGoods int NOT NULL,
+  ValueOutgoingGoods int NOT NULL,
+  StockHoldingCosts int NOT NULL,
+  OpenOrderCosts int NOT NULL,
+  StartingBudget int NOT NULL,
+  StartingOrder int NOT NULL,
   CONSTRAINT PK_FacilityType PRIMARY KEY (FacilityName, GameId),
   CONSTRAINT FK_FacilityType FOREIGN KEY (GameId) REFERENCES Configuration(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS  Facility  (
-  FacilityId smallint NOT NULL,
+  FacilityId int NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
   PlayerId varchar(36) NULL,
@@ -64,8 +64,8 @@ CREATE TABLE IF NOT EXISTS  Facility  (
 
 CREATE TABLE IF NOT EXISTS  FacilityLinkedTo (
   GameId varchar(36) NOT NULL,
-  FacilityIdOrder smallint NOT NULL,
-  FacilityIdDeliver smallint NOT NULL,
+  FacilityIdOrder int NOT NULL,
+  FacilityIdDeliver int NOT NULL,
   Active bit NOT NULL,
   CONSTRAINT PK_FacilityLinkedTo PRIMARY KEY (GameId, FacilityIdOrder, FacilityIdDeliver),
   CONSTRAINT FK_FacilityLinkedTo_Configuration FOREIGN KEY (GameId) REFERENCES Configuration(GameId)
@@ -78,9 +78,9 @@ CREATE TABLE IF NOT EXISTS  FacilityLinkedTo (
 
 CREATE TABLE IF NOT EXISTS FacilityTurn (
   GameId varchar(36) NOT NULL,
-  RoundId smallint NOT NULL,
-  FacilityIdOrder smallint NOT NULL,
-  FacilityIdDeliver smallint NOT NULL,
+  RoundId int NOT NULL,
+  FacilityIdOrder int NOT NULL,
+  FacilityIdDeliver int NOT NULL,
   Stock int NOT NULL,
   RemainingBudget int NOT NULL,
   OrderAmount int NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS FacilityTurn (
 );
 
 CREATE TABLE IF NOT EXISTS GameAgent (
-  FacilityId smallint NOT NULL,
+  FacilityId int NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
   CONSTRAINT PK_GameAgent PRIMARY KEY (GameId, GameAgentName, FacilityId),
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS GameAgent (
 CREATE TABLE IF NOT EXISTS Player (
   GameId varchar(36) NOT NULL,
   PlayerId varchar(36) NOT NULL,
-  FacilityId smallint NOT NULL,
+  FacilityId int NOT NULL,
   IpAddress varchar(45) NOT NULL,
   Name varchar(255) NOT NULL,
   IsConnected bit NOT NULL,
@@ -126,9 +126,9 @@ CREATE TABLE IF NOT EXISTS Leader (
 );
 
 CREATE TABLE IF NOT EXISTS GameBusinessRulesInFacilityTurn (
-  RoundId smallint NOT NULL,
-  FacilityIdOrder smallint NOT NULL,
-  FacilityIdDeliver smallint NOT NULL,
+  RoundId int NOT NULL,
+  FacilityIdOrder int NOT NULL,
+  FacilityIdDeliver int NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
   GameBusinessRule varchar NOT NULL,
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS GameBusinessRulesInFacilityTurn (
 );
 
 CREATE TABLE IF NOT EXISTS GameBusinessRules (
-  FacilityId smallint NOT NULL,
+  FacilityId int NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
   GameBusinessRule varchar NOT NULL,
