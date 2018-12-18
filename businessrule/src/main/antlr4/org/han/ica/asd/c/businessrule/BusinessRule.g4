@@ -15,7 +15,10 @@ PERCENTAGE: [0-9]+'%';
 LOWEST: ('lowest' | 'smallest');
 HIGHEST: ('highest' | 'biggest');
 
+
 NOTEQUAL: '!=' | '<>' | ('is ' | 'are ')? 'not equal';
+GREATEREQUAL: '>=' | ('is ' | 'are ')?  ('greater' | 'higher') ' than or equal to';
+LESSEQUAL: '<=' | ('is ' | 'are ')?  ('less' | 'lower') ' than or equal to';
 GREATER: '>' | ('is ' | 'are ')?  ('greater' | 'higher');
 LESS: '<' | ('is ' | 'are ')?  ('less' | 'lower');
 EQUAL: '=' | ('is ' | 'are ')? 'equal' | 'is' | 'are';
@@ -39,5 +42,5 @@ comparison_value: operation | ROUND;
 operation: value #defaultOperation | operation PLUS operation #plusOperation | operation MIN operation #minOperation | priority_operation #priorityOperation;
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
 value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | (LOWEST | HIGHEST);
-comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
+comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
 action: ORDER operation | DELIVER;
