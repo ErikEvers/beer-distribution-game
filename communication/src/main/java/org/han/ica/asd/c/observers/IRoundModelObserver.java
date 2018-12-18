@@ -1,7 +1,8 @@
 package org.han.ica.asd.c.observers;
 
-import org.han.ica.asd.c.model.Round;
 
-public interface IRoundModelObserver extends IConnectorObserver{
-    void roundModelReceived(Round roundModel);
+import domainobjects.RoundModel;
+
+public interface IRoundModelObserver extends IConnectorObserver {
+    void roundModelReceived(RoundModel roundModel);
 }
