@@ -11,7 +11,6 @@ import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
 public class Main extends Application {
     private static final String GAME_TITLE = "Beer Distribution Game";
 
