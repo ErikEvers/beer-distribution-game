@@ -1,7 +1,7 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.ProgrammedAgent;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.ProgrammedAgent;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -21,7 +21,7 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
     private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
 
     @Inject
-    DatabaseConnection databaseConnection;
+    IDatabaseConnection databaseConnection;
 
     public ProgrammedAgentDAO() {
         //There has to be a constructor to inject the value above.
