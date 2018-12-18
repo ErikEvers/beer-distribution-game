@@ -32,6 +32,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     private DatabaseConnection databaseConnection;
 
     public FacilityTypeDAO() {
+        //There has to be a constructor to inject the value above.
     }
 
     /**
@@ -148,29 +149,6 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     }
 
     /**
-     * A method to delete all facilitytypes that are linked to a game.
-     *
-     * @param gameId The game identifier from which the facilitytypes have to be deleted.
-     */
-    public void deleteAllFacilityTypesForABeergame(String gameId) {
-        Connection conn;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
-                    conn.setAutoCommit(false);
-                    pstmt.setString(1, gameId);
-
-                    pstmt.executeUpdate();
-                }
-                conn.commit();
-            }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
-    }
-
-    /**
      * A method to retrieve all the FacilityTypes from a specific game.
      *
      * @param gameId The identifier of a game from witch the FacilityTypes need to be retrieved.
@@ -188,17 +166,16 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                     try (ResultSet rs = pstmt.executeQuery()) {
                         while (rs.next()) {
                             types.add(new FacilityType(gameId,
-                                    rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"),
-                                    rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
-                                    rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
-                                    rs.getInt("StartingOrder")));
+                                    rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
+                                    rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
+                                    rs.getInt("StartingBudget"), rs.getInt("StartingOrder")));
                         }
                     }
                     conn.commit();
                 }
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString());
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return types;
     }
@@ -225,7 +202,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
             }
 
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString());
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return type;
     }

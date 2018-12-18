@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.Facility;
 
@@ -30,7 +29,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
     private FacilityTypeDAO facilityTypeDAO;
 
     public FacilityDAO() {
-
+        //There has to be a constructor to inject the values above.
     }
 
     /**
@@ -169,7 +168,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
                 conn.commit();
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString());
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return facilities;
     }
@@ -203,7 +202,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString());
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return facility;
     }
