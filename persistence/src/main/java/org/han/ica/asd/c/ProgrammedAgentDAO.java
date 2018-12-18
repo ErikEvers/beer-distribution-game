@@ -27,6 +27,11 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
         //There has to be a constructor to inject the value above.
     }
 
+    /**
+     * A method to create a new ProgrammedAgent in the database.
+     *
+     * @param programmedAgent The model with all the data required to create a new ProgrammedAgent in the database.
+     */
     public void createProgrammedAgent(ProgrammedAgent programmedAgent) {
         executePreparedStatement(programmedAgent, CREATE_PROGRAMMEDAGENT);
     }
@@ -55,10 +60,20 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
         }
     }
 
+    /**
+     * A method to delete a programmedAgent.
+     *
+     * @param programmedAgent The data needed to delete a ProgrammedAgent from the database.
+     */
     public void deleteProgrammedAgent(ProgrammedAgent programmedAgent) {
         executePreparedStatement(programmedAgent, DELETE_PROGRAMMEDAGENT);
     }
 
+    /**
+     * A method to read all ProgrammedAgents from the database.
+     *
+     * @return A list with all the ProgrammedAgents from the database.
+     */
     public List<ProgrammedAgent> readAllProgrammedAgents () {
         Connection conn;
         ArrayList<ProgrammedAgent> programmedAgents = new ArrayList<>();
@@ -82,6 +97,12 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
         return programmedAgents;
     }
 
+    /**
+     * A method to execute a prepared statement with only one set variable.
+     *
+     * @param programmedAgent The data needed to know what to create or delete.
+     * @param query A string which contains the query that has to be executed on the database.
+     */
     private void executePreparedStatement(ProgrammedAgent programmedAgent, String query) {
         Connection conn = null;
         try {
