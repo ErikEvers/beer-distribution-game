@@ -49,6 +49,4 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
         }
     }
 
-    
-
 }
