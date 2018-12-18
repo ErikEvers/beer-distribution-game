@@ -1,6 +1,9 @@
 package org.han.ica.asd.c;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -11,6 +14,8 @@ import javafx.util.converter.IntegerStringConverter;
 import java.util.function.UnaryOperator;
 
 public class PlayGameFactoryController {
+    private ObservableList<FacilityFake> facilityListView = FXCollections.observableArrayList();
+
     @FXML
     private GridPane playGridPane;
 
@@ -32,6 +37,9 @@ public class PlayGameFactoryController {
     @FXML
     private Label inventory;
 
+    @FXML
+    private ComboBox<FacilityFake> comboBox;
+
     public void initialize() {
         mainContainer.getChildren().addAll();
         playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
@@ -46,6 +54,7 @@ public class PlayGameFactoryController {
         };
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
+        fillComboBox();
     }
 
 
@@ -64,11 +73,19 @@ public class PlayGameFactoryController {
         }
     }
 
-    public String calculateInventory(){
+    private String calculateInventory(){
         int inventoryValue = Integer.parseInt(inventory.getText());
         int step2Value = Integer.parseInt(step2TextField.getText());
         int result = inventoryValue + step2Value;
 
         return Integer.toString(result);
+    }
+
+    private void fillComboBox(){
+        FacilityFake warehouse = new FacilityFake();
+        FacilityFake warehouse2 = new FacilityFake();
+        facilityListView.add(warehouse);
+        facilityListView.add(warehouse2);
+        comboBox.setItems(facilityListView);
     }
 }
