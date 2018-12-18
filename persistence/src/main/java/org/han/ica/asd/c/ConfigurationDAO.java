@@ -23,10 +23,10 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
 	@Inject
-	private IDatabaseConnection IDatabaseConnection;
+	private IDatabaseConnection databaseConnection;
 
 	public ConfigurationDAO(){
-
+		//Empty Constructor for GUICE
 	}
 	/**
 	 * A method which creates a configuration in the SQLite Database
@@ -35,7 +35,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	public void createConfiguration(Configuration configuration) {
 		Connection conn = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_CONFIGURATION)) {
 
@@ -49,7 +49,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString(),e);
-			IDatabaseConnection.rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 		Connection conn = null;
 		ArrayList<Configuration> configurations = new ArrayList<>();
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATIONS)) {
 					try (ResultSet rs = pstmt.executeQuery()) {
@@ -103,7 +103,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 		Connection conn;
 		Configuration configuration = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATION)) {
 					pstmt.setString(1,gameId);
@@ -134,7 +134,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	public void updateConfigurations(Configuration configuration) {
 		Connection conn = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_CONFIGURATION)) {
 					conn.setAutoCommit(false);
@@ -163,17 +163,18 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * @param gameId An Id which can be traced to a specific game
 	 */
 	public void deleteConfigurations(String gameId){
-		Connection conn = null;
+		Connection conn;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_CONFIGURATION)) {
 					conn.setAutoCommit(false);
 					pstmt.setString(1, gameId);
 					pstmt.execute();
 				}
-			}
 			conn.commit();
+			}
+
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}

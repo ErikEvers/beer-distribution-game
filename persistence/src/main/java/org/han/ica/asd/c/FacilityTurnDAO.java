@@ -24,9 +24,10 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAO.class.getName());
 
 	@Inject
-	private IDatabaseConnection IDatabaseConnection;
+	private IDatabaseConnection databaseConnection;
 
 	public FacilityTurnDAO(){
+		//Empty Constructor for GUICE
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	public void createTurn(FacilityTurn facilityTurn) {
 		Connection conn = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if(conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_TURN)) {
 					conn.setAutoCommit(false);
@@ -59,7 +60,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
-			IDatabaseConnection.rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -74,7 +75,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 		Connection conn;
 		ArrayList<FacilityTurn> turns = new ArrayList<>();
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURNS)) {
 					conn.setAutoCommit(false);
@@ -106,7 +107,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 		Connection conn;
 		FacilityTurn facilityTurn = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURN)) {
 					pstmt.setString(1,round.getGameId());
@@ -131,7 +132,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	public void updateTurn(FacilityTurn facilityTurn) {
 		Connection conn;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_TURN)) {
 					conn.setAutoCommit(false);
@@ -161,7 +162,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	public void deleteTurn(FacilityTurn facilityTurn) {
 		Connection conn;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_TURN)) {
 				conn.setAutoCommit(false);
 				pstmt.setString(1, facilityTurn.getGameId());

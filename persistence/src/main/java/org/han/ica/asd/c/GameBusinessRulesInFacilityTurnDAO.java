@@ -18,9 +18,10 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
 	@Inject
-	private IDatabaseConnection IDatabaseConnection;
+	private IDatabaseConnection databaseConnection;
 
 	public GameBusinessRulesInFacilityTurnDAO() {
+		//Empty Constructor for GUICE
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 		Connection conn;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
 					conn.setAutoCommit(false);
@@ -65,7 +66,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
 					pstmt.setString(1, gameId);
@@ -94,7 +95,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		public void deleteTurn (String gameId,int roundId, int facilityIdOrder, int facilityIdDeliver){
 			Connection conn = null;
 			try {
-				conn = IDatabaseConnection.connect();
+				conn = databaseConnection.connect();
 				if (conn != null) {
 					try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
 
@@ -111,7 +112,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 				}
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
-				IDatabaseConnection.rollBackTransaction(conn);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}

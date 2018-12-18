@@ -19,10 +19,10 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 
 
 	@Inject
-	private IDatabaseConnection IDatabaseConnection;
+	private IDatabaseConnection databaseConnection;
 
 	public RoundDAO(){
-
+		//Empty Constructor for GUICE
 	}
 
 
@@ -32,7 +32,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @param roundId The id of the round that the players have played
 	 */
 	public void createRound(String gameId, int roundId){
-		Connection conn = IDatabaseConnection.connect();
+		Connection conn = databaseConnection.connect();
 		executePreparedStatement(gameId, roundId, conn, CREATE_ROUND);
 	}
 
@@ -42,7 +42,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @param roundId The id of the round which needs to be deleted
 	 */
 	public void deleteRound(String gameId, int roundId){
-		Connection conn = IDatabaseConnection.connect();
+		Connection conn = databaseConnection.connect();
 		executePreparedStatement(gameId, roundId, conn, DELETE_ROUND);
 	}
 
@@ -53,7 +53,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @return A round object
 	 */
 	public Round getRound(String gameId, int roundId){
-		Connection conn = IDatabaseConnection.connect();
+		Connection conn = databaseConnection.connect();
 		Round round = null;
 		try {
 			if (conn != null) {
@@ -72,7 +72,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 			}
 				} catch (SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
-					IDatabaseConnection.rollBackTransaction(conn);
+					databaseConnection.rollBackTransaction(conn);
 				}
 
 				return round;
@@ -104,7 +104,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString(),e);
-			IDatabaseConnection.rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 }

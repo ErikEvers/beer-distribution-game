@@ -26,11 +26,11 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 
 	@Inject
-	private IDatabaseConnection IDatabaseConnection;
+	private IDatabaseConnection databaseConnection;
 
 
 	public BeergameDAO(){
-
+		//Empty Constructor for GUICE
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	public void createBeergame(String gameName) {
 		Connection conn = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
 
@@ -57,7 +57,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
-			IDatabaseConnection.rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		Connection conn = null;
 		ArrayList<BeerGame> beerGames = new ArrayList<>();
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES)) {
 
@@ -94,7 +94,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	public void deleteBeergame(String gameId) {
 		Connection conn = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
 
@@ -108,7 +108,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(),e);
-			IDatabaseConnection.rollBackTransaction(conn);
+			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 		Connection conn = null;
 		BeerGame beergame = null;
 		try {
-			conn = IDatabaseConnection.connect();
+			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 					pstmt.setString(1,gameId);
