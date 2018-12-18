@@ -120,7 +120,7 @@ public class ReplayGameScreenController {
     }
 
     private void facilityComboBoxUpdated(Facility facility) {
-        clearCheckBoxes();
+        if (facility != null) clearCheckBoxes();
     }
 
     private void clearCheckBoxes(){
@@ -130,8 +130,8 @@ public class ReplayGameScreenController {
         wholesaleCheckBox.selectedProperty().setValue(false);
     }
 
-    private void clearComboBox(){
-
+    private void clearComboBox(boolean newValue){
+        if (newValue == true) facilityComboBox.getSelectionModel().clearSelection();
     }
 
     public void initializeCheckBoxes(){
@@ -141,7 +141,7 @@ public class ReplayGameScreenController {
     }
 
     private void factoryCheckBoxUpdated(Boolean newValue) {
-
+        clearComboBox(newValue);
     }
 
     private void updateCurrentRound() {
