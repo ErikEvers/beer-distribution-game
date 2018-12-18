@@ -14,8 +14,8 @@ public class ElectionHandler {
 
 	private List<Player> receivedPlayers;
   @Inject private static Logger logger;
-  @Inject private static ElectionModel electionModel;
-  @Inject private static IConnectorForLeaderElection communication;
+  @Inject private ElectionModel electionModel;
+  @Inject private IConnectorForLeaderElection communication;
 
   /**
    * Setup the algorithm in de electionModel.

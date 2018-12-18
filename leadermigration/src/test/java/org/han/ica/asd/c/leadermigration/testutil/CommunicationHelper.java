@@ -23,6 +23,7 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
             protected void configure() {
                 bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
                 bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
+                requestStaticInjection(ElectionHandler.class);
             }
         });
 		}

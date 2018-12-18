@@ -15,6 +15,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
+
+import static org.mockito.Mockito.mock;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( ElectionHandler.class )
 public class ElectionTest {
@@ -110,16 +114,18 @@ public class ElectionTest {
     }
 
     @Test
-		public void handlerTest() throws PlayerNotFoundException {
-			Injector injector = Guice.createInjector(new AbstractModule() {
-				@Override
-				protected void configure() {
-					bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
-					bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
-					requestStaticInjection(ElectionHandler.class);
-				}
-			});
+		public void handlerTest() throws PlayerNotFoundException, NoSuchFieldException, IllegalAccessException {
 			ElectionHandler handler = new ElectionHandler();
+
+			Field model = ElectionHandler.class.getDeclaredField("electionModel");
+			model.setAccessible(true);
+			model.set(handler, new ElectionModel());
+
+			Field comm = ElectionHandler.class.getDeclaredField("communication");
+			comm.setAccessible(true);
+			comm.set(handler, mock(IConnectorForLeaderElection.class));
+
+
 			Player[] players = new Player[4];
 			players[0] = new Player("2", "1", "111", 1, "Klaas", true);
 			players[1] = new Player("2", "2", "222", 2, "Nameless", true);
