@@ -1,9 +1,9 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.Configuration;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,10 +22,11 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
+	@Inject
 	private DatabaseConnection databaseConnection;
 
 	public ConfigurationDAO(){
-		databaseConnection = DBConnection.getInstance();
+
 	}
 	/**
 	 * A method which creates a configuration in the SQLite Database
