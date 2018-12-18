@@ -1,11 +1,9 @@
-package org.han.ica.asd.c.fakes;
+package org.han.ica.asd.c.player;
 
 import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
 
-public class PlayerComponentFake {
-    //TODO: Implement actual playercomponent
-    //Stub
+public class PlayerComponent {
 
     public FacilityLinkedTo[] seeOtherFacilities() {
         //Fake method for testing purposes
@@ -31,6 +29,7 @@ public class PlayerComponentFake {
     }
 
     public String requestFacilityInfo(Facility facility) {
+        //Fake method for testing purposes
         return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
     }
 }
