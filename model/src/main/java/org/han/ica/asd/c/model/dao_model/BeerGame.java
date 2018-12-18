@@ -1,4 +1,7 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.model.dao_model;
+
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
