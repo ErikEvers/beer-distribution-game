@@ -22,6 +22,9 @@ public class ConfigurationDB implements IDaoModel{
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
 
+
+    public ConfigurationDB(){}
+
     public ConfigurationDB(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
         this.gameId = gameId;
         this.amountOfRounds = amountOfRounds;

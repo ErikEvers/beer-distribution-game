@@ -17,6 +17,8 @@ public class Configuration implements IDomainModel{
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
 
+    public Configuration(){}
+
     public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
                          int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
                          List<FacilityLinkedTo> facilitiesLinkedTo, List<FacilityType> facilityTypes) //NOSONAR

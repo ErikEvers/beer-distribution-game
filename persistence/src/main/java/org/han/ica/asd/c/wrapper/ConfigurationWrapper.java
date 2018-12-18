@@ -15,6 +15,9 @@ public class ConfigurationWrapper extends Wrapper {
 	@Inject
 	private Configuration configuration;
 
+	public ConfigurationWrapper(){
+	}
+
 	@Override
 	IDaoModel wrapToDaoModel(IDomainModel model) {
 		configuration = (Configuration) model;
