@@ -22,7 +22,7 @@
         <module>gameconfiguration</module>
         <module>gameleader</module>
         <module>gamelogic</module>
-        <module>hostmigration</module>
+        <module>leadermigration</module>
         <module>localization</module>
         <module>player</module>
         <module>replay</module>
