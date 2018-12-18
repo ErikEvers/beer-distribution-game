@@ -71,6 +71,13 @@ class GameAgentDAOTest {
 
     @Test
     void deleteAllGameagentsInABeergame() {
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        gameAgentDAO.createGameAgent(GAMEAGENT);
+        gameAgentDAO.createGameAgent(GAMEAGENT2);
+        Assert.assertEquals(2,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+
+        gameAgentDAO.deleteAllGameagentsInABeergame("gameId");
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
     }
 
     @Test
