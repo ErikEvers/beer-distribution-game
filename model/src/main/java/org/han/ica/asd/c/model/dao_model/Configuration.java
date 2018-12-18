@@ -18,9 +18,9 @@ public class Configuration {
     private int maximumOrderRetail;
     private boolean continuePlayingWhenBankrupt;
     private boolean insightFacilities;
-    private List<org.han.ica.asd.c.model.domain_objects.Facility> facilities;
-    private List<org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo> facilitiesLinkedTo;
-    private List<org.han.ica.asd.c.model.domain_objects.FacilityType> facilityTypes;
+    private List<Facility> facilities;
+    private List<FacilityLinkedTo> facilitiesLinkedTo;
+    private List<FacilityType> facilityTypes;
 
     public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
         this.gameId = gameId;

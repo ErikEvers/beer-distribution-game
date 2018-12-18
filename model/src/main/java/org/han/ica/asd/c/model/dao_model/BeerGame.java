@@ -11,8 +11,8 @@ public class BeerGame {
     private String gameName;
     private String gameDate;
     private String gameEndDate;
-    private List<org.han.ica.asd.c.model.domain_objects.Round> rounds;
-    private org.han.ica.asd.c.model.domain_objects.Configuration configuration;
+    private List<Round> rounds;
+    private Configuration configuration;
 
     public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate) {
         this.gameId = gameId;
