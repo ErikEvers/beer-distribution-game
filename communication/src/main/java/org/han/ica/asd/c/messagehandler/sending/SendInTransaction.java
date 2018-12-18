@@ -6,12 +6,16 @@ import org.han.ica.asd.c.socketrpc.SocketClient;
 import domainobjects.RoundModel;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SendInTransaction {
 
     String[] ips;
     RoundModel roundModel;
     SocketClient socketClient;
+
+    private static final Logger LOGGER = Logger.getLogger(SendInTransaction.class.getName());
 
     SendInTransaction(String[] ips, RoundModel roundModel, SocketClient socketClient) {
         this.ips = ips;
@@ -37,6 +41,7 @@ public class SendInTransaction {
             }
         } catch (Exception ex) {
             //rollback
+            LOGGER.log(Level.INFO, "Stagecommit failed, rolling back");
             RoundModelMessage rollbackRoundModelMessage = new RoundModelMessage(roundModel, -1);
             send(rollbackRoundModelMessage);
         }
@@ -49,10 +54,8 @@ public class SendInTransaction {
                 ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, roundModelMessage);
                 canCommitFinished(response.getIsSuccess());
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (IOException | ClassNotFoundException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }
         });
         t.setDaemon(true);
@@ -83,10 +86,8 @@ public class SendInTransaction {
                 try {
                     ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, roundModelMessage);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                } catch (IOException | ClassNotFoundException e) {
+                    LOGGER.log(Level.SEVERE, e.getMessage());
                 }
             });
             t.setDaemon(true);

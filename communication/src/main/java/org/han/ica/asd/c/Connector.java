@@ -18,6 +18,8 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Connector{
@@ -27,6 +29,8 @@ private static Connector instance = null;
     private FaultDetector faultDetector;
     private IFinder finder;
     private GameMessageClient gameMessageClient;
+
+    private static final Logger LOGGER = Logger.getLogger(Connector.class.getName());
 
     public Connector() {
         observers = new ArrayList<>();
@@ -67,7 +71,7 @@ private static Connector instance = null;
         try {
             return finder.createGameRoom(roomName, ip, password);
         } catch (DiscoveryException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.INFO, e.getMessage());
         }
         return null;
     }
@@ -76,7 +80,7 @@ private static Connector instance = null;
         try {
             return finder.joinGameRoom(roomName, ip, password);
         } catch (DiscoveryException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.INFO, e.getMessage());
         }
         return null;
     }
@@ -89,7 +93,7 @@ private static Connector instance = null;
             }
             room.closeGameAndStartGame();
         } catch (RoomException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.INFO, e.getMessage());
         }
     }
 

@@ -83,7 +83,7 @@ public class Room {
             service.deleteFileByNameInFolder("H: " + ip, roomID);
             hosts.remove(ip);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
         }
     }
 
