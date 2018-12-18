@@ -1,9 +1,9 @@
-package communicationcomponent.messagehandler;
+package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageFilterer;
-import domainobjects.TurnModel;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -102,10 +102,10 @@ public class GameMessageFiltererTest {
     void shouldReturnFalseForNotUniqueGameMessage() {
         UUID uuid = UUID.randomUUID();
 
-        GameMessage message1 = new TurnModelMessage(new TurnModel(10));
+        GameMessage message1 = new TurnModelMessage(new Round());
         message1.setMessageId(uuid);
 
-        GameMessage message2 = new TurnModelMessage(new TurnModel(10));
+        GameMessage message2 = new TurnModelMessage(new Round());
         message2.setMessageId(uuid);
 
         gameMessageFilterer.isUnique(message1);
@@ -118,10 +118,10 @@ public class GameMessageFiltererTest {
         UUID uuid1 = UUID.randomUUID();
         UUID uuid2 = UUID.randomUUID();
 
-        GameMessage message1 = new TurnModelMessage(new TurnModel(10));
+        GameMessage message1 = new TurnModelMessage(new Round());
         message1.setMessageId(uuid1);
 
-        GameMessage message2 = new TurnModelMessage(new TurnModel(10));
+        GameMessage message2 = new TurnModelMessage(new Round());
         message2.setMessageId(uuid2);
 
         gameMessageFilterer.isUnique(message1);
