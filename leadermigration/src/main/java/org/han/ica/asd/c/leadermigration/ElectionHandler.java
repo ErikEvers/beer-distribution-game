@@ -68,7 +68,7 @@ public class ElectionHandler {
   }
 
 	/**
-	 * Compare the currentPlayer to the other players and return it if it's the biggest in the list.
+	 * Compare the currentPlayer to the other players and return it if it has the biggest ID in the list.
 	 * If it is the biggest in the list, the currentPlayer gets returned.
 	 * If a bigger player is encountered in the list, the method is called recursively to determine if there are other
 	 * 	even bigger players in the list.
