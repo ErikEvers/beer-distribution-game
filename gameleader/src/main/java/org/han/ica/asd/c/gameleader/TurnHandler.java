@@ -22,4 +22,5 @@ public class TurnHandler {
     private boolean validateFacilityTurn(FacilityTurn turnModel) {
         return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
     }
+
 }

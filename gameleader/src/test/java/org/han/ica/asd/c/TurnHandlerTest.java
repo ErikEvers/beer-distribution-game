@@ -1,7 +1,6 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.gameleader.TurnHandler;
-import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,16 +11,10 @@ import java.io.ByteArrayOutputStream;;
 import java.lang.reflect.Method;
 import java.util.logging.*;
 import static junit.framework.TestCase.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( TurnHandler.class )
 class TurnHandlerTest {
-
-    //@InjectMocks
-    private IPersistence persistenceLayer;
-
     private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
 
     private TurnHandler turnHandler;
@@ -30,10 +23,7 @@ class TurnHandlerTest {
 
     private Method m;
 
-    private Method processFacilityTurn;
-
     private Object[] parameters;
-
 
     @BeforeEach
     void onSetUp() {
@@ -44,15 +34,10 @@ class TurnHandlerTest {
             parameterTypes = new Class[1];
             parameterTypes[0] = FacilityTurn.class;
 
-            //validateFacilityTurn
             m = turnHandler.getClass().getDeclaredMethod("validateFacilityTurn", parameterTypes);
 
             m.setAccessible(true);
             parameters = new Object[1];
-
-            //processFacilityTurn
-            processFacilityTurn = turnHandler.getClass().getDeclaredMethod("processFacilityTurn", parameterTypes);
-
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Something went wrong while setting up the TurnHandler test");
             e.printStackTrace();
@@ -67,6 +52,7 @@ class TurnHandlerTest {
         parameters[0] = facilityTurnModel;
 
         try {
+            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             assertTrue((Boolean) m.invoke(turnHandler, parameters));
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,6 +69,7 @@ class TurnHandlerTest {
         try {
             assertFalse((Boolean) m.invoke(turnHandler, parameters));
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             e.printStackTrace();
         }
     }
@@ -97,6 +84,7 @@ class TurnHandlerTest {
         try {
             assertFalse((Boolean) m.invoke(turnHandler, parameters));
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             e.printStackTrace();
         }
     }
@@ -109,26 +97,8 @@ class TurnHandlerTest {
         parameters[0] = facilityTurnModel;
 
         try {
+            LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             assertTrue((Boolean) m.invoke(turnHandler, parameters));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void testDoProcess_ValidateFacilityTurnReturnFalse_ThenLog() {
-        facilityTurnModel.setOrder(10);
-        facilityTurnModel.setStock(10);
-
-        parameters[0] = facilityTurnModel;
-
-        try {
-        when(m.invoke(turnHandler, parameters)).thenReturn(true);
-
-        m.invoke(turnHandler, parameters);
-
-        verify(persistenceLayer, times(55)).savePlayerTurn(facilityTurnModel);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,8 +126,6 @@ class TurnHandlerTest {
             String logMsg = out.toString();
 
             assertNotNull(logMsg);
-            //assertEquals(logMsg, "WARNING: Incoming orders can't be higher than the available stock.");
-
         } finally {
             logger.removeHandler(handler);
         }

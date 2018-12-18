@@ -1,26 +1,22 @@
 package org.han.ica.asd.c.gameleader;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
 import org.han.ica.asd.c.model.BeerGame;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 import org.han.ica.asd.c.observers.ITurnModelObserver;
-
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 public class GameLeader implements ITurnModelObserver {
-
     private IConnectorForLeader connectorForLeader;
+
     @Inject
     private ILeaderGameLogic gameLogic;
 
     private BeerGame game;
     private TurnHandler turnHandler;
     private Round currentRoundData;
-
     private int turnsExpected;
     private int turnsReceived;
 
@@ -29,6 +25,7 @@ public class GameLeader implements ITurnModelObserver {
         this.connectorForLeader = connectorForLeader;
         this.connectorForLeader.addObserver(this);
         this.turnHandler = new TurnHandler();
+        this.game = game;
         this.currentRoundData = new Round(game.getGameId(), game.getRounds().size());
         this.turnsExpected = game.getConfiguration().getFacilities().size();
         this.turnsReceived = 0;
@@ -55,4 +52,19 @@ public class GameLeader implements ITurnModelObserver {
         turnsReceived = 0;
     }
 
+    public int getTurnsExpected() {
+        return turnsExpected;
+    }
+
+    public int getTurnsReceived() {
+        return turnsReceived;
+    }
+
+    public void setTurnHandler(TurnHandler turnHandler) {
+        this.turnHandler = turnHandler;
+    }
+
+    public void setGameLogic(ILeaderGameLogic gameLogic) {
+        this.gameLogic = gameLogic;
+    }
 }
