@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.data;
 
-import org.han.ica.asd.c.model.BeerGame;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 /**
  * Small interface to retrieve game and/or round data

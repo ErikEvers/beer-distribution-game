@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.dbconnection;
 
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -10,24 +11,14 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DBConnection implements DatabaseConnection {
+@Singleton
+public class DBConnection implements IDatabaseConnection {
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/main/resources/";
 	private static final String DATABASENAME = "BeerGameDB.db";
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
 	private static volatile DBConnection mInstance;
 
 	private DBConnection() {
-	}
-
-	public static DBConnection getInstance() {
-		if (mInstance == null) {
-			synchronized (DBConnection.class) {
-				if (mInstance == null) {
-					mInstance = new DBConnection();
-				}
-			}
-		}
-		return mInstance;
 	}
 
 
