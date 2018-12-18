@@ -44,6 +44,14 @@ class ProgrammedBusinessRulesDAOTest {
     @Test
     void createProgrammedbusinessRule() {
         Assert.assertEquals(0, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+        programmedBusinessRulesDAO.createProgrammedbusinessRule(PROGRAMMED_BUSINESS_RULES);
+        Assert.assertEquals(1, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+
+        ProgrammedBusinessRules programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
+
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAgentName(),programmedBusinessRulesDb.getProgrammedAgentName());
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedBusinessRule(),programmedBusinessRulesDb.getProgrammedBusinessRule());
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAST(),programmedBusinessRulesDb.getProgrammedAST());
     }
 
     @Test
