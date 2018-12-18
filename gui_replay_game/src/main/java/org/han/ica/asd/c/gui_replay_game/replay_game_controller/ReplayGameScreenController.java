@@ -53,29 +53,19 @@ public class ReplayGameScreenController {
     @FXML
     private TextField totalRoundsTextfield;
 
-    private int currentRound;
-    private int totalRounds;
     private ReplayData replayData;
 
     @FXML
     public void currentRoundEntered(ActionEvent event) {
-        int currentRoundInput = Integer.parseInt(currentRoundTextfield.getText());
+        replayData.updateCurrentRound(Integer.parseInt(currentRoundTextfield.getText()));
 
-        if (currentRoundInput > totalRounds) {
-            currentRound = totalRounds;
-        } else if (currentRoundInput < 1) {
-            currentRound = 1;
-        } else {
-            currentRound = currentRoundInput;
-        }
         updateCurrentRound();
         drawGraph();
     }
 
     @FXML
     public void nextRoundButtonClicked(ActionEvent event) {
-        if (currentRound < totalRounds) {
-            this.currentRound++;
+        if (replayData.incrementCurrentRound()) {
             updateCurrentRound();
             drawGraph();
         }
@@ -83,8 +73,7 @@ public class ReplayGameScreenController {
 
     @FXML
     public void prevRoundButtonClicked(ActionEvent event) {
-        if (currentRound > 1) {
-            this.currentRound--;
+        if (replayData.decrementCurrentRound()) {
             updateCurrentRound();
             drawGraph();
         }
@@ -96,16 +85,14 @@ public class ReplayGameScreenController {
 
         currentRoundTextfield.setTextFormatter(NumericTextFormatter.getTextFormatter());
 
-        currentRound = 1;
-        totalRounds = replayData.getHighestRound();
-        totalRoundsTextfield.setText(totalRounds + "");
+        totalRoundsTextfield.setText(replayData.getTotalRoundsString());
 
-        insertComboBox();
+        initializeComboBox();
         updateCurrentRound();
         drawGraph();
     }
 
-    private void insertComboBox() {
+    private void initializeComboBox() {
         facilityCombobox.getItems().clear();
 
         ObservableList<Facility> observableList = FXCollections.observableArrayList(replayData.getAllFacilities());
@@ -130,14 +117,14 @@ public class ReplayGameScreenController {
     }
 
     private void updateCurrentRound() {
-        currentRoundTextfield.setText(currentRound + "");
+        currentRoundTextfield.setText(replayData.getCurrentRoundString());
     }
 
     private void drawGraph() {
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
         LineChart.Series<Double, Double> series1 = new LineChart.Series<>();
         series1.setName("TestData");
-        for (int i = 0; i <= currentRound; i++) {
+        for (int i = 0; i <= replayData.getCurrentRound(); i++) {
             series1.getData().add(new XYChart.Data<>(new Double(i), new Double(i)));
         }
         lineChartData.add(series1);

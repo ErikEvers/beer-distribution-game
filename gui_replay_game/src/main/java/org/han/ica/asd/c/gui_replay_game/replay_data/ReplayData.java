@@ -7,14 +7,55 @@ import org.han.ica.asd.c.model.Round;
 import java.util.ArrayList;
 
 public class ReplayData {
-    ArrayList<Round> rounds;
+    private final int LOWEST_ROUND_POSSIBLE = 0;
+    private final int FIRST_ROUND_TO_DISPLAY = 1;
+    private ArrayList<Round> rounds;
+    private int currentRound;
+    private int totalRounds;
 
-    public ReplayData(){
+    public ReplayData() {
         rounds = new ArrayList<>();
+        currentRound = FIRST_ROUND_TO_DISPLAY;
+        //totalRounds = rounds.size();
+        totalRounds = 5;
     }
 
-    public int getHighestRound(){
-        return rounds.size();
+    public int getTotalRounds() {
+        return totalRounds;
+    }
+
+    public String getTotalRoundsString() {
+        return String.valueOf(totalRounds);
+    }
+
+    public String getCurrentRoundString() {
+        return String.valueOf(currentRound);
+    }
+
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public boolean incrementCurrentRound() {
+        if (currentRound < totalRounds) {
+            this.currentRound++;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean decrementCurrentRound() {
+        if (currentRound > LOWEST_ROUND_POSSIBLE) {
+            this.currentRound--;
+            return true;
+        }
+        return false;
+    }
+
+    public void updateCurrentRound(int round) {
+        if (round > totalRounds) currentRound = totalRounds;
+        else if (round < LOWEST_ROUND_POSSIBLE) currentRound = LOWEST_ROUND_POSSIBLE;
+        else currentRound = round;
     }
 
     public ArrayList<Facility> getAllFacilities() {
@@ -23,7 +64,7 @@ public class ReplayData {
         //dus de facilities op te halen
         //Wat hier nu aanwezig is is test code om zo de controller werkend te krijgen
 
-        FacilityType type = new FacilityType("Factory", "GameId", 1,1,1,1,1,1);
+        FacilityType type = new FacilityType("Factory", "GameId", 1, 1, 1, 1, 1, 1);
 
         Facility facility1 = new Facility("GameId", 1, type, "IpAddress", "gameAgentName");
         Facility facility2 = new Facility("GameId", 2, type, "IpAddress", "gameAgentName");
