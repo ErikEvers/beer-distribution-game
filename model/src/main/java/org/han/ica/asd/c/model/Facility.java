@@ -3,7 +3,6 @@ package org.han.ica.asd.c.model;
 import java.util.List;
 
 public class Facility {
-
     private FacilityType facilityType;
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private Player player;

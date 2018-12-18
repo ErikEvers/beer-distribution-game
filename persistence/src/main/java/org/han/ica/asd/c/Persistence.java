@@ -1,59 +1,67 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dao_model.*;
+
+import org.han.ica.asd.c.dao_model.BeerGame;
+import org.han.ica.asd.c.dao_model.FacilityLinkedTo;
+import org.han.ica.asd.c.dao_model.FacilityTurn;
+import org.han.ica.asd.c.dao_model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.dao_model.Round;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 
 public class Persistence implements IPersistence {
+
+	@Inject
+	@Named("RoundDAO")
+	private IBeerDisitributionGameDAO roundDAO;
+
+	@Inject
+	@Named("BeergameDAO")
 	private IBeerDisitributionGameDAO beergameDAO;
+
+	@Inject
+	@Named("GameBusinessRulesRulesInFacilityTurnDAO")
+	private IBeerDisitributionGameDAO gameBusinessRulesInFacilityTurnDAO;
+
+	@Inject
+	@Named("FacilityTurnDAO")
+	private IBeerDisitributionGameDAO facilityTurnDAO;
+
+
+	public Persistence(){
+		//Empty constructor for GUICE
+	}
 
 	public void saveRoundData(Round rounddata)
 	{
-		if(!(beergameDAO instanceof RoundDAO)) {
-			beergameDAO = new RoundDAO();
-		}
-		((RoundDAO) beergameDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
+		((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
 	}
 
 	public Round fetchRoundData(String gameId, int roundId)
 	{
-		if(!(beergameDAO instanceof RoundDAO)){
-			beergameDAO = new RoundDAO();
-		}
-		return ((RoundDAO) beergameDAO).getRound(gameId,roundId);
+		return ((RoundDAO)roundDAO).getRound(gameId,roundId);
 	}
 
 	public BeerGame getGameLog(String gameId)
 	{
-		if(!(beergameDAO instanceof BeergameDAO)){
-			beergameDAO = new BeergameDAO();
-		}
 		return ((BeergameDAO)beergameDAO).getGameLog(gameId);
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn)
 	{
-		if(!(beergameDAO instanceof GameBusinessRulesInFacilityTurnDAO)){
-			beergameDAO = new GameBusinessRulesInFacilityTurnDAO();
-		}
-		((GameBusinessRulesInFacilityTurnDAO)beergameDAO).createTurn(gameBusinessRulesInFacilityTurn);
-
+		((GameBusinessRulesInFacilityTurnDAO)gameBusinessRulesInFacilityTurnDAO).createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
 	public FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility)
 	{
-		if(!(beergameDAO instanceof FacilityTurnDAO)){
-			beergameDAO = new FacilityTurnDAO();
-		}
-		return ((FacilityTurnDAO)beergameDAO).fetchTurn(round,facility);
+		return ((FacilityTurnDAO)facilityTurnDAO).fetchTurn(round,facility);
 	}
 
 	public void saveTurnData(FacilityTurn turn)
 	{
-		if(!(beergameDAO instanceof FacilityTurnDAO)){
-			beergameDAO = new FacilityTurnDAO();
-		}
-
-		((FacilityTurnDAO)beergameDAO).createTurn(turn);
+		((FacilityTurnDAO)facilityTurnDAO).createTurn(turn);
 	}
 }
