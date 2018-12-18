@@ -45,6 +45,7 @@ class ConfigurationWrapperTest {
 		configurationDB = new ConfigurationDB("BeerGameZutphen",1, 1, 1, 1, 1, 1, 1, true, true);
 	}
 
+
 	@Test
 	void wrapToDaoModelTest() {
 		Configuration contemp = null;

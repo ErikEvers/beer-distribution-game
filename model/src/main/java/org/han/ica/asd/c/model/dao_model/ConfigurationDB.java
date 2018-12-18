@@ -23,7 +23,9 @@ public class ConfigurationDB implements IDaoModel{
     private List<FacilityType> facilityTypes;
 
 
-    public ConfigurationDB(){}
+    public ConfigurationDB(){
+        //Empty constructor for GUICE
+    }
 
     public ConfigurationDB(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
         this.gameId = gameId;

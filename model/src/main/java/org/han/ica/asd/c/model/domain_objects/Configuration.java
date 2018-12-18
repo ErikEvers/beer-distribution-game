@@ -17,7 +17,9 @@ public class Configuration implements IDomainModel{
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
 
-    public Configuration(){}
+    public Configuration(){
+        //Empty constructor for GUICE
+    }
 
     public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
                          int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
