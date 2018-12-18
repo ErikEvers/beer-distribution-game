@@ -48,36 +48,50 @@ public class SeeOtherFacilitiesController {
         ArrayList<FacilityRectangle> drawnFacilityRectangles = new ArrayList<>();
 
         for(FacilityLinkedTo link : links) {
-            if(!drawnFacilities.contains(link.getFacilityDeliver())) {
-                drawnFacilityRectangles.add(drawFacility(link.getFacilityDeliver()));
-                drawnFacilities.add(link.getFacilityDeliver());
+            drawFacilities(drawnFacilities, drawnFacilityRectangles, link);
+            drawLine(drawnFacilityRectangles, link);
+        }
+    }
+
+    private void drawFacilities(ArrayList<Facility> drawnFacilities,
+                                ArrayList<FacilityRectangle> drawnFacilityRectangles,
+                                FacilityLinkedTo link) throws FacilityLoadingError {
+        if(!drawnFacilities.contains(link.getFacilityDeliver())) {
+            drawnFacilityRectangles.add(drawFacility(link.getFacilityDeliver()));
+            drawnFacilities.add(link.getFacilityDeliver());
+        }
+
+        if(!drawnFacilities.contains(link.getFacilityOrder())) {
+            drawnFacilityRectangles.add(drawFacility(link.getFacilityOrder()));
+            drawnFacilities.add(link.getFacilityOrder());
+        }
+    }
+
+    private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, FacilityLinkedTo link) {
+        EdgeLine line = new EdgeLine();
+        FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,"","",""));
+        FacilityRectangle rectangle2 = new FacilityRectangle(new Facility("",0,"","",""));
+
+        for(FacilityRectangle rectangle : drawnFacilityRectangles) {
+            if(rectangle.getFacility() == link.getFacilityDeliver()) {
+                rectangle1 = rectangle;
             }
-
-            if(!drawnFacilities.contains(link.getFacilityOrder())) {
-                drawnFacilityRectangles.add(drawFacility(link.getFacilityOrder()));
-                drawnFacilities.add(link.getFacilityOrder());
+            if(rectangle.getFacility() == link.getFacilityOrder()) {
+                rectangle2 = rectangle;
             }
+        }
 
-            EdgeLine line = new EdgeLine();
-            FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,"","",""));
-            FacilityRectangle rectangle2 = new FacilityRectangle(new Facility("",0,"","",""));
+        line.drawLine(rectangle1, rectangle2, rectangle1.getTranslateX(), rectangle1.getTranslateY());
+        setLineStroke(link, line);
 
-            for(FacilityRectangle rectangle : drawnFacilityRectangles) {
-                if(rectangle.getFacility() == link.getFacilityDeliver()) {
-                    rectangle1 = rectangle;
-                }
-                if(rectangle.getFacility() == link.getFacilityOrder()) {
-                    rectangle2 = rectangle;
-                }
-            }
+        facilitiesContainer.getChildren().add(line);
+    }
 
-            line.drawLine(rectangle1, rectangle2, rectangle1.getTranslateX(), rectangle1.getTranslateY());
+    private void setLineStroke(FacilityLinkedTo link, EdgeLine line) {
+        line.setStroke(Color.BLACK);
 
-            if(!link.isActive()) {
-                line.setStroke(Color.RED);
-            }
-
-            facilitiesContainer.getChildren().add(line);
+        if(!link.isActive()) {
+            line.setStroke(Color.RED);
         }
     }
 
@@ -91,7 +105,6 @@ public class SeeOtherFacilitiesController {
      */
 
     private FacilityRectangle drawFacility(Facility facility) throws FacilityLoadingError {
-
         if(facility.getFacilityType().equals("Factory")) {
             drawFactory(facility);
             return factories.get(factories.size()-1);
