@@ -1,9 +1,9 @@
 package org.han.ica.asd.c;
 
 
+import org.han.ica.asd.c.dao_model.BeerGame;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.BeerGame;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 
 public class BeergameDAO implements IBeerDisitributionGameDAO {

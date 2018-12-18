@@ -1,34 +1,36 @@
 package org.han.ica.asd.c.model;
 
+import java.util.List;
+
 public class Facility {
-    private String gameId;
-    private int facilityId;
+
     private FacilityType facilityType;
-    private String ipAddress;
-    private String gameAgentName;
+    private List<FacilityLinkedTo> facilitiesLinkedTo;
+    private Player player;
+    private GameAgent agent;
+    private int facilityId;
 
-
-    public Facility(String gameId, int facilityId, FacilityType facilityType, String ipAddress, String gameAgentName) {
-        this.gameId = gameId;
-        this.facilityId = facilityId;
+    public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, Player player, GameAgent agent, int facilityId) {
         this.facilityType = facilityType;
-        this.ipAddress = ipAddress;
-        this.gameAgentName = gameAgentName;
+        this.facilitiesLinkedTo = facilitiesLinkedTo;
+        this.player = player;
+        this.agent = agent;
+        this.facilityId = facilityId;
     }
 
-    public String getGameId() {
-        return gameId;
+    public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, Player player, int facilityId) {
+        this.facilityType = facilityType;
+        this.facilitiesLinkedTo = facilitiesLinkedTo;
+        this.player = player;
+        this.facilityId = facilityId;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public int getFacilityId() {
-        return facilityId;
-    }
-
-    public void setFacilityId(int facilityId) {
+    /**
+     * Bare Facility for when no player or agent is yet available
+     */
+    public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, int facilityId) {
+        this.facilityType = facilityType;
+        this.facilitiesLinkedTo = facilitiesLinkedTo;
         this.facilityId = facilityId;
     }
 
@@ -40,19 +42,35 @@ public class Facility {
         this.facilityType = facilityType;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public List<FacilityLinkedTo> getFacilitiesLinkedTo() {
+        return facilitiesLinkedTo;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
+    public void setFacilitiesLinkedTo(List<FacilityLinkedTo> facilitiesLinkedTo) {
+        this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
-    public String getGameAgentName() {
-        return gameAgentName;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setGameAgentName(String gameAgentName) {
-        this.gameAgentName = gameAgentName;
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public GameAgent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(GameAgent agent) {
+        this.agent = agent;
+    }
+
+    public int getFacilityId() {
+        return facilityId;
+    }
+
+    public void setFacilityId(int facilityId) {
+        this.facilityId = facilityId;
     }
 }

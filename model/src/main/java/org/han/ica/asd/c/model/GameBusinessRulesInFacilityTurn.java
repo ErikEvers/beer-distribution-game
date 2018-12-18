@@ -1,77 +1,33 @@
 package org.han.ica.asd.c.model;
 
+import java.util.List;
+
 public class GameBusinessRulesInFacilityTurn {
-    private int roundId;
-    private int facilityIdDeliver;
-    private int facilityIdOrder;
-    private String gameId;
-    private String gameAgentName;
-    private String gameBusinessRule;
-    private String gameAST;
+    private List<Round> rounds;
+    private List<GameBusinessRules> businessRules;
 
-    public GameBusinessRulesInFacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
-        this.roundId = roundId;
-        this.facilityIdDeliver = facilityIdDeliver;
-        this.facilityIdOrder = facilityIdOrder;
-        this.gameId = gameId;
-        this.gameAgentName = gameAgentName;
-        this.gameBusinessRule = gameBusinessRule;
-        this.gameAST = gameAST;
+    public GameBusinessRulesInFacilityTurn() {
+        // Empty as it also needs to be instantiated when empty
     }
 
-    public int getRoundId() {
-        return roundId;
+    public GameBusinessRulesInFacilityTurn(List<Round> rounds, List<GameBusinessRules> businessRules) {
+        this.rounds = rounds;
+        this.businessRules = businessRules;
     }
 
-    public void setRoundId(int roundId) {
-        this.roundId = roundId;
+    public List<Round> getRounds() {
+        return rounds;
     }
 
-    public int getFacilityIdDeliver() {
-        return facilityIdDeliver;
+    public void setRounds(List<Round> rounds) {
+        this.rounds = rounds;
     }
 
-    public void setFacilityIdDeliver(int facilityIdDeliver) {
-        this.facilityIdDeliver = facilityIdDeliver;
+    public List<GameBusinessRules> getBusinessRules() {
+        return businessRules;
     }
 
-    public int getFacilityIdOrder() {
-        return facilityIdOrder;
-    }
-
-    public void setFacilityIdOrder(int facilityIdOrder) {
-        this.facilityIdOrder = facilityIdOrder;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    public String getGameAgentName() {
-        return gameAgentName;
-    }
-
-    public void setGameAgentName(String gameAgentName) {
-        this.gameAgentName = gameAgentName;
-    }
-
-    public String getGameBusinessRule() {
-        return gameBusinessRule;
-    }
-
-    public void setGameBusinessRule(String gameBusinessRule) {
-        this.gameBusinessRule = gameBusinessRule;
-    }
-
-    public String getGameAST() {
-        return gameAST;
-    }
-
-    public void setGameAST(String gameAST) {
-        this.gameAST = gameAST;
+    public void setBusinessRules(List<GameBusinessRules> businessRules) {
+        this.businessRules = businessRules;
     }
 }

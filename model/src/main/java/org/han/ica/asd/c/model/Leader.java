@@ -1,39 +1,25 @@
 package org.han.ica.asd.c.model;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Leader {
-    private String gameId;
-    private String playerId;
-    private Timestamp timestamp;
+    private Player player;
+    private LocalDateTime timestamp;
 
-    public Leader(String gameId, String playerId, Timestamp timestamp) {
-        this.gameId = gameId;
-        this.playerId = playerId;
-        this.timestamp = timestamp;
+    public Leader(Player player) {
+        this.player = player;
+        timestamp = LocalDateTime.now();
     }
 
-    public String getGameId() {
-        return gameId;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
-    public String getPlayerId() {
-        return playerId;
-    }
-
-    public void setPlayerId(String playerId) {
-        this.playerId = playerId;
-    }
-
-    public Timestamp getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
     }
 }

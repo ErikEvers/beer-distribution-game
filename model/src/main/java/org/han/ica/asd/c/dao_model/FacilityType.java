@@ -1,7 +1,8 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.dao_model;
 
 public class FacilityType {
     private String facilityName;
+    private String gameId;
     private int valueIncomingGoods;
     private int valueOutgoingGoods;
     private int stockHoldingCosts;
@@ -9,9 +10,9 @@ public class FacilityType {
     private int startingBudget;
     private int startingOrder;
 
-    public FacilityType(String facilityName, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, //NOSONAR
-                        int openOrderCosts, int startingBudget, int startingOrder) { //NOSONAR
+    public FacilityType(String facilityName, String gameId, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder) { //NOSONAR
         this.facilityName = facilityName;
+        this.gameId = gameId;
         this.valueIncomingGoods = valueIncomingGoods;
         this.valueOutgoingGoods = valueOutgoingGoods;
         this.stockHoldingCosts = stockHoldingCosts;
@@ -26,6 +27,14 @@ public class FacilityType {
 
     public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public int getValueIncomingGoods() {

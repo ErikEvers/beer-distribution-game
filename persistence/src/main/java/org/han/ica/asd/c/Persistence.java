@@ -1,11 +1,8 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.BeerGame;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.dao_model.*;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
+
 
 public class Persistence implements IPersistence {
 	private IBeerDisitributionGameDAO beergameDAO;
@@ -24,7 +21,6 @@ public class Persistence implements IPersistence {
 			beergameDAO = new RoundDAO();
 		}
 		return ((RoundDAO) beergameDAO).getRound(gameId,roundId);
-
 	}
 
 	public BeerGame getGameLog(String gameId)

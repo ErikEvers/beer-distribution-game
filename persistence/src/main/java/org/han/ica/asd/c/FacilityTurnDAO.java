@@ -1,10 +1,10 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dao_model.FacilityLinkedTo;
+import org.han.ica.asd.c.dao_model.FacilityTurn;
+import org.han.ica.asd.c.dao_model.Round;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.Round;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

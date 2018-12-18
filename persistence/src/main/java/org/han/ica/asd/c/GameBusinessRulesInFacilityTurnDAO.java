@@ -1,8 +1,8 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dao_model.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

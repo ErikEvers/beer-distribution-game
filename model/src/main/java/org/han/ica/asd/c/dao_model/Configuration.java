@@ -1,9 +1,14 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.dao_model;
 
+import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.FacilityType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Configuration {
+    private String gameId;
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesales;
@@ -13,14 +18,12 @@ public class Configuration {
     private int maximumOrderRetail;
     private boolean continuePlayingWhenBankrupt;
     private boolean insightFacilities;
-    private List<Facility> facilities;
-    private List<FacilityLinkedTo> facilitiesLinkedTo;
-    private List<FacilityType> facilityTypes;
+    private List<org.han.ica.asd.c.model.Facility> facilities;
+    private List<org.han.ica.asd.c.model.FacilityLinkedTo> facilitiesLinkedTo;
+    private List<org.han.ica.asd.c.model.FacilityType> facilityTypes;
 
-    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
-                         int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
-                         List<FacilityLinkedTo> facilitiesLinkedTo, List<FacilityType> facilityTypes) //NOSONAR
-    {
+    public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
+        this.gameId = gameId;
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
         this.amountOfWholesales = amountOfWholesales;
@@ -30,9 +33,17 @@ public class Configuration {
         this.maximumOrderRetail = maximumOrderRetail;
         this.continuePlayingWhenBankrupt = continuePlayingWhenBankrupt;
         this.insightFacilities = insightFacilities;
-        this.facilities = facilities;
-        this.facilitiesLinkedTo = facilitiesLinkedTo;
-        this.facilityTypes = facilityTypes;
+        facilities = new ArrayList<>();
+        facilitiesLinkedTo = new ArrayList<>();
+        facilityTypes = new ArrayList<>();
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
     public int getAmountOfRounds() {
@@ -107,27 +118,39 @@ public class Configuration {
         this.insightFacilities = insightFacilities;
     }
 
-    public List<Facility> getFacilities() {
+    public List<org.han.ica.asd.c.model.Facility> getFacilities() {
         return facilities;
     }
 
-    public void setFacilities(List<Facility> facilities) {
+    public void setFacilities(List<org.han.ica.asd.c.model.Facility> facilities) {
         this.facilities = facilities;
     }
 
-    public List<FacilityLinkedTo> getFacilitiesLinkedTo() {
+    public void addFacility(Facility facility){
+        facilities.add(facility);
+    }
+
+    public List<org.han.ica.asd.c.model.FacilityLinkedTo> getFacilitiesLinkedTo() {
         return facilitiesLinkedTo;
     }
 
-    public void setFacilitiesLinkedTo(List<FacilityLinkedTo> facilitiesLinkedTo) {
+    public void setFacilitiesLinkedTo(List<org.han.ica.asd.c.model.FacilityLinkedTo> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
-    public List<FacilityType> getFacilityTypes() {
+    public void addFacilityLinkedTo(FacilityLinkedTo facilityLinkedTo){
+        facilitiesLinkedTo.add(facilityLinkedTo);
+    }
+
+    public List<org.han.ica.asd.c.model.FacilityType> getFacilityTypes() {
         return facilityTypes;
     }
 
-    public void setFacilityTypes(List<FacilityType> facilityTypes) {
+    public void setFacilityTypes(List<org.han.ica.asd.c.model.FacilityType> facilityTypes) {
         this.facilityTypes = facilityTypes;
+    }
+
+    public void addFacilityType(FacilityType facilityType){
+        facilityTypes.add(facilityType);
     }
 }

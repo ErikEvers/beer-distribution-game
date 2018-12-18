@@ -1,8 +1,8 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dao_model.Configuration;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.Configuration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
