@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Action extends ASTNode {
-    private static final String prefix = "A(";
-
+    private static final String PREFIX = "A(";
+    
     private ActionReference actionName;
     private OperationValue operation;
 
@@ -36,7 +36,7 @@ public class Action extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
     }
 
     /**

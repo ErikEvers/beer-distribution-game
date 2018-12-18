@@ -1,8 +1,11 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import org.han.ica.asd.c.businessrule.mocks.GenerateOrderMock;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.gamevalue.GAME_VALUE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,9 +13,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class BusinessRule extends ASTNode {
-    private static final String prefix = "BR(";
+    private static final String PREFIX = "BR(";
     private Condition condition;
     private Action action;
+    private GenerateOrderMock turn;
+    private int facilityId;
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -88,7 +93,7 @@ public class BusinessRule extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
     }
 
     /**
@@ -130,5 +135,68 @@ public class BusinessRule extends ASTNode {
     @Override
     public int hashCode() {
         return Objects.hash(condition, action);
+    }
+
+    /***
+     * replaces the variables of the business rule with data using dept first
+     * When its a leaf (a Value) it replaces the value with the game data(turn)
+     * @param turn data of a turn
+     * @param facilityId identifier of the facility
+     */
+    public void substituteBusinessRuleWithData(GenerateOrderMock turn, int facilityId){
+        int left = 0;
+        int right = 2;
+        int actionValue = 1;
+        this.turn = turn;
+        this.facilityId = facilityId;
+        findLeafAndReplace(condition.getChildren().get(left));
+        if(hasChildren(condition)) {
+            findLeafAndReplace(condition.getChildren().get(right));
+        }
+        if (action != null) {
+            findLeafAndReplace(action.getChildren().get(actionValue));
+        }
+    }
+
+    /***
+     * finds the leaf and replaces the leaf with game data.
+     *
+     * @param astNode a node of the tree
+     */
+    private void findLeafAndReplace(ASTNode astNode){
+        int left = 0;
+        int right = 2;
+        if(astNode instanceof Value){
+            replace((Value) astNode);
+        }
+        if (!astNode.getChildren().isEmpty()) {
+            findLeafAndReplace(astNode.getChildren().get(left));
+            if (hasChildren(astNode)) {
+                findLeafAndReplace(astNode.getChildren().get(right));
+            }
+        }
+    }
+
+
+    /***
+     * checks if the node has more than one child
+     * @param astNode a node of the tree
+     * @return true if the node has more than one child
+     */
+    private boolean hasChildren(ASTNode astNode){
+        int oneChild = 1;
+        return astNode.getChildren().size()>oneChild;
+    }
+
+    /***
+     *replaces the value with the replacementvalue(gamedata) like stock with 10
+     *
+     * @param value a node of the tree
+     */
+    private void replace(Value value) {
+        GAME_VALUE gamevalue = GAME_VALUE.getGameValue(value.getValue());
+        if(gamevalue!=null) {
+            value.replaceValue(String.valueOf(turn.getReplacementValue(gamevalue, facilityId)));
+        }
     }
 }

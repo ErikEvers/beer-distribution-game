@@ -3,7 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast.operations;
 import java.util.Objects;
 
 public class Value extends OperationValue {
-    private static final String prefix = "V(";
+    private static final String PREFIX = "V(";
     private String value;
 
     /**
@@ -50,7 +50,7 @@ public class Value extends OperationValue {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(prefix).append(value).append(suffix);
+        stringBuilder.append(PREFIX).append(value).append(SUFFIX);
     }
 
     /**
@@ -97,5 +97,14 @@ public class Value extends OperationValue {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    /**
+     * replaces the current value with the game value
+     *
+     * @param gameValue the value of the game
+     */
+    public void replaceValue(String gameValue) {
+        this.value = gameValue;
     }
 }

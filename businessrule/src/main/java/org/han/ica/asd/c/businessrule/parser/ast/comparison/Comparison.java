@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Comparison extends Expression {
-    private static final String prefix = "C(";
+    private static final String PREFIX = "C(";
     private ComparisonValue left;
     private ComparisonOperator comparisonOperator;
     private ComparisonValue right;
@@ -25,7 +25,7 @@ public class Comparison extends Expression {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.businessrule;
 
+import org.han.ica.asd.c.businessrule.mocks.GenerateOrderMock;
+import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
@@ -91,6 +93,68 @@ public class BusinessRuleTest {
         inOrder.verify(operation).resolveOperation();
         inOrder.verify(comparisonValue).getChildren();
     }
+    @Test
+    void testBusinessrule_getReplacementValue_equals_10() {
+        String businessRuleString = "BR(CS(C(CV(V(40))ComO(<)CV(Add(V(inventory)CalO(+)Mul(V(inventory)CalO(*)V(back orders)))))))";
+        String expected = "BR(CS(C(CV(V(40))ComO(<)CV(Add(V(10)CalO(+)Mul(V(10)CalO(*)V(10)))))))";
+        GenerateOrderMock generateOrderMock = new GenerateOrderMock();
+        businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
+
+        businessRule.substituteBusinessRuleWithData(generateOrderMock, 5);
+        String result = businessRule.encode();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testBusinessRule_hasMultipleChildren() {
+        String businessRuleString = "BR(CS(C(CV(V(stock))ComO(<)CV(V(10))))A(AR(order)V(0)))";
+        businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
+        Class<?> secretClass = businessRule.getClass();
+        Method[] methods = secretClass.getDeclaredMethods();
+        Method hasChildren = null;
+        for (Method method : methods) {
+            if (method.getName() == "hasChildren") {
+                method.setAccessible(true);
+                hasChildren = method;
+            }
+        }
+
+        try {
+            assertTrue((Boolean) hasChildren.invoke(businessRule, (ASTNode) businessRule.getChildren().get(1)));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void testBusinessRule_replace() {
+        Class<?> secretClass = businessRule.getClass();
+        Method[] methods = secretClass.getDeclaredMethods();
+        Method method1 = null;
+        for (Method method : methods) {
+            if (method.getName() == "replace") {
+                method.setAccessible(true);
+                method1 = method;
+                return;
+            }
+        }
+
+        Value value = new Value();
+        value.addValue("");
+
+        try {
+            method1.invoke(businessRule, method1.invoke(businessRule, (ASTNode) value));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        assertEquals("10", value.getValue());
+    }
+
 
 
 }

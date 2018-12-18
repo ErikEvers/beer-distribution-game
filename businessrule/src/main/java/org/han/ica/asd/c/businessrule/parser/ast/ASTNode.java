@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ASTNode {
-    protected static final String suffix = ")";
+    protected static final String SUFFIX = ")";
 
     /**
      * Overridable function for adding a child to an ASTNode
