@@ -23,6 +23,8 @@ LOWEST: ('lowest' | 'smallest');
 HIGHEST: ('highest' | 'biggest');
 
 NOTEQUAL: '!=' | '<>' | ('is ' | 'are ')? 'not equal';
+GREATEREQUAL: '>=' | ('is ' | 'are ')?  ('greater' | 'higher') ' than or equal to';
+LESSEQUAL: '<=' | ('is ' | 'are ')?  ('less' | 'lower') ' than or equal to';
 GREATER: '>' | ('is ' | 'are ')?  ('greater' | 'higher');
 LESS: '<' | ('is ' | 'are ')?  ('less' | 'lower');
 EQUAL: '=' | ('is ' | 'are ')? 'equal' | 'is' | 'are';
@@ -50,3 +52,4 @@ comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
 action: ORDER operation direction? | DELIVER operation direction;
 direction: (FROM | TO) person (WHEN comparisonstatement | WITH (LOWEST | HIGHEST) GAME_VALUE)?;
 person: NODE (ABOVE | BELOW);
+
