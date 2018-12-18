@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gameleader.componentInterfaces;
 import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.Round;
 
 /**
@@ -34,4 +35,6 @@ public interface IPersistence {
      * @return the round data at that round.
      */
     public Round fetchRoundData(int roundId);
+
+    void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
 }

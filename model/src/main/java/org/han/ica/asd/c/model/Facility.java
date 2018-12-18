@@ -4,15 +4,17 @@ public class Facility {
     private String gameId;
     private int facilityId;
     private String facilityType;
-    private String ipAddress;
+    private String playerId;
     private String gameAgentName;
+    private boolean bankrupt;
 
-    public Facility(String gameId, int facilityId, String facilityType, String ipAddress, String gameAgentName) {
+    public Facility(String gameId, int facilityId, String facilityType, String playerId, String gameAgentName, boolean bankrupt) {
         this.gameId = gameId;
         this.facilityId = facilityId;
         this.facilityType = facilityType;
-        this.ipAddress = ipAddress;
+        this.playerId = playerId;
         this.gameAgentName = gameAgentName;
+        this.bankrupt = bankrupt;
     }
 
     public String getGameId() {
@@ -39,12 +41,12 @@ public class Facility {
         this.facilityType = facilityType;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
+    public String getPlayerId() {
+        return playerId;
     }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
     }
 
     public String getGameAgentName() {
@@ -53,5 +55,13 @@ public class Facility {
 
     public void setGameAgentName(String gameAgentName) {
         this.gameAgentName = gameAgentName;
+    }
+
+    public boolean isBankrupt() {
+        return bankrupt;
+    }
+
+    public void setBankrupt(boolean bankrupt) {
+        this.bankrupt = bankrupt;
     }
 }
