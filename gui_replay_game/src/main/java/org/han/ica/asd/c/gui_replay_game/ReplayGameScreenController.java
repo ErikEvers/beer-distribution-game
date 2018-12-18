@@ -39,7 +39,7 @@ public class ReplayGameScreenController {
     private CheckBox retailCheckbox;
 
     @FXML
-    private ComboBox<?> facilityCombobox;
+    private ComboBox<Facility> facilityCombobox;
 
     @FXML
     private Button prevRoundButton;
@@ -56,6 +56,7 @@ public class ReplayGameScreenController {
     private int currentRound;
     private int totalRounds;
     private TextFormatter textFormatter;
+    private ReplayData replayData;
 
     @FXML
     public void currentRoundEntered(ActionEvent event) {
@@ -92,17 +93,26 @@ public class ReplayGameScreenController {
 
     @FXML
     void initialize() {
+        this.replayData = new ReplayData();
 
         this.setuptextFormatter();
         currentRoundTextfield.setTextFormatter(textFormatter);
 
         currentRound = 1;
-        totalRounds = 5;
+        totalRounds = replayData.getHighestRound();
         totalRoundsTextfield.setText(totalRounds + "");
 
-
+        insertComboBox();
         updateCurrentRound();
         drawGraph();
+    }
+
+    private void insertComboBox() {
+        facilityCombobox.getItems().clear();
+
+        ObservableList<Facility> observableList = FXCollections.observableArrayList(replayData.getAllFacilities());
+
+        facilityCombobox.setItems(observableList);
     }
 
     private void updateCurrentRound() {
