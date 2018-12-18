@@ -10,17 +10,19 @@ public enum OperationType {
 
     /**
      * Constructor
+     *
      * @param operation Operation symbol that is used
      */
-    OperationType(String operation){
+    OperationType(String operation) {
         this.operation = operation;
     }
 
     /**
      * Getter
+     *
      * @return Returns the operation symbol
      */
-    public String getOperation(){
+    public String getOperation() {
         return operation;
     }
 }

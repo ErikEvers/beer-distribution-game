@@ -1,18 +1,20 @@
 package org.han.ica.asd.c.dbconnection;
 
+import javax.inject.Singleton;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DBConnectionTest implements DatabaseConnection {
+@Singleton
+public class DBConnectionTest implements IDatabaseConnection {
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/test/resources/";
 	private static final String DATABASENAME = "BeerGameDBTest.db";
 	public static final Logger LOGGER = Logger.getLogger(DBConnectionTest.class.getName());
 	private static volatile DBConnectionTest mInstance;
 
-	private DBConnectionTest() {
+	public DBConnectionTest() {
 	}
 
 	public static DBConnectionTest getInstance() {
