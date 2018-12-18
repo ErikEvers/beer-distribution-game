@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for making for checking if all the nodes are still connected to the game.
@@ -35,6 +37,8 @@ public class FaultDetectorLeader extends TimerTask {
     private FailLog failLog;
     private Timer timer;
 
+    private static final Logger LOGGER = Logger.getLogger(FaultDetector.class.getName());
+
     FaultDetectorLeader(NodeInfoList nodeInfoList, ArrayList<IConnectorObserver> observers) {
         this.nodeInfoList = nodeInfoList;
         faultHandlerLeader = new FaultHandlerLeader(nodeInfoList, observers);
@@ -57,9 +61,9 @@ public class FaultDetectorLeader extends TimerTask {
         //Tries to make the connection once every set interval.
         ips = nodeInfoList.getActiveIps();
         for (String ip : ips) {
-            System.out.println("Sending Ping to : " + ip + " : " + new Date());
+            LOGGER.log(Level.INFO, "Sending Ping to : {0} : {1}", new Object[]{ip, new Date()});
             makeConnection(ip);
-            System.out.println("Ping Sent:" + new Date());
+            LOGGER.log(Level.INFO,"Ping Sent: {0}", new Date());
         }
 
         //Checks if node wasn't reached 3 times, it then sends a faultMessage to all peers that can be reached.

@@ -26,11 +26,9 @@ class FaultResponder {
 		try {
 			faultDetectionClient.makeConnection(failingIp);
 			faultDetectionClient.sendFaultMessageResponse(new FaultMessageResponse(true, failingIp), senderIp);
-			System.out.println("I was able to reach: " + failingIp);
 
 		} catch (PeerCantBeReachedException e) {
 			faultDetectionClient.sendFaultMessageResponse(new FaultMessageResponse(false, failingIp), senderIp);
-			System.out.println("Failed to reach : " + failingIp);
 		}
 	}
 
