@@ -103,7 +103,7 @@ public class FaultHandlerLeader {
      * @author Tarik
      */
     private void notifyObserversIDied() {
-        if (!observers.isEmpty()) {
+        if (observers.size() > 0) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof IPlayerDisconnectedObserver) {
                     ((IPlayerDisconnectedObserver) observer).iAmDisconnected();
@@ -119,7 +119,7 @@ public class FaultHandlerLeader {
      * @author Tarik
      */
     private void notifyObserversPlayerDied(String ip) {
-        if (!observers.isEmpty()) {
+        if (observers.size() > 0) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof IPlayerDisconnectedObserver) {
                     ((IPlayerDisconnectedObserver) observer).playerIsDisconnected(ip);
