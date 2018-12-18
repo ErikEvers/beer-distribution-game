@@ -11,7 +11,7 @@ public class FacilityTurn {
     private int openOrder;
     private int outgoingGoods;
 
-    public FacilityTurn(String gameId, int roundId, int facilityIdOrder, int facilityIdDeliver, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
+    public FacilityTurn(String gameId, int facilityIdOrder, int facilityIdDeliver, int roundId, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
         this.roundId = roundId;
         this.facilityIdOrder = facilityIdOrder;
         this.facilityIdDeliver = facilityIdDeliver;
@@ -31,6 +31,7 @@ public class FacilityTurn {
         this.roundId = roundId;
     }
 
+
     public int getFacilityIdOrder() {
         return facilityIdOrder;
     }
@@ -43,8 +44,9 @@ public class FacilityTurn {
         return facilityIdDeliver;
     }
 
-    public void setFacilityDeliver(int facilityIdDeliver) {
+    public void setFacilityIdDeliver(int facilityIdDeliver) {
         this.facilityIdDeliver = facilityIdDeliver;
+
     }
 
     public String getGameId() {

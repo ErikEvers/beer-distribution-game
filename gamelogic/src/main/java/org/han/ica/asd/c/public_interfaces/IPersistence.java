@@ -1,8 +1,10 @@
 package org.han.ica.asd.c.public_interfaces;
 
+
 import org.han.ica.asd.c.model.BeerGame;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
 import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.Round;
 
 public interface IPersistence {
@@ -14,6 +16,5 @@ public interface IPersistence {
 
     BeerGame getGameLog(String gameId);
 
-    void logUsedBusinessRuleToCreateOrder(int facilityID, String gameId, FacilityLinkedTo facility,
-                                          String businessRuleString, int outGoingOrderAmount);
+    void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
 }

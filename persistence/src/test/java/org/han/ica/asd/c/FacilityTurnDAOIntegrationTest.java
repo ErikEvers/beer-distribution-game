@@ -19,10 +19,9 @@ import java.util.logging.Logger;
 
 class FacilityTurnDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAOIntegrationTest.class.getName());
-	private static final FacilityTurn FACILITY_TURN = new FacilityTurn("BeerGameZutphen13_12_2018",1,1,2,50,50,50,50,50);
-	private static final FacilityTurn FACILITY_TURN2 = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,3,50,50,50,50,50);
-	private static final FacilityTurn FACILITY_TURN3 = new FacilityTurn("BeerGameZutphen13_12_2018",1,1,2,150,150,150,150,150);
-
+	private static final FacilityTurn FACILITY_TURN = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,1,50,50,50,50,50);
+	private static final FacilityTurn FACILITY_TURN2 = new FacilityTurn("BeerGameZutphen13_12_2018",2,3,1,50,50,50,50,50);
+	private static final FacilityTurn FACILITY_TURN3 = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,1,150,150,150,150,150);
 	private FacilityTurnDAO facilityTurnDAO;
 	private RoundDAO roundDAO;
 
