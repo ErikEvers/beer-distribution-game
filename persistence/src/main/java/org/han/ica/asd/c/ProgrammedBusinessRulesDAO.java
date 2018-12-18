@@ -1,7 +1,7 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.ProgrammedBusinessRules;
+import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRules;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -21,16 +21,41 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
     @Inject
     private IDatabaseConnection databaseConnection;
 
-    public ProgrammedBusinessRulesDAO(){
+    public ProgrammedBusinessRulesDAO() {
         //Empty Constructor for GUICE
     }
 
-    public void createProgrammedbusinessrule(ProgrammedBusinessRules programmedBusinessRules){
+    /**
+     * A method to create a new ProgrammedBusinessRule in the database
+     *
+     * @param programmedBusinessRules The data required to create a new ProgrammedBusinessRule in the database.
+     */
+    public void createProgrammedbusinessRule(ProgrammedBusinessRules programmedBusinessRules) {
+        executePreparedStatement(programmedBusinessRules, CREATE_PROGRAMMEDBUSINESSRULE);
+    }
+
+    /**
+     * A method to delete a specific ProgrammedBusinessRule from the database.
+     *
+     * @param programmedBusinessRules The data required to delete a specific ProgrammedBusinessRule from the database.
+     */
+    public void deleteSpecificProgrammedBusinessRule(ProgrammedBusinessRules programmedBusinessRules) {
+        executePreparedStatement(programmedBusinessRules, DELETE_SPECIFIC_PROGRAMMEDBUSINESSRULE);
+
+    }
+
+    /**
+     * A method to execute the prepared statement with all the required data to create or delete a specific ProgrammedBusinessRule.
+     *
+     * @param programmedBusinessRules The data that is required to execute the prepared statement.
+     * @param query The query that needs to be executed on the database.
+     */
+    private void executePreparedStatement(ProgrammedBusinessRules programmedBusinessRules, String query) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
-            if(conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(CREATE_PROGRAMMEDBUSINESSRULE)) {
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     conn.setAutoCommit(false);
 
                     pstmt.setString(1, programmedBusinessRules.getProgrammedAgentName());
