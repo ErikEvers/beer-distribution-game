@@ -1,7 +1,11 @@
 package org.han.ica.asd.c.leadermigration;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.testutil.CommunicationHelper;
+import org.han.ica.asd.c.leadermigration.testutil.PersistenceStub;
 import org.han.ica.asd.c.model.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +81,7 @@ public class ElectionTest {
         Assert.assertEquals(players[0], elected);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void playerDisconnectAfterElection() throws PlayerNotFoundException {
         Player[] players = new Player[4];
         players[0] = new Player("2", "1", "111", 1, "Klaas", true);
@@ -88,10 +92,10 @@ public class ElectionTest {
         // Player 4 should win the algorithm
         players[3].setConnected(false);
         Player secondElected = communicationHelper.startElection(players);
-        Assert.assertEquals(firstElected, secondElected);
+        Assert.assertNotEquals(firstElected, secondElected);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void playerRejoinAfterElection() throws PlayerNotFoundException {
         Player[] players = new Player[4];
         players[0] = new Player("2", "1", "111", 1, "Klaas", true);
@@ -102,6 +106,25 @@ public class ElectionTest {
         // Player 4 should win the algorithm
         players[3].setConnected(true);
         Player secondElected = communicationHelper.startElection(players);
-        Assert.assertEquals(firstElected, secondElected);
+				Assert.assertNotEquals(firstElected, secondElected);
     }
+
+    @Test
+		public void handlerTest() throws PlayerNotFoundException {
+			Injector injector = Guice.createInjector(new AbstractModule() {
+				@Override
+				protected void configure() {
+					bind(IConnectorForLeaderElection.class).to(CommunicationHelper.class);
+					bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
+					requestStaticInjection(ElectionHandler.class);
+				}
+			});
+			ElectionHandler handler = injector.getInstance(ElectionHandler.class);
+			Player[] players = new Player[4];
+			players[0] = new Player("2", "1", "111", 1, "Klaas", true);
+			players[1] = new Player("2", "2", "222", 2, "Nameless", true);
+			players[2] = new Player("2", "3", "333", 3, "Mark",true);
+			players[3] = new Player("2", "4", "444", 4, "Peter", false);
+			handler.setupAlgorithm(players);
+		}
 }
