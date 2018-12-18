@@ -32,9 +32,10 @@
                 <RowConstraints maxHeight="145.0" minHeight="10.0" prefHeight="138.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                   <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                               GridPane.vgrow="ALWAYS">
                      <content>
-                        <TextFlow fx:id="businessRuleTexFlow" prefHeight="342.0" prefWidth="433.0" />
+                         <TextFlow fx:id="businessRuleTexFlow"/>
                      </content>
                   </ScrollPane>
                   <TextArea fx:id="businessRuleInput" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
