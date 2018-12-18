@@ -1,6 +1,7 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.ProgrammedAgent;
 import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRules;
 
 import javax.inject.Inject;
@@ -45,6 +46,32 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
     }
 
     /**
+     * A method to delete all ProgrammedBusinessRules from a ProgrammedAgent.
+     *
+     * @param programmedAgent The data required to delete all the ProgrammedBusinessRules from a specific ProgrammedAgent.
+     */
+    public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(ProgrammedAgent programmedAgent) {
+        Connection conn = null;
+        try {
+            conn = databaseConnection.connect();
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
+                    conn.setAutoCommit(false);
+
+                    pstmt.setString(1, programmedAgent.getProgrammedAgentName());
+
+                    pstmt.executeUpdate();
+                }
+                conn.commit();
+            }
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
+        }
+    }
+
+    /**
      * A method to execute the prepared statement with all the required data to create or delete a specific ProgrammedBusinessRule.
      *
      * @param programmedBusinessRules The data that is required to execute the prepared statement.
@@ -73,5 +100,4 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
             databaseConnection.rollBackTransaction(conn);
         }
     }
-
 }
