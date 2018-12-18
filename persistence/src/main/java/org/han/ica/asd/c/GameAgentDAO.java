@@ -1,7 +1,6 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.Facility;
 import org.han.ica.asd.c.model.dao_model.GameAgent;
 
 import javax.inject.Inject;
@@ -20,7 +19,7 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
     private static final String DELETE_ALL_GAMEAGENTS_IN_A_BEERGAME = "DELETE FROM GameAgent WHERE GameId = ?;";
     private static final String UPDATE_GAMEAGENT = "UPDATE GameAgent SET GameAgentName = ? WHERE FacilityId = ? AND GameId = ?;";
     private static final String READ_GAMEAGENTS_FOR_A_BEERGAME = "SELECT * FROM GameAgent WHERE GameId = ?;";
-    private static final Logger LOGGER = Logger.getLogger(FacilityDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GameAgentDAO.class.getName());
 
     @Inject
     private IDatabaseConnection databaseConnection;

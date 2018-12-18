@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.logging.Logger;
 
 class GameAgentDAOTest {
-    private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAOIntegrationTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GameAgentDAOTest.class.getName());
     private static final GameAgent GAMEAGENT = new GameAgent("gameId", "name1", 1);
     private static final GameAgent GAMEAGENT2 = new GameAgent("gameId", "name2", 2);
     private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("gameId", "name2_Updated", 2);
@@ -42,6 +42,14 @@ class GameAgentDAOTest {
     @Test
     void createGameAgent() {
         Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        gameAgentDAO.createGameAgent(GAMEAGENT);
+        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+
+        GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame("gameId").get(0);
+
+        Assert.assertEquals(GAMEAGENT.getGameId(),gameAgentDb.getGameId());
+        Assert.assertEquals(GAMEAGENT.getFacilityId(),gameAgentDb.getFacilityId());
+        Assert.assertEquals(GAMEAGENT.getGameAgentName(),gameAgentDb.getGameAgentName());
     }
 
     @Test
