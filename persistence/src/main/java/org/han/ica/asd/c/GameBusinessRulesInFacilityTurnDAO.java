@@ -4,6 +4,7 @@ import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
+	@Inject
 	private DatabaseConnection databaseConnection;
 
 	public GameBusinessRulesInFacilityTurnDAO() {
