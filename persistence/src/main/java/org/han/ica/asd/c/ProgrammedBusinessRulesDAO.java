@@ -7,13 +7,16 @@ import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRules;
 import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+//It is not possible to update a BusinessRule. To update a BusinessRule you must delete all the existing ones and insert the new BusinessRules.
 public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
     private static final String CREATE_PROGRAMMEDBUSINESSRULE = "INSERT INTO ProgrammedBusinessRules VALUES (?,?,?);";
-    private static final String UPDATE_PROGRAMMEDBUSINESSRULE = "Dit is niet mogelijk. Om een business rule te updaten in de database moeten eerst alle oude business rules verwijderd worden.";
     private static final String DELETE_SPECIFIC_PROGRAMMEDBUSINESSRULE = "DELETE FROM ProgrammedBusinessRules WHERE ProgrammedAgentName = ? AND ProgrammedBusinessRule = ? AND ProgrammedAST = ?;";
     private static final String DELETE_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT = "DELETE FROM ProgrammedBusinessRules WHERE ProgrammedAgentName = ?";
     private static final String READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT = "SELECT * FROM ProgrammedBusinessRules WHERE ProgrammedAgentName = ?";
@@ -69,6 +72,38 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
         }
+    }
+
+    /**
+     * A method to retrieve all ProgrammedBusinessRules from a ProgrammedAgent from the database.
+     *
+     * @param programmedAgent The ProgrammedAgent from whom the ProgrammedBusinessRules have to be retrieved.
+     * @return A list from all the ProgrammedBusinessRules from the ProgrammedAgent.
+     */
+    public List<ProgrammedBusinessRules> readAllProgrammedBusinessRulesFromAProgrammedAgent(ProgrammedAgent programmedAgent) {
+        Connection conn = databaseConnection.connect();
+        List<ProgrammedBusinessRules> programmedBusinessRules = new ArrayList<>();
+        try {
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
+
+                    conn.setAutoCommit(false);
+
+                    pstmt.setString(1, programmedAgent.getProgrammedAgentName());
+
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedAgentName"),
+                                rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
+                    }
+                    conn.commit();
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
+        }
+
+        return programmedBusinessRules;
     }
 
     /**
