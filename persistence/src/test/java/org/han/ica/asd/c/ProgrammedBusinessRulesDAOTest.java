@@ -18,8 +18,7 @@ class ProgrammedBusinessRulesDAOTest {
     private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAOIntegrationTest.class.getName());
     private static final ProgrammedAgent PROGRAMMED_AGENT = new ProgrammedAgent("name");
     private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES = new ProgrammedBusinessRules("name", "businessrule1", "ast1");
-    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES2 = new ProgrammedBusinessRules("name", "businessrule2", "ast2");
-    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES2_UPDATE = new ProgrammedBusinessRules("name", "businessrule2", "ast2");
+    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES2 = new ProgrammedBusinessRules("name", "BusinessRule2", "ast2");
 
     private ProgrammedBusinessRulesDAO programmedBusinessRulesDAO;
 
@@ -49,16 +48,38 @@ class ProgrammedBusinessRulesDAOTest {
 
         ProgrammedBusinessRules programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
 
-        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAgentName(),programmedBusinessRulesDb.getProgrammedAgentName());
-        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedBusinessRule(),programmedBusinessRulesDb.getProgrammedBusinessRule());
-        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAST(),programmedBusinessRulesDb.getProgrammedAST());
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAgentName(), programmedBusinessRulesDb.getProgrammedAgentName());
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedBusinessRule(), programmedBusinessRulesDb.getProgrammedBusinessRule());
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAST(), programmedBusinessRulesDb.getProgrammedAST());
     }
 
     @Test
     void deleteSpecificProgrammedBusinessRule() {
+        Assert.assertEquals(0, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+        programmedBusinessRulesDAO.createProgrammedbusinessRule(PROGRAMMED_BUSINESS_RULES);
+        Assert.assertEquals(1, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+
+        programmedBusinessRulesDAO.createProgrammedbusinessRule(PROGRAMMED_BUSINESS_RULES2);
+        Assert.assertEquals(2, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+        programmedBusinessRulesDAO.deleteSpecificProgrammedBusinessRule(PROGRAMMED_BUSINESS_RULES);
+        Assert.assertEquals(1, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+
+        ProgrammedBusinessRules programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
+
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES2.getProgrammedAgentName(), programmedBusinessRulesDb.getProgrammedAgentName());
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES2.getProgrammedBusinessRule(), programmedBusinessRulesDb.getProgrammedBusinessRule());
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES2.getProgrammedAST(), programmedBusinessRulesDb.getProgrammedAST());
     }
 
     @Test
     void deleteAllProgrammedBusinessRulesForAProgrammedAgent() {
+        Assert.assertEquals(0, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+        programmedBusinessRulesDAO.createProgrammedbusinessRule(PROGRAMMED_BUSINESS_RULES);
+        Assert.assertEquals(1, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+
+        programmedBusinessRulesDAO.createProgrammedbusinessRule(PROGRAMMED_BUSINESS_RULES2);
+        Assert.assertEquals(2, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
+        programmedBusinessRulesDAO.deleteAllProgrammedBusinessRulesForAProgrammedAgent(PROGRAMMED_AGENT);
+        Assert.assertEquals(0, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
     }
 }

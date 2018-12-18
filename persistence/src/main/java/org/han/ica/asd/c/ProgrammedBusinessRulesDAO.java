@@ -92,8 +92,10 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
                     pstmt.setString(1, programmedAgent.getProgrammedAgentName());
 
                     try (ResultSet rs = pstmt.executeQuery()) {
-                        programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedAgentName"),
-                                rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
+                        while (rs.next()) {
+                            programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedAgentName"),
+                                    rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
+                        }
                     }
                     conn.commit();
                 }
@@ -110,7 +112,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
      * A method to execute the prepared statement with all the required data to create or delete a specific ProgrammedBusinessRule.
      *
      * @param programmedBusinessRules The data that is required to execute the prepared statement.
-     * @param query The query that needs to be executed on the database.
+     * @param query                   The query that needs to be executed on the database.
      */
     private void executePreparedStatement(ProgrammedBusinessRules programmedBusinessRules, String query) {
         Connection conn = null;
