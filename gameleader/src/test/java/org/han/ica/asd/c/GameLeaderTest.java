@@ -8,19 +8,13 @@ import org.han.ica.asd.c.model.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(GameLeader.class)
 public class GameLeaderTest {
     @Mock
     private ILeaderGameLogic gameLogic;
@@ -28,25 +22,20 @@ public class GameLeaderTest {
     @Mock
     private TurnHandler turnHandlerMock;
 
-    @Mock
     private Configuration con;
 
-    @Mock
     private Facility facil;
 
     @Mock
     private BeerGame gameTest;
 
-    @Mock
     private String t;
 
-    @Mock
     private Round r;
 
     @Mock
     private IConnectorForLeader iConnectorForLeader;
 
-    @Mock
     private GameLeader gameLeader;
 
     private FacilityTurn facilityTurnModel;
@@ -57,6 +46,8 @@ public class GameLeaderTest {
 
     @Before
     public void init() {
+        MockitoAnnotations.initMocks(this);
+
         facilityTurnModel = new FacilityTurn();
         rounds = new ArrayList<>();
         facilities = new ArrayList<>();
@@ -64,29 +55,34 @@ public class GameLeaderTest {
 
     @Test
     public void testGameLeader_CreateUsingConstructor_Created() {
-        rounds.add(r);
         facilities.add(facil);
 
-        when(gameTest.getGameId()).thenReturn(t);
-        when(gameTest.getRounds()).thenReturn(rounds);
-        when(gameTest.getConfiguration()).thenReturn(con);
-        when(con.getFacilities()).thenReturn(facilities);
+        BeerGame beerGame = new BeerGame("test", "test", "test", "test");
 
-        new GameLeader(gameTest, iConnectorForLeader);
+        Configuration con = mock(Configuration.class);
+
+        con.setFacilities(facilities);
+
+        beerGame.setConfiguration(con);
+
+
+        new GameLeader(beerGame, iConnectorForLeader);
     }
 
     @Test
     public void testGameLeaderHasNotGottenAllDataSoNextMethodNotCalled() {
         rounds.add(r);
         facilities.add(facil);
-        facilities.add(facil);
 
-        when(gameTest.getGameId()).thenReturn(t);
-        when(gameTest.getRounds()).thenReturn(rounds);
-        when(gameTest.getConfiguration()).thenReturn(con);
-        when(con.getFacilities()).thenReturn(facilities);
+        BeerGame beerGame = new BeerGame("test", "test", "test", "test");
 
-        gameLeader = new GameLeader(gameTest, iConnectorForLeader);
+        Configuration con = mock(Configuration.class);
+
+        con.setFacilities(facilities);
+
+        beerGame.setConfiguration(con);
+
+        gameLeader = new GameLeader(beerGame, iConnectorForLeader);
 
         gameLeader.setTurnHandler(turnHandlerMock);
 
@@ -94,29 +90,38 @@ public class GameLeaderTest {
 
         verify(turnHandlerMock, times(1)).processFacilityTurn(facilityTurnModel);
 
+        System.out.println(gameLeader.getTurnsExpected());
+        System.out.println(gameLeader.getTurnsReceived());
+
         Assert.assertNotEquals(gameLeader.getTurnsExpected(), gameLeader.getTurnsReceived());
     }
 
     @Test
-    public void testGameFacilitiesAreEqualNextMethodCalledAndReceivedIsZero() {
+    public void testGameRoundDataIsBiggerThanPreviously() {
         rounds.add(r);
-        facilities.add(facil);
+
         facilities.add(facil);
 
-        when(gameTest.getGameId()).thenReturn(t);
-        when(gameTest.getRounds()).thenReturn(rounds);
-        when(gameTest.getConfiguration()).thenReturn(con);
-        when(con.getFacilities()).thenReturn(facilities);
+        BeerGame beerGame = new BeerGame("test", "test", "test", "test");
 
-        gameLeader = new GameLeader(gameTest, iConnectorForLeader);
+        int roundBefore = beerGame.getRounds().size();
+
+        Configuration con = new Configuration();
+
+        con.setFacilities(facilities);
+
+        beerGame.setConfiguration(con);
+
+        gameLeader = new GameLeader(beerGame, iConnectorForLeader);
 
         gameLeader.setGameLogic(gameLogic);
 
         gameLeader.setTurnHandler(turnHandlerMock);
 
         gameLeader.turnModelReceived(facilityTurnModel);
-        gameLeader.turnModelReceived(facilityTurnModel);
 
-        Assert.assertEquals(0, gameLeader.getTurnsReceived());
+        int roundAfter = beerGame.getRounds().size();
+
+        Assert.assertNotEquals(roundAfter, roundBefore);
     }
 }

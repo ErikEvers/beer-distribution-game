@@ -18,6 +18,10 @@ public class Configuration {
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
 
+    public Configuration() {
+
+    }
+
     public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
         this.gameId = gameId;
         this.amountOfRounds = amountOfRounds;

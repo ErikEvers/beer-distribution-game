@@ -1,19 +1,27 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.gameleader.TurnHandler;
+import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import java.io.ByteArrayOutputStream;;
 import java.lang.reflect.Method;
 import java.util.logging.*;
 import static junit.framework.TestCase.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class TurnHandlerTest {
     private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
+
+    @Mock
+    private IPersistence persistenceLayer;
+
+    @Mock
+    private TurnHandler turnHandlerMock;
 
     private TurnHandler turnHandler;
 
@@ -25,6 +33,7 @@ class TurnHandlerTest {
 
     @BeforeEach
     void onSetUp() {
+        MockitoAnnotations.initMocks(this);
         try {
             Class[] parameterTypes;
             turnHandler = new TurnHandler();
@@ -100,6 +109,22 @@ class TurnHandlerTest {
             LOGGER.log(Level.SEVERE, "You've changed parameters or method names");
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void testDoesPersistenceLayerGetCalledWhenTrue() {
+        facilityTurnModel.setOrder(10);
+        facilityTurnModel.setStock(10);
+
+        parameters[0] = facilityTurnModel;
+
+        turnHandlerMock = new TurnHandler();
+
+        turnHandlerMock.setPersistenceLayer(persistenceLayer);
+
+        turnHandlerMock.processFacilityTurn(facilityTurnModel);
+
+        verify(persistenceLayer, times(1)).savePlayerTurn(facilityTurnModel);
     }
 
     @Test

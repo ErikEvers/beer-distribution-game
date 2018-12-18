@@ -13,9 +13,9 @@ public class GameLeader implements ITurnModelObserver {
 
     @Inject
     private ILeaderGameLogic gameLogic;
-
     private BeerGame game;
     private TurnHandler turnHandler;
+
     private Round currentRoundData;
     private int turnsExpected;
     private int turnsReceived;

@@ -11,6 +11,7 @@ public class TurnHandler {
     @Inject
     private IPersistence persistenceLayer;
 
+
     public void processFacilityTurn(FacilityTurn turnModel) {
         if(validateFacilityTurn(turnModel)) {
             persistenceLayer.savePlayerTurn(turnModel);
@@ -23,4 +24,8 @@ public class TurnHandler {
         return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
     }
 
+
+    public void setPersistenceLayer(IPersistence persistenceLayer) {
+        this.persistenceLayer = persistenceLayer;
+    }
 }
