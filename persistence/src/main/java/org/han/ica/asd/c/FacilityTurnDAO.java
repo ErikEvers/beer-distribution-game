@@ -1,11 +1,11 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,10 +23,11 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAO.class.getName());
 
-	private DatabaseConnection databaseConnection;
+	@Inject
+	private IDatabaseConnection databaseConnection;
 
 	public FacilityTurnDAO(){
-		databaseConnection = DBConnection.getInstance();
+		//Empty Constructor for GUICE
 	}
 
 	/**

@@ -1,9 +1,9 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,10 +17,11 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
-	private DatabaseConnection databaseConnection;
+	@Inject
+	private IDatabaseConnection databaseConnection;
 
 	public GameBusinessRulesInFacilityTurnDAO() {
-		databaseConnection = DBConnection.getInstance();
+		//Empty Constructor for GUICE
 	}
 
 	/**
