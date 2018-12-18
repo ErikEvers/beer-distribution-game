@@ -4,7 +4,7 @@ import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
 import org.han.ica.asd.c.leadermigration.componentInterfaces.ILeaderMigration;
 import org.han.ica.asd.c.leadermigration.componentInterfaces.IPersistenceLeaderMigration;
-import org.han.ica.asd.c.model.Player;
+import org.han.ica.asd.c.model.dao_model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 import javax.inject.Inject;
 import java.util.List;
@@ -34,7 +34,7 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
 		return winner;
   }
 
-  /**
+	/**
    * Receiving the electionMessage and handle it
    * @param electionModel -> The electionModel of the sending device
    */
@@ -50,7 +50,7 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
     communicator.addObserver(this);
   }
 
-  /**
+	/**
    * Receiving the player who won the bully algorithm and calls the database.
    * @param electedPlayer -> The elected player.
    */

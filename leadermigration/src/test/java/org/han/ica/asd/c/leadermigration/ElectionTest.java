@@ -2,7 +2,7 @@ package org.han.ica.asd.c.leadermigration;
 
 import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.testutil.CommunicationHelper;
-import org.han.ica.asd.c.model.Player;
+import org.han.ica.asd.c.model.dao_model.Player;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;

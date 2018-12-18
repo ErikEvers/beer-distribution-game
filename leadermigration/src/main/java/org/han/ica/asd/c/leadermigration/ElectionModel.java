@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
-import org.han.ica.asd.c.model.Player;
+import org.han.ica.asd.c.model.dao_model.Player;
 
 /**
  * Object that gets exchanged between players during leader election
