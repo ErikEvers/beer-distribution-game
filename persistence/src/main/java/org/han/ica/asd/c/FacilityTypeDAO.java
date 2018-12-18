@@ -1,6 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.FacilityType;
 
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
 
     @Inject
-    private DatabaseConnection databaseConnection;
+    private IDatabaseConnection databaseConnection;
 
     public FacilityTypeDAO() {
         //There has to be a constructor to inject the value above.
