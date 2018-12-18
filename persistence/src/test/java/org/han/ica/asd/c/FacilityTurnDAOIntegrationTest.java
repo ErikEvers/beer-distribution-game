@@ -1,18 +1,19 @@
 package org.han.ica.asd.c;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+import org.han.ica.asd.c.model.dao_model.Round;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -28,6 +29,14 @@ class FacilityTurnDAOIntegrationTest {
 	@BeforeEach
 	void setUp() {
 		DBConnectionTest.getInstance().createNewDatabase();
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(IDatabaseConnection.class).to(DBConnectionTest.class);
+			}
+		});
+		facilityTurnDAO = injector.getInstance(FacilityTurnDAO.class);
+		roundDAO = injector.getInstance(RoundDAO.class);
 	}
 
 	@AfterEach
@@ -37,13 +46,6 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void createTurnTest() {
-		facilityTurnDAO = new FacilityTurnDAO();
-		roundDAO = new RoundDAO();
-
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(facilityTurnDAO, connection);
-		setDatabaseConnection(roundDAO,connection);
-
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 
@@ -62,13 +64,6 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void fetchTurnsTest() {
-		facilityTurnDAO = new FacilityTurnDAO();
-		roundDAO = new RoundDAO();
-
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(facilityTurnDAO, connection);
-		setDatabaseConnection(roundDAO,connection);
-
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.createTurn(FACILITY_TURN2);
@@ -79,13 +74,6 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void updateTurnTest() {
-		facilityTurnDAO = new FacilityTurnDAO();
-		roundDAO = new RoundDAO();
-
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(facilityTurnDAO, connection);
-		setDatabaseConnection(roundDAO,connection);
-
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.updateTurn(FACILITY_TURN3);
@@ -109,13 +97,6 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void deleteTurnTest() {
-		facilityTurnDAO = new FacilityTurnDAO();
-		roundDAO = new RoundDAO();
-
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(facilityTurnDAO, connection);
-		setDatabaseConnection(roundDAO,connection);
-
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.deleteTurn(FACILITY_TURN);
@@ -123,15 +104,5 @@ class FacilityTurnDAOIntegrationTest {
 
 		List<FacilityTurn> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
 		Assert.assertEquals(0,facilityTurnDb.size());
-	}
-
-	private void setDatabaseConnection(IBeerDisitributionGameDAO gameDAO, DatabaseConnection connection) {
-		try {
-			Field connField = gameDAO.getClass().getDeclaredField("databaseConnection");
-			connField.setAccessible(true);
-			connField.set(gameDAO, connection);
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
-		}
 	}
 }

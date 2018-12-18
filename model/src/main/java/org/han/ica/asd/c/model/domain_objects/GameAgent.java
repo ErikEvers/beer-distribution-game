@@ -1,22 +1,12 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.model.domain_objects;
 
 public class GameAgent {
-    private String gameId;
     private String gameAgentName;
     private int facilityId;
 
-    public GameAgent(String gameId, String gameAgentName, int facilityId) {
-        this.gameId = gameId;
+    public GameAgent(String gameAgentName, int facilityId) {
         this.gameAgentName = gameAgentName;
         this.facilityId = facilityId;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
     }
 
     public String getGameAgentName() {

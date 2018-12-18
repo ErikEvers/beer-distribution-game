@@ -2,7 +2,7 @@ package org.han.ica.asd.c.dbconnection;
 
 import java.sql.Connection;
 
-public interface DatabaseConnection{
+public interface IDatabaseConnection {
 
 	void createNewDatabase();
 	void runSQLScript(String scriptname);

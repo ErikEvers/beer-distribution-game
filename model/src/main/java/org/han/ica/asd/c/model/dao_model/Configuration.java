@@ -1,4 +1,8 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.model.dao_model;
+
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 
 import java.util.ArrayList;
 import java.util.List;
