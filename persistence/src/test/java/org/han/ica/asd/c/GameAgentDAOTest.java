@@ -82,5 +82,17 @@ class GameAgentDAOTest {
 
     @Test
     void updateGameagent() {
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        gameAgentDAO.createGameAgent(GAMEAGENT2);
+        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+
+        gameAgentDAO.updateGameagent(GAMEAGENT2_UPDATE);
+        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+
+        GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame("gameId").get(0);
+
+        Assert.assertEquals(GAMEAGENT2_UPDATE.getGameId(),gameAgentDb.getGameId());
+        Assert.assertEquals(GAMEAGENT2_UPDATE.getFacilityId(),gameAgentDb.getFacilityId());
+        Assert.assertEquals(GAMEAGENT2_UPDATE.getGameAgentName(),gameAgentDb.getGameAgentName());
     }
 }

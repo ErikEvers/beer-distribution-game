@@ -85,7 +85,7 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
 
                     pstmt.setString(1, gameAgent.getGameAgentName());
                     pstmt.setInt(2, gameAgent.getFacilityId());
-                    pstmt.setString(3, gameAgent.getGameAgentName());
+                    pstmt.setString(3, gameAgent.getGameId());
 
                     pstmt.executeUpdate();
                 }
