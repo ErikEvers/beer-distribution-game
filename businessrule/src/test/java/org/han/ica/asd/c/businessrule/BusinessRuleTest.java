@@ -154,7 +154,4 @@ public class BusinessRuleTest {
         }
         assertEquals("10", value.getValue());
     }
-
-
-
 }
