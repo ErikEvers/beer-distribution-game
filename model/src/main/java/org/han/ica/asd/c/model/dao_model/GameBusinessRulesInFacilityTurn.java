@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class GameBusinessRulesInFacilityTurn {
+public class GameBusinessRulesInFacilityTurn implements IDaoModel{
     private int roundId;
     private int facilityIdDeliver;
     private int facilityIdOrder;

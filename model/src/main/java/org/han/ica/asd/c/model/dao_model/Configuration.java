@@ -7,7 +7,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Configuration {
+public class Configuration implements IDaoModel{
     private String gameId;
     private int amountOfRounds;
     private int amountOfFactories;

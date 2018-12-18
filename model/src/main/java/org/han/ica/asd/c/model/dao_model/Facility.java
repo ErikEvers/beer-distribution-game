@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class Facility {
+public class Facility implements IDaoModel{
     private String gameId;
     private int facilityId;
     private String facilityType;

@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class GameAgent {
+public class GameAgent implements IDaoModel{
     private String gameId;
     private String gameAgentName;
     private int facilityId;

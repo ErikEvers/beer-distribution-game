@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class Player {
+public class Player implements IDaoModel{
     private String gameId;
     private String playerId;
     private String ipAddress;

@@ -2,7 +2,7 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.List;
 
-public class Facility {
+public class Facility implements IDomainModel{
     private FacilityType facilityType;
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private Player player;

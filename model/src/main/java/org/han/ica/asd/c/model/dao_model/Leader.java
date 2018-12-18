@@ -2,7 +2,7 @@ package org.han.ica.asd.c.model.dao_model;
 
 import java.sql.Timestamp;
 
-public class Leader {
+public class Leader implements IDaoModel{
     private String gameId;
     private String playerId;
     private Timestamp timestamp;

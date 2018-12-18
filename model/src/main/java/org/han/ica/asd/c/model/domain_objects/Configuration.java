@@ -3,7 +3,7 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.List;
 
-public class Configuration {
+public class Configuration implements IDomainModel{
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesales;

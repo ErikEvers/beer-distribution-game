@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class ProgrammedBusinessRules {
+public class ProgrammedBusinessRules implements IDaoModel{
     private String programmedAgentName;
     private String programmedBusinessRule;
     private String programmedAST;

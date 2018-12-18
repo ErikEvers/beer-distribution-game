@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class FacilityTurn {
+public class FacilityTurn implements IDaoModel{
     private int roundId;
     private int facilityIdOrder;
     private int facilityIdDeliver;

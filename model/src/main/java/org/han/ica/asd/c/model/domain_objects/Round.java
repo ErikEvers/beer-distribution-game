@@ -3,7 +3,7 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.Map;
 
-public class Round {
+public class Round implements IDomainModel{
     private int roundId;
     private Map<Facility, Map<Facility, Integer>> turnOrder;
     private Map<Facility, Map<Facility, Integer>> turnDeliver;

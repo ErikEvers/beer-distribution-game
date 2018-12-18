@@ -3,7 +3,7 @@ package org.han.ica.asd.c.model.dao_model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Round {
+public class Round implements IDaoModel{
     private String gameId;
     private int roundId;
     private List<FacilityTurn> turns;
