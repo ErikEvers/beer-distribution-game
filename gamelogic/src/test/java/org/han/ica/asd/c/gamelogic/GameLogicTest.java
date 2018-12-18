@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,10 +117,7 @@ public class GameLogicTest {
         gameLogic.addfacilities(facilityLinkedTo4);
     }
 
-    @Test
-    public void testIfCalculatingInventoryGoesCorrectly() {
-        setupCalculateRoundTests();
-
+    private Round calculateInventorySetupWithoutBacklog() {
         Round round = new RoundFake("0", 0);
         round.addTurnOrder(manufacturer, manufacturer, 25);
         round.addTurnOrder(regionalWarehouse, manufacturer, 0);
@@ -134,30 +131,60 @@ public class GameLogicTest {
         round.addFacilityStock(40, retailer);
         round.addFacilityStock(10000, demand);
 
+        return round;
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithoutBacklog();
+
         round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(65, round.getStockByFacility(manufacturer));
         Assert.assertEquals(10, round.getStockByFacility(regionalWarehouse));
         Assert.assertEquals(55, round.getStockByFacility(wholesale));
         Assert.assertEquals(25, round.getStockByFacility(retailer));
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithoutBacklog();
+
+        round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(25, round.getTurnDeliverByFacility(manufacturer, manufacturer));
         Assert.assertEquals( 0, round.getTurnDeliverByFacility(regionalWarehouse, manufacturer));
         Assert.assertEquals(30, round.getTurnDeliverByFacility(wholesale, regionalWarehouse));
         Assert.assertEquals(15, round.getTurnDeliverByFacility(retailer, wholesale));
         Assert.assertEquals(30, round.getTurnDeliverByFacility(demand, retailer));
+    }
 
-        Assert.assertEquals(25, round.getTurnDeliverByFacility(manufacturer, manufacturer));
-        Assert.assertEquals( 0, round.getTurnDeliverByFacility(regionalWarehouse, manufacturer));
-        Assert.assertEquals(30, round.getTurnDeliverByFacility(wholesale, regionalWarehouse));
-        Assert.assertEquals(15, round.getTurnDeliverByFacility(retailer, wholesale));
-        Assert.assertEquals(30, round.getTurnDeliverByFacility(demand, retailer));
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithoutBacklog();
+
+        round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(25, round.getTurnReceivedByFacility(manufacturer, manufacturer));
         Assert.assertEquals( 0, round.getTurnReceivedByFacility(regionalWarehouse, manufacturer));
         Assert.assertEquals(30, round.getTurnReceivedByFacility(wholesale, regionalWarehouse));
         Assert.assertEquals(15, round.getTurnReceivedByFacility(retailer, wholesale));
         Assert.assertEquals(30, round.getTurnReceivedByFacility(demand, retailer));
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithoutBacklog();
+
+        round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(manufacturer));
         Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(regionalWarehouse));
@@ -166,10 +193,7 @@ public class GameLogicTest {
         Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(demand));
     }
 
-    @Test
-    public void testIfBacklogAndDeliverCalculationGoesCorrectly() {
-        setupCalculateRoundTests();
-
+    private Round calculateInventorySetupWithBacklog() {
         Round round = new RoundFake("0", 0);
         round.addTurnOrder(manufacturer, manufacturer, 25);
         round.addTurnOrder(regionalWarehouse, manufacturer, 0);
@@ -183,24 +207,60 @@ public class GameLogicTest {
         round.addFacilityStock(40, retailer);
         round.addFacilityStock(10000, demand);
 
+        return round;
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithBacklog();
+
         round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(65, round.getStockByFacility(manufacturer));
         Assert.assertEquals( 0, round.getStockByFacility(regionalWarehouse));
         Assert.assertEquals(65, round.getStockByFacility(wholesale));
         Assert.assertEquals(25, round.getStockByFacility(retailer));
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithBacklog();
+
+        round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(25, round.getTurnDeliverByFacility(manufacturer, manufacturer));
         Assert.assertEquals( 0, round.getTurnDeliverByFacility(regionalWarehouse, manufacturer));
         Assert.assertEquals(40, round.getTurnDeliverByFacility(wholesale, regionalWarehouse));
         Assert.assertEquals(15, round.getTurnDeliverByFacility(retailer, wholesale));
         Assert.assertEquals(30, round.getTurnDeliverByFacility(demand, retailer));
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithBacklog();
+
+        round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(25, round.getTurnReceivedByFacility(manufacturer, manufacturer));
         Assert.assertEquals( 0, round.getTurnReceivedByFacility(regionalWarehouse, manufacturer));
         Assert.assertEquals(40, round.getTurnReceivedByFacility(wholesale, regionalWarehouse));
         Assert.assertEquals(15, round.getTurnReceivedByFacility(retailer, wholesale));
         Assert.assertEquals(30, round.getTurnReceivedByFacility(demand, retailer));
+    }
+
+    @Test
+    public void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacility() {
+        setupCalculateRoundTests();
+
+        Round round = calculateInventorySetupWithBacklog();
+
+        round = gameLogic.calculateRound(round);
 
         Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(manufacturer));
         Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(regionalWarehouse));
@@ -209,10 +269,7 @@ public class GameLogicTest {
         Assert.assertEquals(false, round.isTurnBackLogfilledByFacility(demand));
     }
 
-    @Test
-    public void testIfCalculatingRemainingBudgetGoesCorrectly() {
-        setupCalculateRoundTests();
-
+    public Round calculateRemainingBudgetSetup() {
         Round round = new RoundFake("0", 0);
         round.addTurnOrder(manufacturer, manufacturer, 25);
         round.addTurnOrder(regionalWarehouse, manufacturer, 0);
@@ -231,13 +288,16 @@ public class GameLogicTest {
         round.addFacilityRemainingStock(500, wholesale);
         round.addFacilityRemainingStock(500, retailer);
 
-        round = gameLogic.calculateRound(round);
+        return round;
+    }
 
-        Assert.assertEquals(65, round.getStockByFacility(manufacturer));
-        Assert.assertEquals(0, round.getStockByFacility(regionalWarehouse));
-        Assert.assertEquals(45, round.getStockByFacility(wholesale));
-        Assert.assertEquals(45, round.getStockByFacility(retailer));
-        Assert.assertEquals(10, round.getTurnBacklogByFacility(wholesale, regionalWarehouse));
+    @Test
+    public void testIfCalculatingRemainingBudgetGoesCorrectly() {
+        setupCalculateRoundTests();
+
+        Round round = calculateRemainingBudgetSetup();
+
+        round = gameLogic.calculateRound(round);
 
         //stockcost = 65 * 5 = 325; backlogcost = 0 * 25 = 0; remaining budget = 500 - 325 - 0 = 175
         Assert.assertEquals(175, round.getRemainingBudget(manufacturer));
@@ -250,5 +310,10 @@ public class GameLogicTest {
 
         //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0;  remaining budget = 500 - 225 - 0 = 275
         Assert.assertEquals(275, round.getRemainingBudget(retailer));
+    }
+
+    @Test
+    public void testIfNewOrderPlacementFirstProcessesOpenOrders() {
+        
     }
 }
