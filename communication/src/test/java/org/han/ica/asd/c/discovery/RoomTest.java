@@ -3,15 +3,17 @@ package org.han.ica.asd.c.discovery;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +42,23 @@ public class RoomTest {
         Room room = new Room("Beergame 1", service);
 
         room.addHost(wrongIP, password);
+    }
+
+    @Test(expected = RoomException.class)
+    public void shouldThrowErrorWhenPasswordIsNotCorrect() throws RoomException, IOException {
+        String roomName = "Beergame 1";
+        String wrongIP = "265.22.33.55";
+        String password = "P@SSw0rd";
+        String wrongPassword = "Error";
+        String roomID = "12345";
+        when(service.getFolderID(any(String.class))).thenReturn(roomID);
+        when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
+        when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
+        when(service.getPasswordFromFolder(roomID)).thenReturn(password);
+
+        Room room = new Room("Beergame 1", service);
+
+        room.addHost(wrongIP, wrongPassword);
     }
 
     @Test(expected = RoomException.class)
@@ -104,6 +123,88 @@ public class RoomTest {
         assertEquals(password, room.getPassword());
         assertEquals(leader, room.getLeaderIP());
         assertEquals(roomID, room.getRoomID());
+    }
+
+    @Test
+    public void shouldRemoveHost() throws RoomException, IOException {
+        String roomName = "Beergame";
+        String newIP = "192.168.100.1";
+        String password = "";
+        String roomID = "12345";
+
+        when(service.getFolderID(any(String.class))).thenReturn(roomID);
+        when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
+        when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
+        when(service.getPasswordFromFolder(roomID)).thenReturn(password);
+        doNothing().when(service).deleteFileByNameInFolder("H: " + newIP, roomID);
+
+        Room room = new Room(roomName, service);
+        room.addHost(newIP, password);
+        room.removeHost(newIP);
+
+        assertFalse(room.getHosts().contains(newIP));
+    }
+
+    @Test
+    public void shouldThrowErrorWhenRemovingHostWithNoConnection() throws IOException, RoomException {
+        String roomName = "Beergame";
+        String newIP = "192.168.100.1";
+        String password = "";
+        String roomID = "12345";
+
+        when(service.getFolderID(any(String.class))).thenReturn(roomID);
+        when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
+        when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
+        when(service.getPasswordFromFolder(roomID)).thenReturn(password);
+        doThrow(IOException.class).when(service).deleteFileByNameInFolder("H: " + newIP, roomID);
+
+        Room room = new Room(roomName, service);
+        room.addHost(newIP, password);
+        room.removeHost(newIP);
+    }
+
+    @Test
+    public void shouldReturnTrueWhenRoomOpen() throws RoomException, IOException {
+        String roomID = "12345";
+        String roomName = "Beergame";
+        String password = "P@SSw0rd";
+        String leader = "192.168.1.1";
+
+        when(service.createFolder(roomName)).thenReturn(roomID);
+        when(service.getFolderID(roomName)).thenReturn(roomID);
+
+        Room room = new Room(roomName, leader, password, service);
+        assertFalse(room.isGameClosedForDiscovery());
+        assertEquals(room.getGameStarted(), false);
+    }
+
+    @Test
+    public void shouldReturnFalseWhenRoomClosed() throws RoomException, IOException {
+        String roomID = "12345";
+        String roomName = "Beergame";
+        String password = "P@SSw0rd";
+        String leader = "192.168.1.1";
+
+        when(service.createFolder(roomName)).thenReturn(roomID);
+        when(service.getFolderID(roomName)).thenReturn("");
+
+        Room room = new Room(roomName, leader, password, service);
+        assertTrue(room.isGameClosedForDiscovery());
+        assertEquals(room.getGameStarted(), true);
+    }
+    @Test
+    public void shouldThrowErrorWithNoConnection() throws RoomException, IOException {
+        String roomID = "12345";
+        String roomName = "Beergame";
+        String password = "P@SSw0rd";
+        String leader = "192.168.1.1";
+
+        when(service.createFolder(roomName)).thenReturn(roomID);
+        doThrow(IOException.class).when(service).getFolderID(roomName);
+
+        Room room = new Room(roomName, leader, password, service);
+        assertFalse(room.isGameClosedForDiscovery());
+        assertEquals(room.getGameStarted(), false);
     }
 
     @Test

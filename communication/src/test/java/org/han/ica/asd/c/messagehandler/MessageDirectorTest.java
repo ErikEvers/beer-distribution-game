@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.messagehandler;
+package communicationcomponent.messagehandler;
 
 import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
@@ -13,7 +13,6 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.InvalidObjectException;
 
@@ -37,13 +36,13 @@ public class MessageDirectorTest {
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
 
     @BeforeEach
-    public void init() {
+    void init() {
         initMocks(this);
         messageDirector = new MessageDirector(gameMessageReceiver, faultDetectionMessageReceiver);
     }
 
     @Test
-    public void shouldThrowForInvalidObject() {
+    void shouldReturnInvalidObjectMessage() {
         Object wrongObject = String.class;
         String expected = new InvalidObjectException("Invalid object").getMessage();
 
@@ -53,7 +52,7 @@ public class MessageDirectorTest {
     }
 
     @Test
-    public void shouldReturnSuccessfullObject() {
+    void shouldReturnSuccessfullObject() {
         ResponseMessage expected = new ResponseMessage(true);
 
         when(gameMessageReceiver.gameMessageReceived(gameMessage)).thenReturn(expected);

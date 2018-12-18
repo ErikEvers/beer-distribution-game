@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.faultdetection;
 
+import TestUI.GameRoomManagerController;
+
 public class FaultHandlerPlayer {
 	private int amountOfConnectionsWithLeader;
 	private int amountOfFailingIps;

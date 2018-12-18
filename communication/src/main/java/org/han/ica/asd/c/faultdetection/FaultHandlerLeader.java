@@ -8,6 +8,11 @@ import org.han.ica.asd.c.observers.IPlayerDisconnectedObserver;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class will call methods on external interfaces when needed. Example: a node is disconnected from the game, this
+ * class will then call the 'AgentComponent' to make sure an agent is started instead of the disconnected node.
+ * It also keeps track of the amount of nodes that are able to reach nodes that this machine can't reach.
+ */
 public class FaultHandlerLeader {
     private HashMap<String, Integer> amountOfFailsPerIp;
     private NodeInfoList nodeInfoList;
@@ -25,9 +30,15 @@ public class FaultHandlerLeader {
         iAmDisconnected = false;
     }
 
+    /**
+     * Increments the amount of fails per node. This means it keeps track per node how many nodes can reach said node.
+     * It also updates the status of the node when more than half the nodes can't reach said node.
+     *
+     * @param ip The ip of the node that can/can't be reached.
+     * @return The ip when its incremented, else it returns null
+     * @author Oscar, Tarik
+     */
     public String incrementFailure(String ip) {
-        // Makes sure the ip is in the list.
-        // Increments the List by 1.
         //TODO remove println
         increment(ip);
 
@@ -43,24 +54,43 @@ public class FaultHandlerLeader {
         return null;
     }
 
+    /**
+     * Gets value of iAmDisconnected.
+     *
+     * @return The value of iAmDisconnected
+     */
     public boolean isLeaderAlive() {
         return iAmDisconnected;
     }
 
-
+    /**
+     * Retrieves the value of isConnected of a specific ipAddress
+     *
+     * @param ip The ip of which the status is requested.
+     * @return The value of isConnected for the specified ipAddress.
+     * @author Oscar, Tarik
+     */
     public boolean isPeerAlive(String ip) {
-        //Checks if an ip address is incremented by more than half the amount of ips in the game.
-        //In case the increment is more than the half, the node/peer will be labeled as disconnected.
         //TODO probably remove this method entirely
         return nodeInfoList.getStatusOfOneNode(ip);
     }
 
+    /**
+     * Resets the amount of failures for a specific node, given the ip of said node.
+     *
+     * @param ip The ip of the node.
+     * @author Oscar
+     */
     public void reset(String ip) {
-        //Sets the value of the Key ip to 0 as it resets its amount of fails.
         putIpInListIfNotAlready(ip);
         amountOfFailsPerIp.put(ip, 0);
     }
 
+    /**
+     * Sets the value of iAmDisconnected to true
+     *
+     * @author Oscar
+     */
     public void iAmDisconnected() {
         //Can be called when the leader cant reach anyone but himself
         iAmDisconnected = true;
@@ -70,6 +100,11 @@ public class FaultHandlerLeader {
         System.out.println("This machine can't reach anyone, so is disconnected");
     }
 
+    /**
+     * Notifies every observer that this machine can't connect to anyone.
+     *
+     * @author Tarik
+     */
     private void notifyObserversIDied() {
         if (observers.size() > 0) {
             for (IConnectorObserver observer : observers) {
@@ -80,6 +115,12 @@ public class FaultHandlerLeader {
         }
     }
 
+
+    /**
+     * Notifies every observer that a node can't be reached and is disconnected.
+     * @param ip The ip that was not reached.
+     * @author Tarik
+     */
     private void notifyObserversPlayerDied(String ip) {
         if (observers.size() > 0) {
             for (IConnectorObserver observer : observers) {
@@ -90,12 +131,24 @@ public class FaultHandlerLeader {
         }
     }
 
+    /**
+     * Increments the amount of fails of a specific ip
+     *
+     * @param ip The ip of which the amount of failures needs to be incremented.
+     * @author Oscar
+     */
     private void increment(String ip) {
         //Increments the value that is linked to the ip.
         putIpInListIfNotAlready(ip);
         amountOfFailsPerIp.put(ip, amountOfFailsPerIp.get(ip) + 1);
     }
 
+    /**
+     * Adds the ip to the list if its not already in the list.
+     *
+     * @param ip The ip to add to the list.
+     * @author Oscar
+     */
     private void putIpInListIfNotAlready(String ip) {
         //Puts the ip in the hashmap if it is not yet in that list
         if (!amountOfFailsPerIp.containsKey(ip)) {
@@ -103,6 +156,12 @@ public class FaultHandlerLeader {
         }
     }
 
+    /**
+     * Adds the specified ip to the list.
+     *
+     * @param ip The ip to add to the list.
+     * @author Oscar
+     */
     private void add(String ip) {
         //Adds the ip to the list
         amountOfFailsPerIp.put(ip, 0);

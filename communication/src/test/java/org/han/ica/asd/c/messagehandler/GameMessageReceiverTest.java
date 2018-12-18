@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.messagehandler;
+package communicationcomponent.messagehandler;
 
 import domainobjects.Election;
 import domainobjects.RoundModel;
@@ -22,13 +22,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;

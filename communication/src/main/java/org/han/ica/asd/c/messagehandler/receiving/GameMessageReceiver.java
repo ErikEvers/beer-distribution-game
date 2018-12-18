@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GameMessageReceiver {
 
-    static RoundModelMessage toBecommittedRound;
+    private static RoundModelMessage toBecommittedRound;
     private GameMessageFilterer gameMessageFilterer;
 
     private ArrayList<IConnectorObserver> gameMessageObservers;
@@ -21,6 +21,10 @@ public class GameMessageReceiver {
         gameMessageFilterer = new GameMessageFilterer();
     }
 
+    /**
+     * This method handles a TurnMessage
+     * @param turnModelMessage
+     */
     private void handleTurnMessage(TurnModelMessage turnModelMessage) {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof ITurnModelObserver) {
@@ -29,6 +33,10 @@ public class GameMessageReceiver {
         }
     }
 
+    /**
+     * This method handles a RoundMessage
+     * @param roundModelMessage
+     */
     private void handleRoundMessage(RoundModelMessage roundModelMessage) {
 
         switch (roundModelMessage.getCommitStage()){
@@ -53,6 +61,11 @@ public class GameMessageReceiver {
         }
     }
 
+    /**
+     * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
+     * @param gameMessage
+     * @return ResponseMessage
+     */
     public ResponseMessage gameMessageReceived(GameMessage gameMessage) {
 
         if (gameMessageFilterer.isUnique(gameMessage)) {
@@ -68,11 +81,18 @@ public class GameMessageReceiver {
                 case 3:
                     ElectionMessage electionMessage = (ElectionMessage) gameMessage;
                     return new ResponseMessage(handleElectionMessage(electionMessage));
+                default:
+                    break;
             }
         }
         return new ResponseMessage(true);
     }
 
+    /**
+     * This method handles an Election message
+     * @param electionMessage
+     * @return Election
+     */
     private Object handleElectionMessage(ElectionMessage electionMessage) {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IElectionObserver) {

@@ -2,18 +2,25 @@ package org.han.ica.asd.c.messagehandler.receiving;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class GameMessageFilterer {
-
     private HashMap<UUID, Date> messageIds = new HashMap<>();
-
     private static final long MAX_DURATION = MILLISECONDS.convert(5, MINUTES);
 
-
+    /**
+     * Checks if a GameMessage is in the HashMap messageIds
+     * @param gameMessage
+     * @return boolean
+     */
     public boolean isUnique(GameMessage gameMessage) {
         clearMap();
 
@@ -25,13 +32,22 @@ public class GameMessageFilterer {
         }
     }
 
+    /**
+     * Removes all the entries from the HashMap messageIds which are older than 5 minutes
+     */
     private void clearMap() {
-        Iterator<Map.Entry<UUID, Date>> entryIt = messageIds.entrySet().iterator();
+        Set<Map.Entry<UUID, Date>> entrySet = messageIds.entrySet();
+        Iterator<Map.Entry<UUID, Date>> entryIt = entrySet.iterator();
+
         Date currentDate = new Date();
 
         while (entryIt.hasNext()) {
             Map.Entry<UUID, Date> entry = entryIt.next();
-            if (currentDate.getTime() - entry.getValue().getTime() >= MAX_DURATION) {
+
+            long currentDateTime = currentDate.getTime();
+            long time = entry.getValue().getTime();
+
+            if (currentDateTime - time >= MAX_DURATION) {
                 entryIt.remove();
             }
         }

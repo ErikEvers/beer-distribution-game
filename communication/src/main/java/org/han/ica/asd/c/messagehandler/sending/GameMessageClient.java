@@ -16,8 +16,13 @@ public class GameMessageClient {
 
     private static final Logger LOGGER = Logger.getLogger(GameMessageClient.class.getName());
 
+    /**
+     * This method sends turn data to the leader.
+     * @param ip
+     * @param turn
+     * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
+     */
     public ResponseMessage sendTurnModel(String ip, TurnModel turn) {
-
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
 
         int nFailedAttempts = 0;
@@ -40,7 +45,6 @@ public class GameMessageClient {
                     LOGGER.log(Level.SEVERE, "Something went wrong when reading the object");
                 }
             }
-
         }
         return new ResponseMessage(false, exception);
     }
@@ -49,7 +53,11 @@ public class GameMessageClient {
         this.socketClient = socketClient;
     }
 
-
+    /**
+     * This method sends the handled round data back to every peer.
+     * @param ips
+     * @param roundModel
+     */
     public void sendRoundToAllPlayers(String[] ips, RoundModel roundModel) {
         new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
     }

@@ -1,5 +1,15 @@
 package org.han.ica.asd.c.faultdetection.nodeinfolist;
 
+/**
+ * In this pojo class all the details of a node are kept.
+ * This POJO class is used in the 'NodeInfoList'.<br>
+ * However this class will probably be removed when integrating with the persistence layer/component.<br>
+ * If it doesn't get removed it will have to be modified/extended.
+ *
+ * @author Oscar
+ * @see NodeInfoList
+ */
+
 public class NodeInfo {
 
     private String ip;

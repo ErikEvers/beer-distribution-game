@@ -14,18 +14,17 @@ public class SocketServer {
 
     private static final Logger LOGGER = Logger.getLogger(SocketServer.class.getName());
 
+    private boolean isRunning = true;
+
     public SocketServer(IServerObserver serverObserver) {
         this.serverObserver = serverObserver;
     }
-
 
     public void startThread() {
         Thread serverThread = new Thread(this::start);
         serverThread.setDaemon(true);
         serverThread.start();
     }
-
-    private boolean isRunning = true;
 
     private void start() {
         try (ServerSocket serverSocket = new ServerSocket(4445)) {
@@ -35,7 +34,7 @@ public class SocketServer {
                 startServer(serverSocket);
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong " + e);
+            LOGGER.log(Level.SEVERE, "A server could not be started " + e);
         }
     }
 
@@ -53,8 +52,10 @@ public class SocketServer {
                 new SocketClient().sendObject(socket, response);
             }
             socket.close();
-        } catch (IOException | ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong " + e);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Something went wrong with the connection " + e);
+        } catch (ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "Something went wrong when trying to get an object " + e);
         }
     }
 }

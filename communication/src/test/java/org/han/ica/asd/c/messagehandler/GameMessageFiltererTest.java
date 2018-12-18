@@ -1,9 +1,9 @@
-package org.han.ica.asd.c.messagehandler;
+package communicationcomponent.messagehandler;
 
-import domainobjects.TurnModel;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageFilterer;
+import domainobjects.TurnModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +11,6 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +20,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -37,13 +37,13 @@ public class GameMessageFiltererTest {
     private GameMessage gameMessage;
 
     @BeforeEach
-    public void init() {
+    void init() {
         messageIds = new HashMap<>();
         gameMessageFilterer = new GameMessageFilterer();
     }
 
     @Test
-    public void mapShouldNotHaveEntriesOlderThan5Minutes() {
+    void mapShouldNotHaveEntriesOlderThan5Minutes() {
         Iterator<Map.Entry<UUID, Date>> entryIt = gameMessageFilterer.getMessageIds().entrySet().iterator();
         Date currentDate = new Date();
 
@@ -68,7 +68,7 @@ public class GameMessageFiltererTest {
     }
 
     @Test
-    public void mapShouldnotHaveEntriesExactly5Minutes() {
+    void mapShouldnotHaveEntriesExactly5Minutes() {
         Iterator<Map.Entry<UUID, Date>> entryIt = gameMessageFilterer.getMessageIds().entrySet().iterator();
         Date currentDate = new Date();
 
@@ -93,13 +93,13 @@ public class GameMessageFiltererTest {
     }
 
     @Test
-    public void mapShouldHaveEntriesYoungerThan5Minutes() {
+    void mapShouldHaveEntriesYoungerThan5Minutes() {
         gameMessageFilterer.isUnique(gameMessage);
         assertFalse(gameMessageFilterer.getMessageIds().isEmpty());
     }
 
     @Test
-    public void shouldReturnFalseForNotUniqueGameMessage() {
+    void shouldReturnFalseForNotUniqueGameMessage() {
         UUID uuid = UUID.randomUUID();
 
         GameMessage message1 = new TurnModelMessage(new TurnModel(10));
@@ -114,7 +114,7 @@ public class GameMessageFiltererTest {
     }
 
     @Test
-    public void shouldReturnTrueForUniqueGameMessage() {
+    void shouldReturnTrueForUniqueGameMessage() {
         UUID uuid1 = UUID.randomUUID();
         UUID uuid2 = UUID.randomUUID();
 

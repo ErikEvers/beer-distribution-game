@@ -51,6 +51,7 @@ private static Connector instance = null;
         socketServer.startThread();
     }
 
+    //TODO replace with GUICE, inject singleton
     public static Connector getInstance() {
         if (instance != null){
             instance = new Connector();
@@ -107,7 +108,7 @@ private static Connector instance = null;
     public void addToNodeInfoList(String txtIP) {
         nodeInfoList.addIp(txtIP);
     }
-
+    
     public void addLeaderToNodeInfoList(String txtIp){
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setLeader(true);
@@ -117,7 +118,6 @@ private static Connector instance = null;
     }
 
     public void sendTurn() {
-
         gameMessageClient.sendTurnModel("leaderIp", new TurnModel(1));
     }
 

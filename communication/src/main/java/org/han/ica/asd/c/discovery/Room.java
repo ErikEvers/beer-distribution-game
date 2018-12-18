@@ -81,6 +81,7 @@ public class Room {
     public void removeHost(String ip){
         try {
             service.deleteFileByNameInFolder("H: " + ip, roomID);
+            hosts.remove(ip);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,7 +119,7 @@ public class Room {
             }
             return value.equals("");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
         return false;
     }
@@ -149,9 +150,5 @@ public class Room {
 
     public Boolean getGameStarted() {
         return gameStarted;
-    }
-
-    public void setGameStarted() {
-    gameStarted = true;
     }
 }
