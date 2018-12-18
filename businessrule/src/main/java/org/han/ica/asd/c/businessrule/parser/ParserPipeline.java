@@ -56,10 +56,11 @@ public class ParserPipeline {
         this.businessRulesParsed = listener.getBusinessRules();
         if(setSyntaxError() || evaluate()){
             ParseErrorListener.INSTANCE.getExceptions().clear();
-            return true;
+            return false;
         }
         encodeBusinessRules();
-        return false;
+
+        return true;
     }
 
     /**
