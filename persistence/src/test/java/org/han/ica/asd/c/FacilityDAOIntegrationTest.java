@@ -77,7 +77,22 @@ class FacilityDAOIntegrationTest {
 
     @Test
     void deleteSpecificFacilityTest() {
-        
+
+        Assert.assertEquals(0, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
+        facilityDAO.createFacility(FACILITY);
+        facilityDAO.createFacility(FACILITY2);
+        Assert.assertEquals(2, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
+        facilityDAO.deleteSpecificFacility(2, "BeerGameZutphen");
+        Assert.assertEquals(1, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
+
+        Facility facilityDb = facilityDAO.readSpecificFacility(1, "BeerGameZutphen");
+
+        Assert.assertEquals(FACILITY.getGameId(), facilityDb.getGameId());
+        Assert.assertEquals(FACILITY.getFacilityId(), facilityDb.getFacilityId());
+        Assert.assertEquals(FACILITY.getFacilityType(), facilityDb.getFacilityType());
+        Assert.assertEquals(FACILITY.getPlayerId(), facilityDb.getPlayerId());
+        Assert.assertEquals(FACILITY.getGameAgentName(), facilityDb.getGameAgentName());
+        Assert.assertEquals(FACILITY.isBankrupt(), facilityDb.isBankrupt());
     }
 
     @Test

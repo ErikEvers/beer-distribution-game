@@ -71,19 +71,21 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITY)) {
-                conn.setAutoCommit(false);
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITY)) {
+                    conn.setAutoCommit(false);
 
-                pstmt.setString(1, facility.getGameAgentName());
-                pstmt.setString(2, facility.getPlayerId());
-                pstmt.setString(3, facility.getFacilityType());
-                pstmt.setBoolean(4, facility.isBankrupt());
-                pstmt.setInt(5, facility.getFacilityId());
-                pstmt.setString(6, facility.getGameId());
+                    pstmt.setString(1, facility.getGameAgentName());
+                    pstmt.setString(2, facility.getPlayerId());
+                    pstmt.setString(3, facility.getFacilityType());
+                    pstmt.setBoolean(4, facility.isBankrupt());
+                    pstmt.setInt(5, facility.getFacilityId());
+                    pstmt.setString(6, facility.getGameId());
 
-                pstmt.executeUpdate();
+                    pstmt.executeUpdate();
+                }
+                conn.commit();
             }
-            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -99,15 +101,17 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITY)) {
-                conn.setAutoCommit(false);
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITY)) {
+                    conn.setAutoCommit(false);
 
-                pstmt.setInt(1, faciltyId);
-                pstmt.setString(2, gameId);
+                    pstmt.setInt(1, faciltyId);
+                    pstmt.setString(2, gameId);
 
-                pstmt.executeUpdate();
+                    pstmt.executeUpdate();
+                }
+                conn.commit();
             }
-            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -123,14 +127,16 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITIES_IN_GAME)) {
-                conn.setAutoCommit(false);
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITIES_IN_GAME)) {
+                    conn.setAutoCommit(false);
 
-                pstmt.setString(1, gameId);
+                    pstmt.setString(1, gameId);
 
-                pstmt.executeUpdate();
+                    pstmt.executeUpdate();
+                }
+                conn.commit();
             }
-            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -180,19 +186,21 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
         Facility facility = null;
         try {
             conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITY)) {
-                conn.setAutoCommit(false);
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITY)) {
+                    conn.setAutoCommit(false);
 
-                pstmt.setInt(1, facilityId);
-                pstmt.setString(2, gameId);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        facility = new Facility(gameId, facilityId,
-                                rs.getString("FacilityName"), rs.getString("PlayerId"),
-                                rs.getString("GameAgentName"), rs.getBoolean("Bankrupt"));
+                    pstmt.setInt(1, facilityId);
+                    pstmt.setString(2, gameId);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        while (rs.next()) {
+                            facility = new Facility(gameId, facilityId,
+                                    rs.getString("FacilityName"), rs.getString("PlayerId"),
+                                    rs.getString("GameAgentName"), rs.getBoolean("Bankrupt"));
+                        }
                     }
+                    conn.commit();
                 }
-                conn.commit();
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString());
