@@ -4,10 +4,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import org.han.ica.asd.c.fakes.PlayerComponentFake;
+import org.han.ica.asd.c.player.PlayerComponent;
 import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
 import java.util.ArrayList;
+
+/**
+ * Controller for the facility overview. Accessible when turned on in the game configuration.
+ */
 
 public class SeeOtherFacilitiesController {
     @FXML
@@ -21,12 +25,15 @@ public class SeeOtherFacilitiesController {
     private ArrayList<FacilityRectangle> warehouses = new ArrayList<>();
     private ArrayList<FacilityRectangle> retailers = new ArrayList<>();
 
-    //Fake player component for testing purposes;
-    private PlayerComponentFake playerComponent;
-    
+    private PlayerComponent playerComponent;
+
+    /**
+     * Initialises the facility overview screen by calling the loadFacilityView() method.
+     * @throws FacilityLoadingError
+     */
     public void initialize() throws FacilityLoadingError {
         mainContainer.getChildren().addAll();
-        playerComponent = new PlayerComponentFake();
+        playerComponent = new PlayerComponent();
 
         loadFacilityView();
     }
@@ -53,6 +60,18 @@ public class SeeOtherFacilitiesController {
         }
     }
 
+    /**
+     * Draws the facilities in the link on the screen.
+     *
+     * @param drawnFacilities
+     * Facility objects represented on screen
+     * @param drawnFacilityRectangles
+     * Facility rectangles visible on screen
+     * @param link
+     * Link/edge through which the facilities are connected
+     * @throws FacilityLoadingError
+     * When a facility is of an unknown type, this is thrown.
+     */
     private void drawFacilities(ArrayList<Facility> drawnFacilities,
                                 ArrayList<FacilityRectangle> drawnFacilityRectangles,
                                 FacilityLinkedTo link) throws FacilityLoadingError {
@@ -67,6 +86,14 @@ public class SeeOtherFacilitiesController {
         }
     }
 
+    /**
+     * Draws the line between facilities in a facilitylinkedto on the screen.
+     *
+     * @param drawnFacilityRectangles
+     * Facility rectangles visible on screen
+     * @param link
+     * Link/edge through which the facilities are connected
+     */
     private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, FacilityLinkedTo link) {
         EdgeLine line = new EdgeLine();
         FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,"","",""));
@@ -87,6 +114,14 @@ public class SeeOtherFacilitiesController {
         facilitiesContainer.getChildren().add(line);
     }
 
+    /**
+     * Adjusts the colour based on the link being 'active'.
+     *
+     * @param link
+     * Link/edge through which the facilities are connected
+     * @param line
+     * Visual representation of the link.
+     */
     private void setLineStroke(FacilityLinkedTo link, EdgeLine line) {
         line.setStroke(Color.BLACK);
 
@@ -100,8 +135,11 @@ public class SeeOtherFacilitiesController {
      *
      *
      * @param facility
+     * Facility to be drawn.
      * @return
+     * Returns facility that was drawn.
      * @throws FacilityLoadingError
+     * When a facility is of an unknown type, this is thrown.
      */
 
     private FacilityRectangle drawFacility(Facility facility) throws FacilityLoadingError {
@@ -118,7 +156,7 @@ public class SeeOtherFacilitiesController {
             drawRetailer(facility);
             return retailers.get(retailers.size()-1);
         } else {
-            throw new FacilityLoadingError("Error while drawing facility: "+facility.toString());
+            throw new FacilityLoadingError("Error while drawing facility of an unkwown type: "+facility.toString());
         }
     }
 
