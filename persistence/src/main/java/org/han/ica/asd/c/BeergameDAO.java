@@ -1,10 +1,10 @@
 package org.han.ica.asd.c;
 
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.BeerGame;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,11 +25,12 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 
+	@Inject
 	private DatabaseConnection databaseConnection;
 
 
 	public BeergameDAO(){
-		databaseConnection = DBConnection.getInstance();
+
 	}
 
 	/**
