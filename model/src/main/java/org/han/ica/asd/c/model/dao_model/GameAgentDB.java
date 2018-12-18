@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class GameAgent implements IDaoModel{
+public class GameAgentDB implements IDaoModel{
     private String gameId;
     private String gameAgentName;
     private int facilityId;
 
-    public GameAgent(String gameId, String gameAgentName, int facilityId) {
+    public GameAgentDB(String gameId, String gameAgentName, int facilityId) {
         this.gameId = gameId;
         this.gameAgentName = gameAgentName;
         this.facilityId = facilityId;

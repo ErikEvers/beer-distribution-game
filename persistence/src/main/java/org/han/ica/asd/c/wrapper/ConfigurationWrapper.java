@@ -5,7 +5,6 @@ import org.han.ica.asd.c.model.domain_objects.IDomainModel;
 
 public class ConfigurationWrapper extends Wrapper {
 
-
 	@Override
 	IDaoModel wrapToDaoModel(IDomainModel model) {
 		return null;

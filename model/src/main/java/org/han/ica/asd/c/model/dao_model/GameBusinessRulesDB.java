@@ -1,13 +1,13 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class GameBusinessRules implements IDaoModel{
+public class GameBusinessRulesDB implements IDaoModel{
     private int facilityId;
     private String gameId;
     private String gameAgentName;
     private String gameBusinessRule;
     private String gameAST;
 
-    public GameBusinessRules(int facilityId, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
+    public GameBusinessRulesDB(int facilityId, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
         this.facilityId = facilityId;
         this.gameId = gameId;
         this.gameAgentName = gameAgentName;

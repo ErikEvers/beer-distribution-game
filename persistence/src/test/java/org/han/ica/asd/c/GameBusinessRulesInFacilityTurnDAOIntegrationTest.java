@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 
 class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAOIntegrationTest.class.getName());
-	private static final GameBusinessRulesInFacilityTurn GAME_BUSINESS_RULES_IN_FACILITY_TURN = new GameBusinessRulesInFacilityTurn(1,1,2,"BeerGameZutphen13_12_2018","Henk","als voorraad minder dan 10 dan bestellen bij frits","");
-	private static final GameBusinessRulesInFacilityTurn GAME_BUSINESS_RULES_IN_FACILITY_TURN2 = new GameBusinessRulesInFacilityTurn(2,2,3,"BeerGameZutphen13_12_2018","Henk","als voorraad minder dan 10 dan bestellen bij frits","");;
+	private static final GameBusinessRulesInFacilityTurnDB GAME_BUSINESS_RULES_IN_FACILITY_TURN = new GameBusinessRulesInFacilityTurnDB(1,1,2,"BeerGameZutphen13_12_2018","Henk","als voorraad minder dan 10 dan bestellen bij frits","");
+	private static final GameBusinessRulesInFacilityTurnDB GAME_BUSINESS_RULES_IN_FACILITY_TURN2 = new GameBusinessRulesInFacilityTurnDB(2,2,3,"BeerGameZutphen13_12_2018","Henk","als voorraad minder dan 10 dan bestellen bij frits","");;
 
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 
@@ -41,7 +41,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 	@Test
 	void createTurnTest() {
 		gameBusinessRulesInFacilityTurnDAO.createTurn(GAME_BUSINESS_RULES_IN_FACILITY_TURN);
-		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurnDb = gameBusinessRulesInFacilityTurnDAO.readTurn("BeerGameZutphen13_12_2018",1,1,2);
+		GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurnDb = gameBusinessRulesInFacilityTurnDAO.readTurn("BeerGameZutphen13_12_2018",1,1,2);
 
 		Assert.assertEquals(GAME_BUSINESS_RULES_IN_FACILITY_TURN.getGameId(),gameBusinessRulesInFacilityTurnDb.getGameId());
 		Assert.assertEquals(GAME_BUSINESS_RULES_IN_FACILITY_TURN.getFacilityIdDeliver(),gameBusinessRulesInFacilityTurnDb.getFacilityIdDeliver());

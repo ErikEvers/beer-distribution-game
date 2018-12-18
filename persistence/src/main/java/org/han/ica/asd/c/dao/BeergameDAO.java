@@ -3,7 +3,7 @@ package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.BeerGame;
+import org.han.ica.asd.c.model.dao_model.BeerGameDB;
 
 
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	}
 
 	/**
-	 * A method which creates a BeerGame in the Database
+	 * A method which creates a BeerGameDB in the Database
 	 *
 	 * @param gameName The specified name of the game
 	 */
@@ -67,9 +67,9 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 *
 	 * @return An Arraylist of BeerGames
 	 */
-	public List<BeerGame> readBeergames() {
+	public List<BeerGameDB> readBeergames() {
 		Connection conn = null;
-		ArrayList<BeerGame> beerGames = new ArrayList<>();
+		ArrayList<BeerGameDB> beerGames = new ArrayList<>();
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
@@ -77,7 +77,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							beerGames.add(new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+							beerGames.add(new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
 						}
 					}
 				}
@@ -89,7 +89,7 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	}
 
 	/**
-	 * Deletes a BeerGame from the SQLite Database
+	 * Deletes a BeerGameDB from the SQLite Database
 	 * @param gameId The specified Id of the game which needs to be deleted
 	 */
 	public void deleteBeergame(String gameId) {
@@ -118,16 +118,16 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 * @param gameId The name of the game which needs to be returned
 	 * @return A beergame object
 	 */
-	public BeerGame getGameLog(String gameId) {
+	public BeerGameDB getGameLog(String gameId) {
 		Connection conn = null;
-		BeerGame beergame = null;
+		BeerGameDB beergame = null;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 					pstmt.setString(1,gameId);
 					try (ResultSet rs = pstmt.executeQuery()) {
-						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+						beergame = new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 					}
 				}
 			}

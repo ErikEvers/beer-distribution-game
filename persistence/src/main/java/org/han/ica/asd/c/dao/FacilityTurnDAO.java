@@ -2,9 +2,9 @@ package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
+import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 
 
 import javax.inject.Inject;
@@ -33,10 +33,10 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	}
 
 	/**
-	 * A method to create a FacilityTurn in the SQLite Database
-	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be inserted in the SQLite Database
+	 * A method to create a FacilityTurnDB in the SQLite Database
+	 * @param facilityTurn A FacilityTurnDB object which contains the data which needs to be inserted in the SQLite Database
 	 */
-	public void createTurn(FacilityTurn facilityTurn) {
+	public void createTurn(FacilityTurnDB facilityTurn) {
 		Connection conn = null;
 		try {
 			conn = databaseConnection.connect();
@@ -73,9 +73,9 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	 * @return Returns a list of all the turns in a specific round in a specific game
 	 */
 
-	public List<FacilityTurn> fetchTurns(String gameId, int roundId) {
+	public List<FacilityTurnDB> fetchTurns(String gameId, int roundId) {
 		Connection conn;
-		ArrayList<FacilityTurn> turns = new ArrayList<>();
+		ArrayList<FacilityTurnDB> turns = new ArrayList<>();
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
@@ -85,7 +85,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 					pstmt.setInt(2, roundId);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							turns.add(new FacilityTurn(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount")));
+							turns.add(new FacilityTurnDB(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount")));
 						}
 					}
 				}
@@ -105,9 +105,9 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	 * @return
 	 */
 
-	public FacilityTurn fetchTurn(Round round, FacilityLinkedTo facilityLinkedTo) {
+	public FacilityTurnDB fetchTurn(RoundDB round, FacilityLinkedToDB facilityLinkedTo) {
 		Connection conn;
-		FacilityTurn facilityTurn = null;
+		FacilityTurnDB facilityTurn = null;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
@@ -117,7 +117,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 					pstmt.setInt(3,facilityLinkedTo.getFacilityIdOrder());
 					pstmt.setInt(4,facilityLinkedTo.getFacilityIdDeliver());
 					try (ResultSet rs = pstmt.executeQuery()){
-						facilityTurn = new FacilityTurn(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
+						facilityTurn = new FacilityTurnDB(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
 					}
 				}
 			}
@@ -129,9 +129,9 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * A method which updates a specific turn in the SQLite Database
-	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be updated in the SQLite Database
+	 * @param facilityTurn A FacilityTurnDB object which contains the data which needs to be updated in the SQLite Database
 	 */
-	public void updateTurn(FacilityTurn facilityTurn) {
+	public void updateTurn(FacilityTurnDB facilityTurn) {
 		Connection conn;
 		try {
 			conn = databaseConnection.connect();
@@ -159,9 +159,9 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 
 	/**
 	 * A method which deletes a specific turn in the SQLite Database
-	 * @param facilityTurn A FacilityTurn object which contains the data which needs to be inserted in the SQLite Database
+	 * @param facilityTurn A FacilityTurnDB object which contains the data which needs to be inserted in the SQLite Database
 	 */
-	public void deleteTurn(FacilityTurn facilityTurn) {
+	public void deleteTurn(FacilityTurnDB facilityTurn) {
 		Connection conn;
 		try {
 			conn = databaseConnection.connect();

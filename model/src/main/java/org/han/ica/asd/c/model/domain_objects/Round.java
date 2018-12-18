@@ -13,7 +13,7 @@ public class Round implements IDomainModel{
     private Map<Facility, Integer> remainingBudget;
 
     public Round () {
-        // Round may be void of data
+        // RoundDB may be void of data
     }
 
     public Round(int roundId, Map<Facility, Map<Facility, Integer>> turnOrder, Map<Facility, Map<Facility, Integer>> turnDeliver, //NOSONAR

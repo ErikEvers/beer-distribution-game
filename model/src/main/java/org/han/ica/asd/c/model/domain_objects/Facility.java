@@ -25,7 +25,7 @@ public class Facility implements IDomainModel{
     }
 
     /**
-     * Bare Facility for when no player or agent is yet available
+     * Bare FacilityDB for when no player or agent is yet available
      */
     public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, int facilityId) {
         this.facilityType = facilityType;

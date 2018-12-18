@@ -21,7 +21,7 @@ public interface IReplay {
      * @param roundId
      * Primary identifier to locate a round within a game
      * @return
-     * All Round data up to the given roundId where the index of the List corresponds with the round
+     * All RoundDB data up to the given roundId where the index of the List corresponds with the round
      */
     List<Round> showRoundGraph(String gameId, int roundId);
 }

@@ -11,7 +11,7 @@ public interface IRetrieveReplayData {
      * @param gameId
      * Primary identifier to retrieve a game
      * @return
-     * Returns a BeerGame object for a full replay capability
+     * Returns a BeerGameDB object for a full replay capability
      */
     BeerGame retrieveGameData(String gameId);
 

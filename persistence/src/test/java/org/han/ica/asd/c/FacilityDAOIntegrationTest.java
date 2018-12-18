@@ -7,7 +7,7 @@ import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.FacilityTypeDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.Facility;
+import org.han.ica.asd.c.model.dao_model.FacilityDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 
 class FacilityDAOIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(FacilityDAOIntegrationTest.class.getName());
-    private static final Facility FACILITY = new Facility("BeerGameZutphen", 1, "Factory", "playerId", "gameAgentName", false);
-    private static final Facility FACILITY2 = new Facility("BeerGameZutphen", 2, "Wholesale", "playerId", "gameAgentName", false);
-    private static final Facility FACILITY2_UPDATE = new Facility("BeerGameZutphen", 2, "Wholesale", "playerId", "gameAgentName", true);
+    private static final FacilityDB FACILITY = new FacilityDB("BeerGameZutphen", 1, "Factory", "playerId", "gameAgentName", false);
+    private static final FacilityDB FACILITY2 = new FacilityDB("BeerGameZutphen", 2, "Wholesale", "playerId", "gameAgentName", false);
+    private static final FacilityDB FACILITY2_UPDATE = new FacilityDB("BeerGameZutphen", 2, "Wholesale", "playerId", "gameAgentName", true);
 
     private FacilityDAO facilityDAO;
 
@@ -48,7 +48,7 @@ class FacilityDAOIntegrationTest {
         Assert.assertEquals(0, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
         facilityDAO.createFacility(FACILITY);
         Assert.assertEquals(1, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
-        Facility facilityDb = facilityDAO.readSpecificFacility(1, "BeerGameZutphen");
+        FacilityDB facilityDb = facilityDAO.readSpecificFacility(1, "BeerGameZutphen");
 
         Assert.assertEquals(FACILITY.getGameId(), facilityDb.getGameId());
         Assert.assertEquals(FACILITY.getFacilityId(), facilityDb.getFacilityId());
@@ -67,7 +67,7 @@ class FacilityDAOIntegrationTest {
         facilityDAO.updateFacility(FACILITY2_UPDATE);
         Assert.assertEquals(1, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
 
-        Facility facilityDb = facilityDAO.readSpecificFacility(2, "BeerGameZutphen");
+        FacilityDB facilityDb = facilityDAO.readSpecificFacility(2, "BeerGameZutphen");
 
         Assert.assertEquals(FACILITY2_UPDATE.getGameId(), facilityDb.getGameId());
         Assert.assertEquals(FACILITY2_UPDATE.getFacilityId(), facilityDb.getFacilityId());
@@ -87,7 +87,7 @@ class FacilityDAOIntegrationTest {
         facilityDAO.deleteSpecificFacility(2, "BeerGameZutphen");
         Assert.assertEquals(1, facilityDAO.readAllFacilitiesInGame("BeerGameZutphen").size());
 
-        Facility facilityDb = facilityDAO.readSpecificFacility(1, "BeerGameZutphen");
+        FacilityDB facilityDb = facilityDAO.readSpecificFacility(1, "BeerGameZutphen");
 
         Assert.assertEquals(FACILITY.getGameId(), facilityDb.getGameId());
         Assert.assertEquals(FACILITY.getFacilityId(), facilityDb.getFacilityId());

@@ -7,7 +7,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Configuration implements IDaoModel{
+public class ConfigurationDB implements IDaoModel{
     private String gameId;
     private int amountOfRounds;
     private int amountOfFactories;
@@ -22,7 +22,7 @@ public class Configuration implements IDaoModel{
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
 
-    public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
+    public ConfigurationDB(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
         this.gameId = gameId;
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;

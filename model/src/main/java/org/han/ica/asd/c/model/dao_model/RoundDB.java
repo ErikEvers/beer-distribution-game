@@ -3,12 +3,12 @@ package org.han.ica.asd.c.model.dao_model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Round implements IDaoModel{
+public class RoundDB implements IDaoModel{
     private String gameId;
     private int roundId;
-    private List<FacilityTurn> turns;
+    private List<FacilityTurnDB> turns;
 
-    public Round(String gameId, int roundId) {
+    public RoundDB(String gameId, int roundId) {
         this.gameId = gameId;
         this.roundId = roundId;
         turns = new ArrayList<>();
@@ -30,15 +30,15 @@ public class Round implements IDaoModel{
         this.roundId = roundId;
     }
 
-    public List<FacilityTurn> getTurns() {
+    public List<FacilityTurnDB> getTurns() {
         return turns;
     }
 
-    public void setTurns(List<FacilityTurn> turns) {
+    public void setTurns(List<FacilityTurnDB> turns) {
         this.turns = turns;
     }
 
-    public void addTurn(FacilityTurn turn){
+    public void addTurn(FacilityTurnDB turn){
         turns.add(turn);
     }
 }
