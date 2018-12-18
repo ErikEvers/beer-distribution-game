@@ -1,6 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.Round;
 
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 
 
 	@Inject
-	private DatabaseConnection databaseConnection;
+	private IDatabaseConnection IDatabaseConnection;
 
 	public RoundDAO(){
 
@@ -32,7 +32,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @param roundId The id of the round that the players have played
 	 */
 	public void createRound(String gameId, int roundId){
-		Connection conn = databaseConnection.connect();
+		Connection conn = IDatabaseConnection.connect();
 		executePreparedStatement(gameId, roundId, conn, CREATE_ROUND);
 	}
 
@@ -42,7 +42,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @param roundId The id of the round which needs to be deleted
 	 */
 	public void deleteRound(String gameId, int roundId){
-		Connection conn = databaseConnection.connect();
+		Connection conn = IDatabaseConnection.connect();
 		executePreparedStatement(gameId, roundId, conn, DELETE_ROUND);
 	}
 
@@ -53,7 +53,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @return A round object
 	 */
 	public Round getRound(String gameId, int roundId){
-		Connection conn = databaseConnection.connect();
+		Connection conn = IDatabaseConnection.connect();
 		Round round = null;
 		try {
 			if (conn != null) {
@@ -72,7 +72,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 			}
 				} catch (SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
-					databaseConnection.rollBackTransaction(conn);
+					IDatabaseConnection.rollBackTransaction(conn);
 				}
 
 				return round;
@@ -104,7 +104,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 			}
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString(),e);
-			databaseConnection.rollBackTransaction(conn);
+			IDatabaseConnection.rollBackTransaction(conn);
 		}
 	}
 }

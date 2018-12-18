@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
@@ -32,7 +32,7 @@ class FacilityTurnDAOIntegrationTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(DatabaseConnection.class).to(DBConnectionTest.class);
+				bind(IDatabaseConnection.class).to(DBConnectionTest.class);
 			}
 		});
 		facilityTurnDAO = injector.getInstance(FacilityTurnDAO.class);

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DBConnectionTest implements DatabaseConnection {
+public class DBConnectionTest implements IDatabaseConnection {
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/test/resources/";
 	private static final String DATABASENAME = "BeerGameDBTest.db";
 	public static final Logger LOGGER = Logger.getLogger(DBConnectionTest.class.getName());

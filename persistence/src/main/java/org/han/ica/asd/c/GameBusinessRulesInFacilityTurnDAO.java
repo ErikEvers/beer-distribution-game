@@ -1,7 +1,6 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
 
 import javax.inject.Inject;
@@ -19,10 +18,9 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
 	@Inject
-	private DatabaseConnection databaseConnection;
+	private IDatabaseConnection IDatabaseConnection;
 
 	public GameBusinessRulesInFacilityTurnDAO() {
-		databaseConnection = DBConnection.getInstance();
 	}
 
 	/**
@@ -32,7 +30,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 		Connection conn;
 		try {
-			conn = databaseConnection.connect();
+			conn = IDatabaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
 					conn.setAutoCommit(false);
@@ -67,7 +65,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 
 		try {
-			conn = databaseConnection.connect();
+			conn = IDatabaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
 					pstmt.setString(1, gameId);
@@ -96,7 +94,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		public void deleteTurn (String gameId,int roundId, int facilityIdOrder, int facilityIdDeliver){
 			Connection conn = null;
 			try {
-				conn = databaseConnection.connect();
+				conn = IDatabaseConnection.connect();
 				if (conn != null) {
 					try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
 
@@ -113,7 +111,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 				}
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
-				databaseConnection.rollBackTransaction(conn);
+				IDatabaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}

@@ -4,8 +4,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.*;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.BeerGame;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -36,7 +40,7 @@ class PersistenceTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(DatabaseConnection.class).to(DBConnectionTest.class);
+				bind(IDatabaseConnection.class).to(DBConnectionTest.class);
 			}
 		});
 		persistence = injector.getInstance(Persistence.class);

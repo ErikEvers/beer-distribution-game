@@ -1,6 +1,10 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.*;
+import org.han.ica.asd.c.model.BeerGame;
+import org.han.ica.asd.c.model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.Round;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 
 import javax.inject.Inject;
