@@ -17,19 +17,17 @@ public class LeaderMigrationTest {
 
   private ILeaderMigration leaderMigration;
   private IConnectorForLeaderElection connector;
-  private Injector injector;
 
   @Before
   public void setup() {
     connector = mock(IConnectorForLeaderElection.class);
-    injector = Guice.createInjector(new AbstractModule() {
+    Injector injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
         bind(IConnectorForLeaderElection.class).toInstance(connector);
         bind(IPersistenceLeaderMigration.class).to(PersistenceStub.class);
         bind(IpHandler.class).to(IpHandlerStub.class);
         requestStaticInjection(ElectionHandler.class);
-        requestStaticInjection(LeaderMigration.class);
       }
     });
     leaderMigration = injector.getInstance(LeaderMigration.class);

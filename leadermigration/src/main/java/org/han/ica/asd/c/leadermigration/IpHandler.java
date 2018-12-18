@@ -12,7 +12,7 @@ public class IpHandler {
 	 * Empty constructor.
 	 */
 	public IpHandler() {
-
+		// default
 	}
 
 	/**

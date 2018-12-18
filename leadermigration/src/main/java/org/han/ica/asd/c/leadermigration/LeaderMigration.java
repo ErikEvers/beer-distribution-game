@@ -5,12 +5,9 @@ import org.han.ica.asd.c.model.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 import javax.inject.Inject;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
 
-	@Inject private static Logger logger;
   @Inject IConnectorForLeaderElection communicator;
   @Inject IPersistenceLeaderMigration persistence;
   @Inject ElectionHandler electionHandler;

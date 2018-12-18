@@ -15,7 +15,7 @@ public class ElectionHandler {
   @Inject private static Logger logger;
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
-	@Inject private IpHandler ipHandler;
+  @Inject private IpHandler ipHandler;
 
   /**
    * Setup the algorithm in de electionModel.
