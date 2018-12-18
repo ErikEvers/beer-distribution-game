@@ -1,7 +1,6 @@
-package org.han.ica.asd.c.gui_replay_game;
+package org.han.ica.asd.c.gui_replay_game.replay_game_controller;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -12,6 +11,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 
+import javafx.util.StringConverter;
 import org.han.ica.asd.c.gui_replay_game.replay_data.ReplayData;
 import org.han.ica.asd.c.model.Facility;
 
@@ -55,7 +55,6 @@ public class ReplayGameScreenController {
 
     private int currentRound;
     private int totalRounds;
-    private TextFormatter textFormatter;
     private ReplayData replayData;
 
     @FXML
@@ -95,8 +94,7 @@ public class ReplayGameScreenController {
     void initialize() {
         this.replayData = new ReplayData();
 
-        this.setuptextFormatter();
-        currentRoundTextfield.setTextFormatter(textFormatter);
+        currentRoundTextfield.setTextFormatter(NumericTextFormatter.getTextFormatter());
 
         currentRound = 1;
         totalRounds = replayData.getHighestRound();
@@ -113,6 +111,22 @@ public class ReplayGameScreenController {
         ObservableList<Facility> observableList = FXCollections.observableArrayList(replayData.getAllFacilities());
 
         facilityCombobox.setItems(observableList);
+
+        facilityCombobox.valueProperty().addListener((obs, oldVal, newVal) ->
+                //hier komt een functie die het afhandeld, voor nu een println
+                System.out.println("The ID of Facility: " + newVal.getFacilityType().getFacilityName() + " is : " + newVal.getFacilityId()));
+
+        facilityCombobox.setConverter(new StringConverter<Facility>() {
+            @Override
+            public String toString(Facility object) {
+                return object.getFacilityType().getFacilityName() + " " + object.getFacilityId();
+            }
+
+            @Override
+            public Facility fromString(String string) {
+                return null;
+            }
+        });
     }
 
     private void updateCurrentRound() {
@@ -128,25 +142,6 @@ public class ReplayGameScreenController {
         }
         lineChartData.add(series1);
         replayGraph.setData(lineChartData);
-    }
-
-    private void setuptextFormatter() {
-        textFormatter = new TextFormatter<>(change -> {
-            if (!change.isContentChange()) {
-                return change;
-            }
-
-            sanitizeInput(change);
-
-            return change;
-        });
-    }
-
-    private void sanitizeInput(TextFormatter.Change change) {
-        String text = change.getControlNewText();
-        if (!(text.matches("[0-9]+"))) {
-            change.setText(change.getText().replaceAll("[^\\d.]", ""));
-        }
     }
 }
 
