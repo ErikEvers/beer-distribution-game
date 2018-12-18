@@ -6,6 +6,7 @@ import org.han.ica.asd.c.model.FacilityLinkedTo;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.han.ica.asd.c.model.Round;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +24,7 @@ public class FacilityTurnDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_TURN = "DELETE FROM FacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAO.class.getName());
 
+	@Inject
 	private DatabaseConnection databaseConnection;
 
 	public FacilityTurnDAO(){

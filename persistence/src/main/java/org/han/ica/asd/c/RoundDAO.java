@@ -1,9 +1,9 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
 import org.han.ica.asd.c.model.Round;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,10 +18,11 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	private static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
 
 
+	@Inject
 	private DatabaseConnection databaseConnection;
 
 	public RoundDAO(){
-		databaseConnection = DBConnection.getInstance();
+
 	}
 
 
