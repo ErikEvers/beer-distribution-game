@@ -20,7 +20,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
     private static final String DELETE_SPECIFIC_PROGRAMMEDBUSINESSRULE = "DELETE FROM ProgrammedBusinessRules WHERE ProgrammedAgentName = ? AND ProgrammedBusinessRule = ? AND ProgrammedAST = ?;";
     private static final String DELETE_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT = "DELETE FROM ProgrammedBusinessRules WHERE ProgrammedAgentName = ?";
     private static final String READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT = "SELECT * FROM ProgrammedBusinessRules WHERE ProgrammedAgentName = ?";
-    private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProgrammedBusinessRules.class.getName());
 
     @Inject
     private IDatabaseConnection databaseConnection;

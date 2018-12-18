@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.logging.Logger;
 
 class ProgrammedBusinessRulesDAOTest {
-    private static final Logger LOGGER = Logger.getLogger(FacilityTypeDAOIntegrationTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProgrammedBusinessRules.class.getName());
     private static final ProgrammedAgent PROGRAMMED_AGENT = new ProgrammedAgent("name");
     private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES = new ProgrammedBusinessRules("name", "businessrule1", "ast1");
     private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES2 = new ProgrammedBusinessRules("name", "BusinessRule2", "ast2");
