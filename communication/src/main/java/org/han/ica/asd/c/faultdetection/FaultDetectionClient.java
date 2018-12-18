@@ -56,10 +56,10 @@ public class FaultDetectionClient {
                 outputStream.writeObject(new PingMessage());
                 isConnected = true;
             } catch (SocketException | SocketTimeoutException se) {
-                //logger.log(Level.INFO, se.getMessage(), se);
+                logger.log(Level.INFO, se.getMessage(), se);
                 throw new PeerCantBeReachedException(se);
             } catch (IOException e) {
-                //logger.log(Level.INFO, e.getMessage(), e);
+                logger.log(Level.INFO, e.getMessage(), e);
             }
         }
     }

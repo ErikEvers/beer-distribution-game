@@ -23,6 +23,7 @@ public class GameMessageReceiver {
 
     /**
      * This method handles a TurnMessage
+     *
      * @param turnModelMessage
      */
     private void handleTurnMessage(TurnModelMessage turnModelMessage) {
@@ -35,18 +36,18 @@ public class GameMessageReceiver {
 
     /**
      * This method handles a RoundMessage
+     *
      * @param roundModelMessage
      */
     private void handleRoundMessage(RoundModelMessage roundModelMessage) {
-
-        switch (roundModelMessage.getCommitStage()){
+        switch (roundModelMessage.getCommitStage()) {
             case 0:
                 //stage Commit
                 toBecommittedRound = roundModelMessage;
                 break;
             case 1:
                 //do commit
-                if (toBecommittedRound != null){ //in theory, a bug can still occur where we receive a commit message with a different content.
+                if (toBecommittedRound != null) { //in theory, a bug can still occur where we receive a commit message with a different content.
                     for (IConnectorObserver observer : gameMessageObservers) {
                         if (observer instanceof IRoundModelObserver) {
                             ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
@@ -58,11 +59,14 @@ public class GameMessageReceiver {
                 //rollback
                 toBecommittedRound = null;
                 break;
+            default:
+                break;
         }
     }
 
     /**
      * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
+     *
      * @param gameMessage
      * @return ResponseMessage
      */
@@ -90,6 +94,7 @@ public class GameMessageReceiver {
 
     /**
      * This method handles an Election message
+     *
      * @param electionMessage
      * @return Election
      */

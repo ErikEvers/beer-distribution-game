@@ -47,7 +47,6 @@ public class FaultHandlerLeader {
             nodeInfoList.updateIsConnected(ip, false);
 
             notifyObserversPlayerDied(ip);
-            System.out.println("oh no " + ip + " died");
 
             return ip;
         }
@@ -96,8 +95,6 @@ public class FaultHandlerLeader {
         iAmDisconnected = true;
 
         notifyObserversIDied();
-        //TODO remove println
-        System.out.println("This machine can't reach anyone, so is disconnected");
     }
 
     /**
@@ -106,7 +103,7 @@ public class FaultHandlerLeader {
      * @author Tarik
      */
     private void notifyObserversIDied() {
-        if (observers.size() > 0) {
+        if (!observers.isEmpty()) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof IPlayerDisconnectedObserver) {
                     ((IPlayerDisconnectedObserver) observer).iAmDisconnected();
@@ -122,7 +119,7 @@ public class FaultHandlerLeader {
      * @author Tarik
      */
     private void notifyObserversPlayerDied(String ip) {
-        if (observers.size() > 0) {
+        if (!observers.isEmpty()) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof IPlayerDisconnectedObserver) {
                     ((IPlayerDisconnectedObserver) observer).playerIsDisconnected(ip);

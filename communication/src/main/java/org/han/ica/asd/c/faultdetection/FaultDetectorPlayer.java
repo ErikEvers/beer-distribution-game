@@ -48,7 +48,6 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     public void run() {
-        System.out.println("RUN BEFORE IF" + lastReceived);
         if (leaderIsPinging && leaderIsNotPinging()) {
 
             leaderIsPinging = false;
@@ -91,8 +90,6 @@ public class FaultDetectorPlayer extends TimerTask {
         lastReceived = System.currentTimeMillis();
 
         leaderIsPinging = true;
-
-        System.out.println(lastReceived + " ping");
     }
 
     public void canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {

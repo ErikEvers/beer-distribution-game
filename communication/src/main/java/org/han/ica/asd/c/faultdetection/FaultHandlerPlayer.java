@@ -43,11 +43,8 @@ public class FaultHandlerPlayer {
 	public String whoIsDead() {
 
 		if (amountOfFailingIps >= amountOfActiveIps / 2) {
-			System.out.println("imDead");
-
 			return "imDead";
 		} else if (amountOfConnectionsWithLeader <= amountOfActiveIps / 2) {
-			System.out.println("leaderIsDead");
 			return "leaderIsDead";
 		}
 		else{
