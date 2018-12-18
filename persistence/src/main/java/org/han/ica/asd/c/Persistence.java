@@ -1,11 +1,11 @@
 package org.han.ica.asd.c;
 
 
-import org.han.ica.asd.c.dao_model.BeerGame;
-import org.han.ica.asd.c.dao_model.FacilityLinkedTo;
-import org.han.ica.asd.c.dao_model.FacilityTurn;
-import org.han.ica.asd.c.dao_model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.BeerGame;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.dao_model.Round;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 
 import javax.inject.Inject;

@@ -1,8 +1,8 @@
-package org.han.ica.asd.c.dao_model;
+package org.han.ica.asd.c.model.dao_model;
 
-import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ public class Configuration {
     private int maximumOrderRetail;
     private boolean continuePlayingWhenBankrupt;
     private boolean insightFacilities;
-    private List<org.han.ica.asd.c.model.Facility> facilities;
-    private List<org.han.ica.asd.c.model.FacilityLinkedTo> facilitiesLinkedTo;
-    private List<org.han.ica.asd.c.model.FacilityType> facilityTypes;
+    private List<org.han.ica.asd.c.model.domain_objects.Facility> facilities;
+    private List<org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo> facilitiesLinkedTo;
+    private List<org.han.ica.asd.c.model.domain_objects.FacilityType> facilityTypes;
 
     public Configuration(String gameId, int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities) { //NOSONAR
         this.gameId = gameId;
@@ -118,11 +118,11 @@ public class Configuration {
         this.insightFacilities = insightFacilities;
     }
 
-    public List<org.han.ica.asd.c.model.Facility> getFacilities() {
+    public List<org.han.ica.asd.c.model.domain_objects.Facility> getFacilities() {
         return facilities;
     }
 
-    public void setFacilities(List<org.han.ica.asd.c.model.Facility> facilities) {
+    public void setFacilities(List<org.han.ica.asd.c.model.domain_objects.Facility> facilities) {
         this.facilities = facilities;
     }
 
@@ -130,11 +130,11 @@ public class Configuration {
         facilities.add(facility);
     }
 
-    public List<org.han.ica.asd.c.model.FacilityLinkedTo> getFacilitiesLinkedTo() {
+    public List<org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo> getFacilitiesLinkedTo() {
         return facilitiesLinkedTo;
     }
 
-    public void setFacilitiesLinkedTo(List<org.han.ica.asd.c.model.FacilityLinkedTo> facilitiesLinkedTo) {
+    public void setFacilitiesLinkedTo(List<org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
@@ -142,11 +142,11 @@ public class Configuration {
         facilitiesLinkedTo.add(facilityLinkedTo);
     }
 
-    public List<org.han.ica.asd.c.model.FacilityType> getFacilityTypes() {
+    public List<org.han.ica.asd.c.model.domain_objects.FacilityType> getFacilityTypes() {
         return facilityTypes;
     }
 
-    public void setFacilityTypes(List<org.han.ica.asd.c.model.FacilityType> facilityTypes) {
+    public void setFacilityTypes(List<org.han.ica.asd.c.model.domain_objects.FacilityType> facilityTypes) {
         this.facilityTypes = facilityTypes;
     }
 

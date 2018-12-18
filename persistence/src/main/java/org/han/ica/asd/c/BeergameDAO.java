@@ -3,7 +3,7 @@ package org.han.ica.asd.c;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.dao_model.BeerGame;
+import org.han.ica.asd.c.model.dao_model.BeerGame;
 
 
 import javax.inject.Inject;

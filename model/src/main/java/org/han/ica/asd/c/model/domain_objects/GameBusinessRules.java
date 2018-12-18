@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.model.domain_objects;
 
 public class GameBusinessRules {
     private String gameBusinessRule;

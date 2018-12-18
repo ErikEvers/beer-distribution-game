@@ -1,28 +1,18 @@
-package org.han.ica.asd.c.dao_model;
+package org.han.ica.asd.c.model.domain_objects;
 
 public class Player {
-    private String gameId;
     private String playerId;
     private String ipAddress;
-    private int facilityId;
+    private Facility facility;
     private String name;
     private boolean isConnected;
 
-    public Player(String gameId, String playerId, String ipAddress, int facilityId, String name, boolean isConnected) {
-        this.gameId = gameId;
+    public Player(String playerId, String ipAddress, Facility facility, String name, boolean isConnected) {
         this.playerId = playerId;
         this.ipAddress = ipAddress;
-        this.facilityId = facilityId;
+        this.facility = facility;
         this.name = name;
         this.isConnected = isConnected;
-    }
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
     }
 
     public String getPlayerId() {
@@ -41,12 +31,12 @@ public class Player {
         this.ipAddress = ipAddress;
     }
 
-    public int getFacilityId() {
-        return facilityId;
+    public Facility getFacility() {
+        return facility;
     }
 
-    public void setFacilityId(int facilityId) {
-        this.facilityId = facilityId;
+    public void setFacility(Facility facility) {
+        this.facility = facility;
     }
 
     public String getName() {

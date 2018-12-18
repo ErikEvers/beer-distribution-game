@@ -1,7 +1,7 @@
-package org.han.ica.asd.c.dao_model;
+package org.han.ica.asd.c.model.dao_model;
 
-import org.han.ica.asd.c.model.Configuration;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ public class BeerGame {
     private String gameName;
     private String gameDate;
     private String gameEndDate;
-    private List<org.han.ica.asd.c.model.Round> rounds;
-    private org.han.ica.asd.c.model.Configuration configuration;
+    private List<org.han.ica.asd.c.model.domain_objects.Round> rounds;
+    private org.han.ica.asd.c.model.domain_objects.Configuration configuration;
 
     public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate) {
         this.gameId = gameId;
@@ -54,11 +54,11 @@ public class BeerGame {
         this.gameEndDate = gameEndDate;
     }
 
-    public List<org.han.ica.asd.c.model.Round> getRounds() {
+    public List<org.han.ica.asd.c.model.domain_objects.Round> getRounds() {
         return rounds;
     }
 
-    public void setRounds(List<org.han.ica.asd.c.model.Round> rounds) {
+    public void setRounds(List<org.han.ica.asd.c.model.domain_objects.Round> rounds) {
         this.rounds = rounds;
     }
 
@@ -66,7 +66,7 @@ public class BeerGame {
         rounds.add(round);
     }
 
-    public org.han.ica.asd.c.model.Configuration getConfiguration() {
+    public org.han.ica.asd.c.model.domain_objects.Configuration getConfiguration() {
         return configuration;
     }
 

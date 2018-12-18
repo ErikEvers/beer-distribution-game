@@ -2,7 +2,7 @@ package org.han.ica.asd.c;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.Round;
 
 
 import javax.inject.Inject;

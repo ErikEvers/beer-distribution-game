@@ -1,12 +1,14 @@
-package org.han.ica.asd.c.model;
+package org.han.ica.asd.c.model.dao_model;
 
 public class FacilityLinkedTo {
     private String gameId;
-    private Facility facilityIdDeliver;
+    private int facilityIdOrder;
+    private int facilityIdDeliver;
     private boolean active;
 
-    public FacilityLinkedTo(String gameId, Facility facilityIdDeliver, boolean active) {
+    public FacilityLinkedTo(String gameId, int facilityIdOrder, int facilityIdDeliver, boolean active) {
         this.gameId = gameId;
+        this.facilityIdOrder = facilityIdOrder;
         this.facilityIdDeliver = facilityIdDeliver;
         this.active = active;
     }
@@ -19,12 +21,21 @@ public class FacilityLinkedTo {
         this.gameId = gameId;
     }
 
-    public Facility getFacilityIdDeliver() {
+    public int getFacilityIdOrder() {
+        return facilityIdOrder;
+    }
+
+    public void setFacilityIdOrder(int facilityIdOrder) {
+        this.facilityIdOrder = facilityIdOrder;
+    }
+
+    public int getFacilityIdDeliver() {
         return facilityIdDeliver;
     }
 
-    public void setFacilityIdDeliver(Facility facilityIdDeliver) {
+    public void setFacilityIdDeliver(int facilityIdDeliver) {
         this.facilityIdDeliver = facilityIdDeliver;
+
     }
 
     public boolean isActive() {

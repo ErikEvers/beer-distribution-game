@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.dao_model;
+package org.han.ica.asd.c.model.dao_model;
 
 public class GameBusinessRulesInFacilityTurn {
     private int roundId;

@@ -2,7 +2,7 @@ package org.han.ica.asd.c;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.dao_model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
 
 
 import javax.inject.Inject;

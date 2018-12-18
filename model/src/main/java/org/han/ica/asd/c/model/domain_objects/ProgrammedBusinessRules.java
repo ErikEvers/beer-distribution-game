@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.dao_model;
+package org.han.ica.asd.c.model.domain_objects;
 
 public class ProgrammedBusinessRules {
     private String programmedAgentName;
