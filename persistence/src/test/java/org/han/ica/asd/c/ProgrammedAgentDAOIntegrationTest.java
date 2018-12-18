@@ -5,7 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.FacilityType;
 import org.han.ica.asd.c.model.ProgrammedAgent;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
@@ -50,9 +49,24 @@ class ProgrammedAgentDAOIntegrationTest {
 
     @Test
     void updateProgrammedAgent() {
+        Assert.assertEquals(0, programmedAgentDAO.readAllProgrammedAgents().size());
+        programmedAgentDAO.createProgrammedAgent(PROGRAMMED_AGENT);
+        Assert.assertEquals(1, programmedAgentDAO.readAllProgrammedAgents().size());
+        programmedAgentDAO.updateProgrammedAgent(PROGRAMMED_AGENT, PROGRAMMED_AGENT_UPDATE);
+        Assert.assertEquals(1, programmedAgentDAO.readAllProgrammedAgents().size());
+
+        ProgrammedAgent programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
+
+        Assert.assertEquals(PROGRAMMED_AGENT_UPDATE.getProgrammedAgentName(), programmedAgentDb.getProgrammedAgentName());
     }
 
     @Test
     void deleteProgrammedAgent() {
+        Assert.assertEquals(0, programmedAgentDAO.readAllProgrammedAgents().size());
+        programmedAgentDAO.createProgrammedAgent(PROGRAMMED_AGENT);
+        programmedAgentDAO.createProgrammedAgent(PROGRAMMED_AGENT2);
+        Assert.assertEquals(2, programmedAgentDAO.readAllProgrammedAgents().size());
+        programmedAgentDAO.deleteProgrammedAgent(PROGRAMMED_AGENT2);
+        Assert.assertEquals(1, programmedAgentDAO.readAllProgrammedAgents().size());
     }
 }
