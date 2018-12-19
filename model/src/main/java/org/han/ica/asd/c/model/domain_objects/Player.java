@@ -15,6 +15,10 @@ public class Player {
         this.isConnected = isConnected;
     }
 
+    public String concatIpId() {
+        return playerId.concat(ipAddress);
+    }
+
     public String getPlayerId() {
         return playerId;
     }
