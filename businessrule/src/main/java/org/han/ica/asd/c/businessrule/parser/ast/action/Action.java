@@ -60,11 +60,10 @@ public class Action extends ASTNode {
         if(person != null){
             list.add(person);
         }
-
+        
         if(comparisonStatement != null){
             list.add(comparisonStatement);
         }
-        
         return list;
     }
 
