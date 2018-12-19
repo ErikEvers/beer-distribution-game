@@ -76,7 +76,7 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
      */
     public List<ProgrammedAgent> readAllProgrammedAgents () {
         Connection conn;
-        ArrayList<ProgrammedAgent> programmedAgents = new ArrayList<>();
+        List<ProgrammedAgent> programmedAgents = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
