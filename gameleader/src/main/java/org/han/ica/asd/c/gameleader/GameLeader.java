@@ -117,7 +117,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         currentRoundData = roundProvider.get();
         turnsReceivedInCurrentRound = 0;
     }
-    
+
     /**
      * Checks if the incoming playerId is the same as the playerId of the game leader.
      * @param p supplied player object
