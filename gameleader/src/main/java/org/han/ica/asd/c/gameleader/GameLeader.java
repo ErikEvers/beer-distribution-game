@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
+import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -13,13 +14,11 @@ import org.han.ica.asd.c.observers.ITurnModelObserver;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver {
-    @Inject
-    private IConnectorForLeader connectorForLeader;
-    @Inject
-    private ILeaderGameLogic gameLogic;
-    @Inject
-    private TurnHandler turnHandler;
+public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver {
+    @Inject private IConnectorForLeader connectorForLeader;
+    @Inject private ILeaderGameLogic gameLogic;
+    @Inject private IPersistence persistence;
+    @Inject private TurnHandler turnHandler;
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
@@ -112,6 +111,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     private void allTurnDataReceived() {
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData);
+        persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
         connectorForLeader.sendRoundDataToAllPlayers(currentRoundData);
         startNextRound();
