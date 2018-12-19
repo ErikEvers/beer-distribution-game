@@ -82,9 +82,11 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      * This method is called when a player reconnects, which this class is notified of by the IPlayerReconnected interface (which is going to be implemented in a next sprint)
      *
      * @param playerId the Id of the player that reconnected.
+     * @return game object which the connector sends to the reconnecting player to ensure he has the correct gamestate
      */
-    public void notifyPlayerReconnected(String playerId) {
+    public BeerGame notifyPlayerReconnected(String playerId) {
         gameLogic.removeAgentByPlayerId(playerId);
+        return this.game;
     }
 
     /**
