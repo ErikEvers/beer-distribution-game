@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 
 class GameBusinessRulesDAOIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesDAOIntegrationTest.class.getName());
-    private static final GameBusinessRulesDB FACILITY_TYPE = new GameBusinessRulesDB(1,"BeerGameZutphen","AgentName","BusinessRule","AST");
-    private static final GameBusinessRulesDB FACILITY_TYPE2 = new GameBusinessRulesDB(1,"BeerGameZutphen","AgentName","BusinessRule2","AST2");
+    private static final GameBusinessRulesDB GAME_BUSINESS_RULES_DB = new GameBusinessRulesDB(1,"BeerGameZutphen","AgentName","BusinessRule","AST");
+    private static final GameBusinessRulesDB GAME_BUSINESS_RULES_DB2 = new GameBusinessRulesDB(1,"BeerGameZutphen","AgentName","BusinessRule2","AST2");
 
     private GameBusinessRulesDAO gameBusinessRulesDAO;
 
@@ -41,6 +41,15 @@ class GameBusinessRulesDAOIntegrationTest {
     @Test
     void createGameBusinessRule() {
         Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
+        Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
+        GameBusinessRulesDB gameBusinessRulesDB = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen","AgentName").get(0);
+
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB.getGameId(),gameBusinessRulesDB.getGameId());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB.getFacilityId(),gameBusinessRulesDB.getFacilityId());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB.getGameAgentName(),gameBusinessRulesDB.getGameAgentName());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB.getGameBusinessRule(),gameBusinessRulesDB.getGameBusinessRule());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB.getGameAST(),gameBusinessRulesDB.getGameAST());
     }
 
     @Test
