@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gui_replay_game.replay_game_controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -123,46 +124,67 @@ public class ReplayGameScreenController {
         if (facility != null) clearCheckBoxes();
     }
 
-    private void clearCheckBoxes(){
+    private void clearCheckBoxes() {
         factoryCheckBox.selectedProperty().setValue(false);
         retailCheckBox.selectedProperty().setValue(false);
         warehouseCheckBox.selectedProperty().setValue(false);
         wholesaleCheckBox.selectedProperty().setValue(false);
     }
 
-    private void clearComboBox(boolean newValue){
+    private void clearComboBox(boolean newValue) {
         if (newValue == true) facilityComboBox.getSelectionModel().clearSelection();
     }
 
-    public void initializeCheckBoxes(){
-        factoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            factoryCheckBoxUpdated(newValue);
-        });
-        retailCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            retailCheckBoxUpdated(newValue);
-        });
-        warehouseCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            warehouseCheckBoxUpdated(newValue);
-        });
-        wholesaleCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            wholesaleCheckBoxUpdated(newValue);
-        });
+    public void initializeCheckBoxes() {
+        factoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
+                factoryCheckBoxUpdated(newValue));
+        retailCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
+                retailCheckBoxUpdated(newValue));
+        warehouseCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
+                warehouseCheckBoxUpdated(newValue));
+        wholesaleCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
+                wholesaleCheckBoxUpdated(newValue));
     }
 
     private void wholesaleCheckBoxUpdated(Boolean newValue) {
         clearComboBox(newValue);
+        if (!newValue) {
+            replayData.removeDisplayedFacility(2);
+        } else {
+            replayData.addDisplayedFacility(2);
+        }
+        drawGraph();
     }
 
     private void warehouseCheckBoxUpdated(Boolean newValue) {
-        clearComboBox(newValue);
+            clearComboBox(newValue);
+            if (!newValue) {
+                replayData.removeDisplayedFacility(4);
+            } else {
+                replayData.addDisplayedFacility(4);
+            }
+
+        drawGraph();
     }
 
     private void retailCheckBoxUpdated(Boolean newValue) {
         clearComboBox(newValue);
+        if (!newValue) {
+            replayData.removeDisplayedFacility(3);
+        } else {
+            replayData.addDisplayedFacility(3);
+        }
+        drawGraph();
     }
 
     private void factoryCheckBoxUpdated(Boolean newValue) {
         clearComboBox(newValue);
+        if (!newValue) {
+            replayData.removeDisplayedFacility(1);
+        } else {
+            replayData.addDisplayedFacility(1);
+        }
+        drawGraph();
     }
 
     private void updateCurrentRound() {
@@ -170,14 +192,7 @@ public class ReplayGameScreenController {
     }
 
     private void drawGraph() {
-        ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
-        LineChart.Series<Double, Double> series1 = new LineChart.Series<>();
-        series1.setName("TestData");
-        for (int i = 0; i <= replayData.getCurrentRound(); i++) {
-            series1.getData().add(new XYChart.Data<>(new Double(i), new Double(i)));
-        }
-        lineChartData.add(series1);
-        replayGraph.setData(lineChartData);
+        replayGraph.setData(replayData.getChartData());
     }
 }
 
