@@ -104,7 +104,7 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
      */
     public List<GameAgent> readGameAgentsForABeerGame(String gameId) {
         Connection conn = null;
-        ArrayList<GameAgent> gameAgents = new ArrayList<>();
+        List<GameAgent> gameAgents = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAGENTS_FOR_A_BEERGAME)) {

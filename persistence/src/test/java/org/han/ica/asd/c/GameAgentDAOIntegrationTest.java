@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.logging.Logger;
 
-class GameAgentDAOTest {
-    private static final Logger LOGGER = Logger.getLogger(GameAgentDAOTest.class.getName());
+class GameAgentDAOIntegrationTest {
+    private static final Logger LOGGER = Logger.getLogger(GameAgentDAOIntegrationTest.class.getName());
     private static final GameAgent GAMEAGENT = new GameAgent("gameId", "name1", 1);
     private static final GameAgent GAMEAGENT2 = new GameAgent("gameId", "name2", 2);
     private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("gameId", "name2_Updated", 2);
