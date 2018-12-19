@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
-import org.han.ica.asd.c.faultdetection.exceptions.PeerCantBeReachedException;
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
@@ -80,7 +80,7 @@ public class FaultDetectorPlayer extends TimerTask {
         for (String ip : ips) {
             try {
                 faultDetectionClient.sendCanYouReachLeaderMessage(new CanYouReachLeaderMessage(), ip);
-            } catch (PeerCantBeReachedException se) {
+            } catch (NodeCantBeReachedException se) {
                 faultHandlerPlayer.incrementAmountOfFailingIps();
             }
         }
