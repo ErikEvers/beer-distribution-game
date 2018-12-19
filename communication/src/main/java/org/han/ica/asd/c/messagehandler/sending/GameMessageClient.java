@@ -1,9 +1,8 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import domainobjects.RoundModel;
-import domainobjects.TurnModel;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import java.io.IOException;
@@ -22,7 +21,7 @@ public class GameMessageClient {
      * @param turn
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
-    public ResponseMessage sendTurnModel(String ip, TurnModel turn) {
+    public ResponseMessage sendTurnModel(String ip, Round turn) {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
 
         int nFailedAttempts = 0;
@@ -58,7 +57,7 @@ public class GameMessageClient {
      * @param ips
      * @param roundModel
      */
-    public void sendRoundToAllPlayers(String[] ips, RoundModel roundModel) {
+    public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
         new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
     }
 
