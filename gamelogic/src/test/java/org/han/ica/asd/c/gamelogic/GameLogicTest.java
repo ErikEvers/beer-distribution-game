@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.gamelogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IConnectedForPlayer;
-import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
