@@ -1,10 +1,12 @@
 package org.han.ica.asd.c;
 
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.BeerGame;
 
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.BeerGame;
+
+
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-
 public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
@@ -25,11 +26,12 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 
-	private DatabaseConnection databaseConnection;
+	@Inject
+	private IDatabaseConnection databaseConnection;
 
 
 	public BeergameDAO(){
-		databaseConnection = DBConnection.getInstance();
+		//Empty Constructor for GUICE
 	}
 
 	/**

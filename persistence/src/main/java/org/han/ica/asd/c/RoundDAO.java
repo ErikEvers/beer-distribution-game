@@ -1,9 +1,11 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.Round;
 
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.Round;
+
+
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,11 +19,11 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	private static final String READ_ROUND = "SELECT * FROM ROUND WHERE GameId = ? AND RoundId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
 
-
-	private DatabaseConnection databaseConnection;
+	@Inject
+	private IDatabaseConnection databaseConnection;
 
 	public RoundDAO(){
-		databaseConnection = DBConnection.getInstance();
+		//Empty Constructor for GUICE
 	}
 
 

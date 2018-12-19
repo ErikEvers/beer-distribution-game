@@ -4,7 +4,7 @@ import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 public class BusinessRuleHandler implements IBusinessRules{
     /**
@@ -24,9 +24,9 @@ public class BusinessRuleHandler implements IBusinessRules{
         // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)
 
         // TO-DO: 12/7/2018 Transform comparisons to true and false
+        businessRuleAST.evaluateBusinessRule();
 
         return (Action) businessRuleAST.getChildren()
                 .get(1);
     }
-
 }

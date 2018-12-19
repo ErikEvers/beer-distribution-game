@@ -1,9 +1,11 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.dbconnection.DBConnection;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.Configuration;
 
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.Configuration;
+
+
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,10 +24,11 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(Configuration.class.getName());
 
-	private DatabaseConnection databaseConnection;
+	@Inject
+	private IDatabaseConnection databaseConnection;
 
 	public ConfigurationDAO(){
-		databaseConnection = DBConnection.getInstance();
+		//Empty Constructor for GUICE
 	}
 	/**
 	 * A method which creates a configuration in the SQLite Database
@@ -162,7 +165,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * @param gameId An Id which can be traced to a specific game
 	 */
 	public void deleteConfigurations(String gameId){
-		Connection conn = null;
+		Connection conn;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
@@ -171,8 +174,9 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 					pstmt.setString(1, gameId);
 					pstmt.execute();
 				}
-			}
 			conn.commit();
+			}
+
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
