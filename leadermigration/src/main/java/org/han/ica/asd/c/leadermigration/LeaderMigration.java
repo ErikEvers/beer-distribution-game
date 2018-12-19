@@ -9,6 +9,9 @@ import org.han.ica.asd.c.observers.IConnectorObserver;
 import javax.inject.Inject;
 import java.util.List;
 
+/**
+ * Observer implementation and general election controlling class.
+ */
 public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
 
   @Inject IConnectorForLeaderElection communicator;

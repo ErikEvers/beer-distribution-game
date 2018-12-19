@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Logic behind the leader election process.
+ */
 public class ElectionHandler {
 
 	private List<Player> receivedPlayers;
@@ -37,7 +40,9 @@ public class ElectionHandler {
   }
 
   /**
-   * Send every player an election message to be elected as the leader of the network
+   * Send every player an election message to be elected as the leader of the network.
+	 * For every a new thread is started to send and receive the actual message.
+	 * A lock object is created and passed to each thread to maintain thread safety.
    * @param players -> All the connected players (without the current player)
    */
   public List<Player> sendElectionMessage(Player[] players) {
