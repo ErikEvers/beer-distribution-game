@@ -24,9 +24,9 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="Back to menu" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Button mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="Look for rooms" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Label text="Join Game" wrapText="true" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+            <Button mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%back_to_menu" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%look_for_rooms" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Label text="%join_game" wrapText="true" GridPane.halignment="LEFT" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="20.0" top="20.0" />
                </GridPane.margin>
@@ -34,7 +34,7 @@
                   <Font name="System Bold" size="30.0" />
                </font>
             </Label>
-            <Label text="Enter your IP-address below:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Label text="%enter_ip" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="60.0" />
                </GridPane.margin>
