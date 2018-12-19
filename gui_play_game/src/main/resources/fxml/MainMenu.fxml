@@ -32,10 +32,7 @@
             <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCreateGameButtonClick" prefHeight="60.0" prefWidth="135.0" text="%create_game" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor>
-               <font>
-                  <Font name="Arial" size="15.0" />
-               </font></Button>
+               </cursor></Button>
             <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleJoinGameButtonClick" prefHeight="60.0" prefWidth="135.0" text="%join_game" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <cursor>
                   <Cursor fx:constant="HAND" />
