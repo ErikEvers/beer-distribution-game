@@ -1,15 +1,16 @@
 package org.han.ica.asd.c;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
-import org.han.ica.asd.c.dbconnection.DatabaseConnection;
-import org.han.ica.asd.c.model.Configuration;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.dao_model.Configuration;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -24,7 +25,15 @@ class ConfigurationDAOIntegrationTest {
 	@BeforeEach
 	public void setUp() {
 		DBConnectionTest.getInstance().createNewDatabase();
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(IDatabaseConnection.class).to(DBConnectionTest.class);
+			}
+		});
+		configurationDAO = injector.getInstance(ConfigurationDAO.class);
 	}
+
 
 	@AfterEach
 	public void tearDown() {
@@ -34,10 +43,6 @@ class ConfigurationDAOIntegrationTest {
 
 	@Test
 	void createConfigurationTest() {
-		configurationDAO = new ConfigurationDAO();
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(configurationDAO, connection);
-
 		configurationDAO.createConfiguration(CONFIGURATION);
 		Configuration configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
 
@@ -56,10 +61,6 @@ class ConfigurationDAOIntegrationTest {
 
 	@Test
 	void readConfigurationsTest() {
-		configurationDAO = new ConfigurationDAO();
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(configurationDAO, connection);
-
 		configurationDAO.createConfiguration(CONFIGURATION);
 		configurationDAO.createConfiguration(CONFIGURATION2);
 		Assert.assertEquals(2,configurationDAO.readConfigurations().size());
@@ -67,10 +68,6 @@ class ConfigurationDAOIntegrationTest {
 
 	@Test
 	void updateConfigurationsTest() {
-		configurationDAO = new ConfigurationDAO();
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(configurationDAO, connection);
-
 		configurationDAO.createConfiguration(CONFIGURATION);
 		configurationDAO.updateConfigurations(CONFIGURATION3);
 
@@ -95,22 +92,8 @@ class ConfigurationDAOIntegrationTest {
 
 	@Test
 	void deleteConfigurationsTest() {
-		configurationDAO = new ConfigurationDAO();
-		DatabaseConnection connection = DBConnectionTest.getInstance();
-		setDatabaseConnection(configurationDAO, connection);
-
 		configurationDAO.createConfiguration(CONFIGURATION);
 		configurationDAO.deleteConfigurations("BeerGameZutphen13_12_2018");
 		Assert.assertEquals(0,configurationDAO.readConfigurations().size());
-	}
-
-	private void setDatabaseConnection(ConfigurationDAO configurationDAO, DatabaseConnection connection) {
-		try {
-			Field connField = configurationDAO.getClass().getDeclaredField("databaseConnection");
-			connField.setAccessible(true);
-			connField.set(configurationDAO, connection);
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
-		}
 	}
 }

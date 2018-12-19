@@ -2,6 +2,8 @@ package org.han.ica.asd.c.gamelogic.public_interfaces;
 
 
 import org.han.ica.asd.c.model.*;
+import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.*;
 
 import java.util.Map;
 

@@ -1,15 +1,16 @@
 package org.han.ica.asd.c.gamelogic.participants.domain_models;
 
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.GameAgent;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 
 /**
  * Wrapper for the agent domain class. This wrapper implements the IParticipant interface.
  */
 public class AgentParticipant extends GameAgent implements IParticipant {
-    public AgentParticipant(String gameId, String gameAgentName, int facilityId) {
-        super(gameId, gameAgentName, facilityId);
+    public AgentParticipant(String gameAgentName, Facility facilityId) {
+        super(gameAgentName, facilityId.getFacilityId());
     }
 
     /**
