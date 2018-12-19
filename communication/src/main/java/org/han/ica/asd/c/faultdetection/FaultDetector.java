@@ -56,6 +56,10 @@ public class FaultDetector {
             faultResponder.faultMessageReceived(faultMessage, senderIp);
         }
     }
+    //Wesley-----
+    public void makeConnection(String ip){
+        faultDetectorPlayer.makeConnection(ip);
+    }
 
     public void faultMessageResponseReceived(FaultMessageResponse faultMessageResponse) {
         if (faultDetectorLeader != null) {

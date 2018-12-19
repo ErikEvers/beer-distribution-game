@@ -55,10 +55,10 @@ public class FaultDetectionClient {
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.writeObject(new PingMessage());
                 isConnected = true;
+                System.out.println(1);
             } catch (SocketException | SocketTimeoutException se) {
                 LOGGER.log(Level.INFO, se.getMessage(), se);
                 throw new NodeCantBeReachedException(se);
-
             } catch (IOException e) {
                 LOGGER.log(Level.INFO, e.getMessage(), e);
             }
