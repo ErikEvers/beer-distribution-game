@@ -74,7 +74,7 @@ public class Evaluator {
 
         if (current instanceof Comparison
                 && current.getChildren().get(left) != null
-                && current.getChildren().get(2) != null) {
+                && current.getChildren().get(right) != null) {
             if ("round".equals(((Value) current.getChildren().get(left).getChildren().get(left)).getValue())) {
                 checkRoundIsComparedToInt(current, inputBusinessRule, right);
             } else if ("round".equals(((Value) current.getChildren().get(right).getChildren().get(left)).getValue())) {
@@ -105,13 +105,25 @@ public class Evaluator {
     }
 
     /**
-     * Returns the value of the left or right side of a Comparison
+     * Recursive method that searches for all values in a side of a Comparison and puts them in a list.
      *
-     * @param current Comparison node it needs to get value from
-     * @param side Side of which it needs to retrieve the value
-     * @return Returns value as a string
+     * @param current Current node that is checked
+     * @param nodes List of nodes that contains all Values at the end
+     * @param side Side of the Comparison on which to get Values from
      */
-    private String getValueFromComparisonOnSide(ASTNode current, int side){
-        return ((Value) current.getChildren().get(side).getChildren().get(0)).getValue();
+    private void getAllValues(ASTNode current, List<String> nodes, int side){
+        int left = 0;
+        int right = 2;
+
+        if(current instanceof Value){
+            nodes.add(((Value) current).getValue());
+        }
+
+        if(!current.getChildren().isEmpty()){
+            getAllValues(current.getChildren().get(side),nodes,left);
+            if(current.getChildren().size() > 1){
+                getAllValues(current.getChildren().get(side),nodes,right);
+            }
+        }
     }
 }
