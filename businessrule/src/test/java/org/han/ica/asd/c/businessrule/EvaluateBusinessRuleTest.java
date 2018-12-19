@@ -273,4 +273,96 @@ class EvaluateBusinessRuleTest {
 
         assertEquals(businessRuleAfter, businessRuleBefore);
     }
+
+    @Test
+    void testResolvingGreaterEqualsComparisonGreater() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("51")))
+                        .addChild(new ComparisonOperator("greater equal"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("50")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingGreaterEqualsComparisonEqual() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("51")))
+                        .addChild(new ComparisonOperator("greater equal"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("50")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingLessEqualsComparisonLess() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("19")))
+                        .addChild(new ComparisonOperator("less equal"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingLessEqualsComparisonEqual() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
+                        .addChild(new ComparisonOperator("less equal"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
 }
