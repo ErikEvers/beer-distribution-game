@@ -315,23 +315,33 @@ public class GameLogicTest {
     @Test
     public void testIfOutGoingGoodsGetsCalculatedAndSubtractedFromRemainingBudget() {
         int outGoingGoodsValue = 3;
+        int inGoingGoodsValue = 3;
         int orderAmount = 12;
+        int firstRemainingBudget = 500;
 
-        FacilityType facilityType = new FacilityType("manufacturer", "", outGoingGoodsValue, 5,5, 25, 500, 50);
-        FacilityType facilityType1 = new FacilityType("regionalwarehouse", "", 4, outGoingGoodsValue,5, 25, 500, 50);
+        FacilityType facilityType = new FacilityType("manufacturer", "", inGoingGoodsValue, outGoingGoodsValue,5, 25, firstRemainingBudget, 50);
+        FacilityType facilityType1 = new FacilityType("regionalwarehouse", "", inGoingGoodsValue, outGoingGoodsValue,5, 25, firstRemainingBudget, 50);
 
         manufacturer = new Facility("0", 0, facilityType, "0", "0");
         regionalWarehouse = new Facility("0", 0, facilityType1, "0", "0");
 
-        FacilityLinkedTo facilityLinkedTo = new FacilityLinkedTo("0", manufacturer, manufacturer, true);
         FacilityLinkedTo facilityLinkedTo1 = new FacilityLinkedTo("0", regionalWarehouse, manufacturer, true);
+
+        gameLogic.addfacilities(facilityLinkedTo1);
 
         Round round = new RoundFake("0", 0);
 
         round.addTurnOrder(regionalWarehouse, manufacturer, orderAmount);
+        round.addFacilityRemainingStock(firstRemainingBudget, manufacturer);
+        round.addFacilityRemainingStock(firstRemainingBudget, regionalWarehouse);
 
         round = gameLogic.calculateOrderPlacement(round);
 
-        Assert.assertEquals(round.getRemainingBudget(regionalWarehouse), (orderAmount * outGoingGoodsValue));
+        //12 * 3 = 36. 500 - 35 = 464
+        int expectedRemainingBudgetRegionalWarehouse = firstRemainingBudget - (orderAmount * inGoingGoodsValue);
+        int expectedRemainingBudgetManufacturer = firstRemainingBudget + (orderAmount * outGoingGoodsValue);;
+
+        Assert.assertEquals(expectedRemainingBudgetRegionalWarehouse, round.getRemainingBudget (regionalWarehouse));
+        Assert.assertEquals(expectedRemainingBudgetManufacturer, round.getRemainingBudget (manufacturer));
     }
 }
