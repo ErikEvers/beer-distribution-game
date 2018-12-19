@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,5 +79,32 @@ public class Action extends ASTNode {
     @Override
     public int hashCode() {
         return Objects.hash(actionName, operation);
+    }
+
+    /**
+     * Determines if the action type is order.
+     *
+     * @return Returns a boolean which states if the Action type is order.
+     */
+    public boolean isOrderType() {
+        return "order".equals(this.actionName.getAction());
+    }
+
+    /**
+     * Determines if the action type is deliver.
+     *
+     * @return Returns a boolean which states if the Action type is deliver.
+     */
+    public boolean isDeliverType() {
+        return "deliver".equals(this.actionName.getAction());
+    }
+
+    /**
+     * Gets the amount of the Action
+     *
+     * @return Returns the amount
+     */
+    public int getAmount() {
+        return ((Value) operation).getIntegerValue();
     }
 }

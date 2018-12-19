@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
-import org.han.ica.asd.c.businessrule.IBusinessRules;
+import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRules;
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 
 import java.io.IOException;

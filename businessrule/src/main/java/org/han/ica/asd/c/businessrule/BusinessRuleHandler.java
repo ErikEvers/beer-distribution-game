@@ -6,7 +6,12 @@ import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRuleStore;
+import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.pojo.GameAgentAction;
+import org.han.ica.asd.c.model.pojo.GameAgentDeliver;
+import org.han.ica.asd.c.model.pojo.GameAgentEmptyAction;
+import org.han.ica.asd.c.model.pojo.GameAgentOrder;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -32,14 +37,32 @@ public class BusinessRuleHandler implements IBusinessRules {
         return parserPipeline.getBusinessRulesInput();
     }
 
-    public Action evaluateBusinessRule(String businessRule, Round roundData) {
+    public GameAgentAction evaluateBusinessRule(String businessRule, Round roundData) {
         BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
 
         // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)
 
         businessRuleAST.evaluateBusinessRule();
 
-        return (Action) businessRuleAST.getChildren()
-                .get(1);
+        GameAgentAction gameAgentAction = null;
+        if (businessRuleAST.isTriggered()) {
+
+            Action action = businessRuleAST.getAction();
+
+            if (action.isOrderType()) {
+                gameAgentAction = new GameAgentOrder();
+            } else if (action.isDeliverType()) {
+                gameAgentAction = new GameAgentDeliver();
+            }
+
+            if (gameAgentAction != null) {
+                gameAgentAction.setAmount(action.getAmount());
+                return gameAgentAction;
+            }
+
+            return new GameAgentEmptyAction();
+        }
+
+        return new GameAgentEmptyAction();
     }
 }
