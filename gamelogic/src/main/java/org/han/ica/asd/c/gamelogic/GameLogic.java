@@ -24,14 +24,16 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     private int round;
 
     private ArrayList<FacilityLinkedTo> facilitityLinks;
+    private final BeerGame beerGame;
 
-    public GameLogic(String gameId, IConnectedForPlayer communication, IPersistence persistence, ParticipantsPool participantsPool) {
+    public GameLogic(String gameId, IConnectedForPlayer communication, IPersistence persistence, ParticipantsPool participantsPool, BeerGame beerGame) {
         this.gameId = gameId;
         this.communication = communication;
         this.persistence = persistence;
         this.participantsPool = participantsPool;
         this.round = 0;
         facilitityLinks = new ArrayList<>();
+        this.beerGame = beerGame;
     }
 
     public void addfacilities(FacilityLinkedTo facilityLink) {
@@ -100,25 +102,28 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Calculates the round.
-     *
      * @param round has the information needed to calculate the round
      * @return
      */
     @Override
     public Round calculateRound(Round round) {
+        Round previousRound = beerGame.getRounds().get(round.getRoundId() - 1);
+
         for (FacilityLinkedTo f : facilitityLinks) {
             Facility facilityOrder = f.getFacilityOrder();
             Facility facilityDeliver = f.getFacilityDeliver();
 
-            int ordered = round.getTurnOrderByFacility(facilityOrder, facilityDeliver);
+            //get the round of the previous turn.
+            int ordered = previousRound.getTurnOrderByFacility(facilityOrder, facilityDeliver);
 
             ordered = calculateNewFacilityStockDeliver(round, ordered, facilityDeliver, facilityOrder);
 
-            int facilityStockOrder = round.getStockByFacility(facilityOrder);
-            int newFacilityStockOrder = facilityStockOrder + ordered;
+            //calculate and update the new stock of the facility that ordered.
+            int newFacilityStockOrder = round.getStockByFacility(facilityOrder) + ordered;
+            calculateIncomingGoodsCosts(ordered, round, facilityOrder);
+            round.updateStock(facilityOrder, newFacilityStockOrder);
 
             round.addTurnReceived(facilityOrder, facilityDeliver, ordered);
-            round.updateStock(facilityOrder, newFacilityStockOrder);
             round.addTurnDeliver(facilityOrder, facilityDeliver, ordered);
         }
 
@@ -126,24 +131,47 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         return round;
     }
 
+    /**
+     * calculates if a facility can deliver all the ordered goods. If not the amount it can not deliver will be added as a backorder en the amount it can deliver will be returned.
+     * The stock of the facility that delivers will also be updated
+     * @param round
+     * @param ordered
+     * @param facilityDeliver
+     * @param facilityOrder
+     * @return
+     */
     private int calculateNewFacilityStockDeliver(Round round, int ordered, Facility facilityDeliver, Facility facilityOrder) {
         if (!facilityOrder.equals(facilityDeliver)) {
             int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
             int newFacilityStockDeliver = facilityStockDeliver - ordered;
 
+            //if the newFacilityStockDeliver is below 0 it means the facility that needs to deliver beer doesn't have enough beer in stock to deliver al. a.k.a. he gets back orders
             if (newFacilityStockDeliver < 0) {
+                //determin how much beer can be delivered
                 ordered = newFacilityStockDeliver + ordered;
+
+                //backorders is added as a positive value.
                 int backOrders = -newFacilityStockDeliver;
+
+                //stock is 0 if you delivered all your beer
                 newFacilityStockDeliver = 0;
+
                 round.addTurnBackOrder(facilityOrder, facilityDeliver, backOrders);
             }
 
+            calculateOutgoingGoodsEarnings(ordered, round, facilityDeliver);
             round.updateStock(facilityDeliver, newFacilityStockDeliver);
         }
 
         return ordered;
     }
 
+    /**
+     * Calculates the new remaining budget
+     * The remaini,g budget for facilityorder get's calculated on basis of the stock
+     * The remaining budget for the facilityDeliver get's calculated on basis of the backorders it has.
+     * @param round
+     */
     private void calculateNewRemainingBudget(Round round) {
         for (FacilityLinkedTo f : facilitityLinks) {
             Facility facilityOrder = f.getFacilityOrder();
@@ -164,7 +192,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Calculate the stock cost
-     *
      * @param round
      * @param facilityOrder
      * @return
@@ -179,7 +206,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Because of the structure of our maps it's not possible to calculate the stock and the backlog cost for the same facility in the same function.
-     *
      * @param round
      * @param facilityOrder
      * @param facilityDeliver
@@ -198,19 +224,17 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         return remainingBudgetFacilityDeliver;
     }
 
-    public Round calculateOrderPlacement(Round round) {
-        for (FacilityLinkedTo f : facilitityLinks) {
-            int ordered = round.getTurnOrderByFacility(f.getFacilityOrder(), f.getFacilityDeliver());
-            int budgetDeliver = round.getRemainingBudget(f.getFacilityDeliver());
-            int budgetOrder = round.getRemainingBudget(f.getFacilityOrder());
+    private void calculateOutgoingGoodsEarnings(int ordered, Round round, Facility facilityDeliver) {
+        int budgetDeliver = round.getRemainingBudget(facilityDeliver);
+        int orderCostDeliver = ordered * facilityDeliver.getFacilityType().getValueOutgoingGoods();
 
-            int orderCostDeliver = ordered * f.getFacilityDeliver().getFacilityType().getValueOutgoingGoods();
-            int orderCostOrder = ordered * f.getFacilityOrder().getFacilityType().getValueIncomingGoods();
+        round.updateRemainingBudget(budgetDeliver + orderCostDeliver, facilityDeliver);
+    }
 
-            round.updateRemainingBudget(budgetDeliver + orderCostDeliver, f.getFacilityDeliver());
-            round.updateRemainingBudget(budgetOrder - orderCostOrder, f.getFacilityOrder());
-        }
+    private void calculateIncomingGoodsCosts(int ordered, Round round, Facility facilityOrder) {
+        int budgetOrder = round.getRemainingBudget(facilityOrder);
+        int orderCostOrder = ordered * facilityOrder.getFacilityType().getValueIncomingGoods();
 
-        return round;
+        round.updateRemainingBudget(budgetOrder - orderCostOrder, facilityOrder);
     }
 }
