@@ -1,18 +1,18 @@
 package org.han.ica.asd.c.messagehandler.messagetypes;
 
-import domainobjects.TurnModel;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.Serializable;
 
 public class TurnModelMessage extends GameMessage implements Serializable {
 
-    public TurnModel getTurnModel() {
+    public Round getTurnModel() {
         return turnModel;
     }
 
-    private TurnModel turnModel;
+    private Round turnModel;
 
-    public TurnModelMessage(TurnModel roundData) {
+    public TurnModelMessage(Round roundData) {
         super(1);
         this.turnModel = roundData;
     }

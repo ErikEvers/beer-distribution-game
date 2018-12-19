@@ -5,9 +5,19 @@ import org.han.ica.asd.c.gameleader.TurnHandler;
 import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
 import org.han.ica.asd.c.model.*;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.runner.RunWith;
+
+import org.mockito.InjectMocks;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
@@ -38,7 +48,7 @@ public class GameLeaderTest {
 
     private GameLeader gameLeader;
 
-    private FacilityTurn facilityTurnModel;
+    private Round facilityTurnModel;
 
     private List<Facility> facilities;
 
@@ -48,7 +58,7 @@ public class GameLeaderTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        facilityTurnModel = new FacilityTurn();
+        facilityTurnModel = new Round();
         rounds = new ArrayList<>();
         facilities = new ArrayList<>();
     }
@@ -84,16 +94,16 @@ public class GameLeaderTest {
 
         gameLeader = new GameLeader(beerGame, iConnectorForLeader);
 
-        gameLeader.setTurnHandler(turnHandlerMock);
+        //gameLeader.setTurnHandler(turnHandlerMock);
 
         gameLeader.turnModelReceived(facilityTurnModel);
 
         verify(turnHandlerMock, times(1)).processFacilityTurn(facilityTurnModel);
 
-        System.out.println(gameLeader.getTurnsExpected());
-        System.out.println(gameLeader.getTurnsReceived());
+        System.out.println(gameLeader.getTurnsExpectedPerRound());
+        System.out.println(gameLeader.getTurnsReceivedInCurrentRound());
 
-        Assert.assertNotEquals(gameLeader.getTurnsExpected(), gameLeader.getTurnsReceived());
+        Assert.assertNotEquals(gameLeader.getTurnsExpectedPerRound(), gameLeader.getTurnsReceivedInCurrentRound());
     }
 
     @Test

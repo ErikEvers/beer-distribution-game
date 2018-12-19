@@ -1,31 +1,27 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
-import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Round;
+
 import javax.inject.Inject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TurnHandler {
-    private static final Logger LOGGER = Logger.getLogger(TurnHandler.class.getName() );
     @Inject
     private IPersistence persistenceLayer;
 
+    /**
+     * Saves the incoming turn using the persistence layer and combines incoming turns with already received turns.
+     * @param turnModel a turn sent by a game participant.
+     */
+    Round processFacilityTurn(Round turnModel, Round currentRoundData) {
+        turnModel.getTurnOrder().forEach(currentRoundData.getTurnOrder()::putIfAbsent);
+        turnModel.getTurnDeliver().forEach(currentRoundData.getTurnDeliver()::putIfAbsent);
+        turnModel.getTurnReceived().forEach(currentRoundData.getTurnReceived()::putIfAbsent);
+        turnModel.getTurnBackOrder().forEach(currentRoundData.getTurnBackOrder()::putIfAbsent);
+        turnModel.getTurnStock().forEach(currentRoundData.getTurnStock()::putIfAbsent);
 
-    public void processFacilityTurn(FacilityTurn turnModel) {
-        if(validateFacilityTurn(turnModel)) {
-            persistenceLayer.savePlayerTurn(turnModel);
-        } else {
-            LOGGER.log(Level.WARNING, "Incoming orders can't be higher than the available stock.");
-        }
-    }
+        persistenceLayer.savePlayerTurn(turnModel);
 
-    private boolean validateFacilityTurn(FacilityTurn turnModel) {
-        return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
-    }
-
-
-    public void setPersistenceLayer(IPersistence persistenceLayer) {
-        this.persistenceLayer = persistenceLayer;
+        return currentRoundData;
     }
 }
