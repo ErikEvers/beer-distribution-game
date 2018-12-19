@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import org.han.ica.asd.c.FacilityDAO;
 import org.han.ica.asd.c.player.PlayerComponent;
 import org.han.ica.asd.c.model.Facility;
 import org.han.ica.asd.c.model.FacilityLinkedTo;
@@ -27,6 +28,10 @@ public class SeeOtherFacilitiesController {
 
     private PlayerComponent playerComponent;
 
+    private FacilityDAO facilityDAO;
+
+    private String gameId;
+
     /**
      * Initialises the facility overview screen by calling the loadFacilityView() method.
      * @throws FacilityLoadingError
@@ -34,6 +39,8 @@ public class SeeOtherFacilitiesController {
     public void initialize() throws FacilityLoadingError {
         mainContainer.getChildren().addAll();
         playerComponent = new PlayerComponent();
+        facilityDAO = new FacilityDAO();
+        gameId = "";
 
         loadFacilityView();
     }
@@ -75,14 +82,14 @@ public class SeeOtherFacilitiesController {
     private void drawFacilities(ArrayList<Facility> drawnFacilities,
                                 ArrayList<FacilityRectangle> drawnFacilityRectangles,
                                 FacilityLinkedTo link) throws FacilityLoadingError {
-        if(!drawnFacilities.contains(link.getFacilityDeliver())) {
-            drawnFacilityRectangles.add(drawFacility(link.getFacilityDeliver()));
-            drawnFacilities.add(link.getFacilityDeliver());
+        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId))) {
+            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId)));
+            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId));
         }
 
-        if(!drawnFacilities.contains(link.getFacilityOrder())) {
-            drawnFacilityRectangles.add(drawFacility(link.getFacilityOrder()));
-            drawnFacilities.add(link.getFacilityOrder());
+        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId))) {
+            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId)));
+            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId));
         }
     }
 
@@ -96,14 +103,14 @@ public class SeeOtherFacilitiesController {
      */
     private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, FacilityLinkedTo link) {
         EdgeLine line = new EdgeLine();
-        FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,"","",""));
-        FacilityRectangle rectangle2 = new FacilityRectangle(new Facility("",0,"","",""));
+        FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,null,"",""));
+        FacilityRectangle rectangle2 = new FacilityRectangle(new Facility("",0,null,"",""));
 
         for(FacilityRectangle rectangle : drawnFacilityRectangles) {
-            if(rectangle.getFacility() == link.getFacilityDeliver()) {
+            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId)) {
                 rectangle1 = rectangle;
             }
-            if(rectangle.getFacility() == link.getFacilityOrder()) {
+            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId)) {
                 rectangle2 = rectangle;
             }
         }
