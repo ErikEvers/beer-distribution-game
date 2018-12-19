@@ -313,7 +313,25 @@ public class GameLogicTest {
     }
 
     @Test
-    public void testIfNewOrderPlacementFirstProcessesOpenOrders() {
-        
+    public void testIfOutGoingGoodsGetsCalculatedAndSubtractedFromRemainingBudget() {
+        int outGoingGoodsValue = 3;
+        int orderAmount = 12;
+
+        FacilityType facilityType = new FacilityType("manufacturer", "", outGoingGoodsValue, 5,5, 25, 500, 50);
+        FacilityType facilityType1 = new FacilityType("regionalwarehouse", "", 4, outGoingGoodsValue,5, 25, 500, 50);
+
+        manufacturer = new Facility("0", 0, facilityType, "0", "0");
+        regionalWarehouse = new Facility("0", 0, facilityType1, "0", "0");
+
+        FacilityLinkedTo facilityLinkedTo = new FacilityLinkedTo("0", manufacturer, manufacturer, true);
+        FacilityLinkedTo facilityLinkedTo1 = new FacilityLinkedTo("0", regionalWarehouse, manufacturer, true);
+
+        Round round = new RoundFake("0", 0);
+
+        round.addTurnOrder(regionalWarehouse, manufacturer, orderAmount);
+
+        round = gameLogic.calculateOrderPlacement(round);
+
+        Assert.assertEquals(round.getRemainingBudget(regionalWarehouse), (orderAmount * outGoingGoodsValue));
     }
 }
