@@ -42,7 +42,7 @@ public class FaultHandlerLeader {
         //TODO remove println
         increment(ip);
 
-        if (amountOfFailsPerIp.get(ip) >= (nodeInfoList.size() / 2)) {
+        if (amountOfFailsPerIp.get(ip).equals(nodeInfoList.size())) {
 
             nodeInfoList.updateIsConnected(ip, false);
 
