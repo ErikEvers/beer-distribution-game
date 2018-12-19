@@ -151,7 +151,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      */
     public List<FacilityDB> readAllFacilitiesInGame(String gameId) {
         Connection conn = null;
-        ArrayList<FacilityDB> facilities = new ArrayList<>();
+        List<FacilityDB> facilities = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_FACILITIES_IN_GAME)) {
