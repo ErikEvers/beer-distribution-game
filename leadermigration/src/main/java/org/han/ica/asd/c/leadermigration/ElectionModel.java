@@ -1,70 +1,72 @@
 package org.han.ica.asd.c.leadermigration;
 
-import javax.inject.Inject;
+import org.han.ica.asd.c.model.Player;
 
+/**
+ * Object that gets exchanged between players during leader election
+ * 	to indicate if a player wants to participate in the election.
+ */
 public class ElectionModel {
 
-  private String concattedIp;
-  private boolean elected = false;
-  private boolean victory = false;
-  @Inject private Player currentPlayer;
-  @Inject private Player receivingPlayer;
-  @Inject private Player newLeader;
-  @Inject private Player[] players;
+  private boolean alive;
+  private Player currentPlayer;
+  private Player receivingPlayer;
 
 
-  public String getConcattedIp() {
-    return concattedIp;
+  /**
+   * Default constructor.
+	 * Sets alive to false.
+   */
+  public ElectionModel() {
+    this.alive = false;
   }
 
-  public void setConcattedIp(String concattedIp) {
-    this.concattedIp = concattedIp;
+	/**
+	 * Retrieves whether the responding player is alive or not
+	 * @return boolean	-> true when alive
+	 * 									-> false when not
+	 */
+  public boolean isAlive() {
+    return alive;
   }
 
-  public boolean isElected() {
-    return elected;
+	/**
+	 * Set the status of the responding player.
+	 * @param alive boolean	-> true when alive
+	 *              				-> false when not
+	 */
+  public void setAlive(boolean alive) {
+    this.alive = alive;
   }
 
-  public void setElected(boolean elected) {
-    this.elected = elected;
-  }
-
-  public boolean isVictory() {
-    return victory;
-  }
-
-  public void setVictory(boolean victory) {
-    this.victory = victory;
-  }
-
+	/**
+	 * Retrieve the player doing the election.
+	 * @return Player instance.
+	 */
   public Player getCurrentPlayer() {
     return currentPlayer;
   }
 
+	/**
+	 * Set the player running the election.
+	 * @param currentPlayer Player instance.
+	 */
   public void setCurrentPlayer(Player currentPlayer) {
     this.currentPlayer = currentPlayer;
   }
 
-  public Player getNewLeader() {
-    return newLeader;
-  }
-
-  public void setNewLeader(Player newLeader) {
-    this.newLeader = newLeader;
-  }
-
-  public Player[] getPlayers() {
-    return players;
-  }
-
-  public void setPlayers(Player[] players) {
-    this.players = players;
-  }
-
+	/**
+	 * Retrieve the player receiving the election message.
+	 * @return Player instance.
+	 */
   public Player getReceivingPlayer() {
     return receivingPlayer;
   }
 
+	/**
+	 * Set the player receiving the election message.
+	 * @param receivingPlayer Player instance.
+	 */
   public void setReceivingPlayer(Player receivingPlayer) {
     this.receivingPlayer = receivingPlayer;
   }

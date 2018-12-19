@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.gameleader.componentInterfaces;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 /**
  * interface for persistence component

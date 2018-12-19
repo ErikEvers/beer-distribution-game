@@ -1,31 +1,61 @@
 package org.han.ica.asd.c.leadermigration;
 
+import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
+import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
+import org.han.ica.asd.c.leadermigration.componentInterfaces.ILeaderMigration;
+import org.han.ica.asd.c.leadermigration.componentInterfaces.IPersistenceLeaderMigration;
+import org.han.ica.asd.c.model.Player;
+import org.han.ica.asd.c.observers.IConnectorObserver;
 import javax.inject.Inject;
+import java.util.List;
 
-public class LeaderMigration implements ILeaderMigration {
+public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
 
-  private Player leader;
-  private Player[] players;
+  @Inject IConnectorForLeaderElection communicator;
+  @Inject IPersistenceLeaderMigration persistence;
+  @Inject ElectionHandler electionHandler;
 
-  @Inject
-  private ElectionHandler electionHandler;
+  /**
+   * Start the bully algorithm to get new Leader of the network
+   * @param players -> all the connected player
+   */
+  public Player startMigration(Player[] players) throws PlayerNotFoundException {
+    Player currentPlayer = electionHandler.setupAlgorithm(players);
+    Player winner = currentPlayer;
 
-  public LeaderMigration() {
+		List<Player> answeredPlayers = electionHandler.sendElectionMessage(players);
 
+    if(!answeredPlayers.isEmpty()) {
+			winner = electionHandler.determineWinner(currentPlayer, answeredPlayers);
+		}
+
+		electionHandler.sendVictoryMessage(winner, players);
+		persistence.saveNewLeader(winner);
+		return winner;
   }
 
-  public void startMigration(Player[] players) {
-    this.players = players;
-    electionHandler.setupAlgorithm(players);
-    electionHandler.sendElectionMessage(players);
-  }
-
+  /**
+   * Receiving the electionMessage and handle it
+   * @param electionModel -> The electionModel of the sending device
+   */
   public ElectionModel receiveElectionMessage(ElectionModel electionModel){
     return electionHandler.sendAliveMessage(electionModel);
   }
 
-  public void receiveVictoryMessage(ElectionModel electionModel) {
+  /**
+   * Register this object as an observer of the communication component.
+   */
+	//TODO integrate with comm
+  public void initialize() {
+    communicator.addObserver(this);
+  }
 
+  /**
+   * Receiving the player who won the bully algorithm and calls the database.
+   * @param electedPlayer -> The elected player.
+   */
+  public void receiveVictoryMessage(Player electedPlayer){
+		persistence.saveNewLeader(electedPlayer);
   }
 
 }
