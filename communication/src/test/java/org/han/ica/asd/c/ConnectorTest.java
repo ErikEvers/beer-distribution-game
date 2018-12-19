@@ -1,6 +1,6 @@
+package org.han.ica.asd.c;
+
 import domainobjects.Election;
-import domainobjects.RoundModel;
-import domainobjects.TurnModel;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.RoomFinder;
@@ -10,6 +10,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 import org.han.ica.asd.c.observers.IElectionObserver;
 import org.han.ica.asd.c.observers.IRoundModelObserver;
@@ -68,13 +69,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
         }
 
         public void sendTurnTest(){
-            connector.sendTurn();
-            verify(gameMessageClient).sendTurnModel(anyString(),any(TurnModel.class));
+            connector.sendTurn(new Round());
+            verify(gameMessageClient).sendTurnModel(anyString(),any(Round.class));
         }
 
         public void sendRoundToAllTest(){
-            connector.updateAllPeers(new RoundModel());
-            verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class),any(RoundModel.class));
+            connector.updateAllPeers(new Round());
+            verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class),any(Round.class));
         }
 
 
