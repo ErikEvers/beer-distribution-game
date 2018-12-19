@@ -103,19 +103,19 @@ public class SeeOtherFacilitiesController {
      */
     private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, FacilityLinkedTo link) {
         EdgeLine line = new EdgeLine();
-        FacilityRectangle rectangle1 = new FacilityRectangle(new Facility("",0,null,"",""));
-        FacilityRectangle rectangle2 = new FacilityRectangle(new Facility("",0,null,"",""));
+        FacilityRectangle rectangleDeliver = new FacilityRectangle(new Facility("",0,null,"",""));
+        FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility("",0,null,"",""));
 
         for(FacilityRectangle rectangle : drawnFacilityRectangles) {
             if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId)) {
-                rectangle1 = rectangle;
+                rectangleDeliver = rectangle;
             }
             if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId)) {
-                rectangle2 = rectangle;
+                rectangleOrder = rectangle;
             }
         }
 
-        line.drawLine(rectangle1, rectangle2, rectangle1.getTranslateX(), rectangle1.getTranslateY());
+        line.drawLine(rectangleDeliver, rectangleOrder, rectangleDeliver.getTranslateX(), rectangleDeliver.getTranslateY());
         setLineStroke(link, line);
 
         facilitiesContainer.getChildren().add(line);
