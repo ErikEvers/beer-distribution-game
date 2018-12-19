@@ -9,7 +9,6 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.junit.Assert;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +43,6 @@ class ConfigurationWrapperTest {
 		configuration = new Configuration(1, 1, 1, 1, 1, 1, 1, true, true, facilities, facilityLinkedTos,facilityTypes);
 		configurationDB = new ConfigurationDB("BeerGameZutphen",1, 1, 1, 1, 1, 1, 1, true, true);
 	}
-
 
 	@Test
 	void wrapToDaoModelTest() {

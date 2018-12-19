@@ -16,6 +16,7 @@ public class ConfigurationWrapper extends Wrapper {
 	private Configuration configuration;
 
 	public ConfigurationWrapper(){
+		//Empty constructor for GUICE
 	}
 
 	@Override
