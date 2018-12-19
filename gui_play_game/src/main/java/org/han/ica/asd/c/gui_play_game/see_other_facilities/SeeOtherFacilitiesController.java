@@ -138,8 +138,7 @@ public class SeeOtherFacilitiesController {
     }
 
     /**
-     * Draws the individual facility according to their type.
-     *
+     * Calls the drawFacilityOnScreen method in different ways depending on the type of the given facility.
      *
      * @param facility
      * Facility to be drawn.
@@ -151,19 +150,44 @@ public class SeeOtherFacilitiesController {
 
     private FacilityRectangle drawFacility(Facility facility) throws FacilityLoadingError {
         if(facility.getFacilityType().equals("Factory")) {
-            drawFactory(facility);
+            drawFacilityOnScreen(facility, factories, 0);
             return factories.get(factories.size()-1);
         } else if(facility.getFacilityType().equals("Regional warehouse")) {
-            drawRegionalWarehouse(facility);
+            drawFacilityOnScreen(facility, warehouses, 0);
             return warehouses.get(warehouses.size()-1);
         } else if(facility.getFacilityType().equals("Wholesale")) {
-            drawWholesaler(facility);
+            drawFacilityOnScreen(facility, wholesalers, 0);
             return wholesalers.get(wholesalers.size()-1);
         } else if(facility.getFacilityType().equals("Retailer")) {
-            drawRetailer(facility);
+            drawFacilityOnScreen(facility, retailers, 0);
             return retailers.get(retailers.size()-1);
         } else {
             throw new FacilityLoadingError("Error while drawing facility of an unkwown type: "+facility.toString());
+        }
+    }
+
+    /**
+     * Draws the facility on the screen.
+     * @param facility
+     * Facility to be drawn.
+     * @param facilityList
+     * List of drawn facility rectangles.
+     * @param y
+     * Y-axis on which the facility is to be drawn.
+     */
+
+    private void drawFacilityOnScreen(Facility facility, ArrayList<FacilityRectangle> facilityList, int y) {
+        double rows = (facilitiesContainer.getPrefHeight()/4);
+        double collumns = 60;
+        facilitiesContainer.getChildren().removeAll(facilityList);
+        facilityList.add(createRectangle(facility));
+        for (int i = 0; i < facilityList.size(); i++) {
+            facilityList.get(i).setTranslateX(collumns*i);
+            facilityList.get(i).setTranslateY(rows*y);
+            if ((facilityList.get(i).getTranslateX()+ facilityList.get(i).getWidth()) > facilitiesContainer.getMinWidth()){
+                facilitiesContainer.setMinWidth(warehouses.get(i).getTranslateX()+ warehouses.get(i).getWidth());
+            }
+            facilitiesContainer.getChildren().add(warehouses.get(i));
         }
     }
 
@@ -173,79 +197,15 @@ public class SeeOtherFacilitiesController {
      */
     private FacilityRectangle createRectangle(Facility facility) {
         FacilityRectangle rectangle = new FacilityRectangle(facility);
-        Tooltip tooltip = new Tooltip(playerComponent.requestFacilityInfo(facility));
-        Tooltip.install(rectangle, tooltip);
+        installTooltip(facility, rectangle);
         return rectangle;
     }
 
     /**
-     * Method draws a rectangle(Factory).
+     * Installs the tooltip with information regarding the facility on the rectangle.
      */
-    private void drawFactory(Facility factory){
-        double collumns = 60;
-        facilitiesContainer.getChildren().removeAll(factories);
-        factories.add(createRectangle(factory));
-        for (int i = 0; i < factories.size(); i++) {
-            factories.get(i).setTranslateX(collumns*i);
-            factories.get(i).setTranslateY(0);
-            if ((factories.get(i).getTranslateX()+ factories.get(i).getWidth()) > facilitiesContainer.getMinWidth()){
-                facilitiesContainer.setMinWidth(factories.get(i).getTranslateX()+ factories.get(i).getWidth());
-            }
-            facilitiesContainer.getChildren().add(factories.get(i));
-        }
-    }
-
-    /**
-     * Method draws a rectangle(RegionalWarehouse).
-     */
-    private void drawRegionalWarehouse(Facility regionalWarehouse){
-        double rows = (facilitiesContainer.getPrefHeight()/4);
-        double collumns = 60;
-        facilitiesContainer.getChildren().removeAll(warehouses);
-        warehouses.add(createRectangle(regionalWarehouse));
-        for (int i = 0; i < warehouses.size(); i++) {
-            warehouses.get(i).setTranslateX(collumns*i);
-            warehouses.get(i).setTranslateY(rows*1);
-            if ((warehouses.get(i).getTranslateX()+ warehouses.get(i).getWidth()) > facilitiesContainer.getMinWidth()){
-                facilitiesContainer.setMinWidth(warehouses.get(i).getTranslateX()+ warehouses.get(i).getWidth());
-            }
-            facilitiesContainer.getChildren().add(warehouses.get(i));
-        }
-    }
-
-    /**
-     * Method draws a rectangle(Wholesaler).
-     */
-    private void drawWholesaler(Facility wholesale){
-        double rows = (facilitiesContainer.getPrefHeight()/4);
-        double collumns = 60;
-        facilitiesContainer.getChildren().removeAll(wholesalers);
-        wholesalers.add(createRectangle(wholesale));
-        for (int i = 0; i < wholesalers.size(); i++) {
-            wholesalers.get(i).setTranslateX(collumns*i);
-            wholesalers.get(i).setTranslateY(rows*2);
-            if ((wholesalers.get(i).getTranslateX()+ wholesalers.get(i).getWidth()) > facilitiesContainer.getMinWidth()){
-                facilitiesContainer.setMinWidth(wholesalers.get(i).getTranslateX()+ wholesalers.get(i).getWidth());
-            }
-            facilitiesContainer.getChildren().add(wholesalers.get(i));
-        }
-    }
-
-    /**
-     * Method draws a rectangle(Retailer).
-     */
-    private void drawRetailer(Facility retailer){
-        double rows = (facilitiesContainer.getPrefHeight()/4);
-        double collumns = 60;
-        facilitiesContainer.getChildren().removeAll(retailers);
-        retailers.add(createRectangle(retailer));
-        for (int i = 0; i < retailers.size(); i++) {
-            retailers.get(i).setTranslateX(collumns*i);
-            retailers.get(i).setTranslateY(rows*3);
-            if ((retailers.get(i).getTranslateX()+ retailers.get(i).getWidth()) > facilitiesContainer.getMinWidth()){
-                facilitiesContainer.setMinWidth(retailers.get(i).getTranslateX()+ retailers.get(i).getWidth());
-            }
-            facilitiesContainer.getChildren().add(retailers.get(i));
-        }
+    private void installTooltip(Facility facility, FacilityRectangle rectangle) {
+        Tooltip tooltip = new Tooltip(playerComponent.requestFacilityInfo(facility));
+        Tooltip.install(rectangle, tooltip);
     }
 }
