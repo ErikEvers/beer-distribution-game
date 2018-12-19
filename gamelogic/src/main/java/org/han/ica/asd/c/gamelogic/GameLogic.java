@@ -40,6 +40,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Sends and saves an order of the player / agent.
+     *
      * @param turn
      */
     @Override
@@ -50,6 +51,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Returns the current state of the game.
+     *
      * @return The current state of the game.
      */
     @Override
@@ -59,6 +61,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Replaces the player with the given agent.
+     *
      * @param agent Agent that will replace the player.
      */
     @Override
@@ -76,6 +79,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Adds a local participant to the game.
+     *
      * @param participant The local participant to add to the game.
      */
     @Override
@@ -85,6 +89,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Removes an agent with the given playerId;
+     *
      * @param playerId Identifier of the player to remove.
      */
     @Override
@@ -95,6 +100,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Calculates the round.
+     *
      * @param round has the information needed to calculate the round
      * @return
      */
@@ -151,13 +157,14 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
                 //The budget is calculated for the FacilityDeliver variable
                 round.updateRemainingBudget(
                         calculateBackLogCost(round, facilityOrder, facilityDeliver),
-            facilityDeliver);
+                        facilityDeliver);
             }
         }
     }
 
     /**
      * Calculate the stock cost
+     *
      * @param round
      * @param facilityOrder
      * @return
@@ -172,6 +179,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     /**
      * Because of the structure of our maps it's not possible to calculate the stock and the backlog cost for the same facility in the same function.
+     *
      * @param round
      * @param facilityOrder
      * @param facilityDeliver
@@ -179,7 +187,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      */
     private int calculateBackLogCost(Round round, Facility facilityOrder, Facility facilityDeliver) {
         int remainingBudgetFacilityDeliver = round.getRemainingBudget(facilityDeliver);
-            if (round.isTurnBackLogfilledByFacility(facilityOrder)) {
+        if (round.isTurnBackLogfilledByFacility(facilityOrder)) {
             FacilityType facilityType = facilityDeliver.getFacilityType();
             int backOrders = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
             int backlogCosts = backOrders * facilityType.getOpenOrderCosts();
@@ -188,5 +196,21 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         }
 
         return remainingBudgetFacilityDeliver;
+    }
+
+    public Round calculateOrderPlacement(Round round) {
+        for (FacilityLinkedTo f : facilitityLinks) {
+            int ordered = round.getTurnOrderByFacility(f.getFacilityOrder(), f.getFacilityDeliver());
+            int budgetDeliver = round.getRemainingBudget(f.getFacilityDeliver());
+            int budgetOrder = round.getRemainingBudget(f.getFacilityOrder());
+
+            int orderCostDeliver = ordered * f.getFacilityDeliver().getFacilityType().getValueOutgoingGoods();
+            int orderCostOrder = ordered * f.getFacilityOrder().getFacilityType().getValueIncomingGoods();
+
+            round.updateRemainingBudget(budgetDeliver + orderCostDeliver, f.getFacilityDeliver());
+            round.updateRemainingBudget(budgetOrder - orderCostOrder, f.getFacilityOrder());
+        }
+
+        return round;
     }
 }
