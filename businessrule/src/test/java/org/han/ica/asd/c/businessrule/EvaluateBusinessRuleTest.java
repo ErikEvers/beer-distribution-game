@@ -198,7 +198,7 @@ class EvaluateBusinessRuleTest {
 
         businessRuleBefore.evaluateBusinessRule();
 
-        assertEquals(businessRuleAfter, businessRuleBefore);
+        assertNotEquals(businessRuleAfter, businessRuleBefore);
     }
 
     @Test
