@@ -1,8 +1,8 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.Facility;
+import org.han.ica.asd.c.model.dao_model.FacilityDB;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -36,9 +36,9 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to create a new facility.
      *
-     * @param facility A domain_objects of Facility with all the data required to create a new facility.
+     * @param facility A domain_objects of FacilityDB with all the data required to create a new facility.
      */
-    public void createFacility(Facility facility) {
+    public void createFacility(FacilityDB facility) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -65,9 +65,9 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to update an existing facility within a specific game.
      *
-     * @param facility A domain_objects of Facility with all the data required to update an existing facility.
+     * @param facility A domain_objects of FacilityDB with all the data required to update an existing facility.
      */
-    public void updateFacility(Facility facility) {
+    public void updateFacility(FacilityDB facility) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -149,9 +149,9 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @param gameId The identifier of a game.
      * @return The facilities that have been retrieved from the database.
      */
-    public List<Facility> readAllFacilitiesInGame(String gameId) {
+    public List<FacilityDB> readAllFacilitiesInGame(String gameId) {
         Connection conn = null;
-        ArrayList<Facility> facilities = new ArrayList<>();
+        ArrayList<FacilityDB> facilities = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_FACILITIES_IN_GAME)) {
@@ -161,7 +161,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        facilities.add(new Facility(rs.getString("GameId"), rs.getInt("FacilityId"),
+                        facilities.add(new FacilityDB(rs.getString("GameId"), rs.getInt("FacilityId"),
                                 rs.getString("FacilityName"), rs.getString("PlayerId"),
                                 rs.getString("GameAgentName"), rs.getBoolean("Bankrupt")));
                     }
@@ -181,9 +181,9 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      * @param facilityId The second part of the identifier to retrieve the specific facility.
      * @return The retrieved facility from the database.
      */
-    public Facility readSpecificFacility(int facilityId, String gameId) {
+    public FacilityDB readSpecificFacility(int facilityId, String gameId) {
         Connection conn = null;
-        Facility facility = null;
+        FacilityDB facility = null;
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
@@ -194,7 +194,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
                     pstmt.setString(2, gameId);
                     try (ResultSet rs = pstmt.executeQuery()) {
                         while (rs.next()) {
-                            facility = new Facility(gameId, facilityId,
+                            facility = new FacilityDB(gameId, facilityId,
                                     rs.getString("FacilityName"), rs.getString("PlayerId"),
                                     rs.getString("GameAgentName"), rs.getBoolean("Bankrupt"));
                         }

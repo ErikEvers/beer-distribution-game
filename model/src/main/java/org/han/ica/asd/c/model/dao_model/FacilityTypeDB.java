@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class FacilityType {
+public class FacilityTypeDB implements IDaoModel{
     private String facilityName;
     private String gameId;
     private int valueIncomingGoods;
@@ -10,7 +10,7 @@ public class FacilityType {
     private int startingBudget;
     private int startingOrder;
 
-    public FacilityType(String facilityName, String gameId, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder) { //NOSONAR
+    public FacilityTypeDB(String facilityName, String gameId, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder) { //NOSONAR
         this.facilityName = facilityName;
         this.gameId = gameId;
         this.valueIncomingGoods = valueIncomingGoods;

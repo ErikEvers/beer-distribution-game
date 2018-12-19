@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class ProgrammedBusinessRules {
+public class ProgrammedBusinessRulesDB implements IDaoModel{
     private String programmedAgentName;
     private String programmedBusinessRule;
     private String programmedAST;
 
-    public ProgrammedBusinessRules(String programmedAgentName, String programmedBusinessRule, String programmedAST) {
+    public ProgrammedBusinessRulesDB(String programmedAgentName, String programmedBusinessRule, String programmedAST) {
         this.programmedAgentName = programmedAgentName;
         this.programmedBusinessRule = programmedBusinessRule;
         this.programmedAST = programmedAST;

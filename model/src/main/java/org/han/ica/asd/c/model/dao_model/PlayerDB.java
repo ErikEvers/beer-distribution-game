@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class Player {
+public class PlayerDB implements IDaoModel{
     private String gameId;
     private String playerId;
     private String ipAddress;
@@ -8,7 +8,7 @@ public class Player {
     private String name;
     private boolean isConnected;
 
-    public Player(String gameId, String playerId, String ipAddress, int facilityId, String name, boolean isConnected) {
+    public PlayerDB(String gameId, String playerId, String ipAddress, int facilityId, String name, boolean isConnected) {
         this.gameId = gameId;
         this.playerId = playerId;
         this.ipAddress = ipAddress;

@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class Facility {
+public class FacilityDB implements IDaoModel{
     private String gameId;
     private int facilityId;
     private String facilityType;
@@ -8,7 +8,7 @@ public class Facility {
     private String gameAgentName;
     private boolean bankrupt;
 
-    public Facility(String gameId, int facilityId, String facilityType, String playerId, String gameAgentName, boolean bankrupt) {
+    public FacilityDB(String gameId, int facilityId, String facilityType, String playerId, String gameAgentName, boolean bankrupt) {
         this.gameId = gameId;
         this.facilityId = facilityId;
         this.facilityType = facilityType;

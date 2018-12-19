@@ -1,11 +1,11 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 
-import org.han.ica.asd.c.model.dao_model.BeerGame;
-import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.BeerGameDB;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
+import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 
 import javax.inject.Inject;
@@ -35,32 +35,32 @@ public class Persistence implements IPersistence {
 		//Empty constructor for GUICE
 	}
 
-	public void saveRoundData(Round rounddata)
+	public void saveRoundData(RoundDB rounddata)
 	{
 		((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
 	}
 
-	public Round fetchRoundData(String gameId, int roundId)
+	public RoundDB fetchRoundData(String gameId, int roundId)
 	{
 		return ((RoundDAO)roundDAO).getRound(gameId,roundId);
 	}
 
-	public BeerGame getGameLog(String gameId)
+	public BeerGameDB getGameLog(String gameId)
 	{
 		return ((BeergameDAO)beergameDAO).getGameLog(gameId);
 	}
 
-	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn)
+	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)
 	{
 		((GameBusinessRulesInFacilityTurnDAO)gameBusinessRulesInFacilityTurnDAO).createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
-	public FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility)
+	public FacilityTurnDB fetchTurnData(RoundDB round, FacilityLinkedToDB facility)
 	{
 		return ((FacilityTurnDAO)facilityTurnDAO).fetchTurn(round,facility);
 	}
 
-	public void saveTurnData(FacilityTurn turn)
+	public void saveTurnData(FacilityTurnDB turn)
 	{
 		((FacilityTurnDAO)facilityTurnDAO).createTurn(turn);
 	}
