@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.leadermigration;
 
 import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
-import org.han.ica.asd.c.model.dao_model.Player;
+import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
 import java.util.List;

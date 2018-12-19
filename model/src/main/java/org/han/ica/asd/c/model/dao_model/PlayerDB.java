@@ -19,10 +19,6 @@ public class PlayerDB implements IDaoModel{
         this.isConnected = isConnected;
     }
 
-    public String concatIpId() {
-        return playerId.concat(ipAddress);
-    }
-
     public String getGameId() {
         return gameId;
     }
