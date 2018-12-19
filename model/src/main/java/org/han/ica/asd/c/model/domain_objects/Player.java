@@ -54,4 +54,8 @@ public class Player implements IDomainModel{
     public void setConnected(boolean connected) {
         isConnected = connected;
     }
+
+    public String concatIpId() {
+        return playerId.concat(ipAddress);
+    }
 }
