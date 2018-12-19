@@ -14,10 +14,10 @@ public class ProgramAgentPopupController implements IProgramAgentSharedControlle
     Label headerLabel;
 
     @FXML
-    Label bodyLabel;
+    Button close;
 
     @FXML
-    Button close;
+    Label errorTextArea;
 
     /***
      *  Function for initialising the current ProgramAgentInfo FXML. It also sets the actions of the button to close current window on click.
@@ -42,8 +42,6 @@ public class ProgramAgentPopupController implements IProgramAgentSharedControlle
      * @param text The text that the label should get.
      */
     void setBodyLabelText(String text) {
-        bodyLabel.setText(text);
+        errorTextArea.setText(text);
     }
-
-
 }
