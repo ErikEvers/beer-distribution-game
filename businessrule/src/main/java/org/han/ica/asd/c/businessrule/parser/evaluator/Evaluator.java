@@ -118,7 +118,7 @@ public class Evaluator {
         while (!q.isEmpty()) {
             ASTNode qVal = q.remove();
             if (qVal instanceof Value && !((Value) qVal).getValue().matches("-?\\d+")) {
-                throw new BusinessRuleException("RoundDB can only be compared to a number", lineNumber);
+                throw new BusinessRuleException("Round can only be compared to a number", lineNumber);
             }
             q.addAll(qVal.getChildren());
         }
