@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.model.pojo;
+package org.han.ica.asd.c.agent;
 
 public abstract class GameAgentAction {
     private int targetFacilityId;

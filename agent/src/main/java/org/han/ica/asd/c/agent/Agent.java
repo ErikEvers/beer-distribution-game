@@ -1,66 +1,84 @@
 package org.han.ica.asd.c.agent;
 
+import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.*;
-import org.han.ica.asd.c.model.pojo.GameAgentAction;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Agent extends GameAgent{
+public class Agent extends GameAgent {
     @Inject
+    @Named("businessRules")
     private IBusinessRules businessRules;
 
+    public Agent() {
+        super(null, null);
+    }
     public Agent(String gameAgentName, Facility facility) {
         super(gameAgentName, facility);
     }
 
-    public List<Map<Facility, Map<Facility, Integer>>> generateOrder() {
-//        gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring"));
-//        gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and backorders are greater than 0 then order 50", "awesomerepresentationofthetreeasastring"));
-//        gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 then order 30", "awesomerepresentationofthetreeasastring"));
-//        gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 20 and 10 > 5 then order 30", "awesomerepresentationofthetreeasastring2"));
-//        gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 20 then order 30", "awesomerepresentationofthetreeasastring3"));
+//    @Inject
+//    public Agent(@Named("businessRules") IBusinessRules businessRules) {
+//        super(null, null);
+//        this.businessRules = businessRules;
+//    }
 
+    public List<Map<Facility, Integer>> generateOrder() {
         Map<Facility, Integer> targetOrderMap = new HashMap<>();
         Map<Facility, Integer> targetDeliverMap = new HashMap<>();
 
         for (GameBusinessRules gameBusinessRules : this.gameBusinessRulesList) {
             GameAgentAction action = this.retrieveActionFromBusinessRule(gameBusinessRules.getGameBusinessRule(), null);
-            Facility targetFacility = resolveFacilityId(action.getTargetFacilityId());
+            Facility targetFacility = new Facility(new FacilityType(null, 0, 0, 0, 0, 0, 0), new ArrayList<>(), 1);
+//            Facility targetFacility = resolveFacilityId(action.getTargetFacilityId());
             String type = action.getType();
-            if (targetOrderMap.isEmpty() && "Order".equals(type)){
+            if (targetOrderMap.isEmpty() && "Order".equals(type)) {
                 targetOrderMap.put(targetFacility, action.getAmount());
-            } else if (targetDeliverMap.isEmpty() && "Deliver".equals(type)){
+            } else if (targetDeliverMap.isEmpty() && "Deliver".equals(type)) {
                 targetDeliverMap.put(targetFacility, action.getAmount());
-            } else if(!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
+            } else if (!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
                 break;
             }
         }
 
-        Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
-        orderMap.put(facility, targetOrderMap);
-        Map<Facility, Map<Facility, Integer>> deliverMap = new HashMap<>();
-        deliverMap.put(facility, targetDeliverMap);
-
-        List<Map<Facility, Map<Facility, Integer>>> actionList = new ArrayList<>();
-        actionList.add(orderMap);
-        actionList.add(deliverMap);
+        List<Map<Facility, Integer>> actionList = new ArrayList<>();
+        actionList.add(targetOrderMap);
+        actionList.add(targetDeliverMap);
 
         return actionList;
     }
 
     private GameAgentAction retrieveActionFromBusinessRule(String businessRule, Round round) {
-        return businessRules.evaluateBusinessRule(businessRule, round);
+        GameAgentAction gameAgentAction = null;
+
+        Action action = businessRules.evaluateBusinessRule(businessRule, round);
+
+        if (action != null) {
+            if (action.isOrderType()) {
+                gameAgentAction = new GameAgentOrder();
+            } else if (action.isDeliverType()) {
+                gameAgentAction = new GameAgentDeliver();
+            }
+
+            if (gameAgentAction != null) {
+                gameAgentAction.setAmount(action.getAmount());
+                return gameAgentAction;
+            }
+        }
+
+        return new GameAgentEmptyAction();
     }
 
-    private Facility resolveFacilityId(int targetFacilityId) {
-        for(FacilityLinkedTo link : facility.getFacilitiesLinkedTo()) {
+    public Facility resolveFacilityId(int targetFacilityId) {
+        for (FacilityLinkedTo link : facility.getFacilitiesLinkedTo()) {
             Facility targetFacility = link.getFacilityDeliver();
-            if(targetFacilityId == targetFacility.getFacilityId()) {
+            if (targetFacilityId == targetFacility.getFacilityId()) {
                 return targetFacility;
             }
         }
