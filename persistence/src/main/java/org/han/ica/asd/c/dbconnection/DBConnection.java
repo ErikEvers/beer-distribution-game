@@ -18,7 +18,7 @@ public class DBConnection implements IDatabaseConnection {
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
 	private static volatile DBConnection mInstance;
 
-	private DBConnection() {
+	public DBConnection() {
 	}
 
 

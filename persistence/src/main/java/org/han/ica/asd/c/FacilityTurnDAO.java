@@ -1,9 +1,11 @@
 package org.han.ica.asd.c;
 
+
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+import org.han.ica.asd.c.model.dao_model.Round;
+
 
 import javax.inject.Inject;
 import java.sql.Connection;

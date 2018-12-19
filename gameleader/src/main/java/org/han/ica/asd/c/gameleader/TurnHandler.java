@@ -1,38 +1,27 @@
 package org.han.ica.asd.c.gameleader;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
-import org.han.ica.asd.c.model.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TurnHandler {
-    private static final Logger LOGGER = Logger.getLogger(TurnHandler.class.getName() );
     @Inject
     private IPersistence persistenceLayer;
 
     /**
-     * Saves the incoming turn using the persistence layer if the turn is valid.
+     * Saves the incoming turn using the persistence layer and combines incoming turns with already received turns.
      * @param turnModel a turn sent by a game participant.
      */
-    void processFacilityTurn(FacilityTurn turnModel) {
-        if(validateFacilityTurn(turnModel)) {
-            persistenceLayer.savePlayerTurn(turnModel);
-        } else {
-            LOGGER.log(Level.WARNING, "Incoming orders can't be higher than the available stock.");
-        }
-    }
+    Round processFacilityTurn(Round turnModel, Round currentRoundData) {
+        turnModel.getTurnOrder().forEach(currentRoundData.getTurnOrder()::putIfAbsent);
+        turnModel.getTurnDeliver().forEach(currentRoundData.getTurnDeliver()::putIfAbsent);
+        turnModel.getTurnReceived().forEach(currentRoundData.getTurnReceived()::putIfAbsent);
+        turnModel.getTurnBackOrder().forEach(currentRoundData.getTurnBackOrder()::putIfAbsent);
+        turnModel.getTurnStock().forEach(currentRoundData.getTurnStock()::putIfAbsent);
 
-    /**
-     * Currently public for testing purposes.
-     *
-     * Checks if the incoming turn is valid.
-     * @param turnModel a turn sent by a game participant.
-     * @return true if the turn is valid, false otherwise.
-     */
-    public boolean validateFacilityTurn(FacilityTurn turnModel) {
-        return (turnModel.getOrder() <= turnModel.getStock() && turnModel.getOrder() >= 0);
+        persistenceLayer.savePlayerTurn(turnModel);
+
+        return currentRoundData;
     }
 }

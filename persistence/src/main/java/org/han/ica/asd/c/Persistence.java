@@ -1,14 +1,16 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.BeerGame;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.Round;
+
+import org.han.ica.asd.c.model.dao_model.BeerGame;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
+import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.dao_model.Round;
 import org.han.ica.asd.c.public_interfaces.IPersistence;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 
 public class Persistence implements IPersistence {
 
@@ -41,7 +43,6 @@ public class Persistence implements IPersistence {
 	public Round fetchRoundData(String gameId, int roundId)
 	{
 		return ((RoundDAO)roundDAO).getRound(gameId,roundId);
-
 	}
 
 	public BeerGame getGameLog(String gameId)

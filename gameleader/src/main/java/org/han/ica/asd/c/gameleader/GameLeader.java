@@ -1,41 +1,40 @@
 package org.han.ica.asd.c.gameleader;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
-import org.han.ica.asd.c.model.BeerGame;
-import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.model.FacilityTurn;
-import org.han.ica.asd.c.model.Round;
-import org.han.ica.asd.c.observers.ITurnModelObserver;
-import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.observers.IPlayerDisconnectedObserver;
+import org.han.ica.asd.c.observers.ITurnModelObserver;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver {
-    @Inject
-    private IConnectorForLeader connectorForLeader;
-    @Inject
-    private ILeaderGameLogic gameLogic;
+    @Inject private IConnectorForLeader connectorForLeader;
+    @Inject private ILeaderGameLogic gameLogic;
+    @Inject private TurnHandler turnHandler;
+
+    private final Provider<BeerGame> beerGameProvider;
+    private final Provider<Round> roundProvider;
+    private final Provider<IParticipant> participantProvider;
 
     private BeerGame game;
-    private TurnHandler turnHandler;
     private Round currentRoundData;
 
-    private int turnsExpected;
-    private int turnsReceived;
+    private int turnsExpectedPerRound;
+    private int turnsReceivedInCurrentRound;
 
-    /**
-     * creates a new Game Leader instance for a beer game.
-     * @param game
-     */
-    public GameLeader(BeerGame game) {
+    @Inject
+    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<IParticipant> participantProvider) {
+        this.beerGameProvider = beerGameProvider;
+        this.roundProvider = roundProvider;
+        this.participantProvider = participantProvider;
+    }
+
+    public void init() {
         connectorForLeader.addObserver(this);
-        this.turnHandler = new TurnHandler();
-        this.currentRoundData = new Round(game.getGameId(), game.getRounds().size());
-        this.turnsExpected = game.getConfiguration().getFacilities().size();
-        this.turnsReceived = 0;
+        this.game = beerGameProvider.get();
     }
 
     /**
@@ -43,8 +42,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      * Using this playerId an IParticipant object is created with the facilityId corresponding to the playerId, which is sent to the Game Logic component.
      * @param playerId the Id of the player that disconnected.
      */
-    public void notifyPlayerDisconnected(String playerId) {
-        IParticipant participant = new AgentParticipant(Integer.parseInt(playerId));
+    public void playerIsDisconnected(String playerId) {
+        IParticipant participant = participantProvider.get();
+        participa
         gameLogic.addLocalParticipant(participant);
     }
 
@@ -63,12 +63,11 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      * Once all turns have been received, allTurnDataReceived is called.
      * @param turnModel an incoming turn from a facility
      */
-    public void turnModelReceived(FacilityTurn turnModel) {
-        turnHandler.processFacilityTurn(turnModel);
-        currentRoundData.addTurn(turnModel);
-        turnsReceived++;
+    public void turnModelReceived(Round turnModel) {
+        currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
+        turnsReceivedInCurrentRound++;
 
-        if(turnsReceived == turnsExpected)
+        if(turnsReceivedInCurrentRound == turnsExpectedPerRound)
             allTurnDataReceived();
     }
 
@@ -79,7 +78,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     private void allTurnDataReceived() {
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData);
-        game.addRound(currentRoundData);
+        game.getRounds().add(this.currentRoundData);
         connectorForLeader.sendRoundDataToAllPlayers(currentRoundData);
         startNextRound();
     }
@@ -87,11 +86,11 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     /**
      * Starts a new round of the beer game.
      * Sets the amount of received turns from players to zero.
-     * Creates a new Round for the beer game, setting the roundId the last roundId plus one.
+     * Creates a new Round for the beer game.
      */
     private void startNextRound() {
-        currentRoundData = new Round(game.getGameId(), game.getRounds().size() + 1);
-        turnsReceived = 0;
+        currentRoundData = roundProvider.get();
+        turnsReceivedInCurrentRound = 0;
     }
 
 }

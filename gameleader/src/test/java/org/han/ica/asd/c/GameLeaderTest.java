@@ -111,4 +111,14 @@ public class GameLeaderTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void notifyPlayerDisconnectedTest() {
+
+    }
+
+    @Test
+    public void notifyPlayerReconnectedTest() {
+
+    }
 }
