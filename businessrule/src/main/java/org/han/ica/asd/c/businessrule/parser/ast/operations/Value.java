@@ -62,6 +62,14 @@ public class Value extends OperationValue {
         return this.value;
     }
 
+    public String getSecondPartVariable(){
+       return value.substring(value.indexOf(" ",value.length()));
+    }
+
+    public String getFirstPartVariable(){
+        return value.substring(0,value.indexOf(" "));
+    }
+
     /**
      * Returns the {@link Integer} representation of the value
      *
@@ -104,7 +112,12 @@ public class Value extends OperationValue {
      *
      * @param gameValue the value of the game
      */
-    public void replaceValue(String gameValue) {
-        this.value = gameValue;
+    public void replaceValueWithValue(String gameValue) {
+        if(value.contains("%")) {
+            String[] newValue = value.split(" ");
+            this.value= newValue[0]+" "+gameValue;
+        }else{
+            this.value = gameValue;
+        }
     }
 }

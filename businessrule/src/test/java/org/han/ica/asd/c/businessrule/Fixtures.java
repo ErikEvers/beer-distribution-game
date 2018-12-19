@@ -118,7 +118,7 @@ class Fixtures {
         return businessRule;
     }
 
-    //Setup a businessrule to test Round rule
+    //Setup a businessrule to test t rule
     static BusinessRule RuleWithRound() {
         BusinessRule businessRule = new BusinessRule();
         businessRule.addChild(new ComparisonStatement()

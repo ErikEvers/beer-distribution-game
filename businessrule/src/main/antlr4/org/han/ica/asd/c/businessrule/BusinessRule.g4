@@ -6,7 +6,7 @@ THEN: 'then';
 DEFAULT: 'default' | 'Default';
 ORDER: 'order';
 DELIVER: 'deliver';
-ROUND : 'round';
+ROUND : 't';
 
 FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer' | 'below' | 'above';
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';

@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.mocks.GenerateOrderMock;
+import org.han.ica.asd.c.businessrule.mocks.t;
 import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
@@ -40,7 +40,7 @@ class BusinessRuleHandlerTest {
 		StringBuilder expectedStringBuilder = new StringBuilder();
 		expectedAction.encode(expectedStringBuilder);
 
-		Action actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new GenerateOrderMock(),5);
+		Action actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new t(),5);
 		StringBuilder actualStringBuilder = new StringBuilder();
 		actualAction.encode(actualStringBuilder);
 

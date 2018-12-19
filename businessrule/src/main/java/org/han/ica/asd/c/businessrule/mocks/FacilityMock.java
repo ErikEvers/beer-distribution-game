@@ -1,5 +1,5 @@
 package org.han.ica.asd.c.businessrule.mocks;
-//used in business rule substituteBusinessRuleWithData
+//used in business rule substituteTheVariablesOfBusinessruleWithGameData
 public class FacilityMock {
 
     public int getFacilityId() {

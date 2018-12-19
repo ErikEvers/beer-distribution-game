@@ -1,12 +1,13 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.mocks.GenerateOrderMock;
+import org.han.ica.asd.c.businessrule.mocks.t;
 import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.gamevalue.GameValue;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -93,65 +94,50 @@ public class BusinessRuleTest {
         inOrder.verify(operation).resolveOperation();
         inOrder.verify(comparisonValue).getChildren();
     }
+
     @Test
     void testBusinessrule_getReplacementValue_equals_10() {
-        String businessRuleString = "BR(CS(C(CV(V(40))ComO(<)CV(Add(V(inventory)CalO(+)Mul(V(inventory)CalO(*)V(back orders)))))))";
-        String expected = "BR(CS(C(CV(V(40))ComO(<)CV(Add(V(10)CalO(+)Mul(V(10)CalO(*)V(10)))))))";
-        GenerateOrderMock generateOrderMock = new GenerateOrderMock();
+        String businessRuleString = "BR(CS(C(CV(V(40% inventory))ComO(<)CV(Add(V(inventory)CalO(+)Mul(V(inventory)CalO(*)V(back orders)))))))";
+        String expected = "BR(CS(C(CV(V(40% 10))ComO(<)CV(Add(V(10)CalO(+)Mul(V(10)CalO(*)V(10)))))))";
+	    t gameData = Mockito.mock(t.class);
         businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
-
-        businessRule.substituteBusinessRuleWithData(generateOrderMock, 5);
+	    int facilityId = 10;
+	    when(gameData.getReplacementValue(GameValue.INVENTORY.getValue(),facilityId)).thenReturn(facilityId);
+	    when(gameData.getReplacementValue(GameValue.BACKORDERS.getValue(),facilityId)).thenReturn(facilityId);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(gameData, 10);
         String result = businessRule.encode();
 
         assertEquals(expected, result);
     }
 
     @Test
-    void testBusinessRule_hasMultipleChildren() {
+    void testBusinessRule_hasMultipleChildren_equals_true() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String businessRuleString = "BR(CS(C(CV(V(stock))ComO(<)CV(V(10))))A(AR(order)V(0)))";
         businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
-        Class<?> secretClass = businessRule.getClass();
-        Method[] methods = secretClass.getDeclaredMethods();
-        Method hasChildren = null;
-        for (Method method : methods) {
-            if (method.getName() == "hasChildren") {
-                method.setAccessible(true);
-                hasChildren = method;
-            }
-        }
 
-        try {
-            assertTrue((Boolean) hasChildren.invoke(businessRule, (ASTNode) businessRule.getChildren().get(1)));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        Method hasMultipleChildren = businessRule.getClass().getDeclaredMethod("hasMultipleChildren",ASTNode.class);
+        hasMultipleChildren.setAccessible(true);
+        boolean statement = (Boolean) hasMultipleChildren.invoke(businessRule, (ASTNode) businessRule.getChildren().get(1));
+        assertTrue(statement);
     }
 
     @Test
-    void testBusinessRule_replace() {
-        Class<?> secretClass = businessRule.getClass();
-        Method[] methods = secretClass.getDeclaredMethods();
-        Method method1 = null;
-        for (Method method : methods) {
-            if (method.getName() == "replace") {
-                method.setAccessible(true);
-                method1 = method;
-                return;
-            }
-        }
+    void testBusinessRule_replace_() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	    ASTNode value = new Value();
+	    value.addValue("inventory");
+	    t gameData = Mockito.mock(t.class);
+	    Method replace = businessRule.getClass().getDeclaredMethod("replace", Value.class,t.class,int.class);
+	    replace.setAccessible(true);
+		int facilityId = 5;
+	    when(gameData.getReplacementValue(GameValue.INVENTORY.getValue(),facilityId)).thenReturn(facilityId);
 
-        Value value = new Value();
-        value.addValue("");
-
-        try {
-            method1.invoke(businessRule, method1.invoke(businessRule, (ASTNode) value));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        assertEquals("10", value.getValue());
+	    replace.invoke(businessRule,  value,gameData,facilityId);
+	    assertEquals("5", ((Value) value).getValue());
     }
+//	INVENTORY("inventory"), OPENORDER("open order"),
+//	ROUND("round"), STOCK("stock"), ORDER("order"),
+//	OUTGOINGGOODS("outgoinggoods"), BACKORDERS("backorders"),
+//	BACKLOG("backlog"),INCOMINGORDER("incoming order"),
+//	HIGHEST("highest","biggest"),LOWEST("lowest","smallest"),
+//	Facility("factory","distributor","wholesaler","retailer"),BELOW("below"),ABOVE("above");
 }

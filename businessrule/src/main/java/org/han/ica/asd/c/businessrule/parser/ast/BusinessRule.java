@@ -1,23 +1,23 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
-import org.han.ica.asd.c.businessrule.mocks.GenerateOrderMock;
+import org.han.ica.asd.c.businessrule.mocks.t;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.han.ica.asd.c.gamevalue.GAME_VALUE;
+import org.han.ica.asd.c.gamevalue.GameValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class BusinessRule extends ASTNode {
     private static final String PREFIX = "BR(";
     private Condition condition;
     private Action action;
-    private GenerateOrderMock turn;
-    private int facilityId;
+    private t turn;
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -143,18 +143,17 @@ public class BusinessRule extends ASTNode {
      * @param turn data of a turn
      * @param facilityId identifier of the facility
      */
-    public void substituteBusinessRuleWithData(GenerateOrderMock turn, int facilityId){
+    public void substituteTheVariablesOfBusinessruleWithGameData(t turn, int facilityId){
         int left = 0;
         int right = 2;
         int actionValue = 1;
-        this.turn = turn;
-        this.facilityId = facilityId;
-        findLeafAndReplace(condition.getChildren().get(left));
-        if(hasChildren(condition)) {
-            findLeafAndReplace(condition.getChildren().get(right));
+
+        findLeafAndReplace(condition.getChildren().get(left),turn,facilityId);
+        if(hasMultipleChildren(condition)) {
+            findLeafAndReplace(condition.getChildren().get(right),turn, facilityId);
         }
         if (action != null) {
-            findLeafAndReplace(action.getChildren().get(actionValue));
+            findLeafAndReplace(action.getChildren().get(actionValue),turn, facilityId);
         }
     }
 
@@ -162,17 +161,18 @@ public class BusinessRule extends ASTNode {
      * finds the leaf and replaces the leaf with game data.
      *
      * @param astNode a node of the tree
+     * @param facilityId
      */
-    private void findLeafAndReplace(ASTNode astNode){
+    private void findLeafAndReplace(ASTNode astNode, t turn, int facilityId){
         int left = 0;
         int right = 2;
         if(astNode instanceof Value){
-            replace((Value) astNode);
+            replace((Value) astNode,turn,facilityId);
         }
         if (!astNode.getChildren().isEmpty()) {
-            findLeafAndReplace(astNode.getChildren().get(left));
-            if (hasChildren(astNode)) {
-                findLeafAndReplace(astNode.getChildren().get(right));
+            findLeafAndReplace(astNode.getChildren().get(left),turn, facilityId);
+            if (hasMultipleChildren(astNode)) {
+                findLeafAndReplace(astNode.getChildren().get(right),turn, facilityId);
             }
         }
     }
@@ -183,7 +183,7 @@ public class BusinessRule extends ASTNode {
      * @param astNode a node of the tree
      * @return true if the node has more than one child
      */
-    private boolean hasChildren(ASTNode astNode){
+    private boolean hasMultipleChildren(ASTNode astNode){
         int oneChild = 1;
         return astNode.getChildren().size()>oneChild;
     }
@@ -192,11 +192,19 @@ public class BusinessRule extends ASTNode {
      *replaces the value with the replacementvalue(gamedata) like stock with 10
      *
      * @param value a node of the tree
+     * @param facilityId
      */
-    private void replace(Value value) {
-        GAME_VALUE gamevalue = GAME_VALUE.getGameValue(value.getValue());
-        if(gamevalue!=null) {
-            value.replaceValue(String.valueOf(turn.getReplacementValue(gamevalue, facilityId)));
+    private void replace(Value value, t t, int facilityId) {
+        String REGEX_ISNUMBER = "[0-9]+";
+        if(Pattern.matches(REGEX_ISNUMBER,value.getValue())){
+            return;
+        }
+        String currentVariable = value.getFirstPartVariable().toUpperCase();
+        String[] gameValue = GameValue.valueOf(currentVariable).getValue();
+        if(gameValue !=null) {
+            int newReplacementValue = t.getReplacementValue(gameValue,facilityId);
+            String replacementValue=String.valueOf(newReplacementValue);
+            value.replaceValueWithValue(replacementValue);
         }
     }
 }
