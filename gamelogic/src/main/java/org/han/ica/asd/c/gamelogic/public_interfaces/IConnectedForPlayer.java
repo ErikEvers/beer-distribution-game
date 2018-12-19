@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface IConnectedForPlayer {
     void sendTurnData(Map<Facility, Map<Facility, Integer>> turn);
-    void addObserver(IConnectorObserver observer);
+    //void addObserver(IConnectorObserver observer);
 }

@@ -14,7 +14,7 @@ import org.han.ica.asd.c.observers.ITurnModelObserver;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver {
+public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver {
     @Inject private IConnectorForLeader connectorForLeader;
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;

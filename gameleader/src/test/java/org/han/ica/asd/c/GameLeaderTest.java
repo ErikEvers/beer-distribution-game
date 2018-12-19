@@ -4,6 +4,7 @@ import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gameleader.TurnHandler;
 import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
+import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
 import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
@@ -20,6 +21,8 @@ import org.mockito.InjectMocks;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,9 @@ public class GameLeaderTest {
     @Mock
     private TurnHandler turnHandlerMock;
 
+    @Mock
+    private IPersistence iPersistence;
+
     private Configuration con;
 
     private Facility facil;
@@ -43,6 +49,9 @@ public class GameLeaderTest {
 
     private Round r;
 
+    private final Provider<BeerGame> beerGameProvider;
+    private final Provider<Round> roundProvider;
+
     @Mock
     private IConnectorForLeader iConnectorForLeader;
 
@@ -53,6 +62,10 @@ public class GameLeaderTest {
     private List<Facility> facilities;
 
     private List<Round> rounds;
+
+    public GameLeaderTest() {
+        roundProvider = null;
+    }
 
     @Before
     public void init() {
@@ -112,9 +125,14 @@ public class GameLeaderTest {
 
         facilities.add(facil);
 
-        BeerGame beerGame = new BeerGame("test", "test", "test", "test");
+        BeerGame beerGame = mock(BeerGame.class);
 
-        int roundBefore = beerGame.getRounds().size();
+        Provider<BeerGame> beerGameProvider = mock(Provider.class);
+
+        Provider<Round> roundProvider = mock(Provider.class);
+
+
+        int roundBefore = beerGameProvider.get().getRounds().size();
 
         Configuration con = new Configuration();
 
@@ -122,15 +140,11 @@ public class GameLeaderTest {
 
         beerGame.setConfiguration(con);
 
-        gameLeader = new GameLeader(beerGame, iConnectorForLeader);
-
-        gameLeader.setGameLogic(gameLogic);
-
-        gameLeader.setTurnHandler(turnHandlerMock);
+        gameLeader = new GameLeader(beerGameProvider, roundProvider);
 
         gameLeader.turnModelReceived(facilityTurnModel);
 
-        int roundAfter = beerGame.getRounds().size();
+        int roundAfter = beerGameProvider.get().getRounds().size();
 
         Assert.assertNotEquals(roundAfter, roundBefore);
     }
