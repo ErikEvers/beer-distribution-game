@@ -54,17 +54,8 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     }
 
     /**
-     * Checks if the incoming playerId is the same as the playerId of the game leader.
-     * @param p supplied player object
-     * @return true if the supplied player is the local player, false otherwise
-     */
-    private boolean checkIfPlayerIsLocalPlayer(Player p) {
-        return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
-    }
-
-    /**
      * This method is called when a player disconnects, which this class is notified of by the IPlayerDisconnected interface.
-     * Using this playerId an IParticipant object is created with the facilityId corresponding to the playerId, which is sent to the Game Logic component.
+     * Using this playerId an IParticipant object is created with the facilityId and gameAgentName corresponding to the playerId, which is sent to the Game Logic component.
      *
      * @param playerId the Id of the player that disconnected.
      */
@@ -126,5 +117,13 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         currentRoundData = roundProvider.get();
         turnsReceivedInCurrentRound = 0;
     }
-
+    
+    /**
+     * Checks if the incoming playerId is the same as the playerId of the game leader.
+     * @param p supplied player object
+     * @return true if the supplied player is the local player, false otherwise
+     */
+    private boolean checkIfPlayerIsLocalPlayer(Player p) {
+        return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
+    }
 }
