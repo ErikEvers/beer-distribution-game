@@ -8,6 +8,8 @@ public class PlayerDB implements IDaoModel{
     private String name;
     private boolean isConnected;
 
+    public PlayerDB() {}
+
     public PlayerDB(String gameId, String playerId, String ipAddress, int facilityId, String name, boolean isConnected) {
         this.gameId = gameId;
         this.playerId = playerId;
@@ -15,6 +17,10 @@ public class PlayerDB implements IDaoModel{
         this.facilityId = facilityId;
         this.name = name;
         this.isConnected = isConnected;
+    }
+
+    public String concatIpId() {
+        return playerId.concat(ipAddress);
     }
 
     public String getGameId() {
