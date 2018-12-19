@@ -5,19 +5,17 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.GameAgent;
+import org.han.ica.asd.c.model.dao_model.GameAgentDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.logging.Logger;
-
 class GameAgentDAOIntegrationTest {
-    private static final Logger LOGGER = Logger.getLogger(GameAgentDAOIntegrationTest.class.getName());
-    private static final GameAgent GAMEAGENT = new GameAgent("gameId", "name1", 1);
-    private static final GameAgent GAMEAGENT2 = new GameAgent("gameId", "name2", 2);
-    private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("gameId", "name2_Updated", 2);
+    private static final String GAME_ID = "gameId";
+    private static final GameAgentDB GAMEAGENT = new GameAgentDB(GAME_ID, "name1", 1);
+    private static final GameAgentDB GAMEAGENT2 = new GameAgentDB(GAME_ID, "name2", 2);
+    private static final GameAgentDB GAMEAGENT2_UPDATE = new GameAgentDB(GAME_ID, "name2_Updated", 2);
 
     private GameAgentDAO gameAgentDAO;
 
@@ -41,11 +39,11 @@ class GameAgentDAOIntegrationTest {
 
     @Test
     void createGameAgent() {
-        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
         gameAgentDAO.createGameAgent(GAMEAGENT);
-        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
 
-        GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame("gameId").get(0);
+        GameAgentDB gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).get(0);
 
         Assert.assertEquals(GAMEAGENT.getGameId(),gameAgentDb.getGameId());
         Assert.assertEquals(GAMEAGENT.getFacilityId(),gameAgentDb.getFacilityId());
@@ -54,15 +52,15 @@ class GameAgentDAOIntegrationTest {
 
     @Test
     void deleteSpecificGameagent() {
-        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
         gameAgentDAO.createGameAgent(GAMEAGENT);
         gameAgentDAO.createGameAgent(GAMEAGENT2);
-        Assert.assertEquals(2,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(2,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
 
         gameAgentDAO.deleteSpecificGameagent(GAMEAGENT);
-        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
 
-        GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame("gameId").get(0);
+        GameAgentDB gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).get(0);
 
         Assert.assertEquals(GAMEAGENT2.getGameId(),gameAgentDb.getGameId());
         Assert.assertEquals(GAMEAGENT2.getFacilityId(),gameAgentDb.getFacilityId());
@@ -71,25 +69,25 @@ class GameAgentDAOIntegrationTest {
 
     @Test
     void deleteAllGameagentsInABeergame() {
-        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
         gameAgentDAO.createGameAgent(GAMEAGENT);
         gameAgentDAO.createGameAgent(GAMEAGENT2);
-        Assert.assertEquals(2,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(2,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
 
-        gameAgentDAO.deleteAllGameagentsInABeergame("gameId");
-        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        gameAgentDAO.deleteAllGameagentsInABeergame(GAME_ID);
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
     }
 
     @Test
     void updateGameagent() {
-        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
         gameAgentDAO.createGameAgent(GAMEAGENT2);
-        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
 
         gameAgentDAO.updateGameagent(GAMEAGENT2_UPDATE);
-        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame("gameId").size());
+        Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
 
-        GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame("gameId").get(0);
+        GameAgentDB gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).get(0);
 
         Assert.assertEquals(GAMEAGENT2_UPDATE.getGameId(),gameAgentDb.getGameId());
         Assert.assertEquals(GAMEAGENT2_UPDATE.getFacilityId(),gameAgentDb.getFacilityId());

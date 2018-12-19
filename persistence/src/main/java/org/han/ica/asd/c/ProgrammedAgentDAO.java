@@ -1,7 +1,8 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dao.IBeerDisitributionGameDAO;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgent;
+import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -32,11 +33,11 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
      *
      * @param programmedAgent The model with all the data required to create a new ProgrammedAgent in the database.
      */
-    public void createProgrammedAgent(ProgrammedAgent programmedAgent) {
+    public void createProgrammedAgent(ProgrammedAgentDB programmedAgent) {
         executePreparedStatement(programmedAgent, CREATE_PROGRAMMEDAGENT);
     }
 
-    public void updateProgrammedAgent(ProgrammedAgent programmedAgentOld, ProgrammedAgent programmedAgentNew) {
+    public void updateProgrammedAgent(ProgrammedAgentDB programmedAgentOld, ProgrammedAgentDB programmedAgentNew) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -65,7 +66,7 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
      *
      * @param programmedAgent The data needed to delete a ProgrammedAgent from the database.
      */
-    public void deleteProgrammedAgent(ProgrammedAgent programmedAgent) {
+    public void deleteProgrammedAgent(ProgrammedAgentDB programmedAgent) {
         executePreparedStatement(programmedAgent, DELETE_PROGRAMMEDAGENT);
     }
 
@@ -74,9 +75,9 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
      *
      * @return A list with all the ProgrammedAgents from the database.
      */
-    public List<ProgrammedAgent> readAllProgrammedAgents () {
+    public List<ProgrammedAgentDB> readAllProgrammedAgents () {
         Connection conn;
-        List<ProgrammedAgent> programmedAgents = new ArrayList<>();
+        List<ProgrammedAgentDB> programmedAgents = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
@@ -85,7 +86,7 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
                 try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS)) {
                     try (ResultSet rs = pstmt.executeQuery()) {
                         while (rs.next()) {
-                            programmedAgents.add(new ProgrammedAgent(rs.getString("ProgrammedAgentName")));
+                            programmedAgents.add(new ProgrammedAgentDB(rs.getString("ProgrammedAgentName")));
                         }
                     }
                     conn.commit();
@@ -103,7 +104,7 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
      * @param programmedAgent The data needed to know what to create or delete.
      * @param query A string which contains the query that has to be executed on the database.
      */
-    private void executePreparedStatement(ProgrammedAgent programmedAgent, String query) {
+    private void executePreparedStatement(ProgrammedAgentDB programmedAgent, String query) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();

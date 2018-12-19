@@ -6,16 +6,16 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgent;
+import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ProgrammedAgentDAOIntegrationTest {
-    private static final ProgrammedAgent PROGRAMMED_AGENT = new ProgrammedAgent("Name1");
-    private static final ProgrammedAgent PROGRAMMED_AGENT_UPDATE = new ProgrammedAgent("Name1_Updated");
-    private static final ProgrammedAgent PROGRAMMED_AGENT2 = new ProgrammedAgent("Name2");
+    private static final ProgrammedAgentDB PROGRAMMED_AGENT = new ProgrammedAgentDB("Name1");
+    private static final ProgrammedAgentDB PROGRAMMED_AGENT_UPDATE = new ProgrammedAgentDB("Name1_Updated");
+    private static final ProgrammedAgentDB PROGRAMMED_AGENT2 = new ProgrammedAgentDB("Name2");
 
     private ProgrammedAgentDAO programmedAgentDAO;
 
@@ -43,7 +43,7 @@ class ProgrammedAgentDAOIntegrationTest {
         programmedAgentDAO.createProgrammedAgent(PROGRAMMED_AGENT);
         Assert.assertEquals(1, programmedAgentDAO.readAllProgrammedAgents().size());
 
-        ProgrammedAgent programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
+        ProgrammedAgentDB programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
 
         Assert.assertEquals(PROGRAMMED_AGENT.getProgrammedAgentName(), programmedAgentDb.getProgrammedAgentName());
     }
@@ -56,7 +56,7 @@ class ProgrammedAgentDAOIntegrationTest {
         programmedAgentDAO.updateProgrammedAgent(PROGRAMMED_AGENT, PROGRAMMED_AGENT_UPDATE);
         Assert.assertEquals(1, programmedAgentDAO.readAllProgrammedAgents().size());
 
-        ProgrammedAgent programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
+        ProgrammedAgentDB programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
 
         Assert.assertEquals(PROGRAMMED_AGENT_UPDATE.getProgrammedAgentName(), programmedAgentDb.getProgrammedAgentName());
     }
