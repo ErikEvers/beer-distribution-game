@@ -92,6 +92,14 @@ public class Round {
         return stock.get(facility);
     }
 
+    public void setStock(Map<Facility, Integer> stock) {
+        this.stock = stock;
+    }
+
+    public Map<Facility, Integer> getStock() {
+        return stock;
+    }
+
     public boolean isStockExisting(Facility facility) {
         return stock.containsKey(facility);
     }
@@ -105,8 +113,16 @@ public class Round {
         remainingBudget.put(facility, remainingBudgetNumber);
     }
 
-    public int getRemainingBudget(Facility facility) {
+    public int getRemainingBudgetByFacility(Facility facility) {
         return remainingBudget.get(facility);
+    }
+
+    public void setRemainingBudget(Map<Facility, Integer> remainingBudget) {
+        this.remainingBudget = remainingBudget;
+    }
+
+    public Map<Facility, Integer> getRemainingBudget() {
+        return remainingBudget;
     }
 
     public void updateRemainingBudget(Integer remainingBudgetNumber, Facility facility) {

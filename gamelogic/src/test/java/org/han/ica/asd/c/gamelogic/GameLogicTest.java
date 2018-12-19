@@ -301,7 +301,7 @@ public class GameLogicTest {
         Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(demand));
     }
 
-    public Round setupPreviousRoundObjectForBudgetCalculation() {
+    public Round setupPreviousRoundObjectForBudgetCalculationAndHandlingPreviousOpenOrders() {
         Round round = new RoundFake("0", 0);
         round.addTurnOrder(manufacturer, manufacturer, 25);
         round.addTurnOrder(regionalWarehouse, manufacturer, 0);
@@ -316,7 +316,7 @@ public class GameLogicTest {
     public void testIfCalculatingRemainingBudgetGoesCorrectly() {
         setupCalculateRoundTests();
 
-        Round previousRound = setupPreviousRoundObjectForBudgetCalculation();
+        Round previousRound = setupPreviousRoundObjectForBudgetCalculationAndHandlingPreviousOpenOrders();
         gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
@@ -325,18 +325,47 @@ public class GameLogicTest {
 
         //stockcost = 65 * 5 = 325; backlogcost = 0 * 25 = 0; OutgoingOrders = 25 * 3 = 75; Incoming orders = 0 * 3 = 0;
         //remaining budget = 500 - 325 - (75 - 0) = 100
-        Assert.assertEquals(100, calculatedRound.getRemainingBudget(manufacturer));
+        Assert.assertEquals(100, calculatedRound.getRemainingBudgetByFacility(manufacturer));
 
         //stockcost = 0 * 5 = 0; backlogcost = 10 * 25 = 250; OutgoingOrders = 0 * 4 = 0; incomingorders = 40 * 4 = 160;
         //remaining budget = (500 - 250) - (0 - 160) = 410
-        Assert.assertEquals(410, calculatedRound.getRemainingBudget(regionalWarehouse));
+        Assert.assertEquals(410, calculatedRound.getRemainingBudgetByFacility(regionalWarehouse));
 
         //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0; OutgoingOrders = 40 * 5 = 200; Incoming orders = 35 * 5 = 175;
         //remaining budget = (500 - 225) - (200 - 175) = 250
-        Assert.assertEquals(250, calculatedRound.getRemainingBudget(wholesale));
+        Assert.assertEquals(250, calculatedRound.getRemainingBudgetByFacility(wholesale));
 
         //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0; OutgoingOrders = 35 * 6 = 210; Incoming orders = 30 * 6 = 180;
         //remaining budget = (500 - 225) - (210 - 180) - 0 = 245
-        Assert.assertEquals(245, calculatedRound.getRemainingBudget(retailer));
+        Assert.assertEquals(245, calculatedRound.getRemainingBudgetByFacility(retailer));
+    }
+
+    @Test
+    public void testIfPreviousOpenOrdersAreBeingHandled() {
+        setupCalculateRoundTests();
+
+        Round previousRound = setupPreviousRoundObjectForBudgetCalculationAndHandlingPreviousOpenOrders();
+        gameLogic.getBeerGame().addRound(previousRound);
+
+        Round calculatedRound = setupCalculatedRoundObject();
+
+        calculatedRound = gameLogic.calculateRound(calculatedRound);
+        gameLogic.getBeerGame().addRound(calculatedRound);
+
+        calculatedRound.addTurnOrder(manufacturer, manufacturer, 20);
+        calculatedRound.addTurnOrder(regionalWarehouse, manufacturer, 30);
+        calculatedRound.addTurnOrder(wholesale, regionalWarehouse, 10);
+        calculatedRound.addTurnOrder(retailer, wholesale, 5);
+        calculatedRound.addTurnOrder(demand, retailer, 20);
+
+        Round solvedBackorderRound = new RoundFake("0", 2);
+        solvedBackorderRound.setRemainingBudget(calculatedRound.getRemainingBudget());
+        solvedBackorderRound.setStock(calculatedRound.getStock());
+        solvedBackorderRound = gameLogic.calculateRound(solvedBackorderRound);
+
+        Assert.assertEquals(55, solvedBackorderRound.getStockByFacility(manufacturer));
+        Assert.assertEquals( 10, solvedBackorderRound.getStockByFacility(regionalWarehouse));
+        Assert.assertEquals(60, solvedBackorderRound.getStockByFacility(wholesale));
+        Assert.assertEquals(30, solvedBackorderRound.getStockByFacility(retailer));
     }
 }

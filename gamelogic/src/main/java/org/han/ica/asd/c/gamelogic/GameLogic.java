@@ -197,7 +197,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @return
      */
     private int calculateStockCost(Round round, Facility facilityOrder) {
-        int remainingBudget = round.getRemainingBudget(facilityOrder);
+        int remainingBudget = round.getRemainingBudgetByFacility(facilityOrder);
         int stock = round.getStockByFacility(facilityOrder);
         FacilityType facilityType = facilityOrder.getFacilityType();
         int stockCosts = stock * facilityType.getStockHoldingCosts();
@@ -212,7 +212,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @return
      */
     private int calculateBackLogCost(Round round, Facility facilityOrder, Facility facilityDeliver) {
-        int remainingBudgetFacilityDeliver = round.getRemainingBudget(facilityDeliver);
+        int remainingBudgetFacilityDeliver = round.getRemainingBudgetByFacility(facilityDeliver);
         if (round.isTurnBackLogfilledByFacility(facilityOrder)) {
             FacilityType facilityType = facilityDeliver.getFacilityType();
             int backOrders = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
@@ -225,14 +225,14 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     }
 
     private void calculateOutgoingGoodsEarnings(int ordered, Round round, Facility facilityDeliver) {
-        int budgetDeliver = round.getRemainingBudget(facilityDeliver);
+        int budgetDeliver = round.getRemainingBudgetByFacility(facilityDeliver);
         int orderCostDeliver = ordered * facilityDeliver.getFacilityType().getValueOutgoingGoods();
 
         round.updateRemainingBudget(budgetDeliver + orderCostDeliver, facilityDeliver);
     }
 
     private void calculateIncomingGoodsCosts(int ordered, Round round, Facility facilityOrder) {
-        int budgetOrder = round.getRemainingBudget(facilityOrder);
+        int budgetOrder = round.getRemainingBudgetByFacility(facilityOrder);
         int orderCostOrder = ordered * facilityOrder.getFacilityType().getValueIncomingGoods();
 
         round.updateRemainingBudget(budgetOrder - orderCostOrder, facilityOrder);
