@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * @see FaultResponder
  */
 public class FaultDetectionClient {
-    private static final Logger logger = Logger.getLogger(FaultDetectionClient.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FaultDetectionClient.class.getName());
     private ObjectOutputStream outputStream = null;
     private boolean isConnected = false;
 
@@ -56,10 +56,11 @@ public class FaultDetectionClient {
                 outputStream.writeObject(new PingMessage());
                 isConnected = true;
             } catch (SocketException | SocketTimeoutException se) {
-                logger.log(Level.INFO, se.getMessage(), se);
+                LOGGER.log(Level.INFO, se.getMessage(), se);
                 throw new NodeCantBeReachedException(se);
+
             } catch (IOException e) {
-                logger.log(Level.INFO, e.getMessage(), e);
+                LOGGER.log(Level.INFO, e.getMessage(), e);
             }
         }
     }
@@ -80,7 +81,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessageResponse, ipToSendTo);
         } catch (NodeCantBeReachedException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -99,7 +100,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessage, ipAddress);
         } catch (NodeCantBeReachedException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -116,7 +117,8 @@ public class FaultDetectionClient {
      * @see CanYouReachLeaderMessage
      * @see FaultDetectorPlayer
      */
-    public void sendCanYouReachLeaderMessage(CanYouReachLeaderMessage canYouReachLeaderMessage, String ipAddress) throws NodeCantBeReachedException {
+    public void sendCanYouReachLeaderMessage(CanYouReachLeaderMessage canYouReachLeaderMessage, String ipAddress) throws
+            NodeCantBeReachedException {
         sendObject(canYouReachLeaderMessage, ipAddress);
     }
 
@@ -135,7 +137,7 @@ public class FaultDetectionClient {
         try {
             sendObject(iCanReachLeaderMessage, ipAddress);
         } catch (NodeCantBeReachedException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -166,8 +168,9 @@ public class FaultDetectionClient {
                 outputStream.writeObject(object);
 
             } catch (IOException se) {
-                logger.log(Level.INFO, se.getMessage(), se);
+                LOGGER.log(Level.INFO, se.getMessage(), se);
                 throw new NodeCantBeReachedException(se);
+
             }
         }
     }
