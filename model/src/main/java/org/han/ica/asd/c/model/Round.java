@@ -101,7 +101,7 @@ public class Round {
     }
 
     //Remaining budget
-    public void addFacilityRemainingStock(Integer remainingBudgetNumber, Facility facility) {
+    public void addFacilityRemainingBudget(Integer remainingBudgetNumber, Facility facility) {
         remainingBudget.put(facility, remainingBudgetNumber);
     }
 
