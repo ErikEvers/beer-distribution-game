@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * @see FaultResponder
  */
 public class FaultDetectionClient {
-    private static final Logger logger = Logger.getLogger(FaultDetectionClient.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FaultDetectionClient.class.getName());
     private ObjectOutputStream outputStream = null;
     private boolean isConnected = false;
 
@@ -56,10 +56,10 @@ public class FaultDetectionClient {
                 outputStream.writeObject(new PingMessage());
                 isConnected = true;
             } catch (SocketException | SocketTimeoutException se) {
-                logger.log(Level.INFO, se.getMessage(), se);
+                LOGGER.log(Level.INFO, se.getMessage(), se);
                 throw new PeerCantBeReachedException(se);
             } catch (IOException e) {
-                logger.log(Level.INFO, e.getMessage(), e);
+                LOGGER.log(Level.INFO, e.getMessage(), e);
             }
         }
     }
@@ -80,7 +80,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessageResponse, ipToSendTo);
         } catch (PeerCantBeReachedException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -99,7 +99,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessage, ipAddress);
         } catch (PeerCantBeReachedException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -135,7 +135,7 @@ public class FaultDetectionClient {
         try {
             sendObject(iCanReachLeaderMessage, ipAddress);
         } catch (PeerCantBeReachedException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -166,7 +166,7 @@ public class FaultDetectionClient {
                 outputStream.writeObject(object);
 
             } catch (IOException se) {
-                logger.log(Level.INFO, se.getMessage(), se);
+                LOGGER.log(Level.INFO, se.getMessage(), se);
                 throw new PeerCantBeReachedException(se);
             }
         }
