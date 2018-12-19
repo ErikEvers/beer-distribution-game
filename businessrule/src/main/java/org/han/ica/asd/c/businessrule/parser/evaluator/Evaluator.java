@@ -4,6 +4,8 @@ import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.*;
@@ -32,15 +34,12 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets a the error if check fails.
      */
     private void evaluateBusinessRule(Deque<ASTNode> deque, UserInputBusinessRule inputBusinessRule) {
-        ASTNode previous = null;
-
         while (!deque.isEmpty()) {
             ASTNode current = deque.pop();
 
             if (current != null) {
-                executeChecksAndLog(inputBusinessRule, previous, current);
+                executeChecksAndLog(inputBusinessRule, current);
 
-                previous = current;
                 List<ASTNode> children = current.getChildren();
                 Collections.reverse(children);
                 for (ASTNode child : children) {
@@ -54,11 +53,11 @@ public class Evaluator {
      * Execute all functions that check if node is correct.
      *
      * @param inputBusinessRule The rule that gets an error if check fails.
-     * @param previous          Previous node that it is checking.
      * @param current           Current node that it is checking.
      */
-    private void executeChecksAndLog(UserInputBusinessRule inputBusinessRule, ASTNode previous, ASTNode current) {
+    private void executeChecksAndLog(UserInputBusinessRule inputBusinessRule, ASTNode current) {
         checkRoundIsComparedToInt(current, inputBusinessRule);
+        checkNotDivideByZero(current, inputBusinessRule);
     }
 
     /**
@@ -69,16 +68,13 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkRoundIsComparedToInt(ASTNode current, UserInputBusinessRule inputBusinessRule) {
-        int left = 0;
-        int right = 2;
-
         if (current instanceof Comparison
-                && current.getChildren().get(left) != null
-                && current.getChildren().get(right) != null) {
-            if ("round".equals(((Value) current.getChildren().get(left).getChildren().get(left)).getValue())) {
-                checkRoundIsComparedToInt(current, inputBusinessRule, right);
-            } else if ("round".equals(((Value) current.getChildren().get(right).getChildren().get(left)).getValue())) {
-                checkRoundIsComparedToInt(current, inputBusinessRule, left);
+                && current.getChildren().get(ComparisonSide.LEFT.get()) != null
+                && current.getChildren().get(ComparisonSide.RIGHT.get()) != null) {
+            if (getAllValues(current.getChildren().get(ComparisonSide.LEFT.get()),new ArrayList<>()).contains("round")) {
+                checkRoundIsComparedToInt(current, inputBusinessRule, ComparisonSide.RIGHT.get());
+            } else if (getAllValues(current.getChildren().get(ComparisonSide.RIGHT.get()),new ArrayList<>()).contains("round")) {
+                checkRoundIsComparedToInt(current, inputBusinessRule, ComparisonSide.LEFT.get());
             }
         }
     }
@@ -96,11 +92,20 @@ public class Evaluator {
         q.add(current.getChildren().get(side));
         while (!q.isEmpty()) {
             ASTNode qVal = q.remove();
-            if (qVal instanceof Value && !((Value) qVal).getValue().matches("-?\\d+")) {
+            if (qVal instanceof Value && !((Value) qVal).getValue().matches("\\d+")) {
                 this.hasErrors = true;
                 inputBusinessRule.setErrorMessage("Round can only be compared to a number");
             }
             q.addAll(qVal.getChildren());
+        }
+    }
+
+    private void checkNotDivideByZero(ASTNode current, UserInputBusinessRule inputBusinessRule){
+        if(current instanceof DivideOperation
+                && current.getChildren().get(ComparisonSide.RIGHT.get()) instanceof Value
+                && ((Value) current.getChildren().get(ComparisonSide.RIGHT.get())).getValue().equals("0")){
+            this.hasErrors = true;
+            inputBusinessRule.setErrorMessage("Cannot divide a value by zero");
         }
     }
 
@@ -109,21 +114,19 @@ public class Evaluator {
      *
      * @param current Current node that is checked
      * @param nodes List of nodes that contains all Values at the end
-     * @param side Side of the Comparison on which to get Values from
      */
-    private void getAllValues(ASTNode current, List<String> nodes, int side){
-        int left = 0;
-        int right = 2;
-
+    private List<String> getAllValues(ASTNode current, List<String> nodes){
         if(current instanceof Value){
             nodes.add(((Value) current).getValue());
         }
 
         if(!current.getChildren().isEmpty()){
-            getAllValues(current.getChildren().get(side),nodes,left);
+            getAllValues(current.getChildren().get(ComparisonSide.LEFT.get()),nodes);
             if(current.getChildren().size() > 1){
-                getAllValues(current.getChildren().get(side),nodes,right);
+                getAllValues(current.getChildren().get(ComparisonSide.RIGHT.get()),nodes);
             }
         }
+
+        return nodes;
     }
 }
