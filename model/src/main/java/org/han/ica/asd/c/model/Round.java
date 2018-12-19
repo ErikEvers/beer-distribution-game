@@ -79,7 +79,11 @@ public class Round {
         return turnBackOrder.get(facilityFrom).get(facilityTo);
     }
 
-    public boolean isTurnBackLogfilledByFacility(Facility facilityFrom) {
+    public int updateTurnBacklogByFacility(Facility facilityFrom, Facility facilityTo, int newValue) {
+        return turnBackOrder.get(facilityFrom).replace(facilityTo, newValue);
+    }
+
+    public boolean isTurnBackLogFilledByFacility(Facility facilityFrom) {
         return turnBackOrder.containsKey(facilityFrom);
     }
 
@@ -129,7 +133,7 @@ public class Round {
         remainingBudget.replace(facility, remainingBudgetNumber);
     }
 
-    public boolean isremainingBudgetExisting(Facility facility) {
+    public boolean isRemainingBudgetExisting(Facility facility) {
         return remainingBudget.containsKey(facility);
     }
 

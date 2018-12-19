@@ -33,6 +33,7 @@ public class GameLogicTest {
     public void setup() {
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IPersistence.class);
+
         participantsPool = mock(ParticipantsPool.class);
         gameLogic = new GameLogic("test", communication, persistence, participantsPool, new BeerGame("0", "", "", ""));
     }
@@ -212,11 +213,11 @@ public class GameLogicTest {
 
         calculatedRound = gameLogic.calculateRound(calculatedRound);
 
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(manufacturer));
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(regionalWarehouse));
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(wholesale));
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(retailer));
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(demand));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(manufacturer));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(regionalWarehouse));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(wholesale));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(retailer));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(demand));
     }
 
     private Round setupPreviousRoundObjectWithBacklog() {
@@ -294,11 +295,11 @@ public class GameLogicTest {
 
         calculatedRound = gameLogic.calculateRound(calculatedRound);
 
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(manufacturer));
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(regionalWarehouse));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(manufacturer));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(regionalWarehouse));
         Assert.assertEquals(110, calculatedRound.getTurnBacklogByFacility(wholesale, regionalWarehouse));
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(retailer));
-        Assert.assertEquals(false, calculatedRound.isTurnBackLogfilledByFacility(demand));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(retailer));
+        Assert.assertEquals(false, calculatedRound.isTurnBackLogFilledByFacility(demand));
     }
 
     public Round setupPreviousRoundObjectForBudgetCalculationAndHandlingPreviousOpenOrders() {
@@ -367,5 +368,39 @@ public class GameLogicTest {
         Assert.assertEquals( 10, solvedBackorderRound.getStockByFacility(regionalWarehouse));
         Assert.assertEquals(60, solvedBackorderRound.getStockByFacility(wholesale));
         Assert.assertEquals(30, solvedBackorderRound.getStockByFacility(retailer));
+        Assert.assertEquals(0, calculatedRound.getTurnBacklogByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(false, solvedBackorderRound.isTurnBackLogFilledByFacility(wholesale));
+    }
+
+    @Test
+    public void testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrders() {
+        setupCalculateRoundTests();
+
+        Round previousRound = setupPreviousRoundObjectForBudgetCalculationAndHandlingPreviousOpenOrders();
+        gameLogic.getBeerGame().addRound(previousRound);
+
+        Round calculatedRound = setupCalculatedRoundObject();
+
+        calculatedRound = gameLogic.calculateRound(calculatedRound);
+        gameLogic.getBeerGame().addRound(calculatedRound);
+
+        calculatedRound.addTurnOrder(manufacturer, manufacturer, 20);
+        calculatedRound.addTurnOrder(regionalWarehouse, manufacturer, 30);
+        calculatedRound.addTurnOrder(wholesale, regionalWarehouse, 50);
+        calculatedRound.addTurnOrder(retailer, wholesale, 5);
+        calculatedRound.addTurnOrder(demand, retailer, 20);
+
+        Round solvedBackorderRound = new RoundFake("0", 2);
+        solvedBackorderRound.setRemainingBudget(calculatedRound.getRemainingBudget());
+        solvedBackorderRound.setStock(calculatedRound.getStock());
+        solvedBackorderRound = gameLogic.calculateRound(solvedBackorderRound);
+
+        Assert.assertEquals(55, solvedBackorderRound.getStockByFacility(manufacturer));
+        Assert.assertEquals( 0, solvedBackorderRound.getStockByFacility(regionalWarehouse));
+        Assert.assertEquals(70, solvedBackorderRound.getStockByFacility(wholesale));
+        Assert.assertEquals(30, solvedBackorderRound.getStockByFacility(retailer));
+        Assert.assertEquals(0, calculatedRound.getTurnBacklogByFacility(wholesale, regionalWarehouse));
+        Assert.assertEquals(true, solvedBackorderRound.isTurnBackLogFilledByFacility(wholesale));
+        Assert.assertEquals(30, solvedBackorderRound.getTurnBacklogByFacility(wholesale, regionalWarehouse));
     }
 }

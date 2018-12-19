@@ -116,6 +116,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
             //get the round of the previous turn.
             int ordered = previousRound.getTurnOrderByFacility(facilityOrder, facilityDeliver);
 
+            ordered = dealWithBackOrders(ordered, previousRound, facilityOrder, facilityDeliver);
+
             ordered = calculateNewFacilityStockDeliver(round, ordered, facilityDeliver, facilityOrder);
 
             //calculate and update the new stock of the facility that ordered.
@@ -176,7 +178,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         for (FacilityLinkedTo f : facilitityLinks) {
             Facility facilityOrder = f.getFacilityOrder();
             Facility facilityDeliver = f.getFacilityDeliver();
-            if (round.isremainingBudgetExisting(facilityOrder)) {
+            if (round.isRemainingBudgetExisting(facilityOrder)) {
                 //The budget is calculated for the FacilityOrder variable
                 round.updateRemainingBudget(
                         calculateStockCost(round, facilityOrder),
@@ -213,7 +215,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      */
     private int calculateBackLogCost(Round round, Facility facilityOrder, Facility facilityDeliver) {
         int remainingBudgetFacilityDeliver = round.getRemainingBudgetByFacility(facilityDeliver);
-        if (round.isTurnBackLogfilledByFacility(facilityOrder)) {
+        if (round.isTurnBackLogFilledByFacility(facilityOrder)) {
             FacilityType facilityType = facilityDeliver.getFacilityType();
             int backOrders = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
             int backlogCosts = backOrders * facilityType.getOpenOrderCosts();
@@ -238,7 +240,17 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         round.updateRemainingBudget(budgetOrder - orderCostOrder, facilityOrder);
     }
 
-    public BeerGame getBeerGame() {
+    private int dealWithBackOrders(int ordered, Round round, Facility facilityOrder, Facility facilityDeliver) {
+        if (round.isTurnBackLogFilledByFacility(facilityOrder)) {
+            int backOrderAmount = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
+            round.updateTurnBacklogByFacility(facilityOrder, facilityDeliver, 0);
+            return ordered + backOrderAmount;
+        }
+
+        return ordered;
+    }
+
+    BeerGame getBeerGame() {
         return beerGame;
     }
 }
