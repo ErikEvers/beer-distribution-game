@@ -9,6 +9,10 @@ public class Facility implements IDomainModel{
     private GameAgent agent;
     private int facilityId;
 
+    public Facility() {
+        // empty for Guice
+    }
+
     public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, Player player, GameAgent agent, int facilityId) {
         this.facilityType = facilityType;
         this.facilitiesLinkedTo = facilitiesLinkedTo;
