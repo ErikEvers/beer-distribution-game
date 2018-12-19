@@ -54,6 +54,19 @@ class GameBusinessRulesDAOIntegrationTest {
 
     @Test
     void deleteSpecificGamebusinessrule() {
+        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB2);
+        Assert.assertEquals(2,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
+        gameBusinessRulesDAO.deleteSpecificGamebusinessrule(GAME_BUSINESS_RULES_DB);
+
+        GameBusinessRulesDB gameBusinessRulesDB = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen","AgentName").get(0);
+
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameId(),gameBusinessRulesDB.getGameId());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getFacilityId(),gameBusinessRulesDB.getFacilityId());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameAgentName(),gameBusinessRulesDB.getGameAgentName());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameBusinessRule(),gameBusinessRulesDB.getGameBusinessRule());
+        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameAST(),gameBusinessRulesDB.getGameAST());
     }
 
     @Test
