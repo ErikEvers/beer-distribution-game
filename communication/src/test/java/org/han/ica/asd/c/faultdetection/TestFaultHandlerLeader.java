@@ -46,7 +46,7 @@ public class TestFaultHandlerLeader {
 
 		when(nodeInfoList.size()).thenReturn(10);
 
-		for (int i = 1; i < 10/2; i++) {
+		for (int i = 1; i < 10; i++) {
 			assertNull(faultHandlerLeader.incrementFailure("1234"));
 
 		}
