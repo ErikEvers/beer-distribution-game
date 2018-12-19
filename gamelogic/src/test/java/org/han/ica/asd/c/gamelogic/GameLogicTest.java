@@ -150,7 +150,7 @@ public class GameLogicTest {
 
         Round previousRound = setupPreviousRoundObjectWithoutBacklog();
 
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -168,7 +168,7 @@ public class GameLogicTest {
 
         Round previousRound = setupPreviousRoundObjectWithoutBacklog();
 
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -187,7 +187,7 @@ public class GameLogicTest {
 
         Round previousRound = setupPreviousRoundObjectWithoutBacklog();
 
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -206,7 +206,7 @@ public class GameLogicTest {
 
         Round previousRound = setupPreviousRoundObjectWithoutBacklog();
 
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -235,7 +235,7 @@ public class GameLogicTest {
         setupCalculateRoundTests();
 
         Round previousRound = setupPreviousRoundObjectWithBacklog();
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -252,7 +252,7 @@ public class GameLogicTest {
         setupCalculateRoundTests();
 
         Round previousRound = setupPreviousRoundObjectWithBacklog();
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -270,7 +270,7 @@ public class GameLogicTest {
         setupCalculateRoundTests();
 
         Round previousRound = setupPreviousRoundObjectWithBacklog();
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -288,7 +288,7 @@ public class GameLogicTest {
         setupCalculateRoundTests();
 
         Round previousRound = setupPreviousRoundObjectWithBacklog();
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 
@@ -317,7 +317,7 @@ public class GameLogicTest {
         setupCalculateRoundTests();
 
         Round previousRound = setupPreviousRoundObjectForBudgetCalculation();
-        gameLogic.beerGame.addRound(previousRound);
+        gameLogic.getBeerGame().addRound(previousRound);
 
         Round calculatedRound = setupCalculatedRoundObject();
 

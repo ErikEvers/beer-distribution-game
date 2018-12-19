@@ -237,4 +237,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
         round.updateRemainingBudget(budgetOrder - orderCostOrder, facilityOrder);
     }
+
+    public BeerGame getBeerGame() {
+        return beerGame;
+    }
 }
