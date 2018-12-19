@@ -2,7 +2,10 @@ package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
 import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
+import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.observers.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.observers.ITurnModelObserver;
@@ -11,13 +14,15 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver {
-    @Inject private IConnectorForLeader connectorForLeader;
-    @Inject private ILeaderGameLogic gameLogic;
-    @Inject private TurnHandler turnHandler;
+    @Inject
+    private IConnectorForLeader connectorForLeader;
+    @Inject
+    private ILeaderGameLogic gameLogic;
+    @Inject
+    private TurnHandler turnHandler;
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
-    private final Provider<IParticipant> participantProvider;
 
     private BeerGame game;
     private Round currentRoundData;
@@ -26,10 +31,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private int turnsReceivedInCurrentRound;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<IParticipant> participantProvider) {
+    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider) {
         this.beerGameProvider = beerGameProvider;
         this.roundProvider = roundProvider;
-        this.participantProvider = participantProvider;
     }
 
     public void init() {
@@ -38,18 +42,45 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     }
 
     /**
+     * This method is called when the fault detection component detects that this machine is disconnected from all other players for whatever reason.
+     * When this happens, an agent is added for each player except the local player.
+     */
+    @Override
+    public void iAmDisconnected() {
+        for (Player p : game.getPlayers()) {
+            if (!checkIfPlayerIsLocalPlayer(p)) {
+                playerIsDisconnected(p.getPlayerId());
+            }
+        }
+    }
+
+    /**
+     * Checks if the incoming playerId is the same as the playerId of the game leader.
+     * @param p supplied player object
+     * @return true if the supplied player is the local player, false otherwise
+     */
+    private boolean checkIfPlayerIsLocalPlayer(Player p) {
+        return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
+    }
+
+    /**
      * This method is called when a player disconnects, which this class is notified of by the IPlayerDisconnected interface.
      * Using this playerId an IParticipant object is created with the facilityId corresponding to the playerId, which is sent to the Game Logic component.
+     *
      * @param playerId the Id of the player that disconnected.
      */
     public void playerIsDisconnected(String playerId) {
-        IParticipant participant = participantProvider.get();
-        participa
-        gameLogic.addLocalParticipant(participant);
+        for (int i = 0; i <= game.getConfiguration().getFacilities().size(); i++) {
+            if (game.getConfiguration().getFacilities().get(i).getPlayer().getPlayerId().equals(playerId)) {
+                IParticipant participant = new AgentParticipant(game.getConfiguration().getFacilities().get(i).getAgent().getGameAgentName(), game.getConfiguration().getFacilities().get(i).getFacilityId());
+                gameLogic.addLocalParticipant(participant);
+            }
+        }
     }
 
     /**
      * This method is called when a player reconnects, which this class is notified of by the IPlayerReconnected interface (which is going to be implemented in a next sprint)
+     *
      * @param playerId the Id of the player that reconnected.
      */
     public void notifyPlayerReconnected(String playerId) {
@@ -59,15 +90,16 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     /**
      * This method is called when a turn is received from the ITurnModelObserver.
      * The turn is processed by the TurnHandler and the amount of turns received this round is incremented.
-     *
+     * <p>
      * Once all turns have been received, allTurnDataReceived is called.
+     *
      * @param turnModel an incoming turn from a facility
      */
     public void turnModelReceived(Round turnModel) {
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
-        if(turnsReceivedInCurrentRound == turnsExpectedPerRound)
+        if (turnsReceivedInCurrentRound == turnsExpectedPerRound)
             allTurnDataReceived();
     }
 

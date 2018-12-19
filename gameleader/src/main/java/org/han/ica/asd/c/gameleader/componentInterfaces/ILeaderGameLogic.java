@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gameleader.componentInterfaces;
 
+import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 /**
