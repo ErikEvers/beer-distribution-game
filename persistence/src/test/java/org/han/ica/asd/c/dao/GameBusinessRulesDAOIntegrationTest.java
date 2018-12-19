@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 class GameBusinessRulesDAOIntegrationTest {
@@ -77,5 +78,14 @@ class GameBusinessRulesDAOIntegrationTest {
         Assert.assertEquals(2,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
         gameBusinessRulesDAO.deleteAllGamebusinessrulesForGameagentInAGame("BeerGameZutphen", "AgentName");
         Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
+    }
+
+    @Test
+    void createDuplicateGameBusinessRuleTest() throws SQLException{
+        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
+        Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
+
     }
 }
