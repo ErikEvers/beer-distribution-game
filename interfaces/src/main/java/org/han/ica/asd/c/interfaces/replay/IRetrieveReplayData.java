@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.data;
+package org.han.ica.asd.c.interfaces.replay;
 
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
