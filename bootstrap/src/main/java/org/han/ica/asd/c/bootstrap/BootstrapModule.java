@@ -1,7 +1,8 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.*;
+import org.han.ica.asd.c.dao.*;
+
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.businessrule.IBusinessRules;
 import org.han.ica.asd.c.dbconnection.DBConnection;
