@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.public_interfaces;
+package org.han.ica.asd.c.interfaces.businessrule;
 
 import java.util.List;
 import java.util.Map;

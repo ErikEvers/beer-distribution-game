@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.observers;
+package org.han.ica.asd.c.interfaces.communication;
 
 import org.han.ica.asd.c.model.domain_objects.Round;
 

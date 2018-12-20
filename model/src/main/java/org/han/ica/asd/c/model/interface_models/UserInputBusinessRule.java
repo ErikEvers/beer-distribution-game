@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.parser;
+package org.han.ica.asd.c.model.interface_models;
 
 public class UserInputBusinessRule {
     private String businessRule;

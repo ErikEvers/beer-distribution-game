@@ -1,6 +1,6 @@
-package org.han.ica.asd.c.observers;
+package org.han.ica.asd.c.interfaces.communication;
 
-import domainobjects.Election;
+import org.han.ica.asd.c.model.interface_models.Election;
 
 public interface IElectionObserver extends IConnectorObserver {
     Election electionReceived(Election election);

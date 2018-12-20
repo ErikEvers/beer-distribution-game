@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.observers;
+package org.han.ica.asd.c.interfaces.communication;
 
 public interface IPlayerDisconnectedObserver extends IConnectorObserver {
 	void iAmDisconnected();
