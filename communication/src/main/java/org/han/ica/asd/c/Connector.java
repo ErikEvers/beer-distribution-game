@@ -5,7 +5,11 @@ import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
+import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
+import org.han.ica.asd.c.faultdetection.FaultDetectorPlayer;
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
@@ -56,7 +60,7 @@ private static Connector instance = null;
 
     //TODO replace with GUICE, inject singleton
     public static Connector getInstance() {
-        if (instance != null){
+        if (instance == null){
             instance = new Connector();
         }
         return instance;
@@ -68,7 +72,9 @@ private static Connector instance = null;
 
     public Room createRoom(String roomName, String ip, String password){
         try {
-            return finder.createGameRoom(roomName, ip, password);
+            Room createdRoom = finder.createGameRoom(roomName, ip, password);
+            nodeInfoList.add(new NodeInfo(ip, true, true));
+            return createdRoom;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage());
         }
@@ -77,7 +83,9 @@ private static Connector instance = null;
 
     public Room joinRoom(String roomName, String ip, String password){
         try {
-            return finder.joinGameRoom(roomName, ip, password);
+            Room joinedRoom = finder.joinGameRoom(roomName, ip, password);
+            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+            return joinedRoom;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage());
         }
@@ -86,7 +94,6 @@ private static Connector instance = null;
 
     public void startRoom(Room room){
         try {
-            nodeInfoList.add(new NodeInfo(room.getLeaderIP(), true, true));
             for(String hostIP: room.getHosts()){
                 nodeInfoList.add(new NodeInfo(hostIP, true, false));
             }
@@ -106,6 +113,17 @@ private static Connector instance = null;
 
     public void setJoiner() {
         faultDetector.setPlayer(nodeInfoList);
+        makeConnection(nodeInfoList.get(0).getIp());
+    }
+
+    public boolean makeConnection(String destinationIP){
+        try {
+            new FaultDetectionClient().makeConnection(destinationIP);
+            return true;
+        } catch (NodeCantBeReachedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void addToNodeInfoList(String txtIP) {
@@ -117,7 +135,6 @@ private static Connector instance = null;
         nodeInfo.setLeader(true);
         nodeInfo.setIp(txtIp);
         nodeInfoList.add(nodeInfo);
-
     }
 
     public void sendTurn(Round turn) {
