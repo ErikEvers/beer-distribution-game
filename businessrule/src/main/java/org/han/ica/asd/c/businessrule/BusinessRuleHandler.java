@@ -19,12 +19,12 @@ public class BusinessRuleHandler implements IBusinessRules {
         String s = "if inventory is 20 then order 10\n" +
                 "if back orders is higher than 50 then order 100\n" +
                 "if inventory is higher than 20% of the backlog then order 10\n" +
-                "if inventory is lower than 70 then order 33\n" +
+                "if inventory is lower than 20 then order 33\n" +
                 "if round is 10 then order 20\n" +
                 "default order 20\n" +
                 "default deliver 20\n" +
                 "if inventory is 20 and back orders is 35 or inventory is 55 then order 77\n" +
-                "if inventory*2 is lower than 70/10 then order 33+2";
+                "if inventory*2 is lower than 70/10 then order 33+2 from factory2 where inventory is lowest";
         ParserPipeline parserPipeline = new ParserPipeline();
         parserPipeline.parseString(s);
         System.out.println(parserPipeline.parseString(s));

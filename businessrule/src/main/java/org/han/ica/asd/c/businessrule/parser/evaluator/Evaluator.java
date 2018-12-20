@@ -5,6 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
@@ -14,8 +15,9 @@ import java.util.*;
 public class Evaluator {
     private boolean hasErrors = false;
     private static final String INT_VALUE = "\\d+";
-    private Counter defaultOrderCounter = new Counter();
-    private Counter defaultDeliverCounter = new Counter();
+    private boolean defaultOrderBool = false;
+    private boolean defaultDeliverBool = false;
+    private boolean personBool;
 
     /**
      * Evaluates the business rules. and checks if there are any errors.
@@ -40,6 +42,7 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets a the error if check fails.
      */
     private void evaluateBusinessRule(Deque<ASTNode> deque, UserInputBusinessRule inputBusinessRule) {
+        personBool = false;
         while (!deque.isEmpty()) {
             ASTNode current = deque.pop();
 
@@ -64,8 +67,9 @@ public class Evaluator {
     private void executeChecksAndLog(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         checkRoundIsComparedToInt(current, inputBusinessRule);
         checkNotDividedByZero(current, inputBusinessRule);
-        checkOnlyOneDefaultOrderAndOneDefaultDeliver(current,inputBusinessRule);
-        checkDefaultWithoutDestination(current,inputBusinessRule);
+        checkOnlyOneDefaultOrderAndOneDefaultDeliver(current, inputBusinessRule);
+        checkDefaultWithoutDestination(current, inputBusinessRule);
+        checkLowestHighestOnlyUsedAfterPerson(current, inputBusinessRule);
     }
 
     /**
@@ -141,18 +145,17 @@ public class Evaluator {
                 String action = ((ActionReference) current.getChildren().get(right).getChildren().get(left)).getAction();
 
                 if("order".equals(action)){
-                    defaultOrderCounter.addOne();
+                    if(defaultOrderBool){
+                        this.hasErrors = true;
+                        inputBusinessRule.setErrorMessage("There can only be one default order business rule");
+                    }
+                    defaultOrderBool = true;
                 } else if("deliver".equals(action)){
-                    defaultDeliverCounter.addOne();
-                }
-
-                if(defaultOrderCounter.getCountedValue() > 1){
-                    this.hasErrors = true;
-                    inputBusinessRule.setErrorMessage("There can only be one default order business rule");
-                }
-                if(defaultDeliverCounter.getCountedValue() > 1){
-                    this.hasErrors = true;
-                    inputBusinessRule.setErrorMessage("There can only be one default deliver business rule");
+                    if(defaultDeliverBool){
+                        this.hasErrors = true;
+                        inputBusinessRule.setErrorMessage("There can only be one default deliver business rule");
+                    }
+                    defaultDeliverBool = true;
                 }
             }
         }
@@ -164,12 +167,22 @@ public class Evaluator {
      * @param businessRulesMap A map that combines the BusinessRule and UserInputBusinessRule.
      */
     private void checkMinimumOfOneDefaultForOrderAndDeliver(Map<UserInputBusinessRule, BusinessRule> businessRulesMap){
-        if(defaultDeliverCounter.getCountedValue() == 0 || defaultOrderCounter.getCountedValue() == 0){
+        if(!defaultOrderBool){
             this.hasErrors = true;
-           businessRulesMap.keySet().toArray(new UserInputBusinessRule[]{})[0].setErrorMessage("You're obligated to have at least one default for ordering and one default for delivering");
+            businessRulesMap.keySet().toArray(new UserInputBusinessRule[]{})[0].setErrorMessage("You're obligated to have at least one default for ordering");
+        }
+        if(!defaultDeliverBool){
+            this.hasErrors = true;
+           businessRulesMap.keySet().toArray(new UserInputBusinessRule[]{})[0].setErrorMessage("You're obligated to have at least one default for delivering");
         }
     }
 
+    /**
+     * Checks if the default rule has no destination. If it does it sets an error.
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets an error if check fails.
+     */
     private void checkDefaultWithoutDestination(ASTNode current, UserInputBusinessRule inputBusinessRule){
         if(current instanceof BusinessRule){
             int left = 0;
@@ -181,7 +194,24 @@ public class Evaluator {
         }
     }
 
-    //Lowest/Highest mag alleen gebruikt worden in na een Person
+    /**
+     * Checks that lowest/highest is only used in a condition for another person/player. If not it sets an error.
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets an error if check fails.
+     */
+    private void checkLowestHighestOnlyUsedAfterPerson(ASTNode current, UserInputBusinessRule inputBusinessRule){
+        if(current instanceof Person){
+            personBool = true;
+        }
+
+        if(current instanceof Value
+                && (((Value) current).getValue().equals("lowest") || ((Value) current).getValue().equals("highest"))
+                && !personBool){
+            this.hasErrors = true;
+            inputBusinessRule.setErrorMessage("Lowest/Highest can only be used in a condition for another player");
+        }
+    }
 
     /**
      * Recursive method that searches for all values in a side of a Comparison and puts them in a list.
