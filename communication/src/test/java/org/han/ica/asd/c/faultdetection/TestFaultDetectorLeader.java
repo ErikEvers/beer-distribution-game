@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.faultdetection;
 
 
-import org.han.ica.asd.c.faultdetection.exceptions.PeerCantBeReachedException;
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
@@ -16,11 +16,7 @@ import java.util.List;
 import java.util.Timer;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class TestFaultDetectorLeader {
@@ -121,8 +117,8 @@ public class TestFaultDetectorLeader {
     void testRunThrowsException() {
 
         FaultDetectionClient faultDetectionClientMock = new FaultDetectionClient() {
-            public void makeConnection(String ipAddress) throws PeerCantBeReachedException {
-                throw new PeerCantBeReachedException();
+            public void makeConnection(String ipAddress) throws NodeCantBeReachedException {
+                throw new NodeCantBeReachedException();
                 //doNothing
                 //For this test it is required to throw an exception so its easier to overwrite it.
             }

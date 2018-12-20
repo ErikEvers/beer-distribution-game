@@ -1,17 +1,13 @@
 package org.han.ica.asd.c.faultdetection;
 
-import org.han.ica.asd.c.faultdetection.exceptions.PeerCantBeReachedException;
+import org.han.ica.asd.c.Global;
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.Global;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -170,7 +166,7 @@ public class FaultDetectorLeader extends TimerTask {
             failLog.reset(ip);
             faultHandlerLeader.reset(ip);
             nodeInfoList.updateIsConnected(ip, true);
-        } catch (PeerCantBeReachedException e) {
+        } catch (NodeCantBeReachedException e) {
             if (!failLog.checkIfIpIsFailed(ip)) {
                 failLog.increment(ip);
             }
