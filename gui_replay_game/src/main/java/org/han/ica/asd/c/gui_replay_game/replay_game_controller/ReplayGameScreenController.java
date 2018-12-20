@@ -121,7 +121,6 @@ public class ReplayGameScreenController {
     private void facilityComboBoxUpdated(Facility facilityOld, Facility facilityNew) {
         replayData.removeDisplayedFacility(facilityOld);
         if (facilityNew != null) {
-            System.out.println("added facility");
             clearCheckBoxes();
             replayData.addDisplayedFacility(facilityNew);
         }
