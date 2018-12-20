@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/ChooseFacility.fxml"), ResourceBundle.getBundle("languageResources"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/ChooseAgent.fxml"), ResourceBundle.getBundle("languageResources"));
         primaryStage.setScene(new Scene(root));
         if (!ComponentOrientation.getOrientation(new Locale(System.getProperty("user.language"))).isLeftToRight()){
             root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
