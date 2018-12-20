@@ -37,18 +37,18 @@ public class ComparisonOperator extends Operator {
      * @return The comparison operator as code
      */
     private String findComparisonOperator(String operator) {
-        if (ComparisonType.GREATER_EQUAL.get().equals(operator) || (operator.contains(ComparisonType.EQUAL_CHARS.get()) && (operator.contains(ComparisonType.GREATER_CHARS_HIGHER.get()) || operator.contains(ComparisonType.GREATER_CHARS.get())))) {
-            return ComparisonType.GREATER_EQUAL.get();
-        } else if (ComparisonType.LESS_EQUAL.get().equals(operator) || (operator.contains(ComparisonType.EQUAL_CHARS.get()) && (operator.contains(ComparisonType.LESS_CHARS.get()) || operator.contains(ComparisonType.LESS_CHARS_LOWER.get())))) {
-            return ComparisonType.LESS_EQUAL.get();
-        } else if (ComparisonType.EQUAL_CHARS_IS.get().equals(operator) || ComparisonType.EQUAL_ONE.get().equals(operator) || operator.equals(ComparisonType.EQUAL_CHARS.get())) {
-            return ComparisonType.EQUAL.get();
-        } else if (ComparisonType.NOT.get().equals(operator) || operator.contains(ComparisonType.NOT_CHARS.get())) {
-            return ComparisonType.NOT.get();
-        } else if (operator.contains(ComparisonType.GREATER_CHARS.get()) || operator.contains(ComparisonType.GREATER_CHARS_HIGHER.get())) {
-            return ComparisonType.GREATER.get();
+        if (ComparisonType.GREATER_EQUAL.contains(operator)) {
+            return ComparisonType.GREATER_EQUAL.get(0);
+        } else if (ComparisonType.LESS_EQUAL.contains(operator)) {
+            return ComparisonType.LESS_EQUAL.get(0);
+        } else if (ComparisonType.EQUAL.contains(operator)) {
+            return ComparisonType.EQUAL.get(0);
+        } else if (ComparisonType.NOT.contains(operator)) {
+            return ComparisonType.NOT.get(0);
+        } else if (ComparisonType.GREATER.contains(operator)) {
+            return ComparisonType.GREATER.get(0);
         } else {
-            return ComparisonType.LESS.get();
+            return ComparisonType.LESS.get(0);
         }
     }
 
