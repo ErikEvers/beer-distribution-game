@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.public_interfaces;
+package org.han.ica.asd.c.interfaces.gamelogic;
 
 import org.han.ica.asd.c.model.dao_model.BeerGame;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
