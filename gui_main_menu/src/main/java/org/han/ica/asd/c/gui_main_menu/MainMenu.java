@@ -1,30 +1,15 @@
 package org.han.ica.asd.c.gui_main_menu;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
-public class MainMenu extends Application {
-	private final Provider<FXMLLoaderOnSteroids> loaderProvider;
 
-	@Inject
-	public MainMenu(Provider<FXMLLoaderOnSteroids> loaderProvider) {
-		this.loaderProvider = loaderProvider;
-	}
+public class MainMenu implements IGUIHandler {
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		FXMLLoaderOnSteroids loader = loaderProvider.get();
-		loader.setLocation(getClass().getResource("/fxml/MainMenu.fxml"));
-		primaryStage.setScene(new Scene(loader.load()));
-		primaryStage.show();
-	}
+	public void setupScreen() {
 
-	public static void main(String[] args){
-		launch(args);
+		FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/MainMenu.fxml"));
 	}
 
 }

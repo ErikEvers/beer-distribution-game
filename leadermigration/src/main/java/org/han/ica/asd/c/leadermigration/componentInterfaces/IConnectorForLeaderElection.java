@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.leadermigration.componentInterfaces;
 
 import org.han.ica.asd.c.leadermigration.ElectionModel;
-import org.han.ica.asd.c.model.dao_model.Player;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 
 public interface IConnectorForLeaderElection {

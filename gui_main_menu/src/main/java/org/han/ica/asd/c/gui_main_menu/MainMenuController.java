@@ -1,50 +1,58 @@
 package org.han.ica.asd.c.gui_main_menu;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.util.ResourceBundle;
+import javafx.scene.control.Button;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 
 public class MainMenuController {
 
-	@FXML
-	private AnchorPane mainContainer;
+    @FXML
+    private AnchorPane mainContainer;
 
-	public void initialize(){
+    @FXML
+    private Button close;
+
+    @FXML
+    private Button createAgent;
+
+    @FXML
+    private Button replay;
+
+    @Inject
+    @Named("ProgramAgentList")
+    private IGUIHandler programAgentList;
+
+    @Inject
+    @Named("ReplayGame")
+    private IGUIHandler replayGame;
+
+    public void initialize() {
         mainContainer.getChildren().addAll();
+        setCloseButtonAction();
+        setProgramAgentButtonAction();
+        setReplayButtonAction();
     }
 
-    public void handleCloseGameButtonClick(){
-        Platform.exit();
+    private void setCloseButtonAction() {
+        close.setOnAction(event -> {
+            Stage stage = (Stage) close.getScene().getWindow();
+            stage.close();
+        });
     }
 
-    public void handleCreateGameButtonClick() throws Exception{
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"), ResourceBundle.getBundle("languageResources")));
-        Stage stage = (Stage) mainContainer.getScene().getWindow();
-        stage.setScene(scene);
+    private void setProgramAgentButtonAction() {
+        createAgent.setOnAction(event -> programAgentList.setupScreen());
     }
 
-    public void handleJoinGameButtonClick() throws Exception{
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"), ResourceBundle.getBundle("languageResources")));
-        Stage stage = (Stage) mainContainer.getScene().getWindow();
-        stage.setScene(scene);
-    }
-
-    public void handleBusinessRulesButtonClick() throws Exception{
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"), ResourceBundle.getBundle("languageResources")));
-        Stage stage = (Stage) mainContainer.getScene().getWindow();
-        stage.setScene(scene);
-    }
-
-    public void handleReplayGameButtonClick() throws Exception{
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/MainMenu.fxml"), ResourceBundle.getBundle("languageResources")));
-        Stage stage = (Stage) mainContainer.getScene().getWindow();
-        stage.setScene(scene);
+    private void setReplayButtonAction() {
+        replay.setOnAction(event -> replayGame.setupScreen());
     }
 
 }

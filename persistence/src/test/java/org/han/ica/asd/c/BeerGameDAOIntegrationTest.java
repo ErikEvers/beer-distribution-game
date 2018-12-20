@@ -3,9 +3,10 @@ package org.han.ica.asd.c;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.BeerGame;
+import org.han.ica.asd.c.model.dao_model.BeerGameDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,7 +56,7 @@ public class BeerGameDAOIntegrationTest {
 	public void deleteBeergame() {
 		beergameDAO.createBeergame("BeergameZutphen");
 		beergameDAO.createBeergame("BeergameArnhem");
-		List<BeerGame> beergames = beergameDAO.readBeergames();
+		List<BeerGameDB> beergames = beergameDAO.readBeergames();
 		beergameDAO.deleteBeergame(beergames.get(0).getGameId());
 		Assert.assertEquals(1,beergameDAO.readBeergames().size());
 	}
@@ -64,7 +65,7 @@ public class BeerGameDAOIntegrationTest {
 	@Test
 	public void getGameLog() {
 		beergameDAO.createBeergame("BeergameZutphen");
-		List<BeerGame> beergames = beergameDAO.readBeergames();
+		List<BeerGameDB> beergames = beergameDAO.readBeergames();
 		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog(beergames.get(0).getGameId()).getGameName());
 	}
 }

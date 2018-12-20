@@ -3,9 +3,10 @@ package org.han.ica.asd.c;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ class RoundDAOIntegrationTest {
 	@Test
 	void createRound() {
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
-		Round roundDb = roundDAO.getRound("BeerGameZutphen13_12_2018",1);
+		RoundDB roundDb = roundDAO.getRound("BeerGameZutphen13_12_2018",1);
 
 		Assert.assertEquals(1,roundDb.getRoundId());
 		Assert.assertEquals("BeerGameZutphen13_12_2018",roundDb.getGameId());
@@ -47,7 +48,7 @@ class RoundDAOIntegrationTest {
 	@Test
 	void deleteRound() {
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
-		Round roundDb = roundDAO.getRound("BeerGameZutphen13_12_2018",1);
+		RoundDB roundDb = roundDAO.getRound("BeerGameZutphen13_12_2018",1);
 
 		//Verify that the object is inserted
 		Assert.assertEquals(1,roundDb.getRoundId());
