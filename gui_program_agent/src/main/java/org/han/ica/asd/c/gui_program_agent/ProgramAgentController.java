@@ -54,7 +54,8 @@ public class ProgramAgentController {
     @Inject
     private IBusinessRules iBusinessRules;
 
-    @Inject @Named("ProgramAgentList")
+    @Inject
+    @Named("ProgramAgentList")
     IGUIHandler programAgentList;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
@@ -120,13 +121,7 @@ public class ProgramAgentController {
      * Set the button back to have the action to go back to list with agent's
      */
     private void setBackButtonAction() {
-        back.setOnAction(event -> {
-            try {
-                programAgentList.setupScreen();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        back.setOnAction(event -> programAgentList.setupScreen());
     }
 
     /**

@@ -24,10 +24,12 @@ public class MainMenuController {
     @FXML
     private Button replay;
 
-    @Inject @Named("ProgramAgentList")
+    @Inject
+    @Named("ProgramAgentList")
     private IGUIHandler programAgentList;
 
-    @Inject @Named("ReplayGame")
+    @Inject
+    @Named("ReplayGame")
     private IGUIHandler replayGame;
 
     public void initialize() {
@@ -45,22 +47,10 @@ public class MainMenuController {
     }
 
     private void setProgramAgentButtonAction() {
-        createAgent.setOnAction(event -> {
-            try {
-                programAgentList.setupScreen();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        createAgent.setOnAction(event -> programAgentList.setupScreen());
     }
 
     private void setReplayButtonAction() {
-        replay.setOnAction(event -> {
-            try {
-                replayGame.setupScreen();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        replay.setOnAction(event -> replayGame.setupScreen());
     }
 }

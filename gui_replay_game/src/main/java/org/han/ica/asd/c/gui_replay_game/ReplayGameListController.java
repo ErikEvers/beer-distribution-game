@@ -3,7 +3,6 @@ package org.han.ica.asd.c.gui_replay_game;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import javax.inject.Inject;
 
@@ -28,13 +27,4 @@ public class ReplayGameListController {
         mainContainer.getChildren().addAll();
     }
 
-    private void setReplayButtonAction() {
-        replay.setOnAction(event -> {
-            try {
-                replayGame.setupReplayGameScreen((Stage)replay.getScene().getWindow());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 }
