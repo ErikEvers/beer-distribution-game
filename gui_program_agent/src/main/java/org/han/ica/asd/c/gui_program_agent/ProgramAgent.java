@@ -9,6 +9,7 @@ import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -22,12 +23,20 @@ public class ProgramAgent {
         this.loaderProvider = loaderProvider;
     }
 
-    public void setupScreen(Stage primaryStage) throws Exception {
+    public void setProgramAgentListScreen(Stage primaryStage) throws IOException {
+        setScreen("/fxml/ProgramAgentList.fxml", primaryStage);
+    }
+
+    public void setProgramAgentScreen(Stage primaryStage) throws IOException {
+        setScreen("/fxml/ProgramAgent.fxml", primaryStage);
+    }
+
+    private void setScreen(String pathFxml, Stage primaryStage) throws IOException {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResources");
 
         FXMLLoaderOnSteroids loader = loaderProvider.get();
         loader.setResources(resourceBundle);
-        loader.setLocation(getClass().getResource("/fxml/ProgramAgentList.fxml"));
+        loader.setLocation(getClass().getResource(pathFxml));
         Parent root = loader.load();
 
         if (!ComponentOrientation.getOrientation(new Locale(System.getProperty("user.language"))).isLeftToRight()) {

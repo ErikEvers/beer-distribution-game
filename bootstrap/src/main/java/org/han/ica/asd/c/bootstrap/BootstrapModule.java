@@ -2,6 +2,8 @@ package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.*;
+import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
+import org.han.ica.asd.c.businessrule.IBusinessRules;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
@@ -15,6 +17,8 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("BeergameDAO")).to(BeergameDAO.class);
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("GameBusinessRulesRulesInFacilityTurnDAO")).to(GameBusinessRulesInFacilityTurnDAO.class);
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("FacilityTurnDAO")).to(FacilityTurnDAO.class);
+		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
+		//bind(IBusinessRuleStore.class).to();
 
 	}
 }
