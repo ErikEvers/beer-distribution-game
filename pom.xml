@@ -23,7 +23,6 @@
         <module>gameleader</module>
         <module>gamelogic</module>
         <module>leadermigration</module>
-        <module>localization</module>
         <module>player</module>
         <module>replay</module>
         <module>bootstrap</module>
