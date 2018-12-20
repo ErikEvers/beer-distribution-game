@@ -2,9 +2,19 @@ package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public enum ComparisonType {
     EQUAL("=="),
+    EQUAL_ONE("="),
+    EQUAL_CHARS("equal"),
+    EQUAL_CHARS_IS("is"),
     NOT("!="),
+    NOT_CHARS("not equal"),
     GREATER(">"),
-    LESS("<");
+    GREATER_CHARS("greater"),
+    GREATER_CHARS_HIGHER("higher"),
+    GREATER_EQUAL(">="),
+    LESS_EQUAL("<="),
+    LESS("<"),
+    LESS_CHARS_LOWER("lower"),
+    LESS_CHARS("less");
 
 
     private String comparisonSymbol;
@@ -23,7 +33,7 @@ public enum ComparisonType {
      *
      * @return Returns the comparison symbol
      */
-    public String getComparisonSymbol() {
+    public String get() {
         return comparisonSymbol;
     }
 
