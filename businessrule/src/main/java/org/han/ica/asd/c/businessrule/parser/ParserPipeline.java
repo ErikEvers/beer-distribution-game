@@ -108,20 +108,21 @@ public class ParserPipeline {
         Evaluator evaluator = new Evaluator();
         Counter newLineCounter = new Counter();
         Map<UserInputBusinessRule, BusinessRule> map = new LinkedHashMap<>();
+        boolean hasErrors = false;
 
         if (!businessRulesParsed.isEmpty()) {
             for (int i = 0; i < businessRulesInput.size(); i++) {
                 if (businessRulesInput.get(i).getBusinessRule().isEmpty() || ParseErrorListener.INSTANCE.getExceptions().contains(i + 1) || !businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)) {
                     if(!businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)){
                         businessRulesInput.get(i).setErrorMessage("Only legitimate business rules are allowed");
+                        hasErrors = true;
                     }
                     newLineCounter.addOne();
                 } else {
                     map.put(businessRulesInput.get(i), businessRulesParsed.get(i - newLineCounter.getCountedValue()));
                 }
             }
-
-            return evaluator.evaluate(map);
+            return evaluator.evaluate(map) || hasErrors;
         }
         return true;
     }

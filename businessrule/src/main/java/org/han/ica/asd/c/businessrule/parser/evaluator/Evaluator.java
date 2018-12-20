@@ -2,10 +2,11 @@ package org.han.ica.asd.c.businessrule.parser.evaluator;
 
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.*;
@@ -13,6 +14,8 @@ import java.util.*;
 public class Evaluator {
     private boolean hasErrors = false;
     private static final String INT_VALUE = "\\d+";
+    private Counter defaultOrderCounter = new Counter();
+    private Counter defaultDeliverCounter = new Counter();
 
     /**
      * Evaluates the business rules. and checks if there are any errors.
@@ -26,8 +29,10 @@ public class Evaluator {
             deque.push(entry.getValue());
             evaluateBusinessRule(deque, entry.getKey());
         }
+        checkMinimumOfOneDefaultForOrderAndDeliver(businessRulesMap);
         return hasErrors;
     }
+
     /**
      *
      *
@@ -39,7 +44,7 @@ public class Evaluator {
             ASTNode current = deque.pop();
 
             if (current != null) {
-                executeChecksAndLog(inputBusinessRule, current);
+                executeChecksAndLog(current, inputBusinessRule);
 
                 List<ASTNode> children = current.getChildren();
                 Collections.reverse(children);
@@ -56,14 +61,15 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets an error if check fails.
      * @param current           Current node that it is checking.
      */
-    private void executeChecksAndLog(UserInputBusinessRule inputBusinessRule, ASTNode current) {
+    private void executeChecksAndLog(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         checkRoundIsComparedToInt(current, inputBusinessRule);
         checkNotDividedByZero(current, inputBusinessRule);
+        checkOnlyOneDefaultOrderAndOneDefaultDeliver(current,inputBusinessRule);
     }
 
     /**
-     * Main: Checks that when a round is used it is compared to an int and nothing else
-     * Checks if round is used in the left or right side of the comparison and calls the other side to check
+     * Main: Checks that when a round is used it is compared to an int and nothing else.
+     * Checks if round is used in the left or right side of the comparison and calls the other side to check.
      *
      * @param current           Current node that it is checking.
      * @param inputBusinessRule The rule that gets an error if check fails.
@@ -83,8 +89,8 @@ public class Evaluator {
     }
 
     /**
-     * Main: Checks that when a round is used it is compared to an int and nothing else
-     * Checks if a value in the sub tree is not an int and throws an error if that's the case
+     * Main: Checks that when a round is used it is compared to an int and nothing else.
+     * Checks if a value in the sub tree is not an int and throws an error if that's the case.
      *
      * @param current           Current node that it is checking.
      * @param inputBusinessRule The rule that gets an error if check fails.
@@ -103,6 +109,12 @@ public class Evaluator {
         }
     }
 
+    /**
+     * Checks if there is a division by 0 and sets an error if that's the case.
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets an error if check fails.
+     */
     private void checkNotDividedByZero(ASTNode current, UserInputBusinessRule inputBusinessRule){
         List<ASTNode> children = current.getChildren();
 
@@ -115,10 +127,53 @@ public class Evaluator {
     }
 
     /**
+     * Checks if there are more than one default for order and deliver, if that's the case it sets an error.
+     *
+     * @param current           Current node that it is checking.
+     * @param inputBusinessRule The rule that gets an error if check fails.
+     */
+    private void checkOnlyOneDefaultOrderAndOneDefaultDeliver(ASTNode current, UserInputBusinessRule inputBusinessRule){
+        if(current instanceof BusinessRule){
+            int left = 0;
+            int right = 1;
+            if(current.getChildren().get(left) instanceof Default){
+                String action = ((ActionReference) current.getChildren().get(right).getChildren().get(left)).getAction();
+
+                if("order".equals(action)){
+                    defaultOrderCounter.addOne();
+                } else if("default".equals(action)){
+                    defaultDeliverCounter.addOne();
+                }
+
+                if(defaultOrderCounter.getCountedValue() > 1){
+                    this.hasErrors = true;
+                    inputBusinessRule.setErrorMessage("There can only be one default order business rule");
+                }
+                if(defaultDeliverCounter.getCountedValue() > 1){
+                    this.hasErrors = true;
+                    inputBusinessRule.setErrorMessage("There can only be one default deliver business rule");
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if there is a default order and default deliver, if this is not the case it sets an error.
+     *
+     * @param businessRulesMap A map that combines the BusinessRule and UserInputBusinessRule.
+     */
+    private void checkMinimumOfOneDefaultForOrderAndDeliver(Map<UserInputBusinessRule, BusinessRule> businessRulesMap){
+        if(defaultDeliverCounter.getCountedValue() == 0 || defaultOrderCounter.getCountedValue() == 0){
+            this.hasErrors = true;
+           businessRulesMap.keySet().toArray(new UserInputBusinessRule[]{})[0].setErrorMessage("You're obligated to have at least one default for ordering and one default for delivering");
+        }
+    }
+
+    /**
      * Recursive method that searches for all values in a side of a Comparison and puts them in a list.
      *
-     * @param current Current node that is checked
-     * @param nodes List of nodes that contains all Values at the end
+     * @param current Current node that is checked.
+     * @param nodes List of nodes that contains all Values at the end.
      */
     private List<String> getAllValues(ASTNode current, List<String> nodes){
         if(current instanceof Value){

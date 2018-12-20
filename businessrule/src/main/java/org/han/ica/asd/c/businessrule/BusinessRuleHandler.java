@@ -22,6 +22,7 @@ public class BusinessRuleHandler implements IBusinessRules {
                 "if inventory is lower than 70 then order 33\n" +
                 "if round is 10 then order 20\n" +
                 "default order 20\n" +
+                "default deliver 20\n" +
                 "if inventory is 20 and back orders is 35 or inventory is 55 then order 77\n" +
                 "if inventory*2 is lower than 70/10 then order 33+2";
         ParserPipeline parserPipeline = new ParserPipeline();

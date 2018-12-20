@@ -49,7 +49,7 @@ operation: value #defaultOperation | operation PLUS operation #plusOperation | o
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
 value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY;
 comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
-action: ORDER operation direction? | DELIVER operation direction;
+action: ORDER operation direction? | DELIVER operation direction?;
 direction: (FROM | TO) person (WHEN comparisonstatement | WITH (LOWEST | HIGHEST) GAME_VALUE)?;
 person: NODE (ABOVE | BELOW);
 
