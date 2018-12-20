@@ -120,6 +120,10 @@ public class Comparison extends Expression {
                 return new BooleanLiteral(valueLeft == valueRight);
             case GREATER:
                 return new BooleanLiteral(valueLeft > valueRight);
+            case GREATER_EQUAL:
+                return new BooleanLiteral(valueLeft >= valueRight);
+            case LESS_EQUAL:
+                return new BooleanLiteral(valueLeft <= valueRight);
             default:
                 return new BooleanLiteral(false);
         }

@@ -68,14 +68,14 @@ class ComparisonValueTest {
     }
 
     @Test
-    void testComparisonValue_encode_Called(){
+    void testComparisonValue_encode_Called() {
         ComparisonValue cv = new ComparisonValue();
         StringBuilder exp = new StringBuilder().append("CV()");
         StringBuilder res = new StringBuilder();
 
         cv.encode(res);
 
-        assertEquals(exp.toString(),res.toString());
+        assertEquals(exp.toString(), res.toString());
     }
 
     @Test
@@ -83,6 +83,6 @@ class ComparisonValueTest {
         ComparisonValue cv1 = new ComparisonValue();
         ComparisonValue cv2 = new ComparisonValue();
 
-        assertEquals(cv1.hashCode() , cv2.hashCode());
+        assertEquals(cv1.hashCode(), cv2.hashCode());
     }
 }

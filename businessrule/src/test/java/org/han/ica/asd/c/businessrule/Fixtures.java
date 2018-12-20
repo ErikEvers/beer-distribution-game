@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
-import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
@@ -43,7 +43,7 @@ class Fixtures {
                 .addChild(new ComparisonStatement()
                         .addChild(new Comparison()
                                 .addChild(new ComparisonValue().addChild(new Value().addValue("backlog")))
-                                .addChild(new ComparisonOperator("higher than"))
+                                .addChild(new ComparisonOperator("higher"))
                                 .addChild(new ComparisonValue().addChild(new Value().addValue("20"))))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
@@ -63,7 +63,7 @@ class Fixtures {
                 .addChild(new ComparisonStatement()
                         .addChild(new Comparison()
                                 .addChild(new ComparisonValue().addChild(new Value().addValue("backlog")))
-                                .addChild(new ComparisonOperator("higher than"))
+                                .addChild(new ComparisonOperator("higher"))
                                 .addChild(new ComparisonValue().addChild(new Value().addValue("20"))))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
@@ -138,7 +138,7 @@ class Fixtures {
         businessRule.addChild(new ComparisonStatement()
                 .addChild(new Comparison()
                         .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
-                        .addChild(new ComparisonOperator("is higher than"))
+                        .addChild(new ComparisonOperator("is higher"))
                         .addChild(new ComparisonValue().addChild(new Value().addValue("20% backlog")))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))

@@ -1,9 +1,8 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.mocks.t;
-import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
-import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
@@ -11,6 +10,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +40,7 @@ class BusinessRuleHandlerTest {
 		StringBuilder expectedStringBuilder = new StringBuilder();
 		expectedAction.encode(expectedStringBuilder);
 
-		Action actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new t(),5);
+		Action actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new Round());
 		StringBuilder actualStringBuilder = new StringBuilder();
 		actualAction.encode(actualStringBuilder);
 
