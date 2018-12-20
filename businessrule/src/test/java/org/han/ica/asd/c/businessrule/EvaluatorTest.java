@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
-import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
@@ -81,6 +81,9 @@ class EvaluatorTest {
     @Test
     void testEvaluate_Called_evaluate() throws Exception {
         Map<UserInputBusinessRule,BusinessRule> list = new HashMap<>();
+        UserInputBusinessRule businessRulesInput = new UserInputBusinessRule("if inventory is 20 order 20",1);
+        BusinessRule businessRulesParsed = new BusinessRule();
+        list.put(businessRulesInput, businessRulesParsed);
 
         Evaluator spy = PowerMockito.spy(new Evaluator());
 

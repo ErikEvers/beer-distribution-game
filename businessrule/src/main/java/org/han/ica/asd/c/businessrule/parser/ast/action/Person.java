@@ -1,31 +1,20 @@
-package org.han.ica.asd.c.businessrule.parser.ast;
+package org.han.ica.asd.c.businessrule.parser.ast.action;
+
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 
 import java.util.Objects;
 
-public class ActionReference extends ASTNode {
-    private static final String PREFIX = "AR(";
-    private String action;
-
-    /**
-     * Constructor
-     */
-    public ActionReference() {
-    }
+public class Person extends ASTNode {
+    private static final String PREFIX = "P(";
+    private String personNode;
 
     /**
      * Constructor
      *
-     * @param action The action that has to be executed for this businessrule
+     * @param personNode Person to which action has to be sent
      */
-    public ActionReference(String action) {
-        this.action = action;
-    }
-
-
-    @Override
-    public ActionReference addValue(String value) {
-        this.action = value;
-        return this;
+    public Person(String personNode) {
+        this.personNode = personNode;
     }
 
     /**
@@ -35,7 +24,7 @@ public class ActionReference extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX + action);
+        super.encode(stringBuilder, getChildren(), PREFIX + personNode);
     }
 
     /**
@@ -43,8 +32,8 @@ public class ActionReference extends ASTNode {
      *
      * @return Returns the action
      */
-    public String getAction() {
-        return action;
+    public String getPerson() {
+        return personNode;
     }
 
     /**
@@ -61,8 +50,8 @@ public class ActionReference extends ASTNode {
             return false;
         if (!super.equals(o))
             return false;
-        ActionReference actionReference = (ActionReference) o;
-        return Objects.equals(action, actionReference.action);
+        Person person = (Person) o;
+        return Objects.equals(personNode, person.personNode);
     }
 
     /**
@@ -72,6 +61,6 @@ public class ActionReference extends ASTNode {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(action);
+        return Objects.hash(personNode);
     }
 }
