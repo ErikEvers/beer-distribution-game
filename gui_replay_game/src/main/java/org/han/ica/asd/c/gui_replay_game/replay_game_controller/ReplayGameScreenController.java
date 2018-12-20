@@ -55,6 +55,9 @@ public class ReplayGameScreenController {
     @FXML
     private TextField totalRoundsTextfield;
 
+    @FXML
+    private Button backButton;
+
     private ReplayData replayData;
 
     @FXML
