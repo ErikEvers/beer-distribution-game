@@ -1,14 +1,13 @@
-package communicationcomponent.messagehandler;
+package org.han.ica.asd.c.messagehandler;
 
 import domainobjects.Election;
-import domainobjects.RoundModel;
-import domainobjects.TurnModel;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 import org.han.ica.asd.c.observers.IElectionObserver;
 import org.han.ica.asd.c.observers.IRoundModelObserver;
@@ -72,7 +71,7 @@ public class GameMessageReceiverTest {
 
     @Test
     public void turnModelReceived() {
-        TurnModel turnModel = new TurnModel(10);
+        Round turnModel = new Round();
         TurnModelMessage turnModelMessage = new TurnModelMessage(turnModel);
 
         gameMessageReceiver.gameMessageReceived(turnModelMessage);
@@ -82,7 +81,7 @@ public class GameMessageReceiverTest {
 
     @Test
     public void roundModelRecieved() {
-        RoundModel roundModel = new RoundModel();
+        Round roundModel = new Round();
         RoundModelMessage roundModelMessageStage = new RoundModelMessage(roundModel, 0);
         RoundModelMessage roundModelMessageCommit = new RoundModelMessage(roundModel, 1);
 

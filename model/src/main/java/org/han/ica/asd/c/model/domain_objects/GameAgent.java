@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class GameAgent {
+public class GameAgent implements IDomainModel{
     private String gameAgentName;
     private int facilityId;
 

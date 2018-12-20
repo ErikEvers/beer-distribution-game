@@ -1,20 +1,20 @@
 package org.han.ica.asd.c.messagehandler.messagetypes;
 
-import domainobjects.RoundModel;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.Serializable;
 
 public class RoundModelMessage extends GameMessage implements Serializable{
-    private RoundModel roundModel;
+    private Round roundModel;
     private int commitStage;
 
-    public RoundModelMessage(RoundModel roundModel, int commitStage) {
+    public RoundModelMessage(Round roundModel, int commitStage) {
         super(2);
         this.roundModel = roundModel;
         this.commitStage = commitStage;
     }
 
-    public RoundModel getRoundModel() {
+    public Round getRoundModel() {
         return roundModel;
     }
 

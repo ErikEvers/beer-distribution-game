@@ -1,7 +1,5 @@
 package org.han.ica.asd.c;
 
-import domainobjects.RoundModel;
-import domainobjects.TurnModel;
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.Room;
@@ -12,6 +10,7 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
@@ -121,11 +120,12 @@ private static Connector instance = null;
 
     }
 
-    public void sendTurn() {
-        gameMessageClient.sendTurnModel("leaderIp", new TurnModel(1));
+    public void sendTurn(Round turn) {
+        //TODO get real leaderIP for this function
+        gameMessageClient.sendTurnModel("leader ip", turn);
     }
 
-    public void updateAllPeers(RoundModel roundModel) {
+    public void updateAllPeers(Round roundModel) {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), roundModel);
     }
