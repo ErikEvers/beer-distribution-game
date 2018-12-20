@@ -65,6 +65,7 @@ public class Evaluator {
         checkRoundIsComparedToInt(current, inputBusinessRule);
         checkNotDividedByZero(current, inputBusinessRule);
         checkOnlyOneDefaultOrderAndOneDefaultDeliver(current,inputBusinessRule);
+        checkDefaultWithoutDestination(current,inputBusinessRule);
     }
 
     /**
@@ -141,7 +142,7 @@ public class Evaluator {
 
                 if("order".equals(action)){
                     defaultOrderCounter.addOne();
-                } else if("default".equals(action)){
+                } else if("deliver".equals(action)){
                     defaultDeliverCounter.addOne();
                 }
 
@@ -168,6 +169,19 @@ public class Evaluator {
            businessRulesMap.keySet().toArray(new UserInputBusinessRule[]{})[0].setErrorMessage("You're obligated to have at least one default for ordering and one default for delivering");
         }
     }
+
+    private void checkDefaultWithoutDestination(ASTNode current, UserInputBusinessRule inputBusinessRule){
+        if(current instanceof BusinessRule){
+            int left = 0;
+            int right = 1;
+            if(current.getChildren().get(left) instanceof Default
+                    && current.getChildren().get(right).getChildren().size() > 2){
+                inputBusinessRule.setErrorMessage("A default rule can't specify the destination");
+            }
+        }
+    }
+
+    //Lowest/Highest mag alleen gebruikt worden in na een Person
 
     /**
      * Recursive method that searches for all values in a side of a Comparison and puts them in a list.

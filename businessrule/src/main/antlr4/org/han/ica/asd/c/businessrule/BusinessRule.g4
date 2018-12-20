@@ -45,7 +45,7 @@ comparison_value: operation | ROUND;
 operation: value #defaultOperation | operation PLUS operation #plusOperation | operation MIN operation #minOperation | priority_operation #priorityOperation;
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
 value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | (LOWEST | HIGHEST);
-comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
+comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
 action: ORDER operation person? | DELIVER operation person?;
 person: (FROM | TO) NODE (WHERE comparisonstatement)?;
 
