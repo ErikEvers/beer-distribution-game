@@ -17,6 +17,7 @@ public class Room {
     private String password;
     private Boolean gameStarted;
     private InetAddressValidator validatorIP = InetAddressValidator.getInstance();
+    private String connectionError = "Something went wrong with the connection";
 
     private static final Logger LOGGER = Logger.getLogger(Room.class.getName());
 
@@ -48,7 +49,7 @@ public class Room {
                 this.leaderIP = ip;
                 hosts = new ArrayList<>();
             } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
+                LOGGER.log(Level.SEVERE, connectionError);
                 throw new RoomException(e);
             }
             hosts = new ArrayList<>();
@@ -65,25 +66,25 @@ public class Room {
                     service.createFileInFolder("H: " + ip, roomID);
                     hosts.add(ip);
                 } catch (IOException e) {
-                    LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
+                    LOGGER.log(Level.SEVERE, connectionError);
                     throw new RoomException(e);
                 }
             } else {
                 LOGGER.log(Level.SEVERE, "Game is started or the IP is not valid.");
                 throw new RoomException("Game is started or the IP is not valid.");
             }
-        }else{
+        } else {
             LOGGER.log(Level.SEVERE, "Password doesnt match.");
             throw new RoomException("Password doesnt match.");
         }
     }
 
-    public void removeHost(String ip){
+    public void removeHost(String ip) {
         try {
             service.deleteFileByNameInFolder("H: " + ip, roomID);
             hosts.remove(ip);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
+            LOGGER.log(Level.SEVERE, connectionError);
         }
     }
 
@@ -92,7 +93,7 @@ public class Room {
             try {
                 this.hosts = service.getAllhostsFromFolder(roomID);
             } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
+                LOGGER.log(Level.SEVERE, connectionError);
                 throw new RoomException(e);
             }
         }
@@ -104,17 +105,17 @@ public class Room {
                 gameStarted = true;
                 service.deleteFolderByID(roomID);
             } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
+                LOGGER.log(Level.SEVERE, connectionError);
                 throw new RoomException(e);
             }
         }
     }
 
-    public boolean isGameClosedForDiscovery(){
+    public boolean isGameClosedForDiscovery() {
         try {
             String value = "";
             value = service.getFolderID(roomName);
-            if(value.equals("")){
+            if (value.equals("")) {
                 gameStarted = true;
             }
             return value.equals("");
