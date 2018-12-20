@@ -50,14 +50,7 @@ public class ProgramAgentController {
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
-    private static final String AGENT_NAME_ERROR_HEADER = "Agent name Error";
-    private static final String AGENT_NAME_ERROR_BODY = "You have to set a agent name.";
-
-    private static final String BUSINESS_RULE_ERROR_HEADER = "Business rule Error";
-    private static final String BUSINESS_RULE_ERROR_BODY = "There are no business rules given.\n Please enter them end try again.";
-
-    private static final String BUSINESS_RULE_SUCCESS_HEADER = "Saved Successfully";
-    private static final String BUSINESS_RULE_SUCCESS_BODY = "The business rules are saved successfully.";
+    private ResourceBundle resourceBundle;
 
 
     public ProgramAgentController() {
@@ -70,6 +63,7 @@ public class ProgramAgentController {
     public void initialize() {
         mainContainer.getChildren().addAll();
         setMoreInfoButtonAction();
+        resourceBundle = ResourceBundle.getBundle("languageResources");
         setSaveButtonAction();
     }
 
@@ -83,7 +77,7 @@ public class ProgramAgentController {
     private void setProgramAgentPopup(String headerText, String bodyText, Color headerColor) {
         Parent root;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProgramAgentPopup.fxml"), ResourceBundle.getBundle("languageResources"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ProgramAgentPopup.fxml"), resourceBundle);
             root = loader.load();
             ProgramAgentPopupController programAgentPopupController = loader.getController();
             programAgentPopupController.setHeaderLabelText(headerText, headerColor);
@@ -106,9 +100,9 @@ public class ProgramAgentController {
             String agentName = agentNameInput.getText();
             String businessRulesUserInput = businessRuleInput.getText();
             if (checkIfStringEmpty(agentName)) {
-                setProgramAgentPopup(AGENT_NAME_ERROR_HEADER, AGENT_NAME_ERROR_BODY, Color.RED);
+                setProgramAgentPopup(resourceBundle.getString("agent_name_error_header"), resourceBundle.getString("agent_name_error_body"), Color.RED);
             } else if (checkIfStringEmpty(businessRulesUserInput)) {
-                setProgramAgentPopup(BUSINESS_RULE_ERROR_HEADER, BUSINESS_RULE_ERROR_BODY, Color.RED);
+                setProgramAgentPopup(resourceBundle.getString("business_rule_error_header"), resourceBundle.getString("business_rule_error_body"), Color.RED);
             } else {
                 List<UserInputBusinessRule> result = iBusinessRules.programAgent(agentName, businessRulesUserInput);
                 setScreenValuesBasedOnResult(result);
@@ -134,7 +128,7 @@ public class ProgramAgentController {
         }
         businessRuleTexFlow.getChildren().addAll(textFlow);
         if (errors.toString().isEmpty()) {
-            setProgramAgentPopup(BUSINESS_RULE_SUCCESS_HEADER, BUSINESS_RULE_SUCCESS_BODY, Color.GREEN);
+            setProgramAgentPopup(resourceBundle.getString("business_rule_success_header"), resourceBundle.getString("business_rule_success_body"), Color.GREEN);
         } else {
             businessRuleErrorTextArea.setText(errors.toString());
         }
@@ -156,7 +150,7 @@ public class ProgramAgentController {
         moreInfo.setOnAction(event -> {
             Parent root;
             try {
-                root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"), ResourceBundle.getBundle("languageResources"));
+                root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"), resourceBundle);
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.show();

@@ -2,8 +2,8 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
-import domainobjects.RoundModel;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -12,12 +12,12 @@ import java.util.logging.Logger;
 public class SendInTransaction {
 
     String[] ips;
-    RoundModel roundModel;
+    Round roundModel;
     SocketClient socketClient;
 
     private static final Logger LOGGER = Logger.getLogger(SendInTransaction.class.getName());
 
-    SendInTransaction(String[] ips, RoundModel roundModel, SocketClient socketClient) {
+    SendInTransaction(String[] ips, Round roundModel, SocketClient socketClient) {
         this.ips = ips;
         this.roundModel = roundModel;
         this.socketClient = socketClient;
@@ -29,6 +29,8 @@ public class SendInTransaction {
     private int numberOfThreads = 0;
 
     public void sendRoundToAllPlayers() {
+
+        //TODO implement with this: https://stackoverflow.com/questions/9148899/returning-value-from-thread
 
         RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel, 0);
 
