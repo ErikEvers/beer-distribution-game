@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class FacilityTurn {
+public class FacilityTurnDB implements IDaoModel{
     private int roundId;
     private int facilityIdOrder;
     private int facilityIdDeliver;
@@ -11,7 +11,7 @@ public class FacilityTurn {
     private int openOrder;
     private int outgoingGoods;
 
-    public FacilityTurn(String gameId, int facilityIdOrder, int facilityIdDeliver, int roundId, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
+    public FacilityTurnDB(String gameId, int facilityIdOrder, int facilityIdDeliver, int roundId, int stock, int remainingBudget, int order, int openOrder, int outgoingGoods) {
         this.roundId = roundId;
         this.facilityIdOrder = facilityIdOrder;
         this.facilityIdDeliver = facilityIdDeliver;

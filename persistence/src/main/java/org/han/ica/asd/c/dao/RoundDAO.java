@@ -1,8 +1,8 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 
 
 import javax.inject.Inject;
@@ -53,9 +53,9 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	 * @param roundId The id of the specific round which needs to be returned
 	 * @return A round object
 	 */
-	public Round getRound(String gameId, int roundId){
+	public RoundDB getRound(String gameId, int roundId){
 		Connection conn = databaseConnection.connect();
-		Round round = null;
+		RoundDB round = null;
 		try {
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
@@ -66,7 +66,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 					pstmt.setInt(2, roundId);
 
 					try (ResultSet rs = pstmt.executeQuery()) {
-						round = new Round(rs.getString("GameId"), rs.getInt("RoundId"));
+						round = new RoundDB(rs.getString("GameId"), rs.getInt("RoundId"));
 					}
 					conn.commit();
 				}

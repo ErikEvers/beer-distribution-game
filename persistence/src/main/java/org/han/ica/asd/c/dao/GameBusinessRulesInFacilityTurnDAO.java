@@ -1,8 +1,8 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
 
 
 import javax.inject.Inject;
@@ -27,10 +27,10 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	}
 
 	/**
-	 * A method which creates a GameBusinessRulesInFacilityTurn object in the SQLite Database
+	 * A method which creates a GameBusinessRulesInFacilityTurnDB object in the SQLite Database
 	 * @param gameBusinessRulesInFacilityTurn A GameBusinessRuleInFacilityTurn object which contains data which needs to be inserted in to the SQLite Database
 	 */
-	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+	public void createTurn(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn) {
 		Connection conn;
 		try {
 			conn = databaseConnection.connect();
@@ -56,16 +56,16 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 	}
 
 	/**
-	 * A method which returns a GameBusinessRulesInFacilityTurn object from the SQLite Database
+	 * A method which returns a GameBusinessRulesInFacilityTurnDB object from the SQLite Database
 	 * @param gameId            The Id of the game where the specific turns are located
 	 * @param roundId           The Id of the round where the specific turns are located
-	 * @param facilityIdOrder   The Id of the Facility which placed an order
-	 * @param facilityIdDeliver The Id of the Facility which delivered an order
-	 * @return A GameBusinessRulesInFacilityTurn object which contains data from the database according to the search parameters
+	 * @param facilityIdOrder   The Id of the FacilityDB which placed an order
+	 * @param facilityIdDeliver The Id of the FacilityDB which delivered an order
+	 * @return A GameBusinessRulesInFacilityTurnDB object which contains data from the database according to the search parameters
 	 */
-	public GameBusinessRulesInFacilityTurn readTurn(String gameId, int roundId, int facilityIdOrder, int facilityIdDeliver) {
+	public GameBusinessRulesInFacilityTurnDB readTurn(String gameId, int roundId, int facilityIdOrder, int facilityIdDeliver) {
 		Connection conn;
-		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
+		GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn = null;
 
 		try {
 			conn = databaseConnection.connect();
@@ -76,7 +76,7 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 					pstmt.setInt(3, facilityIdOrder);
 					pstmt.setInt(4, facilityIdDeliver);
 					try (ResultSet rs = pstmt.executeQuery()){
-						gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getString("GameId"), rs.getString("GameAgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
+						gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurnDB(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getString("GameId"), rs.getString("GameAgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
 					}
 				}
 			}
@@ -91,8 +91,8 @@ public class GameBusinessRulesInFacilityTurnDAO implements IBeerDisitributionGam
 		 * A method which deletes a specific turn from the SQLite Database
 		 * @param gameId            The Id of the game where the specific turns are located
 		 * @param roundId           The Id of the round where the specific turns are located
-		 * @param facilityIdOrder  The Id of the Facility which placed an order
-		 * @param facilityIdDeliver The Id of the Facility which delivered an order
+		 * @param facilityIdOrder  The Id of the FacilityDB which placed an order
+		 * @param facilityIdDeliver The Id of the FacilityDB which delivered an order
 		 */
 		public void deleteTurn (String gameId,int roundId, int facilityIdOrder, int facilityIdDeliver){
 			Connection conn = null;

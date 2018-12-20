@@ -1,12 +1,12 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class FacilityLinkedTo {
+public class FacilityLinkedToDB implements IDaoModel{
     private String gameId;
     private int facilityIdOrder;
     private int facilityIdDeliver;
     private boolean active;
 
-    public FacilityLinkedTo(String gameId, int facilityIdOrder, int facilityIdDeliver, boolean active) {
+    public FacilityLinkedToDB(String gameId, int facilityIdOrder, int facilityIdDeliver, boolean active) {
         this.gameId = gameId;
         this.facilityIdOrder = facilityIdOrder;
         this.facilityIdDeliver = facilityIdDeliver;

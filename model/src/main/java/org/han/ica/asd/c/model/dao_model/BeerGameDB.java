@@ -6,7 +6,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BeerGame {
+public class BeerGameDB implements IDaoModel{
     private String gameId;
     private String gameName;
     private String gameDate;
@@ -14,7 +14,7 @@ public class BeerGame {
     private List<Round> rounds;
     private Configuration configuration;
 
-    public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate) {
+    public BeerGameDB(String gameId, String gameName, String gameDate, String gameEndDate) {
         this.gameId = gameId;
         this.gameName = gameName;
         this.gameDate = gameDate;

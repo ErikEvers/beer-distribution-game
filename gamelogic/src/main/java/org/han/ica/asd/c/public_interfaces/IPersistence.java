@@ -1,19 +1,19 @@
 package org.han.ica.asd.c.public_interfaces;
 
-import org.han.ica.asd.c.model.dao_model.BeerGame;
-import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.BeerGameDB;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
+import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 
 public interface IPersistence {
-    void saveRoundData(Round roundData);
-    Round fetchRoundData(String gameId, int roundId);
+    void saveRoundData(RoundDB roundData);
+    RoundDB fetchRoundData(String gameId, int roundId);
 
-    void saveTurnData(FacilityTurn turn);
-    FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility);
+    void saveTurnData(FacilityTurnDB turn);
+    FacilityTurnDB fetchTurnData(RoundDB round, FacilityLinkedToDB facility);
 
-    BeerGame getGameLog(String gameId);
+    BeerGameDB getGameLog(String gameId);
 
-    void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
+    void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn);
 }

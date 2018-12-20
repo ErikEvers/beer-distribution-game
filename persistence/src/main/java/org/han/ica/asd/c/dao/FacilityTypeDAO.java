@@ -1,7 +1,7 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.FacilityType;
+import org.han.ica.asd.c.model.dao_model.FacilityTypeDB;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -36,11 +36,11 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     }
 
     /**
-     * A method to insert a new FacilityType in the database.
+     * A method to insert a new FacilityTypeDB in the database.
      *
-     * @param facilityType A FacilityType domain_objects that contains all the data needed to create a new FacilityType.
+     * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to create a new FacilityTypeDB.
      */
-    public void createFacilityType(FacilityType facilityType) {
+    public void createFacilityType(FacilityTypeDB facilityType) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -70,11 +70,11 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     }
 
     /**
-     * A method to update an existing FacilityType.
+     * A method to update an existing FacilityTypeDB.
      *
-     * @param facilityType A FacilityType domain_objects that contains all the data needed to update an existing FacilityType.
+     * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to update an existing FacilityTypeDB.
      */
-    public void updateFacilityType(FacilityType facilityType) {
+    public void updateFacilityType(FacilityTypeDB facilityType) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -122,10 +122,10 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
     }
 
     /**
-     * A method to delete a specific FacilityType within a specific game.
+     * A method to delete a specific FacilityTypeDB within a specific game.
      *
-     * @param gameId       The first part of the identifier of the FacilityType from witch a FacilityTypes has to be deleted.
-     * @param facilityName The second part of the identifier of the FacilityType from witch a FacilityTypes has to be deleted.
+     * @param gameId       The first part of the identifier of the FacilityTypeDB from witch a FacilityTypes has to be deleted.
+     * @param facilityName The second part of the identifier of the FacilityTypeDB from witch a FacilityTypes has to be deleted.
      */
     public void deleteSpecificFacilityType(String gameId, String facilityName) {
         Connection conn = null;
@@ -154,9 +154,9 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
      * @param gameId The identifier of a game from witch the FacilityTypes need to be retrieved.
      * @return A list of FacilityTypes from a specific game.
      */
-    public List<FacilityType> readAllFacilityTypes(String gameId) {
+    public List<FacilityTypeDB> readAllFacilityTypes(String gameId) {
         Connection conn;
-        ArrayList<FacilityType> types = new ArrayList<>();
+        ArrayList<FacilityTypeDB> types = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
@@ -165,7 +165,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                     pstmt.setString(1, gameId);
                     try (ResultSet rs = pstmt.executeQuery()) {
                         while (rs.next()) {
-                            types.add(new FacilityType(gameId,
+                            types.add(new FacilityTypeDB(gameId,
                                     rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
                                     rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
                                     rs.getInt("StartingBudget"), rs.getInt("StartingOrder")));
@@ -180,9 +180,9 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         return types;
     }
 
-    public FacilityType readSpecificFacilityType(String gameId, String facilityName) {
+    public FacilityTypeDB readSpecificFacilityType(String gameId, String facilityName) {
         Connection conn = null;
-        FacilityType type = null;
+        FacilityTypeDB type = null;
         try {
             conn = databaseConnection.connect();
             if (conn != null) {
@@ -192,7 +192,7 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
                     pstmt.setString(1, gameId);
                     pstmt.setString(2, facilityName);
                     try (ResultSet rs = pstmt.executeQuery()) {
-                        type = new FacilityType(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
+                        type = new FacilityTypeDB(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
                                 rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
                                 rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
                                 rs.getInt("StartingOrder"));

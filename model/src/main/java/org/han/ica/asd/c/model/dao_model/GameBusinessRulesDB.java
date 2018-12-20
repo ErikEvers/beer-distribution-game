@@ -1,46 +1,26 @@
 package org.han.ica.asd.c.model.dao_model;
 
-public class GameBusinessRulesInFacilityTurn {
-    private int roundId;
-    private int facilityIdDeliver;
-    private int facilityIdOrder;
+public class GameBusinessRulesDB implements IDaoModel{
+    private int facilityId;
     private String gameId;
     private String gameAgentName;
     private String gameBusinessRule;
     private String gameAST;
 
-    public GameBusinessRulesInFacilityTurn(int roundId, int facilityIdOrder, int facilityIdDeliver, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
-        this.roundId = roundId;
-        this.facilityIdDeliver = facilityIdDeliver;
-        this.facilityIdOrder = facilityIdOrder;
+    public GameBusinessRulesDB(int facilityId, String gameId, String gameAgentName, String gameBusinessRule, String gameAST) {
+        this.facilityId = facilityId;
         this.gameId = gameId;
         this.gameAgentName = gameAgentName;
         this.gameBusinessRule = gameBusinessRule;
         this.gameAST = gameAST;
     }
 
-    public int getRoundId() {
-        return roundId;
+    public int getFacilityId() {
+        return facilityId;
     }
 
-    public void setRoundId(int roundId) {
-        this.roundId = roundId;
-    }
-
-    public int getFacilityIdDeliver() {
-        return facilityIdDeliver;
-    }
-
-    public void setFacilityIdDeliver(int facilityIdDeliver) {
-        this.facilityIdDeliver = facilityIdDeliver;
-    }
-
-    public int getFacilityIdOrder() {
-        return facilityIdOrder;
-    }
-
-    public void setFacilityIdOrder(int facilityIdOrder) {
-        this.facilityIdOrder = facilityIdOrder;
+    public void setFacilityId(int facilityId) {
+        this.facilityId = facilityId;
     }
 
     public String getGameId() {
