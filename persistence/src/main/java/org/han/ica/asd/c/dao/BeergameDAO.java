@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class BeergameDAO implements IBeerDisitributionGameDAO {
+public class BeergameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameId = ?;";

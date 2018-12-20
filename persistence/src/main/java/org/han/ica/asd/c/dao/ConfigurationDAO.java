@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ConfigurationDAO implements IBeerDisitributionGameDAO {
+public class ConfigurationDAO {
 	
 	private static final String CREATE_CONFIGURATION = "INSERT INTO Configuration VALUES (?,?,?,?,?,?,?,?,?,?);";
 	private static final String READ_CONFIGURATION = "SELECT * FROM Configuration WHERE GameId = ?;";

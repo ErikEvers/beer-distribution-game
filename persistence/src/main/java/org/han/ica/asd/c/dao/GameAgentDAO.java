@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameAgentDAO implements IBeerDisitributionGameDAO {
+public class GameAgentDAO{
     private static final String CREATE_GAMEAGENT = "INSERT INTO GameAgent VALUES (?,?,?);";
     private static final String DELETE_SPECIFIC_GAMEAGENT = "DELETE FROM GameAgent WHERE FacilityId = ? AND GameId = ? AND GameAgentName = ?;";
     private static final String DELETE_ALL_GAMEAGENTS_IN_A_BEERGAME = "DELETE FROM GameAgent WHERE GameId = ?;";
