@@ -66,6 +66,11 @@ private static Connector instance = null;
         return instance;
     }
 
+    public static Connector getInstanceForTests(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder roomFinder) {
+        instance = new Connector(faultDetector, gameMessageClient, roomFinder);
+        return instance;
+    }
+
     public List<String> getAvailableRooms() throws DiscoveryException {
         return finder.getAvailableRooms();
     }

@@ -2,6 +2,7 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
@@ -46,6 +47,12 @@ public class GameMessageClient {
             }
         }
         return new ResponseMessage(false, exception);
+    }
+
+
+    public ResponseMessage sendWhoIsTheLeaderMessage(String ip, WhoIsTheLeaderMessage  whoIsTheLeaderMessage){
+
+        return null;
     }
 
     public void setSocketClient(SocketClient socketClient) {

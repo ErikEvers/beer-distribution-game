@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
+import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.messagehandler.messagetypes.*;
 import org.han.ica.asd.c.observers.IElectionObserver;
 import org.han.ica.asd.c.observers.IConnectorObserver;
@@ -16,9 +17,12 @@ public class GameMessageReceiver {
 
     private ArrayList<IConnectorObserver> gameMessageObservers;
 
+    private MessageProcessor messageProcessor;
+
     public GameMessageReceiver(List<IConnectorObserver> gameMessageObservers) {
         this.gameMessageObservers = (ArrayList<IConnectorObserver>) gameMessageObservers;
         gameMessageFilterer = new GameMessageFilterer();
+        messageProcessor = new MessageProcessor();
     }
 
     /**
@@ -75,7 +79,7 @@ public class GameMessageReceiver {
      * @param gameMessage
      * @return ResponseMessage
      */
-    public ResponseMessage gameMessageReceived(GameMessage gameMessage) {
+    public Object gameMessageReceived(GameMessage gameMessage) {
 
         if (gameMessageFilterer.isUnique(gameMessage)) {
             switch (gameMessage.getMessageType()) {
@@ -90,11 +94,18 @@ public class GameMessageReceiver {
                 case 3:
                     ElectionMessage electionMessage = (ElectionMessage) gameMessage;
                     return new ResponseMessage(handleElectionMessage(electionMessage));
+                case 4:
+                    WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
+                    return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
                 default:
                     break;
             }
         }
         return new ResponseMessage(true);
+    }
+
+    private WhoIsTheLeaderMessage handleWhoIsTheLeaderMessage(WhoIsTheLeaderMessage whoIsTheLeaderMessage) {
+        return messageProcessor.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
     }
 
     /**

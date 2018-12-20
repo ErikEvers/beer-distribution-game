@@ -82,6 +82,16 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
         return list;
     }
 
+
+    public String getLeaderIp() {
+        for (NodeInfo node : nodeList) {
+            if (node.getConnected() && node.getLeader()) {
+                return node.getIp();
+            }
+        }
+        return null;
+    }
+
     /**
      * Retrieves the value of 'isConnected' for the node that is linked to the given ip.
      * For the given ip it will lookup the value of isConnected in the 'NodeInfoList'.

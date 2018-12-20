@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.socketrpc;
 
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,7 +8,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +34,25 @@ public class SocketClient {
             return objectInputStream.readObject();
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public <T> T sendObjectWithResponseGeneric(String ip, T input) throws IOException, ClassNotFoundException {
+
+        try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectOutputStream.writeObject(input);
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+
+            Object object = objectInputStream.readObject();
+
+            T result = null;
+            if (object != null) {
+                result = (T) object;
+            }
+            return result;
+        }
+    }
+
 
     /**
      * This method tried to make a new socket with the given IP and sends an object. This method, however, does not expect something back.
@@ -98,5 +117,6 @@ public class SocketClient {
 
         return map;
     }
+
 
 }
