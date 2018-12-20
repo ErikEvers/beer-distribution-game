@@ -10,11 +10,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class ChooseFacilityController {
-    private ToggleGroup radioButtons= new ToggleGroup();
+    private ToggleGroup radioButtons = new ToggleGroup();
 
     @Inject
     @Named("ChooseAgent")
     private IGUIHandler chooseAgent;
+
+    @Inject
+    @Named("MainMenu")
+    private IGUIHandler mainMenu;
 
     @FXML
     private AnchorPane mainContainer;
@@ -31,7 +35,7 @@ public class ChooseFacilityController {
     @FXML
     private RadioButton retailer;
 
-    public void initialize(){
+    public void initialize() {
         factory.setToggleGroup(radioButtons);
         regionalWarehouse.setToggleGroup(radioButtons);
         wholesale.setToggleGroup(radioButtons);
@@ -39,7 +43,11 @@ public class ChooseFacilityController {
         mainContainer.getChildren().addAll();
     }
 
-    public void handleChooseFacilityButtonClick(){
+    public void handleChooseFacilityButtonClick() {
         chooseAgent.setupScreen();
+    }
+
+    public void handleBackToMenuButtonClick() {
+        mainMenu.setupScreen();
     }
 }

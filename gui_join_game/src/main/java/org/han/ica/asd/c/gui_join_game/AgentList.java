@@ -5,9 +5,9 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import java.util.ResourceBundle;
 
-public class JoinGame implements IGUIHandler {
+public class AgentList implements IGUIHandler {
     @Override
     public void setupScreen() {
-        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/JoinGame.fxml"));
+        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/AgentList.fxml"));
     }
 }

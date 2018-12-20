@@ -7,7 +7,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class ChooseAgentController {
+public class AgentListController {
 
     @FXML
     private AnchorPane mainContainer;
@@ -17,8 +17,8 @@ public class ChooseAgentController {
     private IGUIHandler mainMenu;
 
     @Inject
-    @Named("AgentList")
-    private IGUIHandler agentList;
+    @Named("ChooseAgent")
+    private IGUIHandler chooseAgent;
 
     public void initialize(){
         mainContainer.getChildren().addAll();
@@ -29,6 +29,6 @@ public class ChooseAgentController {
     }
 
     public void handleChooseAgentButtonClick(){
-        agentList.setupScreen();
+        chooseAgent.setupScreen();
     }
 }
