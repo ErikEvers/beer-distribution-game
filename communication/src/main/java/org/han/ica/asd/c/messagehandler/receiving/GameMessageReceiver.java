@@ -59,7 +59,8 @@ public class GameMessageReceiver {
     }
 
     private void doCommit(RoundModelMessage roundModelMessage) {
-        if (toBecommittedRound != null) { //in theory, a bug can still occur where we receive a commit message with a different content.
+        //in theory, a bug can still occur where we receive a commit message with a different content.
+        if (toBecommittedRound != null) {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IRoundModelObserver) {
                     ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
