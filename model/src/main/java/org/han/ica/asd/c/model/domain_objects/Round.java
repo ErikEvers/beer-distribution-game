@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Round implements IDomainModel{
@@ -13,7 +14,11 @@ public class Round implements IDomainModel{
     private Map<Facility, Integer> remainingBudget;
 
     public Round () {
-        // RoundDB may be void of data
+        this.turnOrder = new HashMap<>();
+        this.turnDeliver = new HashMap<>();
+        this.turnReceived = new HashMap<>();
+        this.turnBackOrder = new HashMap<>();
+        this.turnStock = new HashMap<>();
     }
 
     public Round(int roundId, Map<Facility, Map<Facility, Integer>> turnOrder, Map<Facility, Map<Facility, Integer>> turnDeliver, //NOSONAR
