@@ -113,13 +113,11 @@ public class GameBusinessRulesDAO {
             if(conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     conn.setAutoCommit(false);
-
                     pstmt.setInt(1, gameBusinessRulesDB.getFacilityId());
                     pstmt.setString(2, gameBusinessRulesDB.getGameId());
                     pstmt.setString(3, gameBusinessRulesDB.getGameAgentName());
                     pstmt.setString(4, gameBusinessRulesDB.getGameBusinessRule());
                     pstmt.setString(5, gameBusinessRulesDB.getGameAST());
-
                     pstmt.executeUpdate();
 
                 }

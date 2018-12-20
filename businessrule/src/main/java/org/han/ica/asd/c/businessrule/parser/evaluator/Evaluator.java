@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser.evaluator;
 
-import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
