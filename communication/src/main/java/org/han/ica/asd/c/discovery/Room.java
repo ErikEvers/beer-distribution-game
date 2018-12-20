@@ -88,9 +88,10 @@ public class Room {
         }
     }
 
-    public void updateHosts() throws RoomException {
+    public void updateRoom() throws RoomException {
         if (!gameStarted) {
             try {
+                this.leaderIP = service.getLeaderFromFolder(roomID);
                 this.hosts = service.getAllhostsFromFolder(roomID);
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, connectionError);

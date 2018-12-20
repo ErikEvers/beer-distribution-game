@@ -26,7 +26,7 @@ public class FaultDetectionClient {
     private static final Logger LOGGER = Logger.getLogger(FaultDetectionClient.class.getName());
     private SocketClient socketClient;
 
-    FaultDetectionClient(){
+    public FaultDetectionClient(){
         this.socketClient = new SocketClient();
     }
 
@@ -44,7 +44,6 @@ public class FaultDetectionClient {
      * @see PingMessage
      */
     public void makeConnection(String ipAddress) throws NodeCantBeReachedException {
-
         try {
             socketClient.makeConnection(ipAddress, new PingMessage());
         } catch (IOException e) {
