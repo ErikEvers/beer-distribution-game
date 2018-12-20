@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule;
 
+import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.mocks.t;
-import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;

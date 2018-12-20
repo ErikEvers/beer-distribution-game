@@ -24,7 +24,7 @@ public class Person extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix + personNode, suffix);
+        super.encode(stringBuilder, getChildren(), prefix + personNode, SUFFIX);
     }
 
     /**

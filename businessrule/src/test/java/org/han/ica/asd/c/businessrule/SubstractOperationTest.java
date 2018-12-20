@@ -38,7 +38,7 @@ class SubstractOperationTest {
 
         Value value = (Value) subtractOperation.resolveOperation();
 
-        Assertions.assertEquals("16", value.getValue());
+        Assertions.assertEquals("16", value.getValue().get(0));
     }
 
     @Test
@@ -53,6 +53,6 @@ class SubstractOperationTest {
 
         Value value = (Value) subtractOperation.resolveOperation();
 
-        Assertions.assertEquals("16", value.getValue());
+        Assertions.assertEquals("16", value.getValue().get(0));
     }
 }

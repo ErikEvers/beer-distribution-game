@@ -37,7 +37,7 @@ class DivideOperationTest {
 
         Value value = (Value) divideOperation.resolveOperation();
 
-        Assertions.assertEquals("5", value.getValue());
+        Assertions.assertEquals("5", value.getValue().get(0));
     }
 
     @Test
@@ -52,7 +52,7 @@ class DivideOperationTest {
 
         Value value = (Value) divideOperation.resolveOperation();
 
-        Assertions.assertEquals("5", value.getValue());
+        Assertions.assertEquals("5", value.getValue().get(0));
     }
 
     @Test
@@ -64,7 +64,7 @@ class DivideOperationTest {
 
         Value value = (Value) divideOperation.resolveOperation();
 
-        Assertions.assertEquals("8", value.getValue());
+        Assertions.assertEquals("8", value.getValue().get(0));
     }
 
 }

@@ -198,7 +198,7 @@ public class BusinessRule extends ASTNode {
     private void replace(Value value, t t, int facilityId) {
         String REGEXHASCHARACTERS = "[a-zA-Z ]+";
         String currentVariable = value.getFirstPartVariable();
-        if(Pattern.matches(REGEXHASCHARACTERS,value.getFirstPartVariable())){
+        if(value.getFirstPartVariable().matches(REGEXHASCHARACTERS)){
            // ggameValue = GameValue.valueOf(currentVariable).getValue();
         }
 

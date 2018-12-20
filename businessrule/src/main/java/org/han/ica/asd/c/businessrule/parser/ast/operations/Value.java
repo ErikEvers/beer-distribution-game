@@ -1,14 +1,12 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
-import org.han.ica.asd.c.gamevalue.GameValue;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Stack;
 
 public class Value extends OperationValue {
     private static final String PREFIX = "V(";
-    private ArrayList<String> value;
+    private List<String> value = new ArrayList<>();
 
     /**
      * Constructor
@@ -21,8 +19,8 @@ public class Value extends OperationValue {
      *
      * @param value the value to be saved in the object
      */
-    public Value(String value) {
-        addValue(value);
+    public Value(int value) {
+        this.value.add(String.valueOf(value));
     }
 
     /**
@@ -34,12 +32,12 @@ public class Value extends OperationValue {
     @Override
     public Value addValue(String value) {
         if ("smallest".equals(value) || "lowest".equals(value)) {
-            value = "lowest";
+            this.value.add("lowest");
         } else if ("biggest".equals(value) || "highest".equals(value)) {
-            value = "highest";
+            this.value.add("highest");
         }
 
-       this.addValue(value);
+        this.value.add(value);
         return this;
     }
 
@@ -50,7 +48,14 @@ public class Value extends OperationValue {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(PREFIX).append(value).append(SUFFIX);
+        stringBuilder.append(PREFIX);
+        for (int i = 0; i < value.size(); i++) {
+            if(i > 0){
+                stringBuilder.append(" ");
+            }
+            stringBuilder.append(value.get(i));
+        }
+        stringBuilder.append(SUFFIX);
     }
 
     /**
@@ -58,7 +63,7 @@ public class Value extends OperationValue {
      *
      * @return Returns the value
      */
-    public ArrayList<String> getValue() {
+    public List<String> getValue() {
         return this.value;
     }
 

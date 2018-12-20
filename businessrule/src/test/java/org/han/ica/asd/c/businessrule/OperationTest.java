@@ -78,6 +78,6 @@ class OperationTest {
 
         Value value = (Value) subtractOperation.resolveOperation();
 
-        assertEquals("15", value.getValue());
+        assertEquals("15", value.getValue().get(0));
     }
 }

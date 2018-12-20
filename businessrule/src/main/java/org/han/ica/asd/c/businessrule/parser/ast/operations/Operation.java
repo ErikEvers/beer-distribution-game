@@ -104,7 +104,7 @@ public abstract class Operation extends OperationValue {
         Value leftValue = (Value) this.left;
         Value rightValue = (Value) this.right;
 
-        return this.executeOperation(Integer.parseInt(leftValue.getValue()), Integer.parseInt(rightValue.getValue()));
+        return this.executeOperation(leftValue.getIntegerValue(), rightValue.getIntegerValue());
     }
 
     /**
