@@ -4,12 +4,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class SocketClient {
 
     /**
      * This method tries to make a new socket with the given IP, sends an object and expects an object back, which will be returned.
      * No need for socket.close() because of the use of 'try-with'
+     *
      * @param ip
      * @param object
      * @return Object
@@ -29,6 +34,7 @@ public class SocketClient {
     /**
      * This method tried to make a new socket with the given IP and sends an object. This method, however, does not expect something back.
      * No need for socket.close() because of the use of 'try-with'
+     *
      * @param ip
      * @param object
      * @throws IOException
@@ -42,6 +48,7 @@ public class SocketClient {
 
     /**
      * This method sends an object with a given Socket.
+     *
      * @param socket
      * @param object
      * @throws IOException
@@ -50,4 +57,47 @@ public class SocketClient {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         objectOutputStream.writeObject(object);
     }
+
+    /**
+     * Sends an object to multiple ips.
+     *
+     * @param ips
+     * @param object
+     * @return When all threads are finished, this returns a map with all ips and for each ip a result. The result is either the response object or an exception.
+     */
+    public Map<String, Object> sendToAll(String[] ips, Object object) {
+
+        CountDownLatch cdl = new CountDownLatch(ips.length);
+        Map<String, Object> map = new HashMap<>();
+
+        for (String ip : ips) {
+            Thread t = new Thread(() -> {
+
+                try {
+                    Object response = null;
+                    try {
+                        response = sendObjectWithResponse(ip, object);
+                        map.put(ip, response);
+                    } catch (ClassNotFoundException e) {
+                        map.put(ip, e);
+                    }
+                } catch (IOException e) {
+                    map.put(ip, e);
+                }
+
+                cdl.countDown();
+            });
+            t.setDaemon(false);
+            t.start();
+        }
+
+        try {
+            cdl.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return map;
+    }
+
 }
