@@ -15,13 +15,6 @@ public class Agent extends GameAgent /* implements IParticipant */{
     private IBusinessRules businessRules;
 
     /**
-     * Constructor
-     */
-    public Agent() {
-        super(null, null);
-    }
-
-    /**
      * Constructor with default agent name and facility
      *
      * @param gameAgentName The name of the agent
@@ -42,48 +35,21 @@ public class Agent extends GameAgent /* implements IParticipant */{
         Map<Facility, Integer> targetDeliverMap = new HashMap<>();
 
         for (GameBusinessRules gameBusinessRules : this.gameBusinessRulesList) {
-            GameAgentAction action = this.retrieveActionFromBusinessRule(gameBusinessRules.getGameBusinessRule(), round);
-            Facility targetFacility = this.resolveFacilityId(action.getTargetFacilityId());
-            if(targetFacility != null) {
-                if (targetOrderMap.isEmpty() && action instanceof GameAgentOrder) {
-                    targetOrderMap.put(targetFacility, action.getAmount());
-                } else if (targetDeliverMap.isEmpty() && action instanceof GameAgentDeliver) {
-                    targetDeliverMap.put(targetFacility, action.getAmount());
-                } else if (!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
-                    break;
+            Action action = businessRules.evaluateBusinessRule(gameBusinessRules.getGameBusinessRule(), round);
+            if(action != null) {
+                Facility targetFacility = this.resolveFacilityId(action.getFacilityId());
+                if(targetFacility != null) {
+                    if (targetOrderMap.isEmpty() && action.isOrderType()) {
+                        targetOrderMap.put(targetFacility, action.getAmount());
+                    } else if (targetDeliverMap.isEmpty() && action.isDeliverType()) {
+                        targetDeliverMap.put(targetFacility, action.getAmount());
+                    } else if (!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
+                        break;
+                    }
                 }
             }
         }
-
         return new GameRoundAction(targetOrderMap, targetDeliverMap);
-    }
-
-    /**
-     * Retrieve the action that is described in the business rule
-     *
-     * @param businessRule  The business rule script that describes the action when the case is true
-     * @param round         The round with data to fill in variables that need the values
-     * @return              Returns the action that results fom the variable filled business rules
-     */
-    private GameAgentAction retrieveActionFromBusinessRule(String businessRule, Round round) {
-        GameAgentAction gameAgentAction = null;
-
-        Action action = businessRules.evaluateBusinessRule(businessRule, round);
-
-        if (action != null) {
-            if (action.isOrderType()) {
-                gameAgentAction = new GameAgentOrder();
-            } else if (action.isDeliverType()) {
-                gameAgentAction = new GameAgentDeliver();
-            }
-
-            if (gameAgentAction != null) {
-                gameAgentAction.setAmount(action.getAmount());
-                return gameAgentAction;
-            }
-        }
-
-        return new GameAgentEmptyAction();
     }
 
     /**

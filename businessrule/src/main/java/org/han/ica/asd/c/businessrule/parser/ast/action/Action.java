@@ -125,4 +125,14 @@ public class Action extends ASTNode {
     public int getAmount() {
         return ((Value) operation).getIntegerValue();
     }
+
+    /**
+     * Gets the id of the facility of the Action
+     *
+     * @return Returns the facility id of the receiving end
+     */
+    public int getFacilityId() {
+        // TO-DO: 12/20/2018 Write the functionality to retrieve the facility id from the business rule AST
+        return 0;
+    }
 }
