@@ -3,11 +3,13 @@ package org.han.ica.asd.c;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.dao.FacilityTurnDAO;
+import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
+import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +22,9 @@ import java.util.logging.Logger;
 
 class FacilityTurnDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(FacilityTurnDAOIntegrationTest.class.getName());
-	private static final FacilityTurn FACILITY_TURN = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,1,50,50,50,50,50);
-	private static final FacilityTurn FACILITY_TURN2 = new FacilityTurn("BeerGameZutphen13_12_2018",2,3,1,50,50,50,50,50);
-	private static final FacilityTurn FACILITY_TURN3 = new FacilityTurn("BeerGameZutphen13_12_2018",1,2,1,150,150,150,150,150);
+	private static final FacilityTurnDB FACILITY_TURN = new FacilityTurnDB("BeerGameZutphen13_12_2018",1,2,1,50,50,50,50,50);
+	private static final FacilityTurnDB FACILITY_TURN2 = new FacilityTurnDB("BeerGameZutphen13_12_2018",2,3,1,50,50,50,50,50);
+	private static final FacilityTurnDB FACILITY_TURN3 = new FacilityTurnDB("BeerGameZutphen13_12_2018",1,2,1,150,150,150,150,150);
 	private FacilityTurnDAO facilityTurnDAO;
 	private RoundDAO roundDAO;
 
@@ -49,7 +51,7 @@ class FacilityTurnDAOIntegrationTest {
 		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 
-		FacilityTurn facilityTurnDb = facilityTurnDAO.fetchTurn(new Round("BeerGameZutphen13_12_2018",1),new FacilityLinkedTo("BeerGameZutphen13_12_2018",1,2,false));
+		FacilityTurnDB facilityTurnDb = facilityTurnDAO.fetchTurn(new RoundDB("BeerGameZutphen13_12_2018",1),new FacilityLinkedToDB("BeerGameZutphen13_12_2018",1,2,false));
 
 		Assert.assertEquals(FACILITY_TURN.getGameId(),facilityTurnDb.getGameId());
 		Assert.assertEquals(FACILITY_TURN.getFacilityIdDeliver(),facilityTurnDb.getFacilityIdDeliver());
@@ -68,7 +70,7 @@ class FacilityTurnDAOIntegrationTest {
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.createTurn(FACILITY_TURN2);
 
-		List<FacilityTurn> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
+		List<FacilityTurnDB> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
 		Assert.assertEquals(2,facilityTurnDb.size());
 	}
 
@@ -78,7 +80,7 @@ class FacilityTurnDAOIntegrationTest {
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.updateTurn(FACILITY_TURN3);
 
-		FacilityTurn facilityTurnDb = facilityTurnDAO.fetchTurn(new Round("BeerGameZutphen13_12_2018",1),new FacilityLinkedTo("BeerGameZutphen13_12_2018",1,2,false));
+		FacilityTurnDB facilityTurnDb = facilityTurnDAO.fetchTurn(new RoundDB("BeerGameZutphen13_12_2018",1),new FacilityLinkedToDB("BeerGameZutphen13_12_2018",1,2,false));
 
 		//Validate if the data is not inserted but updated
 		Assert.assertEquals(1,facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1).size());
@@ -102,7 +104,7 @@ class FacilityTurnDAOIntegrationTest {
 		facilityTurnDAO.deleteTurn(FACILITY_TURN);
 
 
-		List<FacilityTurn> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
+		List<FacilityTurnDB> facilityTurnDb = facilityTurnDAO.fetchTurns("BeerGameZutphen13_12_2018",1);
 		Assert.assertEquals(0,facilityTurnDb.size());
 	}
 }
