@@ -143,4 +143,12 @@ public class ReplayData {
             }
         }
     }
+
+    public void addDisplayedFacility(Facility facility){
+        displayedFacilities.add(facility);
+    }
+
+    public void removeDisplayedFacility(Facility facility){
+        displayedFacilities.remove(facility);
+    }
 }

@@ -3,13 +3,11 @@ package org.han.ica.asd.c.gui_replay_game.replay_game_controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -105,7 +103,7 @@ public class ReplayGameScreenController {
         facilityComboBox.setItems(observableList);
 
         facilityComboBox.valueProperty().addListener((obs, oldVal, newVal) ->
-                facilityComboBoxUpdated(newVal));
+                facilityComboBoxUpdated(oldVal, newVal));
 
         facilityComboBox.setConverter(new StringConverter<Facility>() {
             @Override
@@ -120,8 +118,14 @@ public class ReplayGameScreenController {
         });
     }
 
-    private void facilityComboBoxUpdated(Facility facility) {
-        if (facility != null) clearCheckBoxes();
+    private void facilityComboBoxUpdated(Facility facilityOld, Facility facilityNew) {
+        replayData.removeDisplayedFacility(facilityOld);
+        if (facilityNew != null) {
+            System.out.println("added facility");
+            clearCheckBoxes();
+            replayData.addDisplayedFacility(facilityNew);
+        }
+        drawGraph();
     }
 
     private void clearCheckBoxes() {
