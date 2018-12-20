@@ -1,11 +1,10 @@
-package communicationcomponent.messagehandler;
+package org.han.ica.asd.c.messagehandler;
 
-import domainobjects.RoundModel;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import domainobjects.TurnModel;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class GameMessageClientTest {
     private String wrongIp = "145.250.165.238";
     private GameMessageClient roundDataClient;
-    private TurnModel data;
+    private Round data;
     private String correctIp = "145.250.165.239";
 
     @InjectMocks
@@ -45,7 +44,7 @@ public class GameMessageClientTest {
         initMocks(this);
         roundDataClient = new GameMessageClient();
         roundDataClient.setSocketClient(socketClient);
-        data = new TurnModel(10);
+        data = new Round();
         gameMessageClient = new GameMessageClient();
         gameMessageClient.setSocketClient(socketClient);
     }

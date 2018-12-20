@@ -1,63 +1,62 @@
 package org.han.ica.asd.c.faultdetection;
 
 public class FaultHandlerPlayer {
-	private int amountOfConnectionsWithLeader;
-	private int amountOfFailingIps;
-	private int amountOfActiveIps;
+    private int amountOfConnectionsWithLeader;
+    private int amountOfFailingIps;
+    private int amountOfActiveIps;
 
-	int getAmountOfActiveIps() {
-		return amountOfActiveIps;
-	}
-	int getAmountOfFailingIps() {
-		return amountOfFailingIps;
-	}
-	int getAmountOfConnectionsWithLeader() {
-		return amountOfConnectionsWithLeader;
-	}
+    int getAmountOfActiveIps() {
+        return amountOfActiveIps;
+    }
 
-	FaultHandlerPlayer() {
-		amountOfConnectionsWithLeader = 0;
-	}
+    int getAmountOfFailingIps() {
+        return amountOfFailingIps;
+    }
 
-	public void reset() {
-		resetAmountOfFailingIps();
-		resetAmountOfConnectionsWithLeader();
-	}
+    int getAmountOfConnectionsWithLeader() {
+        return amountOfConnectionsWithLeader;
+    }
 
-	public void resetAmountOfConnectionsWithLeader(){
-		amountOfConnectionsWithLeader = 0;
-	}
+    FaultHandlerPlayer() {
+        amountOfConnectionsWithLeader = 0;
+    }
 
-	public void incrementAmountOfConnectionsWithLeader(){
-		amountOfConnectionsWithLeader++;
-	}
+    public void reset() {
+        resetAmountOfFailingIps();
+        resetAmountOfConnectionsWithLeader();
+    }
 
-	public void resetAmountOfFailingIps() {
-		amountOfFailingIps = 0;
-	}
+    public void resetAmountOfConnectionsWithLeader() {
+        amountOfConnectionsWithLeader = 0;
+    }
 
-	public void incrementAmountOfFailingIps() {
-		amountOfFailingIps++;
-	}
+    public void incrementAmountOfConnectionsWithLeader() {
+        amountOfConnectionsWithLeader++;
+    }
 
-	public String whoIsDead() {
+    public void resetAmountOfFailingIps() {
+        amountOfFailingIps = 0;
+    }
 
-		if (amountOfFailingIps >= amountOfActiveIps / 2) {
-			return "imDead";
-		} else if (amountOfConnectionsWithLeader <= amountOfActiveIps / 2) {
-			return "leaderIsDead";
-		}
-		else{
-			return null;
-		}
-	}
+    public void incrementAmountOfFailingIps() {
+        amountOfFailingIps++;
+    }
 
-	void setAmountOfActiveIps(int amountOfActiveIps) {
-		this.amountOfActiveIps = amountOfActiveIps;
-	}
+    public String whoIsDead() {
 
-	void setAmountOfFailingIps(int amountOfFailingIps) {
-		this.amountOfFailingIps = amountOfFailingIps;
-	}
+        if (amountOfFailingIps == amountOfActiveIps) {
+            return "imDead";
+        } else {
+            return "leaderIsDead";
+        }
+    }
+
+    void setAmountOfActiveIps(int amountOfActiveIps) {
+        this.amountOfActiveIps = amountOfActiveIps;
+    }
+
+    void setAmountOfFailingIps(int amountOfFailingIps) {
+        this.amountOfFailingIps = amountOfFailingIps;
+    }
 
 }

@@ -32,7 +32,6 @@ MIN: 'minus' | '-';
 MUL: 'times' | '*';
 DIV: 'divided' | '/';
 
-
 GARBAGE: [a-zA-Z'.]+ -> skip;
 WS: [ \t\r\n]+ -> skip;
 
