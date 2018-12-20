@@ -1,18 +1,12 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.gamelogic.public_interfaces.*;
-import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
-import org.han.ica.asd.c.model.dao_model.RoundDB;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
-
-import java.util.Map;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
@@ -40,7 +34,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param turn
      */
     @Override
-    public void placeOrder(FacilityTurnDB turn) {
+    public void placeOrder(Round turn) {
         persistence.saveTurnData(turn);
         communication.sendTurnData(turn);
     }
@@ -50,7 +44,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @return The current state of the game.
      */
     @Override
-    public RoundDB seeOtherFacilities() {
+    public Round seeOtherFacilities() {
         return persistence.fetchRoundData(gameId, round);
     }
 

@@ -8,6 +8,7 @@ import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,14 +34,16 @@ public class GameLogicTest {
 
     @Test
     public void placeOrderCallsPersistence() {
-        FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
+        Round turn = new Round();
+        //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.placeOrder(turn);
         verify(persistence, times(1)).saveTurnData(turn);
     }
 
     @Test
     public void placeOrderCallsCommunication() {
-        FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
+        Round turn = new Round();
+        //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.placeOrder(turn);
         verify(communication, times(1)).sendTurnData(turn);
     }
