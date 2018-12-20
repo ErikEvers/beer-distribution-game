@@ -1,12 +1,20 @@
-package org.han.ica.asd.c.gui_main_menu;
+package org.han.ica.asd.c.gui_join_game;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class ChooseFacilityController {
     private ToggleGroup radioButtons= new ToggleGroup();
+
+    @Inject
+    @Named("ChooseAgent")
+    private IGUIHandler chooseAgent;
 
     @FXML
     private AnchorPane mainContainer;
@@ -29,5 +37,9 @@ public class ChooseFacilityController {
         wholesale.setToggleGroup(radioButtons);
         retailer.setToggleGroup(radioButtons);
         mainContainer.getChildren().addAll();
+    }
+
+    public void handleChooseFacilityButtonClick(){
+        chooseAgent.setupScreen();
     }
 }

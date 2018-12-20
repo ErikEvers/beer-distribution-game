@@ -10,6 +10,9 @@ import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gui_join_game.ChooseAgent;
+import org.han.ica.asd.c.gui_join_game.ChooseFacility;
+import org.han.ica.asd.c.gui_join_game.JoinGame;
 import org.han.ica.asd.c.gui_main_menu.MainMenu;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
@@ -30,6 +33,9 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("JoinGame")).to(JoinGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ChooseFacility")).to(ChooseFacility.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ChooseAgent")).to(ChooseAgent.class);
 
 		requestStaticInjection(FXMLLoaderOnSteroids.class);
 

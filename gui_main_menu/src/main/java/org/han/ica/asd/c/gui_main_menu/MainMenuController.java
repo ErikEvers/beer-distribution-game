@@ -33,6 +33,10 @@ public class MainMenuController {
     @Named("ReplayGame")
     private IGUIHandler replayGame;
 
+    @Inject
+    @Named("JoinGame")
+    private IGUIHandler joinGame;
+
     public void initialize() {
         mainContainer.getChildren().addAll();
         setCloseButtonAction();
@@ -53,6 +57,10 @@ public class MainMenuController {
 
     private void setReplayButtonAction() {
         replay.setOnAction(event -> replayGame.setupScreen());
+    }
+
+    public void handleJoinGameButtonClick(){
+        joinGame.setupScreen();
     }
 
 }

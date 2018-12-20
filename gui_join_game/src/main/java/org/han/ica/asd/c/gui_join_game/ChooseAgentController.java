@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_main_menu;
+package org.han.ica.asd.c.gui_join_game;
 
 public class ChooseAgentController {
 
