@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
+import org.han.ica.asd.c.businessrule.mocks.GameData;
+import org.han.ica.asd.c.gamevalue.GameValue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,11 +39,73 @@ public class Value extends OperationValue {
         } else if ("biggest".equals(value) || "highest".equals(value)) {
             this.value.add("highest");
         }
-
-        this.value.add(value);
+        int countSpaces = countSpaces(value);
+        String firstValue = getFirstPartVariable(value);
+        String secondValue = getSecondPartVariable(value);
+        this.value.add(firstValue);
+        if(countSpaces>=1&&firstValue!=secondValue){
+            this.value.add(secondValue);
+        }
         return this;
     }
+    public String getSecondPartVariable(String value){
+        String newValue="";
+        if(isValid(value)){
+            return value;
+        }
+        while(true) {
+            int countSpaces = countSpaces(value);
+            newValue = value.substring(value.indexOf(" ", 0)+1, value.length());
+            if (!isValid(newValue)) {
+                value =value.replaceFirst(" ",  "");
+                String tmp = value;
+            }else{
+                break;
+            }
+        }
+        return newValue;
+    }
 
+    public String getFirstPartVariable(String value){
+        String newValue="";
+        if(isValid(value)){
+            return value;
+        }
+        while(true) {
+            int countSpaces = countSpaces(value);
+            if(countSpaces==0){
+                return value;
+            }
+            newValue = value.substring(0, value.indexOf(" ", 0));
+            if(newValue.contains("%")){
+                return newValue;
+            }
+            if (!isValid(newValue)) {
+                value =value.replaceFirst(" ",  "");
+                String tmp = value;
+            }else{
+                break;
+            }
+        }
+        return newValue;
+    }
+    private boolean isValid(String value){
+        for(GameValue gameValue: GameValue.values()){
+            if(gameValue.contains(value)){
+                return true;
+            }
+        }
+        return false;
+    }
+    private int countSpaces(String value){
+        int space = 0;
+        for(int i = 0;i<value.length();i++){
+            if(value.charAt(i)==' '){
+                space++;
+            }
+        }
+        return space;
+    }
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
      *
@@ -68,11 +133,11 @@ public class Value extends OperationValue {
     }
 
     public String getSecondPartVariable(){
-       return value.get(1).replaceAll(" ","");
+       return value.get(1);
     }
 
     public String getFirstPartVariable(){
-	    return value.get(0).replaceAll(" ","");
+	    return value.get(0);
     }
 
     /**

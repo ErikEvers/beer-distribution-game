@@ -1,12 +1,17 @@
 package org.han.ica.asd.c.gamevalue;
 
 public enum GameValue {
-    INVENTORY("inventory"), OPENORDER("open order"),
-    ROUND("round"), STOCK("stock"), ORDER("order"),
-    OUTGOINGGOODS("outgoinggoods"), BACKORDERS("backorders"),
-    BACKLOG("backlog"),INCOMINGORDER("incoming order"),
-    HIGHEST("highest","biggest"),LOWEST("lowest","smallest"),
-    FACILITY("factory","distributor","wholesaler","retailer"),BELOW("below"),ABOVE("above");
+    STOCK("stock","inventory"),
+    ORDERED("ordered"),
+    OUTGOINGGOODS("outgoing goods"),
+    BACKLOG("backlog","back orders"),
+    INCOMINGORDER("incoming order"),
+    HIGHEST("highest","biggest"),
+    LOWEST("lowest","smallest"),
+    FACTORY("factory"),
+    DISTIRBUTOR("distributor"),
+    WHOLESALER("wholesaler"),
+    BUDGET("budget");
 
     String[] value;
 
@@ -21,5 +26,14 @@ public enum GameValue {
 
     public String[] getValue() {
         return value;
+    }
+
+    public boolean contains(String i){
+        for (String s : value) {
+            if(s.equals(i)){
+                return true;
+            }
+        }
+        return false;
     }
 }

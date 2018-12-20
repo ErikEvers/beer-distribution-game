@@ -13,7 +13,7 @@ WHERE: 'where';
 NODE : ('factory' | 'distributor' | 'wholesaler' | 'retailer') (' '?[0-9]+)?;
 
 FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer';
-GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';
+GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders' | 'budget' | 'outgoing goods'|'ordered';
 INT_VALUE: [0-9]+;
 PERCENTAGE: [0-9]+'%';
 LOWEST: ('lowest' | 'smallest');

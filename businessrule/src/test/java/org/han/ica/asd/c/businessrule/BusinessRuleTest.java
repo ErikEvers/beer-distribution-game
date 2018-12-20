@@ -1,13 +1,16 @@
 package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
-import org.han.ica.asd.c.businessrule.mocks.t;
+import org.han.ica.asd.c.businessrule.mocks.GameData;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.gamevalue.GameValue;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -15,7 +18,9 @@ import org.mockito.Mockito;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -97,14 +102,30 @@ public class BusinessRuleTest {
 
     @Test
     void testBusinessrule_getReplacementValue_equals_10() {
-        String businessRuleString = "BR(CS(C(CV(V(40% inventory))ComO(<)CV(Add(V(inventory)CalO(+)Mul(V(inventory)CalO(*)V(back orders)))))))";
+        String businessRuleString = "BR(CS(C(CV(V(40% back orders))ComO(<)CV(Add(V(inventory)CalO(+)Mul(V(inventory)CalO(*)V(back orders)))))))";
         String expected = "BR(CS(C(CV(V(40% 10))ComO(<)CV(Add(V(10)CalO(+)Mul(V(10)CalO(*)V(10)))))))";
-	    t gameData = Mockito.mock(t.class);
+
+	    Round round = Mockito.mock(Round.class);
+        Facility facility = Mockito.mock(Facility.class);
+        FacilityType facilityType = Mockito.mock(FacilityType.class);
+        facility.setFacilityType(facilityType);
+        Map<Facility,Integer> map = new HashMap<>();
+        map.put(facility,10);
+        Map<Facility, Map<Facility,Integer> > mapInMap = new HashMap<>();
+        mapInMap.put(facility,map);
+
+        int facilityId = 11;
+        facility.setFacilityId(facilityId);
+        when(facility.getFacilityType()).thenReturn(facilityType);
+	    when(facility.getFacilityId()).thenReturn(facilityId);
+
+	    when(round.getTurnStock()).thenReturn(map);
+	    when(round.getTurnBackOrder()).thenReturn(mapInMap);
+
         businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
-	    int facilityId = 10;
-	    when(gameData.getReplacementValue(GameValue.INVENTORY.getValue(),facilityId)).thenReturn(facilityId);
-	    when(gameData.getReplacementValue(GameValue.BACKORDERS.getValue(),facilityId)).thenReturn(facilityId);
-        businessRule.substituteTheVariablesOfBusinessruleWithGameData(gameData, 10);
+
+
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
         String result = businessRule.encode();
 
         assertEquals(expected, result);
@@ -113,6 +134,7 @@ public class BusinessRuleTest {
     @Test
     void testBusinessRule_hasMultipleChildren_equals_true() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String businessRuleString = "BR(CS(C(CV(V(stock))ComO(<)CV(V(10))))A(AR(order)V(0)))";
+
         businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
 
         Method hasMultipleChildren = businessRule.getClass().getDeclaredMethod("hasMultipleChildren",ASTNode.class);
@@ -120,24 +142,4 @@ public class BusinessRuleTest {
         boolean statement = (Boolean) hasMultipleChildren.invoke(businessRule, (ASTNode) businessRule.getChildren().get(1));
         assertTrue(statement);
     }
-
-    @Test
-    void testBusinessRule_replace_() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-	    ASTNode value = new Value();
-	    value.addValue("inventory");
-	    t gameData = Mockito.mock(t.class);
-	    Method replace = businessRule.getClass().getDeclaredMethod("replace", Value.class,t.class,int.class);
-	    replace.setAccessible(true);
-		int facilityId = 5;
-	    when(gameData.getReplacementValue(GameValue.INVENTORY.getValue(),facilityId)).thenReturn(facilityId);
-
-	    replace.invoke(businessRule,  value,gameData,facilityId);
-	    assertEquals("5", ((Value) value).getValue());
-    }
-//	INVENTORY("inventory"), OPENORDER("open order"),
-//	ROUND("round"), STOCK("stock"), ORDER("order"),
-//	OUTGOINGGOODS("outgoinggoods"), BACKORDERS("backorders"),
-//	BACKLOG("backlog"),INCOMINGORDER("incoming order"),
-//	HIGHEST("highest","biggest"),LOWEST("lowest","smallest"),
-//	Facility("factory","distributor","wholesaler","retailer"),BELOW("below"),ABOVE("above");
 }

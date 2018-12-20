@@ -1,24 +1,22 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
-import org.han.ica.asd.c.businessrule.mocks.t;
+import org.han.ica.asd.c.businessrule.mocks.GameData;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.gamevalue.GameValue;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class BusinessRule extends ASTNode {
     private static final String PREFIX = "BR(";
     private Condition condition;
     private Action action;
-    private t turn;
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -140,21 +138,21 @@ public class BusinessRule extends ASTNode {
 
     /***
      * replaces the variables of the business rule with data using dept first
-     * When its a leaf (a Value) it replaces the value with the game data(turn)
-     * @param turn data of a turn
+     * When its a leaf (a Value) it replaces the value with the game data(gameData)
+     * @param round data of a gameData
      * @param facilityId identifier of the facility
      */
-    public void substituteTheVariablesOfBusinessruleWithGameData(t turn, int facilityId){
+    public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId){
         int left = 0;
         int right = 2;
         int actionValue = 1;
 
-        findLeafAndReplace(condition.getChildren().get(left),turn,facilityId);
+        findLeafAndReplace(condition.getChildren().get(left),round,facilityId);
         if(hasMultipleChildren(condition)) {
-            findLeafAndReplace(condition.getChildren().get(right),turn, facilityId);
+            findLeafAndReplace(condition.getChildren().get(right),round, facilityId);
         }
         if (action != null) {
-            findLeafAndReplace(action.getChildren().get(actionValue),turn, facilityId);
+            findLeafAndReplace(action.getChildren().get(actionValue),round, facilityId);
         }
     }
 
@@ -164,16 +162,16 @@ public class BusinessRule extends ASTNode {
      * @param astNode a node of the tree
      * @param facilityId
      */
-    private void findLeafAndReplace(ASTNode astNode, t turn, int facilityId){
+    private void findLeafAndReplace(ASTNode astNode, Round round, int facilityId){
         int left = 0;
         int right = 2;
         if(astNode instanceof Value){
-            replace((Value) astNode,turn,facilityId);
+            replace((Value) astNode,round,facilityId);
         }
         if (!astNode.getChildren().isEmpty()) {
-            findLeafAndReplace(astNode.getChildren().get(left),turn, facilityId);
+            findLeafAndReplace(astNode.getChildren().get(left),round, facilityId);
             if (hasMultipleChildren(astNode)) {
-                findLeafAndReplace(astNode.getChildren().get(right),turn, facilityId);
+                findLeafAndReplace(astNode.getChildren().get(right),round, facilityId);
             }
         }
     }
@@ -190,22 +188,88 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     *replaces the value with the replacementvalue(gamedata) like stock with 10
+     *replaces the value with the replacementvalue(gamedata)
      *
      * @param value a node of the tree
      * @param facilityId
      */
-    private void replace(Value value, t t, int facilityId) {
+    private void replace(Value value, Round round, int facilityId) {
         String REGEXHASCHARACTERS = "[a-zA-Z ]+";
         String currentVariable = value.getFirstPartVariable();
-        if(value.getFirstPartVariable().matches(REGEXHASCHARACTERS)){
-           // ggameValue = GameValue.valueOf(currentVariable).getValue();
+        if(Pattern.matches(REGEXHASCHARACTERS,value.getFirstPartVariable())) {
+            GameValue gameValue = getGameValue(currentVariable);
+            if (gameValue != null) {
+                replaceValue(gameValue, value,round, facilityId, 0);
+            }
         }
+        if(value.getValue().size()>1) {
+            String secondVariable = value.getSecondPartVariable();
+            if (Pattern.matches(REGEXHASCHARACTERS, value.getSecondPartVariable())) {
+                GameValue gameValue = getGameValue(secondVariable);
+                if (gameValue != null) {
+                    replaceValue(gameValue, value, round, facilityId, 1);
+                }
+            }
+        }
+    }
 
-//        if(gameValue !=null) {
-//            int newReplacementValue = t.getReplacementValue(gameValue,facilityId);
-//            String replacementValue=String.valueOf(newReplacementValue);
-//            value.replaceValueWithValue(replacementValue);
-//        }
+    private GameValue getGameValue(String variable){
+        for(GameValue gameValue: GameValue.values()){
+            if(gameValue.contains(variable)){
+                return gameValue;
+            }
+        }
+        return null;
+    }
+    private void replaceValue(GameValue gameValue,Value value,Round round,int facilityId, int part){
+        if(gameValue !=null) {
+            String newReplacementValue = getReplacementValue(gameValue,round,facilityId);
+            value.replaceValueWithValue(newReplacementValue,part);
+        }
+    }
+
+    public String getReplacementValue(GameValue gameValue,Round round, int facilityId) {
+        switch (gameValue){
+            case ORDERED:
+                return getValueFromHashmapInHasmap(round.getTurnOrder(),facilityId);
+            case STOCK:
+                return  getValue(round.getTurnStock(),facilityId);
+            case BUDGET:
+                return  getValue(round.getRemainingBudget(),facilityId);
+            case BACKLOG:
+                return getValueFromHashmapInHasmap(round.getTurnBackOrder(),facilityId);
+            case INCOMINGORDER:
+                return getValueFromHashmapInHasmap(round.getTurnReceived(),facilityId);
+            case OUTGOINGGOODS:
+                return getValueFromHashmapInHasmap(round.getTurnDeliver(),facilityId);
+            default:
+                return String.valueOf(getFacilityIdBasedOnType(round.getTurnStock(), gameValue));
+        }
+    }
+
+    private String getValueFromHashmapInHasmap(Map<Facility,Map<Facility,Integer>> map, int facilityId){
+        Map.Entry<Facility,Map<Facility,Integer>> entry = map.entrySet().iterator().next();
+        Map<Facility,Integer> value = entry.getValue();
+        return getValue(value,facilityId);
+    }
+
+    private String getValue(Map<Facility,Integer> map,int facilityId){
+        for(Map.Entry<Facility,Integer> entry:map.entrySet()){
+            if(entry.getKey().getFacilityId()==facilityId){
+                return entry.getValue().toString();
+            }
+        }
+        return "";
+    }
+
+    private int getFacilityIdBasedOnType(Map<Facility,Integer> map, GameValue facilityType){
+        Facility facility = null;
+        for(Map.Entry<Facility,Integer> entry:map.entrySet()){
+            if(GameValue.valueOf(entry.getKey().getFacilityType().getFacilityName())==facilityType){
+                facility= entry.getKey();
+                break;
+            }
+        }
+        return facility==null?null:facility.getFacilityId();
     }
 }
