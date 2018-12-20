@@ -48,6 +48,11 @@ public class Value extends OperationValue {
         return this;
     }
 
+    /***
+     * gets the second part of the value
+     * @param value
+     * @return a variable
+     */
     private String getSecondPartVariable(String value){
         String newValue;
         if(isValid(value)){
@@ -64,7 +69,11 @@ public class Value extends OperationValue {
         return newValue;
     }
 
-
+    /***
+     * gets the first part of the value
+     * @param value
+     * @return a variable
+     */
     private String getFirstPartVariable(String value){
         String newValue;
         if(isValid(value)){
@@ -84,6 +93,12 @@ public class Value extends OperationValue {
         return newValue;
     }
 
+    /***
+     * checks if the value is valid
+     *
+     * @param value
+     * @return 
+     */
     private boolean isValid(String value){
         String isNumber = "[0-9]+";
         if(value.matches(isNumber)){
@@ -97,6 +112,11 @@ public class Value extends OperationValue {
         return false;
     }
 
+    /***
+     * counts the number of spaces in the value
+     * @param value the value
+     * @return
+     */
     private int countSpaces(String value){
         int space = 0;
         for(int i = 0;i<value.length();i++){
@@ -132,10 +152,18 @@ public class Value extends OperationValue {
         return this.value;
     }
 
+    /***
+     * gets the second part of the variable
+     * @return
+     */
     public String getSecondPartVariable(){
        return value.get(1);
     }
 
+    /***
+     * gets the first part of the variable
+     * @return
+     */
     public String getFirstPartVariable(){
 	    return value.get(0);
     }

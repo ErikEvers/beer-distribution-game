@@ -182,30 +182,45 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     *
-     * @param value
-     * @param round
-     * @param facilityId
+     * gets one part of the value replaces it with game data
+     * @param value the value
+     * @param round the previous round
+     * @param facilityId the id of the facility
      */
     private void replace(Value value, Round round, int facilityId) {
-        String currentVariable = value.getFirstPartVariable();
+        String firstVariable = value.getFirstPartVariable();
         if(Pattern.matches(HAS_CHARACTERS,value.getFirstPartVariable())) {
-            GameValue gameValue = getGameValue(currentVariable);
-            if (gameValue != null) {
-                replaceValue(gameValue, value,round, facilityId, 0);
-            }
+            replaceOnVariable(value,round,facilityId,firstVariable,0);
         }
         if(value.getValue().size()>1) {
             String secondVariable = value.getSecondPartVariable();
             if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
-                GameValue gameValue = getGameValue(secondVariable);
-                if (gameValue != null) {
-                    replaceValue(gameValue, value, round, facilityId, 1);
-                }
+                replaceOnVariable(value,round,facilityId,secondVariable,1);
             }
         }
     }
 
+    /***
+     * replaces exactly one part of the variable
+     *  @param value the value
+     * @param round the previous round
+     * @param facilityId the id of the facility
+     * @param variable
+     * @param part
+     */
+    private void replaceOnVariable(Value value, Round round, int facilityId, String variable,int part){
+        GameValue gameValue = getGameValue(variable);
+        if(gameValue !=null) {
+            String newReplacementValue = getReplacementValue(gameValue,round,facilityId);
+            value.replaceValueWithValue(newReplacementValue,part);
+        }
+    }
+
+    /***
+     * if the variable is a variable then it returns the corresponding game value
+     * @param variable one part of the value
+     * @return
+     */
     private GameValue getGameValue(String variable){
         for(GameValue gameValue: GameValue.values()){
             if(gameValue.contains(variable)){
@@ -214,13 +229,14 @@ public class BusinessRule extends ASTNode {
         }
         return null;
     }
-    private void replaceValue(GameValue gameValue,Value value,Round round,int facilityId, int part){
-        if(gameValue !=null) {
-            String newReplacementValue = getReplacementValue(gameValue,round,facilityId);
-            value.replaceValueWithValue(newReplacementValue,part);
-        }
-    }
 
+    /***
+     * gets the replacementValue from the previous round
+     * @param gameValue the type of game value
+     * @param round from the previous round
+     * @param facilityId
+     * @return
+     */
     private String getReplacementValue(GameValue gameValue,Round round, int facilityId) {
         switch (gameValue){
             case ORDERED:
@@ -240,12 +256,24 @@ public class BusinessRule extends ASTNode {
         }
     }
 
+    /***
+     *
+     * @param map
+     * @param facilityId
+     * @return
+     */
     private String getValueFromHashmapInHasmap(Map<Facility,Map<Facility,Integer>> map, int facilityId){
         Map.Entry<Facility,Map<Facility,Integer>> entry = map.entrySet().iterator().next();
         Map<Facility,Integer> value = entry.getValue();
         return getValue(value,facilityId);
     }
 
+    /***
+     * gets the value from the hashmap
+     * @param map the map containing round data
+     * @param facilityId the id of the facility
+     * @return
+     */
     private String getValue(Map<Facility,Integer> map,int facilityId){
         for(Map.Entry<Facility,Integer> entry:map.entrySet()){
             if(entry.getKey().getFacilityId()==facilityId){
@@ -255,6 +283,12 @@ public class BusinessRule extends ASTNode {
         return "";
     }
 
+    /**
+     * gets the id based on the facility Type
+     * @param map
+     * @param facilityType
+     * @return
+     */
     private int getFacilityIdBasedOnType(Map<Facility,Integer> map, GameValue facilityType){
         Facility facility = null;
         for(Map.Entry<Facility,Integer> entry:map.entrySet()){
