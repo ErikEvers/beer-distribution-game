@@ -12,12 +12,12 @@ import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
  * @see FaultDetectionClient
  */
 
-public class PeerCantBeReachedException extends Exception {
-    public PeerCantBeReachedException() {
+public class NodeCantBeReachedException extends Exception {
+    public NodeCantBeReachedException() {
         super();
     }
 
-    public PeerCantBeReachedException(Throwable cause) {
+    public NodeCantBeReachedException(Throwable cause) {
         super(cause);
     }
 }
