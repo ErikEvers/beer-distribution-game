@@ -2,10 +2,8 @@ package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -54,7 +52,7 @@ public class ConfigurationDAO {
 
 					conn.setAutoCommit(false);
 
-					setPreparedStatement(configuration, beerGame, pstmt);
+					setPreparedStatement(configuration, pstmt);
 
 					pstmt.executeUpdate();
 				}
@@ -66,8 +64,8 @@ public class ConfigurationDAO {
 		}
 	}
 
-	private void setPreparedStatement(Configuration configuration, BeerGame beergame, PreparedStatement pstmt) throws SQLException {
-		pstmt.setString(1, beergame.getGameId());
+	private void setPreparedStatement(Configuration configuration, PreparedStatement pstmt) throws SQLException {
+		pstmt.setString(1, DaoConfig.getCurrentGameId());
 		pstmt.setInt(2, configuration.getAmountOfRounds());
 		pstmt.setInt(3, configuration.getAmountOfFactories());
 		pstmt.setInt(4, configuration.getAmountOfWholesales());
@@ -96,7 +94,7 @@ public class ConfigurationDAO {
 									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
 									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
 									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
-									rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"),facilityDAO.readAllFacilitiesInGame(beerGame.getGameId()),facilityLinkedToDAO.readAllLinkedTo(beerGame.getGameId()).readAllFacilityTypes(beerGame.getGameId())));
+									rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities")));
 						}
 					}
 				}
@@ -122,7 +120,7 @@ public class ConfigurationDAO {
 					pstmt.setString(1,gameId);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							configuration = new Configuration(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
+							configuration = new Configuration(rs.getInt("AmountOfRounds"),
 									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
 									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
 									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
@@ -144,7 +142,7 @@ public class ConfigurationDAO {
 	 * A method which updates a existing configuration
 	 * @param configuration A updated ConfigurationDB Object which is going to be the new configuration
 	 */
-	public void updateConfigurations(ConfigurationDB configuration) {
+	public void updateConfigurations(Configuration configuration, String gameId) {
 		Connection conn = null;
 		try {
 			conn = databaseConnection.connect();
@@ -160,7 +158,7 @@ public class ConfigurationDAO {
 					pstmt.setInt(7, configuration.getMaximumOrderRetail());
 					pstmt.setBoolean(8, configuration.isContinuePlayingWhenBankrupt());
 					pstmt.setBoolean(9, configuration.isInsightFacilities());
-					pstmt.setString(10, configuration.getGameId());
+					pstmt.setString(10, DaoConfig.getCurrentGameId());
 					pstmt.execute();
 				}
 				conn.commit();
