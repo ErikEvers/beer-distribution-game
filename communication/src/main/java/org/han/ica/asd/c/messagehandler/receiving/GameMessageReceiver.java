@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.*;
-import org.han.ica.asd.c.observers.IElectionObserver;
 import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.observers.IElectionObserver;
 import org.han.ica.asd.c.observers.IRoundModelObserver;
 import org.han.ica.asd.c.observers.ITurnModelObserver;
 
