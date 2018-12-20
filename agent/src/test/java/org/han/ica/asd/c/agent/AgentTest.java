@@ -163,7 +163,7 @@ class AgentTest {
 		injector.injectMembers(agent);
 		agent.gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring"));
 
-		GameRoundAction result = agent.generateRoundActions();
+		GameRoundAction result = agent.generateRoundActions(null);
 		Map.Entry<Facility, Integer> entry = result.targetOrderMap.entrySet().iterator().next();
 
 		assertEquals(30, (int) entry.getValue());
@@ -197,7 +197,7 @@ class AgentTest {
 		injector.injectMembers(agent);
 		agent.gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring"));
 
-		GameRoundAction result = agent.generateRoundActions();
+		GameRoundAction result = agent.generateRoundActions(null);
 		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
 
 		assertEquals(5, (int) entry.getValue());
@@ -242,7 +242,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions();
+		GameRoundAction result = agent.generateRoundActions(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -283,7 +283,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions();
+		GameRoundAction result = agent.generateRoundActions(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(0, result.targetDeliverMap.size());
@@ -324,7 +324,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions();
+		GameRoundAction result = agent.generateRoundActions(null);
 
 		assertEquals(0, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -367,7 +367,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions();
+		GameRoundAction result = agent.generateRoundActions(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -410,7 +410,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions();
+		GameRoundAction result = agent.generateRoundActions(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());

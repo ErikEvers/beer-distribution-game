@@ -34,14 +34,15 @@ public class Agent extends GameAgent /* implements IParticipant */{
     /**
      * Generates actions of an agent using the defined business rules.
      *
+     * @param round         The round data of last round used to determine what actions the agent is going to do.
      * @return              A GameRoundAction with all actions that the agent wants to do.
      */
-    public GameRoundAction generateRoundActions() {
+    public GameRoundAction generateRoundActions(Round round) {
         Map<Facility, Integer> targetOrderMap = new HashMap<>();
         Map<Facility, Integer> targetDeliverMap = new HashMap<>();
 
         for (GameBusinessRules gameBusinessRules : this.gameBusinessRulesList) {
-            GameAgentAction action = this.retrieveActionFromBusinessRule(gameBusinessRules.getGameBusinessRule(), null);
+            GameAgentAction action = this.retrieveActionFromBusinessRule(gameBusinessRules.getGameBusinessRule(), round);
             Facility targetFacility = this.resolveFacilityId(action.getTargetFacilityId());
             if(targetFacility != null) {
                 if (targetOrderMap.isEmpty() && action instanceof GameAgentOrder) {
