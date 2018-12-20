@@ -2,9 +2,7 @@ package org.han.ica.asd.c.dao;
 
 import com.google.inject.Inject;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.exception.GameIdNotSetException;
-import org.han.ica.asd.c.model.domain_objects.GameAgent;
-import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,43 +30,40 @@ public class GameBusinessRulesDAO {
     /**
      * A method to create a new GameBusinessRule.
      *
-     * @param gameAgent         The data required to insert the GameAgentName and FacilityId.
-     * @param gameBusinessRules The data required to insert the GameBusinessRule and GameAST.
+     * @param gameBusinessRulesDB The data required to create a new GameBusinessRule.
      */
-    public void createGameBusinessRule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
-        executePreparedStatement(gameAgent, gameBusinessRules, CREATE_GAMEBUSINESSRULE);
+    public void createGameBusinessRule(GameBusinessRulesDB gameBusinessRulesDB) {
+        executePreparedStatement(gameBusinessRulesDB, CREATE_GAMEBUSINESSRULE);
     }
 
     /**
      * A method to delete a specific GameBusinessRule.
      *
-     * @param gameAgent         The data required to delete the GameAgentName and FacilityId.
-     * @param gameBusinessRules The data required to delete the GameBusinessRule and GameAST.
+     * @param gameBusinessRulesDB The data required to delete a specific GameBusinessRule.
      */
-    public void deleteSpecificGamebusinessrule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
-        executePreparedStatement(gameAgent, gameBusinessRules, DELETE_SPECIFIC_GAMEBUSINESSRULE);
+    public void deleteSpecificGamebusinessrule(GameBusinessRulesDB gameBusinessRulesDB) {
+        executePreparedStatement(gameBusinessRulesDB, DELETE_SPECIFIC_GAMEBUSINESSRULE);
     }
 
     /**
      * A method to delete all GameBusinessRules from a specific GameAgent within a Game.
      *
-     * @param gameAgent Contains the identifier of tje GameAgent from which the GameBusinessRules have to be deleted.
+     * @param gameId The identifier of the game from which the GameBusinessRules have to be deleted.
+     * @param gameAgentname The identifier of tje GameAgent from which the GameBusinessRules have to be deleted.
      */
-    public void deleteAllGamebusinessrulesForGameagentInAGame(GameAgent gameAgent) {
+    public void deleteAllGamebusinessrulesForGameagentInAGame(String gameId, String gameAgentname) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
-            if (conn != null) {
+            if(conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
                     conn.setAutoCommit(false);
 
-                    gameIdNotSetCheck(pstmt, 1);
-                    pstmt.setString(2, gameAgent.getGameAgentName());
+                    pstmt.setString(1, gameId);
+                    pstmt.setString(2, gameAgentname);
 
                     pstmt.executeUpdate();
 
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
                 conn.commit();
             }
@@ -79,31 +74,25 @@ public class GameBusinessRulesDAO {
         }
     }
 
-    /**
-     * A method to read all the GameBusinessRules from a specific GameAgent in a specific BeerGame.
-     *
-     * @param gameAgent Contains the identifier of the GameAgent from which the GameBusinessRules have to be deleted.
-     * @return A list containing all the GameBusinessRules from a specific GameAgent in a specific BeerGame.
-     */
-    public List<GameBusinessRules> readAllGameBusinessRulesForGameAgentInAGame(GameAgent gameAgent) {
+    public List<GameBusinessRulesDB> readAllGameBusinessRulesForGameAgentInAGame(String gameId, String gameAgentName) {
         Connection conn = null;
-        List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
+        List<GameBusinessRulesDB> gameBusinessRules = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
                 conn.setAutoCommit(false);
 
-                gameIdNotSetCheck(pstmt, 1);
-                pstmt.setString(2, gameAgent.getGameAgentName());
+                pstmt.setString(1, gameId);
+                pstmt.setString(2, gameAgentName);
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"), rs.getString("GameAST")));
+                        gameBusinessRules.add(new GameBusinessRulesDB(rs.getInt("FacilityId"), rs.getString("GameId"),
+                                rs.getString("GameAgentName"), rs.getString("GameBusinessRule"),
+                                rs.getString("GameAST")));
                     }
                 }
                 conn.commit();
-            } catch (GameIdNotSetException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -114,28 +103,25 @@ public class GameBusinessRulesDAO {
     /**
      * A method to execute a prepared statement for creating or deleting a specific GameBusinessRule.
      *
-     * @param gameAgent         The data required to create or delete the GameAgentName and FacilityId.
-     * @param gameBusinessRules The data required to create or delete the GameBusinessRule and GameAST.
-     * @param query             The query that has to be executed on the database.
+     * @param gameBusinessRulesDB The data required to create or delete a specific GameBusinessRule.
+     * @param query The query that has to be executed on the database.
      */
-    private void executePreparedStatement(GameAgent gameAgent, GameBusinessRules gameBusinessRules, String query) {
+    private void executePreparedStatement(GameBusinessRulesDB gameBusinessRulesDB, String query) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
-            if (conn != null) {
+            if(conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, gameAgent.getFacilityId());
-                    gameIdNotSetCheck(pstmt, 2);
-                    pstmt.setString(3, gameAgent.getGameAgentName());
-                    pstmt.setString(4, gameBusinessRules.getGameBusinessRule());
-                    pstmt.setString(5, gameBusinessRules.getGameAST());
+                    pstmt.setInt(1, gameBusinessRulesDB.getFacilityId());
+                    pstmt.setString(2, gameBusinessRulesDB.getGameId());
+                    pstmt.setString(3, gameBusinessRulesDB.getGameAgentName());
+                    pstmt.setString(4, gameBusinessRulesDB.getGameBusinessRule());
+                    pstmt.setString(5, gameBusinessRulesDB.getGameAST());
 
                     pstmt.executeUpdate();
 
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
                 conn.commit();
             }
@@ -145,15 +131,4 @@ public class GameBusinessRulesDAO {
             databaseConnection.rollBackTransaction(conn);
         }
     }
-
-    /**
-     * A method to check if a gameId has been set and if so adds it to the prepared statement.
-     *
-     * @param pstmt The prepared statement to whom the gameId needs to be added.
-     * @param index The index on which place the gameId has to be set.
-     */
-    private void gameIdNotSetCheck(PreparedStatement pstmt, int index) throws GameIdNotSetException, SQLException {
-        pstmt.setString(index, DaoConfig.getCurrentGameId());
-    }
 }
-
