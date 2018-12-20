@@ -195,16 +195,16 @@ public class BusinessRule extends ASTNode {
      * @param facilityId
      */
     private void replace(Value value, t t, int facilityId) {
-        String REGEX_ISNUMBER = "[0-9]+";
-        if(Pattern.matches(REGEX_ISNUMBER,value.getValue())){
-            return;
+        String REGEXHASCHARACTERS = "[a-zA-Z ]+";
+        String currentVariable = value.getFirstPartVariable();
+        if(Pattern.matches(REGEXHASCHARACTERS,value.getFirstPartVariable())){
+           // ggameValue = GameValue.valueOf(currentVariable).getValue();
         }
-        String currentVariable = value.getFirstPartVariable().toUpperCase();
-        String[] gameValue = GameValue.valueOf(currentVariable).getValue();
-        if(gameValue !=null) {
-            int newReplacementValue = t.getReplacementValue(gameValue,facilityId);
-            String replacementValue=String.valueOf(newReplacementValue);
-            value.replaceValueWithValue(replacementValue);
-        }
+
+//        if(gameValue !=null) {
+//            int newReplacementValue = t.getReplacementValue(gameValue,facilityId);
+//            String replacementValue=String.valueOf(newReplacementValue);
+//            value.replaceValueWithValue(replacementValue);
+//        }
     }
 }

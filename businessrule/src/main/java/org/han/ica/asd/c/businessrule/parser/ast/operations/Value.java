@@ -1,10 +1,14 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
+import org.han.ica.asd.c.gamevalue.GameValue;
+
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Stack;
 
 public class Value extends OperationValue {
     private static final String PREFIX = "V(";
-    private String value;
+    private ArrayList<String> value;
 
     /**
      * Constructor
@@ -17,8 +21,8 @@ public class Value extends OperationValue {
      *
      * @param value the value to be saved in the object
      */
-    public Value(int value) {
-        this.value = Integer.toString(value);
+    public Value(String value) {
+        addValue(value);
     }
 
     /**
@@ -35,11 +39,7 @@ public class Value extends OperationValue {
             value = "highest";
         }
 
-        if (this.value == null) {
-            this.value = value;
-        } else {
-            this.value += (" " + value);
-        }
+       this.addValue(value);
         return this;
     }
 
@@ -58,16 +58,16 @@ public class Value extends OperationValue {
      *
      * @return Returns the value
      */
-    public String getValue() {
+    public ArrayList<String> getValue() {
         return this.value;
     }
 
     public String getSecondPartVariable(){
-       return value.substring(value.indexOf(" ",value.length()));
+       return value.get(1).replaceAll(" ","");
     }
 
     public String getFirstPartVariable(){
-        return value.substring(0,value.indexOf(" "));
+	    return value.get(0).replaceAll(" ","");
     }
 
     /**
@@ -76,7 +76,7 @@ public class Value extends OperationValue {
      * @return {@link Integer}
      */
     public Integer getIntegerValue() {
-        return Integer.parseInt(this.value);
+        return Integer.parseInt(this.value.get(0));
     }
 
     /**
@@ -112,12 +112,7 @@ public class Value extends OperationValue {
      *
      * @param gameValue the value of the game
      */
-    public void replaceValueWithValue(String gameValue) {
-        if(value.contains("%")) {
-            String[] newValue = value.split(" ");
-            this.value= newValue[0]+" "+gameValue;
-        }else{
-            this.value = gameValue;
-        }
+    public void replaceValueWithValue(String gameValue, int part) {
+       value.set(part,gameValue);
     }
 }
