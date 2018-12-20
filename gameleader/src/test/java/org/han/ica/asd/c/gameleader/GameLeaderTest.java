@@ -68,28 +68,8 @@ public class GameLeaderTest {
         });
 
         try {
-            Class[] parameterTypes;
             gameLeader = injector.getInstance(GameLeader.class);
             currentRoundData = new Round();
-            parameterTypes = new Class[1];
-            parameterTypes[0] = Round.class;
-
-//            //validateFacilityTurn
-//            turnModelReceived = gameLeader.getClass().getDeclaredMethod("turnModelReceived", parameterTypes);
-//
-//            turnModelReceived.setAccessible(true);
-//            parameters = new Object[1];
-//
-//            //turnhandler processFacilityTurn
-//            processFacilityTurn = turnHandler.getClass().getDeclaredMethod("processFacilityTurn", parameterTypes);
-//            processFacilityTurn.setAccessible(true);
-//
-//            //turnhandler validateFacilityTurn
-//            validateFacilityTurn = turnHandler.getClass().getDeclaredMethod("validateFacilityTurn", parameterTypes);
-//            validateFacilityTurn.setAccessible(true);
-//
-//            turnsRec = gameLeader.getClass().getDeclaredField("turnsReceived");
-//            turnsRec.setAccessible(true);
 
 
 

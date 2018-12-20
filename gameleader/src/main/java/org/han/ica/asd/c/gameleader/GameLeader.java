@@ -39,6 +39,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public void init() {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
+        this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
 
     /**
