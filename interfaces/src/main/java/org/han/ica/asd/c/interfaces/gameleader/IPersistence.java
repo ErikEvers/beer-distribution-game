@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gameleader.componentInterfaces;
+package org.han.ica.asd.c.interfaces.gameleader;
 import org.han.ica.asd.c.model.dao_model.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Round;
