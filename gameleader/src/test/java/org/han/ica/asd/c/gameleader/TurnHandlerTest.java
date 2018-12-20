@@ -1,29 +1,32 @@
 package org.han.ica.asd.c.gameleader;
 
-import org.han.ica.asd.c.model.FacilityTurn;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
+import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
+import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
+import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
+import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
+import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static junit.framework.TestCase.*;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
-import static org.powermock.api.mockito.PowerMockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( TurnHandler.class )
 class TurnHandlerTest {
 
     private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
 
     private TurnHandler turnHandler;
 
-    private FacilityTurn facilityTurnModel;
-
-    private Method m;
+    private Round roundModel;
 
     private Method processFacilityTurn;
 
@@ -31,18 +34,24 @@ class TurnHandlerTest {
 
     @BeforeEach
     void onSetUp() {
+				Injector injector = Guice.createInjector(new AbstractModule() {
+					@Override
+					protected void configure() {
+						bind(IPersistence.class).to(PersistenceStub.class);
+						bind(IConnectorForLeader.class).to(CommunicationStub.class);
+						bind(ILeaderGameLogic.class).to(GameLogicStub.class);
+					}
+				});
         try {
             Class[] parameterTypes;
-            turnHandler = new TurnHandler();
-            facilityTurnModel = new FacilityTurn();
-            parameterTypes = new Class[1];
-            parameterTypes[0] = FacilityTurn.class;
+						turnHandler = injector.getInstance(TurnHandler.class);
+            roundModel = new Round();
+            parameterTypes = new Class[2];
+            parameterTypes[0] = Round.class;
+            parameterTypes[1] = Round.class;
 
-            //validateFacilityTurn
-            m = turnHandler.getClass().getDeclaredMethod("validateFacilityTurn", parameterTypes);
 
-            m.setAccessible(true);
-            parameters = new Object[1];
+            parameters = new Object[2];
 
             //processFacilityTurn
             processFacilityTurn = turnHandler.getClass().getDeclaredMethod("processFacilityTurn", parameterTypes);
@@ -54,13 +63,24 @@ class TurnHandlerTest {
 
     @Test
     void testDoValidate_OrderAmountIsZero_ReturnTrue() {
-        facilityTurnModel.setOrder(1);
-        facilityTurnModel.setStock(10);
+				Facility mainFacility = new Facility();
+				Facility facility = new Facility();
+				Map<Facility, Integer> ordersMap = new HashMap<>();
+				ordersMap.put(facility, 1);
 
-        parameters[0] = facilityTurnModel;
+				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
+				orderMap.put(mainFacility, ordersMap);
+				roundModel.setTurnOrder(orderMap);
+
+				Map<Facility, Integer> stockMap = new HashMap<>();
+				stockMap.put(mainFacility, 10);
+				roundModel.setTurnStock(stockMap);
+
+        parameters[0] = new Round();
+        parameters[1] = roundModel;
 
         try {
-            assertTrue((Boolean) m.invoke(turnHandler, parameters));
+            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,13 +89,24 @@ class TurnHandlerTest {
 
     @Test
     void testDoValidate_OrderAmountIsLessThanZero_ReturnFalse() {
-        facilityTurnModel.setOrder(-10);
-        facilityTurnModel.setStock(10);
+				Facility mainFacility = new Facility();
+				Facility facility = new Facility();
+				Map<Facility, Integer> ordersMap = new HashMap<>();
+				ordersMap.put(facility, -10);
 
-        parameters[0] = facilityTurnModel;
+				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
+				orderMap.put(mainFacility, ordersMap);
+				roundModel.setTurnOrder(orderMap);
+
+				Map<Facility, Integer> stockMap = new HashMap<>();
+				stockMap.put(mainFacility, 10);
+				roundModel.setTurnStock(stockMap);
+
+        parameters[0] = new Round();
+        parameters[1] = roundModel;
 
         try {
-            assertFalse((Boolean) m.invoke(turnHandler, parameters));
+            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,13 +114,24 @@ class TurnHandlerTest {
 
     @Test
     void testDoValidate_OrderAmountIsMoreThanStock_ReturnFalse() {
-        facilityTurnModel.setOrder(11);
-        facilityTurnModel.setStock(10);
+				Facility mainFacility = new Facility();
+				Facility facility = new Facility();
+				Map<Facility, Integer> ordersMap = new HashMap<>();
+				ordersMap.put(facility, 11);
 
-        parameters[0] = facilityTurnModel;
+				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
+				orderMap.put(mainFacility, ordersMap);
+				roundModel.setTurnOrder(orderMap);
+
+				Map<Facility, Integer> stockMap = new HashMap<>();
+				stockMap.put(mainFacility, 10);
+				roundModel.setTurnStock(stockMap);
+
+        parameters[0] = new Round();
+        parameters[1] = roundModel;
 
         try {
-            assertFalse((Boolean) m.invoke(turnHandler, parameters));
+            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,34 +139,27 @@ class TurnHandlerTest {
 
     @Test
     void testDoValidate_OrderAmountEqualToStock_ReturnTrue() {
-        facilityTurnModel.setOrder(10);
-        facilityTurnModel.setStock(10);
+        Facility mainFacility = new Facility();
+				Facility facility = new Facility();
+        Map<Facility, Integer> ordersMap = new HashMap<>();
+				ordersMap.put(facility, 10);
 
-        parameters[0] = facilityTurnModel;
+				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
+				orderMap.put(mainFacility, ordersMap);
+        roundModel.setTurnOrder(orderMap);
+
+				Map<Facility, Integer> stockMap = new HashMap<>();
+				stockMap.put(mainFacility, 10);
+        roundModel.setTurnStock(stockMap);
+
+        parameters[0] = new Round();
+        parameters[1] = roundModel;
 
         try {
-            assertTrue((Boolean) m.invoke(turnHandler, parameters));
+            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    void testDoProcess_ValidateFacilityTurnReturnFalse_ThenLog() {
-        facilityTurnModel.setOrder(10);
-        facilityTurnModel.setStock(10);
-
-        parameters[0] = facilityTurnModel;
-
-        try {
-        when(m.invoke(turnHandler, parameters)).thenReturn(false);
-
-        m.invoke(turnHandler, parameters);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        assertTrue(turnHandler.validateFacilityTurn(facilityTurnModel));
     }
 
 

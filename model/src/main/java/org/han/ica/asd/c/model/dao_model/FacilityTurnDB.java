@@ -23,7 +23,7 @@ public class FacilityTurnDB implements IDaoModel{
         this.outgoingGoods = outgoingGoods;
     }
 
-    public FacilityTurn() {
+    public FacilityTurnDB() {
 
     }
 

@@ -9,6 +9,7 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.observers.IPlayerDisconnectedObserver;
+import org.han.ica.asd.c.observers.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.observers.ITurnModelObserver;
 
 import javax.inject.Inject;
@@ -24,7 +25,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private final Provider<Round> roundProvider;
 
     private BeerGame game;
-    private Round currentRoundData;
+    private Round currentRoundData = new Round();
 
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
@@ -62,7 +63,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public void playerIsDisconnected(String playerId) {
         for (int i = 0; i <= game.getConfiguration().getFacilities().size(); i++) {
             if (game.getConfiguration().getFacilities().get(i).getPlayer().getPlayerId().equals(playerId)) {
-                IParticipant participant = new AgentParticipant(game.getConfiguration().getFacilities().get(i).getAgent().getGameAgentName(), game.getConfiguration().getFacilities().get(i).getFacilityId());
+                IParticipant participant = new AgentParticipant(game.getConfiguration().getFacilities().get(i).getAgent().getGameAgentName(), game.getConfiguration().getFacilities().get(i));
                 gameLogic.addLocalParticipant(participant);
             }
         }

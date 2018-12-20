@@ -1,12 +1,14 @@
 package org.han.ica.asd.c.gamelogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IConnectedForPlayer;
-import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
+import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,14 +34,16 @@ public class GameLogicTest {
 
     @Test
     public void placeOrderCallsPersistence() {
-        Map<Facility, Map<Facility, Integer>> turn = new HashMap<>();
+        Round turn = new Round();
+        //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.placeOrder(turn);
         verify(persistence, times(1)).saveTurnData(turn);
     }
 
     @Test
     public void placeOrderCallsCommunication() {
-        Map<Facility, Map<Facility, Integer>> turn = new HashMap<>();
+        Round turn = new Round();
+        //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.placeOrder(turn);
         verify(communication, times(1)).sendTurnData(turn);
     }
