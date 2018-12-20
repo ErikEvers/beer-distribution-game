@@ -1,4 +1,5 @@
 package org.han.ica.asd.c.gameleader.componentInterfaces;
+
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.observers.IConnectorObserver;
 
@@ -19,4 +20,5 @@ public interface IConnectorForLeader {
      * @param allData, the game data of a specific round.
      */
     public void sendRoundDataToAllPlayers(Round allData);
+
 }
