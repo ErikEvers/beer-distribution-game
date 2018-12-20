@@ -5,15 +5,13 @@ import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
-    @Inject
-    private IBusinessRuleStore businessRuleStore;
+//    @Inject
+//    private IBusinessRuleStore businessRuleStore;
 
     /**
      * Parses the business rules and sends it to the persistence component
@@ -27,7 +25,7 @@ public class BusinessRuleHandler implements IBusinessRules {
             return parserPipeline.getBusinessRulesInput();
         }
 
-        // businessRuleStore.synchronizeBusinessRules(agentName, parserPipeline.getBusinessRulesMap());
+//        businessRuleStore.synchronizeBusinessRules(agentName, parserPipeline.getBusinessRulesMap());
 
         return parserPipeline.getBusinessRulesInput();
     }
