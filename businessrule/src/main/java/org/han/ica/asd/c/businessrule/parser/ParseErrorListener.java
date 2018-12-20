@@ -14,14 +14,10 @@ public class ParseErrorListener extends BaseErrorListener {
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-        lines.add(line);
+            lines.add(line);
     }
 
     public List<Integer> getExceptions() {
         return lines;
-    }
-
-    public void setLines(List<Integer> lines) {
-        this.lines = lines;
     }
 }

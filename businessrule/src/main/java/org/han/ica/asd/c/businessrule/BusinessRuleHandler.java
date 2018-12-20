@@ -15,6 +15,26 @@ public class BusinessRuleHandler implements IBusinessRules {
     @Inject
     private IBusinessRuleStore businessRuleStore;
 
+    public static void main(String[] args) {
+        String s = "if inventory is 20 then order 10\n" +
+                "if back orders is higher than 50 then order 100\n" +
+                "if inventory is higher than 20% of the backlog then order 10\n" +
+                "if inventory is lower than 70 then order 33\n" +
+                "if round is 10 then order 20\n" +
+                "default order 20\n" +
+                "if inventory is 20 and back orders is 35 or inventory is 55 then order 77\n" +
+                "if inventory*2 is lower than 70/10 then order 33+2";
+        ParserPipeline parserPipeline = new ParserPipeline();
+        parserPipeline.parseString(s);
+        System.out.println(parserPipeline.parseString(s));
+        for (UserInputBusinessRule input : parserPipeline.getBusinessRulesInput()) {
+            if(input.hasError()){
+                System.out.println(input.getLineNumber());
+                System.out.println(input.getErrorMessage());
+            }
+        }
+    }
+
     /**
      * Parses the business rules and sends it to the persistence component
      *

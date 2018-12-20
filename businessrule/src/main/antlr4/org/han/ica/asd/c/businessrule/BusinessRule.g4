@@ -14,6 +14,7 @@ WITH: 'with';
 BELOW: 'below';
 ABOVE: 'above';
 NODE : 'node' (' '?[0-9]+)?;
+ENTER : [\n];
 
 FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer';
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';
@@ -36,11 +37,11 @@ MUL: 'times' | '*';
 DIV: 'divided' | '/';
 
 GARBAGE: [a-zA-Z'.]+ -> skip;
-WS: [ \t\r\n]+ -> skip;
+WS: [ \t\r]+ -> skip;
 
 //--- PARSER: ---
 businessrules: businessrule+ EOF;
-businessrule: IF comparisonstatement THEN action #ifRule | DEFAULT action #defaultRule;
+businessrule: IF comparisonstatement THEN action ENTER? #ifRule | DEFAULT action ENTER? #defaultRule;
 comparisonstatement: comparison | comparison BOOLEAN_OPERATOR comparisonstatement;
 comparison: comparison_value comparison_operator comparison_value;
 comparison_value: operation | ROUND;

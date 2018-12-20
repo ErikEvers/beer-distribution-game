@@ -23,7 +23,7 @@ public class ParserPipeline {
     private Map<String, String> businessRulesMap = new HashMap<>();
     private static final String DELETE_EMPTY_LINES = "(?m)^[ \t]*\r?\n";
     private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
-    private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+";
+    private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+.";
 
 
     /**
@@ -77,7 +77,7 @@ public class ParserPipeline {
 
         for (int i = 0; i < businessRulesInput.size(); i++) {
             if (ParseErrorListener.INSTANCE.getExceptions().contains(i + 1)) {
-                businessRulesInput.get(i).setErrorMessage("Input error found on '" + businessRulesInput.get(i).getBusinessRule() + "'");
+                businessRulesInput.get(i).setErrorMessage("Input error found on: '" + businessRulesInput.get(i).getBusinessRule() + "'");
                 hasErrors = true;
             }
         }
@@ -108,6 +108,7 @@ public class ParserPipeline {
         Evaluator evaluator = new Evaluator();
         Counter newLineCounter = new Counter();
         Map<UserInputBusinessRule, BusinessRule> map = new LinkedHashMap<>();
+
         if (!businessRulesParsed.isEmpty()) {
             for (int i = 0; i < businessRulesInput.size(); i++) {
                 if (businessRulesInput.get(i).getBusinessRule().isEmpty() || ParseErrorListener.INSTANCE.getExceptions().contains(i + 1) || !businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)) {
