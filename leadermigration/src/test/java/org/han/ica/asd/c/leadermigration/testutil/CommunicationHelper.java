@@ -3,14 +3,14 @@ package org.han.ica.asd.c.leadermigration.testutil;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
+import org.han.ica.asd.c.model.interface_models.PlayerNotFoundException;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.leadermigration.ElectionHandler;
-import org.han.ica.asd.c.leadermigration.ElectionModel;
+import org.han.ica.asd.c.model.interface_models.ElectionModel;
 import org.han.ica.asd.c.leadermigration.IpHandler;
 import org.han.ica.asd.c.leadermigration.LeaderMigration;
-import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
-import org.han.ica.asd.c.leadermigration.componentInterfaces.IPersistenceLeaderMigration;
+import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
+import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.model.dao_model.Player;
 
 public class CommunicationHelper implements IConnectorForLeaderElection {

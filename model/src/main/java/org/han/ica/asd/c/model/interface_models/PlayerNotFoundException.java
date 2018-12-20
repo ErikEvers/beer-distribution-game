@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.exceptions;
+package org.han.ica.asd.c.model.interface_models;
 
 public class PlayerNotFoundException extends Exception {
 

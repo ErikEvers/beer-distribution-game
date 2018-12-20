@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.leadermigration;
+package org.han.ica.asd.c.model.interface_models;
 
 import org.han.ica.asd.c.model.dao_model.Player;
 

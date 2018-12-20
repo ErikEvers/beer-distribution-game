@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
-import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
+import org.han.ica.asd.c.model.interface_models.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.testutil.CommunicationHelper;
 import org.han.ica.asd.c.model.dao_model.Player;
 import org.junit.Before;

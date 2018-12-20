@@ -9,7 +9,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import org.han.ica.asd.c.model.interface_models.Election;
+import org.han.ica.asd.c.model.interface_models.ElectionModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +52,7 @@ public class GameMessageReceiverTest {
 
     @Test
     public void electionReceived() {
-        Election election = new Election();
+        ElectionModel election = new ElectionModel();
         ElectionMessage electionMessage = new ElectionMessage(election);
 
         gameMessageReceiver.gameMessageReceived(electionMessage);
