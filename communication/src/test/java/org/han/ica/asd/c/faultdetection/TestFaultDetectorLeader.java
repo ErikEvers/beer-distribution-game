@@ -5,7 +5,7 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

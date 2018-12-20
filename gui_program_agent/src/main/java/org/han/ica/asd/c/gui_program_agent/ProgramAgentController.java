@@ -12,9 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import org.han.ica.asd.c.businessrule.IBusinessRules;
-import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import javax.inject.Inject;
 import javax.inject.Named;

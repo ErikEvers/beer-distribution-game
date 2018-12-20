@@ -1,13 +1,8 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.BeergameDAO;
-import org.han.ica.asd.c.FacilityTurnDAO;
-import org.han.ica.asd.c.GameBusinessRulesInFacilityTurnDAO;
-import org.han.ica.asd.c.IBeerDisitributionGameDAO;
-import org.han.ica.asd.c.RoundDAO;
+import org.han.ica.asd.c.dao.*;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
-import org.han.ica.asd.c.businessrule.IBusinessRules;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
@@ -18,6 +13,7 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override

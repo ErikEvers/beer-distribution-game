@@ -2,10 +2,11 @@ package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
-import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.interface_models.ActionModel;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import java.util.List;
 
@@ -30,14 +31,14 @@ public class BusinessRuleHandler implements IBusinessRules {
         return parserPipeline.getBusinessRulesInput();
     }
 
-    public Action evaluateBusinessRule(String businessRule, Round roundData) {
+    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
         BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
 
         // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)
 
         businessRuleAST.evaluateBusinessRule();
-
-        return (Action) businessRuleAST.getChildren()
-                .get(1);
+        return new ActionModel();
+//        return (Action) businessRuleAST.getChildren()
+//                .get(1);
     }
 }
