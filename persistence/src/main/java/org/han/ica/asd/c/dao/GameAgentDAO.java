@@ -1,7 +1,9 @@
 package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.GameAgentDB;
+import org.han.ica.asd.c.exception.GameIdNotSetException;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -24,7 +26,10 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
     @Inject
     private IDatabaseConnection databaseConnection;
 
-    public GameAgentDAO(){
+    @Inject
+    private GameBusinessRulesDAO gameBusinessRulesDAO;
+
+    public GameAgentDAO() {
         //A constructor for Guice.
     }
 
@@ -33,7 +38,7 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
      *
      * @param gameAgent The data required to create a new GameAgent.
      */
-    public void createGameAgent(GameAgentDB gameAgent) {
+    public void createGameAgent(GameAgent gameAgent) {
         executePreparedStatement(gameAgent, CREATE_GAMEAGENT);
     }
 
@@ -42,16 +47,14 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
      *
      * @param gameAgent The data required to delete a specific GameAgent.
      */
-    public void deleteSpecificGameagent(GameAgentDB gameAgent) {
+    public void deleteSpecificGameagent(GameAgent gameAgent) {
         executePreparedStatement(gameAgent, DELETE_SPECIFIC_GAMEAGENT);
     }
 
     /**
      * A method to delete all GameAgent within a BeerGame.
-     *
-     * @param gameId The identifier of the BeerGame from whom the GameAgent has to be deleted.
      */
-    public void deleteAllGameagentsInABeergame(String gameId) {
+    public void deleteAllGameagentsInABeergame() {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -59,14 +62,17 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEAGENTS_IN_A_BEERGAME)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setString(1, gameId);
+                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
 
                     pstmt.executeUpdate();
+                } catch (GameIdNotSetException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
                 conn.commit();
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -75,7 +81,7 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
      *
      * @param gameAgent The data required to update the GameAgent.
      */
-    public void updateGameagent(GameAgentDB gameAgent) {
+    public void updateGameagent(GameAgent gameAgent) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -85,14 +91,17 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
 
                     pstmt.setString(1, gameAgent.getGameAgentName());
                     pstmt.setInt(2, gameAgent.getFacilityId());
-                    pstmt.setString(3, gameAgent.getGameId());
+                    DaoConfig.gameIdNotSetCheck(pstmt, 3);
 
                     pstmt.executeUpdate();
+                } catch (GameIdNotSetException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
                 conn.commit();
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -102,26 +111,32 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
      * @param gameId The identifier of the BeerGame.
      * @return A list of GameAgents from the BeerGame.
      */
-    public List<GameAgentDB> readGameAgentsForABeerGame(String gameId) {
+    public List<GameAgent> readGameAgentsForABeerGame(String gameId) {
         Connection conn = null;
-        List<GameAgentDB> gameAgents = new ArrayList<>();
+        List<GameAgent> gameAgents = new ArrayList<>();
+        List<GameBusinessRules> gameBusinessRulesStub = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAGENTS_FOR_A_BEERGAME)) {
                 conn.setAutoCommit(false);
-
-                pstmt.setString(1, gameId);
-
+                DaoConfig.gameIdNotSetCheck(pstmt, 1);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        gameAgents.add(new GameAgentDB(rs.getString("GameId"),
-                                rs.getString("GameAgentName"), rs.getInt("FacilityId")));
+                        int i = 0;
+                        gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
+                                rs.getInt("FacilityId"), gameBusinessRulesStub));
+                        List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
+                        gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
+                        i = i + 1;
                     }
                 }
                 conn.commit();
+            } catch (GameIdNotSetException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
         return gameAgents;
     }
@@ -130,9 +145,9 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
      * A method to execute a prepared statement to create or delete a GameAgent.
      *
      * @param gameAgent The data that is required to create or delete a GameAgent.
-     * @param query The sql statement that needs to be executed.
+     * @param query     The sql statement that needs to be executed.
      */
-    private void executePreparedStatement(GameAgentDB gameAgent, String query) {
+    private void executePreparedStatement(GameAgent gameAgent, String query) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -141,15 +156,18 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
                     conn.setAutoCommit(false);
 
                     pstmt.setInt(1, gameAgent.getFacilityId());
-                    pstmt.setString(2, gameAgent.getGameId());
+                    DaoConfig.gameIdNotSetCheck(pstmt, 2);
                     pstmt.setString(3, gameAgent.getGameAgentName());
 
                     pstmt.executeUpdate();
+                } catch (GameIdNotSetException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
                 conn.commit();
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
     }
 }
