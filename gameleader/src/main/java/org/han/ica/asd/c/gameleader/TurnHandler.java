@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.gameleader;
 
-import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
+import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;

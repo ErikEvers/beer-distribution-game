@@ -1,16 +1,16 @@
 package org.han.ica.asd.c.gameleader;
 
-import org.han.ica.asd.c.gameleader.componentInterfaces.IConnectorForLeader;
-import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
-import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
-import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
+import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import org.han.ica.asd.c.observers.IPlayerDisconnectedObserver;
-import org.han.ica.asd.c.observers.IPlayerReconnectedObserver;
-import org.han.ica.asd.c.observers.ITurnModelObserver;
+import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
+import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
+import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

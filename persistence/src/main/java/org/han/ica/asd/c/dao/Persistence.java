@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.dao;
 
 
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
 import org.han.ica.asd.c.model.dao_model.BeerGameDB;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;

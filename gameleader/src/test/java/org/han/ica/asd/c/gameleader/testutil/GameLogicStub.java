@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.gameleader.testutil;
 
-import org.han.ica.asd.c.gameleader.componentInterfaces.ILeaderGameLogic;
-import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public class GameLogicStub implements ILeaderGameLogic {
