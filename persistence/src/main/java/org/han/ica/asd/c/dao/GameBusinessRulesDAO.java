@@ -62,7 +62,7 @@ public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
                     conn.setAutoCommit(false);
 
-                    gameIdNotSetCheck(pstmt, 1);
+                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
                     pstmt.setString(2, gameAgent.getGameAgentName());
 
                     pstmt.executeUpdate();
@@ -93,7 +93,7 @@ public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
             try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
                 conn.setAutoCommit(false);
 
-                gameIdNotSetCheck(pstmt, 1);
+                DaoConfig.gameIdNotSetCheck(pstmt, 1);
                 pstmt.setString(2, gameAgent.getGameAgentName());
 
                 try (ResultSet rs = pstmt.executeQuery()) {
@@ -127,7 +127,7 @@ public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
                     conn.setAutoCommit(false);
 
                     pstmt.setInt(1, gameAgent.getFacilityId());
-                    gameIdNotSetCheck(pstmt, 2);
+                    DaoConfig.gameIdNotSetCheck(pstmt, 2);
                     pstmt.setString(3, gameAgent.getGameAgentName());
                     pstmt.setString(4, gameBusinessRules.getGameBusinessRule());
                     pstmt.setString(5, gameBusinessRules.getGameAST());
@@ -144,16 +144,6 @@ public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
         }
-    }
-
-    /**
-     * A method to check if a gameId has been set and if so adds it to the prepared statement.
-     *
-     * @param pstmt The prepared statement to whom the gameId needs to be added.
-     * @param index The index on which place the gameId has to be set.
-     */
-    private void gameIdNotSetCheck(PreparedStatement pstmt, int index) throws GameIdNotSetException, SQLException {
-        pstmt.setString(index, DaoConfig.getCurrentGameId());
     }
 }
 
