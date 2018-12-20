@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
