@@ -4,10 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
-import org.han.ica.asd.c.gui_replay_game.ReplayGame;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 
 public class MainMenuController {
@@ -24,11 +24,11 @@ public class MainMenuController {
     @FXML
     private Button replay;
 
-    @Inject
-    private ProgramAgent programAgent;
+    @Inject @Named("ProgramAgentList")
+    private IGUIHandler programAgentList;
 
-    @Inject
-    private ReplayGame replayGame;
+    @Inject @Named("ReplayGame")
+    private IGUIHandler replayGame;
 
     public void initialize() {
         mainContainer.getChildren().addAll();
@@ -45,9 +45,9 @@ public class MainMenuController {
     }
 
     private void setProgramAgentButtonAction() {
-        replay.setOnAction(event -> {
+        createAgent.setOnAction(event -> {
             try {
-                replayGame.setupScreen((Stage)close.getScene().getWindow());
+                programAgentList.setupScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -57,7 +57,7 @@ public class MainMenuController {
     private void setReplayButtonAction() {
         replay.setOnAction(event -> {
             try {
-                replayGame.setupReplayGameListScreen((Stage)close.getScene().getWindow());
+                replayGame.setupScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }

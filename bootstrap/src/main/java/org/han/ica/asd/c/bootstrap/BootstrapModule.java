@@ -7,6 +7,12 @@ import org.han.ica.asd.c.businessrule.IBusinessRules;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
+import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gui_main_menu.MainMenu;
+import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
+import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
+import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
@@ -18,7 +24,13 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("GameBusinessRulesRulesInFacilityTurnDAO")).to(GameBusinessRulesInFacilityTurnDAO.class);
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("FacilityTurnDAO")).to(FacilityTurnDAO.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
-		//bind(IBusinessRuleStore.class).to();
+
+		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
+
+		requestStaticInjection(FXMLLoaderOnSteroids.class);
 
 	}
 }

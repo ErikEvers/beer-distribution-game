@@ -14,8 +14,10 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.businessrule.IBusinessRules;
 import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +54,8 @@ public class ProgramAgentController {
     @Inject
     private IBusinessRules iBusinessRules;
 
-    @Inject
-    ProgramAgent programAgent;
+    @Inject @Named("ProgramAgentList")
+    IGUIHandler programAgentList;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
@@ -120,7 +122,7 @@ public class ProgramAgentController {
     private void setBackButtonAction() {
         back.setOnAction(event -> {
             try {
-                programAgent.setProgramAgentListScreen((Stage) back.getScene().getWindow());
+                programAgentList.setupScreen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
