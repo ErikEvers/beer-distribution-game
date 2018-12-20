@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+
+import org.han.ica.asd.c.gamelogic.participants.domain_models.FacilityTurn;
 
 /**
  * This interface is implemented by local players of the game.

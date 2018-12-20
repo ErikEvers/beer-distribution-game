@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class FacilityLinkedTo {
+public class FacilityLinkedTo implements IDomainModel{
     private String gameId;
     private Facility facilityDeliver;
     private boolean active;
