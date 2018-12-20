@@ -134,8 +134,8 @@ public class ReplayGameScreenController {
         wholesaleCheckBox.selectedProperty().setValue(false);
     }
 
-    private void clearComboBox(boolean newValue) {
-        if (newValue == true) facilityComboBox.getSelectionModel().clearSelection();
+    private void clearComboBox() {
+        facilityComboBox.getSelectionModel().clearSelection();
     }
 
     public void initializeCheckBoxes() {
@@ -150,42 +150,29 @@ public class ReplayGameScreenController {
     }
 
     private void wholesaleCheckBoxUpdated(Boolean newValue) {
-        clearComboBox(newValue);
-        if (!newValue) {
-            replayData.removeDisplayedFacility(2);
-        } else {
-            replayData.addDisplayedFacility(2);
-        }
-        drawGraph();
+        facilityCheckBoxUpdated(newValue, 2);
     }
 
     private void warehouseCheckBoxUpdated(Boolean newValue) {
-            clearComboBox(newValue);
-            if (!newValue) {
-                replayData.removeDisplayedFacility(4);
-            } else {
-                replayData.addDisplayedFacility(4);
-            }
-
-        drawGraph();
+        facilityCheckBoxUpdated(newValue, 4);
     }
 
     private void retailCheckBoxUpdated(Boolean newValue) {
-        clearComboBox(newValue);
-        if (!newValue) {
-            replayData.removeDisplayedFacility(3);
-        } else {
-            replayData.addDisplayedFacility(3);
-        }
-        drawGraph();
+
+        facilityCheckBoxUpdated(newValue, 3);
     }
 
     private void factoryCheckBoxUpdated(Boolean newValue) {
-        clearComboBox(newValue);
+
+        facilityCheckBoxUpdated(newValue, 1);
+    }
+
+    private void facilityCheckBoxUpdated(Boolean newValue, int id){
         if (!newValue) {
-            replayData.removeDisplayedFacility(1);
+            replayData.removeDisplayedFacility(id);
         } else {
-            replayData.addDisplayedFacility(1);
+            clearComboBox();
+            replayData.addDisplayedFacility(id);
         }
         drawGraph();
     }

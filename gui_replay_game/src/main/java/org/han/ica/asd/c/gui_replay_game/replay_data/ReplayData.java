@@ -109,13 +109,11 @@ public class ReplayData {
             series.setName(facility.getFacilityType().getFacilityName() + " " + facility.getFacilityId());
 
             //get rounds van deze facility uit rounds
-            RoundsStub roundsstub;
             for (RoundsStub roundsStub : rounds) {
                 if (roundsStub.getFacility().getFacilityId() == facility.getFacilityId()) {
-                    roundsstub = roundsStub;
 
                     for (int i = 0; i <= currentRound; i++) {
-                        series.getData().add(new XYChart.Data<>((double) i, (double) roundsstub.getRounds().get(i).getBudget()));
+                        series.getData().add(new XYChart.Data<>((double) i, (double) roundsStub.getRounds().get(i).getBudget()));
                     }
                 }
             }
