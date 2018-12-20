@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class BusinessRule extends ASTNode {
-    private static final String prefix = "BR(";
+    private static final String PREFIX = "BR(";
     private Condition condition;
     private Action action;
 
@@ -88,7 +88,7 @@ public class BusinessRule extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**

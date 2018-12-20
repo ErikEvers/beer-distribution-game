@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ComparisonValue extends ASTNode {
-    private static final String prefix = "CV(";
+    private static final String PREFIX = "CV(";
     private OperationValue operationValue;
 
     /**
@@ -60,7 +60,7 @@ public class ComparisonValue extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**
