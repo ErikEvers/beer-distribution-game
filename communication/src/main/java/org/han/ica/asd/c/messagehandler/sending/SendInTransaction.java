@@ -30,6 +30,8 @@ public class SendInTransaction {
 
     public void sendRoundToAllPlayers() {
 
+        //TODO implement with this: https://stackoverflow.com/questions/9148899/returning-value-from-thread
+
         RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel, 0);
 
         numberOfSuccesses = 0;

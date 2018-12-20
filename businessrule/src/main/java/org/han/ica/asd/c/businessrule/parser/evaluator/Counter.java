@@ -21,6 +21,7 @@ public class Counter {
 
     /**
      * Getter
+     *
      * @return Returns the counterValue
      */
     public int getCountedValue() {
@@ -29,6 +30,7 @@ public class Counter {
 
     /**
      * Equals function used for unit testing
+     *
      * @param o Object that needs to be checked if it's equal to this object
      * @return Returns true or false depending on if it's equal or not
      */
@@ -43,6 +45,7 @@ public class Counter {
 
     /**
      * Hash function used for unit testing
+     *
      * @return Returns the hashcode
      */
     @Override
