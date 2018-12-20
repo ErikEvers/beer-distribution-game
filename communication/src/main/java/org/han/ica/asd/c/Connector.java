@@ -70,7 +70,9 @@ private static Connector instance = null;
 
     public Room createRoom(String roomName, String ip, String password){
         try {
-            return finder.createGameRoom(roomName, ip, password);
+            Room createdRoom = finder.createGameRoom(roomName, ip, password);
+            nodeInfoList.add(new NodeInfo(ip, true, true));
+            return createdRoom;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage());
         }
@@ -79,7 +81,9 @@ private static Connector instance = null;
 
     public Room joinRoom(String roomName, String ip, String password){
         try {
-            return finder.joinGameRoom(roomName, ip, password);
+            Room joinedRoom = finder.joinGameRoom(roomName, ip, password);
+            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+            return joinedRoom;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage());
         }
@@ -88,7 +92,6 @@ private static Connector instance = null;
 
     public void startRoom(Room room){
         try {
-            nodeInfoList.add(new NodeInfo(room.getLeaderIP(), true, true));
             for(String hostIP: room.getHosts()){
                 nodeInfoList.add(new NodeInfo(hostIP, true, false));
             }
@@ -108,10 +111,11 @@ private static Connector instance = null;
 
     public void setJoiner() {
         faultDetector.setPlayer(nodeInfoList);
+        makeConnection(nodeInfoList.get(0).getIp());
+    }
 
-
-        String leader = nodeInfoList.get(0).getIp();
-        faultDetector.makeConnection(leader);
+    public boolean makeConnection(String destinationIP){
+        return faultDetector.makeConnection(destinationIP);
     }
 
     public void addToNodeInfoList(String txtIP) {
@@ -123,7 +127,6 @@ private static Connector instance = null;
         nodeInfo.setLeader(true);
         nodeInfo.setIp(txtIp);
         nodeInfoList.add(nodeInfo);
-
     }
 
     public void sendTurn(Round turn) {

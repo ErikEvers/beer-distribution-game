@@ -258,7 +258,7 @@ public class RoomTest {
 
         Room room = new Room(roomName, service);
 
-        room.updateHosts();
+        room.updateRoom();
         assertTrue(room.getHosts().contains(host));
     }
     @Test(expected = RoomException.class)
@@ -279,7 +279,7 @@ public class RoomTest {
         Room room = new Room(roomName, service);
 
         when(service.getAllhostsFromFolder(roomID)).thenThrow(IOException.class);
-        room.updateHosts();
+        room.updateRoom();
     }
 
     @Test

@@ -45,17 +45,14 @@ public class FaultDetectionClient {
      * @see PingMessage
      */
     public void makeConnection(String ipAddress) throws NodeCantBeReachedException {
-
         isConnected = false;
 
         while (!isConnected) {
             try (Socket socket = new Socket()) {
-
                 socket.connect(new InetSocketAddress(ipAddress, 4445), 1000);
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.writeObject(new PingMessage());
                 isConnected = true;
-                System.out.println(1);
             } catch (SocketException | SocketTimeoutException se) {
                 LOGGER.log(Level.INFO, se.getMessage(), se);
                 throw new NodeCantBeReachedException(se);

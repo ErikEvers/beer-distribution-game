@@ -97,13 +97,15 @@ public class FaultDetectorPlayer extends TimerTask {
             faultDetectionClient.sendICanReachLeaderMessage(new ICanReachLeaderMessage(), senderIp);
         }
     }
-    //Wesley---
-    public void makeConnection(String ip){
+
+    public boolean makeConnection(String ip){
         try {
             faultDetectionClient.makeConnection(ip);
+            return true;
         } catch (NodeCantBeReachedException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 
