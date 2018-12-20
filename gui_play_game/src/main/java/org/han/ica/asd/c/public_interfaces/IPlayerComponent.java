@@ -6,9 +6,12 @@ import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
 public interface IPlayerComponent {
     void activatePlayer();
-    void activateGameAgent();
+    void activateAgent();
     void seeOtherFacilities();
     void placeOrder(int amount);
-    void selectProgrammedAgent(ProgrammedAgent programmedagent);
     void chooseFacility(Facility facility);
+    void requestFacilityInfo(String info);
+    void selectAgent();
+    Game[] getAllGames();
+    void connectToGame();
 }
