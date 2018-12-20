@@ -125,7 +125,7 @@ private static Connector instance = null;
             new FaultDetectionClient().makeConnection(destinationIP);
             return true;
         } catch (NodeCantBeReachedException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
         return false;
     }

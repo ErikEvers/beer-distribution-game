@@ -130,7 +130,7 @@ public class TestNodeInfoList {
 
     @Test
     @DisplayName("Test if the UpdateIsConnected updates the value of a node")
-    void TestUpdateIsConnected(){
+    void TestUpdateIsConnected() {
         String testIp1 = "TestIp1";
 
         NodeInfo nodeInfo = new NodeInfo();
@@ -146,7 +146,7 @@ public class TestNodeInfoList {
 
     @Test
     @DisplayName("Test if the size method returns the right value")
-    void TestSize(){
+    void TestSize() {
 
         nodeInfoList.addIp("TestIp");
 
@@ -155,7 +155,7 @@ public class TestNodeInfoList {
 
     @Test
     @DisplayName("Test the equals method works")
-    void TestEquals(){
+    void TestEquals() {
 
         NodeInfoList nodeInfoList2 = nodeInfoList;
 
@@ -165,13 +165,13 @@ public class TestNodeInfoList {
 
     @Test
     @DisplayName("Test the hashcode method of the nodeInfoList")
-    void TestHashCode(){
-       assertEquals(new NodeInfoList().hashCode(), nodeInfoList.hashCode());
+    void TestHashCode() {
+        assertEquals(new NodeInfoList().hashCode(), nodeInfoList.hashCode());
     }
 
     @Test
     @DisplayName("Test if the getLeaderIp works happy flow")
-    void TestGetLeaderIpHappyFlow(){
+    void TestGetLeaderIpHappyFlow() {
         String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setIp(testip);
@@ -185,7 +185,7 @@ public class TestNodeInfoList {
 
     @Test
     @DisplayName("Test if the getLeaderIp returns null when the Leader is disconnected")
-    void TestGetLeaderIpWhenLeaderIsDisconnected(){
+    void TestGetLeaderIpWhenLeaderIsDisconnected() {
 
         String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
@@ -199,10 +199,9 @@ public class TestNodeInfoList {
 
     }
 
-
     @Test
     @DisplayName("Test if the getLeaderIp returns null when there is no Leader")
-    void TestGetLeaderIpWhenThereAreNoLeaders(){
+    void TestGetLeaderIpWhenThereAreNoLeaders() {
         String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setIp(testip);
@@ -216,7 +215,7 @@ public class TestNodeInfoList {
 
     @Test
     @DisplayName("Test if the getLeaderIp returns null when noone is connected")
-    void TestGetLeaderIpWhenThereAreNoNodesConnected(){
+    void TestGetLeaderIpWhenThereAreNoNodesConnected() {
         String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setIp(testip);
@@ -227,7 +226,5 @@ public class TestNodeInfoList {
 
         assertNull(nodeInfoList.getLeaderIp());
     }
-
-
 
 }
