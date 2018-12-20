@@ -1,11 +1,16 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.gamelogic.public_interfaces.*;
-import org.han.ica.asd.c.model.*;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.Map;

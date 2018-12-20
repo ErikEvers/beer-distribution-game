@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.gamelogic.public_interfaces;
 
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
-import org.han.ica.asd.c.model.Round;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface ILeaderGameLogic {
     /**
