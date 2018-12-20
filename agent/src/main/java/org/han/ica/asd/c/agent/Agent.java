@@ -37,10 +37,9 @@ public class Agent extends GameAgent {
             GameAgentAction action = this.retrieveActionFromBusinessRule(gameBusinessRules.getGameBusinessRule(), null);
             Facility targetFacility = new Facility(new FacilityType(null, 0, 0, 0, 0, 0, 0), new ArrayList<>(), 1);
 //            Facility targetFacility = resolveFacilityId(action.getTargetFacilityId());
-            String type = action.getType();
-            if (targetOrderMap.isEmpty() && "Order".equals(type)) {
+            if (targetOrderMap.isEmpty() && action instanceof GameAgentOrder) {
                 targetOrderMap.put(targetFacility, action.getAmount());
-            } else if (targetDeliverMap.isEmpty() && "Deliver".equals(type)) {
+            } else if (targetDeliverMap.isEmpty() && action instanceof GameAgentDeliver) {
                 targetDeliverMap.put(targetFacility, action.getAmount());
             } else if (!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
                 break;

@@ -12,8 +12,6 @@ public abstract class GameAgentAction {
         return this.amount;
     }
 
-    public abstract String getType();
-
     public void setTargetFacilityId(int targetFacilityId) {
         this.targetFacilityId = targetFacilityId;
     }
