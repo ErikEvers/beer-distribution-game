@@ -1,19 +1,17 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
-import org.han.ica.asd.c.model.dao_model.BeerGame;
-import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPersistence {
     void saveRoundData(Round roundData);
     Round fetchRoundData(String gameId, int roundId);
-
-    void saveTurnData(FacilityTurn turn);
-    FacilityTurn fetchTurnData(Round round, FacilityLinkedTo facility);
-
+    void saveTurnData(Round turn);
+    Round fetchTurnData(Round round, FacilityLinkedTo facility);
     BeerGame getGameLog(String gameId);
-
+    Player getPlayerById(String playerId);
     void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
 }

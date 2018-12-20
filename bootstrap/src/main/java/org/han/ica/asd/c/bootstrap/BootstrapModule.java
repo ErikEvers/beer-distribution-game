@@ -1,11 +1,7 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.BeergameDAO;
-import org.han.ica.asd.c.FacilityTurnDAO;
-import org.han.ica.asd.c.GameBusinessRulesInFacilityTurnDAO;
-import org.han.ica.asd.c.IBeerDisitributionGameDAO;
-import org.han.ica.asd.c.RoundDAO;
+import org.han.ica.asd.c.dao.*;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;

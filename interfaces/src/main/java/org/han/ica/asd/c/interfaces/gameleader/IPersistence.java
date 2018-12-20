@@ -1,5 +1,5 @@
 package org.han.ica.asd.c.interfaces.gameleader;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
+
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -13,7 +13,7 @@ public interface IPersistence {
      * Store the actions of a facility in a specific round.
      * @param data, the info to be saved.
      */
-    public void savePlayerTurn(FacilityTurn data);
+    public void savePlayerTurn(Round data);
 
     /**
      * Retrieve the data of a turn of a facility.
@@ -21,7 +21,7 @@ public interface IPersistence {
      * @param facilityId, the identifier of the facility of which the round actions are to be retrieved.
      * @return the round data for that facility in that round.
      */
-    public FacilityTurn fetchPlayerTurn(int roundId, int facilityId);
+    public Round fetchPlayerTurn(int roundId, int facilityId);
 
     /**
      * Store the actions of a specific round.

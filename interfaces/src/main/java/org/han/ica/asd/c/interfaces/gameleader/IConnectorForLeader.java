@@ -20,4 +20,5 @@ public interface IConnectorForLeader {
      * @param allData, the game data of a specific round.
      */
     public void sendRoundDataToAllPlayers(Round allData);
+
 }
