@@ -4,6 +4,8 @@ package org.han.ica.asd.c.public_interfaces;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
+import java.util.List;
+
 public interface IPlayerComponent {
     void activatePlayer();
     void activateAgent();
@@ -12,6 +14,6 @@ public interface IPlayerComponent {
     void chooseFacility(Facility facility);
     void requestFacilityInfo(String info);
     void selectAgent();
-    Game[] getAllGames();
+    List<String> getAllGames();
     void connectToGame();
 }
