@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_replay_game.replay_data;
+package org.han.ica.asd.c.interfaces.gui_replay_game;
 
 import org.han.ica.asd.c.model.domain_objects.Round;
 
