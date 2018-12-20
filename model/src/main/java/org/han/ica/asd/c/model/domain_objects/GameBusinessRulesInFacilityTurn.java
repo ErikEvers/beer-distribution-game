@@ -2,7 +2,7 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.List;
 
-public class GameBusinessRulesInFacilityTurn {
+public class GameBusinessRulesInFacilityTurn implements IDomainModel{
     private List<Round> rounds;
     private List<GameBusinessRules> businessRules;
 
