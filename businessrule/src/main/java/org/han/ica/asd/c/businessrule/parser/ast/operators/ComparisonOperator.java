@@ -37,14 +37,18 @@ public class ComparisonOperator extends Operator {
      * @return The comparison operator as code
      */
     private String findComparisonOperator(String operator) {
-        if ("is".equals(operator) || "=".equals(operator) || "equal".equals(operator)) {
-            return ComparisonType.EQUAL.getComparisonSymbol();
-        } else if ("!=".equals(operator) || operator.contains("not equal")) {
-            return ComparisonType.NOT.getComparisonSymbol();
-        } else if (operator.contains("greater") || operator.contains("higher")) {
-            return ComparisonType.GREATER.getComparisonSymbol();
+        if (ComparisonType.GREATER_EQUAL.contains(operator)) {
+            return ComparisonType.GREATER_EQUAL.get(0);
+        } else if (ComparisonType.LESS_EQUAL.contains(operator)) {
+            return ComparisonType.LESS_EQUAL.get(0);
+        } else if (ComparisonType.EQUAL.contains(operator)) {
+            return ComparisonType.EQUAL.get(0);
+        } else if (ComparisonType.NOT.contains(operator)) {
+            return ComparisonType.NOT.get(0);
+        } else if (ComparisonType.GREATER.contains(operator)) {
+            return ComparisonType.GREATER.get(0);
         } else {
-            return ComparisonType.LESS.getComparisonSymbol();
+            return ComparisonType.LESS.get(0);
         }
     }
 

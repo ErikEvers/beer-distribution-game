@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.faultdetection;
 
+import org.han.ica.asd.c.Global;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.Global;
 
 import java.util.List;
 import java.util.Timer;

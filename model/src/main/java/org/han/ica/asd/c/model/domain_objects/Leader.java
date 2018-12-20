@@ -2,7 +2,7 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.time.LocalDateTime;
 
-public class Leader {
+public class Leader implements IDomainModel{
     private Player player;
     private LocalDateTime timestamp;
 
