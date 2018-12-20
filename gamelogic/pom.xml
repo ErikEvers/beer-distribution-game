@@ -10,16 +10,12 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-<<<<<<< HEAD
-
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>communication</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-=======
->>>>>>> development
     </dependencies>
 
     <parent>

@@ -1,12 +1,14 @@
 package org.han.ica.asd.c.dao;
 
 
+import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
 import org.han.ica.asd.c.model.dao_model.BeerGameDB;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.RoundDB;
-import org.han.ica.asd.c.public_interfaces.IPersistence;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -58,6 +60,11 @@ public class Persistence implements IPersistence {
 	public FacilityTurnDB fetchTurnData(RoundDB round, FacilityLinkedToDB facility)
 	{
 		return ((FacilityTurnDAO)facilityTurnDAO).fetchTurn(round,facility);
+	}
+
+	@Override
+	public Player getPlayerById(String playerId) {
+		throw new NotImplementedException();
 	}
 
 	public void saveTurnData(FacilityTurnDB turn)

@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.gamelogic.participants.domain_models;
 
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
