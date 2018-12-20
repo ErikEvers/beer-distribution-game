@@ -1,12 +1,12 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class GameAgent {
+public class GameAgent implements IDomainModel{
     private String gameAgentName;
-    private int facilityId;
+    private Facility facility;
 
-    public GameAgent(String gameAgentName, int facilityId) {
+    public GameAgent(String gameAgentName, Facility facility) {
         this.gameAgentName = gameAgentName;
-        this.facilityId = facilityId;
+        this.facility = facility;
     }
 
     public String getGameAgentName() {
@@ -17,11 +17,11 @@ public class GameAgent {
         this.gameAgentName = gameAgentName;
     }
 
-    public int getFacilityId() {
-        return facilityId;
+    public Facility getFacility() {
+        return facility;
     }
 
-    public void setFacilityId(int facilityId) {
-        this.facilityId = facilityId;
+    public void setFacility(Facility facility) {
+        this.facility = facility;
     }
 }
