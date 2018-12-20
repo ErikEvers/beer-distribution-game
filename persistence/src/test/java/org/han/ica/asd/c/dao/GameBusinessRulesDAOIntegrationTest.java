@@ -5,7 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesDB;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.junit.Assert;
@@ -52,44 +51,41 @@ class GameBusinessRulesDAOIntegrationTest {
         gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES);
         Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
         GameBusinessRules gameBusinessRulesDb = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).get(0);
-        
+
         Assert.assertEquals(GAME_BUSINESS_RULES.getGameBusinessRule(),gameBusinessRulesDb.getGameBusinessRule());
         Assert.assertEquals(GAME_BUSINESS_RULES.getGameAST(),gameBusinessRulesDb.getGameAST());
     }
 
-//    @Test
-//    void deleteSpecificGamebusinessrule() {
-//        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
-//        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
-//        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB2);
-//        Assert.assertEquals(2,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
-//        gameBusinessRulesDAO.deleteSpecificGamebusinessrule(GAME_BUSINESS_RULES_DB);
-//
-//        GameBusinessRulesDB gameBusinessRulesDB = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen","AgentName").get(0);
-//
-//        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameId(),gameBusinessRulesDB.getGameId());
-//        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getFacilityId(),gameBusinessRulesDB.getFacilityId());
-//        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameAgentName(),gameBusinessRulesDB.getGameAgentName());
-//        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameBusinessRule(),gameBusinessRulesDB.getGameBusinessRule());
-//        Assert.assertEquals(GAME_BUSINESS_RULES_DB2.getGameAST(),gameBusinessRulesDB.getGameAST());
-//    }
-//
-//    @Test
-//    void deleteAllGamebusinessrulesForGameagentInAGame() {
-//        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
-//        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
-//        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB2);
-//        Assert.assertEquals(2,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
-//        gameBusinessRulesDAO.deleteAllGamebusinessrulesForGameagentInAGame("BeerGameZutphen", "AgentName");
-//        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
-//    }
-//
-//    @Test
-//    void createDuplicateGameBusinessRuleTest() throws SQLException{
-//        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
-//        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
-//        gameBusinessRulesDAO.createGameBusinessRule(GAME_BUSINESS_RULES_DB);
-//        Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame("BeerGameZutphen", "AgentName").size());
-//
-//    }
+    @Test
+    void deleteSpecificGamebusinessrule() {
+        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES);
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES2);
+        Assert.assertEquals(2,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+        gameBusinessRulesDAO.deleteSpecificGamebusinessrule(GAME_AGENT, GAME_BUSINESS_RULES);
+        Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+
+        GameBusinessRules gameBusinessRulesDb = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).get(0);
+
+        Assert.assertEquals(GAME_BUSINESS_RULES2.getGameBusinessRule(),gameBusinessRulesDb.getGameBusinessRule());
+        Assert.assertEquals(GAME_BUSINESS_RULES2.getGameAST(),gameBusinessRulesDb.getGameAST());
+    }
+
+    @Test
+    void deleteAllGamebusinessrulesForGameagentInAGame() {
+        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES);
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES2);
+        Assert.assertEquals(2,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+        gameBusinessRulesDAO.deleteAllGamebusinessrulesForGameagentInAGame(GAME_AGENT);
+        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+    }
+
+    @Test
+    void createDuplicateGameBusinessRuleTest() throws SQLException{
+        Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES);
+        gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES);
+        Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
+    }
 }
