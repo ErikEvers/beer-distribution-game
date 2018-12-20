@@ -8,8 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SocketClient {
+
+    private static final Logger LOGGER = Logger.getLogger(SocketClient.class.getName());
 
     /**
      * This method tries to make a new socket with the given IP, sends an object and expects an object back, which will be returned.
@@ -72,19 +76,13 @@ public class SocketClient {
 
         for (String ip : ips) {
             Thread t = new Thread(() -> {
-
                 try {
-                    Object response = null;
-                    try {
-                        response = sendObjectWithResponse(ip, object);
-                        map.put(ip, response);
-                    } catch (ClassNotFoundException e) {
-                        map.put(ip, e);
-                    }
-                } catch (IOException e) {
+                    Object response = sendObjectWithResponse(ip, object);
+                    map.put(ip, response);
+                } catch (IOException | ClassNotFoundException e) {
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
                     map.put(ip, e);
                 }
-
                 cdl.countDown();
             });
             t.setDaemon(false);
@@ -94,7 +92,8 @@ public class SocketClient {
         try {
             cdl.await();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            Thread.currentThread().interrupt();
         }
 
         return map;
