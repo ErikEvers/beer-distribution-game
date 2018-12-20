@@ -1,7 +1,11 @@
 package org.han.ica.asd.c.gui_program_agent;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
@@ -13,30 +17,57 @@ public class ProgramAgentListController {
     AnchorPane mainContainer;
 
     @FXML
-    Button programAgent;
+    Button edit;
 
     @FXML
-    Button back;
+    Button delete;
+
+    @FXML
+    ListView list;
 
     @Inject
     @Named("ProgramAgent")
-    IGUIHandler programAgent1;
+    IGUIHandler programAgent;
 
     @Inject
     @Named("MainMenu")
     IGUIHandler mainMenu;
 
+    private ObservableList<String> items = FXCollections.observableArrayList();
+
     public void initialize() {
-        mainContainer.getChildren().addAll();
-        setProgramAgentButtonAction();
-        setBackButtonAction();
+        //TODO INJECT BUSINESS RULE STORE
+        list.setItems(items);
+        items.add("hello");
+        items.add("lol");
     }
 
-    private void setBackButtonAction() {
-        back.setOnAction(event -> mainMenu.setupScreen());
+    @FXML
+    private void backButtonAction() {
+        mainMenu.setupScreen();
     }
 
-    private void setProgramAgentButtonAction() {
-        programAgent.setOnAction(event -> programAgent1.setupScreen());
+    @FXML
+    private void programAgentButtonAction() {
+        programAgent.setupScreen();
+    }
+
+    @FXML
+    public void handleMouseClickOnList(MouseEvent arg0) {
+        edit.setVisible(true);
+        delete.setVisible(true);
+    }
+
+    @FXML
+    public void editButtonAction() {
+        programAgent.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
+        programAgent.setupScreen();
+
+    }
+
+    @FXML
+    public void deleteButtonAction() {
+        //TODO INJECT BUSINESS RULE STORE
+        items.remove(list.getSelectionModel().getSelectedItem());
     }
 }

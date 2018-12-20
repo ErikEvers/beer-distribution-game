@@ -7,6 +7,11 @@ import java.util.ResourceBundle;
 
 public class ProgramAgentList implements IGUIHandler {
 
+    @Override
+    public void setData(Object[] data) {
+
+    }
+
     public void setupScreen() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResources");
 

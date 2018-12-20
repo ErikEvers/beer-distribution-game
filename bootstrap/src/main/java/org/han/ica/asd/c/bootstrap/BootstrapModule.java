@@ -1,7 +1,11 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.*;
+import org.han.ica.asd.c.BeergameDAO;
+import org.han.ica.asd.c.FacilityTurnDAO;
+import org.han.ica.asd.c.GameBusinessRulesInFacilityTurnDAO;
+import org.han.ica.asd.c.IBeerDisitributionGameDAO;
+import org.han.ica.asd.c.RoundDAO;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.businessrule.IBusinessRules;
 import org.han.ica.asd.c.dbconnection.DBConnection;
@@ -13,6 +17,7 @@ import org.han.ica.asd.c.gui_main_menu.MainMenu;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
+import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
@@ -27,6 +32,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGameList.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
 

@@ -37,7 +37,7 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
 		FXMLLoaderOnSteroids.primaryStage = primaryStage;
 	}
 
-	public static void getScreen(ResourceBundle resourceBundle, URL fxmlPath) {
+	public static <T> T getScreen(ResourceBundle resourceBundle, URL fxmlPath) {
 		FXMLLoaderOnSteroids loader = loaderProvider.get();
 		loader.setResources(resourceBundle);
 		loader.setLocation(fxmlPath);
@@ -54,5 +54,7 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.toString(), e);
 		}
+
+		return loader.getController();
 	}
 }
