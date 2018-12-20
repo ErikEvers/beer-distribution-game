@@ -1,6 +1,5 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.gameleader;
 
-import org.han.ica.asd.c.gameleader.TurnHandler;
 import org.han.ica.asd.c.model.FacilityTurn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
