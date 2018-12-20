@@ -82,7 +82,13 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
         return list;
     }
 
-
+    /**
+     * Retreives the ip of the leader when there is one. If there isnt one it returns null.
+     * Used by the 'MessageProcessor'
+     * @return String of the ip of the leader. or null when there isnt a leader active.
+     * @author Oscar
+     * @see org.han.ica.asd.c.messagehandler.MessageProcessor
+     */
     public String getLeaderIp() {
         for (NodeInfo node : nodeList) {
             if (node.getConnected() && node.getLeader()) {

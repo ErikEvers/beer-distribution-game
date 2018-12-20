@@ -13,6 +13,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 public class TestNodeInfoList {
@@ -162,12 +163,71 @@ public class TestNodeInfoList {
 
     }
 
-
     @Test
     @DisplayName("Test the hashcode method of the nodeInfoList")
     void TestHashCode(){
        assertEquals(new NodeInfoList().hashCode(), nodeInfoList.hashCode());
     }
+
+    @Test
+    @DisplayName("Test if the getLeaderIp works happy flow")
+    void TestGetLeaderIpHappyFlow(){
+        String testip = "TestIp";
+        NodeInfo nodeInfo = new NodeInfo();
+        nodeInfo.setIp(testip);
+        nodeInfo.setLeader(true);
+        nodeInfo.setConnected(true);
+
+        nodeInfoList.add(nodeInfo);
+
+        assertEquals(testip, nodeInfoList.getLeaderIp());
+    }
+
+    @Test
+    @DisplayName("Test if the getLeaderIp returns null when the Leader is disconnected")
+    void TestGetLeaderIpWhenLeaderIsDisconnected(){
+
+        String testip = "TestIp";
+        NodeInfo nodeInfo = new NodeInfo();
+        nodeInfo.setIp(testip);
+        nodeInfo.setLeader(true);
+        nodeInfo.setConnected(false);
+
+        nodeInfoList.add(nodeInfo);
+
+        assertNull(nodeInfoList.getLeaderIp());
+
+    }
+
+
+    @Test
+    @DisplayName("Test if the getLeaderIp returns null when there is no Leader")
+    void TestGetLeaderIpWhenThereAreNoLeaders(){
+        String testip = "TestIp";
+        NodeInfo nodeInfo = new NodeInfo();
+        nodeInfo.setIp(testip);
+        nodeInfo.setLeader(false);
+        nodeInfo.setConnected(true);
+
+        nodeInfoList.add(nodeInfo);
+
+        assertNull(nodeInfoList.getLeaderIp());
+    }
+
+    @Test
+    @DisplayName("Test if the getLeaderIp returns null when noone is connected")
+    void TestGetLeaderIpWhenThereAreNoNodesConnected(){
+        String testip = "TestIp";
+        NodeInfo nodeInfo = new NodeInfo();
+        nodeInfo.setIp(testip);
+        nodeInfo.setLeader(false);
+        nodeInfo.setConnected(false);
+
+        nodeInfoList.add(nodeInfo);
+
+        assertNull(nodeInfoList.getLeaderIp());
+    }
+
 
 
 }
