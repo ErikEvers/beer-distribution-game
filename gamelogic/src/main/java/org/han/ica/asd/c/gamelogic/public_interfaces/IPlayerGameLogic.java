@@ -3,10 +3,8 @@ package org.han.ica.asd.c.gamelogic.public_interfaces;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.RoundDB;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
 
-import java.util.Map;
+import java.util.List;
 
 public interface IPlayerGameLogic {
     /**
@@ -31,4 +29,6 @@ public interface IPlayerGameLogic {
      * Replaces the agent with the player.
      */
     void letPlayerTakeOverAgent();
+
+    List<String> getAllGames();
 }

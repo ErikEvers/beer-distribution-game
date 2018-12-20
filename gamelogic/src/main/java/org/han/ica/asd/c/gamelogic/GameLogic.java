@@ -12,6 +12,8 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,6 +71,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     @Override
     public void letPlayerTakeOverAgent() {
         participantsPool.replaceAgentWithPlayer();
+    }
+
+    @Override
+    public List<String> getAllGames() {
+        return null;
     }
 
     /**

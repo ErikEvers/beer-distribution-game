@@ -52,7 +52,7 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public List<String> getAllGames() {
-        return null;
+        return gameLogic.getAllGames();
     }
 
     @Override
