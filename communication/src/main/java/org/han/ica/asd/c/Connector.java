@@ -5,9 +5,11 @@ import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.FaultDetectorPlayer;
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
@@ -115,7 +117,13 @@ private static Connector instance = null;
     }
 
     public boolean makeConnection(String destinationIP){
-        return faultDetector.makeConnection(destinationIP);
+        try {
+            new FaultDetectionClient().makeConnection(destinationIP);
+            return true;
+        } catch (NodeCantBeReachedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void addToNodeInfoList(String txtIP) {

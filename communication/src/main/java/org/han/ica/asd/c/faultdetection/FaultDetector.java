@@ -57,10 +57,6 @@ public class FaultDetector {
         }
     }
 
-    public boolean makeConnection(String ip){
-        return faultDetectorPlayer.makeConnection(ip);
-    }
-
     public void faultMessageResponseReceived(FaultMessageResponse faultMessageResponse) {
         if (faultDetectorLeader != null) {
             faultDetectorLeader.faultMessageResponseReceived(faultMessageResponse);

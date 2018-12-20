@@ -98,17 +98,6 @@ public class FaultDetectorPlayer extends TimerTask {
         }
     }
 
-    public boolean makeConnection(String ip){
-        try {
-            faultDetectionClient.makeConnection(ip);
-            return true;
-        } catch (NodeCantBeReachedException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
     public void iCanReachLeaderMessageReceived(ICanReachLeaderMessage iCanReachLeaderMessage) {
 
         faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();
