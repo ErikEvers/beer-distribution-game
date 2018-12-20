@@ -4,7 +4,7 @@ public class GameBusinessRules implements IDomainModel{
     private String gameBusinessRule;
     private String gameAST;
 
-    public GameBusinessRules(String gameAgentName, String gameBusinessRule, String gameAST) {
+    public GameBusinessRules(String gameBusinessRule, String gameAST) {
         this.gameBusinessRule = gameBusinessRule;
         this.gameAST = gameAST;
     }
