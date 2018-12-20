@@ -1,8 +1,9 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.public_interfaces.IPlayerComponent;
+
+import java.util.List;
 
 public class PlayerComponent implements IPlayerComponent {
 
@@ -13,7 +14,7 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public void activateGameAgent() {
+    public void activateAgent() {
 
     }
 
@@ -28,12 +29,27 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public void selectProgrammedAgent(ProgrammedAgent programmedagent) {
+    public void chooseFacility(Facility facility) {
 
     }
 
     @Override
-    public void chooseFacility(Facility facility) {
+    public void requestFacilityInfo(String info) {
+
+    }
+
+    @Override
+    public void selectAgent() {
+
+    }
+
+    @Override
+    public List<String> getAllGames() {
+        return null;
+    }
+
+    @Override
+    public void connectToGame() {
 
     }
 }
