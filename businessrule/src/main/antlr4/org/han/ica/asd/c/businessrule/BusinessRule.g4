@@ -9,11 +9,8 @@ DELIVER: 'deliver';
 ROUND : 'round';
 FROM : 'from';
 TO : 'to';
-WHEN: 'when';
-WITH: 'with';
-BELOW: 'below';
-ABOVE: 'above';
-NODE : 'node' (' '?[0-9]+)?;
+WHERE: 'where';
+NODE : ('factory' | 'distributor' | 'wholesaler' | 'retailer') (' '?[0-9]+)?;
 
 FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer';
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';
@@ -46,9 +43,8 @@ comparison: comparison_value comparison_operator comparison_value;
 comparison_value: operation | ROUND;
 operation: value #defaultOperation | operation PLUS operation #plusOperation | operation MIN operation #minOperation | priority_operation #priorityOperation;
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
-value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY;
+value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | (LOWEST | HIGHEST);
 comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS;
-action: ORDER operation direction? | DELIVER operation direction;
-direction: (FROM | TO) person (WHEN comparisonstatement | WITH (LOWEST | HIGHEST) GAME_VALUE)?;
-person: NODE (ABOVE | BELOW);
+action: ORDER operation person? | DELIVER operation person?;
+person: (FROM | TO) NODE (WHERE comparisonstatement)?;
 

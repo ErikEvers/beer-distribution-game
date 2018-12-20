@@ -3,6 +3,9 @@ package org.han.ica.asd.c.businessrule.parser.walker;
 import org.han.ica.asd.c.businessrule.BusinessRuleBaseListener;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.ast.*;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
@@ -359,5 +362,14 @@ public class ASTListener extends BusinessRuleBaseListener {
     @Override
     public void exitAction(BusinessRuleParser.ActionContext ctx) {
         currentContainer.pop();
+    }
+
+    @Override
+    public void enterPerson(BusinessRuleParser.PersonContext ctx) {
+        Person person = new Person(ctx.getChild(1).toString());
+        ASTNode parent = currentContainer.peek();
+        if (parent != null) {
+            parent.addChild(person);
+        }
     }
 }

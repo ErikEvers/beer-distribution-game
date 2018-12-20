@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.agent;
 
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.*;
 
