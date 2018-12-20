@@ -2,8 +2,10 @@ package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ConfigurationDB;
-
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -18,14 +20,23 @@ import java.util.logging.Logger;
 public class ConfigurationDAO {
 	
 	private static final String CREATE_CONFIGURATION = "INSERT INTO Configuration VALUES (?,?,?,?,?,?,?,?,?,?);";
-	private static final String READ_CONFIGURATION = "SELECT * FROM Configuration WHERE GameId = ?;";
+	private static final String READ_CONFIGURATION = "SELECT(AmountOfRounds,AmountOfFactories,AmountOfWholesales,AmountOfDistributors,MinimalOrderRetail,ContinuePlayingWhenBankrupt,InsightFacilities) FROM Configuration WHERE GameId = ?;";
 	private static final String READ_CONFIGURATIONS = "SELECT * FROM Configuration;";
 	private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesales = ?, AmountOfDistributors = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?;";
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
-	private static final Logger LOGGER = Logger.getLogger(ConfigurationDB.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
+
+	@Inject
+	private FacilityDAO facilityDAO;
+
+	@Inject
+	private FacilityTypeDAO facilityTypeDAO;
+
+	@Inject
+	private FacilityLinkedToDAO facilityLinkedToDAO;
 
 	public ConfigurationDAO(){
 		//Empty Constructor for GUICE
@@ -34,7 +45,7 @@ public class ConfigurationDAO {
 	 * A method which creates a configuration in the SQLite Database
 	 @param configuration A ConfigurationDB Object which needs to be inserted in the SQLite Database
 	 */
-	public void createConfiguration(ConfigurationDB configuration) {
+	public void createConfiguration(Configuration configuration, BeerGame beerGame) {
 		Connection conn = null;
 		try {
 			conn = databaseConnection.connect();
@@ -43,7 +54,7 @@ public class ConfigurationDAO {
 
 					conn.setAutoCommit(false);
 
-					setPreparedStatement(configuration, pstmt);
+					setPreparedStatement(configuration, beerGame, pstmt);
 
 					pstmt.executeUpdate();
 				}
@@ -55,8 +66,8 @@ public class ConfigurationDAO {
 		}
 	}
 
-	private void setPreparedStatement(ConfigurationDB configuration, PreparedStatement pstmt) throws SQLException {
-		pstmt.setString(1, configuration.getGameId());
+	private void setPreparedStatement(Configuration configuration, BeerGame beergame, PreparedStatement pstmt) throws SQLException {
+		pstmt.setString(1, beergame.getGameId());
 		pstmt.setInt(2, configuration.getAmountOfRounds());
 		pstmt.setInt(3, configuration.getAmountOfFactories());
 		pstmt.setInt(4, configuration.getAmountOfWholesales());
@@ -72,20 +83,20 @@ public class ConfigurationDAO {
 	 * A method which reads and returns all configurations
 	 * @return A list of configurations of the found configurations of a specific game
 	 */
-	public List<ConfigurationDB> readConfigurations() {
+	public List<Configuration> readConfigurations(BeerGame beerGame) {
 		Connection conn = null;
-		ArrayList<ConfigurationDB> configurations = new ArrayList<>();
+		List<Configuration> configurations = new ArrayList<>();
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATIONS)) {
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							configurations.add(new ConfigurationDB(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
+							configurations.add(new Configuration(rs.getInt("AmountOfRounds"),
 									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
 									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
 									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
-									rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities")));
+									rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"),facilityDAO.readAllFacilitiesInGame(beerGame.getGameId()),facilityLinkedToDAO.readAllLinkedTo(beerGame.getGameId()).readAllFacilityTypes(beerGame.getGameId())));
 						}
 					}
 				}
@@ -101,9 +112,9 @@ public class ConfigurationDAO {
 	 * @param gameId The Id of a game
 	 * @return A configuration according to the gameId
 	 */
-	public ConfigurationDB readConfiguration(String gameId){
+	public Configuration readConfiguration(String gameId){
 		Connection conn;
-		ConfigurationDB configuration = null;
+		Configuration configuration = null;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
@@ -111,7 +122,7 @@ public class ConfigurationDAO {
 					pstmt.setString(1,gameId);
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							configuration = new ConfigurationDB(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
+							configuration = new Configuration(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
 									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
 									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
 									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
