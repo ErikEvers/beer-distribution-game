@@ -3,7 +3,6 @@ package org.han.ica.asd.c.faultdetection;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
-import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.observers.IConnectorObserver;
@@ -69,17 +68,13 @@ public class FaultDetector {
         }
     }
 
-    public void canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
+    public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage) {
         if (faultDetectorPlayer != null) {
-            faultDetectorPlayer.canYouReachLeaderMessageReceived(canYouReachLeaderMessage, senderIp);
+            return faultDetectorPlayer.canYouReachLeaderMessageReceived(canYouReachLeaderMessage);
         }
+        return null;
     }
 
-    public void iCanReachLeaderMessageReceived(ICanReachLeaderMessage iCanReachLeaderMessage) {
-        if (faultDetectorPlayer != null) {
-            faultDetectorPlayer.iCanReachLeaderMessageReceived(iCanReachLeaderMessage);
-        }
-    }
 
     public FaultDetectorLeader makeFaultDetectorLeader(NodeInfoList nodeInfoList, ArrayList<IConnectorObserver> observers) {
         return new FaultDetectorLeader(nodeInfoList, observers);
