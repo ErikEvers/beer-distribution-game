@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.parser.BusinessRuleDecoder;
+import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
@@ -14,7 +14,6 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

@@ -37,14 +37,18 @@ public class ComparisonOperator extends Operator {
      * @return The comparison operator as code
      */
     private String findComparisonOperator(String operator) {
-        if ("is".equals(operator) || "=".equals(operator) || "equal".equals(operator)) {
-            return ComparisonType.EQUAL.getComparisonSymbol();
-        } else if ("!=".equals(operator) || operator.contains("not equal")) {
-            return ComparisonType.NOT.getComparisonSymbol();
-        } else if (operator.contains("greater") || operator.contains("higher")) {
-            return ComparisonType.GREATER.getComparisonSymbol();
+        if (ComparisonType.GREATER_EQUAL.get().equals(operator) || (operator.contains(ComparisonType.EQUAL_CHARS.get()) && (operator.contains(ComparisonType.GREATER_CHARS_HIGHER.get()) || operator.contains(ComparisonType.GREATER_CHARS.get())))) {
+            return ComparisonType.GREATER_EQUAL.get();
+        } else if (ComparisonType.LESS_EQUAL.get().equals(operator) || (operator.contains(ComparisonType.EQUAL_CHARS.get()) && (operator.contains(ComparisonType.LESS_CHARS.get()) || operator.contains(ComparisonType.LESS_CHARS_LOWER.get())))) {
+            return ComparisonType.LESS_EQUAL.get();
+        } else if (ComparisonType.EQUAL_CHARS_IS.get().equals(operator) || ComparisonType.EQUAL_ONE.get().equals(operator) || operator.equals(ComparisonType.EQUAL_CHARS.get())) {
+            return ComparisonType.EQUAL.get();
+        } else if (ComparisonType.NOT.get().equals(operator) || operator.contains(ComparisonType.NOT_CHARS.get())) {
+            return ComparisonType.NOT.get();
+        } else if (operator.contains(ComparisonType.GREATER_CHARS.get()) || operator.contains(ComparisonType.GREATER_CHARS_HIGHER.get())) {
+            return ComparisonType.GREATER.get();
         } else {
-            return ComparisonType.LESS.getComparisonSymbol();
+            return ComparisonType.LESS.get();
         }
     }
 

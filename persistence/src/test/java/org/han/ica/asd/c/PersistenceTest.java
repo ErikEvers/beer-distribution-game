@@ -4,13 +4,14 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.dao.*;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.BeerGame;
-import org.han.ica.asd.c.model.dao_model.FacilityLinkedTo;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.dao_model.Round;
+import org.han.ica.asd.c.model.dao_model.BeerGameDB;
+import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
+import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,19 +32,19 @@ class PersistenceTest {
 	private IBeerDisitributionGameDAO gameBusinessRulesInFacilityTurnMock;
 	private IBeerDisitributionGameDAO facilityTurnDAOMock;
 	private Persistence persistence;
-	private Round round;
-	private BeerGame beerGame;
-	private GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn;
-	private FacilityTurn facilityTurn;
-	private FacilityLinkedTo facilityLinkedTo;
+	private RoundDB round;
+	private BeerGameDB beerGame;
+	private GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn;
+	private FacilityTurnDB facilityTurn;
+	private FacilityLinkedToDB facilityLinkedTo;
 
 	@BeforeEach
 	void setUp() {
-		round = new Round("Beergame",1);
-		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
-		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1,1,1,"Beergame","Henk","Test","Test");
-		facilityTurn = new FacilityTurn("Beergame",1,1,1,1,1,1,1,1);
-		facilityLinkedTo = new FacilityLinkedTo("Beergame",1,1,true);
+		round = new RoundDB("Beergame",1);
+		beerGame = new BeerGameDB(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
+		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurnDB(1,1,1,"Beergame","Henk","Test","Test");
+		facilityTurn = new FacilityTurnDB("Beergame",1,1,1,1,1,1,1,1);
+		facilityLinkedTo = new FacilityLinkedToDB("Beergame",1,1,true);
 
 		roundDAOMock = mock(RoundDAO.class);
 		Mockito.doNothing().when((RoundDAO)roundDAOMock).createRound(anyString(),anyInt());

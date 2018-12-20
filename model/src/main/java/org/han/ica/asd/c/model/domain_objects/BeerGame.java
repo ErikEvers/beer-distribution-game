@@ -2,7 +2,7 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.List;
 
-public class BeerGame {
+public class BeerGame implements IDomainModel{
 
     private Leader leader;
     private List<Player> players;

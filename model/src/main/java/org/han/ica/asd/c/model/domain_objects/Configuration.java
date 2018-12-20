@@ -3,7 +3,7 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.List;
 
-public class Configuration {
+public class Configuration implements IDomainModel{
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesales;
@@ -16,6 +16,10 @@ public class Configuration {
     private List<Facility> facilities;
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
+
+    public Configuration(){
+        //Empty constructor for GUICE
+    }
 
     public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
                          int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
