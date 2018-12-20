@@ -56,7 +56,7 @@ private static Connector instance = null;
 
     //TODO replace with GUICE, inject singleton
     public static Connector getInstance() {
-        if (instance != null){
+        if (instance == null){
             instance = new Connector();
         }
         return instance;
