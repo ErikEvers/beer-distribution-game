@@ -128,4 +128,14 @@ public class Comparison extends Expression {
                 return new BooleanLiteral(false);
         }
     }
+
+    @Override
+    public ASTNode getLeftChild() {
+        return left;
+    }
+
+    @Override
+    public ASTNode getRightChild() {
+        return right;
+    }
 }

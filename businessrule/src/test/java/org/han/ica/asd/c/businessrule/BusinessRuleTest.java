@@ -1,16 +1,15 @@
 package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
-import org.han.ica.asd.c.businessrule.mocks.GameData;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -28,8 +27,11 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 
-public class BusinessRuleTest {
+class BusinessRuleTest {
     private BusinessRule businessRule = new BusinessRule();
+    private Round round;
+    private Facility facility;
+    private int facilityId = 11;
 
     @Test
     void testBusinessRule_getChilderen_True() {
@@ -100,46 +102,45 @@ public class BusinessRuleTest {
         inOrder.verify(comparisonValue).getChildren();
     }
 
-    @Test
-    void testBusinessrule_getReplacementValue_equals_10() {
-        String businessRuleString = "BR(CS(C(CV(V(40% back orders))ComO(<)CV(Add(V(inventory)CalO(+)Mul(V(inventory)CalO(*)V(back orders)))))))";
-        String expected = "BR(CS(C(CV(V(40% 10))ComO(<)CV(Add(V(10)CalO(+)Mul(V(10)CalO(*)V(10)))))))";
+    @BeforeEach
+    void setupTestReplaceBusinessRuleWithValue(){
 
-	    Round round = Mockito.mock(Round.class);
-        Facility facility = Mockito.mock(Facility.class);
+
+         round = Mockito.mock(Round.class);
+         facility = Mockito.mock(Facility.class);
         FacilityType facilityType = Mockito.mock(FacilityType.class);
         facility.setFacilityType(facilityType);
+        facility.setFacilityId(facilityId);
+
         Map<Facility,Integer> map = new HashMap<>();
         map.put(facility,10);
         Map<Facility, Map<Facility,Integer> > mapInMap = new HashMap<>();
         mapInMap.put(facility,map);
 
-        int facilityId = 11;
-        facility.setFacilityId(facilityId);
         when(facility.getFacilityType()).thenReturn(facilityType);
-	    when(facility.getFacilityId()).thenReturn(facilityId);
+        when(facilityType.getFacilityName()).thenReturn("factory");
+        when(facility.getFacilityId()).thenReturn(facilityId);
+        when(round.getTurnStock()).thenReturn(map);
+        when(round.getTurnBackOrder()).thenReturn(mapInMap);
+        when(round.getRemainingBudget()).thenReturn(map);
+        when(round.getTurnDeliver()).thenReturn(mapInMap);
 
-	    when(round.getTurnStock()).thenReturn(map);
-	    when(round.getTurnBackOrder()).thenReturn(mapInMap);
+        when(round.getTurnOrder()).thenReturn(mapInMap);
+        when(round.getTurnReceived()).thenReturn(mapInMap);
+    }
+    @Test
+    void testBusinessrule_getReplacementValue_equals_10() {
+        String businessRuleString = "BR(C(CV(V(incoming order factory))ComO(>=)CV(V(back orders factory)))A(AR(order)Div(V(40% inventory)CalO(/)V(20% outgoing goods))))";
+        String expected = "BR(C(CV(V(10 11))ComO(>=)CV(V(10 11)))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
 
         businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
-
-
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
-        String result = businessRule.encode();
 
+        String result = businessRule.encode();
         assertEquals(expected, result);
     }
+    void test(){
 
-    @Test
-    void testBusinessRule_hasMultipleChildren_equals_true() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String businessRuleString = "BR(CS(C(CV(V(stock))ComO(<)CV(V(10))))A(AR(order)V(0)))";
 
-        businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
-
-        Method hasMultipleChildren = businessRule.getClass().getDeclaredMethod("hasMultipleChildren",ASTNode.class);
-        hasMultipleChildren.setAccessible(true);
-        boolean statement = (Boolean) hasMultipleChildren.invoke(businessRule, (ASTNode) businessRule.getChildren().get(1));
-        assertTrue(statement);
     }
 }

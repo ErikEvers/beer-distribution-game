@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
-import org.han.ica.asd.c.businessrule.mocks.GameData;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
@@ -14,10 +13,10 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class BusinessRule extends ASTNode {
-    private static final String PREFIX = "BR(";
     private Condition condition;
     private Action action;
-
+    private static final String PREFIX = "BR(";
+    private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
      *
@@ -143,24 +142,20 @@ public class BusinessRule extends ASTNode {
      * @param facilityId identifier of the facility
      */
     public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId){
-        int left = 0;
-        int right = 2;
-        int actionValue = 1;
-
-        findLeafAndReplace(condition.getChildren().get(left),round,facilityId);
+        findLeafAndReplace(condition.getLeftChild(),round,facilityId);
         if(hasMultipleChildren(condition)) {
-            findLeafAndReplace(condition.getChildren().get(right),round, facilityId);
+            findLeafAndReplace(condition.getRightChild(),round, facilityId);
         }
         if (action != null) {
-            findLeafAndReplace(action.getChildren().get(actionValue),round, facilityId);
+            findLeafAndReplace(action.getRightChild(),round, facilityId);
         }
     }
 
     /***
-     * finds the leaf and replaces the leaf with game data.
-     *
-     * @param astNode a node of the tree
-     * @param facilityId
+     * finds the leaf of the astnode and replaces the value
+     * @param astNode the node of the ast
+     * @param round the game data, used to replace data in function replace(Value value, int facilityId)
+     * @param facilityId the id of the facility
      */
     private void findLeafAndReplace(ASTNode astNode, Round round, int facilityId){
         int left = 0;
@@ -183,20 +178,18 @@ public class BusinessRule extends ASTNode {
      * @return true if the node has more than one child
      */
     private boolean hasMultipleChildren(ASTNode astNode){
-        int oneChild = 1;
-        return astNode.getChildren().size()>oneChild;
+        return astNode.getChildren().size()>1;
     }
 
     /***
-     *replaces the value with the replacementvalue(gamedata)
      *
-     * @param value a node of the tree
+     * @param value
+     * @param round
      * @param facilityId
      */
     private void replace(Value value, Round round, int facilityId) {
-        String REGEXHASCHARACTERS = "[a-zA-Z ]+";
         String currentVariable = value.getFirstPartVariable();
-        if(Pattern.matches(REGEXHASCHARACTERS,value.getFirstPartVariable())) {
+        if(Pattern.matches(HAS_CHARACTERS,value.getFirstPartVariable())) {
             GameValue gameValue = getGameValue(currentVariable);
             if (gameValue != null) {
                 replaceValue(gameValue, value,round, facilityId, 0);
@@ -204,7 +197,7 @@ public class BusinessRule extends ASTNode {
         }
         if(value.getValue().size()>1) {
             String secondVariable = value.getSecondPartVariable();
-            if (Pattern.matches(REGEXHASCHARACTERS, value.getSecondPartVariable())) {
+            if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
                 GameValue gameValue = getGameValue(secondVariable);
                 if (gameValue != null) {
                     replaceValue(gameValue, value, round, facilityId, 1);
@@ -228,7 +221,7 @@ public class BusinessRule extends ASTNode {
         }
     }
 
-    public String getReplacementValue(GameValue gameValue,Round round, int facilityId) {
+    private String getReplacementValue(GameValue gameValue,Round round, int facilityId) {
         switch (gameValue){
             case ORDERED:
                 return getValueFromHashmapInHasmap(round.getTurnOrder(),facilityId);
@@ -265,7 +258,7 @@ public class BusinessRule extends ASTNode {
     private int getFacilityIdBasedOnType(Map<Facility,Integer> map, GameValue facilityType){
         Facility facility = null;
         for(Map.Entry<Facility,Integer> entry:map.entrySet()){
-            if(GameValue.valueOf(entry.getKey().getFacilityType().getFacilityName())==facilityType){
+            if(GameValue.valueOf(entry.getKey().getFacilityType().getFacilityName().toUpperCase())==facilityType){
                 facility= entry.getKey();
                 break;
             }

@@ -97,4 +97,9 @@ public class Action extends ASTNode {
     public int hashCode() {
         return Objects.hash(actionName, operation, person, comparisonStatement);
     }
+
+    @Override
+    public ASTNode getRightChild() {
+        return operation;
+    }
 }

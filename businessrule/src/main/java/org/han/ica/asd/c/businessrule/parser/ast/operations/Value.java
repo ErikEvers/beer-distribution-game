@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
-import org.han.ica.asd.c.businessrule.mocks.GameData;
 import org.han.ica.asd.c.gamevalue.GameValue;
 
 import java.util.ArrayList;
@@ -43,53 +42,53 @@ public class Value extends OperationValue {
         String firstValue = getFirstPartVariable(value);
         String secondValue = getSecondPartVariable(value);
         this.value.add(firstValue);
-        if(countSpaces>=1&&firstValue!=secondValue){
+        if(countSpaces>=1&&!firstValue.equals(secondValue)){
             this.value.add(secondValue);
         }
         return this;
     }
-    public String getSecondPartVariable(String value){
-        String newValue="";
+
+    private String getSecondPartVariable(String value){
+        String newValue;
         if(isValid(value)){
             return value;
         }
+        int fromIndex =0;
         while(true) {
-            int countSpaces = countSpaces(value);
-            newValue = value.substring(value.indexOf(" ", 0)+1, value.length());
-            if (!isValid(newValue)) {
-                value =value.replaceFirst(" ",  "");
-                String tmp = value;
-            }else{
+            newValue = value.substring(value.indexOf(' ', 0)+fromIndex, value.length());
+            if (isValid(newValue)) {
                 break;
             }
+            fromIndex++;
         }
         return newValue;
     }
 
-    public String getFirstPartVariable(String value){
-        String newValue="";
+
+    private String getFirstPartVariable(String value){
+        String newValue;
         if(isValid(value)){
             return value;
         }
+        int fromIndex =0;
         while(true) {
-            int countSpaces = countSpaces(value);
-            if(countSpaces==0){
-                return value;
-            }
-            newValue = value.substring(0, value.indexOf(" ", 0));
+            newValue = value.substring(0, value.indexOf(' ', fromIndex));
             if(newValue.contains("%")){
                 return newValue;
             }
-            if (!isValid(newValue)) {
-                value =value.replaceFirst(" ",  "");
-                String tmp = value;
-            }else{
+            if (isValid(newValue)) {
                 break;
             }
+            fromIndex++;
         }
         return newValue;
     }
+
     private boolean isValid(String value){
+        String isNumber = "[0-9]+";
+        if(value.matches(isNumber)){
+            return true;
+        }
         for(GameValue gameValue: GameValue.values()){
             if(gameValue.contains(value)){
                 return true;
@@ -97,6 +96,7 @@ public class Value extends OperationValue {
         }
         return false;
     }
+
     private int countSpaces(String value){
         int space = 0;
         for(int i = 0;i<value.length();i++){
