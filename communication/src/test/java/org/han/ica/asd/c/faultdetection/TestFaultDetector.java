@@ -97,23 +97,9 @@ public class TestFaultDetector {
 				.makeFaultDetectorPlayer(nodeInfoList);
 
 		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.canYouReachLeaderMessageReceived(any(),any());
+		faultDetector.canYouReachLeaderMessageReceived(any());
 		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), any());
-
-	}
-
-	@Test
-	void TestICanReachLeaderMessageReceived() {
-
-		doReturn( faultDetectorPlayer )
-				.when( faultDetector )
-				.makeFaultDetectorPlayer(nodeInfoList);
-
-		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.iCanReachLeaderMessageReceived(any());
-		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).iCanReachLeaderMessageReceived(any());
+		verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any());
 
 	}
 
