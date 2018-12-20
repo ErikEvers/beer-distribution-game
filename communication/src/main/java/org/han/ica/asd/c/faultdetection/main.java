@@ -20,6 +20,8 @@ public class main {
 
     public static void startenSpel() {
         connector.addToNodeInfoList("169.254.156.128");
+        connector.addToNodeInfoList("169.254.153.134");
+        connector.addToNodeInfoList("192.168.137.91");
         connector.addToNodeInfoList("192.168.137.91");
 
         connector.setLeader();
