@@ -3,10 +3,11 @@ package org.han.ica.asd.c;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.dao.ProgrammedBusinessRulesDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgent;
-import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRules;
+import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
+import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRulesDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,9 +17,9 @@ import java.util.logging.Logger;
 
 class ProgrammedBusinessRulesDAOIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(ProgrammedBusinessRulesDAOIntegrationTest.class.getName());
-    private static final ProgrammedAgent PROGRAMMED_AGENT = new ProgrammedAgent("name");
-    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES = new ProgrammedBusinessRules("name", "businessrule1", "ast1");
-    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES2 = new ProgrammedBusinessRules("name", "BusinessRule2", "ast2");
+    private static final ProgrammedAgentDB PROGRAMMED_AGENT = new ProgrammedAgentDB("name");
+    private static final ProgrammedBusinessRulesDB PROGRAMMED_BUSINESS_RULES = new ProgrammedBusinessRulesDB("name", "businessrule1", "ast1");
+    private static final ProgrammedBusinessRulesDB PROGRAMMED_BUSINESS_RULES2 = new ProgrammedBusinessRulesDB("name", "BusinessRule2", "ast2");
 
     private ProgrammedBusinessRulesDAO programmedBusinessRulesDAO;
 
@@ -46,7 +47,7 @@ class ProgrammedBusinessRulesDAOIntegrationTest {
         programmedBusinessRulesDAO.createProgrammedbusinessRule(PROGRAMMED_BUSINESS_RULES);
         Assert.assertEquals(1, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
 
-        ProgrammedBusinessRules programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
+        ProgrammedBusinessRulesDB programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
 
         Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAgentName(), programmedBusinessRulesDb.getProgrammedAgentName());
         Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedBusinessRule(), programmedBusinessRulesDb.getProgrammedBusinessRule());
@@ -64,7 +65,7 @@ class ProgrammedBusinessRulesDAOIntegrationTest {
         programmedBusinessRulesDAO.deleteSpecificProgrammedBusinessRule(PROGRAMMED_BUSINESS_RULES);
         Assert.assertEquals(1, programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).size());
 
-        ProgrammedBusinessRules programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
+        ProgrammedBusinessRulesDB programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
 
         Assert.assertEquals(PROGRAMMED_BUSINESS_RULES2.getProgrammedAgentName(), programmedBusinessRulesDb.getProgrammedAgentName());
         Assert.assertEquals(PROGRAMMED_BUSINESS_RULES2.getProgrammedBusinessRule(), programmedBusinessRulesDb.getProgrammedBusinessRule());

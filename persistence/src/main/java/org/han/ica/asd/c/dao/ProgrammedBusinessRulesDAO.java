@@ -1,8 +1,8 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgent;
-import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRules;
+import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
+import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRulesDB;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -34,7 +34,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
      *
      * @param programmedBusinessRules The data required to create a new ProgrammedBusinessRule in the database.
      */
-    public void createProgrammedbusinessRule(ProgrammedBusinessRules programmedBusinessRules) {
+    public void createProgrammedbusinessRule(ProgrammedBusinessRulesDB programmedBusinessRules) {
         executePreparedStatement(programmedBusinessRules, CREATE_PROGRAMMEDBUSINESSRULE);
     }
 
@@ -43,7 +43,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
      *
      * @param programmedBusinessRules The data required to delete a specific ProgrammedBusinessRule from the database.
      */
-    public void deleteSpecificProgrammedBusinessRule(ProgrammedBusinessRules programmedBusinessRules) {
+    public void deleteSpecificProgrammedBusinessRule(ProgrammedBusinessRulesDB programmedBusinessRules) {
         executePreparedStatement(programmedBusinessRules, DELETE_SPECIFIC_PROGRAMMEDBUSINESSRULE);
 
     }
@@ -53,7 +53,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
      *
      * @param programmedAgent The data required to delete all the ProgrammedBusinessRules from a specific ProgrammedAgent.
      */
-    public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(ProgrammedAgent programmedAgent) {
+    public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(ProgrammedAgentDB programmedAgent) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
@@ -80,9 +80,9 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
      * @param programmedAgent The ProgrammedAgent from whom the ProgrammedBusinessRules have to be retrieved.
      * @return A list from all the ProgrammedBusinessRules from the ProgrammedAgent.
      */
-    public List<ProgrammedBusinessRules> readAllProgrammedBusinessRulesFromAProgrammedAgent(ProgrammedAgent programmedAgent) {
+    public List<ProgrammedBusinessRulesDB> readAllProgrammedBusinessRulesFromAProgrammedAgent(ProgrammedAgentDB programmedAgent) {
         Connection conn = databaseConnection.connect();
-        List<ProgrammedBusinessRules> programmedBusinessRules = new ArrayList<>();
+        List<ProgrammedBusinessRulesDB> programmedBusinessRules = new ArrayList<>();
         try {
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
@@ -93,7 +93,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
 
                     try (ResultSet rs = pstmt.executeQuery()) {
                         while (rs.next()) {
-                            programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedAgentName"),
+                            programmedBusinessRules.add(new ProgrammedBusinessRulesDB(rs.getString("ProgrammedAgentName"),
                                     rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
                         }
                     }
@@ -114,7 +114,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
      * @param programmedBusinessRules The data that is required to execute the prepared statement.
      * @param query                   The query that needs to be executed on the database.
      */
-    private void executePreparedStatement(ProgrammedBusinessRules programmedBusinessRules, String query) {
+    private void executePreparedStatement(ProgrammedBusinessRulesDB programmedBusinessRules, String query) {
         Connection conn = null;
         try {
             conn = databaseConnection.connect();
