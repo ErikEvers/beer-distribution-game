@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class ProgrammedBusinessRules {
+public class ProgrammedBusinessRules implements IDomainModel{
     private String programmedAgentName;
     private String programmedBusinessRule;
     private String programmedAST;

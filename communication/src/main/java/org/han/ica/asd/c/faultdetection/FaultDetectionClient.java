@@ -1,12 +1,7 @@
 package org.han.ica.asd.c.faultdetection;
 
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
-import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
-import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
-import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
-import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
-import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
-
+import org.han.ica.asd.c.faultdetection.messagetypes.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

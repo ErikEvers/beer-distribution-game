@@ -12,12 +12,11 @@ import org.han.ica.asd.c.faultdetection.FaultDetectorPlayer;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import org.han.ica.asd.c.observers.IConnectorObserver;
 import org.han.ica.asd.c.socketrpc.SocketServer;
-
 
 import java.util.ArrayList;
 import java.util.List;
