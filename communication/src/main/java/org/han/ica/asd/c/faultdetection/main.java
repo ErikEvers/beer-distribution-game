@@ -8,13 +8,19 @@ public class main {
 
         public static void main(String[] args) {
             connector = Connector.getInstance();
-            //aanmeldenSpel();
-            startenSpel();
+            aanmeldenSpel();
+            //startenSpel();
             while(true){}
         }
 
 
     public static void aanmeldenSpel() {
+
+        connector.addToNodeInfoList("169.254.156.128");
+        connector.addToNodeInfoList("169.254.153.134");
+        connector.addToNodeInfoList("192.168.137.91");
+        connector.addToNodeInfoList("192.168.137.91");
+
         connector.setJoiner();
     }
 
