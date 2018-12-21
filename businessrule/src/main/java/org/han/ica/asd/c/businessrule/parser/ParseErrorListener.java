@@ -18,7 +18,7 @@ public class ParseErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
         if(msg.contains("expecting")){
-            lineChar.put(line,charPositionInLine);
+            lineChar.put(line, charPositionInLine);
         }
         lines.add(line);
     }

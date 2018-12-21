@@ -96,11 +96,7 @@ public class ParserPipeline {
     }
 
     private String findWordInBusinessRule(String businessRule, int beginChar, int endChar){
-        StringBuilder word = new StringBuilder();
-        for (int i = beginChar; i < endChar+1; i++) {
-            word.append(businessRule.charAt(i));
-        }
-        return word.toString();
+        return businessRule.substring(beginChar,endChar+1);
     }
 
     private int findEndErrorWord(String businessRule, int charPosition){
