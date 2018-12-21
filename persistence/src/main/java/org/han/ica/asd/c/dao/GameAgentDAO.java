@@ -108,10 +108,9 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to retrieve all GameAgents from a BeerGame.
      *
-     * @param gameId The identifier of the BeerGame.
      * @return A list of GameAgents from the BeerGame.
      */
-    public List<GameAgent> readGameAgentsForABeerGame(String gameId) {
+    public List<GameAgent> readGameAgentsForABeerGame() {
         Connection conn = null;
         List<GameAgent> gameAgents = new ArrayList<>();
         List<GameBusinessRules> gameBusinessRulesStub = new ArrayList<>();
