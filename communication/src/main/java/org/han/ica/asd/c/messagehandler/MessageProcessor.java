@@ -8,14 +8,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 public class MessageProcessor {
 
-
-
-
-    public MessageProcessor() {
-    }
-
-
-    public NodeInfoList getNodeInfoListFromConnector(){
+    public NodeInfoList getNodeInfoListFromConnector() {
         Connector connector = Connector.getInstance();
         return connector.getIps();
     }
@@ -26,8 +19,7 @@ public class MessageProcessor {
         String leaderIp = nodeInfoList.getLeaderIp();
         if (leaderIp != null) {
             whoIsTheLeaderMessage.setResponse(leaderIp);
-        }
-        else{
+        } else {
             whoIsTheLeaderMessage.setResponse(new LeaderNotPresentException("I dont have a leader at this moment"));
         }
         return whoIsTheLeaderMessage;
