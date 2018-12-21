@@ -45,20 +45,14 @@ CREATE TABLE IF NOT EXISTS  FacilityType (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS  Facility  (
+CREATE TABLE IF NOT EXISTS Facility  (
   FacilityId int NOT NULL,
   GameId varchar(36) NOT NULL,
-  GameAgentName varchar(255) NOT NULL,
-  PlayerId varchar(36) NULL,
   FacilityName varchar(24) NOT NULL,
   CONSTRAINT PK_Facility PRIMARY KEY (GameId, FacilityId),
   CONSTRAINT FK_Facility_Configuration FOREIGN KEY (GameId) REFERENCES  FacilityType(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT FK_Facility_FacilityType FOREIGN KEY (FacilityName) REFERENCES FacilityType(FacilityName)
-  ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT FK_Facility_GameAgent FOREIGN KEY (GameAgentName) REFERENCES GameAgent (GameAgentName)
-  ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT FK_Facility_Player FOREIGN KEY (PlayerId) REFERENCES Player (PlayerId)
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 

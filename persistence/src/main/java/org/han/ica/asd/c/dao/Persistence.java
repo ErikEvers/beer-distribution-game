@@ -28,8 +28,7 @@ public class Persistence implements IPersistence {
 	@Inject
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 
-	@Inject
-	private FacilityTurnDAO facilityTurnDAO;
+
 
 
 	public Persistence(){

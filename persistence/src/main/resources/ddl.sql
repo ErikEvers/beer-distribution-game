@@ -48,8 +48,6 @@ CREATE TABLE IF NOT EXISTS  FacilityType (
 CREATE TABLE IF NOT EXISTS  Facility  (
   FacilityId int NOT NULL,
   GameId varchar(36) NOT NULL,
-  GameAgentName varchar(255) NOT NULL,
-  PlayerId varchar(36) NULL,
   FacilityName varchar(24) NOT NULL,
   CONSTRAINT PK_Facility PRIMARY KEY (GameId, FacilityId),
   CONSTRAINT FK_Facility_Configuration FOREIGN KEY (GameId) REFERENCES  FacilityType(GameId)
