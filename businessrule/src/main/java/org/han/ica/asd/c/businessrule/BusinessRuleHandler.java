@@ -27,11 +27,10 @@ public class BusinessRuleHandler implements IBusinessRules {
         return parserPipeline.getBusinessRulesInput();
     }
 
-    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
         BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
 
-        //TODO: 12/7/2018 Substitute variables in BusinessRule(tree)
-
+        businessRuleAST.substituteTheVariablesOfBusinessruleWithGameData(roundData,facilityId);
         businessRuleAST.evaluateBusinessRule();
 
         if (businessRuleAST.isTriggered()){
