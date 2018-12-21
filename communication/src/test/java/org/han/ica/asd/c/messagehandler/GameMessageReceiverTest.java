@@ -1,35 +1,26 @@
 package org.han.ica.asd.c.messagehandler;
 
-import domainobjects.Election;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
+import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
+import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
-import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import org.han.ica.asd.c.observers.IConnectorObserver;
-import org.han.ica.asd.c.observers.IElectionObserver;
-import org.han.ica.asd.c.observers.IRoundModelObserver;
-import org.han.ica.asd.c.observers.ITurnModelObserver;
-import org.han.ica.asd.c.socketrpc.SocketClient;
+import org.han.ica.asd.c.model.interface_models.ElectionModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,7 +52,7 @@ public class GameMessageReceiverTest {
 
     @Test
     public void electionReceived() {
-        Election election = new Election();
+        ElectionModel election = new ElectionModel();
         ElectionMessage electionMessage = new ElectionMessage(election);
 
         gameMessageReceiver.gameMessageReceived(electionMessage);

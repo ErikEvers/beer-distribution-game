@@ -2,8 +2,7 @@ package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ConfigurationDB;
-
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -15,17 +14,24 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ConfigurationDAO implements IBeerDisitributionGameDAO {
+public class ConfigurationDAO {
 	
 	private static final String CREATE_CONFIGURATION = "INSERT INTO Configuration VALUES (?,?,?,?,?,?,?,?,?,?);";
-	private static final String READ_CONFIGURATION = "SELECT * FROM Configuration WHERE GameId = ?;";
+	private static final String READ_CONFIGURATION = "SELECT AmountOfRounds,AmountOfFactories,AmountOfWholesales,AmountOfDistributors,AmountOfRetailers,MinimalOrderRetail,MaximumOrderRetail,ContinuePlayingWhenBankrupt,InsightFacilities FROM Configuration WHERE GameId = ?;";
 	private static final String READ_CONFIGURATIONS = "SELECT * FROM Configuration;";
 	private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesales = ?, AmountOfDistributors = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?;";
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
-	private static final Logger LOGGER = Logger.getLogger(ConfigurationDB.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
+
+	@Inject
+	private FacilityDAO facilityDAO;
+
+	@Inject
+	private FacilityTypeDAO facilityTypeDAO;
+
 
 	public ConfigurationDAO(){
 		//Empty Constructor for GUICE
@@ -34,7 +40,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * A method which creates a configuration in the SQLite Database
 	 @param configuration A ConfigurationDB Object which needs to be inserted in the SQLite Database
 	 */
-	public void createConfiguration(ConfigurationDB configuration) {
+	public void createConfiguration(Configuration configuration) {
 		Connection conn = null;
 		try {
 			conn = databaseConnection.connect();
@@ -55,8 +61,8 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 		}
 	}
 
-	private void setPreparedStatement(ConfigurationDB configuration, PreparedStatement pstmt) throws SQLException {
-		pstmt.setString(1, configuration.getGameId());
+	private void setPreparedStatement(Configuration configuration, PreparedStatement pstmt) throws SQLException {
+		pstmt.setString(1, DaoConfig.getCurrentGameId());
 		pstmt.setInt(2, configuration.getAmountOfRounds());
 		pstmt.setInt(3, configuration.getAmountOfFactories());
 		pstmt.setInt(4, configuration.getAmountOfWholesales());
@@ -72,16 +78,16 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * A method which reads and returns all configurations
 	 * @return A list of configurations of the found configurations of a specific game
 	 */
-	public List<ConfigurationDB> readConfigurations() {
+	public List<Configuration> readConfigurations() {
 		Connection conn = null;
-		ArrayList<ConfigurationDB> configurations = new ArrayList<>();
+		List<Configuration> configurations = new ArrayList<>();
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATIONS)) {
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							configurations.add(new ConfigurationDB(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
+							configurations.add(new Configuration(rs.getInt("AmountOfRounds"),
 									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
 									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
 									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
@@ -101,17 +107,17 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * @param gameId The Id of a game
 	 * @return A configuration according to the gameId
 	 */
-	public ConfigurationDB readConfiguration(String gameId){
+	public Configuration readConfiguration(){
 		Connection conn;
-		ConfigurationDB configuration = null;
+		Configuration configuration = null;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATION)) {
-					pstmt.setString(1,gameId);
+					pstmt.setString(1,DaoConfig.getCurrentGameId());
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							configuration = new ConfigurationDB(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
+							configuration = new Configuration(rs.getInt("AmountOfRounds"),
 									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
 									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
 									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
@@ -133,7 +139,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * A method which updates a existing configuration
 	 * @param configuration A updated ConfigurationDB Object which is going to be the new configuration
 	 */
-	public void updateConfigurations(ConfigurationDB configuration) {
+	public void updateConfigurations(Configuration configuration) {
 		Connection conn = null;
 		try {
 			conn = databaseConnection.connect();
@@ -149,7 +155,7 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 					pstmt.setInt(7, configuration.getMaximumOrderRetail());
 					pstmt.setBoolean(8, configuration.isContinuePlayingWhenBankrupt());
 					pstmt.setBoolean(9, configuration.isInsightFacilities());
-					pstmt.setString(10, configuration.getGameId());
+					pstmt.setString(10, DaoConfig.getCurrentGameId());
 					pstmt.execute();
 				}
 				conn.commit();
@@ -164,14 +170,14 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * A method which deletes a specific configurations according to a specific gameId
 	 * @param gameId An Id which can be traced to a specific game
 	 */
-	public void deleteConfigurations(String gameId){
+	public void deleteConfigurations(){
 		Connection conn;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_CONFIGURATION)) {
 					conn.setAutoCommit(false);
-					pstmt.setString(1, gameId);
+					pstmt.setString(1, DaoConfig.getCurrentGameId());
 					pstmt.execute();
 				}
 			conn.commit();
