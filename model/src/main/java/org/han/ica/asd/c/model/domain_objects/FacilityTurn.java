@@ -2,11 +2,12 @@ package org.han.ica.asd.c.model.domain_objects;
 
 public class FacilityTurn {
 	private int facilityId;
+	private int roundId;
 	private int stock;
 	private int remainingBudget;
 	private boolean bankrupt;
 
-	public FacilityTurn(int facilityId, int stock, int remainingBudget, boolean bankrupt) {
+	public FacilityTurn(int facilityId, int roundId, int stock, int remainingBudget, boolean bankrupt) {
 		this.facilityId = facilityId;
 		this.stock = stock;
 		this.remainingBudget = remainingBudget;
@@ -43,5 +44,13 @@ public class FacilityTurn {
 
 	public void setBankrupt(boolean bankrupt) {
 		this.bankrupt = bankrupt;
+	}
+
+	public int getRoundId() {
+		return roundId;
+	}
+
+	public void setRoundId(int roundId) {
+		this.roundId = roundId;
 	}
 }

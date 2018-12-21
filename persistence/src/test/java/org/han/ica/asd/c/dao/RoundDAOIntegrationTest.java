@@ -37,7 +37,7 @@ class RoundDAOIntegrationTest {
 		beergameDAO = injector.getInstance(BeergameDAO.class);
 		roundDAO = injector.getInstance(RoundDAO.class);
 		DaoConfig.setCurrentGameId("BeerGameZutphen13_12_2018");
-		facilityTurn = new FacilityTurn(1,1,1,false);
+		facilityTurn = new FacilityTurn(1,1,1,1,false);
 		facilityTurnDeliver = new FacilityTurnDeliver(1,2,0,4);
 		facilityTurnOrder = new FacilityTurnOrder(1,2,50);
 	}

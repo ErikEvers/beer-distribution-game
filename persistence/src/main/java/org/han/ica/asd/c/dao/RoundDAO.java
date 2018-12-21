@@ -168,7 +168,7 @@ public class RoundDAO {
 					pstmt.setInt(2, roundId);
 
 					try (ResultSet rs = pstmt.executeQuery()) {
-						facilities.add(new FacilityTurn(rs.getInt("FacilityId"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
+						facilities.add(new FacilityTurn(rs.getInt("FacilityId"), rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
 
 					}
 				}
