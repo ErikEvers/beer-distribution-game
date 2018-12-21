@@ -145,6 +145,31 @@ CREATE TABLE IF NOT EXISTS GameBusinessRulesInFacilityTurn (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
+CREATE TABLE IF NOT EXISTS FacilityTurnOrder (
+  GameId varchar(36) NOT NULL,
+  RoundId int NOT NULL,
+  FacilityIdOrder int NOT NULL,
+  FacilityId int NOT NULL,
+  OrderAmount int NOT NULL,
+  CONSTRAINT PK_FacilityTurnOrder PRIMARY KEY (GameId, RoundId, FacilityIdOrder, FacilityId),
+  CONSTRAINT FK_FacilityTurnOrder_Facility FOREIGN KEY (FacilityIdOrder) REFERENCES Facility(FacilityId),
+  CONSTRAINT FK_FacilityTurnOrder_FacilityTurn FOREIGN KEY (GameId, RoundId, FacilityId) REFERENCES FacilityTurn(GameId, RoundId, FacilityId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS FacilityTurnDeliver (
+  GameId varchar(36) NOT NULL,
+  RoundId int NOT NULL,
+  FacilityIdDeliver int NOT NULL,
+  FacilityId int NOT NULL,
+  DeliverrAmount int NOT NULL,
+  OpenOrderAmount int NOT NULL,
+  CONSTRAINT PK_FacilityTurnOrder PRIMARY KEY (GameId, RoundId, FacilityIdOrder, FacilityId),
+  CONSTRAINT FK_FacilityTurnOrder_Facility FOREIGN KEY (FacilityIdDeliver) REFERENCES Facility(FacilityId),
+  CONSTRAINT FK_FacilityTurnOrder_FacilityTurn FOREIGN KEY (GameId, RoundId, FacilityId) REFERENCES FacilityTurn(GameId, RoundId, FacilityId)
+  ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
 CREATE TABLE IF NOT EXISTS ProgrammedAgent (
   ProgrammedAgentName varchar(255) NOT NULL,
   CONSTRAINT PK_ProgrammedAgent PRIMARY KEY (ProgrammedAgentName)

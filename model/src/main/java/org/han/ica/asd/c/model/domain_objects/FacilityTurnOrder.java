@@ -5,7 +5,7 @@ public class FacilityTurnOrder {
 	private int facilityIdOrderTo;
 	private int orderAmount;
 
-	public FacilityTurnOrder(int facilityId, int facilityIdOrderTo, int orderAmount, int roundId) {
+	public FacilityTurnOrder(int facilityId, int facilityIdOrderTo, int orderAmount) {
 		this.facilityId = facilityId;
 		this.facilityIdOrderTo = facilityIdOrderTo;
 		this.orderAmount = orderAmount;
