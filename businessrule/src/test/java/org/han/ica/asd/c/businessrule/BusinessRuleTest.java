@@ -166,8 +166,16 @@ class BusinessRuleTest {
     }
 
     @Test
-    void testGame_Value(){
+    void testGameValue_ORDERED_contains_ordered(){
         assertTrue(GameValue.ORDERED.contains("ordered"));
+    }
+
+
+    @Test
+    void testGame_ORDERED_getValue_Equals_ordered(){
+        String[] actual = GameValue.ORDERED.getValue();
+        String[] expected={"ordered"};
+        assertEquals(expected,actual);
     }
 
 }
