@@ -289,6 +289,10 @@ public class BusinessRule extends ASTNode {
                 break;
             }
         }
-        return facility==null?null:facility.getFacilityId();
+        if(facility==null){
+        	return -1;
+        }else {
+        	    return facility.getFacilityId();
+        }
     }
 }
