@@ -1,18 +1,21 @@
 package org.han.ica.asd.c.gui_join_game;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class JoinGameController {
-    private String localIp;
-    private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.gui_join_game.JoinGameController.class.getName());
+    @FXML
+    Button joinGameButton;
 
+    @FXML
+    ListView list;
     @Inject
     @Named("ChooseFacility")
     private IGUIHandler chooseFacility;
@@ -21,27 +24,30 @@ public class JoinGameController {
     @Named("MainMenu")
     private IGUIHandler mainMenu;
 
-    public void initialize(){
-        try {
-            setLocalIp(getLocalIp());
-        } catch (UnknownHostException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+    private ObservableList<String> items = FXCollections.observableArrayList();
+
+    public void initialize() {
+        //TODO connect with IConnectorForSetup getAvailableRooms;
+        list.setItems(items);
+        items.add("hello");
+        items.add("lol");
+    }
+
+    public void handleJoinGameButtonClick() {
+        //TODO Join room on IConnectorForSetup. If logged in succesful then set Room
+
+        if (true) {
+            list.getSelectionModel().getSelectedItem();
+            //chooseFacility.setData(new Object[]{"hello"});
+            chooseFacility.setupScreen();
         }
-    }
-
-    private String getLocalIp() throws UnknownHostException {
-        return InetAddress.getLocalHost().getHostAddress();
-    }
-
-    public void handleJoinGameButtonClick(){
-        chooseFacility.setupScreen();
-    }
-
-    public void setLocalIp(String localIp) {
-        this.localIp = localIp;
     }
 
     public void handleBackToMenuButtonClick() {
         mainMenu.setupScreen();
+    }
+
+    public void handleListClick() {
+        joinGameButton.setVisible(true);
     }
 }

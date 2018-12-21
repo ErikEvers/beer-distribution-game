@@ -5,6 +5,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.model.interface_models.RoomModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -49,5 +50,9 @@ public class ChooseFacilityController {
 
     public void handleBackToMenuButtonClick() {
         mainMenu.setupScreen();
+    }
+
+    public void setGameRoom(RoomModel roomModel){
+        //TODO GET ROOM
     }
 }
