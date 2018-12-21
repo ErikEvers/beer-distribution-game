@@ -2,6 +2,7 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
@@ -61,6 +62,8 @@ public class GameMessageClient {
         new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
     }
 
-
+    public void sendConfigurationToAllPlayers(Configuration configuration) {
+        new SendInTransaction(ips, configuration, socketClient).sendRoundToAllPlayers();
+    }
 
 }

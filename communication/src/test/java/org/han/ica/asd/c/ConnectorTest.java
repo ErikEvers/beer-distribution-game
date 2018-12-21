@@ -74,6 +74,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
         @Test
         public void sendConfigurationTest() {
             connector.sendConfiguration(new Configuration());
-            verify(gameMessageClient).sendConfiguration();
+            verify(gameMessageClient).sendConfigurationToAllPlayers();
         }
 }

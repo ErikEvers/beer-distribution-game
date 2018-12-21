@@ -148,7 +148,7 @@ private static Connector instance = null;
     }
 
     public void sendConfiguration(Configuration configuration) {
-        gameMessageClient.sendConfiguration(configuration);
+        gameMessageClient.sendConfigurationToAllPlayers(configuration);
     }
 
     public void addIP(String text) {

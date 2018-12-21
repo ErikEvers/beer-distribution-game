@@ -11,9 +11,9 @@ import java.util.logging.Logger;
 
 public class SendInTransaction {
 
-    String[] ips;
-    Round roundModel;
-    SocketClient socketClient;
+    private String[] ips;
+    private Round roundModel;
+    private SocketClient socketClient;
 
     private static final Logger LOGGER = Logger.getLogger(SendInTransaction.class.getName());
 
