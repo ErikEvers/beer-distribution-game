@@ -11,6 +11,7 @@ public enum GameValue {
     FACTORY("factory"),
     DISTIRBUTOR("distributor"),
     WHOLESALER("wholesaler"),
+    RETAILER("retailer"),
     BUDGET("budget");
 
     String[] value;

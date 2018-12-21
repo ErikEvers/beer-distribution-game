@@ -181,15 +181,20 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      */
     private void replace(Value value, Round round, int facilityId) {
+
+        if(value.getValue().size()>1) {
+            String secondVariable = value.getSecondPartVariable();
+            String id ;
+            if(checkIfFacility(secondVariable)){
+                id = getReplacementValue(getGameValue(secondVariable),round,facilityId);
+                replaceOnVariable(value,round,facilityId,id);
+            }else if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
+                replaceOnVariable(value,round,facilityId,secondVariable);
+            }
+        }
         String firstVariable = value.getFirstPartVariable();
         if(Pattern.matches(HAS_CHARACTERS,value.getFirstPartVariable())) {
             replaceOnVariable(value,round,facilityId,firstVariable);
-        }
-        if(value.getValue().size()>1) {
-            String secondVariable = value.getSecondPartVariable();
-            if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
-                replaceOnVariable(value,round,facilityId,secondVariable);
-            }
         }
     }
 
@@ -294,5 +299,31 @@ public class BusinessRule extends ASTNode {
         }else {
         	    return facility.getFacilityId();
         }
+    }
+
+    /***
+     * if the variable is a facility then it returns true
+     * @param variable one part of the value
+     * @return the corresponding game value
+     */
+    private boolean checkIfFacility(String variable){
+        for(GameValue gameValue: GameValue.values()){
+            if(gameValue.contains(variable)&&isFacility(gameValue)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /***
+     * checks if the game value is of type facility
+     * @param gameValue
+     * @return
+     */
+    private boolean isFacility(GameValue gameValue){
+        return gameValue==GameValue.FACTORY||
+                gameValue==GameValue.WHOLESALER||
+                gameValue==GameValue.DISTIRBUTOR||
+                gameValue==GameValue.RETAILER;
     }
 }

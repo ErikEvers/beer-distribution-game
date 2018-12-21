@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
+import org.han.ica.asd.c.gamevalue.GameValue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -127,12 +129,43 @@ public class Value extends OperationValue {
      */
     public void replaceValueWithValue(String gameValue) {
         if(hasNotBeenReplaced(value.get(0))) {
+            if(value.size()>1) {
+                if (checkIfFacility(value.get(1))) {
+                    value.remove(value.get(1));
+                    value.set(0, gameValue);
+                    return;
+                }
+            }
             value.set(0, gameValue);
         }else if(hasNotBeenReplaced(value.get(1))){
             value.set(1,gameValue);
         }
     }
+    /***
+     * if the variable is a facility then it returns true
+     * @param variable one part of the value
+     * @return the corresponding game value
+     */
+    private boolean checkIfFacility(String variable){
+        for(GameValue gameValue: GameValue.values()){
+            if(gameValue.contains(variable)&&isFacility(gameValue)){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    /***
+     * checks if the game value is of type facility
+     * @param gameValue
+     * @return
+     */
+    private boolean isFacility(GameValue gameValue){
+        return gameValue==GameValue.FACTORY||
+                gameValue==GameValue.WHOLESALER||
+                gameValue==GameValue.DISTIRBUTOR||
+                gameValue==GameValue.RETAILER;
+    }
     /**
      * checks if the value has not been replaced with just a number
      * @param value the value
