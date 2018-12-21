@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import java.util.LinkedList;

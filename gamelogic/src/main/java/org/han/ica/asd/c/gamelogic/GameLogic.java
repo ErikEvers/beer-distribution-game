@@ -1,10 +1,13 @@
 package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.gamelogic.public_interfaces.*;
-import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
+import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -35,7 +38,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      */
     @Override
     public void placeOrder(Round turn) {
-        persistence.saveTurnData(turn);
+        persistence.saveRoundData(turn);
         communication.sendTurnData(turn);
     }
 
@@ -63,6 +66,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     @Override
     public void letPlayerTakeOverAgent() {
         participantsPool.replaceAgentWithPlayer();
+    }
+
+    @Override
+    public Round calculateRound(Round round) {
+        return null;
     }
 
     /**

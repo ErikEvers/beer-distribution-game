@@ -10,25 +10,13 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> d79b92886e9992e26dfa4c885246344202a1c331
-=======
->>>>>>> 225e76595cfb33fe6652ec46e9c1bdc72c67eb1a
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>communication</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 225e76595cfb33fe6652ec46e9c1bdc72c67eb1a
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>communication</artifactId>
@@ -44,12 +32,16 @@
             <artifactId>communication</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-<<<<<<< HEAD
-        >>>>>>> origin/team1
-=======
->>>>>>> d79b92886e9992e26dfa4c885246344202a1c331
-=======
->>>>>>> 225e76595cfb33fe6652ec46e9c1bdc72c67eb1a
+        <dependency>
+            <groupId>org.han.ica.asd.c</groupId>
+            <artifactId>interfaces</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.han.ica.asd.c</groupId>
+            <artifactId>interfaces</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <parent>

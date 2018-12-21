@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.faultdetection;
 
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

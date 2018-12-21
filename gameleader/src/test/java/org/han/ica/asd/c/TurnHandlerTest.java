@@ -5,7 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gameleader.TurnHandler;
-import org.han.ica.asd.c.gameleader.componentInterfaces.IPersistence;
+import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
@@ -27,25 +27,24 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class TurnHandlerTest {
+    @Mock
+    private Map<Facility, Integer> turnOrderTestInteger;
+
+    @Mock
+    private Map<Facility, Map<Facility, Integer>> turnOrderFacility;
+
+    @Mock
+    private Facility facility;
+
     private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
 
     private IPersistence persistenceLayer;
 
     private TurnHandler turnHandler;
 
-    private Round facilityTurnModel;
-
     private Method m;
 
     private Object[] parameters;
-
-    @Mock
-    private Map<Facility, Integer> turnOrderTestInteger;
-    @Mock
-    private Map<Facility, Map<Facility, Integer>> turnOrderFacility;
-
-    @Mock
-    private Facility facility;
 
     @BeforeEach
     void onSetUp() {
@@ -64,7 +63,6 @@ class TurnHandlerTest {
 
         try {
             Class[] parameterTypes;
-            facilityTurnModel = new Round();
             parameterTypes = new Class[2];
             parameterTypes[0] = Round.class;
             parameterTypes[1] = Round.class;
@@ -80,7 +78,7 @@ class TurnHandlerTest {
     }
 
     @Test
-    void testDoValidate_OrderAmountIsZero_ReturnTrue() {
+    void testDoValidate_GetInstanceOfAndVerify() {
         turnOrderTestInteger.put(facility, 1);
         turnOrderFacility.put(facility, turnOrderTestInteger);
 
@@ -96,7 +94,6 @@ class TurnHandlerTest {
         round.setTurnStock(turnOrderTestInteger);
 
         try {
-            //assertTrue((Boolean) m.invoke(turnHandler, parameters));
             Assert.assertThat(m.invoke(turnHandler, parameters), instanceOf(Round.class));
 
             Round roundTest = (Round) m.invoke(turnHandler, parameters);

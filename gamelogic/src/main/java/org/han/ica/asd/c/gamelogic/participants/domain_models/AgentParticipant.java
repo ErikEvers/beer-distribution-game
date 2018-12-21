@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.gamelogic.participants.domain_models;
 
-import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.domain_objects.Facility;
