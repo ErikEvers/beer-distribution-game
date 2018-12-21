@@ -40,7 +40,7 @@ public class JoinGameController {
     public void setLocalIp(String localIp) {
         this.localIp = localIp;
     }
-    
+
     public void handleBackToMenuButtonClick() {
         mainMenu.setupScreen();
     }
