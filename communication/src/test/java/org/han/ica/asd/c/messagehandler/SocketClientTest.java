@@ -1,4 +1,4 @@
-package communicationcomponent.messagehandler;
+package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
