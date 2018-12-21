@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
+import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
@@ -77,7 +78,8 @@ public class GameMessageClient {
      * @param roundModel
      */
     public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
-        new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
+        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
+        new SendInTransaction(ips, roundModelMessage, socketClient).sendRoundToAllPlayers();
     }
 
 
