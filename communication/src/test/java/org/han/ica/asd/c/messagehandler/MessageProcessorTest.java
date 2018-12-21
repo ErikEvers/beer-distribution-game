@@ -17,10 +17,6 @@ public class MessageProcessorTest {
 
     private NodeInfoList nodeInfoList = mock(NodeInfoList.class);
 
-    @BeforeEach
-    void setup(){
-    }
-
     @Test
     @DisplayName("Test response is set to leaderIp when leaderIp is not null")
     void whoIsTheLeaderMessageReceivedTestResponseHappyFlow(){

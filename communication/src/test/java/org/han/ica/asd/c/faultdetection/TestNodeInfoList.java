@@ -61,7 +61,6 @@ public class TestNodeInfoList {
         nodeInfo2.setIp(testIp2);
         nodeInfo2.setConnected(false);
 
-
         nodeInfoList.add(nodeInfo1);
         nodeInfoList.add(nodeInfo2);
 
@@ -177,7 +176,6 @@ public class TestNodeInfoList {
         nodeInfoList.add(nodeInfo);
 
         assertNull(nodeInfoList.getLeaderIp());
-
     }
 
     @Test
