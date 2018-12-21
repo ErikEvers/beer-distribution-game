@@ -1,20 +1,23 @@
 package org.han.ica.asd.c.gui_replay_game.replay_data;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import org.han.ica.asd.c.gui_replay_game.replay_data.fakes.FacilityTurnFake;
+import org.han.ica.asd.c.gui_replay_game.replay_data.fakes.RoundFake;
+import org.han.ica.asd.c.gui_replay_game.replay_data.fakes.RoundsFake;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReplayData {
     private static final int LOWEST_ROUND_POSSIBLE = 0;
     private static final int FIRST_ROUND_TO_DISPLAY = 1;
-    private ArrayList<RoundsStub> rounds;
-    private ArrayList<Facility> displayedFacilities;
+    private List<RoundFake> rounds;
+    private List<Facility> displayedFacilities;
     private int currentRound;
     private int totalRounds;
 
@@ -25,16 +28,12 @@ public class ReplayData {
         displayedFacilities.add(getAllFacilities().get(2));
         displayedFacilities.add(getAllFacilities().get(3));
 
-        rounds = new ArrayList<>();
-        rounds.add(new RoundsStub(displayedFacilities.get(0)));
-        rounds.add(new RoundsStub(displayedFacilities.get(1)));
-        rounds.add(new RoundsStub(displayedFacilities.get(2)));
-        rounds.add(new RoundsStub(displayedFacilities.get(3)));
+        RoundsFake roundsFake = new RoundsFake();
+        rounds = roundsFake.getRounds();
 
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
-        //totalRounds = rounds.size();
-        totalRounds = 5;
+        totalRounds = rounds.size()-1;
     }
 
     public int getTotalRounds() {
@@ -108,15 +107,14 @@ public class ReplayData {
             LineChart.Series<Double, Double> series = new LineChart.Series<>();
             series.setName(facility.getFacilityType().getFacilityName() + " " + facility.getFacilityId());
 
-            //get rounds van deze facility uit rounds
-            for (RoundsStub roundsStub : rounds) {
-                if (roundsStub.getFacility().getFacilityId() == facility.getFacilityId()) {
-
-                    for (int i = 0; i <= currentRound; i++) {
-                        series.getData().add(new XYChart.Data<>((double) i, (double) roundsStub.getRounds().get(i).getBudget()));
+            for (int i = 0; i <= currentRound; i++) {
+                for (FacilityTurnFake facilityTurnFake : rounds.get(i).getFacilityTurns()){
+                    if (facilityTurnFake.getFacilityId() == facility.getFacilityId()){
+                        series.getData().add(new XYChart.Data<>((double) i, (double) facilityTurnFake.getRemainingBudget()));
                     }
                 }
             }
+
 
             lineChartData.add(series);
         }
