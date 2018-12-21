@@ -177,7 +177,7 @@ public class GameLeaderTest {
         when(con.getFacilities()).thenReturn(facilities);
         when(facilities.get(0).getPlayer()).thenReturn(player);
         when(facilities.get(1).getPlayer()).thenReturn(player);
-        when(facilities.get(2).getPlayer()).thenReturn(player);
+        //when(facilities.get(2).getPlayer()).thenReturn(player);
         when(player.getPlayerId()).thenReturn("b");
 
         GameAgent gameAgent = mock(GameAgent.class);

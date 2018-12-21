@@ -21,8 +21,8 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     @Inject private IPersistence persistence;
     @Inject private TurnHandler turnHandler;
 
-    private  Provider<BeerGame> beerGameProvider;
-    private  Provider<Round> roundProvider;
+    private final Provider<BeerGame> beerGameProvider;
+    private final Provider<Round> roundProvider;
 
     private BeerGame game;
 
