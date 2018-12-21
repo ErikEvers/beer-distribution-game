@@ -20,11 +20,12 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="262.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="262.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="568.0" minHeight="10.0" prefHeight="132.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="504.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="414.0" minHeight="10.0" prefHeight="156.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="134.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="148.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="504.0" minHeight="10.0" prefHeight="147.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="414.0" minHeight="10.0" prefHeight="141.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="136.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label prefHeight="104.0" prefWidth="102.0" text="The beer distribution game" wrapText="true" GridPane.halignment="LEFT" GridPane.valignment="TOP">

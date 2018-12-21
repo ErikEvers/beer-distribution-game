@@ -3,6 +3,8 @@ package org.han.ica.asd.c.gui_main_menu;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+
+import javafx.scene.control.Button;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import javax.inject.Inject;
@@ -22,6 +24,10 @@ public class MainMenuController {
     @Named("ReplayGameList")
     private IGUIHandler replayGameList;
 
+    @Inject
+    @Named("JoinGame")
+    private IGUIHandler joinGame;
+
     public void initialize() {
 
     }
@@ -40,4 +46,9 @@ public class MainMenuController {
     private void replayButtonAction() {
          replayGameList.setupScreen();
     }
+
+    public void handleJoinGameButtonClick(){
+        joinGame.setupScreen();
+    }
+
 }
