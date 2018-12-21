@@ -108,6 +108,7 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
         return programmedBusinessRules;
     }
 
+
     /**
      * A method to execute the prepared statement with all the required data to create or delete a specific ProgrammedBusinessRule.
      *

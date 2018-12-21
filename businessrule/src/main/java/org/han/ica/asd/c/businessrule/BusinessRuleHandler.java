@@ -12,9 +12,6 @@ import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
-//    @Inject
-//    private IBusinessRuleStore businessRuleStore;
-
     /**
      * Parses the business rules and sends it to the persistence component
      *
@@ -27,15 +24,13 @@ public class BusinessRuleHandler implements IBusinessRules {
             return parserPipeline.getBusinessRulesInput();
         }
 
-//        businessRuleStore.synchronizeBusinessRules(agentName, parserPipeline.getBusinessRulesMap());
-
         return parserPipeline.getBusinessRulesInput();
     }
 
     public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
         BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
 
-        // TO-DO: 12/7/2018 Substitute variables in BusinessRule(tree)
+        //TODO: 12/7/2018 Substitute variables in BusinessRule(tree)
 
         businessRuleAST.evaluateBusinessRule();
 
@@ -46,7 +41,6 @@ public class BusinessRuleHandler implements IBusinessRules {
                     action.getAmount(),
                     action.getFacilityId());
         }
-
         return null;
     }
 }

@@ -159,21 +159,22 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         ArrayList<FacilityTypeDB> types = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
-            if (conn != null) {
-                conn.setAutoCommit(false);
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
-                    pstmt.setString(1, gameId);
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            types.add(new FacilityTypeDB(gameId,
-                                    rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
-                                    rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
-                                    rs.getInt("StartingBudget"), rs.getInt("StartingOrder")));
-                        }
-                    }
-                    conn.commit();
-                }
-            }
+            if (conn == null) {
+            	return types;
+						}
+						conn.setAutoCommit(false);
+						try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
+								pstmt.setString(1, gameId);
+								try (ResultSet rs = pstmt.executeQuery()) {
+										while (rs.next()) {
+												types.add(new FacilityTypeDB(gameId,
+																rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
+																rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
+																rs.getInt("StartingBudget"), rs.getInt("StartingOrder")));
+										}
+								}
+								conn.commit();
+						}
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -185,21 +186,22 @@ public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
         FacilityTypeDB type = null;
         try {
             conn = databaseConnection.connect();
-            if (conn != null) {
-                conn.setAutoCommit(false);
+            if (conn == null) {
+            	return type;
+						}
+						conn.setAutoCommit(false);
 
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
-                    pstmt.setString(1, gameId);
-                    pstmt.setString(2, facilityName);
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        type = new FacilityTypeDB(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
-                                rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
-                                rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
-                                rs.getInt("StartingOrder"));
-                    }
-                }
-                conn.commit();
-            }
+						try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
+								pstmt.setString(1, gameId);
+								pstmt.setString(2, facilityName);
+								try (ResultSet rs = pstmt.executeQuery()) {
+										type = new FacilityTypeDB(facilityName, gameId, rs.getInt("ValueIncomingGoods"),
+														rs.getInt("ValueOutgoingGoods"), rs.getInt("StockholdingCosts"),
+														rs.getInt("OpenOrderCosts"), rs.getInt("StartingBudget"),
+														rs.getInt("StartingOrder"));
+								}
+						}
+						conn.commit();
 
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
