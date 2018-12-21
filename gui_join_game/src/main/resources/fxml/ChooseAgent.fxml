@@ -21,14 +21,14 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onAction="#handleBackToMenuButtonClick" style="-fx-background-color: #ffa31a;" text="%back_to_menu" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%skip" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Button onAction="#handleChooseAgentButtonClick" mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%choose_existing_agent" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Button mnemonicParsing="false" onAction="#handleBackToMenuButtonClick" style="-fx-background-color: #ff8000;" text="%back_to_menu" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="%skip" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleChooseAgentButtonClick" style="-fx-background-color: #ff8000;" text="%choose_existing_agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="40.0" />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%new_agent" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="%new_agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="40.0" />
                </GridPane.margin>

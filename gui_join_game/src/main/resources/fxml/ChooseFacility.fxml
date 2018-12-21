@@ -32,8 +32,8 @@
                      <Font name="System Bold" size="30.0" />
                  </font>
              </Label>
-            <Button onAction="#handleBackToMenuButtonClick" mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%back_to_menu" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Button onAction="#handleChooseFacilityButtonClick" mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%choose_facility" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleBackToMenuButtonClick" style="-fx-background-color: #ff8000;" text="%back_to_menu" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleChooseFacilityButtonClick" style="-fx-background-color: #ff8000;" text="%choose_facility" textFill="WHITE" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <RadioButton fx:id="factory" mnemonicParsing="false" text="%factory" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP" />
             <RadioButton fx:id="regionalWarehouse" mnemonicParsing="false" text="%regional_warehouse" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
