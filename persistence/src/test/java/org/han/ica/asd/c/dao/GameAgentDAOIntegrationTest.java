@@ -72,17 +72,17 @@ class GameAgentDAOIntegrationTest {
         Assert.assertEquals(GAMEAGENT2.getGameBusinessRules().size(),gameAgentDb.getGameBusinessRules().size());
     }
 
-//    @Test
-//    void deleteAllGameagentsInABeergame() {
-//        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
-//        gameAgentDAO.createGameAgent(GAMEAGENT);
-//        gameAgentDAO.createGameAgent(GAMEAGENT2);
-//        Assert.assertEquals(2,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
-//
-//        gameAgentDAO.deleteAllGameagentsInABeergame(GAME_ID);
-//        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
-//    }
-//
+    @Test
+    void deleteAllGameagentsInABeergame() {
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame().size());
+        gameAgentDAO.createGameAgent(GAMEAGENT);
+        gameAgentDAO.createGameAgent(GAMEAGENT2);
+        Assert.assertEquals(2,gameAgentDAO.readGameAgentsForABeerGame().size());
+
+        gameAgentDAO.deleteAllGameagentsInABeergame();
+        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame().size());
+    }
+
 //    @Test
 //    void updateGameagent() {
 //        Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame(GAME_ID).size());
