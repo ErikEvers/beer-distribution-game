@@ -188,7 +188,7 @@ public class TestFailLog {
 
         when(nodeInfoList.getActiveIps()).thenReturn(mockList);
 
-        assertEquals(3, failLog.getSuccesSize());
+        assertEquals(3, failLog.getSuccessSize());
 
     }
 
@@ -206,7 +206,7 @@ public class TestFailLog {
 
         when(nodeInfoList.getActiveIps()).thenReturn(mockList);
 
-        assertEquals(2, failLog.getSuccesSize());
+        assertEquals(2, failLog.getSuccessSize());
 
     }
 
@@ -230,7 +230,7 @@ public class TestFailLog {
 
         when(nodeInfoList.getActiveIps()).thenReturn(mockList);
 
-        assertEquals(1, failLog.getSuccesSize());
+        assertEquals(1, failLog.getSuccessSize());
 
     }
 

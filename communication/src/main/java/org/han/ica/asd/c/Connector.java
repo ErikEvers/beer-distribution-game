@@ -6,9 +6,7 @@ import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
-import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
-import org.han.ica.asd.c.faultdetection.FaultDetectorPlayer;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
@@ -18,6 +16,7 @@ import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,21 +26,41 @@ import java.util.logging.Logger;
 public class Connector{
 private static Connector instance = null;
     private ArrayList<IConnectorObserver> observers;
+
+    @Inject
     private NodeInfoList nodeInfoList;
+
+    @Inject
     private FaultDetector faultDetector;
-    private IFinder finder;
+
+    @Inject
     private GameMessageClient gameMessageClient;
 
-    private static final Logger LOGGER = Logger.getLogger(Connector.class.getName());
+    @Inject
+    private static Logger logger;
+
+    @Inject
+    private SocketServer socketServer;
+
+    @Inject
+    private MessageDirector messageDirector;
+
+    @Inject
+    private GameMessageReceiver gameMessageReceiver;
+
+    private IFinder finder;
 
     public Connector() {
         observers = new ArrayList<>();
-        nodeInfoList = new NodeInfoList();
         finder = new RoomFinder();
-        gameMessageClient = new GameMessageClient();
-        faultDetector = new FaultDetector(observers);
 
-        SocketServer socketServer = new SocketServer(new MessageDirector(new GameMessageReceiver(observers), faultDetector.getFaultDetectionMessageReceiver()));
+        faultDetector.setObservers(observers);
+        gameMessageReceiver.setObservers(observers);
+
+        messageDirector.setGameMessageReceiver(gameMessageReceiver);
+        messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
+
+        socketServer.setServerObserver(messageDirector);
         socketServer.startThread();
     }
 
@@ -53,7 +72,16 @@ private static Connector instance = null;
         this.gameMessageClient = gameMessageClient;
         this.faultDetector = faultDetector;
 
-        SocketServer socketServer = new SocketServer(new MessageDirector(new GameMessageReceiver(observers), faultDetector.getFaultDetectionMessageReceiver()));
+        faultDetector.setObservers(observers);
+
+        GameMessageReceiver gameMessageReceiver1 = new GameMessageReceiver();
+        gameMessageReceiver1.setObservers(observers);
+
+        MessageDirector messageDirector1 = new MessageDirector();
+        messageDirector1.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
+        messageDirector1.setGameMessageReceiver(gameMessageReceiver1);
+
+        socketServer.setServerObserver(messageDirector1);
         socketServer.startThread();
     }
 
@@ -75,7 +103,7 @@ private static Connector instance = null;
             nodeInfoList.add(new NodeInfo(ip, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            logger.log(Level.INFO, e.getMessage());
         }
         return null;
     }
@@ -86,7 +114,7 @@ private static Connector instance = null;
             addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
             return joinedRoom;
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            logger.log(Level.INFO, e.getMessage());
         }
         return null;
     }
@@ -98,7 +126,7 @@ private static Connector instance = null;
             }
             room.closeGameAndStartGame();
         } catch (RoomException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            logger.log(Level.INFO, e.getMessage());
         }
     }
 
@@ -120,7 +148,7 @@ private static Connector instance = null;
             new FaultDetectionClient().makeConnection(destinationIP);
             return true;
         } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
         return false;
     }

@@ -47,7 +47,8 @@ public class GameMessageReceiverTest {
         observers.add(turnModelObserver);
         observers.add(electionObserver);
 
-        gameMessageReceiver = new GameMessageReceiver(observers);
+        gameMessageReceiver = new GameMessageReceiver();
+        gameMessageReceiver.setObservers(observers);
     }
 
     @Test

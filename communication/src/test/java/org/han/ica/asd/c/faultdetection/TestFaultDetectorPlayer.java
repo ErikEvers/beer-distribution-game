@@ -29,7 +29,8 @@ class TestFaultDetectorPlayer {
         faultHandlerPlayer = mock(FaultHandlerPlayer.class);
         faultDetectionClient = mock(FaultDetectionClient.class);
 
-        faultDetectorPlayer = new FaultDetectorPlayer(nodeInfoList);
+        faultDetectorPlayer = new FaultDetectorPlayer();
+        faultDetectorPlayer.setNodeInfoList(nodeInfoList);
 
         faultDetectorPlayer.setFaultDetectionClient(faultDetectionClient);
         faultDetectorPlayer.setFaultHandlerPlayer(faultHandlerPlayer);

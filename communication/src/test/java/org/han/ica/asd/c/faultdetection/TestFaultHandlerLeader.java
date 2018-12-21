@@ -23,7 +23,9 @@ public class TestFaultHandlerLeader {
 
 	@BeforeEach
 	void setUp(){
-		faultHandlerLeader = new FaultHandlerLeader(nodeInfoList, observers);
+		faultHandlerLeader = new FaultHandlerLeader();
+		faultHandlerLeader.setNodeInfoList(nodeInfoList);
+		faultHandlerLeader.setObservers(observers);
 	}
 
 	@Test

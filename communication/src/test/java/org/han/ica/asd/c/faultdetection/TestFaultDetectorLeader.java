@@ -38,8 +38,9 @@ public class TestFaultDetectorLeader {
         nodeInfoList = mock(NodeInfoList.class);
         observers = mock(ArrayList.class);
 
-
-        faultDetectorLeader = new FaultDetectorLeader(nodeInfoList, observers);
+        faultDetectorLeader = new FaultDetectorLeader();
+        faultDetectorLeader.setNodeInfoList(nodeInfoList);
+        faultDetectorLeader.setObservers(observers);
     }
 
     @Test
@@ -48,12 +49,15 @@ public class TestFaultDetectorLeader {
 
         Timer toTest = mock(Timer.class);
 
-        FaultDetectorLeader faultDetectorLeader = new FaultDetectorLeader(nodeInfoList, observers) {
+        FaultDetectorLeader faultDetectorLeader = new FaultDetectorLeader() {
 
             public Timer createTimer(Boolean isDeamon) {
                 return toTest;
             }
         };
+
+        faultDetectorLeader.setObservers(observers);
+        faultDetectorLeader.setNodeInfoList(nodeInfoList);
 
 
         faultDetectorLeader.start();
@@ -72,7 +76,7 @@ public class TestFaultDetectorLeader {
             }
         };
 
-        faultDetectorLeader = new FaultDetectorLeader(nodeInfoList, observers) {
+        faultDetectorLeader = new FaultDetectorLeader() {
             @Override
             public void sendFaultMessagesToActivePlayers(List<String> ips) {
                 //do nothing
@@ -83,6 +87,9 @@ public class TestFaultDetectorLeader {
                 //do nothing
             }
         };
+
+        faultDetectorLeader.setNodeInfoList(nodeInfoList);
+        faultDetectorLeader.setObservers(observers);
 
         faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setFaultDetectionClient(faultDetectionClientMock);
@@ -124,7 +131,7 @@ public class TestFaultDetectorLeader {
             }
         };
 
-        faultDetectorLeader = new FaultDetectorLeader(nodeInfoList, observers) {
+        faultDetectorLeader = new FaultDetectorLeader() {
             @Override
             public void sendFaultMessagesToActivePlayers(List<String> ips) {
                 //do nothing
@@ -135,6 +142,9 @@ public class TestFaultDetectorLeader {
                 //do nothing
             }
         };
+
+        faultDetectorLeader.setObservers(observers);
+        faultDetectorLeader.setNodeInfoList(nodeInfoList);
 
         faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setFaultDetectionClient(faultDetectionClientMock);
@@ -243,7 +253,7 @@ public class TestFaultDetectorLeader {
         faultDetectorLeader.setTimer(timer);
         faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
 
-        when(failLog.getSuccesSize()).thenReturn(0);
+        when(failLog.getSuccessSize()).thenReturn(0);
 
         faultDetectorLeader.checkIfThisMachineIsDisconnected();
 

@@ -25,7 +25,8 @@ public class TestFaultDetector {
 
 	@BeforeEach
 	void setUp() {
-		faultDetector = spy(new FaultDetector(observers));
+		faultDetector = spy(new FaultDetector());
+		faultDetector.setObservers(observers);
 	}
 
 	@Test

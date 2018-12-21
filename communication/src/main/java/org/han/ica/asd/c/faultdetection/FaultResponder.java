@@ -4,11 +4,13 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 
+import javax.inject.Inject;
+
 class FaultResponder {
+	@Inject
 	private FaultDetectionClient faultDetectionClient;
 
 	FaultResponder() {
-		faultDetectionClient = new FaultDetectionClient();
 	}
 
 	public void faultMessageReceived(FaultMessage faultMessage, String senderIp) {

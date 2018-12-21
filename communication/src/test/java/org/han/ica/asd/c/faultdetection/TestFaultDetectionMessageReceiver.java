@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
+
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
@@ -21,7 +22,8 @@ public class TestFaultDetectionMessageReceiver {
 
 	@BeforeEach
 	void setUp(){
-		faultDetectionMessageReceiver = new FaultDetectionMessageReceiver(faultDetector);
+		faultDetectionMessageReceiver = new FaultDetectionMessageReceiver();
+		faultDetectionMessageReceiver.setFaultDetector(faultDetector);
 	}
 
 	@Test

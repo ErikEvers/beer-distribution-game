@@ -13,21 +13,20 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameMessageReceiver {
-
-    private static RoundModelMessage toBecommittedRound;
+    @Inject
     private GameMessageFilterer gameMessageFilterer;
 
-    private ArrayList<IConnectorObserver> gameMessageObservers;
-
+    @Inject
     private MessageProcessor messageProcessor;
 
-    public GameMessageReceiver(List<IConnectorObserver> gameMessageObservers) {
-        this.gameMessageObservers = (ArrayList<IConnectorObserver>) gameMessageObservers;
-        gameMessageFilterer = new GameMessageFilterer();
+    private ArrayList<IConnectorObserver> gameMessageObservers;
+    private static RoundModelMessage toBeCommittedRound;
+
+    public GameMessageReceiver() {
         messageProcessor = new MessageProcessor();
     }
 
@@ -53,7 +52,7 @@ public class GameMessageReceiver {
         switch (roundModelMessage.getCommitStage()) {
             case 0:
                 //stage Commit
-                toBecommittedRound = roundModelMessage;
+                toBeCommittedRound = roundModelMessage;
                 break;
             case 1:
                 //do commit
@@ -61,7 +60,7 @@ public class GameMessageReceiver {
                 break;
             case -1:
                 //rollback
-                toBecommittedRound = null;
+                toBeCommittedRound = null;
                 break;
             default:
                 break;
@@ -70,11 +69,12 @@ public class GameMessageReceiver {
 
     /**
      * Executes a commit
+     *
      * @param roundModelMessage
      */
     private void doCommit(RoundModelMessage roundModelMessage) {
         //in theory, a bug can still occur where we receive a commit message with a different content.
-        if (toBecommittedRound != null) {
+        if (toBeCommittedRound != null) {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IRoundModelObserver) {
                     ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
@@ -116,9 +116,10 @@ public class GameMessageReceiver {
 
     /**
      * Calls the whoIsTheLeaderMessageReceived method on the 'MessageProcessor".
-     * @author Oscar
+     *
      * @param whoIsTheLeaderMessage The 'WhoIsTheLeaderMessage' that was received.
      * @return whoIsTheLeaderMessage with the response filled in. This is either the response that was excepted or an exception.
+     * @author Oscar
      * @see WhoIsTheLeaderMessage
      * @see MessageProcessor
      */
@@ -139,5 +140,9 @@ public class GameMessageReceiver {
             }
         }
         return null;
+    }
+
+    public void setObservers(ArrayList<IConnectorObserver> observers) {
+        this.gameMessageObservers = observers;
     }
 }

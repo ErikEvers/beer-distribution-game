@@ -3,24 +3,26 @@ package org.han.ica.asd.c.faultdetection;
 
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FailLog {
-    //TODO make the nodeinfolist the same over every class
-
-    private NodeInfoList nodeInfoList;
     private HashMap<String, Integer> failLogHashMap;
-    private int succesSize;
+    private int successSize;
 
-    private static final Logger LOGGER = Logger.getLogger(FailLog.class.getName());
+    @Inject
+    private static Logger logger;
+
+    @Inject
+    NodeInfoList nodeInfoList;
 
     FailLog(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
         failLogHashMap = new HashMap<>();
-        succesSize = 0;
+        successSize = 0;
     }
 
     HashMap<String, Integer> getFailLogHashMap() {
@@ -28,12 +30,11 @@ public class FailLog {
     }
 
     void increment(String ip) {
-        //Increments the amount of fails for an Ip
         //TODO remove println when done
         putIpInListIfNotAlready(ip);
         failLogHashMap.put(ip, failLogHashMap.get(ip) + 1);
 
-        LOGGER.log(Level.INFO,"deze wordt geincrement : {0} met als waarde : {1}", new Object[] {ip, failLogHashMap.get(ip)});
+        logger.log(Level.INFO, "deze wordt geincrement : {0} met als waarde : {1}", new Object[]{ip, failLogHashMap.get(ip)});
     }
 
     public void reset(String ip) {
@@ -57,17 +58,17 @@ public class FailLog {
         } else return failLogHashMap.get(ip) == 0;
     }
 
-    int getSuccesSize() {
+    int getSuccessSize() {
         //Returns the amount of successfully reached nodes.
         List<String> list = nodeInfoList.getActiveIps();
-        succesSize = list.size();
+        successSize = list.size();
 
         for (String ip : list) {
             if (checkIfIpIsFailed(ip)) {
-                succesSize--;
+                successSize--;
             }
         }
-        return succesSize;
+        return successSize;
     }
 
     private void putIpInListIfNotAlready(String ip) {
@@ -82,5 +83,12 @@ public class FailLog {
         failLogHashMap.put(ip, 0);
     }
 
-
+    /**
+     * Sets new nodeInfoList.
+     *
+     * @param nodeInfoList New value of nodeInfoList.
+     */
+    public void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
+    }
 }

@@ -7,6 +7,7 @@ import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,9 +15,16 @@ import java.util.TimerTask;
 public class FaultDetectorPlayer extends TimerTask {
     private long lastReceived;
     private boolean leaderIsPinging;
+
+    @Inject
     private FaultDetectionClient faultDetectionClient;
+
+    @Inject
     private FaultHandlerPlayer faultHandlerPlayer;
+
+    @Inject
     private NodeInfoList nodeInfoList;
+
     private Timer timer;
 
     boolean getLeaderIsPinging() {
@@ -27,13 +35,8 @@ public class FaultDetectorPlayer extends TimerTask {
         return lastReceived;
     }
 
-    FaultDetectorPlayer(NodeInfoList nodeInfoList) {
-        this.nodeInfoList = nodeInfoList;
+    FaultDetectorPlayer() {
         this.lastReceived = System.currentTimeMillis();
-
-        faultHandlerPlayer = new FaultHandlerPlayer();
-        faultDetectionClient = new FaultDetectionClient();
-
         leaderIsPinging = true;
     }
 
@@ -88,7 +91,6 @@ public class FaultDetectorPlayer extends TimerTask {
 
     public void pingMessageReceived(PingMessage pingMessage) {
         lastReceived = System.currentTimeMillis();
-
         leaderIsPinging = true;
     }
 
@@ -102,8 +104,6 @@ public class FaultDetectorPlayer extends TimerTask {
 
         faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();
     }
-
-    // public void rejoinAcceptedMessageReceived(){set lastreceived set true}?
 
     void setFaultDetectionClient(FaultDetectionClient faultDetectionClient) {
         this.faultDetectionClient = faultDetectionClient;
@@ -119,5 +119,9 @@ public class FaultDetectorPlayer extends TimerTask {
 
     void setLeaderIsPinging(boolean leaderIsPinging) {
         this.leaderIsPinging = leaderIsPinging;
+    }
+
+    public void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
     }
 }

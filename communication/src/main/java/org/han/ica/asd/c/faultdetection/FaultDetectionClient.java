@@ -3,6 +3,7 @@ package org.han.ica.asd.c.faultdetection;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.*;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
@@ -22,8 +23,12 @@ import java.util.logging.Logger;
  * @see FaultResponder
  */
 public class FaultDetectionClient {
-    private static final Logger LOGGER = Logger.getLogger(FaultDetectionClient.class.getName());
-    private ObjectOutputStream outputStream = null;
+    @Inject
+    private static Logger logger;
+
+    @Inject
+    private ObjectOutputStream outputStream;
+
     private boolean isConnected = false;
 
     /**
@@ -49,10 +54,10 @@ public class FaultDetectionClient {
                 outputStream.writeObject(new PingMessage());
                 isConnected = true;
             } catch (SocketException | SocketTimeoutException se) {
-                LOGGER.log(Level.INFO, se.getMessage(), se);
+                logger.log(Level.INFO, se.getMessage(), se);
                 throw new NodeCantBeReachedException(se);
             } catch (IOException e) {
-                LOGGER.log(Level.INFO, e.getMessage(), e);
+                logger.log(Level.INFO, e.getMessage(), e);
             }
         }
     }
@@ -73,7 +78,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessageResponse, ipToSendTo);
         } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -92,7 +97,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessage, ipAddress);
         } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -129,7 +134,7 @@ public class FaultDetectionClient {
         try {
             sendObject(iCanReachLeaderMessage, ipAddress);
         } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -158,11 +163,9 @@ public class FaultDetectionClient {
 
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.writeObject(object);
-
             } catch (IOException se) {
-                LOGGER.log(Level.INFO, se.getMessage(), se);
+                logger.log(Level.INFO, se.getMessage(), se);
                 throw new NodeCantBeReachedException(se);
-
             }
         }
     }

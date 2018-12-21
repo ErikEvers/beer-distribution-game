@@ -6,7 +6,12 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
+import javax.inject.Inject;
+
 public class MessageProcessor {
+
+    @Inject
+    Connector connector;
 
     /**
      * Gets the current 'NodeInfoList' from the connector instance.
@@ -17,7 +22,7 @@ public class MessageProcessor {
      * @see NodeInfoList
      */
     public NodeInfoList getNodeInfoListFromConnector() {
-        Connector connector = Connector.getInstance();
+        connector = Connector.getInstance();
         return connector.getIps();
     }
 

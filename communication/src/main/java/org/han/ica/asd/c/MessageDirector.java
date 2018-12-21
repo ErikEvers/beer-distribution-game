@@ -7,16 +7,19 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 
+import javax.inject.Inject;
 import java.io.InvalidObjectException;
 
 public class MessageDirector implements IServerObserver {
 
+    @Inject
     private GameMessageReceiver gameMessageReceiver;
+
+    @Inject
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
 
-    public MessageDirector(GameMessageReceiver gameMessageReceiver, FaultDetectionMessageReceiver faultDetectionMessageReceiver) {
-        this.gameMessageReceiver = gameMessageReceiver;
-        this.faultDetectionMessageReceiver = faultDetectionMessageReceiver;
+    public MessageDirector() {
+        //for inject purposes
     }
 
     /**
@@ -40,5 +43,14 @@ public class MessageDirector implements IServerObserver {
             return new ResponseMessage(false, new InvalidObjectException("Invalid object"));
         }
         return null;
+    }
+
+    @Override
+    public void setGameMessageReceiver(GameMessageReceiver gameMessageReceiver) {
+        this.gameMessageReceiver = gameMessageReceiver;
+    }
+
+    public void setFaultDetectionMessageReceiver(FaultDetectionMessageReceiver faultDetectionMessageReceiver) {
+        this.faultDetectionMessageReceiver = faultDetectionMessageReceiver;
     }
 }

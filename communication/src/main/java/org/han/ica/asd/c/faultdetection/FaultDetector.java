@@ -8,15 +8,23 @@ import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
+import java.util.List;
 
 public class FaultDetector {
-
+    @Inject
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
+
+    @Inject
     private FaultDetectorPlayer faultDetectorPlayer;
+
+    @Inject
     private FaultDetectorLeader faultDetectorLeader;
+
+    @Inject
     private FaultResponder faultResponder;
-    private ArrayList<IConnectorObserver> observers;
+
+    private List<IConnectorObserver> observers;
 
 
     FaultDetectorPlayer getFaultDetectorPlayer() {
@@ -35,9 +43,8 @@ public class FaultDetector {
         return faultDetectionMessageReceiver;
     }
 
-    public FaultDetector(ArrayList<IConnectorObserver> observers) {
-        this.observers = observers;
-        faultDetectionMessageReceiver = new FaultDetectionMessageReceiver(this);
+    public FaultDetector() {
+        //Inject purposes
     }
 
     public void setLeader(NodeInfoList nodeInfoList) {
@@ -81,15 +88,22 @@ public class FaultDetector {
         }
     }
 
-    public FaultDetectorLeader makeFaultDetectorLeader(NodeInfoList nodeInfoList, ArrayList<IConnectorObserver> observers) {
-        return new FaultDetectorLeader(nodeInfoList, observers);
+    public FaultDetectorLeader makeFaultDetectorLeader(NodeInfoList nodeInfoList, List<IConnectorObserver> observers) {
+        faultDetectorLeader.setObservers(observers);
+        faultDetectorLeader.setNodeInfoList(nodeInfoList);
+        return faultDetectorLeader;
     }
 
     public FaultDetectorPlayer makeFaultDetectorPlayer(NodeInfoList nodeInfoList) {
-        return new FaultDetectorPlayer(nodeInfoList);
+        faultDetectorPlayer.setNodeInfoList(nodeInfoList);
+        return faultDetectorPlayer;
     }
 
     public FaultResponder makeFaultResponder() {
-        return new FaultResponder();
+        return faultResponder;
+    }
+
+    public void setObservers(List<IConnectorObserver> observers) {
+        this.observers = observers;
     }
 }

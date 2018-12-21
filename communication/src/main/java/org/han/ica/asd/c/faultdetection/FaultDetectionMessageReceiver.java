@@ -8,6 +8,8 @@ import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 
+import javax.inject.Inject;
+
 /**
  * This class is used to determine which 'FaultDetectionMessage' is received and then which method is supposed to be
  * called with said message. This class is used by the 'SocketServer' and then
@@ -15,10 +17,12 @@ import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
  * @author Oscar Tarik
  */
 public class FaultDetectionMessageReceiver {
+
+    @Inject
     private FaultDetector faultDetector;
 
-    public FaultDetectionMessageReceiver(FaultDetector faultDetector) {
-        this.faultDetector = faultDetector;
+    public FaultDetectionMessageReceiver() {
+        //For inject purposes
     }
 
     /**
@@ -32,7 +36,6 @@ public class FaultDetectionMessageReceiver {
      * @see org.han.ica.asd.c.socketrpc.SocketServer
      * @see FaultDetector
      */
-
     public void receiveMessage(FaultDetectionMessage faultDetectionMessage, String senderIp) {
         switch (faultDetectionMessage.getMessageId()) {
             case 1:
@@ -64,5 +67,14 @@ public class FaultDetectionMessageReceiver {
 
                 break;
         }
+    }
+
+    /**
+     * Sets new faultDetector.
+     *
+     * @param faultDetector New value of faultDetector.
+     */
+    public void setFaultDetector(FaultDetector faultDetector) {
+        this.faultDetector = faultDetector;
     }
 }

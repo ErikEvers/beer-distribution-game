@@ -1,10 +1,16 @@
 package org.han.ica.asd.c.bootstrap;
 
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.Connector;
+import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.dao.*;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.faultdetection.FailLog;
+import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
+import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
@@ -13,6 +19,12 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.socketrpc.IServerObserver;
+import org.han.ica.asd.c.socketrpc.SocketClient;
+import org.han.ica.asd.c.socketrpc.SocketServer;
+
+import java.net.ServerSocket;
+import java.util.logging.Logger;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
@@ -30,7 +42,20 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
 
+		//CommunicationBinds
+		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
+
 		requestStaticInjection(FXMLLoaderOnSteroids.class);
+
+		//communication
+		requestStaticInjection(SocketClient.class);
+		requestStaticInjection(SocketServer.class);
+
+		//FaultDetector
+		requestStaticInjection(FailLog.class);
+		requestStaticInjection(FaultDetectionClient.class);
+		requestStaticInjection(FaultDetectorLeader.class);
+		requestStaticInjection(Connector.class);
 
 	}
 }
