@@ -13,7 +13,7 @@ import java.util.List;
 public class BusinessRuleHandler implements IBusinessRules {
 //    @Inject
 //    private IBusinessRuleStore businessRuleStore;
-
+    
     /**
      * Parses the business rules and sends it to the persistence component
      *
