@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
-
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
@@ -130,8 +129,6 @@ public class FaultDetectionClient {
             throw new NodeCantBeReachedException(e);
         }
     }
-
-
 }
 
 

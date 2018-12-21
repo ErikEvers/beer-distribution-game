@@ -31,7 +31,6 @@ class TestFaultDetectorPlayer {
 
         faultDetectorPlayer.setFaultDetectionClient(faultDetectionClient);
         faultDetectorPlayer.setFaultHandlerPlayer(faultHandlerPlayer);
-
     }
 
     @Test
@@ -72,11 +71,9 @@ class TestFaultDetectorPlayer {
 
     @Test
     void TestCanYouReachLeaderMessageReceived() {
-
         Object result = faultDetectorPlayer.canYouReachLeaderMessageReceived(new CanYouReachLeaderMessage());
 
         assertTrue(result instanceof CanYouReachLeaderMessageResponse);
-
     }
 
 

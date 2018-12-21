@@ -82,7 +82,6 @@ public class FaultDetectorPlayer extends TimerTask {
         for (Object responseMessage: response.values()) {
             count++;
             if (responseMessage instanceof Exception){
-
                 faultHandlerPlayer.incrementAmountOfFailingIps();
             }else if(responseMessage instanceof CanYouReachLeaderMessageResponse) {
                 CanYouReachLeaderMessageResponse canYouReachLeaderMessageResponse = (CanYouReachLeaderMessageResponse) responseMessage;
@@ -91,7 +90,6 @@ public class FaultDetectorPlayer extends TimerTask {
                 }
             }
         }
-
     }
 
     public void pingMessageReceived(PingMessage pingMessage) {
