@@ -2,11 +2,13 @@ package org.han.ica.asd.c.model.domain_objects;
 
 public class FacilityLinkedTo implements IDomainModel{
     private String gameId;
+    private Facility facilityOrder;
     private Facility facilityDeliver;
     private boolean active;
 
-    public FacilityLinkedTo(String gameId, Facility facilityDeliver, boolean active) {
+    public FacilityLinkedTo(String gameId, Facility facilityOrder, Facility facilityDeliver, boolean active) {
         this.gameId = gameId;
+        this.facilityOrder = facilityOrder;
         this.facilityDeliver = facilityDeliver;
         this.active = active;
     }
@@ -17,6 +19,14 @@ public class FacilityLinkedTo implements IDomainModel{
 
     public void setGameId(String gameId) {
         this.gameId = gameId;
+    }
+
+    public void setFacilityOrder(Facility facilityOrder) {
+        this.facilityOrder = facilityOrder;
+    }
+
+    public Facility getFacilityOrder() {
+        return facilityOrder;
     }
 
     public Facility getFacilityDeliver() {

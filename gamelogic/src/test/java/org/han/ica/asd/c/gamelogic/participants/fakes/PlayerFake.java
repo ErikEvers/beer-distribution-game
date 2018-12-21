@@ -8,7 +8,6 @@ public class PlayerFake extends Player {
         super("", "", new Facility(
                 null,
                 null,
-                null,
-                null, 1), "", true);
+                null, 0), "", true);
     }
 }

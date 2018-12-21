@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Facility implements IDomainModel{
     private FacilityType facilityType;
-    private List<FacilityLinkedTo> facilitiesLinkedTo;
     private Player player;
     private GameAgent agent;
     private int facilityId;
@@ -13,17 +12,15 @@ public class Facility implements IDomainModel{
         // empty for Guice
     }
 
-    public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, Player player, GameAgent agent, int facilityId) {
+    public Facility(FacilityType facilityType, Player player, GameAgent agent, int facilityId) {
         this.facilityType = facilityType;
-        this.facilitiesLinkedTo = facilitiesLinkedTo;
         this.player = player;
         this.agent = agent;
         this.facilityId = facilityId;
     }
 
-    public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, Player player, int facilityId) {
+    public Facility(FacilityType facilityType, Player player, int facilityId) {
         this.facilityType = facilityType;
-        this.facilitiesLinkedTo = facilitiesLinkedTo;
         this.player = player;
         this.facilityId = facilityId;
     }
@@ -31,9 +28,8 @@ public class Facility implements IDomainModel{
     /**
      * Bare FacilityDB for when no player or agent is yet available
      */
-    public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, int facilityId) {
+    public Facility(FacilityType facilityType, int facilityId) {
         this.facilityType = facilityType;
-        this.facilitiesLinkedTo = facilitiesLinkedTo;
         this.facilityId = facilityId;
     }
 
@@ -43,14 +39,6 @@ public class Facility implements IDomainModel{
 
     public void setFacilityType(FacilityType facilityType) {
         this.facilityType = facilityType;
-    }
-
-    public List<FacilityLinkedTo> getFacilitiesLinkedTo() {
-        return facilitiesLinkedTo;
-    }
-
-    public void setFacilitiesLinkedTo(List<FacilityLinkedTo> facilitiesLinkedTo) {
-        this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
     public Player getPlayer() {
