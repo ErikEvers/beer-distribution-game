@@ -3,6 +3,7 @@ package org.han.ica.asd.c.messagehandler.sending;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
@@ -47,6 +48,24 @@ public class GameMessageClient {
             }
         }
         return new ResponseMessage(false, exception);
+    }
+
+    /**
+     * Send the whoIsTheLeaderMessage using the socketclient.
+     * @author Oscar
+     * @param ip The ip to send it to.
+     * @return The 'WhoIsTheLeaderMessage' with either the exception or the response filled in.
+     * @see WhoIsTheLeaderMessage
+     * @see SocketClient
+     */
+    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip){
+        WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
+        try {
+            whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE,e.getMessage());
+        }
+        return whoIsTheLeaderMessageReturn;
     }
 
     public void setSocketClient(SocketClient socketClient) {
