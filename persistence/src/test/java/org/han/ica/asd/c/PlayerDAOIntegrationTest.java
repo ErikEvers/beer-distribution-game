@@ -37,7 +37,7 @@ public class PlayerDAOIntegrationTest {
     void getAllPlayersTest() {
 
         Assert.assertEquals(0, playerDAO.getAll("test"));
-        playerDAO.insertPlayer(GAME_ID, PLAYER);
+        playerDAO.createPlayer(PLAYER);
 
         Player tempPlayer = playerDAO.getPlayer(GAME_ID, PLAYERID);
 
