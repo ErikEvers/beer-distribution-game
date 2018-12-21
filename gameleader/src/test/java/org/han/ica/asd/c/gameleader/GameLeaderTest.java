@@ -6,98 +6,188 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
+import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Round;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.han.ica.asd.c.model.domain_objects.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.mockito.Mockito.*;
 
 public class GameLeaderTest {
-    private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
+    @Mock
+    private Facility facil;
 
-    private IConnectorForLeader connectorForLeader;
+    @Mock
+    private BeerGame gameTest;
 
-    private ILeaderGameLogic gameLogic;
+    @Mock
+    private Round r;
 
-    private BeerGame game;
+    @Mock
+    private Player player;
 
-    private TurnHandler turnHandler;
+    @Mock
+    private Leader leader;
 
-    private Round currentRoundData;
+    @Mock
+    private Configuration con;
+
+    private Round round = new Round();
+
+    private List<Facility> facilities = new ArrayList<>();
+
+    private List<Round> rounds = new ArrayList<>();
+
+    private List<Player> players = new ArrayList<>();
+
+    private IConnectorForLeader iConnectorForLeader;
 
     private GameLeader gameLeader;
 
-    private Method turnModelReceived;
+    private Round facilityTurnModel;
 
-    private Method processFacilityTurn;
+    private ILeaderGameLogic gameLogic;
 
-    private Method validateFacilityTurn;
+    private TurnHandler turnHandlerMock;
 
-    private int turnsExpected;
+    private IPersistence iPersistence;
 
-    private int turnsReceived;
-    
-    private Object[] parameters;
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
 
-    //
-    Field turnsRec;
+        gameTest = new BeerGame();
+        facilityTurnModel = new Round();
 
-    @BeforeEach
-    void onSetUp() {
-        turnHandler = mock(TurnHandler.class);
+        rounds.add(r);
+
+        facilities.add(facil);
+        facilities.add(facil);
+
+        players.add(player);
+        players.add(player);
+        players.add(player);
+
+        player.setPlayerId("1");
+
+        facilities.get(0).setPlayer(player);
+        facilities.get(1).setPlayer(player);
+
+        con.setFacilities(facilities);
+        gameTest.setConfiguration(con);
+
+        when(con.getFacilities()).thenReturn(facilities);
+        when(leader.getPlayer()).thenReturn(player);
+        when(player.getPlayerId()).thenReturn("1");
+
+        gameTest.setRounds(rounds);
+        leader.setPlayer(player);
+        gameTest.setPlayers(players);
+        gameTest.setLeader(leader);
+
+        iConnectorForLeader = mock(CommunicationStub.class);
+        gameLogic = mock(GameLogicStub.class);
+        iPersistence = mock(PersistenceStub.class);
+        turnHandlerMock = mock(TurnHandler.class);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IPersistence.class).to(PersistenceStub.class);
-                bind(IConnectorForLeader.class).to(CommunicationStub.class);
-                bind(ILeaderGameLogic.class).to(GameLogicStub.class);
-                bind(TurnHandler.class).toInstance(turnHandler);
+                bind(IConnectorForLeader.class).toInstance(iConnectorForLeader);
+                bind(ILeaderGameLogic.class).toInstance(gameLogic);
+                bind(IPersistence.class).toInstance(iPersistence);
+                bind(TurnHandler.class).toInstance(turnHandlerMock);
+                bind(BeerGame.class).toInstance(gameTest);
+                bind(Round.class).toInstance(round);
+
             }
         });
-
-        try {
-            gameLeader = injector.getInstance(GameLeader.class);
-            currentRoundData = new Round();
-
-
-
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong while setting up the TurnHandler test");
-            e.printStackTrace();
-        }
+        gameLeader = injector.getInstance(GameLeader.class);
     }
 
     @Test
-    public void gameLeaderTest() {
+    public void facilitiesIs2AndTurnModelReceivedIsCalledTwice_TurnsReceived_IS_Zero() {
+        gameLeader.init();
+        gameLeader.turnModelReceived(facilityTurnModel);
+        gameLeader.turnModelReceived(facilityTurnModel);
 
-        try {
-            gameLeader.turnModelReceived(currentRoundData);
-
-            Mockito.verify(turnHandler, Mockito.times(1)).processFacilityTurn(any(Round.class), any(Round.class));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Assert.assertEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
     }
 
     @Test
-    public void notifyPlayerDisconnectedTest() {
+    public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() {
+        gameLeader.init();
+        gameLeader.turnModelReceived(facilityTurnModel);
 
+        Assert.assertNotEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
     }
 
     @Test
-    public void notifyPlayerReconnectedTest() {
+    public void verifyThatMethodsAreCalled() {
+        gameLeader.init();
 
+        gameLeader.turnModelReceived(facilityTurnModel);
+        gameLeader.turnModelReceived(facilityTurnModel);
+
+        verify(gameLogic, times(1)).calculateRound(null);
+        verify(iPersistence, times(1)).saveRoundData(null);
+        verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(null);
+    }
+
+    @Test
+    public void notifyReconnected() {
+        gameLeader.init();
+        gameLeader.notifyPlayerReconnected(any(String.class));
+
+        verify(gameLogic, times(1)).removeAgentByPlayerId(null);
+
+        Assert.assertThat(gameLeader.notifyPlayerReconnected(any(String.class)), instanceOf(BeerGame.class));
+    }
+
+    @Test
+    public void DisconnectedNotEqual_addLocalParticipant_NotCalled() {
+        gameLeader.init();
+        gameLeader.iAmDisconnected();
+
+        verify(gameLogic, times(0)).addLocalParticipant(any(AgentParticipant.class));
+    }
+
+    @Test
+    public void DisconnectedWrongTestCallPlayerIsDisconnectedMethod() {
+        Player playerTest = mock(Player.class);
+        Facility facility = mock(Facility.class);
+        playerTest.setPlayerId("b");
+        players.add(playerTest);
+        Facility facilityTest = mock(Facility.class);
+        facility.setPlayer(playerTest);
+        facilities.add(facilityTest);
+        facilities.get(2).setPlayer(playerTest);
+        con.setFacilities(facilities);
+
+        when(con.getFacilities()).thenReturn(facilities);
+        when(facilities.get(0).getPlayer()).thenReturn(player);
+        when(facilities.get(1).getPlayer()).thenReturn(player);
+        when(facilities.get(2).getPlayer()).thenReturn(player);
+        when(player.getPlayerId()).thenReturn("b");
+
+        GameAgent gameAgent = mock(GameAgent.class);
+        when(facilities.get(0).getAgent()).thenReturn(gameAgent);
+        when(facilities.get(1).getAgent()).thenReturn(gameAgent);
+        when(facilities.get(2).getAgent()).thenReturn(gameAgent);
+        when(gameAgent.getGameAgentName()).thenReturn("test");
+
+        gameLeader.init();
+        gameLeader.playerIsDisconnected("b");
+
+        verify(gameLogic, times(3)).addLocalParticipant(any(AgentParticipant.class));
     }
 }
