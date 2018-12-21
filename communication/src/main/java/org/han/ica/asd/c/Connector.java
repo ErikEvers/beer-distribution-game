@@ -15,6 +15,7 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
@@ -144,6 +145,10 @@ private static Connector instance = null;
     public void updateAllPeers(Round roundModel) {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), roundModel);
+    }
+
+    public void sendConfiguration(Configuration configuration) {
+        gameMessageClient.sendConfiguration(configuration);
     }
 
     public void addIP(String text) {
