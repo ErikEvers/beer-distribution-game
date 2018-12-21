@@ -6,7 +6,7 @@ import java.util.List;
 public class GameAgent implements IDomainModel {
     private String gameAgentName;
     protected Facility facility;
-    public List<GameBusinessRules> gameBusinessRulesList = new ArrayList<>();
+    protected List<GameBusinessRules> gameBusinessRulesList = new ArrayList<>();
 
     public GameAgent(String gameAgentName, Facility facility) {
         this.gameAgentName = gameAgentName;
@@ -21,11 +21,11 @@ public class GameAgent implements IDomainModel {
         this.gameAgentName = gameAgentName;
     }
 
-    public Facility getFacilityId() {
+    public Facility getFacility() {
         return facility;
     }
 
-    public void setFacilityId(Facility facilityId) {
-        this.facility = facilityId;
+    public void setFacility(Facility facility) {
+        this.facility = facility;
     }
 }

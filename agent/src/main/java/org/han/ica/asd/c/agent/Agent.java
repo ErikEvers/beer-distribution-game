@@ -3,6 +3,7 @@ package org.han.ica.asd.c.agent;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Agent extends GameAgent /* implements IParticipant */{
+public class Agent extends GameAgent implements IParticipant {
     @Inject
     @Named("businessRules")
     private IBusinessRules businessRules;
@@ -38,13 +39,13 @@ public class Agent extends GameAgent /* implements IParticipant */{
      * @param round         The round data of last round used to determine what actions the agent is going to do.
      * @return              A GameRoundAction with all actions that the agent wants to do.
      */
-    public GameRoundAction generateRoundActions(Round round) {
+    private GameRoundAction generateRoundActions(Round round) {
         Map<Facility, Integer>  targetOrderMap          = new HashMap<>();
         Map<Facility, Integer>  targetDeliverMap        = new HashMap<>();
         List<GameBusinessRules> triggeredBusinessRules  = new ArrayList<>();
         List<Round>             triggeredRounds         = new ArrayList<>();
 
-        for (GameBusinessRules gameBusinessRules : this.gameBusinessRulesList) {
+        for (GameBusinessRules gameBusinessRules : gameBusinessRulesList) {
         	// Hier ergens GameBusinessRulesInFacilityTurn aanmaken met getriggerde Business rules en de verwante Rounds
 
             ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameBusinessRule(), round);
@@ -87,4 +88,13 @@ public class Agent extends GameAgent /* implements IParticipant */{
         return null;
     }
 
+	@Override
+	public GameRoundAction executeTurn(Round round) {
+		return generateRoundActions(round);
+	}
+
+	@Override
+	public Facility getParticipant() {
+		return facility;
+	}
 }

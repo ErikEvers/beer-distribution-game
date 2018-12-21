@@ -5,9 +5,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
-import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.*;
@@ -25,11 +22,11 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class AgentTest {
-	private static final String RETRIEVE_ACTION_FROM_BUSINESS_RULE = "retrieveActionFromBusinessRule";
 	private static final String BUSINESS_RULES = "businessRules";
 	private static final String RESOLVE_FACILITY_ID = "resolveFacilityId";
 	private static final String ORDER = "order";
@@ -50,7 +47,8 @@ class AgentTest {
 
 	private IPersistence persistence = new IPersistence() {
 		@Override
-		public void savePlayerTurn(Round data) {}
+		public void savePlayerTurn(Round data) {
+		}
 
 		@Override
 		public Round fetchPlayerTurn(int roundId, int facilityId) {
@@ -58,7 +56,8 @@ class AgentTest {
 		}
 
 		@Override
-		public void saveRoundData(Round data) {}
+		public void saveRoundData(Round data) {
+		}
 
 		@Override
 		public Round fetchRoundData(int roundId) {
@@ -66,7 +65,8 @@ class AgentTest {
 		}
 
 		@Override
-		public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {}
+		public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+		}
 	};
 
 	@Test
@@ -92,7 +92,7 @@ class AgentTest {
 		injector.injectMembers(agent);
 		agent.gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring"));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		GameRoundAction result = agent.executeTurn(null);
 		Map.Entry<Facility, Integer> entry = result.targetOrderMap.entrySet().iterator().next();
 
 		assertEquals(30, (int) entry.getValue());
@@ -121,7 +121,7 @@ class AgentTest {
 		injector.injectMembers(agent);
 		agent.gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring"));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		GameRoundAction result = agent.executeTurn(null);
 		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
 
 		assertEquals(5, (int) entry.getValue());
@@ -141,12 +141,12 @@ class AgentTest {
 
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
-						switch(businessRule) {
+						switch (businessRule) {
 							case IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10:
 								return new ActionModel(DELIVER, 5, 0);
 							case IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20:
 								return new ActionModel(ORDER, 5, 0);
-							}
+						}
 						return null;
 					}
 				});
@@ -159,7 +159,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -194,7 +194,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(0, result.targetDeliverMap.size());
@@ -229,7 +229,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(0, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -264,7 +264,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -299,7 +299,7 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -324,7 +324,7 @@ class AgentTest {
 	}
 
 	@Test
-	void testCallingLogWhenTriggeringBusinessRulesExpectsMethodCall() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	void testCallingLogWhenTriggeringBusinessRulesExpectsMethodCall() {
 		Agent agent = new Agent("", facility);
 		IPersistence persistenceMock = mock(IPersistence.class);
 		Injector injector = Guice.createInjector(new AbstractModule() {
@@ -339,9 +339,9 @@ class AgentTest {
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
 						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10.equals(businessRule)) {
-							return new ActionModel(DELIVER, 5, 0);
+							return new ActionModel(DELIVER, 5, 1);
 						}
-						return new ActionModel(ORDER, 5, 0);
+						return new ActionModel(ORDER, 5, 1);
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistenceMock);
@@ -353,9 +353,16 @@ class AgentTest {
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
 		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
 
-		GameRoundAction result = agent.generateRoundActions(null);
+		agent.executeTurn(null);
 
 		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(ArgumentMatchers.any(GameBusinessRulesInFacilityTurn.class));
 		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(ArgumentMatchers.any(GameBusinessRulesInFacilityTurn.class));
+	}
+
+	@Test
+	void testGetParticipant() {
+		Agent agent = new Agent("", facility);
+
+		assertEquals(facility, agent.getParticipant());
 	}
 }
