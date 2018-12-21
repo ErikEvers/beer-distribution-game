@@ -23,11 +23,11 @@ public class ParseErrorListener extends BaseErrorListener {
         lines.add(line);
     }
 
-    List<Integer> getExceptions() {
+    public List<Integer> getExceptions() {
         return lines;
     }
 
-    Map<Integer, Integer> getWordExceptions() {
+    public Map<Integer, Integer> getWordExceptions() {
         return lineChar;
     }
 }
