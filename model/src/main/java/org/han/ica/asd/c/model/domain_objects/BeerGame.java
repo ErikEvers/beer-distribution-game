@@ -29,6 +29,10 @@ public class BeerGame {
         this.gameEndDate = gameEndDate;
     }
 
+    public BeerGame() {
+
+    }
+
     public Leader getLeader() {
         return leader;
     }

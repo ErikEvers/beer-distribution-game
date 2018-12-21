@@ -1,12 +1,12 @@
 package org.han.ica.asd.c.gamelogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IConnectedForPlayer;
-import org.han.ica.asd.c.model.*;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

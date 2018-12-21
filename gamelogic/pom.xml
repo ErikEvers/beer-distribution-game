@@ -12,13 +12,17 @@
         </dependency>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d79b92886e9992e26dfa4c885246344202a1c331
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>communication</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>communication</artifactId>
@@ -35,6 +39,8 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         >>>>>>> origin/team1
+=======
+>>>>>>> d79b92886e9992e26dfa4c885246344202a1c331
     </dependencies>
 
     <parent>
@@ -46,5 +52,5 @@
     <artifactId>gamelogic</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
+    
 </project>
