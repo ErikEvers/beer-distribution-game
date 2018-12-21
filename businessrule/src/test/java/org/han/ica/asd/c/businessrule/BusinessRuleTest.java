@@ -156,7 +156,7 @@ class BusinessRuleTest {
 							    .addChild(new Value().addValue("40%").addValue("inventory"))
 							    .addChild(new Value().addValue("20%").addValue("outgoing goods"))));
 
-        String expected = "BR(CS(C(CV(V(10 11))ComO(>=)CV(V(10 11)))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10)))))";
+        String expected = "BR(CS(CS(C(CV(V(10 11))ComO(>=)CV(V(10 11))))BoolO(null)CS(C(CV(V(10))ComO(!=)CV(V(10)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
 
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
 
