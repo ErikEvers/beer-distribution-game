@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class GameBusinessRules {
+public class GameBusinessRules implements IDomainModel{
     private String gameBusinessRule;
     private String gameAST;
 

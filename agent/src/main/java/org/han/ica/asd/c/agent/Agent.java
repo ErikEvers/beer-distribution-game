@@ -1,18 +1,26 @@
 package org.han.ica.asd.c.agent;
 
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
-import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRules;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.interface_models.ActionModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Agent extends GameAgent /* implements IParticipant */{
     @Inject
     @Named("businessRules")
     private IBusinessRules businessRules;
+
+    @Inject
+    @Named("persistance")
+    private IPersistence persistence;
 
     /**
      * Constructor with default agent name and facility
@@ -31,24 +39,35 @@ public class Agent extends GameAgent /* implements IParticipant */{
      * @return              A GameRoundAction with all actions that the agent wants to do.
      */
     public GameRoundAction generateRoundActions(Round round) {
-        Map<Facility, Integer> targetOrderMap = new HashMap<>();
-        Map<Facility, Integer> targetDeliverMap = new HashMap<>();
+        Map<Facility, Integer>  targetOrderMap          = new HashMap<>();
+        Map<Facility, Integer>  targetDeliverMap        = new HashMap<>();
+        List<GameBusinessRules> triggeredBusinessRules  = new ArrayList<>();
+        List<Round>             triggeredRounds         = new ArrayList<>();
 
         for (GameBusinessRules gameBusinessRules : this.gameBusinessRulesList) {
-            Action action = businessRules.evaluateBusinessRule(gameBusinessRules.getGameBusinessRule(), round);
-            if(action != null) {
-                Facility targetFacility = this.resolveFacilityId(action.getFacilityId());
+        	// Hier ergens GameBusinessRulesInFacilityTurn aanmaken met getriggerde Business rules en de verwante Rounds
+
+            ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameBusinessRule(), round);
+            if(actionModel != null) {
+                Facility targetFacility = this.resolveFacilityId(actionModel.facilityId);
                 if(targetFacility != null) {
-                    if (targetOrderMap.isEmpty() && action.isOrderType()) {
-                        targetOrderMap.put(targetFacility, action.getAmount());
-                    } else if (targetDeliverMap.isEmpty() && action.isDeliverType()) {
-                        targetDeliverMap.put(targetFacility, action.getAmount());
+                    if (targetOrderMap.isEmpty() && actionModel.isOrderType()) {
+                        targetOrderMap.put(targetFacility, actionModel.amount);
+                        triggeredBusinessRules.add(gameBusinessRules);
+                        triggeredRounds.add(round);
+                    } else if (targetDeliverMap.isEmpty() && actionModel.isDeliverType()) {
+                        targetDeliverMap.put(targetFacility, actionModel.amount);
+                        triggeredBusinessRules.add(gameBusinessRules);
+                        triggeredRounds.add(round);
                     } else if (!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
                         break;
                     }
                 }
             }
         }
+
+        persistence.logUsedBusinessRuleToCreateOrder(
+            new GameBusinessRulesInFacilityTurn(triggeredRounds, triggeredBusinessRules));
         return new GameRoundAction(targetOrderMap, targetDeliverMap);
     }
 

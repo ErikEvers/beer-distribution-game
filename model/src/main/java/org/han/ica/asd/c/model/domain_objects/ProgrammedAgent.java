@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class ProgrammedAgent {
+public class ProgrammedAgent implements IDomainModel{
     private String programmedAgentName;
 
     public ProgrammedAgent(String programmedAgentName) {

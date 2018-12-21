@@ -5,13 +5,16 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRules;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.interface_models.ActionModel;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,7 +23,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class AgentTest {
 	private static final String RETRIEVE_ACTION_FROM_BUSINESS_RULE = "retrieveActionFromBusinessRule";
@@ -32,6 +38,7 @@ class AgentTest {
 	private static final String IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20 = "if inventory higher than 10 then order 20";
 	private static final String IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30 = "if inventory higher than 10 then order 30";
 	private static final String EMPTY_BUSINESS_RULE = "BR()";
+	private static final String PERSISTENCE = "persistance";
 
 	private Facility facility = new Facility(
 			new FacilityType(null, 0, 0, 0, 0, 0, 0),
@@ -40,6 +47,27 @@ class AgentTest {
 					new ArrayList<>(),
 					0), true)),
 			1);
+
+	private IPersistence persistence = new IPersistence() {
+		@Override
+		public void savePlayerTurn(Round data) {}
+
+		@Override
+		public Round fetchPlayerTurn(int roundId, int facilityId) {
+			return null;
+		}
+
+		@Override
+		public void saveRoundData(Round data) {}
+
+		@Override
+		public Round fetchRoundData(int roundId) {
+			return null;
+		}
+
+		@Override
+		public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {}
+	};
 
 	@Test
 	void testGenerateOrder() {
@@ -54,16 +82,11 @@ class AgentTest {
 					}
 
 					@Override
-					public Action evaluateBusinessRule(String businessRule, Round roundData) {
-						Action action = new Action();
-						action.addChild(new ActionReference(ORDER));
-
-						Value value = new Value().addValue("30");
-						action.addChild(value);
-
-						return action;
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+						return new ActionModel(ORDER, 30, 0);
 					}
 				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
 			}
 		});
 		injector.injectMembers(agent);
@@ -88,16 +111,11 @@ class AgentTest {
 					}
 
 					@Override
-					public Action evaluateBusinessRule(String businessRule, Round roundData) {
-						Action action = new Action();
-						action.addChild(new ActionReference(DELIVER));
-
-						Value value = new Value().addValue("5");
-						action.addChild(value);
-
-						return action;
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+						return new ActionModel(DELIVER, 5, 0);
 					}
 				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
 			}
 		});
 		injector.injectMembers(agent);
@@ -122,24 +140,17 @@ class AgentTest {
 					}
 
 					@Override
-					public Action evaluateBusinessRule(String businessRule, Round roundData) {
-						Action action = new Action();
-
-						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10.equals(businessRule)) {
-							action.addChild(new ActionReference(DELIVER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
-						} else if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20.equals(businessRule)) {
-							action.addChild(new ActionReference(ORDER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
-						} else if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
-							return null;
-						}
-
-						return action;
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+						switch(businessRule) {
+							case IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10:
+								return new ActionModel(DELIVER, 5, 0);
+							case IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20:
+								return new ActionModel(ORDER, 5, 0);
+							}
+						return null;
 					}
 				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
 			}
 		});
 		injector.injectMembers(agent);
@@ -167,20 +178,14 @@ class AgentTest {
 					}
 
 					@Override
-					public Action evaluateBusinessRule(String businessRule, Round roundData) {
-						Action action = new Action();
-
-						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
-							return null;
-						} else {
-							action.addChild(new ActionReference(ORDER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+						if (!IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
+							return new ActionModel(ORDER, 5, 0);
 						}
-
-						return action;
+						return null;
 					}
 				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
 			}
 		});
 		injector.injectMembers(agent);
@@ -208,20 +213,14 @@ class AgentTest {
 					}
 
 					@Override
-					public Action evaluateBusinessRule(String businessRule, Round roundData) {
-						Action action = new Action();
-
-						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
-							return null;
-						} else {
-							action.addChild(new ActionReference(DELIVER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+						if (!IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
+							return new ActionModel(DELIVER, 5, 0);
 						}
-
-						return action;
+						return null;
 					}
 				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
 			}
 		});
 		injector.injectMembers(agent);
@@ -249,22 +248,14 @@ class AgentTest {
 					}
 
 					@Override
-					public Action evaluateBusinessRule(String businessRule, Round roundData) {
-						Action action = new Action();
-
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
 						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
-							action.addChild(new ActionReference(ORDER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
-						} else {
-							action.addChild(new ActionReference(DELIVER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
+							return new ActionModel(ORDER, 5, 0);
 						}
-
-						return action;
+						return new ActionModel(DELIVER, 5, 0);
 					}
 				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
 			}
 		});
 		injector.injectMembers(agent);
@@ -292,22 +283,14 @@ class AgentTest {
 					}
 
 					@Override
-					public Action evaluateBusinessRule(String businessRule, Round roundData) {
-						Action action = new Action();
-
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
 						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10.equals(businessRule)) {
-							action.addChild(new ActionReference(DELIVER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
-						} else {
-							action.addChild(new ActionReference(ORDER));
-							Value value = new Value().addValue("5");
-							action.addChild(value);
+							return new ActionModel(DELIVER, 5, 0);
 						}
-
-						return action;
+						return new ActionModel(ORDER, 5, 0);
 					}
 				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
 			}
 		});
 		injector.injectMembers(agent);
@@ -321,7 +304,6 @@ class AgentTest {
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
 	}
-
 
 	@Test
 	void testResolveFacilityIdExpectsMockedFacility() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -339,5 +321,41 @@ class AgentTest {
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, 1);
 		assertNull(resultFacility);
+	}
+
+	@Test
+	void testCallingLogWhenTriggeringBusinessRulesExpectsMethodCall() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		Agent agent = new Agent("", facility);
+		IPersistence persistenceMock = mock(IPersistence.class);
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+					@Override
+					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
+						return Collections.emptyList();
+					}
+
+					@Override
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10.equals(businessRule)) {
+							return new ActionModel(DELIVER, 5, 0);
+						}
+						return new ActionModel(ORDER, 5, 0);
+					}
+				});
+				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistenceMock);
+			}
+		});
+		injector.injectMembers(agent);
+
+		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, EMPTY_BUSINESS_RULE));
+		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
+		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
+
+		GameRoundAction result = agent.generateRoundActions(null);
+
+		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(ArgumentMatchers.any(GameBusinessRulesInFacilityTurn.class));
+		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(ArgumentMatchers.any(GameBusinessRulesInFacilityTurn.class));
 	}
 }

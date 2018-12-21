@@ -92,8 +92,8 @@
                    <Button fx:id="save" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
                            style="-fx-background-color: ff8000;" text="%save_button" textFill="WHITE" wrapText="true"
                            GridPane.columnIndex="3"/>
-                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0"
-                           style="-fx-background-color: ff8000;" text="%back_to_menu_button" textFill="WHITE"
+                   <Button fx:id="back" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0"
+                           style="-fx-background-color: ff8000;" text="%back_button" textFill="WHITE"
                            wrapText="true" GridPane.columnIndex="2"/>
                </children>
             </GridPane>

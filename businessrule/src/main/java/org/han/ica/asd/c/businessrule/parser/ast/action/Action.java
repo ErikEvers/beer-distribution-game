@@ -100,21 +100,12 @@ public class Action extends ASTNode {
     }
 
     /**
-     * Determines if the action type is order.
+     * Get type of action as String
      *
-     * @return Returns a boolean which states if the Action type is order.
+     * @return Returns a String that determines te type of the action.
      */
-    public boolean isOrderType() {
-        return "order".equals(this.actionName.getAction());
-    }
-
-    /**
-     * Determines if the action type is deliver.
-     *
-     * @return Returns a boolean which states if the Action type is deliver.
-     */
-    public boolean isDeliverType() {
-        return "deliver".equals(this.actionName.getAction());
+    public String getType() {
+        return this.actionName.getAction();
     }
 
     /**

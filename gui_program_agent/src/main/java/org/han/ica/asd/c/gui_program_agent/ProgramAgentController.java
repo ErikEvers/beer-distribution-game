@@ -12,10 +12,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
-import org.han.ica.asd.c.businessrule.public_interfaces.IBusinessRules;
-import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,9 @@ public class ProgramAgentController {
     Button moreInfo;
 
     @FXML
+    Button back;
+
+    @FXML
     TextField agentNameInput;
 
     @FXML
@@ -46,16 +51,13 @@ public class ProgramAgentController {
     @FXML
     Button save;
 
+    @Inject
     private IBusinessRules iBusinessRules;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
     private ResourceBundle resourceBundle;
 
-
-    public ProgramAgentController() {
-        iBusinessRules = new BusinessRuleHandler();
-    }
 
     /***
      * Function for initialising the current ProgramAgent FXML. It also sets the actions of the button's
@@ -65,6 +67,7 @@ public class ProgramAgentController {
         setMoreInfoButtonAction();
         resourceBundle = ResourceBundle.getBundle("languageResources");
         setSaveButtonAction();
+        setBackButtonAction();
     }
 
     /***
@@ -108,6 +111,13 @@ public class ProgramAgentController {
                 setScreenValuesBasedOnResult(result);
             }
         });
+    }
+
+    /***
+     * Set the button back to have the action to go back to list with agent's
+     */
+    private void setBackButtonAction() {
+        back.setOnAction(event -> programAgentList.setupScreen());
     }
 
     /**

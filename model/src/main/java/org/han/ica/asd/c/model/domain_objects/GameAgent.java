@@ -3,7 +3,7 @@ package org.han.ica.asd.c.model.domain_objects;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameAgent {
+public class GameAgent implements IDomainModel {
     private String gameAgentName;
     protected Facility facility;
     public List<GameBusinessRules> gameBusinessRulesList = new ArrayList<>();
