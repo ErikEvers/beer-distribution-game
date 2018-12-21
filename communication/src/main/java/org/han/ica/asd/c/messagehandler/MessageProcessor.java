@@ -8,6 +8,14 @@ import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 public class MessageProcessor {
 
+    /**
+     * Gets the current 'NodeInfoList' from the connector instance.
+     *
+     * @author Oscar
+     * @return The current 'NodeInfoList'.
+     * @see Connector
+     * @see NodeInfoList
+     */
     public NodeInfoList getNodeInfoListFromConnector() {
         Connector connector = Connector.getInstance();
         return connector.getIps();
