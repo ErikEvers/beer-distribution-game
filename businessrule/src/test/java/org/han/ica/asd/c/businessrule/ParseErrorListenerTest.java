@@ -23,12 +23,12 @@ public class ParseErrorListenerTest {
     void testSyntaxError_ErrorWithExpecting() {
         ParseErrorListener parseErrorListener = new ParseErrorListener();
 
-        parseErrorListener.syntaxError(recognizer, "",1,1,"expecting",recognitionException);
+        parseErrorListener.syntaxError(recognizer, "", 1, 1, "expecting", recognitionException);
         Map<Integer, Integer> res = parseErrorListener.getWordExceptions();
         Map<Integer, Integer> exp = new HashMap<>();
-        exp.put(1,1);
+        exp.put(1, 1);
 
-        assertEquals(exp,res);
+        assertEquals(exp, res);
     }
 
 }

@@ -82,9 +82,9 @@ public class ParserPipeline {
 
             if(ParseErrorListener.INSTANCE.getWordExceptions().containsKey(i + 1)){
                 int endErrorWord = findEndErrorWord(businessRule,ParseErrorListener.INSTANCE.getWordExceptions().get(i + lineOffset) - 1);
-                int beginErrorWord = findBeginErrorWord(businessRule,endErrorWord);
+                int beginErrorWord = findBeginErrorWord(businessRule, endErrorWord);
                 businessRulesInput.get(i).setErrorMessage("Input error found on: '" + findWordInBusinessRule(businessRule,beginErrorWord,endErrorWord) + "'");
-                businessRulesInput.get(i).setErrorWord(beginErrorWord,endErrorWord);
+                businessRulesInput.get(i).setErrorWord(beginErrorWord, endErrorWord);
                 hasErrors = true;
             } else if (ParseErrorListener.INSTANCE.getExceptions().contains(i + lineOffset)) {
                 businessRulesInput.get(i).setErrorMessage("Input error found on: '" + businessRule + "'");

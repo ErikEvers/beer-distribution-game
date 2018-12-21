@@ -23,8 +23,8 @@ class ParserPipelineTest {
         List<UserInputBusinessRule> exp = new ArrayList<>();
         exp.add(new UserInputBusinessRule("default order 20",1));
 
-        assertEquals(exp.get(0).getBusinessRule(),res.get(0).getBusinessRule());
-        assertEquals(exp.get(0).getLineNumber(),res.get(0).getLineNumber());
+        assertEquals(exp.get(0).getBusinessRule(), res.get(0).getBusinessRule());
+        assertEquals(exp.get(0).getLineNumber(), res.get(0).getLineNumber());
     }
 
     @Test
@@ -39,7 +39,7 @@ class ParserPipelineTest {
         }
 
         String exp = "inventory";
-        assertEquals(exp,res);
+        assertEquals(exp, res);
     }
 
     @Test
@@ -54,7 +54,7 @@ class ParserPipelineTest {
         }
 
         int exp = 11;
-        assertEquals(exp,res);
+        assertEquals(exp, res);
     }
 
     @Test
@@ -69,7 +69,7 @@ class ParserPipelineTest {
         }
 
         int exp = 3;
-        assertEquals(exp,res);
+        assertEquals(exp, res);
     }
 
     @Test
@@ -78,6 +78,6 @@ class ParserPipelineTest {
 
         boolean exp = false;
 
-        assertEquals(exp,res);
+        assertEquals(exp, res);
     }
 }
