@@ -14,6 +14,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import java.util.*;
 

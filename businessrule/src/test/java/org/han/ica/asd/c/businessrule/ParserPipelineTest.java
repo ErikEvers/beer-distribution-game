@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
-import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

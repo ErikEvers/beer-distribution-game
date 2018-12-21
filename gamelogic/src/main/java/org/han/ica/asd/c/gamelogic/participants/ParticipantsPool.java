@@ -2,6 +2,8 @@ package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +64,7 @@ public class ParticipantsPool {
      */
     private void replaceParticipantWithPlayer(PlayerParticipant playerParticipant) {
         for (IParticipant participant : participants) {
-            if (participant.getParticipantId() == playerParticipant.getParticipantId()) {
+            if (participant.getParticipant() == playerParticipant.getParticipant()) {
                 participants.remove(participant);
                 participants.add(player);
                 return;
@@ -72,11 +74,11 @@ public class ParticipantsPool {
 
     /**
      * Removes the participant with the given participantId.
-     * @param participantId Identifier of the participant to remove from the pool.
+     * @param participantFacility Facility of the participant to remove from the pool.
      */
-    public void removeParticipant(int participantId) {
+    public void removeParticipant(Facility participantFacility) {
         for (IParticipant participant : participants) {
-            if (participant.getParticipantId() == participantId) {
+            if (participant.getParticipant() == participantFacility) {
                 participants.remove(participant);
                 return;
             }
