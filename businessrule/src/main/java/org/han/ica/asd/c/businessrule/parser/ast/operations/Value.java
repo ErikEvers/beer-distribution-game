@@ -37,8 +37,8 @@ public class Value extends OperationValue {
             this.value.add("lowest");
         } else if ("biggest".equals(value) || "highest".equals(value)) {
             this.value.add("highest");
-        }else{
-	        this.value.add(value);
+        } else {
+            this.value.add(value);
         }
         return this;
     }
@@ -50,12 +50,14 @@ public class Value extends OperationValue {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(PREFIX);
-        for (int i = 0; i < value.size(); i++) {
-            if(i > 0){
-                stringBuilder.append(" ");
-            }
-            stringBuilder.append(value.get(i));
+        stringBuilder
+                .append(PREFIX)
+                .append(value.get(0));
+
+        for (int i = 1, il = value.size(); i < il; i++) {
+            stringBuilder
+                    .append(' ')
+                    .append(value.get(i));
         }
         stringBuilder.append(SUFFIX);
     }
@@ -73,16 +75,16 @@ public class Value extends OperationValue {
      * gets the second part of the variable
      * @return
      */
-    public String getSecondPartVariable(){
-       return value.get(1);
+    public String getSecondPartVariable() {
+        return value.get(1);
     }
 
     /***
      * gets the first part of the variable
      * @return
      */
-    public String getFirstPartVariable(){
-	    return value.get(0);
+    public String getFirstPartVariable() {
+        return value.get(0);
     }
 
     /**
@@ -128,50 +130,27 @@ public class Value extends OperationValue {
      * @param gameValue the value of the game
      */
     public void replaceValueWithValue(String gameValue) {
-        if(hasNotBeenReplaced(value.get(0))) {
-            if(value.size()>1) {
-                if (checkIfFacility(value.get(1))) {
+        if (hasNotBeenReplaced(value.get(0))) {
+            if (value.size() > 1) {
+                if (GameValue.checkIfFacility(value.get(1))) {
                     value.remove(value.get(1));
                     value.set(0, gameValue);
                     return;
                 }
             }
             value.set(0, gameValue);
-        }else if(hasNotBeenReplaced(value.get(1))){
-            value.set(1,gameValue);
+        } else if (hasNotBeenReplaced(value.get(1))) {
+            value.set(1, gameValue);
         }
-    }
-    /***
-     * if the variable is a facility then it returns true
-     * @param variable one part of the value
-     * @return the corresponding game value
-     */
-    private boolean checkIfFacility(String variable){
-        for(GameValue gameValue: GameValue.values()){
-            if(gameValue.contains(variable)&&isFacility(gameValue)){
-                return true;
-            }
-        }
-        return false;
     }
 
-    /***
-     * checks if the game value is of type facility
-     * @param gameValue
-     * @return
-     */
-    private boolean isFacility(GameValue gameValue){
-        return gameValue==GameValue.FACTORY||
-                gameValue==GameValue.WHOLESALER||
-                gameValue==GameValue.DISTIRBUTOR||
-                gameValue==GameValue.RETAILER;
-    }
     /**
      * checks if the value has not been replaced with just a number
+     *
      * @param value the value
      * @return
      */
-    private boolean hasNotBeenReplaced(String value){
-        return !value.matches("[0-9]+")&&!value.matches("[0-9%]+");
+    private boolean hasNotBeenReplaced(String value) {
+        return !value.matches("[0-9]+") && !value.matches("[0-9%]+");
     }
 }

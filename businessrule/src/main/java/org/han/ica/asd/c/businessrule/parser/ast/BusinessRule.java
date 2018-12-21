@@ -17,6 +17,7 @@ public class BusinessRule extends ASTNode {
     private Action action;
     private static final String PREFIX = "BR(";
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
+
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
      *
@@ -141,9 +142,9 @@ public class BusinessRule extends ASTNode {
      * @param round data of a gameData
      * @param facilityId identifier of the facility
      */
-    public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId){
-        findLeafAndReplace(condition,round,facilityId);
-        findLeafAndReplace(action,round, facilityId);
+    public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId) {
+        findLeafAndReplace(condition, round, facilityId);
+        findLeafAndReplace(action, round, facilityId);
     }
 
     /***
@@ -152,15 +153,15 @@ public class BusinessRule extends ASTNode {
      * @param round the game data, used to replace data in function replace(Value value, int facilityId)
      * @param facilityId the id of the facility
      */
-    private void findLeafAndReplace(ASTNode astNode, Round round, int facilityId){
-        if(astNode instanceof Value){
-            replace((Value) astNode,round,facilityId);
+    private void findLeafAndReplace(ASTNode astNode, Round round, int facilityId) {
+        if (astNode instanceof Value) {
+            replace((Value) astNode, round, facilityId);
         }
-        if (astNode!=null) {
-            findLeafAndReplace(astNode.getLeftChild(),round, facilityId);
-	        if (hasMultipleChildren(astNode)) {
-		        findLeafAndReplace(astNode.getRightChild(),round, facilityId);
-	        }
+        if (astNode != null) {
+            findLeafAndReplace(astNode.getLeftChild(), round, facilityId);
+            if (hasMultipleChildren(astNode)) {
+                findLeafAndReplace(astNode.getRightChild(), round, facilityId);
+            }
         }
     }
 
@@ -170,8 +171,8 @@ public class BusinessRule extends ASTNode {
      * @param astNode a node of the tree
      * @return true if the node has more than one child
      */
-    private boolean hasMultipleChildren(ASTNode astNode){
-        return astNode.getChildren().size()>1;
+    private boolean hasMultipleChildren(ASTNode astNode) {
+        return astNode.getChildren().size() > 1;
     }
 
     /***
@@ -181,20 +182,19 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      */
     private void replace(Value value, Round round, int facilityId) {
-
-        if(value.getValue().size()>1) {
+        if (value.getValue().size() > 1) {
             String secondVariable = value.getSecondPartVariable();
-            String id ;
-            if(checkIfFacility(secondVariable)){
-                id = getReplacementValue(getGameValue(secondVariable),round,facilityId);
-                replaceOnVariable(value,round,facilityId,id);
-            }else if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
-                replaceOnVariable(value,round,facilityId,secondVariable);
+            String id;
+            if (GameValue.checkIfFacility(secondVariable)) {
+                id = getReplacementValue(getGameValue(secondVariable), round, facilityId);
+                replaceOnVariable(value, round, facilityId, id);
+            } else if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
+                replaceOnVariable(value, round, facilityId, secondVariable);
             }
         }
         String firstVariable = value.getFirstPartVariable();
-        if(Pattern.matches(HAS_CHARACTERS,value.getFirstPartVariable())) {
-            replaceOnVariable(value,round,facilityId,firstVariable);
+        if (Pattern.matches(HAS_CHARACTERS, value.getFirstPartVariable())) {
+            replaceOnVariable(value, round, facilityId, firstVariable);
         }
     }
 
@@ -205,10 +205,10 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      * @param variable one part of value
      */
-    private void replaceOnVariable(Value value, Round round, int facilityId, String variable){
+    private void replaceOnVariable(Value value, Round round, int facilityId, String variable) {
         GameValue gameValue = getGameValue(variable);
-        if(gameValue !=null) {
-            String newReplacementValue = getReplacementValue(gameValue,round,facilityId);
+        if (gameValue != null) {
+            String newReplacementValue = getReplacementValue(gameValue, round, facilityId);
             value.replaceValueWithValue(newReplacementValue);
         }
     }
@@ -218,9 +218,9 @@ public class BusinessRule extends ASTNode {
      * @param variable one part of the value
      * @return the corresponding game value
      */
-    private GameValue getGameValue(String variable){
-        for(GameValue gameValue: GameValue.values()){
-            if(gameValue.contains(variable)){
+    private GameValue getGameValue(String variable) {
+        for (GameValue gameValue : GameValue.values()) {
+            if (gameValue.contains(variable)) {
                 return gameValue;
             }
         }
@@ -234,20 +234,20 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      * @return the replacement Value
      */
-    private String getReplacementValue(GameValue gameValue,Round round, int facilityId) {
-        switch (gameValue){
+    private String getReplacementValue(GameValue gameValue, Round round, int facilityId) {
+        switch (gameValue) {
             case ORDERED:
-                return getValueFromHashmapInHashmap(round.getTurnOrder(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnOrder(), facilityId);
             case STOCK:
-                return  getValue(round.getTurnStock(),facilityId);
+                return getValue(round.getTurnStock(), facilityId);
             case BUDGET:
-                return  getValue(round.getRemainingBudget(),facilityId);
+                return getValue(round.getRemainingBudget(), facilityId);
             case BACKLOG:
-                return getValueFromHashmapInHashmap(round.getTurnBackOrder(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnBackOrder(), facilityId);
             case INCOMINGORDER:
-                return getValueFromHashmapInHashmap(round.getTurnReceived(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnReceived(), facilityId);
             case OUTGOINGGOODS:
-                return getValueFromHashmapInHashmap(round.getTurnDeliver(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnDeliver(), facilityId);
             default:
                 return String.valueOf(getFacilityIdBasedOnType(round.getTurnStock(), gameValue));
         }
@@ -259,10 +259,10 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      * @return the value of the hashmap
      */
-    private String getValueFromHashmapInHashmap(Map<Facility,Map<Facility,Integer>> map, int facilityId){
-        Map.Entry<Facility,Map<Facility,Integer>> entry = map.entrySet().iterator().next();
-        Map<Facility,Integer> value = entry.getValue();
-        return getValue(value,facilityId);
+    private String getValueFromHashmapInHashmap(Map<Facility, Map<Facility, Integer>> map, int facilityId) {
+        Map.Entry<Facility, Map<Facility, Integer>> entry = map.entrySet().iterator().next();
+        Map<Facility, Integer> value = entry.getValue();
+        return getValue(value, facilityId);
     }
 
     /***
@@ -271,9 +271,9 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      * @return gets the value of the map and returns it as a string
      */
-    private String getValue(Map<Facility,Integer> map,int facilityId){
-        for(Map.Entry<Facility,Integer> entry:map.entrySet()){
-            if(entry.getKey().getFacilityId()==facilityId){
+    private String getValue(Map<Facility, Integer> map, int facilityId) {
+        for (Map.Entry<Facility, Integer> entry : map.entrySet()) {
+            if (entry.getKey().getFacilityId() == facilityId) {
                 return entry.getValue().toString();
             }
         }
@@ -282,48 +282,23 @@ public class BusinessRule extends ASTNode {
 
     /**
      * gets the id based on the facility Type
-     * @param map the map to search through
+     *
+     * @param map          the map to search through
      * @param facilityType the type of facility
      * @return the type of facility. returns -1 when no type is found
      */
-    private int getFacilityIdBasedOnType(Map<Facility,Integer> map, GameValue facilityType){
+    private int getFacilityIdBasedOnType(Map<Facility, Integer> map, GameValue facilityType) {
         Facility facility = null;
-        for(Map.Entry<Facility,Integer> entry:map.entrySet()){
-            if(GameValue.valueOf(entry.getKey().getFacilityType().getFacilityName().toUpperCase())==facilityType){
-                facility= entry.getKey();
+        for (Map.Entry<Facility, Integer> entry : map.entrySet()) {
+            if (GameValue.valueOf(entry.getKey().getFacilityType().getFacilityName().toUpperCase()) == facilityType) {
+                facility = entry.getKey();
                 break;
             }
         }
-        if(facility==null){
-        	return -1;
-        }else {
-        	    return facility.getFacilityId();
+        if (facility == null) {
+            return -1;
+        } else {
+            return facility.getFacilityId();
         }
-    }
-
-    /***
-     * if the variable is a facility then it returns true
-     * @param variable one part of the value
-     * @return the corresponding game value
-     */
-    private boolean checkIfFacility(String variable){
-        for(GameValue gameValue: GameValue.values()){
-            if(gameValue.contains(variable)&&isFacility(gameValue)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /***
-     * checks if the game value is of type facility
-     * @param gameValue
-     * @return
-     */
-    private boolean isFacility(GameValue gameValue){
-        return gameValue==GameValue.FACTORY||
-                gameValue==GameValue.WHOLESALER||
-                gameValue==GameValue.DISTIRBUTOR||
-                gameValue==GameValue.RETAILER;
     }
 }
