@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FacilityDAO implements IBeerDisitributionGameDAO {
+public class FacilityDAO {
     private static final String CREATE_FACILITY = "INSERT INTO Facility VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_FACILITY = "UPDATE Facility SET GameAgentName = ?, PlayerId = ?, FacilityName = ?, Bankrupt = ? WHERE FacilityId = ? AND GameId = ?;";
     private static final String DELETE_SPECIFIC_FACILITY = "DELETE FROM Facility WHERE FacilityId = ? AND GameId = ?;";
@@ -151,7 +151,7 @@ public class FacilityDAO implements IBeerDisitributionGameDAO {
      */
     public List<FacilityDB> readAllFacilitiesInGame(String gameId) {
         Connection conn = null;
-        ArrayList<FacilityDB> facilities = new ArrayList<>();
+        List<FacilityDB> facilities = new ArrayList<>();
         try {
             conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_FACILITIES_IN_GAME)) {

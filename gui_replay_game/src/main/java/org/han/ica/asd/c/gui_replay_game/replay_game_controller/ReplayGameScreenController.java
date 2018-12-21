@@ -161,16 +161,14 @@ public class ReplayGameScreenController {
     }
 
     private void retailCheckBoxUpdated(Boolean newValue) {
-
         facilityCheckBoxUpdated(newValue, 3);
     }
 
     private void factoryCheckBoxUpdated(Boolean newValue) {
-
         facilityCheckBoxUpdated(newValue, 1);
     }
 
-    private void facilityCheckBoxUpdated(Boolean newValue, int id){
+    private void facilityCheckBoxUpdated(Boolean newValue, int id) {
         if (!newValue) {
             replayData.removeDisplayedFacility(id);
         } else {

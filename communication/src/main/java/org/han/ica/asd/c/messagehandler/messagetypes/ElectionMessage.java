@@ -1,16 +1,16 @@
 package org.han.ica.asd.c.messagehandler.messagetypes;
 
-import domainobjects.Election;
+import org.han.ica.asd.c.model.interface_models.ElectionModel;
 
 public class ElectionMessage extends GameMessage {
-    private Election election;
+    private ElectionModel election;
 
-    public ElectionMessage(Election election) {
+    public ElectionMessage(ElectionModel election) {
         super(3);
         this.election = election;
     }
 
-    public Election getElection() {
+    public ElectionModel getElection() {
         return election;
     }
 }

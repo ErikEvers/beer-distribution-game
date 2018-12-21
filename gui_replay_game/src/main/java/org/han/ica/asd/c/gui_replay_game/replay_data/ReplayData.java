@@ -86,10 +86,10 @@ public class ReplayData {
         FacilityType retailer = new FacilityType("Retailer", 1, 1, 1, 1, 1, 1);
         FacilityType warehouse = new FacilityType("Warehouse", 1, 1, 1, 1, 1, 1);
 
-        Facility facility1 = new Facility(factory, null, null, null, 1);
-        Facility facility2 = new Facility(wholesaler, null, null, null, 2);
-        Facility facility3 = new Facility(retailer, null, null, null, 3);
-        Facility facility4 = new Facility(warehouse, null, null, null, 4);
+        Facility facility1 = new Facility(factory, null, null, 1);
+        Facility facility2 = new Facility(wholesaler, null, null, 2);
+        Facility facility3 = new Facility(retailer, null, null, 3);
+        Facility facility4 = new Facility(warehouse, null, null, 4);
 
         ArrayList<Facility> returnList = new ArrayList<>();
 
