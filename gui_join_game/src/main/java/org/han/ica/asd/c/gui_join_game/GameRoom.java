@@ -6,7 +6,7 @@ import org.han.ica.asd.c.model.interface_models.RoomModel;
 
 import java.util.ResourceBundle;
 
-public class ChooseFacility implements IGUIHandler {
+public class GameRoom implements IGUIHandler {
     private RoomModel roomModel;
 
     @Override
@@ -16,7 +16,7 @@ public class ChooseFacility implements IGUIHandler {
 
     @Override
     public void setupScreen() {
-        ChooseFacilityController chooseFacilityController = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/ChooseFacility.fxml"));
-        chooseFacilityController.setGameRoom(roomModel);
+        GameRoomController gameRoomController = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/GameRoom.fxml"));
+        gameRoomController.setGameRoom(roomModel);
     }
 }

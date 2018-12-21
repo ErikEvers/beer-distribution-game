@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.model.interface_models.RoomModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,8 +18,8 @@ public class JoinGameController {
     @FXML
     ListView list;
     @Inject
-    @Named("ChooseFacility")
-    private IGUIHandler chooseFacility;
+    @Named("GameRoom")
+    private IGUIHandler gameRoom;
 
     @Inject
     @Named("MainMenu")
@@ -38,8 +39,8 @@ public class JoinGameController {
 
         if (true) {
             list.getSelectionModel().getSelectedItem();
-            //chooseFacility.setData(new Object[]{"hello"});
-            chooseFacility.setupScreen();
+            gameRoom.setData(new Object[]{new RoomModel()});
+            gameRoom.setupScreen();
         }
     }
 
