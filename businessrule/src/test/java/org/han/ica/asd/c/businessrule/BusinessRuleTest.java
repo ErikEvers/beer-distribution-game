@@ -15,6 +15,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -163,4 +164,10 @@ class BusinessRuleTest {
         String result = businessRule.encode();
         assertEquals(expected, result);
     }
+
+    @Test
+    void testGame_Value(){
+        assertTrue(GameValue.ORDERED.contains("ordered"));
+    }
+
 }
