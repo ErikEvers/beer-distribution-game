@@ -23,6 +23,10 @@ public class FacilityTurnDB implements IDaoModel{
         this.outgoingGoods = outgoingGoods;
     }
 
+    public FacilityTurnDB() {
+
+    }
+
     public int getRoundId() {
         return roundId;
     }
