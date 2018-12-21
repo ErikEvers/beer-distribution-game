@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.socketrpc;
 
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,7 +9,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,9 +48,38 @@ public class SocketClient {
         try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(object);
-
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             return objectInputStream.readObject();
+        }
+    }
+
+    /**
+     * This generic version of sendObjectWithResponse enforces the rule the kind of object that is returned.
+     * This way you dont need a switch to determine which object was returned.
+     *
+     * @author Oscar
+     * @param ip    The ip to send to.
+     * @param input The message object that needs to be send.
+     * @param <T>   The type of the object that was send, and has to be returned.
+     * @return The type of message that was send with either the exception or the desired response filled in.
+     * @throws IOException When it is unable to send the object to the specified IP.
+     * @throws ClassNotFoundException When it is unable to find the specific class.
+     * @see org.han.ica.asd.c.messagehandler.sending.GameMessageClient
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T sendObjectWithResponseGeneric(String ip, T input) throws IOException, ClassNotFoundException {
+        try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectOutputStream.writeObject(input);
+
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            Object object = objectInputStream.readObject();
+
+            T result = null;
+            if (object != null) {
+                result = (T) object;
+            }
+            return result;
         }
     }
 
@@ -114,8 +143,6 @@ public class SocketClient {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
-
         return map;
     }
-
 }

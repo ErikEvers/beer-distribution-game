@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
+<?import javafx.scene.text.TextFlow?>
 <AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_program_agent.ProgramAgentController">
     <children>
         <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -26,7 +20,36 @@
             <RowConstraints maxHeight="186.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label alignment="BOTTOM_LEFT" prefHeight="73.0" prefWidth="854.0" text="Create Agent Business Rules" textFill="#ff8000" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+              <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="304.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="460.0" minHeight="10.0" prefHeight="349.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="145.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="145.0" minHeight="10.0" prefHeight="138.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                   <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                               GridPane.vgrow="ALWAYS">
+                     <content>
+                         <TextFlow fx:id="businessRuleTexFlow"/>
+                     </content>
+                  </ScrollPane>
+                  <TextArea fx:id="businessRuleInput" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                  <TextArea fx:id="businessRuleErrorTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                   <Label prefHeight="17.0" prefWidth="165.0" text="%error_label" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+                <Label alignment="BOTTOM_LEFT" prefHeight="73.0" prefWidth="854.0" text="%program_agent_header"
+                       textFill="#ff8000" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+                       GridPane.valignment="BOTTOM">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" />
                     </GridPane.margin>
@@ -47,9 +70,12 @@
               </rowConstraints>
                <children>
                   <TextField fx:id="agentNameInput" prefHeight="25.0" prefWidth="719.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label prefHeight="17.0" prefWidth="116.0" text="Agent Name:" GridPane.rowIndex="1" />
-                  <Label prefHeight="17.0" prefWidth="403.0" text="Add the business rules for a agent bellow. How do you do that watch here: " GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Button fx:id="moreInfo" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: ff8000;" text="More info" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                   <Label prefHeight="17.0" prefWidth="116.0" text="%agent_name" GridPane.rowIndex="1"/>
+                   <Label prefHeight="17.0" prefWidth="403.0" text="%businessrule_description" GridPane.columnIndex="1"
+                          GridPane.rowIndex="2"/>
+                   <Button fx:id="moreInfo" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0"
+                           style="-fx-background-color: ff8000;" text="%more_info_button" textFill="WHITE"
+                           wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                </children>
             </GridPane>
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -63,11 +89,14 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="save" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Save" textFill="WHITE" GridPane.columnIndex="3" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: ff8000;" text="Back to menu" textFill="WHITE" GridPane.columnIndex="2" />
+                   <Button fx:id="save" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
+                           style="-fx-background-color: ff8000;" text="%save_button" textFill="WHITE" wrapText="true"
+                           GridPane.columnIndex="3"/>
+                   <Button fx:id="back" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0"
+                           style="-fx-background-color: ff8000;" text="%back_button" textFill="WHITE"
+                           wrapText="true" GridPane.columnIndex="2"/>
                </children>
             </GridPane>
-            <TextArea fx:id="businessRuleInput" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             </children>
         </GridPane>
     </children>

@@ -5,7 +5,7 @@ import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 
 import java.util.ArrayList;
 
