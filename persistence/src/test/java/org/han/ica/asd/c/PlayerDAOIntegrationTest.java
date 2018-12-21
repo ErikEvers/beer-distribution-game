@@ -6,6 +6,7 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.exception.PlayerNotFoundException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.junit.Assert;
@@ -34,9 +35,9 @@ public class PlayerDAOIntegrationTest {
 
 
     @Test
-    void getAllPlayersTest() {
+    void getAllPlayersTest() throws PlayerNotFoundException {
 
-        Assert.assertEquals(0, playerDAO.getAll("test"));
+        Assert.assertNull(playerDAO.getAllPlayers());
         playerDAO.createPlayer(PLAYER);
 
         Player tempPlayer = playerDAO.getPlayer(GAME_ID, PLAYERID);

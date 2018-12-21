@@ -3,6 +3,7 @@ package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.dao_model.FacilityDB;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -21,6 +22,7 @@ public class FacilityDAO {
     private static final String DELETE_ALL_FACILITIES_IN_GAME = "DELETE FROM Facility WHERE GameId = ?;";
     private static final String READ_ALL_FACILITIES_IN_GAME = "SELECT * FROM Facility WHERE GameId = ?;";
     private static final String READ_SPECIFIC_FACILITY = "SELECT * FROM Facility WHERE FacilityId = ? AND GameId = ?;";
+    private static final String READ_FACILITY_FOR_PLAYER = "SELECT * FROM Facility WHERE PlayerId = ?";
     private static final Logger LOGGER = Logger.getLogger(FacilityDAO.class.getName());
 
     @Inject

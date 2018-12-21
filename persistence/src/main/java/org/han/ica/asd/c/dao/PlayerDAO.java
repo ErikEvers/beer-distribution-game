@@ -27,6 +27,8 @@ public class PlayerDAO {
     @Inject
     private IDatabaseConnection databaseConnection;
 
+    @Inject FacilityDAO facilityDAO;
+
     public PlayerDAO () {
         // empty for Guice
     }
@@ -61,6 +63,11 @@ public class PlayerDAO {
         }
     }
 
+    /**
+     * Can update a player's name and/or ip address
+     * @param player
+     * Specifies the player to update
+     */
     public void updatePlayer(Player player) {
         Connection conn = null;
         try {
@@ -83,10 +90,25 @@ public class PlayerDAO {
         }
     }
 
+    /**
+     * Gets the player
+     * @param playerId
+     * Primary identifier for a player
+     * @return
+     * Returns the specified player
+     */
     public Player getPlayer(String playerId) {
         return null;
     }
 
+    /**
+     * This function gets all the players in the current game
+     * @return
+     * Returns a list of the players found in the current game
+     * @throws PlayerNotFoundException
+     * If a player could not be found within the current game,
+     * this exception will be thrown. This can also happen when a game exists only out of agents
+     */
     public List<Player> getAllPlayers() throws PlayerNotFoundException {
         Connection conn = null;
         ResultSet rs = null;
@@ -110,6 +132,31 @@ public class PlayerDAO {
         throw new PlayerNotFoundException("No player was found in the current game");
     }
 
+    /**
+     * Function to delete player from current game
+     * @param playerId
+     * The primary identifier of the player to be removed
+     */
+    public void deletePlayer(String playerId) {
+        Connection conn;
+        try {
+            conn = databaseConnection.connect();
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_PLAYER)) {
+                    conn.setAutoCommit(false);
+
+                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
+                    pstmt.setString(2, playerId);
+
+                } catch (GameIdNotSetException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
     private List<Player> buildPlayerArray (ResultSet rs) {
         List<Player> players = new ArrayList<>();
         try {
@@ -117,7 +164,12 @@ public class PlayerDAO {
                 return players;
             } else {
                 do {
-
+                    players.add(new Player(
+                            rs.getString("PlayerId"),
+                            rs.getString("IpAddress"),
+                            facilityDAO.readSpecificFacility(rs.getString("FacilityId")),
+                            rs.getString("Name")
+                    ));
                 } while (rs.next());
             }
         } catch (SQLException e) {
@@ -126,12 +178,6 @@ public class PlayerDAO {
         return players;
     }
 
-    private Player assemblePlayerObject () {
-        return null;
-    }
 
-    public void deletePlayer(String playerId) {
-
-    }
 
 }
