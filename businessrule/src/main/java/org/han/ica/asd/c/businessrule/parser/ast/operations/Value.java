@@ -72,7 +72,8 @@ public class Value extends OperationValue {
     }
 
     /***
-     * gets the second part of the variable
+     * Gets the second part of the variable
+     *
      * @return
      */
     public String getSecondPartVariable() {
@@ -80,7 +81,8 @@ public class Value extends OperationValue {
     }
 
     /***
-     * gets the first part of the variable
+     * Gets the first part of the variable
+     *
      * @return
      */
     public String getFirstPartVariable() {
@@ -125,7 +127,7 @@ public class Value extends OperationValue {
     }
 
     /**
-     * replaces the current value with the game value
+     * Replaces the current value with the game value
      *
      * @param gameValue the value of the game
      */
@@ -145,12 +147,12 @@ public class Value extends OperationValue {
     }
 
     /**
-     * checks if the value has not been replaced with just a number
+     * Checks if the value has not been replaced with just a number
      *
      * @param value the value
-     * @return
+     * @return true if the value does not contain any numbers or percentage. Only characters a-zA-Z need to be replaced
      */
     private boolean hasNotBeenReplaced(String value) {
-        return !value.matches("[0-9]+") && !value.matches("[0-9%]+");
+        return  !value.matches("[0-9%]+");
     }
 }

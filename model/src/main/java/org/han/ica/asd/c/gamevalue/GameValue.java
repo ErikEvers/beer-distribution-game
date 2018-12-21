@@ -17,7 +17,7 @@ public enum GameValue {
     String[] value;
 
     /***
-     * sets the GameValue
+     * Sets the GameValue
      *
      * @param values the values of type String[]
      */
@@ -26,7 +26,8 @@ public enum GameValue {
     }
 
     /***
-     * gets the synonyms of the enum
+     * Gets the synonyms of the enum
+     *
      * @return gets the synonyms of value
      */
     public String[] getValue() {
@@ -34,7 +35,7 @@ public enum GameValue {
     }
 
     /**
-     * checks if the given value is used in the list
+     * Checks if the given value is used in the list
      *
      * @param value the given value
      * @return
@@ -49,7 +50,8 @@ public enum GameValue {
     }
 
     /***
-     * if the variable is a facility then it returns true
+     * If the variable is a facility then it returns true
+     *
      * @param variable one part of the value
      * @return the corresponding game value
      */
@@ -63,7 +65,8 @@ public enum GameValue {
     }
 
     /***
-     * checks if the game value is of type facility
+     * Checks if the game value is of type facility
+     *
      * @param gameValue the corresponding game value
      * @return if its a facility
      */

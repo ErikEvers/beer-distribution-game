@@ -137,7 +137,8 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * replaces the variables of the business rule with data using dept first
+     * Replaces the variables of the business rule with data using dept first
+     *
      * When its a leaf (a Value) it replaces the value with the game data(gameData)
      * @param round data of a gameData
      * @param facilityId identifier of the facility
@@ -148,7 +149,8 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * finds the leaf of the astnode and replaces the value
+     * Finds the leaf of the astnode and replaces the value
+     *
      * @param astNode the node of the ast
      * @param round the game data, used to replace data in function replace(Value value, int facilityId)
      * @param facilityId the id of the facility
@@ -167,7 +169,7 @@ public class BusinessRule extends ASTNode {
 
 
     /***
-     * checks if the node has more than one child
+     * Checks if the node has more than one child
      * @param astNode a node of the tree
      * @return true if the node has more than one child
      */
@@ -176,7 +178,8 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * gets one part of the value replaces it with game data
+     * Gets one part of the value replaces it with game data
+     *
      * @param value the value
      * @param round the previous round
      * @param facilityId the id of the facility
@@ -199,8 +202,9 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * replaces exactly one part of the variable
-     *  @param value the value
+     * Replaces exactly one part of the variable
+     *
+     * @param value the value
      * @param round the previous round
      * @param facilityId the id of the facility
      * @param variable one part of value
@@ -214,7 +218,8 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * if the variable is a variable then it returns the corresponding game value
+     * If the variable is a variable then it returns the corresponding game value
+     *
      * @param variable one part of the value
      * @return the corresponding game value
      */
@@ -228,7 +233,8 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * gets the replacementValue from the previous round
+     * Gets the replacementValue from the previous round
+     *
      * @param gameValue the type of game value
      * @param round from the previous round
      * @param facilityId the id of the facility
@@ -254,7 +260,8 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * gets the value from hashmap in hashmap
+     * Gets the value from hashmap in hashmap
+     *
      * @param map the given map
      * @param facilityId the id of the facility
      * @return the value of the hashmap
@@ -266,7 +273,8 @@ public class BusinessRule extends ASTNode {
     }
 
     /***
-     * gets the value from the hashmap
+     * Gets the value from the hashmap
+     *
      * @param map the map containing round data
      * @param facilityId the id of the facility
      * @return gets the value of the map and returns it as a string
@@ -281,7 +289,7 @@ public class BusinessRule extends ASTNode {
     }
 
     /**
-     * gets the id based on the facility Type
+     * Gets the id based on the facility Type
      *
      * @param map          the map to search through
      * @param facilityType the type of facility
