@@ -34,6 +34,7 @@
         <module>gui_replay_game</module>
         <module>persistence</module>
         <module>fxml_helper</module>
+        <module>gui_join_game</module>
     </modules>
 
     <dependencies>

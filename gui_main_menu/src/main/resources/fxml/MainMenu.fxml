@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800" prefWidth="1000" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_main_menu.MainMenuController">
+
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800" prefWidth="1000" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_main_menu.MainMenuController">
    <children>
       <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -16,11 +21,12 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="262.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="262.0" minHeight="10.0" prefHeight="145.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="568.0" minHeight="10.0" prefHeight="132.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="504.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="414.0" minHeight="10.0" prefHeight="156.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="134.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="148.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="504.0" minHeight="10.0" prefHeight="147.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="414.0" minHeight="10.0" prefHeight="141.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="136.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="123.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label prefHeight="104.0" prefWidth="102.0" text="The beer distribution game" wrapText="true" GridPane.halignment="LEFT" GridPane.valignment="TOP">
@@ -35,11 +41,11 @@
                <image>
                   <Image url="@../image/flat-beer-background_23-2147744096.jpg" />
                </image></ImageView>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Create Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Join Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button fx:id="createAgent" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Create Agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Button fx:id="replay" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Replay game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Close Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Create Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button onAction="#handleJoinGameButtonClick" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Join Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button fx:id="createAgent" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Create Agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button fx:id="replay" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Replay game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Close Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
       </GridPane>
    </children>
