@@ -19,6 +19,15 @@ public class BusinessRule extends ASTNode {
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
 
     /**
+     * Gets the action of the BusinessRule
+     *
+     * @return Returns an action
+     */
+    public Action getAction() {
+        return action;
+    }
+
+    /**
      * Adds a child ASTNode to a parent(this) ASTNode
      *
      * @param child Child that has the be added to this ASTNode
@@ -308,5 +317,14 @@ public class BusinessRule extends ASTNode {
         } else {
             return facility.getFacilityId();
         }
+    }
+
+    /**
+     * States if the business rule is triggered
+     *
+     * @return Returns if the business rule is triggered
+     */
+    public boolean isTriggered() {
+        return ((BooleanLiteral) this.condition).getValue();
     }
 }

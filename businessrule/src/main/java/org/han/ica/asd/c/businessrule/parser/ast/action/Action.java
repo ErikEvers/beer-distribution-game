@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class Action extends ASTNode {
     private static final String PREFIX = "A(";
-    
+
     private ActionReference actionName;
     private OperationValue operation;
     private Person person;
