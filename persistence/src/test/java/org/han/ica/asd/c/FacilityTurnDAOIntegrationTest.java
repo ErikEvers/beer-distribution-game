@@ -48,7 +48,7 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void createTurnTest() {
-		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
+		roundDAO.createRound(1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 
 		FacilityTurnDB facilityTurnDb = facilityTurnDAO.fetchTurn(new RoundDB("BeerGameZutphen13_12_2018",1),new FacilityLinkedToDB("BeerGameZutphen13_12_2018",1,2,false));
@@ -66,7 +66,7 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void fetchTurnsTest() {
-		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
+		roundDAO.createRound(1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.createTurn(FACILITY_TURN2);
 
@@ -76,7 +76,7 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void updateTurnTest() {
-		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
+		roundDAO.createRound(1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.updateTurn(FACILITY_TURN3);
 
@@ -99,7 +99,7 @@ class FacilityTurnDAOIntegrationTest {
 
 	@Test
 	void deleteTurnTest() {
-		roundDAO.createRound("BeerGameZutphen13_12_2018",1);
+		roundDAO.createRound(1);
 		facilityTurnDAO.createTurn(FACILITY_TURN);
 		facilityTurnDAO.deleteTurn(FACILITY_TURN);
 

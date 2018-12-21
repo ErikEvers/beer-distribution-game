@@ -36,11 +36,11 @@ public class Persistence implements IPersistence {
 		//Empty constructor for GUICE
 	}
 
-	public void saveRoundData(RoundDB rounddata)
-	{
-		roundDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
-		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
-	}
+//	public void saveRoundData(Round rounddata)
+//	{
+//		roundDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
+//		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
+//	}
 
 	public void saveRoundData(Round rounddata) {
 	    // empty for stub

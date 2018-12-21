@@ -25,6 +25,9 @@ public class RoundDAO{
 	private static final String READ_DELIVERS = "SELECT * FROM FacilityTurnDeliver WHERE GameId = ? AND RoundId = ?;";
 	private static final String READ_FACILITIES = "SELECT * FROM FacilityTurn WHERE GameId = ? AND RoundId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(RoundDAO.class.getName());
+	private static final String CREATE_FACILITYORDER = "INSERT INTO FacilityTurnOrder (GameId, RoundId, FacilityId, FacilityIdOrder,OrderAmount) VALUES (?,?,?,?,?);";
+	private static final String CREATE_FACILITYDELIVER = "INSERT INTO FacilityTurnDeliver (GameId, RoundId, FacilityId, FacilityIdDeliver,DeliverAmount,OpenOrderAmount)  VALUES (?,?,?,?,?,?);" ;
+	private static final String CREATE_FACILITYTURN = "INSERT INTO FacilityTurn VALUES (?,?,?,?,?,?)";
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
@@ -127,7 +130,7 @@ public class RoundDAO{
 					pstmt.setInt(2, roundId);
 
 					try (ResultSet rs = pstmt.executeQuery()) {
-						delivers.add(new FacilityTurnDeliver(rs.getInt("FacilityId"), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoods")));
+						delivers.add(new FacilityTurnDeliver(rs.getInt("FacilityId"), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
 
 					}
 					conn.commit();
@@ -168,9 +171,82 @@ public class RoundDAO{
 		return facilities;
 	}
 
+	public void createFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder){
+		Connection conn = databaseConnection.connect();
+		try {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYORDER)) {
 
+					conn.setAutoCommit(false);
 
+					pstmt.setString(1, DaoConfig.getCurrentGameId());
+					pstmt.setInt(2, roundId);
+					pstmt.setInt(3,facilityTurnOrder.getFacilityId());
+					pstmt.setInt(4,facilityTurnOrder.getFacilityIdOrderTo());
+					pstmt.setInt(5,facilityTurnOrder.getOrderAmount());
 
+					pstmt.executeUpdate();
+				}
+
+				conn.commit();
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE,e.toString(),e);
+			databaseConnection.rollBackTransaction(conn);
+		}
+	}
+
+	public void createFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver){
+		Connection conn = databaseConnection.connect();
+		try {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYDELIVER)) {
+
+					conn.setAutoCommit(false);
+
+					pstmt.setString(1, DaoConfig.getCurrentGameId());
+					pstmt.setInt(2, roundId);
+					pstmt.setInt(3,facilityTurnDeliver.getFacilityId());
+					pstmt.setInt(4,facilityTurnDeliver.getFacilityIdDeliverTo());
+					pstmt.setInt(5,facilityTurnDeliver.getDeliverAmount());
+					pstmt.setInt(6,facilityTurnDeliver.getOpenOrderAmount());
+
+					pstmt.executeUpdate();
+				}
+
+				conn.commit();
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE,e.toString(),e);
+			databaseConnection.rollBackTransaction(conn);
+		}
+	}
+
+	public void createFacilityTurn(int roundId, FacilityTurn facilityTurn){
+		Connection conn = databaseConnection.connect();
+		try {
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTURN)) {
+
+					conn.setAutoCommit(false);
+
+					pstmt.setString(1, DaoConfig.getCurrentGameId());
+					pstmt.setInt(2, roundId);
+					pstmt.setInt(3,facilityTurn.getFacilityId());
+					pstmt.setInt(4,facilityTurn.getStock());
+					pstmt.setInt(5,facilityTurn.getRemainingBudget());
+					pstmt.setBoolean(6,facilityTurn.isBankrupt());
+
+					pstmt.executeUpdate();
+				}
+
+				conn.commit();
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE,e.toString(),e);
+			databaseConnection.rollBackTransaction(conn);
+		}
+	}
 
 	/**
 	 * A helper method to execute a prepared statement for the SQLite Database.

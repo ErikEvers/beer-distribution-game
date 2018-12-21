@@ -4,13 +4,13 @@ public class FacilityTurnDeliver {
 	private int facilityId;
 	private int facilityIdDeliverTo;
 	private int openOrderAmount;
-	private int outGoingGoods;
+	private int deliverAmount;
 
-	public FacilityTurnDeliver(int facilityId, int facilityIdDeliverTo, int openOrderAmount, int outGoingGoods) {
+	public FacilityTurnDeliver(int facilityId, int facilityIdDeliverTo, int openOrderAmount, int deliverAmount) {
 		this.facilityId = facilityId;
 		this.facilityIdDeliverTo = facilityIdDeliverTo;
 		this.openOrderAmount = openOrderAmount;
-		this.outGoingGoods = outGoingGoods;
+		this.deliverAmount = deliverAmount;
 	}
 
 	public int getFacilityIdDeliverTo() {
@@ -29,12 +29,12 @@ public class FacilityTurnDeliver {
 		this.openOrderAmount = openOrderAmount;
 	}
 
-	public int getOutGoingGoods() {
-		return outGoingGoods;
+	public int getDeliverAmount() {
+		return deliverAmount;
 	}
 
-	public void setOutGoingGoods(int outGoingGoods) {
-		this.outGoingGoods = outGoingGoods;
+	public void setDeliverAmount(int deliverAmount) {
+		this.deliverAmount = deliverAmount;
 	}
 
 	public int getFacilityId() {
