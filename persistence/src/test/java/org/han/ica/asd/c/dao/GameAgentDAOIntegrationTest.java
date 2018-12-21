@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.exception.GameIdNotSetException;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.junit.Assert;
@@ -97,5 +98,11 @@ class GameAgentDAOIntegrationTest {
         Assert.assertEquals(GAMEAGENT2_UPDATE.getFacilityId(),gameAgentDb.getFacilityId());
         Assert.assertEquals(GAMEAGENT2_UPDATE.getGameAgentName(),gameAgentDb.getGameAgentName());
         Assert.assertEquals(GAMEAGENT2_UPDATE.getGameBusinessRules().size(),gameAgentDb.getGameBusinessRules().size());
+    }
+
+    @Test
+    void gameIdNotSetExceptionTest() throws GameIdNotSetException{
+        DaoConfig.setCurrentGameId(null);
+        gameAgentDAO.createGameAgent(GAMEAGENT2);
     }
 }
