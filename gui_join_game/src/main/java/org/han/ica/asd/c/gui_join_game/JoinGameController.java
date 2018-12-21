@@ -6,7 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.model.interface_models.RoomModel;
+import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,21 +26,21 @@ public class JoinGameController {
     @Named("MainMenu")
     private IGUIHandler mainMenu;
 
+    @Inject
+    private IConnecterForSetup iConnectorForSetup;
+
     private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
-        //TODO connect with IConnectorForSetup getAvailableRooms;
+        items.addAll(iConnectorForSetup.getAvailableRooms());
         list.setItems(items);
-        items.add("hello");
-        items.add("lol");
     }
 
     public void handleJoinGameButtonClick() {
         //TODO Join room on IConnectorForSetup. If logged in succesful then set Room
-
-        if (true) {
-            list.getSelectionModel().getSelectedItem();
-            gameRoom.setData(new Object[]{new RoomModel()});
+        RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),"","");
+        if (result != null) {
+            gameRoom.setData(new Object[]{result});
             gameRoom.setupScreen();
         }
     }
@@ -49,6 +50,8 @@ public class JoinGameController {
     }
 
     public void handleListClick() {
-        joinGameButton.setVisible(true);
+        if(list.getSelectionModel().getSelectedItem() !=null) {
+            joinGameButton.setVisible(true);
+        }
     }
 }

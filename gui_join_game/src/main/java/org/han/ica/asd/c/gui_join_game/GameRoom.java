@@ -2,7 +2,7 @@ package org.han.ica.asd.c.gui_join_game;
 
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.model.interface_models.RoomModel;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import java.util.ResourceBundle;
 
