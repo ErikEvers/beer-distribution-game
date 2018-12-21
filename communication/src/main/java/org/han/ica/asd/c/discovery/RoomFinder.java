@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.discovery;
 
 import org.han.ica.asd.c.discovery.impl.GoogleDrive;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,21 +29,74 @@ public class RoomFinder implements IFinder{
         return rooms;
     }
 
-    public Room joinGameRoom(String roomName, String hostIP, String password) throws DiscoveryException {
-        if (checkIfRoomDoesNotExists(roomName)) {
-            try {
-                Room room = new Room(roomName, service);
-                room.addHost(hostIP, password);
-                return room;
-            } catch (RoomException e) {
-                LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
-                throw new DiscoveryException(e);
-            }
+    public RoomModel createGameRoomModel(String roomName, String leaderIP, String password){
+        RoomModel roomModel = new RoomModel();
+        try {
+            createGameRoomOnline(roomName, leaderIP, password);
+            roomModel.setRoomName(roomName);
+            roomModel.setLeaderIP(leaderIP);
+            roomModel.setHosts(new ArrayList<String>());
+            roomModel.setPassword(password);
+            roomModel.setGameStarted(false);
+            return roomModel;
+        } catch (DiscoveryException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
-        return null;
+        return roomModel;
     }
 
-    public Room createGameRoom(String roomName, String ip, String password) throws DiscoveryException {
+    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password){
+        RoomModel roomModel = new RoomModel();
+        try {
+            Room created = getRoom(roomName);
+            created.addHost(hostIP, password);
+            roomModel.setRoomName(roomName);
+            roomModel.setLeaderIP(created.getLeaderIP());
+            roomModel.setHosts(created.getHosts());
+            roomModel.setPassword(password);
+            roomModel.setGameStarted(false);
+            return roomModel;
+        } catch (DiscoveryException | RoomException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return new RoomModel();
+    }
+
+    public void startGameRoom(String roomName){
+        try {
+            getRoom(roomName).closeGameAndStartGame();
+        } catch (RoomException | DiscoveryException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public RoomModel getRoom(RoomModel roomModel){
+        RoomModel room = new RoomModel();
+        try {
+            Room onlineRoom = getRoom(roomModel.getRoomName());
+            room.setRoomName(onlineRoom.getRoomName());
+            room.setHosts(onlineRoom.getHosts());
+            room.setLeaderIP(onlineRoom.getLeaderIP());
+            room.setPassword(onlineRoom.getPassword());
+            room.setGameStarted(false);
+        } catch (DiscoveryException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return room;
+    }
+
+    private Room getRoom(String roomName) throws DiscoveryException {
+        Room room = null;
+        try {
+            room = new Room(roomName, service);
+        } catch (RoomException e) {
+            LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
+                throw new DiscoveryException(e);
+        }
+        return room;
+    }
+
+    private Room createGameRoomOnline(String roomName, String ip, String password) throws DiscoveryException {
         if (checkIfRoomDoesNotExists(roomName)) {
             throw new DiscoveryException("Room already exists.");
         }else {
@@ -75,7 +129,7 @@ public class RoomFinder implements IFinder{
         }
     }
 
-    public static void setService(IResourceManager service) {
+    static void setService(IResourceManager service) {
         RoomFinder.service = service;
     }
 }
