@@ -163,8 +163,4 @@ class BusinessRuleTest {
         String result = businessRule.encode();
         assertEquals(expected, result);
     }
-    void test(){
-
-
-    }
 }
