@@ -53,15 +53,14 @@ public class GameMessageClient {
      * Send the whoIsTheLeaderMessage using the socketclient.
      * @author Oscar
      * @param ip The ip to send it to.
-     * @param whoIsTheLeaderMessage The 'WhoIsTheLeaderMessage' to sent to the ip.
      * @return The 'WhoIsTheLeaderMessage' with either the exception or the response filled in.
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip, WhoIsTheLeaderMessage  whoIsTheLeaderMessage){
-        WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = null;
+    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip){
+        WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {
-            whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessage);
+            whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.SEVERE,e.getMessage());
         }
