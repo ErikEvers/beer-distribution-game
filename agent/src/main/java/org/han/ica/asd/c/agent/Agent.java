@@ -46,8 +46,6 @@ public class Agent extends GameAgent implements IParticipant {
         List<Round>             triggeredRounds         = new ArrayList<>();
 
         for (GameBusinessRules gameBusinessRules : gameBusinessRulesList) {
-        	// Hier ergens GameBusinessRulesInFacilityTurn aanmaken met getriggerde Business rules en de verwante Rounds
-
             ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.gameBusinessRuleAST, round);
             if(actionModel != null) {
                 Facility targetFacility = this.resolveFacilityId(actionModel.facilityId);
