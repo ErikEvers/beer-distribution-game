@@ -18,7 +18,7 @@ public enum GameValue {
     /***
      * sets the GameValue
      *
-     * @param values
+     * @param values the values of type String[]
      */
     GameValue(String... values) {
         this.value = (values);
@@ -26,7 +26,7 @@ public enum GameValue {
 
     /***
      * gets the synonyms of the enum
-     * @return
+     * @return gets the synonyms of value
      */
     public String[] getValue() {
         return value;
@@ -34,7 +34,7 @@ public enum GameValue {
 
     /**
      * checks if the given value is used in the list
-     * @param value
+     * @param value the given value
      * @return
      */
     public boolean contains(String value){

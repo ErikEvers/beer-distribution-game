@@ -198,7 +198,7 @@ public class BusinessRule extends ASTNode {
      *  @param value the value
      * @param round the previous round
      * @param facilityId the id of the facility
-     * @param variable
+     * @param variable one part of value
      */
     private void replaceOnVariable(Value value, Round round, int facilityId, String variable){
         GameValue gameValue = getGameValue(variable);
@@ -211,7 +211,7 @@ public class BusinessRule extends ASTNode {
     /***
      * if the variable is a variable then it returns the corresponding game value
      * @param variable one part of the value
-     * @return
+     * @return the corresponding game value
      */
     private GameValue getGameValue(String variable){
         for(GameValue gameValue: GameValue.values()){
@@ -226,35 +226,35 @@ public class BusinessRule extends ASTNode {
      * gets the replacementValue from the previous round
      * @param gameValue the type of game value
      * @param round from the previous round
-     * @param facilityId
-     * @return
+     * @param facilityId the id of the facility
+     * @return the replacement Value
      */
     private String getReplacementValue(GameValue gameValue,Round round, int facilityId) {
         switch (gameValue){
             case ORDERED:
-                return getValueFromHashmapInHasmap(round.getTurnOrder(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnOrder(),facilityId);
             case STOCK:
                 return  getValue(round.getTurnStock(),facilityId);
             case BUDGET:
                 return  getValue(round.getRemainingBudget(),facilityId);
             case BACKLOG:
-                return getValueFromHashmapInHasmap(round.getTurnBackOrder(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnBackOrder(),facilityId);
             case INCOMINGORDER:
-                return getValueFromHashmapInHasmap(round.getTurnReceived(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnReceived(),facilityId);
             case OUTGOINGGOODS:
-                return getValueFromHashmapInHasmap(round.getTurnDeliver(),facilityId);
+                return getValueFromHashmapInHashmap(round.getTurnDeliver(),facilityId);
             default:
                 return String.valueOf(getFacilityIdBasedOnType(round.getTurnStock(), gameValue));
         }
     }
 
     /***
-     *
-     * @param map
-     * @param facilityId
-     * @return
+     * gets the value from hashmap in hashmap
+     * @param map the given map
+     * @param facilityId the id of the facility
+     * @return the value of the hashmap
      */
-    private String getValueFromHashmapInHasmap(Map<Facility,Map<Facility,Integer>> map, int facilityId){
+    private String getValueFromHashmapInHashmap(Map<Facility,Map<Facility,Integer>> map, int facilityId){
         Map.Entry<Facility,Map<Facility,Integer>> entry = map.entrySet().iterator().next();
         Map<Facility,Integer> value = entry.getValue();
         return getValue(value,facilityId);
@@ -264,7 +264,7 @@ public class BusinessRule extends ASTNode {
      * gets the value from the hashmap
      * @param map the map containing round data
      * @param facilityId the id of the facility
-     * @return
+     * @return gets the value of the map and returns it as a string
      */
     private String getValue(Map<Facility,Integer> map,int facilityId){
         for(Map.Entry<Facility,Integer> entry:map.entrySet()){
@@ -277,9 +277,9 @@ public class BusinessRule extends ASTNode {
 
     /**
      * gets the id based on the facility Type
-     * @param map
-     * @param facilityType
-     * @return
+     * @param map the map to search through
+     * @param facilityType the type of facility
+     * @return the type of facility. returns -1 when no type is found
      */
     private int getFacilityIdBasedOnType(Map<Facility,Integer> map, GameValue facilityType){
         Facility facility = null;
