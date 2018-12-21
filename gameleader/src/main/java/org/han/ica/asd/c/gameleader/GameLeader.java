@@ -57,14 +57,14 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
     /**
      * This method is called when a player disconnects, which this class is notified of by the IPlayerDisconnected interface.
-     * Using this playerId an IParticipant object is created with the facilityId and gameAgentName corresponding to the playerId, which is sent to the Game Logic component.
+     * Using this playerId an IParticipant object is created with the facility and gameAgentName corresponding to the playerId, which is sent to the Game Logic component.
      *
      * @param playerId the Id of the player that disconnected.
      */
     public void playerIsDisconnected(String playerId) {
-        for (int i = 0; i <= game.getConfiguration().getFacilities().size(); i++) {
-            if (game.getConfiguration().getFacilities().get(i).getPlayer().getPlayerId().equals(playerId)) {
-                IParticipant participant = new AgentParticipant(game.getConfiguration().getFacilities().get(i).getAgent().getGameAgentName(), game.getConfiguration().getFacilities().get(i));
+        for (int i = 0; i <= game.getPlayers().size(); i++) {
+            if (game.getPlayers().get(i).getPlayerId().equals(playerId)) {
+                IParticipant participant = new AgentParticipant(game.getPlayers().get(i).getFacility().getAgent().getGameAgentName(), game.getPlayers().get(i).getFacility());
                 gameLogic.addLocalParticipant(participant);
             }
         }
