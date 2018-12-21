@@ -108,7 +108,6 @@ CREATE TABLE IF NOT EXISTS Player (
   FacilityId int NOT NULL,
   IpAddress varchar(45) NOT NULL,
   Name varchar(255) NOT NULL,
-  IsConnected bit NOT NULL,
   CONSTRAINT PK_Player PRIMARY KEY (GameId, PlayerId),
   CONSTRAINT FK_Player_Beergame FOREIGN KEY (GameId) REFERENCES Beergame(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT,

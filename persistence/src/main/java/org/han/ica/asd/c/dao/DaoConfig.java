@@ -23,7 +23,7 @@ public class DaoConfig {
      * @param pstmt The prepared statement to whom the gameId needs to be added.
      * @param index The index on which place the gameId has to be set.
      */
-    protected static void gameIdNotSetCheck(PreparedStatement pstmt, int index) throws GameIdNotSetException, SQLException {
+    private static void gameIdNotSetCheck(PreparedStatement pstmt, int index) throws GameIdNotSetException, SQLException {
         if(DaoConfig.currentGameId == null) {
             throw new GameIdNotSetException("GameId not set");
         } else {
