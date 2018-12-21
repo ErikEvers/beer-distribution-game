@@ -4,6 +4,8 @@ package org.han.ica.asd.c.gui_main_menu;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
+import java.util.ResourceBundle;
+
 
 public class MainMenu implements IGUIHandler {
 
@@ -13,8 +15,7 @@ public class MainMenu implements IGUIHandler {
 	}
 
 	public void setupScreen() {
-
-		FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/MainMenu.fxml"));
+		FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiMainMenu"), getClass().getResource("/fxml/MainMenu.fxml"));
 	}
 
 }
