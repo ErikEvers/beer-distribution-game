@@ -71,4 +71,13 @@ class ParserPipelineTest {
         int exp = 3;
         assertEquals(exp,res);
     }
+
+    @Test
+    void test(){
+        boolean res = parserPipeline.parseString("defaul order 20");
+
+        boolean exp = false;
+
+        assertEquals(exp,res);
+    }
 }

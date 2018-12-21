@@ -112,6 +112,10 @@ public class ParserPipeline {
     }
 
     private int findBeginErrorWord(String businessRule, int charPosition){
+        if(charPosition < 0){
+            return 0;
+        }
+
         if(String.valueOf(businessRule.charAt(charPosition)).equals(" ")){
             return charPosition+1;
         }
