@@ -29,8 +29,6 @@ public class Value extends OperationValue {
      * @param value Value to be added to the value string
      * @return Returns itself so that it can be used immediately
      */
-    //[40% inventory]
-    //[40%], [inventory]
     @Override
     public Value addValue(String value) {
         if ("smallest".equals(value) || "lowest".equals(value)) {

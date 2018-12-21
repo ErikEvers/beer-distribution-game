@@ -88,10 +88,10 @@ public abstract class ASTNode {
 
 
     public ASTNode getLeftChild(){
-        return this;
+        return null;
     }
 
     public ASTNode getRightChild(){
-        return this;
+        return null;
     }
 }

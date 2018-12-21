@@ -142,13 +142,8 @@ public class BusinessRule extends ASTNode {
      * @param facilityId identifier of the facility
      */
     public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId){
-        findLeafAndReplace(condition.getLeftChild(),round,facilityId);
-        if(hasMultipleChildren(condition)) {
-            findLeafAndReplace(condition.getRightChild(),round, facilityId);
-        }
-        if (action != null) {
-            findLeafAndReplace(action.getRightChild(),round, facilityId);
-        }
+        findLeafAndReplace(condition,round,facilityId);
+        findLeafAndReplace(action,round, facilityId);
     }
 
     /***
@@ -158,16 +153,14 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      */
     private void findLeafAndReplace(ASTNode astNode, Round round, int facilityId){
-        int left = 0;
-        int right = 2;
         if(astNode instanceof Value){
             replace((Value) astNode,round,facilityId);
         }
-        if (!astNode.getChildren().isEmpty()) {
-            findLeafAndReplace(astNode.getChildren().get(left),round, facilityId);
-            if (hasMultipleChildren(astNode)) {
-                findLeafAndReplace(astNode.getChildren().get(right),round, facilityId);
-            }
+        if (astNode!=null) {
+            findLeafAndReplace(astNode.getLeftChild(),round, facilityId);
+	        if (hasMultipleChildren(astNode)) {
+		        findLeafAndReplace(astNode.getRightChild(),round, facilityId);
+	        }
         }
     }
 
@@ -206,7 +199,6 @@ public class BusinessRule extends ASTNode {
      * @param round the previous round
      * @param facilityId the id of the facility
      * @param variable
-     * @param part
      */
     private void replaceOnVariable(Value value, Round round, int facilityId, String variable){
         GameValue gameValue = getGameValue(variable);
