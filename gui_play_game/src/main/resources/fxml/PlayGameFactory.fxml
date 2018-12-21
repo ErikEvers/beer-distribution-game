@@ -45,12 +45,12 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Step 2:" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Label text="Step 2:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="60.0" left="30.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSendOrderButtonClick" style="-fx-background-color: #ff8000;" text="Send order" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Button mnemonicParsing="false" onAction="#handleSendOrderButtonClick" style="-fx-background-color: #ff8000;" text="Send order" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                   <TextField fx:id="incomingOrderTextField" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                   <TextField fx:id="outgoingOrderTextField" layoutX="39.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
@@ -66,40 +66,25 @@
                         <Insets left="30.0" top="25.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label text="Inventory:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Label text="Inventory:" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+
                      <font>
-                        <Font size="21.0" />
+                        <Font size="20.0" />
                      </font>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
                   </Label>
                   <Label fx:id="inventory" text="40" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <GridPane.margin>
-                        <Insets right="30.0" />
+                        <Insets />
                      </GridPane.margin>
                      <font>
-                        <Font size="21.0" />
+                        <Font size="20.0" />
                      </font>
                   </Label>
-                  <Label text="Back orders:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                     <font>
-                        <Font size="21.0" />
-                     </font>
-                  </Label>
-                  <Label text="0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                     <font>
-                        <Font size="21.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="30.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Label text="Step 1:" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                     <GridPane.margin>
-                        <Insets bottom="60.0" left="30.0" />
-                     </GridPane.margin>
-                  </Label>
+                   <Label text="Step 1:" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                       <GridPane.margin>
+                           <Insets bottom="60.0" left="30.0" />
+                       </GridPane.margin>
+                   </Label>
                   <TextField fx:id="step1TextField" editable="false" layoutX="39.0" layoutY="289.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                   <TextField fx:id="step2TextField" editable="false" layoutX="39.0" layoutY="485.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                   <ComboBox fx:id="comboBox" prefWidth="150.0" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
