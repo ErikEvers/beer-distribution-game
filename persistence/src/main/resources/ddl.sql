@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS  FacilityType (
   OpenOrderCosts int NOT NULL,
   StartingBudget int NOT NULL,
   StartingOrder int NOT NULL,
+  StartingStock int NOT NULL,
   CONSTRAINT PK_FacilityType PRIMARY KEY (FacilityName, GameId),
   CONSTRAINT FK_FacilityType FOREIGN KEY (GameId) REFERENCES Configuration(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT
@@ -50,9 +51,8 @@ CREATE TABLE IF NOT EXISTS  Facility  (
   GameAgentName varchar(255) NOT NULL,
   PlayerId varchar(36) NULL,
   FacilityName varchar(24) NOT NULL,
-  Bankrupt bit NOT NULL,
   CONSTRAINT PK_Facility PRIMARY KEY (GameId, FacilityId),
-  CONSTRAINT FK_Facility_Configuration FOREIGN KEY (GameId) REFERENCES  Configuration(GameId)
+  CONSTRAINT FK_Facility_Configuration FOREIGN KEY (GameId) REFERENCES  FacilityType(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT FK_Facility_FacilityType FOREIGN KEY (FacilityName) REFERENCES FacilityType(FacilityName)
   ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -64,32 +64,28 @@ CREATE TABLE IF NOT EXISTS  Facility  (
 
 CREATE TABLE IF NOT EXISTS  FacilityLinkedTo (
   GameId varchar(36) NOT NULL,
-  FacilityIdOrder int NOT NULL,
-  FacilityIdDeliver int NOT NULL,
-  Active bit NOT NULL,
-  CONSTRAINT PK_FacilityLinkedTo PRIMARY KEY (GameId, FacilityIdOrder, FacilityIdDeliver),
+  FacilityIdOrderering int NOT NULL,
+  FacilityIdDelivering int NOT NULL,
+  CONSTRAINT PK_FacilityLinkedTo PRIMARY KEY (GameId, FacilityIdOrdering, FacilityIdDelivering),
   CONSTRAINT FK_FacilityLinkedTo_Configuration FOREIGN KEY (GameId) REFERENCES Configuration(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT FK_FacilityLinkedTo_Facility_Deliver FOREIGN KEY (FacilityIdDeliver) REFERENCES Facility(FacilityId)
+  CONSTRAINT FK_FacilityLinkedTo_Facility_Delivering FOREIGN KEY (FacilityIdDelivering) REFERENCES Facility(FacilityId)
   ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT FK_FacilityLinkedTo_Facility_Order FOREIGN KEY (FacilityIdOrder) REFERENCES Facility(FacilityId)
+  CONSTRAINT FK_FacilityLinkedTo_Facility_Ordering FOREIGN KEY (FacilityIdOrdering) REFERENCES Facility(FacilityId)
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS FacilityTurn (
   GameId varchar(36) NOT NULL,
   RoundId int NOT NULL,
-  FacilityIdOrder int NOT NULL,
-  FacilityIdDeliver int NOT NULL,
+  FacilityId int NOT NULL,
   Stock int NOT NULL,
   RemainingBudget int NOT NULL,
-  OrderAmount int NOT NULL,
-  OpenOrderAmount int NOT NULL,
-  OutgoingGoodsAmount int NOT NULL,
-  CONSTRAINT PK_FacilityTurn PRIMARY KEY (RoundId, FacilityIdOrder, GameId, FacilityIdDeliver),
-  CONSTRAINT FK_FacilityTurn_Facility FOREIGN KEY (FacilityIdOrder, FacilityIdDeliver, GameId) REFERENCES FacilityLinkedTo(FacilityIdOrder, FacilityIdDeliver, GameId)
+  Bankrupt bit NOT NULL,
+  CONSTRAINT PK_FacilityTurn PRIMARY KEY (GameId, RoundId, FacilityId),
+  CONSTRAINT FK_FacilityTurn_Facility FOREIGN KEY (FacilityId) REFERENCES Facility(FacilityId)
   ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT FK_FacilityTurn_Round FOREIGN KEY (RoundId) REFERENCES Round(RoundId)
+  CONSTRAINT FK_FacilityTurn_Round FOREIGN KEY (GameId, RoundId) REFERENCES Round(GameId, RoundId)
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
@@ -97,7 +93,7 @@ CREATE TABLE IF NOT EXISTS GameAgent (
   FacilityId int NOT NULL,
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
-  CONSTRAINT PK_GameAgent PRIMARY KEY (GameId, GameAgentName, FacilityId),
+  CONSTRAINT PK_GameAgent PRIMARY KEY (FacilityId, GameId, GameAgentName),
   CONSTRAINT FK_GameAgent_Facility FOREIGN KEY (GameId, FacilityId) REFERENCES Facility(GameId, FacilityId)
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
@@ -108,7 +104,6 @@ CREATE TABLE IF NOT EXISTS Player (
   FacilityId int NOT NULL,
   IpAddress varchar(45) NOT NULL,
   Name varchar(255) NOT NULL,
-  IsConnected bit NOT NULL,
   CONSTRAINT PK_Player PRIMARY KEY (GameId, PlayerId),
   CONSTRAINT FK_Player_Beergame FOREIGN KEY (GameId) REFERENCES Beergame(GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -125,21 +120,6 @@ CREATE TABLE IF NOT EXISTS Leader (
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS GameBusinessRulesInFacilityTurn (
-  RoundId int NOT NULL,
-  FacilityIdOrder int NOT NULL,
-  FacilityIdDeliver int NOT NULL,
-  GameId varchar(36) NOT NULL,
-  GameAgentName varchar(255) NOT NULL,
-  GameBusinessRule varchar NOT NULL,
-  GameAST varchar NOT NULL,
-  CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId, GameAgentName, GameBusinessRule, GameAST),
-  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule, GameAST) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule, GameAST)
-  ON UPDATE CASCADE ON DELETE RESTRICT,
-  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_FacilityTurn FOREIGN KEY (RoundId, FacilityIdDeliver, FacilityIdOrder, GameId) REFERENCES FacilityTurn(RoundId, FacilityIdDeliver, FacilityIdOrder, GameId)
-  ON UPDATE CASCADE ON DELETE RESTRICT
-);
-
 CREATE TABLE IF NOT EXISTS GameBusinessRules (
   FacilityId int NOT NULL,
   GameId varchar(36) NOT NULL,
@@ -148,6 +128,20 @@ CREATE TABLE IF NOT EXISTS GameBusinessRules (
   GameAST varchar NOT NULL,
   CONSTRAINT PK_GameBusinessRules PRIMARY KEY (FacilityId, GameId, GameAgentName, GameBusinessRule, GameAST),
   CONSTRAINT FK_GameBusinessRules_GameAgent FOREIGN KEY (FacilityId, GameId, GameAgentName) REFERENCES GameAgent(FacilityId, GameId, GameAgentName)
+  ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS GameBusinessRulesInFacilityTurn (
+  RoundId int NOT NULL,
+  FacilityId int NOT NULL,
+  GameId varchar(36) NOT NULL,
+  GameAgentName varchar(255) NOT NULL,
+  GameBusinessRule varchar NOT NULL,
+  GameAST varchar NOT NULL,
+  CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityId, GameId, GameAgentName, GameBusinessRule, GameAST),
+  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule, GameAST) REFERENCES GameBusinessRules (GameAgentName, GameBusinessRule, GameAST)
+  ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_FacilityTurn FOREIGN KEY (RoundId, FacilityId, GameId) REFERENCES FacilityTurn(RoundId, FacilityIdDeliver, FacilityIdOrder, GameId)
   ON UPDATE CASCADE ON DELETE RESTRICT
 );
 

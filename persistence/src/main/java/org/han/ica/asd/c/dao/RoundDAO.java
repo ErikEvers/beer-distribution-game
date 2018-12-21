@@ -2,8 +2,7 @@ package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.RoundDB;
-
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -53,20 +52,22 @@ public class RoundDAO{
 	 * @param roundId The id of the specific round which needs to be returned
 	 * @return A round object
 	 */
-	public RoundDB getRound(String gameId, int roundId){
+	public Round getRound(String gameId, int roundId){
 		Connection conn = databaseConnection.connect();
-		RoundDB round = null;
+		Round round = null;
 		try {
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
 
 					conn.setAutoCommit(false);
 
-					pstmt.setString(1, gameId);
+					pstmt.setString(1, DaoConfig.getCurrentGameId());
 					pstmt.setInt(2, roundId);
 
 					try (ResultSet rs = pstmt.executeQuery()) {
-						round = new RoundDB(rs.getString("GameId"), rs.getInt("RoundId"));
+						round = new Round();
+						round.setRoundId(rs.getInt("RoundId"));
+						
 					}
 					conn.commit();
 				}
