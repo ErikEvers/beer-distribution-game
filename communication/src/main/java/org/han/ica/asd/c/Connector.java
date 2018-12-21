@@ -69,7 +69,7 @@ private static Connector instance = null;
         try {
             return finder.createGameRoom(roomName, ip, password);
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            LOGGER.log(Level.INFO, e.getMessage(), e);
         }
         return null;
     }
@@ -78,7 +78,7 @@ private static Connector instance = null;
         try {
             return finder.joinGameRoom(roomName, ip, password);
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            LOGGER.log(Level.INFO, e.getMessage(), e);
         }
         return null;
     }
@@ -91,7 +91,7 @@ private static Connector instance = null;
             }
             room.closeGameAndStartGame();
         } catch (RoomException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            LOGGER.log(Level.INFO, e.getMessage(), e);
         }
     }
 

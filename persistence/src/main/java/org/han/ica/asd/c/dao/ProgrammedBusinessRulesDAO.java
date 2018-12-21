@@ -83,26 +83,23 @@ public class ProgrammedBusinessRulesDAO implements IBeerDisitributionGameDAO {
     public List<ProgrammedBusinessRulesDB> readAllProgrammedBusinessRulesFromAProgrammedAgent(ProgrammedAgentDB programmedAgent) {
         Connection conn = databaseConnection.connect();
         List<ProgrammedBusinessRulesDB> programmedBusinessRules = new ArrayList<>();
-        try {
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
 
-                    conn.setAutoCommit(false);
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, programmedAgent.getProgrammedAgentName());
+                pstmt.setString(1, programmedAgent.getProgrammedAgentName());
 
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            programmedBusinessRules.add(new ProgrammedBusinessRulesDB(rs.getString("ProgrammedAgentName"),
-                                    rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
-                        }
-                    }
-                    conn.commit();
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    rs.next();
+                    programmedBusinessRules.add(new ProgrammedBusinessRulesDB(rs.getString("ProgrammedAgentName"),
+                            rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
                 }
+                conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
 
         return programmedBusinessRules;

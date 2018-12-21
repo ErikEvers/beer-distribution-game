@@ -73,25 +73,16 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * @return A list of configurations of the found configurations of a specific game
 	 */
 	public List<ConfigurationDB> readConfigurations() {
-		Connection conn = null;
 		ArrayList<ConfigurationDB> configurations = new ArrayList<>();
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATIONS)) {
-					try (ResultSet rs = pstmt.executeQuery()) {
-						while (rs.next()) {
-							configurations.add(new ConfigurationDB(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
-									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
-									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
-									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
-									rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities")));
-						}
-					}
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATIONS); ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					configurations.add(createConfigurationDB(rs));
 				}
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 		return configurations;
 	}
@@ -102,31 +93,35 @@ public class ConfigurationDAO implements IBeerDisitributionGameDAO {
 	 * @return A configuration according to the gameId
 	 */
 	public ConfigurationDB readConfiguration(String gameId){
-		Connection conn;
 		ConfigurationDB configuration = null;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATION)) {
-					pstmt.setString(1,gameId);
-					try (ResultSet rs = pstmt.executeQuery()) {
-						while (rs.next()) {
-							configuration = new ConfigurationDB(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
-									rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
-									rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
-									rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
-									rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"));
-						}
-					}
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATION)) {
+				pstmt.setString(1,gameId);
+				try (ResultSet rs = pstmt.executeQuery()) {
+					rs.next();
+					configuration = createConfigurationDB(rs);
 				}
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE,e.toString(),e);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString(),e);
 		}
 		return configuration;
 	}
 
-
+	/**
+	 * Port resultset to configurationDB object.
+	 * @param rs result set from the database.
+	 * @return created configurationDB.
+	 * @throws SQLException thrown when result set does not contain the requested keys.
+	 */
+	private ConfigurationDB createConfigurationDB(ResultSet rs) throws SQLException {
+		return new ConfigurationDB(rs.getString("GameId"), rs.getInt("AmountOfRounds"),
+				rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
+				rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
+				rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
+				rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"));
+	}
 
 
 	/**
