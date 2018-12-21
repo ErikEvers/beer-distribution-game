@@ -3,9 +3,16 @@ package org.han.ica.asd.c.businessrule;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -104,10 +111,8 @@ class BusinessRuleTest {
 
     @BeforeEach
     void setupTestReplaceBusinessRuleWithValue(){
-
-
-         round = Mockito.mock(Round.class);
-         facility = Mockito.mock(Facility.class);
+        round = Mockito.mock(Round.class);
+        facility = Mockito.mock(Facility.class);
         FacilityType facilityType = Mockito.mock(FacilityType.class);
         facility.setFacilityType(facilityType);
         facility.setFacilityId(facilityId);
@@ -118,22 +123,30 @@ class BusinessRuleTest {
         mapInMap.put(facility,map);
 
         when(facility.getFacilityType()).thenReturn(facilityType);
-        when(facilityType.getFacilityName()).thenReturn("factory");
         when(facility.getFacilityId()).thenReturn(facilityId);
+        when(facilityType.getFacilityName()).thenReturn("factory");
         when(round.getTurnStock()).thenReturn(map);
         when(round.getTurnBackOrder()).thenReturn(mapInMap);
         when(round.getRemainingBudget()).thenReturn(map);
         when(round.getTurnDeliver()).thenReturn(mapInMap);
-
         when(round.getTurnOrder()).thenReturn(mapInMap);
         when(round.getTurnReceived()).thenReturn(mapInMap);
     }
     @Test
     void testBusinessrule_getReplacementValue_equals_10() {
-        String businessRuleString = "BR(C(CV(V(incoming order factory))ComO(>=)CV(V(back orders factory)))A(AR(order)Div(V(40% inventory)CalO(/)V(20% outgoing goods))))";
+	    BusinessRule businessRule = (BusinessRule) new BusinessRule()
+			    .addChild(new Comparison()
+					    .addChild(new ComparisonValue().addChild(new Value().addValue("incoming order").addValue("factory")))
+					    .addChild(new ComparisonOperator("equal"))
+					    .addChild(new ComparisonValue().addChild(new Value().addValue("back orders").addValue("factory"))))
+			    .addChild(new Action()
+					    .addChild(new ActionReference("order"))
+					    .addChild(new DivideOperation()
+							    .addChild(new Value().addValue("40%").addValue("inventory"))
+							    .addChild(new Value().addValue("20%").addValue("outgoing goods"))));
+
         String expected = "BR(C(CV(V(10 11))ComO(>=)CV(V(10 11)))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
 
-        businessRule = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
 
         String result = businessRule.encode();

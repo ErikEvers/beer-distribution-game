@@ -190,12 +190,12 @@ public class BusinessRule extends ASTNode {
     private void replace(Value value, Round round, int facilityId) {
         String firstVariable = value.getFirstPartVariable();
         if(Pattern.matches(HAS_CHARACTERS,value.getFirstPartVariable())) {
-            replaceOnVariable(value,round,facilityId,firstVariable,0);
+            replaceOnVariable(value,round,facilityId,firstVariable);
         }
         if(value.getValue().size()>1) {
             String secondVariable = value.getSecondPartVariable();
             if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
-                replaceOnVariable(value,round,facilityId,secondVariable,1);
+                replaceOnVariable(value,round,facilityId,secondVariable);
             }
         }
     }
@@ -208,11 +208,11 @@ public class BusinessRule extends ASTNode {
      * @param variable
      * @param part
      */
-    private void replaceOnVariable(Value value, Round round, int facilityId, String variable,int part){
+    private void replaceOnVariable(Value value, Round round, int facilityId, String variable){
         GameValue gameValue = getGameValue(variable);
         if(gameValue !=null) {
             String newReplacementValue = getReplacementValue(gameValue,round,facilityId);
-            value.replaceValueWithValue(newReplacementValue,part);
+            value.replaceValueWithValue(newReplacementValue);
         }
     }
 

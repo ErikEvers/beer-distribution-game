@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
-import org.han.ica.asd.c.gamevalue.GameValue;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -31,101 +29,20 @@ public class Value extends OperationValue {
      * @param value Value to be added to the value string
      * @return Returns itself so that it can be used immediately
      */
+    //[40% inventory]
+    //[40%], [inventory]
     @Override
     public Value addValue(String value) {
         if ("smallest".equals(value) || "lowest".equals(value)) {
             this.value.add("lowest");
         } else if ("biggest".equals(value) || "highest".equals(value)) {
             this.value.add("highest");
-        }
-        int countSpaces = countSpaces(value);
-        String firstValue = getFirstPartVariable(value);
-        String secondValue = getSecondPartVariable(value);
-        this.value.add(firstValue);
-        if(countSpaces>=1&&!firstValue.equals(secondValue)){
-            this.value.add(secondValue);
+        }else{
+	        this.value.add(value);
         }
         return this;
     }
 
-    /***
-     * gets the second part of the value
-     * @param value
-     * @return a variable
-     */
-    private String getSecondPartVariable(String value){
-        String newValue;
-        if(isValid(value)){
-            return value;
-        }
-        int fromIndex =0;
-        while(true) {
-            newValue = value.substring(value.indexOf(' ', 0)+fromIndex, value.length());
-            if (isValid(newValue)) {
-                break;
-            }
-            fromIndex++;
-        }
-        return newValue;
-    }
-
-    /***
-     * gets the first part of the value
-     * @param value
-     * @return a variable
-     */
-    private String getFirstPartVariable(String value){
-        String newValue;
-        if(isValid(value)){
-            return value;
-        }
-        int fromIndex =0;
-        while(true) {
-            newValue = value.substring(0, value.indexOf(' ', fromIndex));
-            if(newValue.contains("%")){
-                return newValue;
-            }
-            if (isValid(newValue)) {
-                break;
-            }
-            fromIndex++;
-        }
-        return newValue;
-    }
-
-    /***
-     * checks if the value is valid
-     *
-     * @param value
-     * @return 
-     */
-    private boolean isValid(String value){
-        String isNumber = "[0-9]+";
-        if(value.matches(isNumber)){
-            return true;
-        }
-        for(GameValue gameValue: GameValue.values()){
-            if(gameValue.contains(value)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /***
-     * counts the number of spaces in the value
-     * @param value the value
-     * @return
-     */
-    private int countSpaces(String value){
-        int space = 0;
-        for(int i = 0;i<value.length();i++){
-            if(value.charAt(i)==' '){
-                space++;
-            }
-        }
-        return space;
-    }
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
      *
@@ -210,7 +127,20 @@ public class Value extends OperationValue {
      *
      * @param gameValue the value of the game
      */
-    public void replaceValueWithValue(String gameValue, int part) {
-       value.set(part,gameValue);
+    public void replaceValueWithValue(String gameValue) {
+        if(hasNotBeenReplaced(value.get(0))) {
+            value.set(0, gameValue);
+        }else if(hasNotBeenReplaced(value.get(1))){
+            value.set(1,gameValue);
+        }
+    }
+
+    /**
+     * checks if the value has not been replaced with just a number
+     * @param value the value
+     * @return
+     */
+    private boolean hasNotBeenReplaced(String value){
+        return !value.matches("[0-9]+")&&!value.matches("[0-9%]+");
     }
 }
