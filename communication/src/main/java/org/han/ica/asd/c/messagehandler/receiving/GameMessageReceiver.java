@@ -1,13 +1,8 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
-<<<<<<< HEAD
+
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.messagehandler.messagetypes.*;
-import org.han.ica.asd.c.observers.IElectionObserver;
-import org.han.ica.asd.c.observers.IConnectorObserver;
-import org.han.ica.asd.c.observers.IRoundModelObserver;
-import org.han.ica.asd.c.observers.ITurnModelObserver;
-=======
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
@@ -17,7 +12,6 @@ import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
->>>>>>> be381de4dcae519483429fb410505c63f68d9ae9
 
 import java.util.ArrayList;
 import java.util.List;
