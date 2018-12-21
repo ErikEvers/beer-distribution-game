@@ -6,9 +6,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JoinGameController {
     private String localIp;
+    private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.gui_join_game.JoinGameController.class.getName());
 
     @Inject
     @Named("ChooseFacility")
@@ -18,7 +21,7 @@ public class JoinGameController {
         try {
             setLocalIp(getLocalIp());
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
     }
 
