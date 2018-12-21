@@ -32,7 +32,7 @@ public class RoomFinder implements IFinder{
     public RoomModel createGameRoomModel(String roomName, String leaderIP, String password){
         RoomModel roomModel = new RoomModel();
         try {
-            Room created = createGameRoomOnline(roomName, leaderIP, password);
+            createGameRoomOnline(roomName, leaderIP, password);
             roomModel.setRoomName(roomName);
             roomModel.setLeaderIP(leaderIP);
             roomModel.setHosts(new ArrayList<String>());
@@ -40,7 +40,7 @@ public class RoomFinder implements IFinder{
             roomModel.setGameStarted(false);
             return roomModel;
         } catch (DiscoveryException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
         return roomModel;
     }
@@ -56,10 +56,8 @@ public class RoomFinder implements IFinder{
             roomModel.setPassword(password);
             roomModel.setGameStarted(false);
             return roomModel;
-        } catch (DiscoveryException e) {
-            e.printStackTrace();
-        } catch (RoomException e) {
-            e.printStackTrace();
+        } catch (DiscoveryException | RoomException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
         return new RoomModel();
     }
@@ -67,10 +65,8 @@ public class RoomFinder implements IFinder{
     public void startGameRoom(String roomName){
         try {
             getRoom(roomName).closeGameAndStartGame();
-        } catch (RoomException e) {
-            e.printStackTrace();
-        } catch (DiscoveryException e) {
-            e.printStackTrace();
+        } catch (RoomException | DiscoveryException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -84,7 +80,7 @@ public class RoomFinder implements IFinder{
             room.setPassword(onlineRoom.getPassword());
             room.setGameStarted(false);
         } catch (DiscoveryException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
         return room;
     }
@@ -133,7 +129,7 @@ public class RoomFinder implements IFinder{
         }
     }
 
-    public static void setService(IResourceManager service) {
+    static void setService(IResourceManager service) {
         RoomFinder.service = service;
     }
 }
