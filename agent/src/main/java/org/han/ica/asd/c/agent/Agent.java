@@ -29,8 +29,8 @@ public class Agent extends GameAgent implements IParticipant {
      * @param gameAgentName The name of the agent
      * @param facility      Which facility it's representing
      */
-    public Agent(String gameAgentName, Facility facility) {
-        super(gameAgentName, facility);
+    Agent(String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
+        super(gameAgentName, facility, gameBusinessRulesList);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Agent extends GameAgent implements IParticipant {
         for (GameBusinessRules gameBusinessRules : gameBusinessRulesList) {
         	// Hier ergens GameBusinessRulesInFacilityTurn aanmaken met getriggerde Business rules en de verwante Rounds
 
-            ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameBusinessRule(), round);
+            ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.gameBusinessRuleAST, round);
             if(actionModel != null) {
                 Facility targetFacility = this.resolveFacilityId(actionModel.facilityId);
                 if(targetFacility != null) {

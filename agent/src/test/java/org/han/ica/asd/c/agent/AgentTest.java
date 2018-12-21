@@ -34,16 +34,10 @@ class AgentTest {
 	private static final String IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10 = "if inventory higher than 10 then order 10";
 	private static final String IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20 = "if inventory higher than 10 then order 20";
 	private static final String IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30 = "if inventory higher than 10 then order 30";
-	private static final String EMPTY_BUSINESS_RULE = "BR()";
+	private static final String BUSINESS_RULE_1 = "BR(V(1))";
+	private static final String BUSINESS_RULE_2 = "BR(V(2))";
+	private static final String BUSINESS_RULE_3 = "BR(V(3))";
 	private static final String PERSISTENCE = "persistance";
-
-	private Facility facility = new Facility(
-			new FacilityType(null, 0, 0, 0, 0, 0, 0),
-			Lists.newArrayList(new FacilityLinkedTo("1", new Facility(
-					new FacilityType(null, 0, 0, 0, 0, 0, 0),
-					new ArrayList<>(),
-					0), true)),
-			1);
 
 	private IPersistence persistence = new IPersistence() {
 		@Override
@@ -69,9 +63,24 @@ class AgentTest {
 		}
 	};
 
+	private Facility facility = new Facility(
+			new FacilityType(null, 0, 0, 0, 0, 0, 0),
+			Lists.newArrayList(new FacilityLinkedTo("1", new Facility(
+					new FacilityType(null, 0, 0, 0, 0, 0, 0),
+					new ArrayList<>(),
+					0), true)),
+			1);
+
+	private List<GameBusinessRules> gameBusinessRuleList = Lists.newArrayList(
+			new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, BUSINESS_RULE_1),
+			new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, BUSINESS_RULE_2),
+			new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, BUSINESS_RULE_3));
+
+
 	@Test
 	void testGenerateOrder() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility,
+				Lists.newArrayList(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring")));
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -90,7 +99,6 @@ class AgentTest {
 			}
 		});
 		injector.injectMembers(agent);
-		agent.gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring"));
 
 		GameRoundAction result = agent.executeTurn(null);
 		Map.Entry<Facility, Integer> entry = result.targetOrderMap.entrySet().iterator().next();
@@ -100,7 +108,8 @@ class AgentTest {
 
 	@Test
 	void testGenerateDeliver() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility,
+				Lists.newArrayList(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring")));
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -119,8 +128,6 @@ class AgentTest {
 			}
 		});
 		injector.injectMembers(agent);
-		agent.gameBusinessRulesList.add(new GameBusinessRules("if inventory higher than 10 and inventory lower than 40 and 0 < 1 then order 30", "awesomerepresentationofthetreeasastring"));
-
 		GameRoundAction result = agent.executeTurn(null);
 		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
 
@@ -129,7 +136,7 @@ class AgentTest {
 
 	@Test
 	void testGenerateDeliverAndOrder() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -142,9 +149,9 @@ class AgentTest {
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
 						switch (businessRule) {
-							case IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10:
+							case BUSINESS_RULE_1:
 								return new ActionModel(DELIVER, 5, 0);
-							case IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20:
+							case BUSINESS_RULE_2:
 								return new ActionModel(ORDER, 5, 0);
 						}
 						return null;
@@ -155,10 +162,6 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
-
 		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
@@ -167,7 +170,7 @@ class AgentTest {
 
 	@Test
 	void testGenerateMultipleOrders() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -179,7 +182,7 @@ class AgentTest {
 
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
-						if (!IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
+						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, 0);
 						}
 						return null;
@@ -190,10 +193,6 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
-
 		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
@@ -202,7 +201,7 @@ class AgentTest {
 
 	@Test
 	void testGenerateMultipleDelivers() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -214,7 +213,7 @@ class AgentTest {
 
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
-						if (!IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
+						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, 0);
 						}
 						return null;
@@ -225,10 +224,6 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
-
 		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(0, result.targetOrderMap.size());
@@ -237,7 +232,7 @@ class AgentTest {
 
 	@Test
 	void testGenerateMultipleDeliversAndOneOrder() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -249,7 +244,7 @@ class AgentTest {
 
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
-						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30.equals(businessRule)) {
+						if (BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, 0);
 						}
 						return new ActionModel(DELIVER, 5, 0);
@@ -260,10 +255,6 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
-
 		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
@@ -272,7 +263,7 @@ class AgentTest {
 
 	@Test
 	void testGenerateOneDeliverAndMultipleOrders() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -284,7 +275,7 @@ class AgentTest {
 
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
-						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10.equals(businessRule)) {
+						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, 0);
 						}
 						return new ActionModel(ORDER, 5, 0);
@@ -295,10 +286,6 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
-
 		GameRoundAction result = agent.executeTurn(null);
 
 		assertEquals(1, result.targetOrderMap.size());
@@ -307,7 +294,7 @@ class AgentTest {
 
 	@Test
 	void testResolveFacilityIdExpectsMockedFacility() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		Method method = agent.getClass().getDeclaredMethod(RESOLVE_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, 0);
@@ -316,7 +303,7 @@ class AgentTest {
 
 	@Test
 	void testResolveFacilityIdExpectsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		Method method = agent.getClass().getDeclaredMethod(RESOLVE_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, 1);
@@ -325,7 +312,7 @@ class AgentTest {
 
 	@Test
 	void testCallingLogWhenTriggeringBusinessRulesExpectsMethodCall() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 		IPersistence persistenceMock = mock(IPersistence.class);
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
@@ -338,7 +325,7 @@ class AgentTest {
 
 					@Override
 					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
-						if (IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10.equals(businessRule)) {
+						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, 1);
 						}
 						return new ActionModel(ORDER, 5, 1);
@@ -349,10 +336,6 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_10, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_20, EMPTY_BUSINESS_RULE));
-		agent.gameBusinessRulesList.add(new GameBusinessRules(IF_INVENTORY_HIGHER_THAN_10_THEN_ORDER_30, EMPTY_BUSINESS_RULE));
-
 		agent.executeTurn(null);
 
 		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(ArgumentMatchers.any(GameBusinessRulesInFacilityTurn.class));
@@ -361,7 +344,7 @@ class AgentTest {
 
 	@Test
 	void testGetParticipant() {
-		Agent agent = new Agent("", facility);
+		Agent agent = new Agent("", facility, gameBusinessRuleList);
 
 		assertEquals(facility, agent.getParticipant());
 	}
