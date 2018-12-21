@@ -15,21 +15,19 @@ public class SendInTransaction {
     private Round roundModel;
     private SocketClient socketClient;
 
+    private int numberOfSuccesses = 0;
+    private int numberFinished = 0;
+    private int numberOfThreads = 0;
+
     private static final Logger LOGGER = Logger.getLogger(SendInTransaction.class.getName());
 
     SendInTransaction(String[] ips, Round roundModel, SocketClient socketClient) {
         this.ips = ips;
         this.roundModel = roundModel;
         this.socketClient = socketClient;
-
     }
 
-    private int numberOfSuccesses = 0;
-    private int numberFinished = 0;
-    private int numberOfThreads = 0;
-
     public void sendRoundToAllPlayers() {
-
         //TODO implement with this: https://stackoverflow.com/questions/9148899/returning-value-from-thread
 
         RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel, 0);
@@ -50,7 +48,6 @@ public class SendInTransaction {
     }
 
     private void sendCanCommit(String ip, RoundModelMessage roundModelMessage) {
-
         Thread t = new Thread(() -> {
             try {
                 ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, roundModelMessage);
@@ -83,7 +80,6 @@ public class SendInTransaction {
 
     private void send(RoundModelMessage roundModelMessage) {
         for (String ip : ips) {
-
             Thread t = new Thread(() -> {
                 try {
                     ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, roundModelMessage);
@@ -94,8 +90,6 @@ public class SendInTransaction {
             });
             t.setDaemon(true);
             t.start();
-
         }
     }
-
 }

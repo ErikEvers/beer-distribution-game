@@ -81,7 +81,7 @@ public class GameMessageClient {
         new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
     }
 
-    public void sendConfigurationToAllPlayers(Configuration configuration) {
+    public void sendConfigurationToAllPlayers(String[] ips, Configuration configuration) {
         new SendInTransaction(ips, configuration, socketClient).sendRoundToAllPlayers();
     }
 
