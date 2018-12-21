@@ -34,6 +34,7 @@
                   <Font size="25.0" />
                </font>
             </Label>
+            <Button mnemonicParsing="false" onAction="#handleBackToMenuButtonClick" style="-fx-background-color: #ff8000;" text="%back_to_menu" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </children>

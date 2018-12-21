@@ -17,6 +17,10 @@ public class JoinGameController {
     @Named("ChooseFacility")
     private IGUIHandler chooseFacility;
 
+    @Inject
+    @Named("MainMenu")
+    private IGUIHandler mainMenu;
+
     public void initialize(){
         try {
             setLocalIp(getLocalIp());
@@ -35,5 +39,9 @@ public class JoinGameController {
 
     public void setLocalIp(String localIp) {
         this.localIp = localIp;
+    }
+    
+    public void handleBackToMenuButtonClick() {
+        mainMenu.setupScreen();
     }
 }
