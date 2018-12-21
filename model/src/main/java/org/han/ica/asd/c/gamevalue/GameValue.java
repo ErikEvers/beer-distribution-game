@@ -24,13 +24,22 @@ public enum GameValue {
         this.value = (values);
     }
 
+    /***
+     * gets the synonyms of the enum
+     * @return
+     */
     public String[] getValue() {
         return value;
     }
 
-    public boolean contains(String i){
-        for (String s : value) {
-            if(s.equals(i)){
+    /**
+     * checks if the given value is used in the list
+     * @param value
+     * @return
+     */
+    public boolean contains(String value){
+        for (String s : this.value) {
+            if(s.equals(value)){
                 return true;
             }
         }
