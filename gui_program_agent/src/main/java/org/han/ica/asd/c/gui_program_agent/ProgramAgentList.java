@@ -13,7 +13,7 @@ public class ProgramAgentList implements IGUIHandler {
     }
 
     public void setupScreen() {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResources");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResourcesGuiProgramAgent");
 
         FXMLLoaderOnSteroids.getScreen(resourceBundle, getClass().getResource("/fxml/ProgramAgentList.fxml"));
     }
