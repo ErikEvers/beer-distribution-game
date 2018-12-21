@@ -9,8 +9,8 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
  * Wrapper for the player domain class. This wrapper implements the IParticipant interface.
  */
 public class PlayerParticipant extends Player implements IParticipant {
-    public PlayerParticipant(String playerId, String ipAddress, Facility facilityId, String name, boolean isConnected) {
-        super(playerId, ipAddress, facilityId, name, isConnected);
+    public PlayerParticipant(String playerId, String ipAddress, Facility facility, String name, boolean isConnected) {
+        super(playerId, ipAddress, facility, name, isConnected);
     }
 
     public PlayerParticipant(Player player) {
@@ -34,11 +34,11 @@ public class PlayerParticipant extends Player implements IParticipant {
     }
 
     /**
-     * Returns the identifier for the ParticipantPool to compare with other participants.
-     * @return The identifier of the participant.
+     * Returns the facility for the ParticipantPool to compare with other participants.
+     * @return The facility of the participant.
      */
     @Override
-    public int getParticipantId() {
-        return this.getFacility().getFacilityId();
+    public Facility getParticipant() {
+        return this.getFacility();
     }
 }

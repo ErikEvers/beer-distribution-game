@@ -1,5 +1,5 @@
 package org.han.ica.asd.c.gamelogic.participants;
-
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 /**
@@ -14,8 +14,8 @@ public interface IParticipant {
     Round doOrder();
 
     /**
-     * Returns the identifier for the ParticipantPool to compare with other participants.
-     * @return The identifier of the participant.
+     * Returns the facility for the ParticipantPool to compare with other participants.
+     * @return The facility instance.
      */
-    int getParticipantId();
+    Facility getParticipant();
 }

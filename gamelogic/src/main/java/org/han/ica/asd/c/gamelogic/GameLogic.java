@@ -5,11 +5,8 @@ import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
-
-import java.util.Map;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
@@ -37,7 +34,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param turn
      */
     @Override
-    public void placeOrder(Map<Facility, Map<Facility, Integer>> turn) {
+    public void placeOrder(Round turn) {
         persistence.saveTurnData(turn);
         communication.sendTurnData(turn);
     }

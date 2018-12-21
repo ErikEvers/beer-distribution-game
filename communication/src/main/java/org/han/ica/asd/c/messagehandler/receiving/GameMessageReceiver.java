@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.*;
-import org.han.ica.asd.c.observers.IElectionObserver;
 import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.observers.IElectionObserver;
 import org.han.ica.asd.c.observers.IRoundModelObserver;
 import org.han.ica.asd.c.observers.ITurnModelObserver;
 
@@ -59,7 +59,8 @@ public class GameMessageReceiver {
     }
 
     private void doCommit(RoundModelMessage roundModelMessage) {
-        if (toBecommittedRound != null) { //in theory, a bug can still occur where we receive a commit message with a different content.
+        //in theory, a bug can still occur where we receive a commit message with a different content.
+        if (toBecommittedRound != null) {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IRoundModelObserver) {
                     ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());

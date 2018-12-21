@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class Player {
+public class Player implements IDomainModel{
     private String playerId;
     private String ipAddress;
     private Facility facility;
@@ -57,5 +57,9 @@ public class Player {
 
     public void setConnected(boolean connected) {
         isConnected = connected;
+    }
+
+    public String concatIpId() {
+        return playerId.concat(ipAddress);
     }
 }

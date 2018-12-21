@@ -295,7 +295,7 @@ public class GameLeaderTest {
         when(con.getFacilities()).thenReturn(facilities);
         when(facilities.get(0).getPlayer()).thenReturn(player);
         when(playerTest.getPlayerId()).thenReturn("b");
-        //when(con.getFacilities().get(anyInt()).getPlayer().getPlayerId()).thenReturn("1");
+        when(con.getFacilities().get(3).getPlayer().getPlayerId()).thenReturn("b");
 
         gameLeader.init();
 

@@ -2,12 +2,16 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.List;
 
-public class Facility {
+public class Facility implements IDomainModel{
     private FacilityType facilityType;
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private Player player;
     private GameAgent agent;
     private int facilityId;
+
+    public Facility() {
+        // empty for Guice
+    }
 
     public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, Player player, GameAgent agent, int facilityId) {
         this.facilityType = facilityType;
@@ -25,7 +29,7 @@ public class Facility {
     }
 
     /**
-     * Bare Facility for when no player or agent is yet available
+     * Bare FacilityDB for when no player or agent is yet available
      */
     public Facility(FacilityType facilityType, List<FacilityLinkedTo> facilitiesLinkedTo, int facilityId) {
         this.facilityType = facilityType;

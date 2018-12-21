@@ -3,13 +3,14 @@ package org.han.ica.asd.c.gamelogic.participants.domain_models;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 /**
  * Wrapper for the agent domain class. This wrapper implements the IParticipant interface.
  */
 public class AgentParticipant extends GameAgent implements IParticipant {
-    public AgentParticipant(String gameAgentName, int facilityId) {
-        super(gameAgentName, facilityId);
+    public AgentParticipant(String gameAgentName, Facility facility) {
+        super(gameAgentName, facility);
     }
 
     /**
@@ -27,7 +28,7 @@ public class AgentParticipant extends GameAgent implements IParticipant {
      * @return The identifier of the participant.
      */
     @Override
-    public int getParticipantId() {
-        return this.getFacilityId();
+    public Facility getParticipant() {
+        return this.getFacility();
     }
 }

@@ -1,10 +1,9 @@
 package org.han.ica.asd.c.gamelogic.public_interfaces;
 
-import org.han.ica.asd.c.model.domain_objects.Facility;
-
-import java.util.Map;
+import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.observers.IConnectorObserver;
 
 public interface IConnectedForPlayer {
-    void sendTurnData(Map<Facility, Map<Facility, Integer>> turn);
-    //void addObserver(IConnectorObserver observer);
+    void sendTurnData(Round turn);
+    void addObserver(IConnectorObserver observer);
 }
