@@ -38,7 +38,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      */
     @Override
     public void placeOrder(Round turn) {
-        persistence.saveRoundData(turn);
+        persistence.saveTurnData(turn);
         communication.sendTurnData(turn);
     }
 
