@@ -17,7 +17,7 @@ public class DefaultTest {
         StringBuilder exp = new StringBuilder();
         exp.append("D()");
 
-        assertEquals(exp.toString(),res.toString());
+        assertEquals(exp.toString(), res.toString());
     }
 
     @Test
@@ -25,11 +25,11 @@ public class DefaultTest {
         Default testDefault1 = new Default();
         Default testDefault2 = new Default();
 
-        assertEquals(testDefault1.hashCode() , testDefault2.hashCode());
+        assertEquals(testDefault1.hashCode(), testDefault2.hashCode());
     }
 
     @Test
-    void testDefault_Equal_True(){
+    void testDefault_Equal_True() {
         Default testDefault = new Default();
         boolean match = aDefault.equals(testDefault);
         assertTrue(match);

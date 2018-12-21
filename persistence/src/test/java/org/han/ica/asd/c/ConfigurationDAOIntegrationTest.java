@@ -3,9 +3,10 @@ package org.han.ica.asd.c;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.dao.ConfigurationDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.Configuration;
+import org.han.ica.asd.c.model.dao_model.ConfigurationDB;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,9 +17,9 @@ import java.util.logging.Logger;
 
 class ConfigurationDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(BeerGameDAOIntegrationTest.class.getName());
-	private static final Configuration CONFIGURATION = new Configuration("BeerGameZutphen13_12_2018",40,1,1,1,1,1,99,false,false);
-	private static final Configuration CONFIGURATION2 = new Configuration("BeerGameArnhem13_12_2018",40,1,1,1,1,1,99,false,false);
-	private static final Configuration CONFIGURATION3 = new Configuration("BeerGameZutphen13_12_2018",50,51,51,51,51,51,599,true,true);
+	private static final ConfigurationDB CONFIGURATION = new ConfigurationDB("BeerGameZutphen13_12_2018",40,1,1,1,1,1,99,false,false);
+	private static final ConfigurationDB CONFIGURATION2 = new ConfigurationDB("BeerGameArnhem13_12_2018",40,1,1,1,1,1,99,false,false);
+	private static final ConfigurationDB CONFIGURATION3 = new ConfigurationDB("BeerGameZutphen13_12_2018",50,51,51,51,51,51,599,true,true);
 
 	private ConfigurationDAO configurationDAO;
 
@@ -44,7 +45,7 @@ class ConfigurationDAOIntegrationTest {
 	@Test
 	void createConfigurationTest() {
 		configurationDAO.createConfiguration(CONFIGURATION);
-		Configuration configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
+		ConfigurationDB configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
 
 		//Test if object values are the equal
 		Assert.assertEquals(CONFIGURATION.getGameId(),configurationDb.getGameId());
@@ -71,7 +72,7 @@ class ConfigurationDAOIntegrationTest {
 		configurationDAO.createConfiguration(CONFIGURATION);
 		configurationDAO.updateConfigurations(CONFIGURATION3);
 
-		Configuration configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
+		ConfigurationDB configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
 
 		//Test if there an insert in not triggered instead of an update
 		Assert.assertEquals(1,configurationDAO.readConfigurations().size());

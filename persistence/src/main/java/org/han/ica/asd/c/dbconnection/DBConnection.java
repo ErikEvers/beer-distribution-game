@@ -19,6 +19,7 @@ public class DBConnection implements IDatabaseConnection {
 	private static volatile DBConnection mInstance;
 
 	public DBConnection() {
+		//Empty constructor for GUICE
 	}
 
 

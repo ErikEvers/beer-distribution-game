@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class FacilityType {
+public class FacilityType implements IDomainModel{
     private String facilityName;
     private int valueIncomingGoods;
     private int valueOutgoingGoods;

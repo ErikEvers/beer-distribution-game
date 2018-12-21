@@ -4,16 +4,11 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
-import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
-
+import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,8 +23,11 @@ import java.util.logging.Logger;
  */
 public class FaultDetectionClient {
     private static final Logger LOGGER = Logger.getLogger(FaultDetectionClient.class.getName());
-    private ObjectOutputStream outputStream = null;
-    private boolean isConnected = false;
+    private SocketClient socketClient;
+
+    public FaultDetectionClient(){
+        this.socketClient = new SocketClient();
+    }
 
     /**
      * Tries to make a connection with the specified ipAddress.
@@ -45,21 +43,13 @@ public class FaultDetectionClient {
      * @see PingMessage
      */
     public void makeConnection(String ipAddress) throws NodeCantBeReachedException {
-        isConnected = false;
-
-        while (!isConnected) {
-            try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(ipAddress, 4445), 1000);
-                outputStream = new ObjectOutputStream(socket.getOutputStream());
-                outputStream.writeObject(new PingMessage());
-                isConnected = true;
-            } catch (SocketException | SocketTimeoutException se) {
-                LOGGER.log(Level.INFO, se.getMessage(), se);
-                throw new NodeCantBeReachedException(se);
-            } catch (IOException e) {
-                LOGGER.log(Level.INFO, e.getMessage(), e);
-            }
+        try {
+            socketClient.makeConnection(ipAddress, new PingMessage());
+        } catch (IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage(), e);
+            throw new NodeCantBeReachedException(e);
         }
+
     }
 
     /**
@@ -102,41 +92,22 @@ public class FaultDetectionClient {
     }
 
     /**
-     * Sends a 'CanYouReachLeaderMessage' to a specified ipAddress.
+     * Sends a 'CanYouReachLeaderMessage' to a all Active ipAddresses.
      * This method is used by the 'FaultDetectorPlayer'. If an exception occurs when sending the message it will throw
      * the exception to the class that calls the method.
      *
      * @param canYouReachLeaderMessage The 'CanYouReachLeaderMessage' that is sent to the specified ipAddress.
-     * @param ipAddress                The ip to send the 'CanYouReachLeaderMessage' to.
+     * @param ips                All ips to send the 'CanYouReachLeaderMessage' to.
      * @throws NodeCantBeReachedException The exception that is thrown if an exception occurred when sending the
      *                                    'CanYouReachLeaderMessage'
      * @author Tarik
      * @see CanYouReachLeaderMessage
      * @see FaultDetectorPlayer
      */
-    public void sendCanYouReachLeaderMessage(CanYouReachLeaderMessage canYouReachLeaderMessage, String ipAddress) throws
-            NodeCantBeReachedException {
-        sendObject(canYouReachLeaderMessage, ipAddress);
+    public Map<String, Object> sendCanYouReachLeaderMessageToAll(String[] ips, CanYouReachLeaderMessage canYouReachLeaderMessage) {
+        return socketClient.sendToAll(ips,canYouReachLeaderMessage);
     }
 
-    /**
-     * Sends a 'iCanReachLeaderMessage' to a specified ipAddress.
-     * This method is used by the 'FaultDetectorPlayer'
-     * If an exception occurs when sending the 'iCanReachLeaderMessage' it will log the thrown exception.
-     *
-     * @param iCanReachLeaderMessage The 'iCanReachLeaderMessage' that is sent to a specified ipAddress.
-     * @param ipAddress              The ip to send the 'iCanReadLeaderMessage' to.
-     * @author Oscar, Tarik
-     * @see ICanReachLeaderMessage
-     * @see FaultDetectorPlayer
-     */
-    public void sendICanReachLeaderMessage(ICanReachLeaderMessage iCanReachLeaderMessage, String ipAddress) {
-        try {
-            sendObject(iCanReachLeaderMessage, ipAddress);
-        } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-    }
 
     /**
      * Sends the specified message to a specified ipAddress.
@@ -151,24 +122,11 @@ public class FaultDetectionClient {
      * @see NodeCantBeReachedException
      */
     private void sendObject(Object object, String ipAddress) throws NodeCantBeReachedException {
-
-        outputStream = null;
-        isConnected = false;
-        boolean isConnecting = true;
-
-        while (!isConnected && isConnecting) {
-            try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(ipAddress, 4445), 2000);
-                isConnected = true;
-
-                outputStream = new ObjectOutputStream(socket.getOutputStream());
-                outputStream.writeObject(object);
-
-            } catch (IOException se) {
-                LOGGER.log(Level.INFO, se.getMessage(), se);
-                throw new NodeCantBeReachedException(se);
-
-            }
+        try {
+            socketClient.sendObject(ipAddress,object);
+        } catch (IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage(), e);
+            throw new NodeCantBeReachedException(e);
         }
     }
 }

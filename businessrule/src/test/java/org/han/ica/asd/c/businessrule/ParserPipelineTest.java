@@ -1,24 +1,28 @@
 package org.han.ica.asd.c.businessrule;
 
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
-public class ParserPipelineTest {
+class ParserPipelineTest {
 
-    ParserPipeline parserPipeline = new ParserPipeline();
+    private ParserPipeline parserPipeline = new ParserPipeline();
 
     @Test
     void testParserPipelineTest_getBusinessRulesMap() {
-        List<String> res = parserPipeline.getBusinessRulesInput();
+        parserPipeline.parseString("default order 20");
 
-        List<String> exp = new ArrayList<>();
+        List<UserInputBusinessRule> res = parserPipeline.getBusinessRulesInput();
 
-        assertEquals(res, exp);
+        List<UserInputBusinessRule> exp = new ArrayList<>();
+        exp.add(new UserInputBusinessRule("default order 20",1));
+
+        assertEquals(exp.get(0).getBusinessRule(),res.get(0).getBusinessRule());
+        assertEquals(exp.get(0).getLineNumber(),res.get(0).getLineNumber());
     }
 }
