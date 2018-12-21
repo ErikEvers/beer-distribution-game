@@ -1,10 +1,10 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 public class FacilityTurn {
-	int facilityId;
-	int stock;
-	int remainingBudget;
-	boolean bankrupt;
+	private int facilityId;
+	private int stock;
+	private int remainingBudget;
+	private boolean bankrupt;
 
 	public FacilityTurn(int facilityId, int stock, int remainingBudget, boolean bankrupt) {
 		this.facilityId = facilityId;

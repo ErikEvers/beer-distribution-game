@@ -1,10 +1,10 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 public class FacilityTurnDeliver {
-	int facilityId;
-	int facilityIdDeliverTo;
-	int openOrderAmount;
-	int outGoingGoods;
+	private int facilityId;
+	private int facilityIdDeliverTo;
+	private int openOrderAmount;
+	private int outGoingGoods;
 
 	public FacilityTurnDeliver(int facilityId, int facilityIdDeliverTo, int openOrderAmount, int outGoingGoods) {
 		this.facilityId = facilityId;
