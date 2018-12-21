@@ -75,17 +75,15 @@ class RoundDAOIntegrationTest {
 
 	@Test
 	void deleteRound() {
+		beergameDAO.createBeergame(DaoConfig.getCurrentGameId());
 		roundDAO.createRound(1);
-		Round round = roundDAO.getRound(1);
+		roundDAO.createFacilityDeliver(1,facilityTurnDeliver);
+		roundDAO.createFacilityOrder(1,facilityTurnOrder);
+		roundDAO.createFacilityTurn(1,facilityTurn);
 
-		//Verify that the object is inserted
-		Assert.assertEquals(1,round.getRoundId());
-
+		Assert.assertEquals(1,roundDAO.getRounds().size());
 		roundDAO.deleteRound(1);
-
-
-		//Verify that the object is deleted
-		Assert.assertEquals(null,roundDAO.getRound(1));
+		Assert.assertEquals(0,roundDAO.getRounds().size());
 
 
 	}
