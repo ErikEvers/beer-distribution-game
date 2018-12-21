@@ -4,10 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -27,12 +25,6 @@ import java.util.logging.Logger;
 
 
 public class ProgramAgentController {
-    @FXML
-    AnchorPane mainContainer;
-
-    @FXML
-    Button back;
-
     @FXML
     TextField agentNameInput;
 
@@ -69,7 +61,7 @@ public class ProgramAgentController {
      * Function for initialising the current ProgramAgent FXML. It also sets the actions of the button's
      */
     public void initialize() {
-        resourceBundle = ResourceBundle.getBundle("languageResources");
+        resourceBundle = ResourceBundle.getBundle("languageResourcesGuiProgramAgent");
     }
 
     /***

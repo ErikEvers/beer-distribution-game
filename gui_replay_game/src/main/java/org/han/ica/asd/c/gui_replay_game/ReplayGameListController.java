@@ -45,6 +45,7 @@ public class ReplayGameListController {
 
     @FXML
     private void replayButtonAction() {
+        replayGame.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
         replayGame.setupScreen();
     }
 

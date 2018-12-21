@@ -14,7 +14,7 @@ public class ProgramAgent implements IGUIHandler {
 
     public void setupScreen() {
 
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResources");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("languageResourcesGuiProgramAgent");
 
         ProgramAgentController controller = FXMLLoaderOnSteroids.getScreen(resourceBundle, getClass().getResource("/fxml/ProgramAgent.fxml"));
 
