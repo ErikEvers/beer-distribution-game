@@ -16,6 +16,15 @@ public class BusinessRule extends ASTNode {
     private Action action;
 
     /**
+     * Gets the action of the BusinessRule
+     *
+     * @return Returns an action
+     */
+    public Action getAction() {
+        return action;
+    }
+
+    /**
      * Adds a child ASTNode to a parent(this) ASTNode
      *
      * @param child Child that has the be added to this ASTNode
@@ -131,5 +140,14 @@ public class BusinessRule extends ASTNode {
     @Override
     public int hashCode() {
         return Objects.hash(condition, action);
+    }
+
+    /**
+     * States if the business rule is triggered
+     *
+     * @return Returns if the business rule is triggered
+     */
+    public boolean isTriggered() {
+        return ((BooleanLiteral) this.condition).getValue();
     }
 }

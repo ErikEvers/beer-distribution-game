@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
@@ -32,6 +33,14 @@ public class BusinessRuleHandler implements IBusinessRules {
         //TODO: 12/7/2018 Substitute variables in BusinessRule(tree)
 
         businessRuleAST.evaluateBusinessRule();
-        return new ActionModel();
+
+        if (businessRuleAST.isTriggered()){
+            Action action = businessRuleAST.getAction();
+        	return new ActionModel(
+                    action.getType(),
+                    action.getAmount(),
+                    action.getFacilityId());
+        }
+        return null;
     }
 }
