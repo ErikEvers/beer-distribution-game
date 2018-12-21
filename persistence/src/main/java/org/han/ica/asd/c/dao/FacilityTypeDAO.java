@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class FacilityTypeDAO implements IBeerDisitributionGameDAO {
+public class FacilityTypeDAO{
     private static final String CREATE_FACILITYTYPE = "INSERT INTO FacilityType Values (?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String UPDATE_FACILITYTYPE = "UPDATE FacilityType SET " +
             "ValueIncomingGoods = ?, ValueOutgoingGoods = ?, StockHoldingCosts = ?, " +

@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RoundDAO implements IBeerDisitributionGameDAO {
+public class RoundDAO{
 	private static final String CREATE_ROUND = "INSERT INTO ROUND VALUES(?,?);";
 	private static final String DELETE_ROUND = "DELETE FROM ROUND WHERE GameId = ? AND RoundId = ?;";
 	private static final String READ_ROUND = "SELECT * FROM ROUND WHERE GameId = ? AND RoundId = ?;";
@@ -77,7 +77,7 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 				}
 
 				return round;
-			}
+	}
 
 
 

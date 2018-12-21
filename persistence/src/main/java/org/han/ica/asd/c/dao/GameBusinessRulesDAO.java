@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
+public class GameBusinessRulesDAO {
     private static final String CREATE_GAMEBUSINESSRULE = "INSERT INTO GameBusinessRules VALUES (?,?,?,?,?);";
     private static final String DELETE_SPECIFIC_GAMEBUSINESSRULE = "DELETE FROM GameBusinessRules WHERE FacilityId = ? AND GameId = ? AND GameAgentName = ? AND GameBusinessRule = ? AND GameAST = ?;";
     private static final String DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "DELETE FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?;";
@@ -125,8 +125,7 @@ public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     conn.setAutoCommit(false);
-
-                    pstmt.setInt(1, gameAgent.getFacilityId());
+                    pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
                     DaoConfig.gameIdNotSetCheck(pstmt, 2);
                     pstmt.setString(3, gameAgent.getGameAgentName());
                     pstmt.setString(4, gameBusinessRules.getGameBusinessRule());
@@ -145,5 +144,5 @@ public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
             databaseConnection.rollBackTransaction(conn);
         }
     }
-}
 
+}

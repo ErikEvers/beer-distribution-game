@@ -8,6 +8,8 @@ import java.sql.SQLException;
 public class DaoConfig {
     private static String currentGameId;
 
+    private DaoConfig(){}
+
     protected static String getCurrentGameId(){
         return currentGameId;
     }

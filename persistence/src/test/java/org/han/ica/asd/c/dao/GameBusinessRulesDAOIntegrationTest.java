@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.junit.Assert;
@@ -22,7 +23,8 @@ class GameBusinessRulesDAOIntegrationTest {
     private static final List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
     private static final GameBusinessRules GAME_BUSINESS_RULES = new GameBusinessRules("BusinessRule","AST");
     private static final GameBusinessRules GAME_BUSINESS_RULES2 = new GameBusinessRules("BusinessRule2","AST2");
-    private static final GameAgent GAME_AGENT = new GameAgent("gameAgentName", 1, gameBusinessRules);
+    private static final Facility testFacility = new Facility();
+    private static final GameAgent GAME_AGENT = new GameAgent("gameAgentName", testFacility);
 
     private GameBusinessRulesDAO gameBusinessRulesDAO;
 
@@ -38,6 +40,8 @@ class GameBusinessRulesDAOIntegrationTest {
         DBConnectionTest.getInstance().createNewDatabase();
         gameBusinessRulesDAO = injector.getInstance(GameBusinessRulesDAO.class);
         DaoConfig.setCurrentGameId("BeerGameTest");
+        testFacility.setFacilityId(1);
+        GAME_AGENT.setGameBusinessRules(gameBusinessRules);
     }
 
     @AfterEach
