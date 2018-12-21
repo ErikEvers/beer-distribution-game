@@ -47,7 +47,8 @@ public class GameLeaderTest {
 
     private List<Round> rounds = new ArrayList<>();
 
-    private List<Player> players = new ArrayList<>();
+    @Mock
+    private List<Player> players;
 
     private IConnectorForLeader iConnectorForLeader;
 
@@ -155,6 +156,10 @@ public class GameLeaderTest {
 
     @Test
     public void DisconnectedNotEqual_addLocalParticipant_NotCalled() {
+        List<Player> players = new ArrayList<>();
+
+        players.add(player);
+        gameTest.setPlayers(players);
         gameLeader.init();
         gameLeader.iAmDisconnected();
 
@@ -183,11 +188,16 @@ public class GameLeaderTest {
         when(facilities.get(0).getAgent()).thenReturn(gameAgent);
         when(facilities.get(1).getAgent()).thenReturn(gameAgent);
         when(facilities.get(2).getAgent()).thenReturn(gameAgent);
+        when(players.get(0)).thenReturn(player);
+        when(players.get(1)).thenReturn(player);
+        when(players.get(2)).thenReturn(player);
+        when(player.getFacility()).thenReturn(facil);
+        when(facil.getAgent()).thenReturn(gameAgent);
         when(gameAgent.getGameAgentName()).thenReturn("test");
 
         gameLeader.init();
         gameLeader.playerIsDisconnected("b");
 
-        verify(gameLogic, times(3)).addLocalParticipant(any(AgentParticipant.class));
+        verify(gameLogic, times(1)).addLocalParticipant(any(AgentParticipant.class));
     }
 }
