@@ -30,6 +30,7 @@ public class Agent extends GameAgent implements IParticipant {
      */
     Agent(String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
         super(gameAgentName, facility, gameBusinessRulesList);
+
     }
 
     /**
