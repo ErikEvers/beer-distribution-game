@@ -2,16 +2,14 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
-import org.han.ica.asd.c.discovery.Room;
-import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
-import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
-import org.han.ica.asd.c.faultdetection.FaultDetectorPlayer;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.communication.IConnecterForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -24,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector{
+public class Connector implements IConnecterForSetup {
 private static Connector instance = null;
     private ArrayList<IConnectorObserver> observers;
     private NodeInfoList nodeInfoList;
@@ -65,13 +63,18 @@ private static Connector instance = null;
         return instance;
     }
 
-    public List<String> getAvailableRooms() throws DiscoveryException {
-        return finder.getAvailableRooms();
+    public List<String> getAvailableRooms() {
+        try {
+            return finder.getAvailableRooms();
+        } catch (DiscoveryException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public Room createRoom(String roomName, String ip, String password){
+    public RoomModel createRoom(String roomName, String ip, String password){
         try {
-            Room createdRoom = finder.createGameRoom(roomName, ip, password);
+            RoomModel createdRoom = finder.createGameRoomModel(roomName, ip, password);
             nodeInfoList.add(new NodeInfo(ip, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -80,25 +83,33 @@ private static Connector instance = null;
         return null;
     }
 
-    public Room joinRoom(String roomName, String ip, String password){
+    public RoomModel joinRoom(String roomName, String ip, String password){
         try {
-            Room joinedRoom = finder.joinGameRoom(roomName, ip, password);
-            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-            return joinedRoom;
+            RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
+            if(makeConnection(joinedRoom.getLeaderIP())){
+                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+                setJoiner();
+                return joinedRoom;
+            }
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage());
         }
         return null;
     }
 
-    public void startRoom(Room room){
+    public RoomModel updateRoom(RoomModel room){
+        return finder.getRoom(room);
+    }
+
+    public void startRoom(RoomModel room){
         try {
             for(String hostIP: room.getHosts()){
                 nodeInfoList.add(new NodeInfo(hostIP, true, false));
             }
-            room.closeGameAndStartGame();
-        } catch (RoomException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            finder.startGameRoom(room.getRoomName());
+            setLeader();
+        } catch (DiscoveryException e) {
+            e.printStackTrace();
         }
     }
 
@@ -112,7 +123,6 @@ private static Connector instance = null;
 
     public void setJoiner() {
         faultDetector.setPlayer(nodeInfoList);
-        makeConnection(nodeInfoList.get(0).getIp());
     }
 
     public boolean makeConnection(String destinationIP){
