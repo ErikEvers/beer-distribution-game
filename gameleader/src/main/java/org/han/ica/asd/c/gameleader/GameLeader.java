@@ -15,7 +15,7 @@ import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver {
+public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver {
     @Inject private IConnectorForLeader connectorForLeader;
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
@@ -27,16 +27,6 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private BeerGame game;
 
     private Round currentRoundData = new Round();
-
-
-    //TEST
-    public int getTurnsExpectedPerRound() {
-        return turnsExpectedPerRound;
-    }
-    //TEST
-    public int getTurnsReceivedInCurrentRound() {
-        return turnsReceivedInCurrentRound;
-    }
 
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
@@ -138,5 +128,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     private boolean checkIfPlayerIsLocalPlayer(Player p) {
         return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
+    }
+
+    public int getTurnsReceivedInCurrentRound() {
+        return turnsReceivedInCurrentRound;
     }
 }
