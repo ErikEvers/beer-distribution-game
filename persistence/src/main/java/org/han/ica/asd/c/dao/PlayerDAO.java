@@ -17,7 +17,7 @@ public class PlayerDAO {
     private static final String GET_SPECIFIC = "SELECT * FROM Player WHERE GameId = ? AND PlayerId = ?";
     private static final String CREATE_PLAYER = "INSERT INTO Player VALUES (?, ?, ?, ?, ?)";
     private static final String DELETE_PLAYER = "DELETE FROM Player WHERE GameId = ? AND PlayerId = ?";
-    private static final String UPDATE_PLAYER = "UPDATE Player"
+    private static final String UPDATE_PLAYER = "UPDATE Player";
 
     @Inject
     private IDatabaseConnection databaseConnection;
