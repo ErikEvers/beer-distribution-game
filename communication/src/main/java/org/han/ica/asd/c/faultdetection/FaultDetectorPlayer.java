@@ -7,11 +7,16 @@ import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FaultDetectorPlayer extends TimerTask {
+    @Inject private static Logger logger; //NOSONAR
+
     private long lastReceived;
     private boolean leaderIsPinging;
     private FaultDetectionClient faultDetectionClient;
@@ -81,6 +86,7 @@ public class FaultDetectorPlayer extends TimerTask {
             try {
                 faultDetectionClient.sendCanYouReachLeaderMessage(new CanYouReachLeaderMessage(), ip);
             } catch (NodeCantBeReachedException se) {
+                logger.log(Level.INFO, se.getMessage(), se);
                 faultHandlerPlayer.incrementAmountOfFailingIps();
             }
         }
