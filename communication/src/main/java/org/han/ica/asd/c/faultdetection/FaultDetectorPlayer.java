@@ -7,12 +7,17 @@ import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessageRes
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FaultDetectorPlayer extends TimerTask {
+    @Inject private static Logger logger; //NOSONAR
+
     private long lastReceived;
     private boolean leaderIsPinging;
     private FaultDetectionClient faultDetectionClient;

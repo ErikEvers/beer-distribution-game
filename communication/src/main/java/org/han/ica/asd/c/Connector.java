@@ -67,7 +67,7 @@ private static Connector instance = null;
         try {
             return finder.getAvailableRooms();
         } catch (DiscoveryException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
         return null;
     }
@@ -78,7 +78,7 @@ private static Connector instance = null;
             nodeInfoList.add(new NodeInfo(ip, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            LOGGER.log(Level.INFO, e.getMessage(), e);
         }
         return null;
     }
@@ -92,7 +92,7 @@ private static Connector instance = null;
                 return joinedRoom;
             }
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+            LOGGER.log(Level.INFO, e.getMessage(), e);
         }
         return null;
     }
@@ -109,7 +109,7 @@ private static Connector instance = null;
             finder.startGameRoom(room.getRoomName());
             setLeader();
         } catch (DiscoveryException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 

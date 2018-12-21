@@ -36,13 +36,13 @@ public class GameMessageClient {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
                     exception = new IOException("Something went wrong when trying to connect");
-                    LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect");
+                    LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect", e);
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
                     exception = new ClassNotFoundException("Sommething went wrong when reading the object");
-                    LOGGER.log(Level.SEVERE, "Something went wrong when reading the object");
+                    LOGGER.log(Level.SEVERE, "Something went wrong when reading the object", e);
                 }
             }
         }

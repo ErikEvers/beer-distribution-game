@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.faultdetection;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -7,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -25,6 +29,12 @@ public class TestFaultDetector {
 
 	@BeforeEach
 	void setUp() {
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				requestStaticInjection(FaultResponder.class);
+			}
+		});
 		faultDetector = spy(new FaultDetector(observers));
 	}
 

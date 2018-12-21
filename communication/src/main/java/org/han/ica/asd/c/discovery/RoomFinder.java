@@ -107,7 +107,6 @@ public class RoomFinder implements IFinder{
             try {
                 return new Room(roomName, ip, password, service);
             } catch (RoomException e) {
-                LOGGER.log(Level.SEVERE, "Connection error");
                 throw new DiscoveryException(e);
             }
         }
@@ -117,8 +116,7 @@ public class RoomFinder implements IFinder{
         try {
             return !service.checkIfFolderNotExists(roomName);
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error checking if room exists.");
-            throw new DiscoveryException("Error checking if room exists.");
+            throw new DiscoveryException(e);
         }
     }
 
@@ -131,8 +129,7 @@ public class RoomFinder implements IFinder{
             }
             rooms = updatedHosts;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error updating available rooms.");
-            throw new DiscoveryException("Error updating available rooms.");
+            throw new DiscoveryException(e);
         }
     }
 
