@@ -16,7 +16,6 @@ public class SocketClient {
 
     private static final Logger LOGGER = Logger.getLogger(SocketClient.class.getName());
 
-
     /**
      * Tries to make a connection with the specified ipAddress.
      * It will try to send an empty object to make sure it can reach the specified ipAddress within a given time.
@@ -28,15 +27,13 @@ public class SocketClient {
      * @author Tarik
      */
     public void makeConnection(String ipAddress, Object object) throws IOException {
-
         try (Socket socket = new Socket()) {
-
-            socket.connect(new InetSocketAddress(ipAddress, 4445), 1000);
+            socket.connect(new InetSocketAddress(ipAddress, SocketSettings.PORT), 1000);
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(object);
-
         }
     }
+
     /**
      * This method tries to make a new socket with the given IP, sends an object and expects an object back, which will be returned.
      * No need for socket.close() because of the use of 'try-with'

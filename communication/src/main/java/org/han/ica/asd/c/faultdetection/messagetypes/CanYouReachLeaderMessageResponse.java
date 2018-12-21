@@ -12,5 +12,4 @@ public class CanYouReachLeaderMessageResponse extends FaultDetectionMessage {
         this.leaderState = leaderState;
     }
 
-
 }

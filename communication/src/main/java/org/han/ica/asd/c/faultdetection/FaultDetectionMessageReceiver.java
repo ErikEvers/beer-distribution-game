@@ -55,7 +55,6 @@ public class FaultDetectionMessageReceiver {
             default:
                 break;
         }
-
         return null;
     }
 }
