@@ -50,7 +50,7 @@
                         <Insets bottom="60.0" left="30.0" />
                      </GridPane.margin>
                   </Label>
-                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSendOrderButtonClick" text="Send order" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSendOrderButtonClick" style="-fx-background-color: #ff8000;" text="Send order" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                   <TextField fx:id="incomingOrderTextField" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                   <TextField fx:id="outgoingOrderTextField" layoutX="39.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
@@ -118,15 +118,15 @@
                <GridPane.margin>
                   <Insets left="30.0" top="85.0" />
                </GridPane.margin></TextField>
-            <Button mnemonicParsing="false" text="See graph" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="See graph" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="20.0" />
                </GridPane.margin></Button>
-            <Button mnemonicParsing="false" text="Use agent" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="Use agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="20.0" />
                </GridPane.margin></Button>
-            <Button mnemonicParsing="false" text="See other facilities" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="See other facilities" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="20.0" />
                </GridPane.margin></Button>
