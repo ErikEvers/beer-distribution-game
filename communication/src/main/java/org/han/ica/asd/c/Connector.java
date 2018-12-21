@@ -2,17 +2,14 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
-import org.han.ica.asd.c.discovery.Room;
-import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
-import org.han.ica.asd.c.discovery.RoomModel;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
-import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
-import org.han.ica.asd.c.faultdetection.FaultDetectorPlayer;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.communication.IConnecterForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -25,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector implements IConnecterForSetup{
+public class Connector implements IConnecterForSetup {
 private static Connector instance = null;
     private ArrayList<IConnectorObserver> observers;
     private NodeInfoList nodeInfoList;
@@ -66,8 +63,13 @@ private static Connector instance = null;
         return instance;
     }
 
-    public List<String> getAvailableRooms() throws DiscoveryException {
-        return finder.getAvailableRooms();
+    public List<String> getAvailableRooms() {
+        try {
+            return finder.getAvailableRooms();
+        } catch (DiscoveryException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public RoomModel createRoom(String roomName, String ip, String password){

@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.discovery;
 
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
+
 import java.util.List;
 
 public interface IFinder {

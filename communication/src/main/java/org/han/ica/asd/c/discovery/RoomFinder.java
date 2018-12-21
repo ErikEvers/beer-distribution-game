@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.discovery;
 
 import org.han.ica.asd.c.discovery.impl.GoogleDrive;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
