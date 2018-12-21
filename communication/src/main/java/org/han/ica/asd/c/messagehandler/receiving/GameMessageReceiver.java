@@ -68,6 +68,10 @@ public class GameMessageReceiver {
         }
     }
 
+    /**
+     * Executes a commit
+     * @param roundModelMessage
+     */
     private void doCommit(RoundModelMessage roundModelMessage) {
         //in theory, a bug can still occur where we receive a commit message with a different content.
         if (toBecommittedRound != null) {
@@ -110,6 +114,14 @@ public class GameMessageReceiver {
         return new ResponseMessage(true);
     }
 
+    /**
+     * Calls the whoIsTheLeaderMessageReceived method on the 'MessageProcessor".
+     * @author Oscar
+     * @param whoIsTheLeaderMessage The 'WhoIsTheLeaderMessage' that was received.
+     * @return whoIsTheLeaderMessage with the response filled in. This is either the response that was excepted or an exception.
+     * @see WhoIsTheLeaderMessage
+     * @see MessageProcessor
+     */
     private WhoIsTheLeaderMessage handleWhoIsTheLeaderMessage(WhoIsTheLeaderMessage whoIsTheLeaderMessage) {
         return messageProcessor.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
     }

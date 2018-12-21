@@ -6,7 +6,7 @@ import java.util.UUID;
 public abstract class GameMessage implements Serializable {
     protected int messageType;
     private UUID messageId;
-    private Object response;
+    private Exception exception;
 
     protected GameMessage(int messageType) {
         this.messageId = UUID.randomUUID();
@@ -25,22 +25,21 @@ public abstract class GameMessage implements Serializable {
         this.messageId = messageId;
     }
 
-
     /**
-     * Gets response.
+     * Gets exception.
      *
-     * @return Value of response.
+     * @return Value of exception.
      */
-    public Object getResponse() {
-        return response;
+    public Exception getException() {
+        return exception;
     }
 
     /**
-     * Sets new response.
+     * Sets new exception.
      *
-     * @param response New value of response.
+     * @param exception New value of exception.
      */
-    public void setResponse(Object response) {
-        this.response = response;
+    public void setException(Exception exception) {
+        this.exception = exception;
     }
 }

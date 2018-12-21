@@ -8,14 +8,6 @@ package org.han.ica.asd.c.messagehandler.exceptions;
  */
 public class LeaderNotPresentException extends Exception {
 
-    public LeaderNotPresentException() {
-        super();
-    }
-
-    public LeaderNotPresentException(Throwable cause) {
-        super(cause);
-    }
-
     public LeaderNotPresentException(String s) {
         super(s);
     }

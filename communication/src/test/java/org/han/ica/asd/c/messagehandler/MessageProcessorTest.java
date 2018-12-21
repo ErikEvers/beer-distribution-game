@@ -17,16 +17,13 @@ public class MessageProcessorTest {
 
     private NodeInfoList nodeInfoList = mock(NodeInfoList.class);
 
-
     @BeforeEach
     void setup(){
-
     }
 
     @Test
     @DisplayName("Test response is set to leaderIp when leaderIp is not null")
     void whoIsTheLeaderMessageReceivedTestResponseHappyFlow(){
-
         MessageProcessor messageProcessorMock = new MessageProcessor(){
             @Override
             public NodeInfoList getNodeInfoListFromConnector() {
@@ -60,11 +57,10 @@ public class MessageProcessorTest {
         WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
         WhoIsTheLeaderMessage result = messageProcessorMock.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
 
-        assertTrue(result.getResponse() instanceof LeaderNotPresentException);
+        assertTrue(result.getException() instanceof LeaderNotPresentException);
 
-        LeaderNotPresentException leaderNotPresentException = (LeaderNotPresentException) result.getResponse();
+        LeaderNotPresentException leaderNotPresentException = (LeaderNotPresentException) result.getException();
 
         assertEquals( "I dont have a leader at this moment", leaderNotPresentException.getMessage());
-
     }
 }

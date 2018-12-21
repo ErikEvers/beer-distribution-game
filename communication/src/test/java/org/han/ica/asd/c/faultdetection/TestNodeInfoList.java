@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
+import junit.framework.TestCase;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,23 +22,24 @@ public class TestNodeInfoList {
     NodeInfo nodeInfo = mock(NodeInfo.class);
     NodeInfoList nodeInfoList = new NodeInfoList();
 
+    private String testIp1;
+    private String testIp2;
+
+
     @BeforeEach
     void setUp() {
-
+        testIp1 = "TestIp1";
+        testIp2 = "TestIp2";
     }
 
     @Test
     @DisplayName("Test if getAllIps returns the right ips")
     void TestGetAllIps() {
-        String testIp1 = "TestIp1";
-        String testIp2 = "TestIp2";
-
         NodeInfo nodeInfo1 = new NodeInfo();
         nodeInfo1.setIp(testIp1);
 
         NodeInfo nodeInfo2 = new NodeInfo();
         nodeInfo2.setIp(testIp2);
-
 
         nodeInfoList.add(nodeInfo1);
         nodeInfoList.add(nodeInfo2);
@@ -46,15 +48,11 @@ public class TestNodeInfoList {
 
         assertTrue(result.get(0).equals(testIp1) || result.get(1).equals(testIp1));
         assertTrue(result.get(0).equals(testIp2) || result.get(1).equals(testIp2));
-
     }
 
     @Test
     @DisplayName("Test if getActiveIps returns the right ips")
     void TestGetAllActiveIps() {
-        String testIp1 = "TestIp1";
-        String testIp2 = "TestIp2";
-
         NodeInfo nodeInfo1 = new NodeInfo();
         nodeInfo1.setIp(testIp1);
         nodeInfo1.setConnected(true);
@@ -76,9 +74,6 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if getActiveIpsWithoutLeader returns the right ips")
     void TestGetAllActiveIpsThatAreNotLeader() {
-        String testIp1 = "TestIp1";
-        String testIp2 = "TestIp2";
-
         NodeInfo nodeInfo1 = new NodeInfo();
         nodeInfo1.setIp(testIp1);
         nodeInfo1.setConnected(true);
@@ -101,9 +96,6 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if the getStatusOfOneNode returns the right value")
     void TestGetStatusOfOneNode() {
-        String testIp1 = "TestIp1";
-        String testIp2 = "TestIp2";
-
         NodeInfo nodeInfo1 = new NodeInfo();
         nodeInfo1.setIp(testIp1);
         nodeInfo1.setConnected(true);
@@ -121,8 +113,6 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if AddIp function adds the ip to the nodeInfoList")
     void TestAddIp() {
-        String testIp1 = "TestIp1";
-
         nodeInfoList.addIp(testIp1);
 
         assertEquals(testIp1, nodeInfoList.get(0).getIp());
@@ -131,14 +121,11 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if the UpdateIsConnected updates the value of a node")
     void TestUpdateIsConnected() {
-        String testIp1 = "TestIp1";
-
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setIp(testIp1);
         nodeInfo.setConnected(false);
 
         nodeInfoList.add(nodeInfo);
-
         nodeInfoList.updateIsConnected(testIp1, true);
 
         assertTrue(nodeInfoList.get(0).getConnected());
@@ -147,8 +134,7 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if the size method returns the right value")
     void TestSize() {
-
-        nodeInfoList.addIp("TestIp");
+        nodeInfoList.addIp(testIp1);
 
         assertEquals(1, nodeInfoList.size());
     }
@@ -156,11 +142,9 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test the equals method works")
     void TestEquals() {
-
         NodeInfoList nodeInfoList2 = nodeInfoList;
 
-        assertTrue(nodeInfoList2.equals(nodeInfoList2));
-
+        TestCase.assertEquals(nodeInfoList2, nodeInfoList2);
     }
 
     @Test
@@ -170,26 +154,23 @@ public class TestNodeInfoList {
     }
 
     @Test
-    @DisplayName("Test if the getLeaderIp works happy flow")
+    @DisplayName("Test if the getResponse works happy flow")
     void TestGetLeaderIpHappyFlow() {
-        String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testip);
+        nodeInfo.setIp(testIp1);
         nodeInfo.setLeader(true);
         nodeInfo.setConnected(true);
 
         nodeInfoList.add(nodeInfo);
 
-        assertEquals(testip, nodeInfoList.getLeaderIp());
+        assertEquals(testIp1, nodeInfoList.getLeaderIp());
     }
 
     @Test
-    @DisplayName("Test if the getLeaderIp returns null when the Leader is disconnected")
+    @DisplayName("Test if the getResponse returns null when the Leader is disconnected")
     void TestGetLeaderIpWhenLeaderIsDisconnected() {
-
-        String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testip);
+        nodeInfo.setIp(testIp1);
         nodeInfo.setLeader(true);
         nodeInfo.setConnected(false);
 
@@ -200,11 +181,10 @@ public class TestNodeInfoList {
     }
 
     @Test
-    @DisplayName("Test if the getLeaderIp returns null when there is no Leader")
+    @DisplayName("Test if the getResponse returns null when there is no Leader")
     void TestGetLeaderIpWhenThereAreNoLeaders() {
-        String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testip);
+        nodeInfo.setIp(testIp1);
         nodeInfo.setLeader(false);
         nodeInfo.setConnected(true);
 
@@ -214,11 +194,10 @@ public class TestNodeInfoList {
     }
 
     @Test
-    @DisplayName("Test if the getLeaderIp returns null when noone is connected")
+    @DisplayName("Test if the getResponse returns null when noone is connected")
     void TestGetLeaderIpWhenThereAreNoNodesConnected() {
-        String testip = "TestIp";
         NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testip);
+        nodeInfo.setIp(testIp1);
         nodeInfo.setLeader(false);
         nodeInfo.setConnected(false);
 
@@ -226,5 +205,4 @@ public class TestNodeInfoList {
 
         assertNull(nodeInfoList.getLeaderIp());
     }
-
 }
