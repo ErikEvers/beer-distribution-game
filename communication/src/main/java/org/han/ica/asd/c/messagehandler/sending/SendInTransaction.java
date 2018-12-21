@@ -1,9 +1,7 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import java.io.IOException;
@@ -55,7 +53,7 @@ public class SendInTransaction {
                 canCommitFinished(response.getIsSuccess());
 
             } catch (IOException | ClassNotFoundException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
         });
         t.setDaemon(true);
@@ -85,7 +83,7 @@ public class SendInTransaction {
                     ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, transactionMessage);
 
                 } catch (IOException | ClassNotFoundException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage());
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
                 }
             });
             t.setDaemon(true);

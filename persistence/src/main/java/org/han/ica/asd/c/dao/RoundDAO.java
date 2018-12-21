@@ -56,27 +56,26 @@ public class RoundDAO implements IBeerDisitributionGameDAO {
 	public RoundDB getRound(String gameId, int roundId){
 		Connection conn = databaseConnection.connect();
 		RoundDB round = null;
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, gameId);
-					pstmt.setInt(2, roundId);
+				pstmt.setString(1, gameId);
+				pstmt.setInt(2, roundId);
 
-					try (ResultSet rs = pstmt.executeQuery()) {
-						round = new RoundDB(rs.getString("GameId"), rs.getInt("RoundId"));
-					}
-					conn.commit();
+				try (ResultSet rs = pstmt.executeQuery()) {
+					rs.next();
+					round = new RoundDB(rs.getString("GameId"), rs.getInt("RoundId"));
 				}
+				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-				} catch (SQLException e) {
-					LOGGER.log(Level.SEVERE, e.toString(), e);
-					databaseConnection.rollBackTransaction(conn);
-				}
+		}
 
-				return round;
+		return round;
 	}
 
 
