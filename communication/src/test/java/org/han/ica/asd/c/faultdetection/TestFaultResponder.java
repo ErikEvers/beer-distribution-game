@@ -1,9 +1,16 @@
 package org.han.ica.asd.c.faultdetection;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
+import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.rules.ExpectedException;
+
+import java.net.SocketTimeoutException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,9 +24,19 @@ import static org.mockito.Mockito.when;
 public class TestFaultResponder {
     FaultResponder faultResponder;
 
+    @Rule
+    public ExpectedException thrown= ExpectedException.none();
+
+
 
     @BeforeEach
     void setUp() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(FaultResponder.class);
+            }
+        });
         faultResponder = spy(FaultResponder.class);
     }
 
@@ -46,6 +63,7 @@ public class TestFaultResponder {
 
         verify(faultDetectionClient).sendFaultMessageResponse(any(), eq(""));
 
+        thrown.expect(SocketTimeoutException.class);
     }
 
     @Test

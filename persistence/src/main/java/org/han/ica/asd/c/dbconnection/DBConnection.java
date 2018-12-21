@@ -65,7 +65,7 @@ public class DBConnection implements IDatabaseConnection {
 					// we ensure that there is no spaces before or after the request string
 					// in order to not execute empty statements
 					String strings = inst[i];
-					if (!strings.equals("")) {
+					if (!"".equals(strings)) {
 						st.executeUpdate(strings); //NOSONAR because the SQL Scripts are written by ourselves. SQLInjection not applicable
 					}
 				}
