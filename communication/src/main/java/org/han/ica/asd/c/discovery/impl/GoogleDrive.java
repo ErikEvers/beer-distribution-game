@@ -53,7 +53,7 @@ public class GoogleDrive implements IResourceManager {
                     .setApplicationName(APPLICATION_NAME)
                     .build();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR);
+            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR, e);
         }
     }
 
@@ -143,7 +143,7 @@ public class GoogleDrive implements IResourceManager {
             try {
                 folderID = result.getFiles().get(0).getId();
             }catch(IndexOutOfBoundsException e){
-                //
+                LOGGER.log(Level.SEVERE, "Room file can not be found", e);
             }
 
         } while (pageToken != null);
@@ -182,7 +182,7 @@ public class GoogleDrive implements IResourceManager {
                 return newFile.getId();
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR);
+            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR, e);
             throw new IOException(GOOGLE_DRIVE_ERROR);
         }
         return "False";
@@ -199,7 +199,7 @@ public class GoogleDrive implements IResourceManager {
                     .execute();
             service.files().delete(result.getFiles().get(0).getId()).execute();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR);
+            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR, e);
             throw new IOException(GOOGLE_DRIVE_ERROR);
         }
     }
@@ -209,14 +209,14 @@ public class GoogleDrive implements IResourceManager {
             service.files().delete(id).execute();
             service.files().emptyTrash().execute();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR);
+            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR, e);
             throw new IOException(GOOGLE_DRIVE_ERROR);
         }
     }
 
     public void createFileInFolder(String name, String idFolder) throws IOException {
         try {
-            if (!idFolder.equals("False")) {
+            if (!"False".equals(idFolder)) {
 
                 File fileMetadata = new File();
                 fileMetadata.setName(name);
@@ -227,7 +227,7 @@ public class GoogleDrive implements IResourceManager {
                         .execute();
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR);
+            LOGGER.log(Level.SEVERE, GOOGLE_DRIVE_ERROR, e);
             throw new IOException(GOOGLE_DRIVE_ERROR);
         }
     }

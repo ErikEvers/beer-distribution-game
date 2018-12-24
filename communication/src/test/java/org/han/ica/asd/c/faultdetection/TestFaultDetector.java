@@ -1,15 +1,19 @@
 package org.han.ica.asd.c.faultdetection;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -25,6 +29,12 @@ public class TestFaultDetector {
 
 	@BeforeEach
 	void setUp() {
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				requestStaticInjection(FaultResponder.class);
+			}
+		});
 		faultDetector = spy(new FaultDetector(observers));
 	}
 
@@ -37,7 +47,6 @@ public class TestFaultDetector {
 		faultDetector.setLeader(nodeInfoList);
 		assertNotNull(faultDetector.getFaultDetectorLeader());
 		verify(faultDetectorLeader).start();
-
 	}
 
 	@Test
@@ -49,7 +58,6 @@ public class TestFaultDetector {
 
 	@Test
 	void TestFaultMessageReceived() {
-
 		doReturn( faultResponder )
 				.when( faultDetector )
 				.makeFaultResponder();
@@ -58,12 +66,10 @@ public class TestFaultDetector {
 		faultDetector.faultMessageReceived(any(), any());
 		assertNotNull(faultDetector.getFaultResponder());
 		verify(faultResponder).faultMessageReceived(any(),any());
-
 	}
 
 	@Test
 	void TestFaultMessageResponseReceived() {
-
 		doReturn( faultDetectorLeader )
 				.when( faultDetector )
 				.makeFaultDetectorLeader(nodeInfoList, observers);
@@ -72,12 +78,10 @@ public class TestFaultDetector {
 		faultDetector.faultMessageResponseReceived(any());
 		assertNotNull(faultDetector.getFaultDetectorLeader());
 		verify(faultDetectorLeader).faultMessageResponseReceived(any());
-
 	}
 
 	@Test
 	void TestPingMessageReceived() {
-
 		doReturn( faultDetectorPlayer )
 				.when( faultDetector )
 				.makeFaultDetectorPlayer(nodeInfoList);
@@ -86,40 +90,22 @@ public class TestFaultDetector {
 		faultDetector.pingMessageReceived(any());
 		assertNotNull(faultDetector.getFaultDetectorPlayer());
 		verify(faultDetectorPlayer).pingMessageReceived(any());
-
 	}
 
 	@Test
 	void TestCanYouReachLeaderMessageReceived() {
-
 		doReturn( faultDetectorPlayer )
 				.when( faultDetector )
 				.makeFaultDetectorPlayer(nodeInfoList);
 
 		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.canYouReachLeaderMessageReceived(any(),any());
+		faultDetector.canYouReachLeaderMessageReceived(any());
 		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), any());
-
-	}
-
-	@Test
-	void TestICanReachLeaderMessageReceived() {
-
-		doReturn( faultDetectorPlayer )
-				.when( faultDetector )
-				.makeFaultDetectorPlayer(nodeInfoList);
-
-		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.iCanReachLeaderMessageReceived(any());
-		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).iCanReachLeaderMessageReceived(any());
-
+		verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any());
 	}
 
 	@Test
 	void TestFaultDetectionMessageReceiver() {
 		assertNotNull(faultDetector.getFaultDetectionMessageReceiver());
 	}
-
 }

@@ -3,13 +3,14 @@ package org.han.ica.asd.c.leadermigration;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
-import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
-import org.han.ica.asd.c.leadermigration.componentInterfaces.ILeaderMigration;
-import org.han.ica.asd.c.leadermigration.componentInterfaces.IPersistenceLeaderMigration;
+import org.han.ica.asd.c.model.interface_models.PlayerNotFoundException;
+import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
+import org.han.ica.asd.c.interfaces.communication.ILeaderMigration;
+import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.leadermigration.testutil.IpHandlerStub;
 import org.han.ica.asd.c.leadermigration.testutil.PersistenceStub;
-import org.han.ica.asd.c.model.dao_model.Player;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -46,7 +47,7 @@ public class LeaderMigrationTest {
   public void testDifferentIpThrowsException() throws Exception {
     Player[] players = new Player[1];
     IpHandlerStub.setIpString("1");
-    players[0] = new Player("0","0", "0", 0, "Joost", true);
+    players[0] = new Player("0","0", new Facility(), "",  true);
     leaderMigration.startMigration(players);
   }
 
@@ -54,7 +55,7 @@ public class LeaderMigrationTest {
   public void testNoIpThrowsException() throws Exception {
     Player[] players = new Player[1];
     IpHandlerStub.setIpString(null);
-    players[0] = new Player("0","0", "0", 0, "Joost", true);
+    players[0] = new Player("0","0", new Facility(), "",  true);
     leaderMigration.startMigration(players);
   }
 }
