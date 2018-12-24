@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gui_spelers_beheren;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,6 +16,7 @@ public class MonitorPlayersScreenController {
 
 	@Inject GameConfiguration gameConfiguration;
 
+	@FXML private Button kickPlayerButton;
 	@FXML private TableView<Player> playerTable;
 	@FXML private TableColumn<Player, String> playerIdColumn;
 	@FXML private TableColumn<Player, String> nameColumn;
@@ -51,6 +53,15 @@ public class MonitorPlayersScreenController {
 	 */
 	public void handleStartGameButtonClick() {
 
+	}
+
+	/**
+	 * Enable the kick button whenever a player gets selected in the table.
+	 */
+	public void handlePlayerSelection() {
+		if(playerTable.getSelectionModel().getSelectedItem() != null) {
+			kickPlayerButton.setDisable(false);
+		}
 	}
 
 	/**

@@ -28,7 +28,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-								 	<Button contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#handleKickPlayerButtonClick" style="-fx-background-color: #ff8000; -fx-cursor: hand;" text="%kick_player" wrapText="true" GridPane.halignment="RIGHT" />
+								 	<Button fx:id="kickPlayerButton" contentDisplay="RIGHT" mnemonicParsing="false" disable="true" onMouseClicked="#handleKickPlayerButtonClick" style="-fx-background-color: #ff8000; -fx-cursor: hand;" text="%kick_player" wrapText="true" GridPane.halignment="RIGHT" />
 								  <Button contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#handleReturnToGameRoomButtonClick" style="-fx-background-color: #ff8000; -fx-cursor: hand;" text="%back_to_room" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                      <GridPane.margin>
                         <Insets right="10.0" />
@@ -52,7 +52,7 @@
                       <RowConstraints maxHeight="636.0" minHeight="10.0" prefHeight="636.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView GridPane.rowIndex="1" fx:id="playerTable">
+                        <TableView GridPane.rowIndex="1" fx:id="playerTable" onMouseClicked="#handlePlayerSelection">
                           <columns>
                             <TableColumn fx:id="playerIdColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%player_id" />
                             <TableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%name" />
