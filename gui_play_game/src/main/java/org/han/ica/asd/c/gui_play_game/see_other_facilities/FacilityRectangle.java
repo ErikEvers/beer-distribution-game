@@ -4,12 +4,12 @@ import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-import org.han.ica.asd.c.model.Facility;
+import org.han.ica.asd.c.model.dao_model.FacilityDB;
 
 public class FacilityRectangle extends Rectangle {
-    private Facility facility;
+    private FacilityDB facility;
 
-    public  FacilityRectangle(Facility facility){
+    public  FacilityRectangle(FacilityDB facility){
         super(51, 36, Color.web(determineColor(facility.getFacilityType())));
         this.facility = facility;
         super.setStroke(Color.BLACK);
@@ -38,7 +38,7 @@ public class FacilityRectangle extends Rectangle {
         return color;
     }
 
-    public Facility getFacility() {
+    public FacilityDB getFacility() {
         return facility;
     }
 }

@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.player;
 
+import org.han.ica.asd.c.model.dao_model.FacilityDB;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
@@ -18,7 +19,7 @@ public class PlayerComponent {
         return array;
     }
 
-    public String requestFacilityInfo(Facility facility) {
+    public String requestFacilityInfo(FacilityDB facility) {
         //Fake method for testing purposes
         return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
     }

@@ -4,10 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import org.han.ica.asd.c.FacilityDAO;
+import org.han.ica.asd.c.dao.FacilityDAO;
+import org.han.ica.asd.c.model.dao_model.FacilityDB;
+import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.player.PlayerComponent;
-import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.model.FacilityLinkedTo;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +32,7 @@ public class SeeOtherFacilitiesController {
     private FacilityDAO facilityDAO;
 
     private String gameId;
+    private RoomModel roomModel;
 
     /**
      * Initialises the facility overview screen by calling the loadFacilityView() method.
@@ -43,6 +45,10 @@ public class SeeOtherFacilitiesController {
         gameId = "";
 
         loadFacilityView();
+    }
+
+    public void setGameRoom(RoomModel roomModel) {
+        this.roomModel = roomModel;
     }
 
     /**
@@ -58,7 +64,7 @@ public class SeeOtherFacilitiesController {
     private void loadFacilityView() throws FacilityLoadingError {
         FacilityLinkedTo[] links = playerComponent.seeOtherFacilities();
 
-        ArrayList<Facility> drawnFacilities = new ArrayList<>();
+        ArrayList<FacilityDB> drawnFacilities = new ArrayList<>();
         ArrayList<FacilityRectangle> drawnFacilityRectangles = new ArrayList<>();
 
         for(FacilityLinkedTo link : links) {
@@ -79,17 +85,17 @@ public class SeeOtherFacilitiesController {
      * @throws FacilityLoadingError
      * When a facility is of an unknown type, this is thrown.
      */
-    private void drawFacilities(ArrayList<Facility> drawnFacilities,
+    private void drawFacilities(ArrayList<FacilityDB> drawnFacilities,
                                 ArrayList<FacilityRectangle> drawnFacilityRectangles,
                                 FacilityLinkedTo link) throws FacilityLoadingError {
-        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId))) {
-            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId)));
-            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId));
+        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId))) {
+            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId)));
+            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId));
         }
 
-        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId))) {
-            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId)));
-            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId));
+        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId))) {
+            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId)));
+            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId));
         }
     }
 
@@ -103,14 +109,14 @@ public class SeeOtherFacilitiesController {
      */
     private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, FacilityLinkedTo link) {
         EdgeLine line = new EdgeLine();
-        FacilityRectangle rectangleDeliver = new FacilityRectangle(new Facility("",0,null,"",""));
-        FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility("",0,null,"",""));
+        FacilityRectangle rectangleDeliver = new FacilityRectangle(new FacilityDB("",0,"Retailer","","", false));
+        FacilityRectangle rectangleOrder = new FacilityRectangle(new FacilityDB("", 0, "Retailer", "", "", false));
 
         for(FacilityRectangle rectangle : drawnFacilityRectangles) {
-            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityIdDeliver(), gameId)) {
+            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId)) {
                 rectangleDeliver = rectangle;
             }
-            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityIdOrder(), gameId)) {
+            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId)) {
                 rectangleOrder = rectangle;
             }
         }
@@ -148,7 +154,7 @@ public class SeeOtherFacilitiesController {
      * When a facility is of an unknown type, this is thrown.
      */
 
-    private FacilityRectangle drawFacility(Facility facility) throws FacilityLoadingError {
+    private FacilityRectangle drawFacility(FacilityDB facility) throws FacilityLoadingError {
         if(facility.getFacilityType().equals("Factory")) {
             drawFacilityOnScreen(facility, factories, 0);
             return factories.get(factories.size()-1);
@@ -176,7 +182,7 @@ public class SeeOtherFacilitiesController {
      * Y-axis on which the facility is to be drawn.
      */
 
-    private void drawFacilityOnScreen(Facility facility, ArrayList<FacilityRectangle> facilityList, int y) {
+    private void drawFacilityOnScreen(FacilityDB facility, ArrayList<FacilityRectangle> facilityList, int y) {
         double rows = (facilitiesContainer.getPrefHeight()/4);
         double collumns = 60;
         facilitiesContainer.getChildren().removeAll(facilityList);
@@ -195,7 +201,7 @@ public class SeeOtherFacilitiesController {
      * Method creates a new FacilityRectangle based on the facility given to the method.
      * @return New FacilityRectangle.
      */
-    private FacilityRectangle createRectangle(Facility facility) {
+    private FacilityRectangle createRectangle(FacilityDB facility) {
         FacilityRectangle rectangle = new FacilityRectangle(facility);
         installTooltip(facility, rectangle);
         return rectangle;
@@ -204,7 +210,7 @@ public class SeeOtherFacilitiesController {
     /**
      * Installs the tooltip with information regarding the facility on the rectangle.
      */
-    private void installTooltip(Facility facility, FacilityRectangle rectangle) {
+    private void installTooltip(FacilityDB facility, FacilityRectangle rectangle) {
         Tooltip tooltip = new Tooltip(playerComponent.requestFacilityInfo(facility));
         Tooltip.install(rectangle, tooltip);
     }

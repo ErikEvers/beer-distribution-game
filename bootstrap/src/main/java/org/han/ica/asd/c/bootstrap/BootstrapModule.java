@@ -13,6 +13,7 @@ import org.han.ica.asd.c.gui_join_game.AgentList;
 import org.han.ica.asd.c.gui_join_game.GameRoom;
 import org.han.ica.asd.c.gui_join_game.JoinGame;
 import org.han.ica.asd.c.gui_main_menu.MainMenu;
+import org.han.ica.asd.c.gui_play_game.see_other_facilities.SeeOtherFacilities;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
@@ -39,6 +40,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
 
 		requestStaticInjection(FXMLLoaderOnSteroids.class);
 
