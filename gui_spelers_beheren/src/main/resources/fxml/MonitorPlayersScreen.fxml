@@ -52,11 +52,11 @@
                       <RowConstraints maxHeight="636.0" minHeight="10.0" prefHeight="636.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView GridPane.rowIndex="1">
+                        <TableView GridPane.rowIndex="1" fx:id="playerTable">
                           <columns>
-                            <TableColumn maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%player_id" />
-                            <TableColumn maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%name" />
-														<TableColumn maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%IP" />
+                            <TableColumn fx:id="playerIdColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%player_id" />
+                            <TableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%name" />
+														<TableColumn fx:id="ipColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%IP" />
                           </columns>
                         </TableView>
                         <Label text="%connected_players" GridPane.halignment="CENTER" style="-fx-text-fill: #1997ff;">
