@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class ElectionHandler {
 
 	private List<Player> receivedPlayers;
-  @Inject private static Logger logger;
+  @Inject private static Logger logger; //NOSONAR
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
   @Inject private IpHandler ipHandler;

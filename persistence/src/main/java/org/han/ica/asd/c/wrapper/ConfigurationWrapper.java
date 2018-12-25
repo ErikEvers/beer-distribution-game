@@ -7,7 +7,7 @@ import org.han.ica.asd.c.model.domain_objects.IDomainModel;
 
 import javax.inject.Inject;
 
-public class ConfigurationWrapper extends Wrapper {
+public class ConfigurationWrapper implements Wrapper {
 
 	@Inject
 	private ConfigurationDB configurationDB;
@@ -20,7 +20,7 @@ public class ConfigurationWrapper extends Wrapper {
 	}
 
 	@Override
-	IDaoModel wrapToDaoModel(IDomainModel model) {
+	public IDaoModel wrapToDaoModel(IDomainModel model) {
 		configuration = (Configuration) model;
 		configurationDB.setAmountOfRounds(configuration.getAmountOfRounds());
 		configurationDB.setAmountOfDistributors(configuration.getAmountOfDistributors());
@@ -37,7 +37,7 @@ public class ConfigurationWrapper extends Wrapper {
 	}
 
 	@Override
-	IDomainModel wrapToDomainModel(IDaoModel model) {
+	public IDomainModel wrapToDomainModel(IDaoModel model) {
 		configurationDB = (ConfigurationDB) model;
 		configuration.setAmountOfRounds(configurationDB.getAmountOfRounds());
 		configuration.setAmountOfDistributors(configurationDB.getAmountOfDistributors());
