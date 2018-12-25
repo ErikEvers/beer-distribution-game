@@ -20,7 +20,7 @@ public class TurnHandler {
         turnModel.getTurnBackOrder().forEach(currentRoundData.getTurnBackOrder()::putIfAbsent);
         turnModel.getTurnStock().forEach(currentRoundData.getTurnStock()::putIfAbsent);
 
-        persistenceLayer.savePlayerTurn(turnModel);
+        persistenceLayer.saveFacilityTurn(turnModel);
 
         return currentRoundData;
     }

@@ -25,7 +25,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private final Provider<Round> roundProvider;
 
     private BeerGame game;
-    private Round currentRoundData = new Round();
+    private Round currentRoundData;
 
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
@@ -39,6 +39,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public void init() {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
+        this.currentRoundData = roundProvider.get();
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
 

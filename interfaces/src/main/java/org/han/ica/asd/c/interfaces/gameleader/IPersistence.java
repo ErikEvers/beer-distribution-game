@@ -13,7 +13,7 @@ public interface IPersistence {
      * Store the actions of a facility in a specific round.
      * @param data, the info to be saved.
      */
-    public void savePlayerTurn(Round data);
+    public void saveFacilityTurn(Round data);
 
     /**
      * Retrieve the data of a turn of a facility.
@@ -21,7 +21,7 @@ public interface IPersistence {
      * @param facilityId, the identifier of the facility of which the round actions are to be retrieved.
      * @return the round data for that facility in that round.
      */
-    public Round fetchPlayerTurn(int roundId, int facilityId);
+    public Round fetchFacilityTurn(int roundId, int facilityId);
 
     /**
      * Store the actions of a specific round.
