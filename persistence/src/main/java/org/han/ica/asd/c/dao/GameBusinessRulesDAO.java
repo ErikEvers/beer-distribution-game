@@ -21,7 +21,7 @@ public class GameBusinessRulesDAO {
 	private static final String DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "DELETE FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?;";
 	private static final String READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "SELECT * FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesDAO.class.getName());
-	private static final String READ_GAMEAST = "SELECT GameAST FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ? AND GameBusinessRule = ?; ";
+	private static final String READ_GAMEAST = "SELECT * FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ? AND GameBusinessRule = ? AND FacilityId = ?; ";
 
     @Inject
     private IDatabaseConnection databaseConnection;
@@ -113,7 +113,15 @@ public class GameBusinessRulesDAO {
     }
 
 
-	public String getGameAST(String businessRule, String gameAgentName) {
+    /**
+     * A method to retrieve the GameAST linked to a GameBusinessRule.
+     *
+     * @param businessRule The business rule that the GameAST is linked to.
+     * @param gameAgentName The GameAgent from whom the data needs to be collected.
+     * @param facilityId The Facility from which the GameAST needs to be collected.
+     * @return The linked GameAST will be returned.
+     */
+	public String getGameAST(String businessRule, String gameAgentName, int facilityId) {
 		String gameAST = "";
 		Connection conn = null;
 		conn = databaseConnection.connect();
@@ -123,6 +131,7 @@ public class GameBusinessRulesDAO {
 			pstmt.setString(1,DaoConfig.getCurrentGameId());
 			pstmt.setString(2, gameAgentName);
 			pstmt.setString(3, businessRule);
+			pstmt.setInt(4, facilityId);
 
 			try (ResultSet rs = pstmt.executeQuery()) {
 				gameAST = rs.getString("GameAST");

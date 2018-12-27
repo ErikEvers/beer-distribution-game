@@ -20,8 +20,8 @@ import java.util.List;
 
 class GameAgentDAOIntegrationTest {
     private static final List<GameBusinessRules> GAME_BUSINESS_RULES = new ArrayList<>();
-    private static final FacilityType FACILITY_TYPE = new FacilityType("Factory", 1, 1, 1, 1, 1, 1);
-    private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesale", 1, 1, 1, 1, 1, 1);
+    private static final FacilityType FACILITY_TYPE = new FacilityType("Factory", 1, 1, 1, 1, 1, 1, 1);
+    private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesale", 1, 1, 1, 1, 1, 1, 1);
     private static final Facility FACILITY = new Facility(FACILITY_TYPE, 1);
     private static final Facility FACILITY2 = new Facility(FACILITY_TYPE2, 2);
     private static final GameAgent GAMEAGENT = new GameAgent("Agent1", FACILITY, GAME_BUSINESS_RULES);
@@ -29,6 +29,8 @@ class GameAgentDAOIntegrationTest {
     private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("Agent2_Updated", FACILITY2, GAME_BUSINESS_RULES);
 
     private GameAgentDAO gameAgentDAO;
+    private FacilityDAO facilityDAO;
+    private  FacilityTypeDAO facilityTypeDAO;
 
     @BeforeEach
     void setUp() {
@@ -44,6 +46,16 @@ class GameAgentDAOIntegrationTest {
         DBConnectionTest.getInstance().createNewDatabase();
         gameAgentDAO = injector.getInstance(GameAgentDAO.class);
         DaoConfig.setCurrentGameId("gameId");
+
+        Injector injector1 = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IDatabaseConnection.class).to(DBConnectionTest.class);
+            }
+        });
+
+        facilityTypeDAO = injector1.getInstance(FacilityTypeDAO.class);
+        facilityDAO = injector1.getInstance(FacilityDAO.class);
     }
 
     @AfterEach
@@ -53,6 +65,8 @@ class GameAgentDAOIntegrationTest {
 
     @Test
     void createGameAgent() {
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE);
+        facilityDAO.createFacility(FACILITY);
         Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame().size());
         gameAgentDAO.createGameAgent(GAMEAGENT);
         Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame().size());
@@ -66,6 +80,8 @@ class GameAgentDAOIntegrationTest {
 
     @Test
     void deleteSpecificGameagent() {
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+        facilityDAO.createFacility(FACILITY2);
         Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame().size());
         gameAgentDAO.createGameAgent(GAMEAGENT);
         gameAgentDAO.createGameAgent(GAMEAGENT2);
@@ -83,6 +99,10 @@ class GameAgentDAOIntegrationTest {
 
     @Test
     void deleteAllGameagentsInABeergame() {
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE);
+        facilityDAO.createFacility(FACILITY);
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+        facilityDAO.createFacility(FACILITY2);
         Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame().size());
         gameAgentDAO.createGameAgent(GAMEAGENT);
         gameAgentDAO.createGameAgent(GAMEAGENT2);
@@ -94,6 +114,8 @@ class GameAgentDAOIntegrationTest {
 
     @Test
     void updateGameagent() {
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+        facilityDAO.createFacility(FACILITY2);
         Assert.assertEquals(0,gameAgentDAO.readGameAgentsForABeerGame().size());
         gameAgentDAO.createGameAgent(GAMEAGENT2);
         Assert.assertEquals(1,gameAgentDAO.readGameAgentsForABeerGame().size());

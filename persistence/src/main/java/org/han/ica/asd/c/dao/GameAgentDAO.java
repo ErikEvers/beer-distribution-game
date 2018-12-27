@@ -115,6 +115,7 @@ public class GameAgentDAO{
      */
     public List<GameAgent> readGameAgentsForABeerGame() {
         Connection conn = null;
+        int i = 0;
         List<GameAgent> gameAgents = new ArrayList<>();
         List<GameBusinessRules> gameBusinessRulesStub = new ArrayList<>();
         try {
@@ -124,7 +125,6 @@ public class GameAgentDAO{
                 DaoConfig.gameIdNotSetCheck(pstmt, 1);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        int i = 0;
                         gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
                                 facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
                         List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));

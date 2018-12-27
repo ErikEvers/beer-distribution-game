@@ -24,7 +24,7 @@ class GameBusinessRulesDAOIntegrationTest {
     private static final GameBusinessRules GAME_BUSINESS_RULES = new GameBusinessRules("BusinessRule","AST");
     private static final GameBusinessRules GAME_BUSINESS_RULES2 = new GameBusinessRules("BusinessRule2","AST2");
     private static final Facility testFacility = new Facility();
-    private static final GameAgent GAME_AGENT = new GameAgent("gameAgentName", testFacility);
+    private static final GameAgent GAME_AGENT = new GameAgent("gameAgentName", testFacility, gameBusinessRules);
 
     private GameBusinessRulesDAO gameBusinessRulesDAO;
 
@@ -40,8 +40,6 @@ class GameBusinessRulesDAOIntegrationTest {
         DBConnectionTest.getInstance().createNewDatabase();
         gameBusinessRulesDAO = injector.getInstance(GameBusinessRulesDAO.class);
         DaoConfig.setCurrentGameId("BeerGameTest");
-        testFacility.setFacilityId(1);
-        GAME_AGENT.setGameBusinessRules(gameBusinessRules);
     }
 
     @AfterEach
@@ -51,6 +49,7 @@ class GameBusinessRulesDAOIntegrationTest {
 
     @Test
     void createGameBusinessRule() {
+
         Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
         gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES);
         Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());

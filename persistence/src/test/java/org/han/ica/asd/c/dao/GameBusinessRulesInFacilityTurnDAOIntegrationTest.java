@@ -25,15 +25,14 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 	private static GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn2;
 	private List<Round> rounds;
 	private List<GameBusinessRules> gameBusinessRules;
-	
+
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
-	private BeergameDAO beergameDAO;
 	private GameBusinessRulesDAO gameBusinessRulesDAO;
 	
 
 	@BeforeEach
 	void setUp() {
-		GameBusinessRules businessRules = new GameBusinessRules("als voorraad minder dan 10 dan bestellen bij frits","");
+		GameBusinessRules businessRules = new GameBusinessRules("als voorraad minder dan 10 dan bestellen bij frits","gameAST");
 		rounds = new ArrayList<>();
 		gameBusinessRules = new ArrayList<>();
 		gameBusinessRules.add(businessRules);
@@ -46,9 +45,15 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 			}
 		});
 		gameBusinessRulesDAO = injector.getInstance(GameBusinessRulesDAO.class);
-		beergameDAO = injector.getInstance(BeergameDAO.class);
 		DaoConfig.setCurrentGameId("BeerGameZutphen");
-		gameBusinessRulesInFacilityTurnDAO = injector.getInstance(GameBusinessRulesInFacilityTurnDAO.class);
+		Injector injector1 = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+				bind(IDatabaseConnection.class).to(DBConnectionTest.class);
+				bind(GameBusinessRulesDAO.class);
+			}
+		});
+		gameBusinessRulesInFacilityTurnDAO = injector1.getInstance(GameBusinessRulesInFacilityTurnDAO.class);
 		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1, 1, "Henk",gameBusinessRules);
 		gameBusinessRulesInFacilityTurn2 = new GameBusinessRulesInFacilityTurn(1, 1, "Sjaak",gameBusinessRules);
 
@@ -61,9 +66,9 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 
 	@Test
 	void createTurnTest() {
-		gameBusinessRulesDAO.createGameBusinessRule(new GameAgent("Henk",new Facility()),gameBusinessRules.get(0));
-		beergameDAO.createBeergame(DaoConfig.getCurrentGameId());
+		gameBusinessRulesDAO.createGameBusinessRule(new GameAgent("Henk",new Facility(), gameBusinessRules),gameBusinessRules.get(0));
 		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
+
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurnDb = gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,"Henk");
 
 		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getFacilityId(),gameBusinessRulesInFacilityTurn.getFacilityId());

@@ -10,6 +10,10 @@ public class FacilityType implements IDomainModel{
     private int startingOrder;
     private int startingStock;
 
+    public FacilityType(){
+        //Empty constructor for Guice
+    }
+
     public FacilityType(String facilityName, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder, int startingStock) {
         this.facilityName = facilityName;
         this.valueIncomingGoods = valueIncomingGoods;
