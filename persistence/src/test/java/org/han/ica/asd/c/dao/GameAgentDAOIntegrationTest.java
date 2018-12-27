@@ -6,6 +6,8 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.exception.GameIdNotSetException;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.junit.Assert;
@@ -18,9 +20,13 @@ import java.util.List;
 
 class GameAgentDAOIntegrationTest {
     private static final List<GameBusinessRules> GAME_BUSINESS_RULES = new ArrayList<>();
-    private static final GameAgent GAMEAGENT = new GameAgent("Agent1", 1, GAME_BUSINESS_RULES);
-    private static final GameAgent GAMEAGENT2 = new GameAgent("Agent2", 2, GAME_BUSINESS_RULES);
-    private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("Agent2_Updated", 2, GAME_BUSINESS_RULES);
+    private static final FacilityType FACILITY_TYPE = new FacilityType("Factory", 1, 1, 1, 1, 1, 1);
+    private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesale", 1, 1, 1, 1, 1, 1);
+    private static final Facility FACILITY = new Facility(FACILITY_TYPE, 1);
+    private static final Facility FACILITY2 = new Facility(FACILITY_TYPE2, 2);
+    private static final GameAgent GAMEAGENT = new GameAgent("Agent1", FACILITY, GAME_BUSINESS_RULES);
+    private static final GameAgent GAMEAGENT2 = new GameAgent("Agent2", FACILITY2, GAME_BUSINESS_RULES);
+    private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("Agent2_Updated", FACILITY2, GAME_BUSINESS_RULES);
 
     private GameAgentDAO gameAgentDAO;
 
@@ -30,6 +36,8 @@ class GameAgentDAOIntegrationTest {
             @Override
             protected void configure() {
                 bind(IDatabaseConnection.class).to(DBConnectionTest.class);
+                bind(GameBusinessRulesDAO.class);
+                bind(FacilityDAO.class);
             }
         });
 
@@ -51,7 +59,7 @@ class GameAgentDAOIntegrationTest {
 
         GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame().get(0);
 
-        Assert.assertEquals(GAMEAGENT.getFacilityId(),gameAgentDb.getFacilityId());
+        Assert.assertEquals(GAMEAGENT.getFacility().getFacilityId(),gameAgentDb.getFacility().getFacilityId());
         Assert.assertEquals(GAMEAGENT.getGameAgentName(),gameAgentDb.getGameAgentName());
         Assert.assertEquals(GAMEAGENT.getGameBusinessRules().size(),gameAgentDb.getGameBusinessRules().size());
     }
@@ -68,7 +76,7 @@ class GameAgentDAOIntegrationTest {
 
         GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame().get(0);
 
-        Assert.assertEquals(GAMEAGENT2.getFacilityId(),gameAgentDb.getFacilityId());
+        Assert.assertEquals(GAMEAGENT2.getFacility().getFacilityId(),gameAgentDb.getFacility().getFacilityId());
         Assert.assertEquals(GAMEAGENT2.getGameAgentName(),gameAgentDb.getGameAgentName());
         Assert.assertEquals(GAMEAGENT2.getGameBusinessRules().size(),gameAgentDb.getGameBusinessRules().size());
     }
@@ -95,7 +103,7 @@ class GameAgentDAOIntegrationTest {
 
         GameAgent gameAgentDb = gameAgentDAO.readGameAgentsForABeerGame().get(0);
 
-        Assert.assertEquals(GAMEAGENT2_UPDATE.getFacilityId(),gameAgentDb.getFacilityId());
+        Assert.assertEquals(GAMEAGENT2_UPDATE.getFacility().getFacilityId(),gameAgentDb.getFacility().getFacilityId());
         Assert.assertEquals(GAMEAGENT2_UPDATE.getGameAgentName(),gameAgentDb.getGameAgentName());
         Assert.assertEquals(GAMEAGENT2_UPDATE.getGameBusinessRules().size(),gameAgentDb.getGameBusinessRules().size());
     }

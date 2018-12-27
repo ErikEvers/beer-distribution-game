@@ -126,7 +126,7 @@ public class GameBusinessRulesDAO {
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, gameAgent.getFacilityId());
+                    pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
                     DaoConfig.gameIdNotSetCheck(pstmt, 2);
                     pstmt.setString(3, gameAgent.getGameAgentName());
                     pstmt.setString(4, gameBusinessRules.getGameBusinessRule());

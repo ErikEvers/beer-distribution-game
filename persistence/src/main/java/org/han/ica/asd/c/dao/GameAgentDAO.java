@@ -29,6 +29,9 @@ public class GameAgentDAO{
     @Inject
     private GameBusinessRulesDAO gameBusinessRulesDAO;
 
+    @Inject
+    private FacilityDAO facilityDAO;
+
     public GameAgentDAO() {
         //A constructor for Guice.
     }
@@ -90,7 +93,7 @@ public class GameAgentDAO{
                     conn.setAutoCommit(false);
 
                     pstmt.setString(1, gameAgent.getGameAgentName());
-                    pstmt.setInt(2, gameAgent.getFacilityId());
+                    pstmt.setInt(2, gameAgent.getFacility().getFacilityId());
                     DaoConfig.gameIdNotSetCheck(pstmt, 3);
 
                     pstmt.executeUpdate();
@@ -123,7 +126,7 @@ public class GameAgentDAO{
                     while (rs.next()) {
                         int i = 0;
                         gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
-                                rs.getInt("FacilityId"), gameBusinessRulesStub));
+                                facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
                         List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
                         gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
                         i = i + 1;
@@ -154,7 +157,7 @@ public class GameAgentDAO{
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, gameAgent.getFacilityId());
+                    pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
                     DaoConfig.gameIdNotSetCheck(pstmt, 2);
                     pstmt.setString(3, gameAgent.getGameAgentName());
 
