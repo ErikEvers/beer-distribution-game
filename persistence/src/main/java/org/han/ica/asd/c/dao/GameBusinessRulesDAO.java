@@ -16,11 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameBusinessRulesDAO {
-    private static final String CREATE_GAMEBUSINESSRULE = "INSERT INTO GameBusinessRules VALUES (?,?,?,?,?);";
-    private static final String DELETE_SPECIFIC_GAMEBUSINESSRULE = "DELETE FROM GameBusinessRules WHERE FacilityId = ? AND GameId = ? AND GameAgentName = ? AND GameBusinessRule = ? AND GameAST = ?;";
-    private static final String DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "DELETE FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?;";
-    private static final String READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "SELECT * FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?";
-    private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesDAO.class.getName());
+	private static final String CREATE_GAMEBUSINESSRULE = "INSERT INTO GameBusinessRules VALUES (?,?,?,?,?);";
+	private static final String DELETE_SPECIFIC_GAMEBUSINESSRULE = "DELETE FROM GameBusinessRules WHERE FacilityId = ? AND GameId = ? AND GameAgentName = ? AND GameBusinessRule = ? AND GameAST = ?;";
+	private static final String DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "DELETE FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?;";
+	private static final String READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "SELECT * FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?";
+	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesDAO.class.getName());
+	private static final String READ_GAMEAST = "SELECT GameAST FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ? AND GameBusinessRule = ?; ";
 
     @Inject
     private IDatabaseConnection databaseConnection;
@@ -111,20 +112,45 @@ public class GameBusinessRulesDAO {
         return gameBusinessRules;
     }
 
-    /**
-     * A method to execute a prepared statement for creating or deleting a specific GameBusinessRule.
-     *
-     * @param gameAgent         The data required to create or delete the GameAgentName and FacilityId.
-     * @param gameBusinessRules The data required to create or delete the GameBusinessRule and GameAST.
-     * @param query             The query that has to be executed on the database.
-     */
-    private void executePreparedStatement(GameAgent gameAgent, GameBusinessRules gameBusinessRules, String query) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                    conn.setAutoCommit(false);
+
+	public String getGameAST(String businessRule, String gameAgentName) {
+		String gameAST = "";
+		Connection conn = null;
+		conn = databaseConnection.connect();
+		try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAST)) {
+			conn.setAutoCommit(false);
+
+			pstmt.setString(1,DaoConfig.getCurrentGameId());
+			pstmt.setString(2, gameAgentName);
+			pstmt.setString(3, businessRule);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				gameAST = rs.getString("GameAST");
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+			}
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
+		}
+
+		return gameAST;
+	}
+
+
+	/**
+	 * A method to execute a prepared statement for creating or deleting a specific GameBusinessRule.
+	 *
+	 * @param gameAgent         The data required to create or delete the GameAgentName and FacilityId.
+	 * @param gameBusinessRules The data required to create or delete the GameBusinessRule and GameAST.
+	 * @param query             The query that has to be executed on the database.
+	 */
+	private void executePreparedStatement(GameAgent gameAgent, GameBusinessRules gameBusinessRules, String query) {
+		Connection conn = null;
+		try {
+			conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+					conn.setAutoCommit(false);
 
                     pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
                     DaoConfig.gameIdNotSetCheck(pstmt, 2);

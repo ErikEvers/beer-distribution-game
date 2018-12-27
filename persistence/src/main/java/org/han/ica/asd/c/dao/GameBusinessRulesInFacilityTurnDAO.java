@@ -2,25 +2,30 @@ package org.han.ica.asd.c.dao;
 
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
-
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 
 import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameBusinessRulesInFacilityTurnDAO {
-	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRulesInFacilityTurn VALUES (?,?,?,?,?,?,?);";
-	private static final String READ_BUSINESSRULETURN = "SELECT* FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
+	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRulesInFacilityTurn VALUES (?,?,?,?,?);";
+	private static final String READ_BUSINESSRULETURN = "SELECT* FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
 	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
+
+	@Inject
+	private GameBusinessRulesDAO gameBusinessRulesDAO;
 
 	public GameBusinessRulesInFacilityTurnDAO() {
 		//Empty Constructor for GUICE
@@ -30,22 +35,24 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 * A method which creates a GameBusinessRulesInFacilityTurnDB object in the SQLite Database
 	 * @param gameBusinessRulesInFacilityTurn A GameBusinessRuleInFacilityTurn object which contains data which needs to be inserted in to the SQLite Database
 	 */
-	public void createTurn(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn) {
+	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 		Connection conn;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
 					conn.setAutoCommit(false);
-					pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
-					pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityIdOrder());
-					pstmt.setInt(3, gameBusinessRulesInFacilityTurn.getFacilityIdDeliver());
-					pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameId());
-					pstmt.setString(5, gameBusinessRulesInFacilityTurn.getGameAgentName());
-					pstmt.setString(6, gameBusinessRulesInFacilityTurn.getGameBusinessRule());
-					pstmt.setString(7, gameBusinessRulesInFacilityTurn.getGameAST());
 
-					pstmt.executeUpdate();
+					for (GameBusinessRules gamebusinessrule: gameBusinessRulesInFacilityTurn.getGameBusinessRulesList()) {
+						pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
+						pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityId());
+						pstmt.setString(3, DaoConfig.getCurrentGameId());
+						pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameAgentName());
+						pstmt.setString(5, gamebusinessrule.toString());
+
+						pstmt.executeUpdate();
+					}
+
 				}
 				conn.commit();
 			}
@@ -57,27 +64,28 @@ public class GameBusinessRulesInFacilityTurnDAO {
 
 	/**
 	 * A method which returns a GameBusinessRulesInFacilityTurnDB object from the SQLite Database
-	 * @param gameId            The Id of the game where the specific turns are located
-	 * @param roundId           The Id of the round where the specific turns are located
-	 * @param facilityIdOrder   The Id of the FacilityDB which placed an order
-	 * @param facilityIdDeliver The Id of the FacilityDB which delivered an order
+	 * @param roundId The Id of the round where the specific turns are located
 	 * @return A GameBusinessRulesInFacilityTurnDB object which contains data from the database according to the search parameters
 	 */
-	public GameBusinessRulesInFacilityTurnDB readTurn(String gameId, int roundId, int facilityIdOrder, int facilityIdDeliver) {
+	public GameBusinessRulesInFacilityTurn readTurn(int roundId, int facilityId, String gameAgentName) {
 		Connection conn;
-		GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn = null;
+		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
+		List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
 
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
-					pstmt.setString(1, gameId);
+					pstmt.setString(1, DaoConfig.getCurrentGameId());
 					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityIdOrder);
-					pstmt.setInt(4, facilityIdDeliver);
+					pstmt.setInt(3, facilityId);
 					try (ResultSet rs = pstmt.executeQuery()){
-						gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurnDB(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getString("GameId"), rs.getString("GameAgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
+						gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"),gameBusinessRulesDAO.getGameAST(rs.getString("GameBusinessRule"),gameAgentName)));
 					}
+					gameBusinessRulesInFacilityTurn.setFacilityId(facilityId);
+					gameBusinessRulesInFacilityTurn.setRoundId(roundId);
+					gameBusinessRulesInFacilityTurn.setGameAgentName(gameAgentName);
+					gameBusinessRulesInFacilityTurn.setGameBusinessRulesList(gameBusinessRules);
 				}
 			}
 		} catch (SQLException e) {

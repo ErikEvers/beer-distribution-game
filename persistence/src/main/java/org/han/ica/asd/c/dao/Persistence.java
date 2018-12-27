@@ -28,19 +28,18 @@ public class Persistence implements IPersistence {
 	@Inject
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 
-	@Inject
-	private FacilityTurnDAO facilityTurnDAO;
+
 
 
 	public Persistence(){
 		//Empty constructor for GUICE
 	}
 
-	public void saveRoundData(RoundDB rounddata)
-	{
-		roundDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
-		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
-	}
+//	public void saveRoundData(Round rounddata)
+//	{
+//		roundDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
+//		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
+//	}
 
 	public void saveRoundData(Round rounddata) {
 	    // empty for stub
@@ -66,7 +65,7 @@ public class Persistence implements IPersistence {
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)
 	{
-		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
+		//gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
 	public Round fetchTurnData(Round round, Facility facility)

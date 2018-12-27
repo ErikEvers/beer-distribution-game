@@ -12,6 +12,8 @@ DROP TABLE Facility;
 DROP TABLE FacilityType;
 DROP TABLE Configuration;
 DROP TABLE Round;
+DROP TABLE FacilityTurnOrder;
+DROP TABLE FacilityTurnDeliver;
 
 
 
