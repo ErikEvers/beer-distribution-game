@@ -136,6 +136,7 @@ public class GameAgentDAO{
             } catch (GameIdNotSetException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
             }
+            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);

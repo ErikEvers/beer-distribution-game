@@ -106,6 +106,7 @@ public class GameBusinessRulesDAO {
             } catch (GameIdNotSetException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
             }
+            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }

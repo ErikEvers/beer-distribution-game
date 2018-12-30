@@ -56,7 +56,6 @@ public class GameBusinessRulesInFacilityTurnDAO {
 				}
 				conn.commit();
 			}
-
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
@@ -105,26 +104,23 @@ public class GameBusinessRulesInFacilityTurnDAO {
 		 * @param facilityIdDeliver The Id of the FacilityDB which delivered an order
 		 */
 		public void deleteTurn (String gameId,int roundId, int facilityIdOrder, int facilityIdDeliver){
-			Connection conn = null;
-			try {
-				conn = databaseConnection.connect();
-				if (conn != null) {
-					try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
+			Connection conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
 
-						conn.setAutoCommit(false);
+					conn.setAutoCommit(false);
 
-						pstmt.setString(1, gameId);
-						pstmt.setInt(2, roundId);
-						pstmt.setInt(3, facilityIdOrder);
-						pstmt.setInt(4, facilityIdDeliver);
+					pstmt.setString(1, gameId);
+					pstmt.setInt(2, roundId);
+					pstmt.setInt(3, facilityIdOrder);
+					pstmt.setInt(4, facilityIdDeliver);
 
-						pstmt.executeUpdate();
-					}
+					pstmt.executeUpdate();
 					conn.commit();
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(),e);
+					databaseConnection.rollBackTransaction(conn);
 				}
-			} catch (SQLException e) {
-				LOGGER.log(Level.SEVERE, e.toString(),e);
-				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}

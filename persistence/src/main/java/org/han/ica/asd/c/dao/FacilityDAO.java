@@ -173,10 +173,12 @@ public class FacilityDAO {
             } catch (GameIdNotSetException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
             }
+            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
         }
+        //NOSONAR
         return facilities;
     }
 
@@ -206,6 +208,7 @@ public class FacilityDAO {
                 } catch (GameIdNotSetException e) {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
+                conn.commit();
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -213,4 +216,5 @@ public class FacilityDAO {
         }
         return facilityFromDb;
     }
+
 }

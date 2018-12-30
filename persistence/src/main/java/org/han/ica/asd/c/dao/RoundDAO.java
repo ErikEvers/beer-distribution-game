@@ -79,7 +79,7 @@ public class RoundDAO {
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
 					pstmt.setString(1, DaoConfig.getCurrentGameId());
 					pstmt.setInt(2, roundId);

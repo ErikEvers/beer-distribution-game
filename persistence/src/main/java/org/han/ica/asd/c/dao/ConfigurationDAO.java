@@ -97,14 +97,13 @@ public class ConfigurationDAO {
 				}
 			}
 		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString(),e);
+			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 		return configurations;
 	}
 
 	/**
 	 * A method which returns a single configuration according to the gameId
-	 * @param gameId The Id of a game
 	 * @return A configuration according to the gameId
 	 */
 	public Configuration readConfiguration(){
@@ -131,8 +130,6 @@ public class ConfigurationDAO {
 		}
 		return configuration;
 	}
-
-
 
 
 	/**
@@ -168,7 +165,6 @@ public class ConfigurationDAO {
 
 	/**
 	 * A method which deletes a specific configurations according to a specific gameId
-	 * @param gameId An Id which can be traced to a specific game
 	 */
 	public void deleteConfigurations(){
 		Connection conn;

@@ -11,7 +11,6 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class Persistence implements IPersistence {
 
 
 	public Persistence(){
-		//Empty constructor for GUICE
+		//stub
 	}
 
 //	public void saveRoundData(Round rounddata)
@@ -41,14 +40,15 @@ public class Persistence implements IPersistence {
 //		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
 //	}
 
+
 	public void saveRoundData(Round rounddata) {
-	    // empty for stub
-    }
+		//stub
+	}
 
 	public Round fetchRoundData(String gameId, int roundId)
 	{
+		//stub
 		return null;
-		// ((RoundDAO)roundDAO).getRound(gameId,roundId);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class Persistence implements IPersistence {
 	public BeerGame getGameLog(String gameId)
 	{
 
-		return null;//((BeergameDAO)beergameDAO).getGameLog(gameId);
+		return null; //((BeergameDAO)beergameDAO).getGameLog(gameId);
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)
@@ -70,31 +70,34 @@ public class Persistence implements IPersistence {
 
 	public Round fetchTurnData(Round round, Facility facility)
 	{
-		return null; //return ((FacilityTurnDAO)facilityTurnDAO).fetchTurn(round,facility);
+		//stub
+		return null;
 	}
 
-    public Round fetchTurnData(RoundDB round, FacilityLinkedToDB facility)
-    {
-        return null; //return ((FacilityTurnDAO)facilityTurnDAO).fetchTurn(round,facility);
-    }
+	public Round fetchTurnData(RoundDB round, FacilityLinkedToDB facility)
+	{
+		//stub
+		return null;
+	}
 
 	@Override
 	public Player getPlayerById(String playerId) {
-		throw new NotImplementedException();
+		//stub
+		return null;
 	}
 
 	@Override
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
-
+		//stub
 	}
 
 	public void saveTurnData(Round turn)
 	{
-		//((FacilityTurnDAO)facilityTurnDAO).createTurn(turn);
+		//stub
 	}
 
-    public void saveTurnData(FacilityTurnDB turn)
-    {
-        // for stub
-    }
+	public void saveTurnData(FacilityTurnDB turn)
+	{
+		//for stub
+	}
 }

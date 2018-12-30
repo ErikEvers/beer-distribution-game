@@ -198,7 +198,6 @@ public class FacilityTypeDAO{
                 }
                 conn.commit();
             }
-
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
