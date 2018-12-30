@@ -30,21 +30,13 @@ public class GameLeaderTest {
     private BeerGame gameTest;
 
     @Mock
-    private Round r;
-
-    @Mock
     private Player player;
-
-    @Mock
-    private GameAgent gameAgent;
 
     @Mock
     private Leader leader;
 
     @Mock
     private Configuration con;
-
-    private Round round = new Round();
 
     private List<Facility> facilities = new ArrayList<>();
 
@@ -55,8 +47,6 @@ public class GameLeaderTest {
 
     private IConnectorForLeader iConnectorForLeader;
 
-    private GameLeader gameLeader;
-
     private Round facilityTurnModel;
 
     private ILeaderGameLogic gameLogic;
@@ -65,6 +55,8 @@ public class GameLeaderTest {
 
     private IPersistence iPersistence;
 
+    private GameLeader gameLeader;
+
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -72,7 +64,7 @@ public class GameLeaderTest {
         gameTest = new BeerGame();
         facilityTurnModel = new Round();
 
-        rounds.add(r);
+        rounds.add(mock(Round.class));
 
         facilities.add(facil);
         facilities.add(facil);
@@ -107,12 +99,12 @@ public class GameLeaderTest {
                 bind(ILeaderGameLogic.class).toInstance(gameLogic);
                 bind(IPersistence.class).toInstance(iPersistence);
                 bind(TurnHandler.class).toInstance(turnHandlerMock);
-                bind(BeerGame.class).toInstance(gameTest);
-                bind(Round.class).toInstance(round);
 
+                bind(BeerGame.class).toProvider(() -> gameTest);
             }
         });
-        gameLeader = injector.getInstance(GameLeader.class);
+
+        gameLeader = spy(injector.getInstance(GameLeader.class));
     }
 
     @Test
@@ -168,10 +160,6 @@ public class GameLeaderTest {
 
     @Test
     public void DisconnectedWrongTestCallPlayerIsDisconnectedMethod() {
-//        Player playerTest = mock(Player.class);
-//        Facility facility = mock(Facility.class);
-//        playerTest.setPlayerId("b");
-//        players.add(playerTest);
         Facility facilityTest = mock(Facility.class);
         facilities.add(facilityTest);
         con.setFacilities(facilities);
@@ -182,9 +170,10 @@ public class GameLeaderTest {
         when(players.get(1)).thenReturn(player);
         when(players.get(2)).thenReturn(player);
         when(player.getFacility()).thenReturn(facil);
-        do
-        when(gameLeader.getAgentByFacility(anyInt())).thenReturn(mock(GameAgent.class));
-//        when(gameAgent.getGameAgentName()).thenReturn("test");
+
+        GameAgent gameAgent = mock(GameAgent.class);
+        doReturn(gameAgent).when(gameLeader).getAgentByFacility(anyInt());
+        when(gameAgent.getGameAgentName()).thenReturn("test");
 
         gameLeader.init();
         gameLeader.playerIsDisconnected("b");
