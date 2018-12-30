@@ -85,10 +85,10 @@ public class GameLeaderTest {
         gameTest.setPlayers(players);
         gameTest.setLeader(leader);
 
-        iConnectorForLeader = mock(CommunicationStub.class);
-        gameLogic = mock(GameLogicStub.class);
-        iPersistence = mock(PersistenceStub.class);
-        turnHandlerMock = mock(TurnHandler.class);
+        iConnectorForLeader = spy(CommunicationStub.class);
+        gameLogic = spy(GameLogicStub.class);
+        iPersistence = spy(PersistenceStub.class);
+        turnHandlerMock = spy(TurnHandler.class);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -129,9 +129,11 @@ public class GameLeaderTest {
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
 
-        verify(gameLogic, times(1)).calculateRound(null);
-        verify(iPersistence, times(1)).saveRoundData(null);
-        verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(null);
+        verify(gameLogic, times(1)).calculateRound(any(Round.class));
+        verify(turnHandlerMock, times(2)).processFacilityTurn(any(Round.class), any(Round.class));
+        verify(iPersistence, times(2)).savePlayerTurn(any(Round.class));
+        verify(iPersistence, times(1)).saveRoundData(any(Round.class));
+        verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(any(Round.class));
     }
 
     @Test

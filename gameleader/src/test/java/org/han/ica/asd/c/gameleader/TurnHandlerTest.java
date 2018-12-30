@@ -10,27 +10,24 @@ import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static junit.framework.TestCase.*;
+import static org.mockito.Mockito.mock;
 
 class TurnHandlerTest {
-
-    private static final Logger LOGGER = Logger.getLogger(TurnHandlerTest.class.getName());
-
     private TurnHandler turnHandler;
-
-    private Round roundModel;
-
-    private Method processFacilityTurn;
-
-    private Object[] parameters;
 
     @BeforeEach
     void onSetUp() {
@@ -42,47 +39,52 @@ class TurnHandlerTest {
 						bind(ILeaderGameLogic.class).to(GameLogicStub.class);
 					}
 				});
-        try {
-            Class[] parameterTypes;
-						turnHandler = injector.getInstance(TurnHandler.class);
-            roundModel = new Round();
-            parameterTypes = new Class[2];
-            parameterTypes[0] = Round.class;
-            parameterTypes[1] = Round.class;
-
-
-            parameters = new Object[2];
-
-            //processFacilityTurn
-            processFacilityTurn = turnHandler.getClass().getDeclaredMethod("processFacilityTurn", parameterTypes);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong while setting up the TurnHandler test");
-            e.printStackTrace();
-        }
+				turnHandler = injector.getInstance(TurnHandler.class);
     }
 
-//    @Test
-//    void testDoValidate_OrderAmountIsZero_ReturnTrue() {
-//				Facility mainFacility = new Facility();
-//				Facility facility = new Facility();
-//				Map<Facility, Integer> ordersMap = new HashMap<>();
-//				ordersMap.put(facility, 1);
-//
-//				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
-//				orderMap.put(mainFacility, ordersMap);
-//				roundModel.setTurnOrder(orderMap);
-//
-//				Map<Facility, Integer> stockMap = new HashMap<>();
-//				stockMap.put(mainFacility, 10);
-//				roundModel.setTurnStock(stockMap);
-//
-//        parameters[0] = new Round();
-//        parameters[1] = roundModel;
-//
-//        try {
-//            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Test
+    void testCombineTwoTurns() {
+				Facility mainFacility = new Facility(mock(FacilityType.class), 1);
+				Facility facility = new Facility(mock(FacilityType.class), 2);
+
+				// Our models
+				Round expectedRoundModel = new Round();
+				Round round1 = new Round();
+				Round round2 = new Round();
+
+				// Add orders for the first facility
+				List<FacilityTurnOrder> orderList = new ArrayList<>();
+				orderList.add(new FacilityTurnOrder(mainFacility.getFacilityId(), facility.getFacilityId(), 1));
+				round1.setFacilityOrders(orderList);
+				expectedRoundModel.setFacilityOrders(orderList);
+
+				// Add turns for the first facility
+				List<FacilityTurn> facilityList = new ArrayList<>();
+				facilityList.add(new FacilityTurn(mainFacility.getFacilityId(), 1, 10, 0, 10, false));
+				round1.setFacilityTurns(facilityList);
+				expectedRoundModel.setFacilityTurns(facilityList);
+
+				// Add orders for the second facility
+				orderList = new ArrayList<>();
+				orderList.add(new FacilityTurnOrder(facility.getFacilityId(), mainFacility.getFacilityId(), 1));
+				round2.setFacilityOrders(orderList);
+				expectedRoundModel.setFacilityOrders(orderList);
+
+				// Add turns for the second facility
+				facilityList = new ArrayList<>();
+				facilityList.add(new FacilityTurn(facility.getFacilityId(), 1, 10, 0, 10, false));
+				round2.setFacilityTurns(facilityList);
+				expectedRoundModel.setFacilityTurns(facilityList);
+
+				// Perform processing
+				Round actualRoundModel = new Round();
+				actualRoundModel = turnHandler.processFacilityTurn(actualRoundModel, round1);
+				actualRoundModel = turnHandler.processFacilityTurn(actualRoundModel, round2);
+
+				// compare
+				assertEquals(2, actualRoundModel.getFacilityOrders().size());
+				assertEquals(2, actualRoundModel.getFacilityTurns().size());
+				assertEquals(expectedRoundModel.getFacilityOrders(), actualRoundModel.getFacilityOrders());
+				assertEquals(expectedRoundModel.getFacilityTurns(), actualRoundModel.getFacilityTurns());
+    }
 }

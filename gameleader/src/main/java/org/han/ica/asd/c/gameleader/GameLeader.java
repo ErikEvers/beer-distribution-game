@@ -27,10 +27,11 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
     private BeerGame game;
 
-    private Round currentRoundData = new Round();
+    private Round currentRoundData;
 
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
+    private int roundId = 1;
 
     @Inject
     public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider) {
@@ -41,6 +42,8 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public void init() {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
+        this.currentRoundData = roundProvider.get();
+        this.currentRoundData.setRoundId(roundId);
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
 
@@ -123,6 +126,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     private void startNextRound() {
         currentRoundData = roundProvider.get();
+        //TODO: check if game is done? (round count exceeds config max)
+        roundId++;
+        currentRoundData.setRoundId(roundId);
         turnsReceivedInCurrentRound = 0;
     }
 
