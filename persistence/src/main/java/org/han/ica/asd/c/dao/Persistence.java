@@ -34,12 +34,11 @@ public class Persistence implements IPersistence {
 		//stub
 	}
 
-//	public void saveRoundData(Round rounddata)
-//	{
-//		roundDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
-//		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
-//	}
-
+	public void saveRoundData(RoundDB rounddata)
+	{
+		roundDAO.createRound(rounddata.getRoundId());
+		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
+	}
 
 	public void saveRoundData(Round rounddata) {
 		//stub
@@ -59,8 +58,7 @@ public class Persistence implements IPersistence {
 
 	public BeerGame getGameLog(String gameId)
 	{
-
-		return null; //((BeergameDAO)beergameDAO).getGameLog(gameId);
+		return null;//((BeergameDAO)beergameDAO).getGameLog(gameId);
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)

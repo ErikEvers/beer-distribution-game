@@ -56,9 +56,7 @@ public class GameBusinessRulesDAO {
      * @param gameAgent Contains the identifier of tje GameAgent from which the GameBusinessRules have to be deleted.
      */
     public void deleteAllGamebusinessrulesForGameagentInAGame(GameAgent gameAgent) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
+        Connection conn = databaseConnection.connect();
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
                     conn.setAutoCommit(false);
@@ -67,17 +65,15 @@ public class GameBusinessRulesDAO {
                     pstmt.setString(2, gameAgent.getGameAgentName());
 
                     pstmt.executeUpdate();
+										conn.commit();
 
                 } catch (GameIdNotSetException e) {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
-                conn.commit();
+                } catch (SQLException e) {
+									LOGGER.log(Level.SEVERE, e.toString(), e);
+									databaseConnection.rollBackTransaction(conn);
+								}
             }
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
-        }
     }
 
     /**
@@ -87,30 +83,31 @@ public class GameBusinessRulesDAO {
      * @return A list containing all the GameBusinessRules from a specific GameAgent in a specific BeerGame.
      */
     public List<GameBusinessRules> readAllGameBusinessRulesForGameAgentInAGame(GameAgent gameAgent) {
-        Connection conn = null;
         List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
-        try {
-            conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
-                conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+				if(conn == null) {
+						return gameBusinessRules;
+				}
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
+						conn.setAutoCommit(false);
 
-                DaoConfig.gameIdNotSetCheck(pstmt, 1);
-                pstmt.setString(2, gameAgent.getGameAgentName());
+						DaoConfig.gameIdNotSetCheck(pstmt, 1);
+						pstmt.setString(2, gameAgent.getGameAgentName());
 
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"), rs.getString("GameAST")));
-                    }
-                }
-                conn.commit();
-            } catch (GameIdNotSetException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
-            }
-            conn.commit();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
-        return gameBusinessRules;
+						try (ResultSet rs = pstmt.executeQuery()) {
+								while (rs.next()) {
+										gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"), rs.getString("GameAST")));
+								}
+						}
+						conn.commit();
+				} catch (GameIdNotSetException e) {
+						LOGGER.log(Level.SEVERE, e.toString(), e);
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
+
+				return gameBusinessRules;
     }
 
 
@@ -124,23 +121,22 @@ public class GameBusinessRulesDAO {
      */
 	public String getGameAST(String businessRule, String gameAgentName, int facilityId) {
 		String gameAST = "";
-		Connection conn = null;
-		conn = databaseConnection.connect();
-		try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAST)) {
-			conn.setAutoCommit(false);
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAST)) {
+				conn.setAutoCommit(false);
 
-			pstmt.setString(1,DaoConfig.getCurrentGameId());
-			pstmt.setString(2, gameAgentName);
-			pstmt.setString(3, businessRule);
-			pstmt.setInt(4, facilityId);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setString(2, gameAgentName);
+				pstmt.setString(3, businessRule);
+				pstmt.setInt(4, facilityId);
 
-			try (ResultSet rs = pstmt.executeQuery()) {
-				gameAST = rs.getString("GameAST");
+				try (ResultSet rs = pstmt.executeQuery()) {
+					gameAST = rs.getString("GameAST");
+				}
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 
 		return gameAST;
@@ -155,30 +151,26 @@ public class GameBusinessRulesDAO {
 	 * @param query             The query that has to be executed on the database.
 	 */
 	private void executePreparedStatement(GameAgent gameAgent, GameBusinessRules gameBusinessRules, String query) {
-		Connection conn = null;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-					conn.setAutoCommit(false);
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+				conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
-                    DaoConfig.gameIdNotSetCheck(pstmt, 2);
-                    pstmt.setString(3, gameAgent.getGameAgentName());
-                    pstmt.setString(4, gameBusinessRules.getGameBusinessRule());
-                    pstmt.setString(5, gameBusinessRules.getGameAST());
+				pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
+				DaoConfig.gameIdNotSetCheck(pstmt, 2);
+				pstmt.setString(3, gameAgent.getGameAgentName());
+				pstmt.setString(4, gameBusinessRules.getGameBusinessRule());
+				pstmt.setString(5, gameBusinessRules.getGameAST());
 
-                    pstmt.executeUpdate();
+				pstmt.executeUpdate();
+				conn.commit();
 
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
-                conn.commit();
-            }
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
-        }
-    }
+			} catch (GameIdNotSetException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
+			}
+		}
+	}
 }
