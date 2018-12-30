@@ -11,15 +11,13 @@ import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.mockito.Mockito.*;
 
 public class GameLeaderTest {
@@ -57,7 +55,7 @@ public class GameLeaderTest {
 
     private GameLeader gameLeader;
 
-    @Before
+    @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
 
@@ -113,7 +111,7 @@ public class GameLeaderTest {
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
 
-        Assert.assertEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
+        Assertions.assertEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
     }
 
     @Test
@@ -121,7 +119,7 @@ public class GameLeaderTest {
         gameLeader.init();
         gameLeader.turnModelReceived(facilityTurnModel);
 
-        Assert.assertNotEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
+        Assertions.assertNotEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
     }
 
     @Test
@@ -143,7 +141,7 @@ public class GameLeaderTest {
 
         verify(gameLogic, times(1)).removeAgentByPlayerId(null);
 
-        Assert.assertThat(gameLeader.notifyPlayerReconnected(any(String.class)), instanceOf(BeerGame.class));
+        Assertions.assertNotNull(gameLeader.notifyPlayerReconnected(any(String.class)));
     }
 
     @Test
