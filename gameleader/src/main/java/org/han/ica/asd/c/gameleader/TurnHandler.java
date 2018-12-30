@@ -14,14 +14,15 @@ public class TurnHandler {
      * @param turnModel a turn sent by a game participant.
      */
     Round processFacilityTurn(Round turnModel, Round currentRoundData) {
-        turnModel.getTurnOrder().forEach(currentRoundData.getTurnOrder()::putIfAbsent);
-        turnModel.getTurnDeliver().forEach(currentRoundData.getTurnDeliver()::putIfAbsent);
-        turnModel.getTurnReceived().forEach(currentRoundData.getTurnReceived()::putIfAbsent);
-        turnModel.getTurnBackOrder().forEach(currentRoundData.getTurnBackOrder()::putIfAbsent);
-        turnModel.getTurnStock().forEach(currentRoundData.getTurnStock()::putIfAbsent);
-
-        persistenceLayer.savePlayerTurn(turnModel);
-
-        return currentRoundData;
+//        turnModel.getTurnOrder().forEach(currentRoundData.getTurnOrder()::putIfAbsent);
+//        turnModel.getTurnDeliver().forEach(currentRoundData.getTurnDeliver()::putIfAbsent);
+//        turnModel.getTurnReceived().forEach(currentRoundData.getTurnReceived()::putIfAbsent);
+//        turnModel.getTurnBackOrder().forEach(currentRoundData.getTurnBackOrder()::putIfAbsent);
+//        turnModel.getTurnStock().forEach(currentRoundData.getTurnStock()::putIfAbsent);
+//
+//        persistenceLayer.savePlayerTurn(turnModel);
+//
+//        return currentRoundData;
+        return null;
     }
 }

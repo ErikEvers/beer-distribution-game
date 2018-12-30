@@ -61,106 +61,28 @@ class TurnHandlerTest {
         }
     }
 
-    @Test
-    void testDoValidate_OrderAmountIsZero_ReturnTrue() {
-				Facility mainFacility = new Facility();
-				Facility facility = new Facility();
-				Map<Facility, Integer> ordersMap = new HashMap<>();
-				ordersMap.put(facility, 1);
-
-				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
-				orderMap.put(mainFacility, ordersMap);
-				roundModel.setTurnOrder(orderMap);
-
-				Map<Facility, Integer> stockMap = new HashMap<>();
-				stockMap.put(mainFacility, 10);
-				roundModel.setTurnStock(stockMap);
-
-        parameters[0] = new Round();
-        parameters[1] = roundModel;
-
-        try {
-            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Test
-    void testDoValidate_OrderAmountIsLessThanZero_ReturnFalse() {
-				Facility mainFacility = new Facility();
-				Facility facility = new Facility();
-				Map<Facility, Integer> ordersMap = new HashMap<>();
-				ordersMap.put(facility, -10);
-
-				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
-				orderMap.put(mainFacility, ordersMap);
-				roundModel.setTurnOrder(orderMap);
-
-				Map<Facility, Integer> stockMap = new HashMap<>();
-				stockMap.put(mainFacility, 10);
-				roundModel.setTurnStock(stockMap);
-
-        parameters[0] = new Round();
-        parameters[1] = roundModel;
-
-        try {
-            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void testDoValidate_OrderAmountIsMoreThanStock_ReturnFalse() {
-				Facility mainFacility = new Facility();
-				Facility facility = new Facility();
-				Map<Facility, Integer> ordersMap = new HashMap<>();
-				ordersMap.put(facility, 11);
-
-				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
-				orderMap.put(mainFacility, ordersMap);
-				roundModel.setTurnOrder(orderMap);
-
-				Map<Facility, Integer> stockMap = new HashMap<>();
-				stockMap.put(mainFacility, 10);
-				roundModel.setTurnStock(stockMap);
-
-        parameters[0] = new Round();
-        parameters[1] = roundModel;
-
-        try {
-            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void testDoValidate_OrderAmountEqualToStock_ReturnTrue() {
-        Facility mainFacility = new Facility();
-				Facility facility = new Facility();
-        Map<Facility, Integer> ordersMap = new HashMap<>();
-				ordersMap.put(facility, 10);
-
-				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
-				orderMap.put(mainFacility, ordersMap);
-        roundModel.setTurnOrder(orderMap);
-
-				Map<Facility, Integer> stockMap = new HashMap<>();
-				stockMap.put(mainFacility, 10);
-        roundModel.setTurnStock(stockMap);
-
-        parameters[0] = new Round();
-        parameters[1] = roundModel;
-
-        try {
-            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
+//    @Test
+//    void testDoValidate_OrderAmountIsZero_ReturnTrue() {
+//				Facility mainFacility = new Facility();
+//				Facility facility = new Facility();
+//				Map<Facility, Integer> ordersMap = new HashMap<>();
+//				ordersMap.put(facility, 1);
+//
+//				Map<Facility, Map<Facility, Integer>> orderMap = new HashMap<>();
+//				orderMap.put(mainFacility, ordersMap);
+//				roundModel.setTurnOrder(orderMap);
+//
+//				Map<Facility, Integer> stockMap = new HashMap<>();
+//				stockMap.put(mainFacility, 10);
+//				roundModel.setTurnStock(stockMap);
+//
+//        parameters[0] = new Round();
+//        parameters[1] = roundModel;
+//
+//        try {
+//            assertEquals(roundModel, processFacilityTurn.invoke(turnHandler, parameters));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

@@ -6,6 +6,7 @@ import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
@@ -25,6 +26,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private final Provider<Round> roundProvider;
 
     private BeerGame game;
+
     private Round currentRoundData = new Round();
 
     private int turnsExpectedPerRound;
@@ -57,15 +59,19 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
     /**
      * This method is called when a player disconnects, which this class is notified of by the IPlayerDisconnected interface.
-     * Using this playerId an IParticipant object is created with the facilityId and gameAgentName corresponding to the playerId, which is sent to the Game Logic component.
+     * Using this playerId an IParticipant object is created with the facility and gameAgentName corresponding to the playerId, which is sent to the Game Logic component.
      *
      * @param playerId the Id of the player that disconnected.
      */
     public void playerIsDisconnected(String playerId) {
-        for (int i = 0; i <= game.getConfiguration().getFacilities().size(); i++) {
-            if (game.getConfiguration().getFacilities().get(i).getPlayer().getPlayerId().equals(playerId)) {
-                IParticipant participant = new AgentParticipant(game.getConfiguration().getFacilities().get(i).getAgent().getGameAgentName(), game.getConfiguration().getFacilities().get(i));
-                gameLogic.addLocalParticipant(participant);
+        for (int i = 0; i <= game.getPlayers().size(); i++) {
+            if (game.getPlayers().get(i).getPlayerId().equals(playerId)) {
+                GameAgent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
+                if (agent != null) {
+                    IParticipant participant = new AgentParticipant(agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
+                    gameLogic.addLocalParticipant(participant);
+                    return;
+                }
             }
         }
     }
@@ -127,5 +133,18 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     private boolean checkIfPlayerIsLocalPlayer(Player p) {
         return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
+    }
+
+    public int getTurnsReceivedInCurrentRound() {
+        return turnsReceivedInCurrentRound;
+    }
+
+    GameAgent getAgentByFacility (int facilityId) {
+        for (GameAgent agent : game.getAgents()) {
+            if (agent.getFacility().getFacilityId() == facilityId) {
+                return agent;
+            }
+        }
+        return null;
     }
 }
