@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.dbconnection;
 
 import javax.inject.Singleton;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,18 +31,7 @@ public class DBConnectionTest implements IDatabaseConnection {
 
 
 	public void createNewDatabase() {
-
-		String url = CONNECTIONSTRING + DATABASENAME;
-
-		try (Connection conn = DriverManager.getConnection(url)) {
-			if (conn != null) {
-				runSQLScript("ddl.sql");
-			}
-
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString(),e);
-		}
-
+		runSQLScript("ddl.sql");
 	}
 
 	public void runSQLScript(String scriptname)
@@ -70,11 +60,19 @@ public class DBConnectionTest implements IDatabaseConnection {
 			conn.rollback();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				//
+			}
 		}
 	}
 
 	public void cleanup() {
-	runSQLScript("cleanup.sql");
+		runSQLScript("cleanup.sql");
+		File file = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator + DATABASENAME);
+		file.delete();
 	}
 
 }
