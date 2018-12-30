@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.junit.jupiter.api.Test;
 
 import static junit.framework.TestCase.*;

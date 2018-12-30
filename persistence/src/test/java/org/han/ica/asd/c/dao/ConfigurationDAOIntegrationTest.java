@@ -11,7 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 class ConfigurationDAOIntegrationTest {
 	private static final Configuration CONFIGURATION = new Configuration(40,1,1,1,1,1,99,false,false);
 	private static final Configuration CONFIGURATION2 = new Configuration(40,1,1,1,1,1,99,false,false);
@@ -22,7 +21,6 @@ class ConfigurationDAOIntegrationTest {
 
 	@BeforeEach
 	public void setUp() {
-
 		DBConnectionTest.getInstance().createNewDatabase();
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override

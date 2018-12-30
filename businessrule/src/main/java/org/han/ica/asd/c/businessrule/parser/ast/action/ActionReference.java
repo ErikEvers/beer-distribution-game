@@ -1,4 +1,6 @@
-package org.han.ica.asd.c.businessrule.parser.ast;
+package org.han.ica.asd.c.businessrule.parser.ast.action;
+
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 
 import java.util.Objects;
 
