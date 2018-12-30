@@ -74,23 +74,21 @@ public class FacilityTurnDAO {
 	 */
 
 	public List<FacilityTurnDB> fetchTurns(String gameId, int roundId) {
-		Connection conn;
 		ArrayList<FacilityTurnDB> turns = new ArrayList<>();
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURNS)) {
-					conn.setAutoCommit(false);
-					pstmt.setString(1, gameId);
-					pstmt.setInt(2, roundId);
-					try (ResultSet rs = pstmt.executeQuery()) {
-						while (rs.next()) {
-							turns.add(new FacilityTurnDB(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount")));
-						}
-					}
+		Connection conn = databaseConnection.connect();
+		if (conn == null) {
+			return turns;
+		}
+		try (PreparedStatement pstmt = conn.prepareStatement(READ_TURNS)) {
+			conn.setAutoCommit(false);
+			pstmt.setString(1, gameId);
+			pstmt.setInt(2, roundId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					turns.add(new FacilityTurnDB(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount")));
 				}
-				conn.commit();
 			}
+			conn.commit();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
@@ -108,21 +106,19 @@ public class FacilityTurnDAO {
 	public FacilityTurnDB fetchTurn(RoundDB round, FacilityLinkedToDB facilityLinkedTo) {
 		Connection conn;
 		FacilityTurnDB facilityTurn = null;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_TURN)) {
-					pstmt.setString(1,round.getGameId());
-					pstmt.setInt(2,round.getRoundId());
-					pstmt.setInt(3,facilityLinkedTo.getFacilityIdOrder());
-					pstmt.setInt(4,facilityLinkedTo.getFacilityIdDeliver());
-					try (ResultSet rs = pstmt.executeQuery()){
-						facilityTurn = new FacilityTurnDB(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
-					}
+		conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_TURN)) {
+				pstmt.setString(1,round.getGameId());
+				pstmt.setInt(2,round.getRoundId());
+				pstmt.setInt(3,facilityLinkedTo.getFacilityIdOrder());
+				pstmt.setInt(4,facilityLinkedTo.getFacilityIdDeliver());
+				try (ResultSet rs = pstmt.executeQuery()){
+					facilityTurn = new FacilityTurnDB(rs.getString("GameId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"),rs.getInt("RoundId"), rs.getInt("Stock"), rs.getInt("RemainingBudget"), rs.getInt("OrderAmount"), rs.getInt("OpenOrderAmount"), rs.getInt("OutgoingGoodsAmount"));
 				}
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(),e);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return facilityTurn;
 	}

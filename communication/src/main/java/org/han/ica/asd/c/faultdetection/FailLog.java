@@ -27,9 +27,8 @@ public class FailLog {
         return failLogHashMap;
     }
 
+    //Increments the amount of fails for an Ip
     void increment(String ip) {
-        //Increments the amount of fails for an Ip
-        //TODO remove println when done
         putIpInListIfNotAlready(ip);
         failLogHashMap.put(ip, failLogHashMap.get(ip) + 1);
 
