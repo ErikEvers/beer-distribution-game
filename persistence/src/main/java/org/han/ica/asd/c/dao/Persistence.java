@@ -8,32 +8,27 @@ import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import java.util.Map;
 
 
 public class Persistence implements IPersistence {
 
 	@Inject
-	@Named("RoundDAO")
-	private IBeerDisitributionGameDAO roundDAO;
+	private RoundDAO roundDAO;
 
 	@Inject
-	@Named("BeergameDAO")
-	private IBeerDisitributionGameDAO beergameDAO;
+	private BeergameDAO beergameDAO;
 
 	@Inject
-	@Named("GameBusinessRulesRulesInFacilityTurnDAO")
-	private IBeerDisitributionGameDAO gameBusinessRulesInFacilityTurnDAO;
+	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 
 	@Inject
-	@Named("FacilityTurnDAO")
-	private IBeerDisitributionGameDAO facilityTurnDAO;
+	private FacilityTurnDAO facilityTurnDAO;
 
 
 	public Persistence(){
@@ -42,7 +37,8 @@ public class Persistence implements IPersistence {
 
 	public void saveRoundData(RoundDB rounddata)
 	{
-		//stub
+		roundDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
+		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
 	}
 
 	public void saveRoundData(Round rounddata) {
@@ -56,21 +52,19 @@ public class Persistence implements IPersistence {
 	}
 
 	@Override
-	public Round fetchTurnData(Round round, FacilityLinkedTo facility) {
-		//stub
+	public Round fetchTurnData(Round round, Map<Facility, Facility> facilityLinkedTo) {
 		return null;
+
 	}
 
 	public BeerGame getGameLog(String gameId)
 	{
-		//stub
-		return null;
+		return null;//((BeergameDAO)beergameDAO).getGameLog(gameId);
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)
 	{
-		//stub
-		((GameBusinessRulesInFacilityTurnDAO)gameBusinessRulesInFacilityTurnDAO).createTurn(gameBusinessRulesInFacilityTurn);
+		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
 	public Round fetchTurnData(Round round, Facility facility)

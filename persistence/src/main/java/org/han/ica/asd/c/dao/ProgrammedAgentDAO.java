@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
+public class ProgrammedAgentDAO {
     private static final String CREATE_PROGRAMMEDAGENT = "INSERT INTO ProgrammedAgent VALUES (?)";
     private static final String UPDATE_PROGRAMMEDAGENT = "UPDATE ProgrammedAgent SET ProgrammedAgentName = ? WHERE ProgrammedAgentName = ?";
     private static final String DELETE_PROGRAMMEDAGENT = "DELETE FROM ProgrammedAgent WHERE ProgrammedAgentName = ?";

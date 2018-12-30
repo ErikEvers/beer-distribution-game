@@ -2,7 +2,9 @@ package org.han.ica.asd.c.dao;
 
 import com.google.inject.Inject;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.GameBusinessRulesDB;
+import org.han.ica.asd.c.exception.GameIdNotSetException;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
+public class GameBusinessRulesDAO {
     private static final String CREATE_GAMEBUSINESSRULE = "INSERT INTO GameBusinessRules VALUES (?,?,?,?,?);";
     private static final String DELETE_SPECIFIC_GAMEBUSINESSRULE = "DELETE FROM GameBusinessRules WHERE FacilityId = ? AND GameId = ? AND GameAgentName = ? AND GameBusinessRule = ? AND GameAST = ?;";
     private static final String DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME = "DELETE FROM GameBusinessRules WHERE GameId = ? AND GameAgentName = ?;";
@@ -30,96 +32,112 @@ public class GameBusinessRulesDAO implements IBeerDisitributionGameDAO {
     /**
      * A method to create a new GameBusinessRule.
      *
-     * @param gameBusinessRulesDB The data required to create a new GameBusinessRule.
+     * @param gameAgent         The data required to insert the GameAgentName and FacilityId.
+     * @param gameBusinessRules The data required to insert the GameBusinessRule and GameAST.
      */
-    public void createGameBusinessRule(GameBusinessRulesDB gameBusinessRulesDB) {
-        executePreparedStatement(gameBusinessRulesDB, CREATE_GAMEBUSINESSRULE);
+    public void createGameBusinessRule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
+        executePreparedStatement(gameAgent, gameBusinessRules, CREATE_GAMEBUSINESSRULE);
     }
 
     /**
      * A method to delete a specific GameBusinessRule.
      *
-     * @param gameBusinessRulesDB The data required to delete a specific GameBusinessRule.
+     * @param gameAgent         The data required to delete the GameAgentName and FacilityId.
+     * @param gameBusinessRules The data required to delete the GameBusinessRule and GameAST.
      */
-    public void deleteSpecificGamebusinessrule(GameBusinessRulesDB gameBusinessRulesDB) {
-        executePreparedStatement(gameBusinessRulesDB, DELETE_SPECIFIC_GAMEBUSINESSRULE);
+    public void deleteSpecificGamebusinessrule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
+        executePreparedStatement(gameAgent, gameBusinessRules, DELETE_SPECIFIC_GAMEBUSINESSRULE);
     }
 
     /**
      * A method to delete all GameBusinessRules from a specific GameAgent within a Game.
      *
-     * @param gameId The identifier of the game from which the GameBusinessRules have to be deleted.
-     * @param gameAgentname The identifier of tje GameAgent from which the GameBusinessRules have to be deleted.
+     * @param gameAgent Contains the identifier of tje GameAgent from which the GameBusinessRules have to be deleted.
      */
-    public void deleteAllGamebusinessrulesForGameagentInAGame(String gameId, String gameAgentname) {
-				Connection conn = databaseConnection.connect();
-				if(conn != null) {
-						try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
-								conn.setAutoCommit(false);
+    public void deleteAllGamebusinessrulesForGameagentInAGame(GameAgent gameAgent) {
+        Connection conn = databaseConnection.connect();
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
+                    conn.setAutoCommit(false);
 
-								pstmt.setString(1, gameId);
-								pstmt.setString(2, gameAgentname);
+                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
+                    pstmt.setString(2, gameAgent.getGameAgentName());
 
-								pstmt.executeUpdate();
+                    pstmt.executeUpdate();
+										conn.commit();
 
-								conn.commit();
-						} catch (SQLException e) {
-							LOGGER.log(Level.SEVERE, e.toString(), e);
-							databaseConnection.rollBackTransaction(conn);
-						}
-				}
+                } catch (GameIdNotSetException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
+                } catch (SQLException e) {
+									LOGGER.log(Level.SEVERE, e.toString(), e);
+									databaseConnection.rollBackTransaction(conn);
+								}
+            }
     }
 
-    public List<GameBusinessRulesDB> readAllGameBusinessRulesForGameAgentInAGame(String gameId, String gameAgentName) {
-        List<GameBusinessRulesDB> gameBusinessRules = new ArrayList<>();
+    /**
+     * A method to read all the GameBusinessRules from a specific GameAgent in a specific BeerGame.
+     *
+     * @param gameAgent Contains the identifier of the GameAgent from which the GameBusinessRules have to be deleted.
+     * @return A list containing all the GameBusinessRules from a specific GameAgent in a specific BeerGame.
+     */
+    public List<GameBusinessRules> readAllGameBusinessRulesForGameAgentInAGame(GameAgent gameAgent) {
+        List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
         Connection conn = databaseConnection.connect();
-        if(conn == null) {
-        	return gameBusinessRules;
+				if(conn == null) {
+						return gameBusinessRules;
 				}
-        try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
-            conn.setAutoCommit(false);
+				try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
+						conn.setAutoCommit(false);
 
-            pstmt.setString(1, gameId);
-            pstmt.setString(2, gameAgentName);
+						DaoConfig.gameIdNotSetCheck(pstmt, 1);
+						pstmt.setString(2, gameAgent.getGameAgentName());
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    gameBusinessRules.add(new GameBusinessRulesDB(rs.getInt("FacilityId"), rs.getString("GameId"),
-                            rs.getString("GameAgentName"), rs.getString("GameBusinessRule"),
-                            rs.getString("GameAST")));
-                }
-            }
-            conn.commit();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
-        return gameBusinessRules;
+						try (ResultSet rs = pstmt.executeQuery()) {
+								while (rs.next()) {
+										gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"), rs.getString("GameAST")));
+								}
+						}
+						conn.commit();
+				} catch (GameIdNotSetException e) {
+						LOGGER.log(Level.SEVERE, e.toString(), e);
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
+
+				return gameBusinessRules;
     }
 
     /**
      * A method to execute a prepared statement for creating or deleting a specific GameBusinessRule.
      *
-     * @param gameBusinessRulesDB The data required to create or delete a specific GameBusinessRule.
-     * @param query The query that has to be executed on the database.
+     * @param gameAgent         The data required to create or delete the GameAgentName and FacilityId.
+     * @param gameBusinessRules The data required to create or delete the GameBusinessRule and GameAST.
+     * @param query             The query that has to be executed on the database.
      */
-    private void executePreparedStatement(GameBusinessRulesDB gameBusinessRulesDB, String query) {
-				Connection conn = databaseConnection.connect();
-				if(conn != null) {
-						try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-								conn.setAutoCommit(false);
+    private void executePreparedStatement(GameAgent gameAgent, GameBusinessRules gameBusinessRules, String query) {
+			Connection conn = databaseConnection.connect();
+			if(conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+					conn.setAutoCommit(false);
 
-								pstmt.setInt(1, gameBusinessRulesDB.getFacilityId());
-								pstmt.setString(2, gameBusinessRulesDB.getGameId());
-								pstmt.setString(3, gameBusinessRulesDB.getGameAgentName());
-								pstmt.setString(4, gameBusinessRulesDB.getGameBusinessRule());
-								pstmt.setString(5, gameBusinessRulesDB.getGameAST());
+					pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
+					DaoConfig.gameIdNotSetCheck(pstmt, 2);
+					pstmt.setString(3, gameAgent.getGameAgentName());
+					pstmt.setString(4, gameBusinessRules.getGameBusinessRule());
+					pstmt.setString(5, gameBusinessRules.getGameAST());
 
-								pstmt.executeUpdate();
-								conn.commit();
-						} catch (SQLException e) {
-							LOGGER.log(Level.SEVERE, e.toString(), e);
-							databaseConnection.rollBackTransaction(conn);
-						}
+					pstmt.executeUpdate();
+					conn.commit();
+
+				} catch (GameIdNotSetException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
 				}
+			}
     }
+
 }
