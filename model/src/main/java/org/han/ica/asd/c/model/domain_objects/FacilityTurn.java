@@ -5,11 +5,14 @@ public class FacilityTurn {
 	private int roundId;
 	private int stock;
 	private int remainingBudget;
+	private int backorders;
 	private boolean bankrupt;
 
-	public FacilityTurn(int facilityId, int roundId, int stock, int remainingBudget, boolean bankrupt) {
+	public FacilityTurn(int facilityId, int roundId, int stock, int backorders, int remainingBudget, boolean bankrupt) {
 		this.facilityId = facilityId;
+		this.roundId = roundId;
 		this.stock = stock;
+		this.backorders = backorders;
 		this.remainingBudget = remainingBudget;
 		this.bankrupt = bankrupt;
 	}
@@ -28,6 +31,14 @@ public class FacilityTurn {
 
 	public void setStock(int stock) {
 		this.stock = stock;
+	}
+
+	public int getBackorders() {
+		return backorders;
+	}
+
+	public void setBackorders(int backorders) {
+		this.backorders = backorders;
 	}
 
 	public int getRemainingBudget() {

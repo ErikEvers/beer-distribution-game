@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS FacilityTurn (
   RoundId int NOT NULL,
   FacilityId int NOT NULL,
   Stock int NOT NULL,
+  Backorders int NOT NULL,
   RemainingBudget int NOT NULL,
   Bankrupt bit NOT NULL,
   CONSTRAINT PK_FacilityTurn PRIMARY KEY (GameId, RoundId, FacilityId),

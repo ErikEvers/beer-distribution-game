@@ -37,7 +37,7 @@ class RoundDAOIntegrationTest {
 		beergameDAO = injector.getInstance(BeergameDAO.class);
 		roundDAO = injector.getInstance(RoundDAO.class);
 		DaoConfig.setCurrentGameId("BeerGameZutphen13_12_2018");
-		facilityTurn = new FacilityTurn(1,1,1,1,false);
+		facilityTurn = new FacilityTurn(1,1,1,1, 1,false);
 		facilityTurnDeliver = new FacilityTurnDeliver(1,2,0,4);
 		facilityTurnOrder = new FacilityTurnOrder(1,2,50);
 	}
@@ -60,6 +60,7 @@ class RoundDAOIntegrationTest {
 		Assert.assertEquals(1,round.getRoundId());
 		Assert.assertEquals(facilityTurn.getRemainingBudget(),round.getFacilityTurns().get(0).getRemainingBudget());
 		Assert.assertEquals(facilityTurn.getStock(),round.getFacilityTurns().get(0).getStock());
+		Assert.assertEquals(facilityTurn.getBackorders(),round.getFacilityTurns().get(0).getBackorders());
 		Assert.assertEquals(facilityTurn.getFacilityId(),round.getFacilityTurns().get(0).getFacilityId());
 
 		Assert.assertEquals(facilityTurnDeliver.getFacilityId(),round.getFacilityTurnDelivers().get(0).getFacilityId());
