@@ -11,7 +11,7 @@ public class GameAgent implements IDomainModel{
     public GameAgent(String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRules) {
         this.gameAgentName = gameAgentName;
         this.facility = facility;
-        this.gameBusinessRulesList = gameBusinessRules;
+        this.gameBusinessRulesList = Collections.unmodifiableList(gameBusinessRules);
     }
 
     public String getGameAgentName() {
