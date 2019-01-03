@@ -45,7 +45,7 @@ public class RoomFinder implements IFinder{
         return roomModel;
     }
 
-    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password){
+    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password) throws DiscoveryException, RoomException {
         RoomModel roomModel = new RoomModel();
         try {
             Room created = getRoom(roomName);
@@ -56,10 +56,13 @@ public class RoomFinder implements IFinder{
             roomModel.setPassword(password);
             roomModel.setGameStarted(false);
             return roomModel;
-        } catch (DiscoveryException | RoomException e) {
+        } catch (DiscoveryException e){
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e);
+        } catch (RoomException r){
+            LOGGER.log(Level.SEVERE, r.getMessage(), r);
+            throw new RoomException(r);
         }
-        return new RoomModel();
     }
 
     public void startGameRoom(String roomName){

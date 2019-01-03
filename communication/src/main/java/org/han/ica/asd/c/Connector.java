@@ -2,6 +2,7 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
@@ -93,6 +94,8 @@ private static Connector instance = null;
             }
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage(), e);
+        } catch (RoomException e) {
+            e.printStackTrace();
         }
         return null;
     }
