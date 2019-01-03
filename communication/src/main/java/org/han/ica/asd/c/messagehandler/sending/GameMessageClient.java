@@ -68,10 +68,6 @@ public class GameMessageClient {
         return whoIsTheLeaderMessageReturn;
     }
 
-    public void setSocketClient(SocketClient socketClient) {
-        this.socketClient = socketClient;
-    }
-
     /**
      * This method sends the handled round data back to every peer.
      * @param ips
@@ -82,6 +78,7 @@ public class GameMessageClient {
         new SendInTransaction(ips, roundModelMessage, socketClient).sendRoundToAllPlayers();
     }
 
-
-
+    public void setSocketClient(SocketClient socketClient) {
+        this.socketClient = socketClient;
+    }
 }
