@@ -139,4 +139,48 @@ public class RoomFinderTest {
         roomFinder = new RoomFinder();
         roomFinder.getAvailableRooms();
     }
+
+    @Test
+    public void shouldStartGame() throws IOException, DiscoveryException {
+        String roomName = "Beergame";
+        String leaderIP = "192.168.1.1";
+        String password = "P@SSw0rd";
+        String roomID = "12345";
+        when(service.checkIfFolderNotExists(roomName)).thenReturn(true);
+        when(service.getFolderID(roomName)).thenReturn(roomID);
+        when(service.getLeaderFromFolder(roomID)).thenReturn(leaderIP);
+        when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
+        when(service.getPasswordFromFolder(roomID)).thenReturn(password);
+
+        roomFinder = new RoomFinder();
+
+        roomFinder.createGameRoomModel(roomName, leaderIP, password);
+
+        roomFinder.startGameRoom(roomName);
+    }
+
+
+
+    @Test
+    public void shouldReturnRoomModelWithGivenValues() throws IOException, DiscoveryException {
+        String roomName = "Beergame";
+        String leaderIP = "192.168.1.1";
+        String password = "P@SSw0rd";
+        String roomID = "12345";
+
+        roomFinder = new RoomFinder();
+
+        RoomModel roomModel = new RoomModel();
+        roomModel.setRoomName(roomName);
+
+        when(service.checkIfFolderNotExists(roomName)).thenReturn(true);
+        when(service.getFolderID(roomName)).thenReturn(roomID);
+        when(service.getLeaderFromFolder(roomID)).thenReturn(leaderIP);
+        when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
+        when(service.getPasswordFromFolder(roomID)).thenReturn(password);
+
+        RoomModel updatedRoomModel = roomFinder.getRoom(roomModel);
+        assertEquals(updatedRoomModel.getLeaderIP(), leaderIP);
+        assertEquals(updatedRoomModel.getPassword(), password);
+    }
 }

@@ -62,15 +62,16 @@ public class RoomFinder implements IFinder{
         }
     }
 
-    public void startGameRoom(String roomName){
+    public void startGameRoom(String roomName) throws DiscoveryException {
         try {
             getRoom(roomName).closeGameAndStartGame();
         } catch (RoomException | DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e);
         }
     }
 
-    public RoomModel getRoom(RoomModel roomModel){
+    public RoomModel getRoom(RoomModel roomModel) throws DiscoveryException {
         RoomModel room = new RoomModel();
         try {
             Room onlineRoom = getRoom(roomModel.getRoomName());
@@ -81,6 +82,7 @@ public class RoomFinder implements IFinder{
             room.setGameStarted(false);
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e);
         }
         return room;
     }
@@ -90,7 +92,7 @@ public class RoomFinder implements IFinder{
             return new Room(roomName, service);
         } catch (RoomException e) {
             LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
-                throw new DiscoveryException(e);
+            throw new DiscoveryException(e);
         }
     }
 

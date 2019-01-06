@@ -95,13 +95,18 @@ private static Connector instance = null;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage(), e);
         } catch (RoomException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
         return null;
     }
 
     public RoomModel updateRoom(RoomModel room){
-        return finder.getRoom(room);
+        try {
+            return finder.getRoom(room);
+        } catch (DiscoveryException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return null;
     }
 
     public void startRoom(RoomModel room){
