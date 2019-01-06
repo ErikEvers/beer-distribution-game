@@ -7,7 +7,6 @@ import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,26 +14,44 @@ import java.util.logging.Logger;
 // TODO -> reminder: Interfaces in right directory
 public class AgentController implements IAgentController {
 
-  private String gameId;
   private List<ProgrammedAgent> agents;
+  @Inject IGameConfigurationUserInterface gameConfigurationUserInterface;
   @Inject IPersistenceProgrammedAgents iPersistenceProgrammedAgents;
   @Inject private static Logger LOGGER;
 
-  public List<Facility> setAgentsInFacilities(List<Facility> facilities, String gameId) {
-    this.gameId = gameId;
+  /**
+   * Get all the agents and send them to the UI, so the GameLeader can chose the agents for empty facilities.
+   * @param facilities -> All the facilities get from the service.
+   */
+  public void getAgentsForUI(List<Facility> facilities) {
     try {
-      agents = new ArrayList<>();
-      agents = getAllProgrammedAgents();
       // TODO -> The agents has to be send to the GUI, so the gameleader can pick one!
+      agents = getAllProgrammedAgents();
+      gameConfigurationUserInterface.sendAgentsToUI(agents);
     } catch(NoProgrammedAgentsFoundException e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
+    }
+  }
+
+  /**
+   * This function, sets the GameAgents objects to Facility objects
+   * @param gameAgents -> GameAgent opbjects returned from the UI
+   * @param facilities -> All the facilities in this game
+   * @return -> List with facilities with the chosen agents.
+   */
+  public List<Facility> setAgentsInFacilities(List<GameAgent> gameAgents, List<Facility> facilities) {
+    for(GameAgent gameAgent: gameAgents) {
+      for(Facility facility: facilities) {
+        if(gameAgent.getFacility().getFacilityId() == facility.getFacilityId())
+          facility.setAgent(gameAgent);
+      }
     }
     return facilities;
   }
 
   public List<Facility> agentsFinished(List<Facility> facilities) {
     try {
-      ProgrammedAgent defaultAgent = getDefaultAgent();
+      ProgrammedAgent defaultAgent = getDefaultAgent(this.agents);
       for(Facility facility: facilities) {
         if(facility.getAgent() == null) {
           GameAgent gameAgent = new GameAgent(defaultAgent.getProgrammedAgentName(), facility);
@@ -57,7 +74,7 @@ public class AgentController implements IAgentController {
 
   //TODO -> Afspreken default agent name.
 
-  private ProgrammedAgent getDefaultAgent() throws NoProgrammedAgentsFoundException {
+  private ProgrammedAgent getDefaultAgent(List<ProgrammedAgent> agents) throws NoProgrammedAgentsFoundException {
     for(ProgrammedAgent agent: agents){
       if ("Default".equals(agent.getProgrammedAgentName())) {
         return agent;
