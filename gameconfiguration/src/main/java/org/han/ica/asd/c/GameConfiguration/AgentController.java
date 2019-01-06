@@ -16,14 +16,12 @@ import java.util.logging.Logger;
 public class AgentController implements IAgentController {
 
   private String gameId;
-  private List<Facility> facilities = new ArrayList<>();
   private List<ProgrammedAgent> agents;
   @Inject IPersistenceProgrammedAgents iPersistenceProgrammedAgents;
   @Inject private static Logger LOGGER;
 
-  public void setAgentsInFacilities(List<Facility> facilities, String gameId) {
+  public List<Facility> setAgentsInFacilities(List<Facility> facilities, String gameId) {
     this.gameId = gameId;
-    this.facilities = facilities;
     try {
       agents = new ArrayList<>();
       agents = getAllProgrammedAgents();
@@ -31,6 +29,7 @@ public class AgentController implements IAgentController {
     } catch(NoProgrammedAgentsFoundException e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
+    return facilities;
   }
 
   public List<Facility> agentsFinished(List<Facility> facilities) {

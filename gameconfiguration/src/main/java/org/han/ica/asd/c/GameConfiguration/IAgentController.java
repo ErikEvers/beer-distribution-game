@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface IAgentController {
 
-  void setAgentsInFacilities(List<Facility> facilities, String gameId);
+  List<Facility> setAgentsInFacilities(List<Facility> facilities, String gameId);
+
+  List<Facility> agentsFinished(List<Facility> facilities);
 }
