@@ -29,7 +29,7 @@ public class RoomFinder implements IFinder{
         return rooms;
     }
 
-    public RoomModel createGameRoomModel(String roomName, String leaderIP, String password){
+    public RoomModel createGameRoomModel(String roomName, String leaderIP, String password) throws DiscoveryException{
         RoomModel roomModel = new RoomModel();
         try {
             createGameRoomOnline(roomName, leaderIP, password);
@@ -41,11 +41,11 @@ public class RoomFinder implements IFinder{
             return roomModel;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e.getMessage());
         }
-        return roomModel;
     }
 
-    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password) throws DiscoveryException, RoomException {
+    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password) throws DiscoveryException {
         RoomModel roomModel = new RoomModel();
         try {
             Room created = getRoom(roomName);
@@ -56,12 +56,9 @@ public class RoomFinder implements IFinder{
             roomModel.setPassword(password);
             roomModel.setGameStarted(false);
             return roomModel;
-        } catch (DiscoveryException e){
+        } catch (DiscoveryException | RoomException e){
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new DiscoveryException(e);
-        } catch (RoomException r){
-            LOGGER.log(Level.SEVERE, r.getMessage(), r);
-            throw new RoomException(r);
         }
     }
 
@@ -89,14 +86,12 @@ public class RoomFinder implements IFinder{
     }
 
     private Room getRoom(String roomName) throws DiscoveryException {
-        Room room = null;
         try {
-            room = new Room(roomName, service);
+            return new Room(roomName, service);
         } catch (RoomException e) {
             LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
                 throw new DiscoveryException(e);
         }
-        return room;
     }
 
     private Room createGameRoomOnline(String roomName, String ip, String password) throws DiscoveryException {
