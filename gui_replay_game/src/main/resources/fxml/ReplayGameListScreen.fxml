@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_replay_game.ReplayGameListController">
     <children>
         <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -28,10 +32,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="replay" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="See Replay" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
-                        <Button fx:id="back" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: ff8000;" text="Back to menu" textFill="WHITE" wrapText="true" GridPane.columnIndex="2" />
+                        <Button fx:id="replay" mnemonicParsing="false" onAction="#replayButtonAction" visible="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="See Replay" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
+                        <Button mnemonicParsing="false" onAction="#backButtonAction" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: ff8000;" text="Back to menu" textFill="WHITE" wrapText="true" GridPane.columnIndex="2" />
                     </children>
                 </GridPane>
+            <ListView fx:id="list" onMouseClicked="#handleMouseClickOnList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             </children>
         </GridPane>
     </children>
