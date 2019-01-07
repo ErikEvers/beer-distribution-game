@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RoomFinder implements IFinder{
+public class RoomFinder implements IFinder {
     private static IResourceManager service = new GoogleDrive("/credentials.json");
     private ArrayList<String> rooms;
     private static final Logger LOGGER = Logger.getLogger(RoomFinder.class.getName());
@@ -29,7 +29,7 @@ public class RoomFinder implements IFinder{
         return rooms;
     }
 
-    public RoomModel createGameRoomModel(String roomName, String leaderIP, String password){
+    public RoomModel createGameRoomModel(String roomName, String leaderIP, String password) {
         RoomModel roomModel = new RoomModel();
         try {
             createGameRoomOnline(roomName, leaderIP, password);
@@ -45,7 +45,7 @@ public class RoomFinder implements IFinder{
         return roomModel;
     }
 
-    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password){
+    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password) {
         RoomModel roomModel = new RoomModel();
         try {
             Room created = getRoom(roomName);
@@ -62,7 +62,7 @@ public class RoomFinder implements IFinder{
         return new RoomModel();
     }
 
-    public void startGameRoom(String roomName){
+    public void startGameRoom(String roomName) {
         try {
             getRoom(roomName).closeGameAndStartGame();
         } catch (RoomException | DiscoveryException e) {
@@ -70,7 +70,7 @@ public class RoomFinder implements IFinder{
         }
     }
 
-    public RoomModel getRoom(RoomModel roomModel){
+    public RoomModel getRoom(RoomModel roomModel) {
         RoomModel room = new RoomModel();
         try {
             Room onlineRoom = getRoom(roomModel.getRoomName());
@@ -91,7 +91,7 @@ public class RoomFinder implements IFinder{
             room = new Room(roomName, service);
         } catch (RoomException e) {
             LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
-                throw new DiscoveryException(e);
+            throw new DiscoveryException(e);
         }
         return room;
     }
@@ -99,7 +99,7 @@ public class RoomFinder implements IFinder{
     private Room createGameRoomOnline(String roomName, String ip, String password) throws DiscoveryException {
         if (checkIfRoomDoesNotExists(roomName)) {
             throw new DiscoveryException("Room already exists.");
-        }else {
+        } else {
             try {
                 return new Room(roomName, ip, password, service);
             } catch (RoomException e) {
