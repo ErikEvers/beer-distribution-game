@@ -27,6 +27,17 @@ public class BeergameDAO {
 	@Inject
 	private IDatabaseConnection databaseConnection;
 
+	@Inject
+	private ConfigurationDAO configurationDAO;
+
+	@Inject
+	private GameAgentDAO gameAgentDAO;
+
+	@Inject
+	private RoundDAO roundDAO;
+
+
+
 
 	public BeergameDAO(){
 		//Empty Constructor for GUICE
@@ -116,6 +127,9 @@ public class BeergameDAO {
 				pstmt.setString(1,gameId);
 				try (ResultSet rs = pstmt.executeQuery()) {
 					beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+					beergame.setConfiguration(configurationDAO.readConfiguration());
+					beergame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
+					beergame.setRounds(roundDAO.getRounds());
 				}
 				conn.commit();
 			} catch (SQLException e) {
