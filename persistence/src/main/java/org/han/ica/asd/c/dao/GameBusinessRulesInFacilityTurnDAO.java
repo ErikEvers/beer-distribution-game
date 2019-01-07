@@ -50,7 +50,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 						pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameAgentName());
 						pstmt.setString(5, gamebusinessrule.toString());
 
-						pstmt.executeUpdate();
+						pstmt.execute();
 					}
 
 				}

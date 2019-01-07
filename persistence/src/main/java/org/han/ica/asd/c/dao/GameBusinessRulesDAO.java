@@ -132,11 +132,14 @@ public class GameBusinessRulesDAO {
 				pstmt.setInt(4, facilityId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					gameAST = rs.getString("GameAST");
+					if(!rs.isClosed())
+						gameAST = rs.getString("GameAST");
 				}
+
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 			}
+
 		}
 
 		return gameAST;
