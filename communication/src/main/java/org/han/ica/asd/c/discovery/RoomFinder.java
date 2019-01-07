@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RoomFinder implements IFinder{
+public class RoomFinder implements IFinder {
     private static IResourceManager service = new GoogleDrive("/credentials.json");
     private ArrayList<String> rooms;
     private static final Logger LOGGER = Logger.getLogger(RoomFinder.class.getName());
@@ -99,7 +99,7 @@ public class RoomFinder implements IFinder{
     private Room createGameRoomOnline(String roomName, String ip, String password) throws DiscoveryException {
         if (checkIfRoomDoesNotExists(roomName)) {
             throw new DiscoveryException("Room already exists.");
-        }else {
+        } else {
             try {
                 return new Room(roomName, ip, password, service);
             } catch (RoomException e) {

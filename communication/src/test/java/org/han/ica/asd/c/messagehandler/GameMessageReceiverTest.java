@@ -73,14 +73,16 @@ public class GameMessageReceiverTest {
     @Test
     public void roundModelRecieved() {
         Round roundModel = new Round();
-        RoundModelMessage roundModelMessageStage = new RoundModelMessage(roundModel, 0);
-        RoundModelMessage roundModelMessageCommit = new RoundModelMessage(roundModel, 1);
+
+        RoundModelMessage roundModelMessageStage = new RoundModelMessage(roundModel);
+        roundModelMessageStage.setPhaseToStage();
+
+        RoundModelMessage roundModelMessageCommit = new RoundModelMessage(roundModel);
+        roundModelMessageCommit.setPhaseToCommit();
 
         gameMessageReceiver.gameMessageReceived(roundModelMessageStage);
         gameMessageReceiver.gameMessageReceived(roundModelMessageCommit);
 
         verify(roundModelObserver).roundModelReceived(roundModel);
     }
-
-
 }

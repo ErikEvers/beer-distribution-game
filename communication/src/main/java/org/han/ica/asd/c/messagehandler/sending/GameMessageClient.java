@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
+import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
@@ -22,31 +23,30 @@ public class GameMessageClient {
      * @param turn
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
-    public ResponseMessage sendTurnModel(String ip, Round turn) {
+    public boolean sendTurnModel(String ip, Round turn) {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
-
         int nFailedAttempts = 0;
-        Exception exception = null;
 
         while (nFailedAttempts < 3) {
             try {
-                Object response = socketClient.sendObjectWithResponse(ip, turnModelMessage);
-                return (ResponseMessage) response;
+                TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
+                if (response.getException() != null){
+                    LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
+                }
+                return response.isSuccess();
             } catch (IOException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    exception = new IOException("Something went wrong when trying to connect");
                     LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect", e);
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    exception = new ClassNotFoundException("Sommething went wrong when reading the object");
                     LOGGER.log(Level.SEVERE, "Something went wrong when reading the object", e);
                 }
             }
         }
-        return new ResponseMessage(false, exception);
+        return false;
     }
 
     /**
@@ -67,19 +67,17 @@ public class GameMessageClient {
         return whoIsTheLeaderMessageReturn;
     }
 
-    public void setSocketClient(SocketClient socketClient) {
-        this.socketClient = socketClient;
-    }
-
     /**
      * This method sends the handled round data back to every peer.
      * @param ips
      * @param roundModel
      */
     public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
-        new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
+        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
+        new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 
-
-
+    public void setSocketClient(SocketClient socketClient) {
+        this.socketClient = socketClient;
+    }
 }
