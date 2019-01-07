@@ -1,10 +1,8 @@
 package org.han.ica.asd.c.dao;
 
 
-
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.BeerGameDB;
-
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -67,9 +65,9 @@ public class BeergameDAO {
 	 *
 	 * @return An Arraylist of BeerGames
 	 */
-	public List<BeerGameDB> readBeergames() {
+	public List<BeerGame> readBeergames() {
 		Connection conn = null;
-		ArrayList<BeerGameDB> beerGames = new ArrayList<>();
+		ArrayList<BeerGame> beerGames = new ArrayList<>();
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
@@ -77,7 +75,7 @@ public class BeergameDAO {
 
 					try (ResultSet rs = pstmt.executeQuery()) {
 						while (rs.next()) {
-							beerGames.add(new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+							beerGames.add(new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
 						}
 					}
 				}
@@ -118,16 +116,16 @@ public class BeergameDAO {
 	 * @param gameId The name of the game which needs to be returned
 	 * @return A beergame object
 	 */
-	public BeerGameDB getGameLog(String gameId) {
+	public BeerGame getGameLog(String gameId) {
 		Connection conn = null;
-		BeerGameDB beergame = null;
+		BeerGame beergame = null;
 		try {
 			conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 					pstmt.setString(1,gameId);
 					try (ResultSet rs = pstmt.executeQuery()) {
-						beergame = new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 					}
 				}
 			}

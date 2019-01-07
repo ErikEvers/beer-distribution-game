@@ -10,11 +10,11 @@ import org.han.ica.asd.c.dao.Persistence;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.BeerGameDB;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.RoundDB;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,9 +26,7 @@ import java.util.logging.Logger;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class PersistenceTest {
 	public static final Logger LOGGER = Logger.getLogger(PersistenceTest.class.getName());
@@ -38,7 +36,7 @@ class PersistenceTest {
 	private FacilityTurnDAO facilityTurnDAOMock;
 	private Persistence persistence;
 	private RoundDB round;
-	private BeerGameDB beerGame;
+	private BeerGame beerGame;
 	private GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn;
 	private FacilityTurnDB facilityTurn;
 	private FacilityLinkedToDB facilityLinkedTo;
@@ -46,7 +44,7 @@ class PersistenceTest {
 	@BeforeEach
 	void setUp() {
 		round = new RoundDB("Beergame",1);
-		beerGame = new BeerGameDB(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
+		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
 		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurnDB(1,1,1,"Beergame","Henk","Test","Test");
 		facilityTurn = new FacilityTurnDB("Beergame",1,1,1,1,1,1,1,1);
 		facilityLinkedTo = new FacilityLinkedToDB("Beergame",1,1,true);
