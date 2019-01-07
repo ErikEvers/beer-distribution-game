@@ -145,4 +145,8 @@ public class GameMessageReceiver {
     public void setObservers(ArrayList<IConnectorObserver> observers) {
         this.gameMessageObservers = observers;
     }
+
+    public void setGameMessageFilterer(GameMessageFilterer gameMessageFilterer){
+        this.gameMessageFilterer = gameMessageFilterer;
+    }
 }

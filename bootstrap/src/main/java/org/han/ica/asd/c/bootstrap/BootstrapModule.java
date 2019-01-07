@@ -19,11 +19,12 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
+import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
-import java.net.ServerSocket;
 import java.util.logging.Logger;
 
 public class BootstrapModule extends AbstractModuleExtension {
@@ -55,6 +56,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		requestStaticInjection(FailLog.class);
 		requestStaticInjection(FaultDetectionClient.class);
 		requestStaticInjection(FaultDetectorLeader.class);
+		requestStaticInjection(GameMessageClient.class);
 		requestStaticInjection(Connector.class);
 
 	}

@@ -22,7 +22,6 @@ public class MessageProcessor {
      * @see NodeInfoList
      */
     public NodeInfoList getNodeInfoListFromConnector() {
-        connector = Connector.getInstance();
         return connector.getIps();
     }
 

@@ -10,8 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FailLog {
-    private HashMap<String, Integer> failLogHashMap;
-    private int successSize;
+    private HashMap<String, Integer> failLogHashMap = new HashMap<>();
+    private int successSize = 0;
 
     @Inject
     private static Logger logger;
@@ -19,10 +19,8 @@ public class FailLog {
     @Inject
     NodeInfoList nodeInfoList;
 
-    FailLog(NodeInfoList nodeInfoList) {
-        this.nodeInfoList = nodeInfoList;
-        failLogHashMap = new HashMap<>();
-        successSize = 0;
+    public FailLog() {
+        //for inject purposes
     }
 
     HashMap<String, Integer> getFailLogHashMap() {

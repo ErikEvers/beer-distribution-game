@@ -1,44 +1,72 @@
 package org.han.ica.asd.c.faultdetection;
 
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import org.han.ica.asd.c.Connector;
+import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.socketrpc.IServerObserver;
+import org.han.ica.asd.c.socketrpc.SocketClient;
+import org.han.ica.asd.c.socketrpc.SocketServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class TestFaultDetectorLeader {
     private FaultDetectorLeader faultDetectorLeader;
 
+    @Mock
     NodeInfoList nodeInfoList;
+
+    @Mock
     FaultDetectionClient faultDetectionClient;
+
+    @Mock
     FaultHandlerLeader faultHandlerLeader;
+
+    @Mock
     FailLog failLog;
+
+    @Mock
     ArrayList<IConnectorObserver> observers;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        initMocks(this);
 
-        failLog = mock(FailLog.class);
-        faultHandlerLeader = mock(FaultHandlerLeader.class);
-        faultDetectionClient = mock(FaultDetectionClient.class);
-        nodeInfoList = mock(NodeInfoList.class);
-        observers = mock(ArrayList.class);
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                //FaultDetector
+                requestStaticInjection(FailLog.class);
+                requestStaticInjection(FaultDetectionClient.class);
+                requestStaticInjection(FaultDetectorLeader.class);
+            }
+        });
 
-        faultDetectorLeader = new FaultDetectorLeader();
+        faultDetectorLeader = injector.getInstance(FaultDetectorLeader.class);
+
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
         faultDetectorLeader.setObservers(observers);
     }
@@ -57,6 +85,7 @@ public class TestFaultDetectorLeader {
         };
 
         faultDetectorLeader.setObservers(observers);
+        faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
 
 
@@ -87,7 +116,7 @@ public class TestFaultDetectorLeader {
                 //do nothing
             }
         };
-
+        faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
         faultDetectorLeader.setObservers(observers);
 
@@ -144,6 +173,7 @@ public class TestFaultDetectorLeader {
         };
 
         faultDetectorLeader.setObservers(observers);
+        faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
 
         faultDetectorLeader.setFailLog(failLog);
@@ -247,7 +277,7 @@ public class TestFaultDetectorLeader {
 
     @Test
     @DisplayName("Test the checkIfThisMachineIsDisconnected method works")
-    void TestCheckIfThisMachineIsDisconnected(){
+    void TestCheckIfThisMachineIsDisconnected() {
         Timer timer = mock(Timer.class);
 
         faultDetectorLeader.setTimer(timer);

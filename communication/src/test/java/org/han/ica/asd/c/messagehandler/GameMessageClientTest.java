@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.messagehandler;
 
-import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -17,11 +19,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -45,7 +46,15 @@ public class GameMessageClientTest {
         roundDataClient = new GameMessageClient();
         roundDataClient.setSocketClient(socketClient);
         data = new Round();
-        gameMessageClient = new GameMessageClient();
+
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(GameMessageClient.class);
+            }
+        });
+
+        gameMessageClient = injector.getInstance(GameMessageClient.class);
         gameMessageClient.setSocketClient(socketClient);
     }
 
@@ -54,7 +63,6 @@ public class GameMessageClientTest {
         String expected = new IOException("Something went wrong when trying to connect").getMessage();
 
         when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
-
 
         ResponseMessage responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
 

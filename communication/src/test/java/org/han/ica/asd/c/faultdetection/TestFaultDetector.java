@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
-import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
+
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,117 +10,132 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultDetector {
-	FaultDetector faultDetector;
-	@Mock
-	NodeInfoList nodeInfoList = mock(NodeInfoList.class);
-	ArrayList<IConnectorObserver> observers = mock(ArrayList.class);
-	FaultMessage faultMessage = mock(FaultMessage.class);
-	FaultResponder faultResponder = mock(FaultResponder.class);
-	FaultDetectorLeader faultDetectorLeader = mock(FaultDetectorLeader.class);
-	FaultDetectorPlayer faultDetectorPlayer = mock(FaultDetectorPlayer.class);
 
-	@BeforeEach
-	void setUp() {
-		faultDetector = spy(new FaultDetector());
-		faultDetector.setObservers(observers);
-	}
+    FaultDetector faultDetector;
 
-	@Test
-	public void TestSetLeader() {
-		doReturn( faultDetectorLeader )
-				.when( faultDetector )
-				.makeFaultDetectorLeader(nodeInfoList, observers);
+    @Mock
+    NodeInfoList nodeInfoList;
 
-		faultDetector.setLeader(nodeInfoList);
-		assertNotNull(faultDetector.getFaultDetectorLeader());
-		verify(faultDetectorLeader).start();
+    @Mock
+    ArrayList<IConnectorObserver> observers;
 
-	}
+    @Mock
+    FaultResponder faultResponder;
 
-	@Test
-	public void TestSetPlayer() {
-		faultDetector.setPlayer(nodeInfoList);
-		assertNotNull(faultDetector.getFaultResponder());
-		assertNotNull(faultDetector.getFaultDetectorPlayer());
-	}
+    @Mock
+    FaultDetectorLeader faultDetectorLeader;
 
-	@Test
-	void TestFaultMessageReceived() {
+    @Mock
+    FaultDetectorPlayer faultDetectorPlayer;
 
-		doReturn( faultResponder )
-				.when( faultDetector )
-				.makeFaultResponder();
+    @BeforeEach
+    void setUp() {
+        initMocks(this);
 
-		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.faultMessageReceived(any(), any());
-		assertNotNull(faultDetector.getFaultResponder());
-		verify(faultResponder).faultMessageReceived(any(),any());
+        faultDetector = spy(new FaultDetector());
+        faultDetector.setObservers(observers);
+    }
 
-	}
+    @Test
+    public void TestSetLeader() {
+        doReturn(faultDetectorLeader)
+                .when(faultDetector)
+                .makeFaultDetectorLeader(nodeInfoList, observers);
 
-	@Test
-	void TestFaultMessageResponseReceived() {
+        faultDetector.setLeader(nodeInfoList);
+        assertNotNull(faultDetector.getFaultDetectorLeader());
+        verify(faultDetectorLeader).start();
+    }
 
-		doReturn( faultDetectorLeader )
-				.when( faultDetector )
-				.makeFaultDetectorLeader(nodeInfoList, observers);
+    @Test
+    public void TestSetPlayer() {
+        doReturn(faultResponder)
+                .when(faultDetector)
+                .makeFaultResponder();
 
-		faultDetector.setLeader(nodeInfoList);
-		faultDetector.faultMessageResponseReceived(any());
-		assertNotNull(faultDetector.getFaultDetectorLeader());
-		verify(faultDetectorLeader).faultMessageResponseReceived(any());
+        doReturn(faultDetectorPlayer)
+                .when(faultDetector)
+                .makeFaultDetectorPlayer(nodeInfoList);
 
-	}
+        faultDetector.setPlayer(nodeInfoList);
+        assertNotNull(faultDetector.getFaultResponder());
+        assertNotNull(faultDetector.getFaultDetectorPlayer());
+    }
 
-	@Test
-	void TestPingMessageReceived() {
+    @Test
+    void TestFaultMessageReceived() {
+        doReturn(faultResponder)
+                .when(faultDetector)
+                .makeFaultResponder();
 
-		doReturn( faultDetectorPlayer )
-				.when( faultDetector )
-				.makeFaultDetectorPlayer(nodeInfoList);
+        doReturn(faultDetectorPlayer)
+                .when(faultDetector)
+                .makeFaultDetectorPlayer(nodeInfoList);
 
-		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.pingMessageReceived(any());
-		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).pingMessageReceived(any());
+        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.faultMessageReceived(any(), any());
+        assertNotNull(faultDetector.getFaultResponder());
+        verify(faultResponder).faultMessageReceived(any(), any());
+    }
 
-	}
+    @Test
+    void TestFaultMessageResponseReceived() {
+        doReturn(faultDetectorLeader)
+                .when(faultDetector)
+                .makeFaultDetectorLeader(nodeInfoList, observers);
 
-	@Test
-	void TestCanYouReachLeaderMessageReceived() {
+        faultDetector.setLeader(nodeInfoList);
+        faultDetector.faultMessageResponseReceived(any());
+        assertNotNull(faultDetector.getFaultDetectorLeader());
+        verify(faultDetectorLeader).faultMessageResponseReceived(any());
+    }
 
-		doReturn( faultDetectorPlayer )
-				.when( faultDetector )
-				.makeFaultDetectorPlayer(nodeInfoList);
+    @Test
+    void TestPingMessageReceived() {
+        doReturn(faultDetectorPlayer)
+                .when(faultDetector)
+                .makeFaultDetectorPlayer(nodeInfoList);
 
-		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.canYouReachLeaderMessageReceived(any(),any());
-		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), any());
+        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.pingMessageReceived(any());
+        assertNotNull(faultDetector.getFaultDetectorPlayer());
+        verify(faultDetectorPlayer).pingMessageReceived(any());
+    }
 
-	}
+    @Test
+    void TestCanYouReachLeaderMessageReceived() {
+        doReturn(faultDetectorPlayer)
+                .when(faultDetector)
+                .makeFaultDetectorPlayer(nodeInfoList);
 
-	@Test
-	void TestICanReachLeaderMessageReceived() {
+        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.canYouReachLeaderMessageReceived(any(), any());
+        assertNotNull(faultDetector.getFaultDetectorPlayer());
+        verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), any());
+    }
 
-		doReturn( faultDetectorPlayer )
-				.when( faultDetector )
-				.makeFaultDetectorPlayer(nodeInfoList);
+    @Test
+    void TestICanReachLeaderMessageReceived() {
+        doReturn(faultDetectorPlayer)
+                .when(faultDetector)
+                .makeFaultDetectorPlayer(nodeInfoList);
 
-		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.iCanReachLeaderMessageReceived(any());
-		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).iCanReachLeaderMessageReceived(any());
+        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.iCanReachLeaderMessageReceived(any());
+        assertNotNull(faultDetector.getFaultDetectorPlayer());
+        verify(faultDetectorPlayer).iCanReachLeaderMessageReceived(any());
+    }
 
-	}
-
-	@Test
-	void TestFaultDetectionMessageReceiver() {
-		assertNotNull(faultDetector.getFaultDetectionMessageReceiver());
-	}
-
+    @Test
+    void TestFaultDetectionMessageReceiver() {
+        assertNull(faultDetector.getFaultDetectionMessageReceiver());
+    }
 }

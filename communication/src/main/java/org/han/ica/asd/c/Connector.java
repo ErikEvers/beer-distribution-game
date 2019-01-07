@@ -85,6 +85,26 @@ private static Connector instance = null;
         socketServer.startThread();
     }
 
+    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer){
+        observers = new ArrayList<>();
+        nodeInfoList = new NodeInfoList();
+        this.finder = finder;
+        this.gameMessageClient = gameMessageClient;
+        this.faultDetector = faultDetector;
+
+        faultDetector.setObservers(observers);
+
+        GameMessageReceiver gameMessageReceiver1 = new GameMessageReceiver();
+        gameMessageReceiver1.setObservers(observers);
+
+        MessageDirector messageDirector1 = new MessageDirector();
+        messageDirector1.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
+        messageDirector1.setGameMessageReceiver(gameMessageReceiver1);
+
+        socketServer.setServerObserver(messageDirector1);
+        socketServer.startThread();
+    }
+
     //TODO replace with GUICE, inject singleton
     public static Connector getInstance() {
         if (instance == null){
@@ -180,5 +200,9 @@ private static Connector instance = null;
 
     public NodeInfoList getIps() {
         return nodeInfoList;
+    }
+
+    public void setNodeInfoList(NodeInfoList nodeInfoList){
+        this.nodeInfoList = nodeInfoList;
     }
 }

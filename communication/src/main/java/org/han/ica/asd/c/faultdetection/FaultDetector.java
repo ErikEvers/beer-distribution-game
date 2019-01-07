@@ -106,4 +106,5 @@ public class FaultDetector {
     public void setObservers(List<IConnectorObserver> observers) {
         this.observers = observers;
     }
+
 }

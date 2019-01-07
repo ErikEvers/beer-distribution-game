@@ -50,12 +50,8 @@ public class FaultDetectorLeader extends TimerTask {
 
     private List<IConnectorObserver> observers;
 
-    FaultDetectorLeader() {
-        faultHandlerLeader.setNodeInfoList(nodeInfoList);
-
-        faultHandlerLeader.setObservers(observers);
-
-        failLog.setNodeInfoList(nodeInfoList);
+    public FaultDetectorLeader() {
+        //for inject purposes
     }
 
     /**
@@ -252,5 +248,8 @@ public class FaultDetectorLeader extends TimerTask {
 
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
+        failLog.setNodeInfoList(nodeInfoList);
     }
+
+
 }

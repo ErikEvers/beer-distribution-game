@@ -16,6 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 public class TestFailLog {
@@ -30,7 +31,8 @@ public class TestFailLog {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        failLog = new FailLog(nodeInfoList);
+        failLog = new FailLog();
+        failLog.setNodeInfoList(nodeInfoList);
         beginHashMap = failLog.getFailLogHashMap();
     }
 
