@@ -75,29 +75,28 @@ public class RoundDAO {
 	public Round getRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		Round round = null;
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUND)) {
 
 				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
 
-					try (ResultSet rs = pstmt.executeQuery()) {
-						round = new Round();
-						round.setRoundId(rs.getInt("RoundId"));
-						round.setFacilityOrders(getFacilityOrdersInRound(roundId));
-						round.setFacilityTurnDelivers(getFacilityDeliversInRound(roundId));
-						round.setFacilityTurns(getFacilitiesInRound(roundId));
-					}
-
+				try (ResultSet rs = pstmt.executeQuery()) {
+					round = new Round();
+					round.setRoundId(rs.getInt("RoundId"));
+					round.setFacilityOrders(getFacilityOrdersInRound(roundId));
+					round.setFacilityTurnDelivers(getFacilityDeliversInRound(roundId));
+					round.setFacilityTurns(getFacilitiesInRound(roundId));
 				}
+
 				conn.commit();
+
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
-			databaseConnection.rollBackTransaction(conn);
 		}
 
 		return round;
@@ -106,24 +105,24 @@ public class RoundDAO {
 	public List<FacilityTurnOrder> getFacilityOrdersInRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		List<FacilityTurnOrder> orders = new ArrayList<>();
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_ORDERS)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_ORDERS)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
 
-					try (ResultSet rs = pstmt.executeQuery()) {
-						orders.add(new FacilityTurnOrder(rs.getInt("FacilityId"), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
+				try (ResultSet rs = pstmt.executeQuery()) {
+					orders.add(new FacilityTurnOrder(rs.getInt("FacilityId"), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
 
-					}
 				}
+
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 
 		return orders;
@@ -132,24 +131,24 @@ public class RoundDAO {
 	public List<FacilityTurnDeliver> getFacilityDeliversInRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		List<FacilityTurnDeliver> delivers = new ArrayList<>();
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_DELIVERS)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_DELIVERS)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
 
-					try (ResultSet rs = pstmt.executeQuery()) {
-						delivers.add(new FacilityTurnDeliver(rs.getInt("FacilityId"), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
+				try (ResultSet rs = pstmt.executeQuery()) {
+					delivers.add(new FacilityTurnDeliver(rs.getInt("FacilityId"), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
 
-					}
 				}
+
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 
 		return delivers;
@@ -158,24 +157,24 @@ public class RoundDAO {
 	public List<FacilityTurn> getFacilitiesInRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		List<FacilityTurn> facilities = new ArrayList<>();
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITIES)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITIES)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
 
-					try (ResultSet rs = pstmt.executeQuery()) {
-						facilities.add(new FacilityTurn(rs.getInt("FacilityId"), rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
+				try (ResultSet rs = pstmt.executeQuery()) {
+					facilities.add(new FacilityTurn(rs.getInt("FacilityId"), rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
 
-					}
 				}
+
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 
 		return facilities;
@@ -183,101 +182,97 @@ public class RoundDAO {
 
 	public void createFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder) {
 		Connection conn = databaseConnection.connect();
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYORDER)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYORDER)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityTurnOrder.getFacilityId());
-					pstmt.setInt(4, facilityTurnOrder.getFacilityIdOrderTo());
-					pstmt.setInt(5, facilityTurnOrder.getOrderAmount());
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
+				pstmt.setInt(3, facilityTurnOrder.getFacilityId());
+				pstmt.setInt(4, facilityTurnOrder.getFacilityIdOrderTo());
+				pstmt.setInt(5, facilityTurnOrder.getOrderAmount());
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
 	public void createFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
 		Connection conn = databaseConnection.connect();
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYDELIVER)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYDELIVER)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityTurnDeliver.getFacilityId());
-					pstmt.setInt(4, facilityTurnDeliver.getFacilityIdDeliverTo());
-					pstmt.setInt(5, facilityTurnDeliver.getDeliverAmount());
-					pstmt.setInt(6, facilityTurnDeliver.getOpenOrderAmount());
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
+				pstmt.setInt(3, facilityTurnDeliver.getFacilityId());
+				pstmt.setInt(4, facilityTurnDeliver.getFacilityIdDeliverTo());
+				pstmt.setInt(5, facilityTurnDeliver.getDeliverAmount());
+				pstmt.setInt(6, facilityTurnDeliver.getOpenOrderAmount());
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
 	public void createFacilityTurn(int roundId, FacilityTurn facilityTurn) {
 		Connection conn = databaseConnection.connect();
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTURN)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTURN)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityTurn.getFacilityId());
-					pstmt.setInt(4, facilityTurn.getStock());
-					pstmt.setInt(5, facilityTurn.getBackorders());
-					pstmt.setInt(6, facilityTurn.getRemainingBudget());
-					pstmt.setBoolean(7, facilityTurn.isBankrupt());
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
+				pstmt.setInt(3, facilityTurn.getFacilityId());
+				pstmt.setInt(4, facilityTurn.getStock());
+				pstmt.setInt(5, facilityTurn.getBackorders());
+				pstmt.setInt(6, facilityTurn.getRemainingBudget());
+				pstmt.setBoolean(7, facilityTurn.isBankrupt());
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
 	public List<Round> getRounds() {
 		Connection conn = databaseConnection.connect();
 		List<Round> rounds = new ArrayList<>();
-		Round round = null;
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUNDS)) {
-					conn.setAutoCommit(false);
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					try (ResultSet rs = pstmt.executeQuery()) {
-						if(!rs.isClosed()) {
-							round = new Round();
-							round.setRoundId(rs.getInt("RoundId"));
-							round.setFacilityOrders(getFacilityOrdersInRound(round.getRoundId()));
-							round.setFacilityTurnDelivers(getFacilityDeliversInRound(round.getRoundId()));
-							round.setFacilityTurns(getFacilitiesInRound(round.getRoundId()));
-							rounds.add(round);
-						}
+		Round round;
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_ROUNDS)) {
+				conn.setAutoCommit(false);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				try (ResultSet rs = pstmt.executeQuery()) {
+					if(!rs.isClosed()) {
+						round = new Round();
+						round.setRoundId(rs.getInt("RoundId"));
+						round.setFacilityOrders(getFacilityOrdersInRound(round.getRoundId()));
+						round.setFacilityTurnDelivers(getFacilityDeliversInRound(round.getRoundId()));
+						round.setFacilityTurns(getFacilitiesInRound(round.getRoundId()));
+						rounds.add(round);
 					}
-
 				}
 				conn.commit();
+
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 
 		return rounds;
@@ -308,21 +303,20 @@ public class RoundDAO {
 	 * @param sqlStatement The statement which needs to be executed
 	 */
 	private void executePreparedStatement(int roundId, Connection conn, String sqlStatement) {
-		try {
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(sqlStatement)) {
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(sqlStatement)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 }

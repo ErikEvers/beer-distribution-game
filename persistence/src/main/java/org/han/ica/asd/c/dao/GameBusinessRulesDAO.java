@@ -67,9 +67,7 @@ public class GameBusinessRulesDAO {
                     pstmt.executeUpdate();
 										conn.commit();
 
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                } catch (SQLException e) {
+                } catch (GameIdNotSetException | SQLException e) {
 									LOGGER.log(Level.SEVERE, e.toString(), e);
 									databaseConnection.rollBackTransaction(conn);
 								}
@@ -100,9 +98,7 @@ public class GameBusinessRulesDAO {
 								}
 						}
 						conn.commit();
-				} catch (GameIdNotSetException e) {
-						LOGGER.log(Level.SEVERE, e.toString(), e);
-				} catch (SQLException e) {
+				} catch (GameIdNotSetException | SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
 					databaseConnection.rollBackTransaction(conn);
 				}
@@ -135,9 +131,10 @@ public class GameBusinessRulesDAO {
 					if(!rs.isClosed())
 						gameAST = rs.getString("GameAST");
 				}
-
+				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 
 		}
@@ -168,9 +165,7 @@ public class GameBusinessRulesDAO {
 				pstmt.executeUpdate();
 				conn.commit();
 
-			} catch (GameIdNotSetException e) {
-				LOGGER.log(Level.SEVERE, e.toString(), e);
-			} catch (SQLException e) {
+			} catch (GameIdNotSetException | SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
 			}

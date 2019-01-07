@@ -85,8 +85,10 @@ public class ConfigurationDAO {
 				while (rs.next()) {
 					configurations.add(createConfigurationObject(rs));
 				}
+				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 		return configurations;
@@ -106,8 +108,10 @@ public class ConfigurationDAO {
 					rs.next();
 					configuration = createConfigurationObject(rs);
 				}
+				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 		return configuration;
@@ -151,6 +155,7 @@ public class ConfigurationDAO {
 				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE,e.toString(),e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}
@@ -169,6 +174,7 @@ public class ConfigurationDAO {
 				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE,e.toString(),e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}

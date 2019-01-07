@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,15 +17,17 @@ public class Configuration implements IDomainModel{
     private boolean continuePlayingWhenBankrupt;
     private boolean insightFacilities;
     private List<Facility> facilities;
-    private Map<Facility,Facility> facilitiesLinkedTo;
+    private Map<Facility, List<Facility>> facilitiesLinkedTo;
 
     public Configuration(){
         //Empty constructor for GUICE
+        this.facilities = new ArrayList<>();
+        this.facilitiesLinkedTo = new HashMap<>();
     }
 
     public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
                          int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
-                         Map<Facility,Facility> facilitiesLinkedTo, List<FacilityType> facilityTypes) //NOSONAR
+                         Map<Facility, List<Facility>> facilitiesLinkedTo, List<FacilityType> facilityTypes) //NOSONAR
     {
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
@@ -132,11 +136,11 @@ public class Configuration implements IDomainModel{
         this.facilities = facilities;
     }
 
-    public Map<Facility,Facility> getFacilitiesLinkedTo() {
+    public Map<Facility, List<Facility>> getFacilitiesLinkedTo() {
         return facilitiesLinkedTo;
     }
 
-    public void setFacilitiesLinkedTo(Map<Facility,Facility> facilitiesLinkedTo) {
+    public void setFacilitiesLinkedTo(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 }
