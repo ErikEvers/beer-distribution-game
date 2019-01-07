@@ -1,8 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.ast.action;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public enum FacilityType {
     FACTORY("factory", 0),
     DISTRIBUTOR("distributor", 1),
