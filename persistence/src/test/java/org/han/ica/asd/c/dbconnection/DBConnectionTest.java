@@ -2,6 +2,10 @@ package org.han.ica.asd.c.dbconnection;
 
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.UserPrincipal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -70,8 +74,8 @@ public class DBConnectionTest implements IDatabaseConnection {
 	}
 
 	public void cleanup() {
-		File file = new File("src" + File.separator + "test" + File.separator + "resources" + File.separator + DATABASENAME);
-		file.delete();
+        runSQLScript("cleanup.sql");
+        runSQLScript("ddl.sql");
 	}
 
 }
