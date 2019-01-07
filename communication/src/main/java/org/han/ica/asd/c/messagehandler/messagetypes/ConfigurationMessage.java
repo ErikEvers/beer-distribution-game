@@ -13,4 +13,10 @@ public class ConfigurationMessage extends TransactionMessage {
     public Configuration getConfiguration() {
         return configuration;
     }
+
+    @Override
+    public void createResponseMessage() {
+        isSuccess = true;
+        configuration = null;
+    }
 }
