@@ -55,6 +55,9 @@ public class GameMessageReceiver {
                 case 4:
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
+                case 5:
+                    ConfigurationMessage configurationMessage = (ConfigurationMessage) gameMessage;
+                    return handleConfigurationMessage(configurationMessage);
                 default:
                     break;
             }
