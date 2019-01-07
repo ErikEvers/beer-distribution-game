@@ -37,7 +37,6 @@ public class Persistence implements IPersistence {
 	public void saveRoundData(RoundDB rounddata)
 	{
 		roundDAO.createRound(rounddata.getRoundId());
-		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
 	}
 
 	public void saveRoundData(Round rounddata) {
@@ -58,12 +57,12 @@ public class Persistence implements IPersistence {
 
 	public BeerGame getGameLog(String gameId)
 	{
-		return null;//((BeergameDAO)beergameDAO).getGameLog(gameId);
+		return null;
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)
 	{
-		//gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
+		// empty for now
 	}
 
 	public Round fetchTurnData(Round round, Facility facility)
