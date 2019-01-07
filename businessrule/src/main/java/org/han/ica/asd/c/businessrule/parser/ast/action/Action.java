@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast.action;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +61,7 @@ public class Action extends ASTNode {
         if(person != null){
             list.add(person);
         }
-        
+
         if(comparisonStatement != null){
             list.add(comparisonStatement);
         }
@@ -98,12 +99,40 @@ public class Action extends ASTNode {
         return Objects.hash(actionName, operation, person, comparisonStatement);
     }
 
+    /**
+     * Get type of action as String
+     *
+     * @return Returns a String that determines te type of the action.
+     */
+    public String getType() {
+        return this.actionName.getAction();
+    }
+
+    /**
+     * Gets the amount of the Action
+     *
+     * @return Returns the amount
+     */
+    public int getAmount() {
+        return ((Value) operation).getIntegerValue();
+    }
+
+    /**
+     * Gets the id of the facility of the Action
+     *
+     * @return Returns the facility id of the receiving end
+     */
+    public int getFacilityId() {
+        // TO-DO: 12/20/2018 Write the functionality to retrieve the facility id from the business rule AST
+        return 0;
+    }
+
+    /***
+     * gets the right child of an action
+     * @return operation
+     */
     @Override
     public ASTNode getRightChild() {
         return operation;
-    }
-
-    public void leesDitNietSven(){
-        System.out.println("omg sven waarom lees je dit");
     }
 }

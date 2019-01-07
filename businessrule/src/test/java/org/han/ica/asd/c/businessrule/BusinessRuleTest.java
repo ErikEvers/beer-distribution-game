@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
@@ -8,12 +7,10 @@ import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
-import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -113,17 +110,17 @@ class BusinessRuleTest {
     }
 
     @BeforeEach
-    void setupTestReplaceBusinessRuleWithValue(){
+    void setupTestReplaceBusinessRuleWithValue() {
         round = Mockito.mock(Round.class);
         facility = Mockito.mock(Facility.class);
         FacilityType facilityType = Mockito.mock(FacilityType.class);
         facility.setFacilityType(facilityType);
         facility.setFacilityId(facilityId);
 
-        Map<Facility,Integer> map = new HashMap<>();
-        map.put(facility,10);
-        Map<Facility, Map<Facility,Integer> > mapInMap = new HashMap<>();
-        mapInMap.put(facility,map);
+        Map<Facility, Integer> map = new HashMap<>();
+        map.put(facility, 10);
+        Map<Facility, Map<Facility, Integer>> mapInMap = new HashMap<>();
+        mapInMap.put(facility, map);
 
         when(facility.getFacilityType()).thenReturn(facilityType);
         when(facility.getFacilityId()).thenReturn(facilityId);
@@ -135,27 +132,28 @@ class BusinessRuleTest {
         when(round.getTurnOrder()).thenReturn(mapInMap);
         when(round.getTurnReceived()).thenReturn(mapInMap);
     }
+
     @Test
     void testBusinessrule_getReplacementValue_equals_10() {
         //BR(CS(C(CV(V(inventory))ComO(==)CV(V(inventory)))BoolO(==)CS(C(CV(V(round))ComO(!=)CV(V(3)))))
-	    BusinessRule businessRule = (BusinessRule) new BusinessRule()
-			    .addChild(new ComparisonStatement()
+        BusinessRule businessRule = (BusinessRule) new BusinessRule()
+                .addChild(new ComparisonStatement()
                         .addChild(new ComparisonStatement()
-                            .addChild(new Comparison()
-							    .addChild(new ComparisonValue().addChild(new Value().addValue("incoming order").addValue("factory")))
-							    .addChild(new ComparisonOperator("equal"))
-							    .addChild(new ComparisonValue().addChild(new Value().addValue("back orders").addValue("factory")))))
-                        .addChild(new BooleanOperator())
-                            .addChild(new ComparisonStatement()
                                 .addChild(new Comparison()
-                                    .addChild(new ComparisonValue().addChild(new Value().addValue("budget")))
-                                    .addChild(new ComparisonOperator("not equal"))
-                                    .addChild(new ComparisonValue().addChild(new Value().addValue("ordered"))))))
-			    .addChild(new Action()
-					    .addChild(new ActionReference("order"))
-					    .addChild(new DivideOperation()
-							    .addChild(new Value().addValue("40%").addValue("inventory"))
-							    .addChild(new Value().addValue("20%").addValue("outgoing goods"))));
+                                        .addChild(new ComparisonValue().addChild(new Value().addValue("incoming order").addValue("factory")))
+                                        .addChild(new ComparisonOperator("equal"))
+                                        .addChild(new ComparisonValue().addChild(new Value().addValue("back orders").addValue("factory")))))
+                        .addChild(new BooleanOperator())
+                        .addChild(new ComparisonStatement()
+                                .addChild(new Comparison()
+                                        .addChild(new ComparisonValue().addChild(new Value().addValue("budget")))
+                                        .addChild(new ComparisonOperator("not equal"))
+                                        .addChild(new ComparisonValue().addChild(new Value().addValue("ordered"))))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new DivideOperation()
+                                .addChild(new Value().addValue("40%").addValue("inventory"))
+                                .addChild(new Value().addValue("20%").addValue("outgoing goods"))));
 
         String expected = "BR(CS(CS(C(CV(V(10))ComO(>=)CV(V(10))))BoolO(null)CS(C(CV(V(10))ComO(!=)CV(V(10)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
 
@@ -166,16 +164,16 @@ class BusinessRuleTest {
     }
 
     @Test
-    void testGameValue_ORDERED_contains_ordered(){
+    void testGameValue_ORDERED_contains_ordered() {
         assertTrue(GameValue.ORDERED.contains("ordered"));
     }
 
 
     @Test
-    void testGame_ORDERED_getValue_Equals_ordered(){
+    void testGame_ORDERED_getValue_Equals_ordered() {
         String[] actual = GameValue.ORDERED.getValue();
-        String[] expected={"ordered"};
-        assertEquals(expected,actual);
+        String[] expected = {"ordered"};
+        assertEquals(expected, actual);
     }
 
 }

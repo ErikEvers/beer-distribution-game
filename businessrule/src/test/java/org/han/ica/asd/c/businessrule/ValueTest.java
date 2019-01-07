@@ -56,7 +56,7 @@ public class ValueTest {
         testValue.addValue("smallest");
 
         String exp = "lowest";
-        String cur = testValue.getValue();
+        String cur = testValue.getValue().get(0);
 
         assertEquals(exp,cur);
     }
@@ -67,7 +67,7 @@ public class ValueTest {
         testValue.addValue("biggest");
 
         String exp = "highest";
-        String cur = testValue.getValue();
+        String cur = testValue.getValue().get(0);
 
         assertEquals(exp,cur);
     }

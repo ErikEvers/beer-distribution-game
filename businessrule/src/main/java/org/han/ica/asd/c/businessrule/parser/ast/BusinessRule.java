@@ -319,6 +319,7 @@ public class BusinessRule extends ASTNode {
         }
     }
 
+
     /**
      * States if the business rule is triggered
      *
