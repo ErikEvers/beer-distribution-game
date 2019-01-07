@@ -2,7 +2,7 @@ package org.han.ica.asd.c.messagehandler.messagetypes;
 
 public abstract class TransactionMessage extends GameMessage {
     private int phase;
-    protected boolean isSuccess;
+    private boolean isSuccess;
 
     public TransactionMessage(int messageType) {
         super(messageType);
@@ -36,5 +36,7 @@ public abstract class TransactionMessage extends GameMessage {
         return phase;
     }
 
-    public abstract void createResponseMessage();
+    public void createResponseMessage() {
+        isSuccess = true;
+    }
 }
