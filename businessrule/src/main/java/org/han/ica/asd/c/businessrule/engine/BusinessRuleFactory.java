@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.businessrule.engine;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.parser.ast.Action;
-import org.han.ica.asd.c.businessrule.parser.ast.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
