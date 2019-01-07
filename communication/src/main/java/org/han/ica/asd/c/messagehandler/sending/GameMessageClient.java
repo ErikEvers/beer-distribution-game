@@ -33,7 +33,6 @@ public class GameMessageClient {
     public boolean sendTurnModel(String ip, Round turn) {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
         int nFailedAttempts = 0;
-        Exception exception;
 
         while (nFailedAttempts < 3) {
             try {
@@ -45,15 +44,12 @@ public class GameMessageClient {
             } catch (IOException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    exception = new IOException("Something went wrong when trying to connect");
                     logger.log(Level.SEVERE, "Something went wrong when trying to connect");
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    exception = new ClassNotFoundException("Sommething went wrong when reading the object");
                     logger.log(Level.SEVERE, "Something went wrong when reading the object");
-
                 }
             }
         }

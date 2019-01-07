@@ -18,8 +18,8 @@ public class FaultDetectorPlayer extends TimerTask {
     @Inject
     private static Logger logger;
 
-    private final long FIVEMINUTES = 300000;
-    
+    private static final long FIVE_MINUTES = 300000;
+
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
 
     private long lastReceived;
@@ -81,7 +81,7 @@ public class FaultDetectorPlayer extends TimerTask {
         long current = System.currentTimeMillis();
         long timeDifference = current - lastTime;
 
-        return timeDifference < FIVEMINUTES;
+        return timeDifference < FIVE_MINUTES;
     }
 
     private void askOtherPlayers() {

@@ -42,7 +42,7 @@ public class FaultDetectorLeader extends TimerTask {
     private FailLog failLog;
 
     @Inject
-    private static Logger logger;
+    private static Logger logger;//NOSONAR
 
     private List<String> ips;
 
