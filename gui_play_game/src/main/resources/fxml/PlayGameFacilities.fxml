@@ -25,7 +25,7 @@
             </rowConstraints>
             <children>
                 <!--The facility name can be on of the next texts: 'Regional warehouse', 'Wholesaler' or 'retailer'-->
-                <Label alignment="BOTTOM_LEFT" text="[Facilityname]" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM" fx:id="lblFacilities">
+                <Label fx:id="lblFacilities" alignment="BOTTOM_LEFT" text="[Facilityname]" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" />
                     </GridPane.margin>
@@ -46,9 +46,9 @@
                     </rowConstraints>
                     <children>
 
-                        <Button defaultButton="true" mnemonicParsing="false" text="Send order" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <Button fx:id="btnSendTurn" defaultButton="true" mnemonicParsing="false" onAction="#sendOrder" text="Send order" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                         <TextField editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                        <TextField layoutX="39.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <TextField fx:id="txtOutgoingOrder" layoutX="39.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                         <Label text="Incoming order:" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets bottom="60.0" left="30.0" />

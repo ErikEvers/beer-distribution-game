@@ -40,6 +40,6 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public String getFacilityName() {
-        return player.getFacilityId().getFacilityType().getFacilityName();
+        return "facilityName";
     }
 }
