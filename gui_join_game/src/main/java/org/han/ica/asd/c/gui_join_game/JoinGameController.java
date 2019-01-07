@@ -27,6 +27,7 @@ public class JoinGameController {
     private IGUIHandler mainMenu;
 
     @Inject
+    @Named("Connector")
     private IConnecterForSetup iConnectorForSetup;
 
     private ObservableList<String> items = FXCollections.observableArrayList();
@@ -38,7 +39,7 @@ public class JoinGameController {
 
     public void handleJoinGameButtonClick() {
         //TODO Join room on IConnectorForSetup. If logged in succesful then set Room
-        RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),"","");
+        RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),"145.74.199.201","");
         if (result != null) {
             gameRoom.setData(new Object[]{result});
             gameRoom.setupScreen();
