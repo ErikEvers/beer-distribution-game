@@ -94,8 +94,6 @@ private static Connector instance = null;
             }
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage(), e);
-        } catch (RoomException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
         return null;
     }
