@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
+
+import org.han.ica.asd.c.messagehandler.MessageProcessor;
+import org.han.ica.asd.c.messagehandler.messagetypes.*;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
@@ -20,9 +23,12 @@ public class GameMessageReceiver {
 
     private ArrayList<IConnectorObserver> gameMessageObservers;
 
+    private MessageProcessor messageProcessor;
+
     public GameMessageReceiver(List<IConnectorObserver> gameMessageObservers) {
         this.gameMessageObservers = (ArrayList<IConnectorObserver>) gameMessageObservers;
         gameMessageFilterer = new GameMessageFilterer();
+        messageProcessor = new MessageProcessor();
     }
 
     /**
@@ -62,6 +68,10 @@ public class GameMessageReceiver {
         }
     }
 
+    /**
+     * Executes a commit
+     * @param roundModelMessage
+     */
     private void doCommit(RoundModelMessage roundModelMessage) {
         //in theory, a bug can still occur where we receive a commit message with a different content.
         if (toBecommittedRound != null) {
@@ -79,7 +89,7 @@ public class GameMessageReceiver {
      * @param gameMessage
      * @return ResponseMessage
      */
-    public ResponseMessage gameMessageReceived(GameMessage gameMessage) {
+    public Object gameMessageReceived(GameMessage gameMessage) {
 
         if (gameMessageFilterer.isUnique(gameMessage)) {
             switch (gameMessage.getMessageType()) {
@@ -94,11 +104,26 @@ public class GameMessageReceiver {
                 case 3:
                     ElectionMessage electionMessage = (ElectionMessage) gameMessage;
                     return new ResponseMessage(handleElectionMessage(electionMessage));
+                case 4:
+                    WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
+                    return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
                 default:
                     break;
             }
         }
         return new ResponseMessage(true);
+    }
+
+    /**
+     * Calls the whoIsTheLeaderMessageReceived method on the 'MessageProcessor".
+     * @author Oscar
+     * @param whoIsTheLeaderMessage The 'WhoIsTheLeaderMessage' that was received.
+     * @return whoIsTheLeaderMessage with the response filled in. This is either the response that was excepted or an exception.
+     * @see WhoIsTheLeaderMessage
+     * @see MessageProcessor
+     */
+    private WhoIsTheLeaderMessage handleWhoIsTheLeaderMessage(WhoIsTheLeaderMessage whoIsTheLeaderMessage) {
+        return messageProcessor.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
     }
 
     /**
