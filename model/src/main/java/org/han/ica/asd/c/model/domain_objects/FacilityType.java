@@ -8,9 +8,13 @@ public class FacilityType implements IDomainModel{
     private int openOrderCosts;
     private int startingBudget;
     private int startingOrder;
+    private int startingStock;
 
-    public FacilityType(String facilityName, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, //NOSONAR
-                        int openOrderCosts, int startingBudget, int startingOrder) { //NOSONAR
+    public FacilityType(){
+        //Empty constructor for Guice
+    }
+
+    public FacilityType(String facilityName, int valueIncomingGoods, int valueOutgoingGoods, int stockHoldingCosts, int openOrderCosts, int startingBudget, int startingOrder, int startingStock) {
         this.facilityName = facilityName;
         this.valueIncomingGoods = valueIncomingGoods;
         this.valueOutgoingGoods = valueOutgoingGoods;
@@ -18,6 +22,7 @@ public class FacilityType implements IDomainModel{
         this.openOrderCosts = openOrderCosts;
         this.startingBudget = startingBudget;
         this.startingOrder = startingOrder;
+        this.startingStock = startingStock;
     }
 
     public String getFacilityName() {
@@ -74,5 +79,13 @@ public class FacilityType implements IDomainModel{
 
     public void setStartingOrder(int startingOrder) {
         this.startingOrder = startingOrder;
+    }
+
+    public int getStartingStock() {
+        return startingStock;
+    }
+
+    public void setStartingStock(int startingStock) {
+        this.startingStock = startingStock;
     }
 }

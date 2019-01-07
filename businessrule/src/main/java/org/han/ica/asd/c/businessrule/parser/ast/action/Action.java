@@ -1,6 +1,9 @@
-package org.han.ica.asd.c.businessrule.parser.ast;
+package org.han.ica.asd.c.businessrule.parser.ast.action;
 
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +15,8 @@ public class Action extends ASTNode {
 
     private ActionReference actionName;
     private OperationValue operation;
+    private Person person;
+    private ComparisonStatement comparisonStatement;
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -23,8 +28,12 @@ public class Action extends ASTNode {
     public ASTNode addChild(ASTNode child) {
         if (child instanceof ActionReference) {
             this.actionName = (ActionReference) child;
-        } else {
+        } else if (child instanceof OperationValue){
             this.operation = (OperationValue) child;
+        } else if (child instanceof ComparisonStatement) {
+            this.comparisonStatement = (ComparisonStatement) child;
+        } else {
+            this.person = (Person) child;
         }
         return this;
     }
@@ -48,6 +57,14 @@ public class Action extends ASTNode {
     public List<ASTNode> getChildren() {
         List<ASTNode> list = new ArrayList<>();
         Collections.addAll(list, actionName, operation);
+
+        if(person != null){
+            list.add(person);
+        }
+        
+        if(comparisonStatement != null){
+            list.add(comparisonStatement);
+        }
         return list;
     }
 
@@ -67,7 +84,9 @@ public class Action extends ASTNode {
             return false;
         Action action = (Action) o;
         return Objects.equals(actionName, action.actionName) &&
-                Objects.equals(operation, action.operation);
+                Objects.equals(operation, action.operation) &&
+                Objects.equals(person, action.person) &&
+                Objects.equals(comparisonStatement, action.comparisonStatement);
     }
 
     /**
@@ -77,6 +96,34 @@ public class Action extends ASTNode {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(actionName, operation);
+        return Objects.hash(actionName, operation, person, comparisonStatement);
+    }
+
+    /**
+     * Get type of action as String
+     *
+     * @return Returns a String that determines te type of the action.
+     */
+    public String getType() {
+        return this.actionName.getAction();
+    }
+
+    /**
+     * Gets the amount of the Action
+     *
+     * @return Returns the amount
+     */
+    public int getAmount() {
+        return ((Value) operation).getIntegerValue();
+    }
+
+    /**
+     * Gets the id of the facility of the Action
+     *
+     * @return Returns the facility id of the receiving end
+     */
+    public int getFacilityId() {
+        // TO-DO: 12/20/2018 Write the functionality to retrieve the facility id from the business rule AST
+        return 0;
     }
 }
