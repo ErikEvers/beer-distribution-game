@@ -98,10 +98,8 @@ public class Agent extends GameAgent implements IParticipant {
 	 */
 	private Facility resolveHigherFacilityId(int targetFacilityId) {
 		for(Map.Entry<Facility, List<Facility>> link: configuration.getFacilitiesLinkedTo().entrySet()) {
-			if(link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId())) {
-				if(link.getKey().getFacilityId() == targetFacilityId) {
-					return link.getKey();
-				}
+			if(link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
+				return link.getKey();
 			}
 		}
 		return null;
