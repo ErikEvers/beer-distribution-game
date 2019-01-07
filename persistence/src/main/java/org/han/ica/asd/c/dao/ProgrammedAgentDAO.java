@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
+public class ProgrammedAgentDAO {
     private static final String CREATE_PROGRAMMEDAGENT = "INSERT INTO ProgrammedAgent VALUES (?)";
     private static final String UPDATE_PROGRAMMEDAGENT = "UPDATE ProgrammedAgent SET ProgrammedAgentName = ? WHERE ProgrammedAgentName = ?";
     private static final String DELETE_PROGRAMMEDAGENT = "DELETE FROM ProgrammedAgent WHERE ProgrammedAgentName = ?";
@@ -72,22 +72,20 @@ public class ProgrammedAgentDAO implements IBeerDisitributionGameDAO {
      */
     public List<ProgrammedAgentDB> readAllProgrammedAgents () {
         List<ProgrammedAgentDB> programmedAgents = new ArrayList<>();
-        try {
-            Connection conn = databaseConnection.connect();
+        Connection conn = databaseConnection.connect();
             if (conn == null) {
                 return programmedAgents;
             }
-
-            conn.setAutoCommit(false);
             try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
+                conn.setAutoCommit(false);
                 while (rs.next()) {
                     programmedAgents.add(new ProgrammedAgentDB(rs.getString("ProgrammedAgentName")));
                 }
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
         return programmedAgents;
     }
 

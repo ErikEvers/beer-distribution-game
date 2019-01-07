@@ -1,30 +1,27 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.dao.ConfigurationDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ConfigurationDB;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.logging.Logger;
-
-
 class ConfigurationDAOIntegrationTest {
-	private static final Logger LOGGER = Logger.getLogger(BeerGameDAOIntegrationTest.class.getName());
-	private static final ConfigurationDB CONFIGURATION = new ConfigurationDB("BeerGameZutphen13_12_2018",40,1,1,1,1,1,99,false,false);
-	private static final ConfigurationDB CONFIGURATION2 = new ConfigurationDB("BeerGameArnhem13_12_2018",40,1,1,1,1,1,99,false,false);
-	private static final ConfigurationDB CONFIGURATION3 = new ConfigurationDB("BeerGameZutphen13_12_2018",50,51,51,51,51,51,599,true,true);
+	private static final Configuration CONFIGURATION = new Configuration(40,1,1,1,1,1,99,false,false);
+	private static final Configuration CONFIGURATION2 = new Configuration(40,1,1,1,1,1,99,false,false);
+	private static final Configuration CONFIGURATION3 = new Configuration(50,51,51,51,51,51,599,true,true);
 
 	private ConfigurationDAO configurationDAO;
+	private BeergameDAO beergameDAO;
 
 	@BeforeEach
 	public void setUp() {
+		DBConnectionTest.getInstance().cleanup();
 		DBConnectionTest.getInstance().createNewDatabase();
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
@@ -33,6 +30,8 @@ class ConfigurationDAOIntegrationTest {
 			}
 		});
 		configurationDAO = injector.getInstance(ConfigurationDAO.class);
+		beergameDAO = injector.getInstance(BeergameDAO.class);
+		DaoConfig.setCurrentGameId("BeerGameZutphen");
 	}
 
 
@@ -44,25 +43,27 @@ class ConfigurationDAOIntegrationTest {
 
 	@Test
 	void createConfigurationTest() {
+		beergameDAO.createBeergame(DaoConfig.getCurrentGameId());
 		configurationDAO.createConfiguration(CONFIGURATION);
-		ConfigurationDB configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
+		Configuration configuration = configurationDAO.readConfiguration();
 
 		//Test if object values are the equal
-		Assert.assertEquals(CONFIGURATION.getGameId(),configurationDb.getGameId());
-		Assert.assertEquals(CONFIGURATION.getAmountOfRounds(),configurationDb.getAmountOfRounds());
-		Assert.assertEquals(CONFIGURATION.getMaximumOrderRetail(),configurationDb.getMaximumOrderRetail());
-		Assert.assertEquals(CONFIGURATION.getMinimalOrderRetail(),configurationDb.getMinimalOrderRetail());
-		Assert.assertEquals(CONFIGURATION.getAmountOfFactories(),configurationDb.getAmountOfFactories());
-		Assert.assertEquals(CONFIGURATION.getAmountOfDistributors(),configurationDb.getAmountOfDistributors());
-		Assert.assertEquals(CONFIGURATION.getAmountOfWholesales(),configurationDb.getAmountOfWholesales());
-		Assert.assertEquals(CONFIGURATION.getAmountOfRetailers(),configurationDb.getAmountOfRetailers());
-		Assert.assertEquals(CONFIGURATION.isContinuePlayingWhenBankrupt(),configurationDb.isContinuePlayingWhenBankrupt());
-		Assert.assertEquals(CONFIGURATION.isInsightFacilities(),configurationDb.isInsightFacilities());
+
+		Assert.assertEquals(CONFIGURATION.getAmountOfRounds(),configuration.getAmountOfRounds());
+		Assert.assertEquals(CONFIGURATION.getMaximumOrderRetail(),configuration.getMaximumOrderRetail());
+		Assert.assertEquals(CONFIGURATION.getMinimalOrderRetail(),configuration.getMinimalOrderRetail());
+		Assert.assertEquals(CONFIGURATION.getAmountOfFactories(),configuration.getAmountOfFactories());
+		Assert.assertEquals(CONFIGURATION.getAmountOfDistributors(),configuration.getAmountOfDistributors());
+		Assert.assertEquals(CONFIGURATION.getAmountOfWholesales(),configuration.getAmountOfWholesales());
+		Assert.assertEquals(CONFIGURATION.getAmountOfRetailers(),configuration.getAmountOfRetailers());
+		Assert.assertEquals(CONFIGURATION.isContinuePlayingWhenBankrupt(),configuration.isContinuePlayingWhenBankrupt());
+		Assert.assertEquals(CONFIGURATION.isInsightFacilities(),configuration.isInsightFacilities());
 	}
 
 	@Test
 	void readConfigurationsTest() {
 		configurationDAO.createConfiguration(CONFIGURATION);
+		DaoConfig.setCurrentGameId("BeerGameZutphen2");
 		configurationDAO.createConfiguration(CONFIGURATION2);
 		Assert.assertEquals(2,configurationDAO.readConfigurations().size());
 	}
@@ -72,13 +73,12 @@ class ConfigurationDAOIntegrationTest {
 		configurationDAO.createConfiguration(CONFIGURATION);
 		configurationDAO.updateConfigurations(CONFIGURATION3);
 
-		ConfigurationDB configurationDb = configurationDAO.readConfiguration("BeerGameZutphen13_12_2018");
+		Configuration configurationDb = configurationDAO.readConfiguration();
 
 		//Test if there an insert in not triggered instead of an update
 		Assert.assertEquals(1,configurationDAO.readConfigurations().size());
 
 		//Test if the DAO updated the data correctly
-		Assert.assertEquals(CONFIGURATION3.getGameId(),configurationDb.getGameId());
 		Assert.assertEquals(CONFIGURATION3.getAmountOfRounds(),configurationDb.getAmountOfRounds());
 		Assert.assertEquals(CONFIGURATION3.getMaximumOrderRetail(),configurationDb.getMaximumOrderRetail());
 		Assert.assertEquals(CONFIGURATION3.getMinimalOrderRetail(),configurationDb.getMinimalOrderRetail());
@@ -94,7 +94,7 @@ class ConfigurationDAOIntegrationTest {
 	@Test
 	void deleteConfigurationsTest() {
 		configurationDAO.createConfiguration(CONFIGURATION);
-		configurationDAO.deleteConfigurations("BeerGameZutphen13_12_2018");
+		configurationDAO.deleteConfigurations();
 		Assert.assertEquals(0,configurationDAO.readConfigurations().size());
 	}
 }

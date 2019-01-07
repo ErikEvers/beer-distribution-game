@@ -14,12 +14,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Agent extends GameAgent implements IParticipant {
+    private Configuration configuration;
+
     @Inject
     @Named("businessRules")
     private IBusinessRules businessRules;
 
     @Inject
-    @Named("persistance")
+    @Named("persistence")
     private IPersistence persistence;
 
     /**
@@ -28,9 +30,9 @@ public class Agent extends GameAgent implements IParticipant {
      * @param gameAgentName The name of the agent
      * @param facility      Which facility it's representing
      */
-    Agent(String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
+    Agent(Configuration configuration, String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
         super(gameAgentName, facility, gameBusinessRulesList);
-
+        this.configuration = configuration;
     }
 
     /**
@@ -43,30 +45,32 @@ public class Agent extends GameAgent implements IParticipant {
         Map<Facility, Integer>  targetOrderMap          = new HashMap<>();
         Map<Facility, Integer>  targetDeliverMap        = new HashMap<>();
         List<GameBusinessRules> triggeredBusinessRules  = new ArrayList<>();
-        List<Round>             triggeredRounds         = new ArrayList<>();
 
-        for (GameBusinessRules gameBusinessRules : gameBusinessRulesList) {
-            ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.gameBusinessRuleAST, round,getFacility().getFacilityId());
+        for (GameBusinessRules gameBusinessRules : this.getGameBusinessRules()) {
+            ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round);
             if(actionModel != null) {
-                Facility targetFacility = this.resolveFacilityId(actionModel.facilityId);
-                if(targetFacility != null) {
-                    if (targetOrderMap.isEmpty() && actionModel.isOrderType()) {
-                        targetOrderMap.put(targetFacility, actionModel.amount);
-                        triggeredBusinessRules.add(gameBusinessRules);
-                        triggeredRounds.add(round);
-                    } else if (targetDeliverMap.isEmpty() && actionModel.isDeliverType()) {
-                        targetDeliverMap.put(targetFacility, actionModel.amount);
-                        triggeredBusinessRules.add(gameBusinessRules);
-                        triggeredRounds.add(round);
-                    } else if (!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
-                        break;
-                    }
-                }
+								if (targetOrderMap.isEmpty() && actionModel.isOrderType()) {
+										Facility targetFacility = this.resolveLowerFacilityId(actionModel.facilityId);
+										if(targetFacility == null) {
+											break;
+										}
+										targetOrderMap.put(targetFacility, actionModel.amount);
+										triggeredBusinessRules.add(gameBusinessRules);
+								} else if (targetDeliverMap.isEmpty() && actionModel.isDeliverType()) {
+										Facility targetFacility = this.resolveHigherFacilityId(actionModel.facilityId);
+										if(targetFacility == null) {
+											break;
+										}
+										targetDeliverMap.put(targetFacility, actionModel.amount);
+										triggeredBusinessRules.add(gameBusinessRules);
+								} else if (!targetOrderMap.isEmpty() && !targetDeliverMap.isEmpty()) {
+										break;
+								}
             }
         }
 
         persistence.logUsedBusinessRuleToCreateOrder(
-            new GameBusinessRulesInFacilityTurn(triggeredRounds, triggeredBusinessRules));
+            new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
         return new GameRoundAction(targetOrderMap, targetDeliverMap);
     }
 
@@ -74,17 +78,34 @@ public class Agent extends GameAgent implements IParticipant {
      * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
      *
      * @param targetFacilityId  The identifying integer of the facility that needs to be resolved
-     * @return                  The facility that needs to be resolved. NULL when facility is not found.
+     * @return                  The facility below the current facility that needs to be resolved. NULL when facility is not found.
      */
-    private Facility resolveFacilityId(int targetFacilityId) {
-        for (FacilityLinkedTo link : facility.getFacilitiesLinkedTo()) {
-            Facility targetFacility = link.getFacilityDeliver();
-            if (targetFacilityId == targetFacility.getFacilityId()) {
-                return targetFacility;
+    private Facility resolveLowerFacilityId(int targetFacilityId) {
+				List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
+        for (Facility link : links) {
+            if (targetFacilityId == link.getFacilityId()) {
+                return link;
             }
         }
         return null;
     }
+
+	/**
+	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
+	 *
+	 * @param targetFacilityId  The identifying integer of the facility that needs to be resolved
+	 * @return                  The facility above the current facility that needs to be resolved. NULL when facility is not found.
+	 */
+	private Facility resolveHigherFacilityId(int targetFacilityId) {
+		for(Map.Entry<Facility, List<Facility>> link: configuration.getFacilitiesLinkedTo().entrySet()) {
+			if(link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId())) {
+				if(link.getKey().getFacilityId() == targetFacilityId) {
+					return link.getKey();
+				}
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public GameRoundAction executeTurn(Round round) {
@@ -93,6 +114,6 @@ public class Agent extends GameAgent implements IParticipant {
 
 	@Override
 	public Facility getParticipant() {
-		return facility;
+		return getFacility();
 	}
 }
