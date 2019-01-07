@@ -55,7 +55,7 @@ public class ProgrammedBusinessRulesDAO {
      * @param programmedAgentName The data required to delete all the ProgrammedBusinessRules from a specific ProgrammedAgent.
      */
     public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(String programmedAgentName) {
-        Connection conn = databaseConnection.connect();;
+        Connection conn = databaseConnection.connect();
         if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
                     conn.setAutoCommit(false);
@@ -89,8 +89,8 @@ public class ProgrammedBusinessRulesDAO {
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
-                        programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedAgentName"),
-                                rs.getString("ProgrammedBusinessRule")));
+                        programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedBusinessRule"),
+                                rs.getString("ProgrammedAST")));
                     }
                 }
                 conn.commit();
