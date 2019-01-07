@@ -29,7 +29,7 @@ public class RoomFinder implements IFinder{
         return rooms;
     }
 
-    public RoomModel createGameRoomModel(String roomName, String leaderIP, String password){
+    public RoomModel createGameRoomModel(String roomName, String leaderIP, String password) throws DiscoveryException{
         RoomModel roomModel = new RoomModel();
         try {
             createGameRoomOnline(roomName, leaderIP, password);
@@ -41,11 +41,11 @@ public class RoomFinder implements IFinder{
             return roomModel;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e.getMessage());
         }
-        return roomModel;
     }
 
-    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password){
+    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password) throws DiscoveryException {
         RoomModel roomModel = new RoomModel();
         try {
             Room created = getRoom(roomName);
@@ -56,21 +56,22 @@ public class RoomFinder implements IFinder{
             roomModel.setPassword(password);
             roomModel.setGameStarted(false);
             return roomModel;
-        } catch (DiscoveryException | RoomException e) {
+        } catch (DiscoveryException | RoomException e){
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e);
         }
-        return new RoomModel();
     }
 
-    public void startGameRoom(String roomName){
+    public void startGameRoom(String roomName) throws DiscoveryException {
         try {
             getRoom(roomName).closeGameAndStartGame();
         } catch (RoomException | DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e);
         }
     }
 
-    public RoomModel getRoom(RoomModel roomModel){
+    public RoomModel getRoom(RoomModel roomModel) throws DiscoveryException {
         RoomModel room = new RoomModel();
         try {
             Room onlineRoom = getRoom(roomModel.getRoomName());
@@ -81,19 +82,18 @@ public class RoomFinder implements IFinder{
             room.setGameStarted(false);
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e);
         }
         return room;
     }
 
     private Room getRoom(String roomName) throws DiscoveryException {
-        Room room = null;
         try {
-            room = new Room(roomName, service);
+            return new Room(roomName, service);
         } catch (RoomException e) {
             LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
-                throw new DiscoveryException(e);
+            throw new DiscoveryException(e);
         }
-        return room;
     }
 
     private Room createGameRoomOnline(String roomName, String ip, String password) throws DiscoveryException {
