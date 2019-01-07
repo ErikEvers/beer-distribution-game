@@ -137,16 +137,12 @@ public class GameMessageReceiver {
         //in theory, a bug can still occur where we receive a commit message with a different content.
         if (toBecommittedRound != null) {
             for (IConnectorObserver observer : gameMessageObservers) {
-                if (observer instanceof IRoundModelObserver) {
-                    if (transactionMessage.getMessageType() == 2) {
-                        RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
-                        ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
-                    }
-                } else if (observer instanceof IGameConfigurationObserver) {
-                    if (transactionMessage.getMessageType() == 5) {
-                        ConfigurationMessage configurationMessage = (ConfigurationMessage) transactionMessage;
-                        ((IGameConfigurationObserver) observer).gameConfigurationReceived(configurationMessage.getConfiguration());
-                    }
+                if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == 2) {
+                    RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
+                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
+                } else if (observer instanceof IGameConfigurationObserver && transactionMessage.getMessageType() == 5) {
+                    ConfigurationMessage configurationMessage = (ConfigurationMessage) transactionMessage;
+                    ((IGameConfigurationObserver) observer).gameConfigurationReceived(configurationMessage.getConfiguration());
                 }
             }
         }

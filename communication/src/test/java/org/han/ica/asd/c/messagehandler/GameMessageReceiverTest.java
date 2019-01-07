@@ -52,6 +52,7 @@ public class GameMessageReceiverTest {
         observers.add(roundModelObserver);
         observers.add(turnModelObserver);
         observers.add(electionObserver);
+        observers.add(gameConfigurationObserver);
 
         gameMessageReceiver = new GameMessageReceiver(observers);
     }
@@ -80,10 +81,14 @@ public class GameMessageReceiverTest {
     public void configurationReceived() {
         Configuration configuration = new Configuration();
 
-        ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
-        configurationMessage.setPhaseToCommit();
+        ConfigurationMessage configurationMessageStage = new ConfigurationMessage(configuration);
+        configurationMessageStage.setPhaseToStage();
 
-        gameMessageReceiver.gameMessageReceived(configurationMessage);
+        ConfigurationMessage configurationMessageCommit = new ConfigurationMessage(configuration);
+        configurationMessageCommit.setPhaseToCommit();
+
+        gameMessageReceiver.gameMessageReceived(configurationMessageStage);
+        gameMessageReceiver.gameMessageReceived(configurationMessageCommit);
 
         verify(gameConfigurationObserver).gameConfigurationReceived(configuration);
     }
