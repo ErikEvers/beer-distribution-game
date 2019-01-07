@@ -5,10 +5,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.han.ica.asd.c.dao.FacilityDAO;
-import org.han.ica.asd.c.model.dao_model.FacilityDB;
-import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.player.PlayerComponent;
+
 import java.util.ArrayList;
 
 /**
@@ -64,7 +64,7 @@ public class SeeOtherFacilitiesController {
     private void loadFacilityView() throws FacilityLoadingError {
         FacilityLinkedTo[] links = playerComponent.seeOtherFacilities();
 
-        ArrayList<FacilityDB> drawnFacilities = new ArrayList<>();
+        ArrayList<Facility> drawnFacilities = new ArrayList<>();
         ArrayList<FacilityRectangle> drawnFacilityRectangles = new ArrayList<>();
 
         for(FacilityLinkedTo link : links) {
@@ -85,7 +85,7 @@ public class SeeOtherFacilitiesController {
      * @throws FacilityLoadingError
      * When a facility is of an unknown type, this is thrown.
      */
-    private void drawFacilities(ArrayList<FacilityDB> drawnFacilities,
+    private void drawFacilities(ArrayList<Facility> drawnFacilities,
                                 ArrayList<FacilityRectangle> drawnFacilityRectangles,
                                 FacilityLinkedTo link) throws FacilityLoadingError {
         if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId))) {
@@ -109,8 +109,8 @@ public class SeeOtherFacilitiesController {
      */
     private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, FacilityLinkedTo link) {
         EdgeLine line = new EdgeLine();
-        FacilityRectangle rectangleDeliver = new FacilityRectangle(new FacilityDB("",0,"Retailer","","", false));
-        FacilityRectangle rectangleOrder = new FacilityRectangle(new FacilityDB("", 0, "Retailer", "", "", false));
+        FacilityRectangle rectangleDeliver = new FacilityRectangle(new FacilityRectangle("",0,"Retailer","","", false));
+        FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility("", 0, "Retailer", "", "", false));
 
         for(FacilityRectangle rectangle : drawnFacilityRectangles) {
             if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId)) {
@@ -154,7 +154,7 @@ public class SeeOtherFacilitiesController {
      * When a facility is of an unknown type, this is thrown.
      */
 
-    private FacilityRectangle drawFacility(FacilityDB facility) throws FacilityLoadingError {
+    private FacilityRectangle drawFacility(Facility facility) throws FacilityLoadingError {
         if(facility.getFacilityType().equals("Factory")) {
             drawFacilityOnScreen(facility, factories, 0);
             return factories.get(factories.size()-1);
@@ -182,7 +182,7 @@ public class SeeOtherFacilitiesController {
      * Y-axis on which the facility is to be drawn.
      */
 
-    private void drawFacilityOnScreen(FacilityDB facility, ArrayList<FacilityRectangle> facilityList, int y) {
+    private void drawFacilityOnScreen(Facility facility, ArrayList<FacilityRectangle> facilityList, int y) {
         double rows = (facilitiesContainer.getPrefHeight()/4);
         double collumns = 60;
         facilitiesContainer.getChildren().removeAll(facilityList);
@@ -201,7 +201,7 @@ public class SeeOtherFacilitiesController {
      * Method creates a new FacilityRectangle based on the facility given to the method.
      * @return New FacilityRectangle.
      */
-    private FacilityRectangle createRectangle(FacilityDB facility) {
+    private FacilityRectangle createRectangle(Facility facility) {
         FacilityRectangle rectangle = new FacilityRectangle(facility);
         installTooltip(facility, rectangle);
         return rectangle;
@@ -210,7 +210,7 @@ public class SeeOtherFacilitiesController {
     /**
      * Installs the tooltip with information regarding the facility on the rectangle.
      */
-    private void installTooltip(FacilityDB facility, FacilityRectangle rectangle) {
+    private void installTooltip(Facility facility, FacilityRectangle rectangle) {
         Tooltip tooltip = new Tooltip(playerComponent.requestFacilityInfo(facility));
         Tooltip.install(rectangle, tooltip);
     }
