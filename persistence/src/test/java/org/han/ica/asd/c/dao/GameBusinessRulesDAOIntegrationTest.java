@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,7 @@ class GameBusinessRulesDAOIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        DBConnectionTest.getInstance().cleanup();
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
@@ -40,8 +40,6 @@ class GameBusinessRulesDAOIntegrationTest {
         DBConnectionTest.getInstance().createNewDatabase();
         gameBusinessRulesDAO = injector.getInstance(GameBusinessRulesDAO.class);
         DaoConfig.setCurrentGameId("BeerGameTest");
-        testFacility.setFacilityId(1);
-        GAME_AGENT.setGameBusinessRules(gameBusinessRules);
     }
 
     @AfterEach
@@ -51,6 +49,7 @@ class GameBusinessRulesDAOIntegrationTest {
 
     @Test
     void createGameBusinessRule() {
+
         Assert.assertEquals(0,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());
         gameBusinessRulesDAO.createGameBusinessRule(GAME_AGENT, GAME_BUSINESS_RULES);
         Assert.assertEquals(1,gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(GAME_AGENT).size());

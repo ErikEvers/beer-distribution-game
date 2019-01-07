@@ -5,15 +5,13 @@ import java.util.List;
 
 public class GameAgent implements IDomainModel{
     private String gameAgentName;
-
+    private Facility facility;
     private List<GameBusinessRules> gameBusinessRulesList;
 
-    private Facility facility;
-
-    public GameAgent(String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
+    public GameAgent(String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRules) {
         this.gameAgentName = gameAgentName;
         this.facility = facility;
-        this.gameBusinessRulesList = Collections.unmodifiableList(gameBusinessRulesList);
+        this.gameBusinessRulesList = Collections.unmodifiableList(gameBusinessRules);
     }
 
     public String getGameAgentName() {

@@ -42,23 +42,21 @@ public class ConfigurationDAO {
 	 @param configuration A ConfigurationDB Object which needs to be inserted in the SQLite Database
 	 */
 	public void createConfiguration(Configuration configuration) {
-		Connection conn = null;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_CONFIGURATION)) {
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_CONFIGURATION)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					setPreparedStatement(configuration, pstmt);
+				setPreparedStatement(configuration, pstmt);
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
+
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE,e.toString(),e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString(),e);
-			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -87,8 +85,10 @@ public class ConfigurationDAO {
 				while (rs.next()) {
 					configurations.add(createConfigurationObject(rs));
 				}
+				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 		return configurations;
@@ -98,19 +98,20 @@ public class ConfigurationDAO {
 	 * A method which returns a single configuration according to the gameId
 	 * @return A configuration according to the gameId
 	 */
-	public Configuration readConfiguration(){
+	public Configuration readConfiguration() {
 		Configuration configuration = null;
-
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATION)) {
-				pstmt.setString(1,DaoConfig.getCurrentGameId());
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
 					rs.next();
 					configuration = createConfigurationObject(rs);
 				}
+				conn.commit();
 			} catch (SQLException e) {
-				LOGGER.log(Level.SEVERE,e.toString(),e);
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 		return configuration;
@@ -129,7 +130,6 @@ public class ConfigurationDAO {
 				rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
 				rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"));
 	}
-
 
 	/**
 	 * A method which updates a existing configuration
@@ -155,6 +155,7 @@ public class ConfigurationDAO {
 				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE,e.toString(),e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}
@@ -173,6 +174,7 @@ public class ConfigurationDAO {
 				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE,e.toString(),e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}

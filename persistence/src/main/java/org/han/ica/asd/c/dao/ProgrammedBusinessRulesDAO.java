@@ -55,23 +55,19 @@ public class ProgrammedBusinessRulesDAO {
      * @param programmedAgentName The data required to delete all the ProgrammedBusinessRules from a specific ProgrammedAgent.
      */
     public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(String programmedAgentName) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
+        Connection conn = databaseConnection.connect();;
+        if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
                     conn.setAutoCommit(false);
 
                     pstmt.setString(1, programmedAgentName);
 
-                    pstmt.executeUpdate();
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -84,26 +80,24 @@ public class ProgrammedBusinessRulesDAO {
     public List<ProgrammedBusinessRules> readAllProgrammedBusinessRulesFromAProgrammedAgent(String programmedAgentName) {
         Connection conn = databaseConnection.connect();
         List<ProgrammedBusinessRules> programmedBusinessRules = new ArrayList<>();
-        try {
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
 
-                    conn.setAutoCommit(false);
+                conn.setAutoCommit(false);
 
                     pstmt.setString(1, programmedAgentName);
 
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedBusinessRule"),
-                                    rs.getString("ProgrammedAST")));
-                        }
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedAgentName"),
+                                rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
                     }
-                    conn.commit();
                 }
+                conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
 
         return programmedBusinessRules;
@@ -118,26 +112,22 @@ public class ProgrammedBusinessRulesDAO {
      * @param query                   The query that needs to be executed on the database.
      */
     private void executePreparedStatement(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName, String query) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                conn.setAutoCommit(false);
 
                     pstmt.setString(1, programmedAgentName);
                     pstmt.setString(2, programmedBusinessRules.getProgrammedBusinessRule());
                     pstmt.setString(3, programmedBusinessRules.getProgrammedAST());
 
-                    pstmt.executeUpdate();
-
-                }
+                pstmt.executeUpdate();
                 conn.commit();
-            }
 
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
+            }
         }
     }
 }

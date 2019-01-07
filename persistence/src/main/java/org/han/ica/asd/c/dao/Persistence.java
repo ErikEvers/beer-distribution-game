@@ -27,8 +27,7 @@ public class Persistence implements IPersistence {
 	@Inject
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 
-	@Inject
-	private FacilityTurnDAO facilityTurnDAO;
+
 
 
 	public Persistence(){
@@ -37,7 +36,7 @@ public class Persistence implements IPersistence {
 
 	public void saveRoundData(RoundDB rounddata)
 	{
-		roundDAO.createRound(rounddata.getGameId(), rounddata.getRoundId());
+		roundDAO.createRound(rounddata.getRoundId());
 		//((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
 	}
 
@@ -64,7 +63,7 @@ public class Persistence implements IPersistence {
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)
 	{
-		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
+		//gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
 	public Round fetchTurnData(Round round, Facility facility)
