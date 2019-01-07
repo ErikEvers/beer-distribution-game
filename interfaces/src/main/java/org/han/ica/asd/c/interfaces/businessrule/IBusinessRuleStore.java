@@ -36,7 +36,7 @@ public interface IBusinessRuleStore {
 
     /**
      * Deletes a programmed agent with its name.
-     * 
+     *
      * @param agentName The name of a agent.
      */
     void deleteProgrammedAgent(String agentName);
