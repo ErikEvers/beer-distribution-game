@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 public class AgentController implements IAgentController {
 
   private List<ProgrammedAgent> agents;
-  @Inject IGameConfigurationUserInterface gameConfigurationUserInterface;
-  @Inject IPersistenceProgrammedAgents iPersistenceProgrammedAgents;
-  @Inject private static Logger LOGGER;
+  private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.GameConfiguration.AgentController.class.getName());
+  @Inject private IGameConfigurationUserInterface gameConfigurationUserInterface;
+  @Inject private IPersistenceProgrammedAgents iPersistenceProgrammedAgents;
 
   /**
    * Get all the agents and send them to the UI, so the GameLeader can chose the agents for empty facilities.
