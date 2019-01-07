@@ -31,27 +31,23 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 * @param gameBusinessRulesInFacilityTurn A GameBusinessRuleInFacilityTurn object which contains data which needs to be inserted in to the SQLite Database
 	 */
 	public void createTurn(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn) {
-		Connection conn;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
-					conn.setAutoCommit(false);
-					pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
-					pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityIdOrder());
-					pstmt.setInt(3, gameBusinessRulesInFacilityTurn.getFacilityIdDeliver());
-					pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameId());
-					pstmt.setString(5, gameBusinessRulesInFacilityTurn.getGameAgentName());
-					pstmt.setString(6, gameBusinessRulesInFacilityTurn.getGameBusinessRule());
-					pstmt.setString(7, gameBusinessRulesInFacilityTurn.getGameAST());
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
+				conn.setAutoCommit(false);
+				pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
+				pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityIdOrder());
+				pstmt.setInt(3, gameBusinessRulesInFacilityTurn.getFacilityIdDeliver());
+				pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameId());
+				pstmt.setString(5, gameBusinessRulesInFacilityTurn.getGameAgentName());
+				pstmt.setString(6, gameBusinessRulesInFacilityTurn.getGameBusinessRule());
+				pstmt.setString(7, gameBusinessRulesInFacilityTurn.getGameAST());
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
 			}
-
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
@@ -64,24 +60,21 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 * @return A GameBusinessRulesInFacilityTurnDB object which contains data from the database according to the search parameters
 	 */
 	public GameBusinessRulesInFacilityTurnDB readTurn(String gameId, int roundId, int facilityIdOrder, int facilityIdDeliver) {
-		Connection conn;
 		GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn = null;
 
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
-					pstmt.setString(1, gameId);
-					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityIdOrder);
-					pstmt.setInt(4, facilityIdDeliver);
-					try (ResultSet rs = pstmt.executeQuery()){
-						gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurnDB(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getString("GameId"), rs.getString("GameAgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
-					}
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
+				pstmt.setString(1, gameId);
+				pstmt.setInt(2, roundId);
+				pstmt.setInt(3, facilityIdOrder);
+				pstmt.setInt(4, facilityIdDeliver);
+				try (ResultSet rs = pstmt.executeQuery()){
+					gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurnDB(rs.getInt("RoundId"), rs.getInt("FacilityIdOrder"), rs.getInt("FacilityIdDeliver"), rs.getString("GameId"), rs.getString("GameAgentName"), rs.getString("GameBusinessRule"), rs.getString("GameAST"));
 				}
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(),e);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return gameBusinessRulesInFacilityTurn;
 	}
@@ -95,26 +88,23 @@ public class GameBusinessRulesInFacilityTurnDAO {
 		 * @param facilityIdDeliver The Id of the FacilityDB which delivered an order
 		 */
 		public void deleteTurn (String gameId,int roundId, int facilityIdOrder, int facilityIdDeliver){
-			Connection conn = null;
-			try {
-				conn = databaseConnection.connect();
-				if (conn != null) {
-					try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
+			Connection conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
 
-						conn.setAutoCommit(false);
+					conn.setAutoCommit(false);
 
-						pstmt.setString(1, gameId);
-						pstmt.setInt(2, roundId);
-						pstmt.setInt(3, facilityIdOrder);
-						pstmt.setInt(4, facilityIdDeliver);
+					pstmt.setString(1, gameId);
+					pstmt.setInt(2, roundId);
+					pstmt.setInt(3, facilityIdOrder);
+					pstmt.setInt(4, facilityIdDeliver);
 
-						pstmt.executeUpdate();
-					}
+					pstmt.executeUpdate();
 					conn.commit();
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(),e);
+					databaseConnection.rollBackTransaction(conn);
 				}
-			} catch (SQLException e) {
-				LOGGER.log(Level.SEVERE, e.toString(),e);
-				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}

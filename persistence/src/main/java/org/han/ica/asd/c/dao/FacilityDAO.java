@@ -150,27 +150,26 @@ public class FacilityDAO {
      * @return The facilities that have been retrieved from the database.
      */
     public List<FacilityDB> readAllFacilitiesInGame(String gameId) {
-        Connection conn = null;
         List<FacilityDB> facilities = new ArrayList<>();
-        try {
-            conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_FACILITIES_IN_GAME)) {
-                conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if(conn == null) {
+            return facilities;
+        }
+        try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_FACILITIES_IN_GAME)) {
+            conn.setAutoCommit(false);
 
-                pstmt.setString(1, gameId);
+            pstmt.setString(1, gameId);
 
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        facilities.add(new FacilityDB(rs.getString("GameId"), rs.getInt("FacilityId"),
-                                rs.getString("FacilityName"), rs.getString("PlayerId"),
-                                rs.getString("GameAgentName"), rs.getBoolean("Bankrupt")));
-                    }
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    facilities.add(createEntireFacilityObject(rs));
                 }
-                conn.commit();
             }
+            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
+        //NOSONAR
         return facilities;
     }
 
@@ -182,29 +181,33 @@ public class FacilityDAO {
      * @return The retrieved facility from the database.
      */
     public FacilityDB readSpecificFacility(int facilityId, String gameId) {
-        Connection conn = null;
         FacilityDB facility = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITY)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITY)) {
+                conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, facilityId);
-                    pstmt.setString(2, gameId);
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            facility = new FacilityDB(gameId, facilityId,
-                                    rs.getString("FacilityName"), rs.getString("PlayerId"),
-                                    rs.getString("GameAgentName"), rs.getBoolean("Bankrupt"));
-                        }
-                    }
-                    conn.commit();
+                pstmt.setInt(1, facilityId);
+                pstmt.setString(2, gameId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    rs.next();
+                    facility = createFacilityObject(rs, gameId, facilityId);
                 }
+                conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return facility;
+    }
+
+    private FacilityDB createEntireFacilityObject(ResultSet rs) throws SQLException{
+        return this.createFacilityObject(rs, rs.getString("GameId"), rs.getInt("FacilityId"));
+    }
+
+    private FacilityDB createFacilityObject(ResultSet rs, String gameId, int facilityId) throws SQLException {
+        return new FacilityDB(gameId, facilityId,
+            rs.getString("FacilityName"), rs.getString("PlayerId"),
+            rs.getString("GameAgentName"), rs.getBoolean("Bankrupt"));
     }
 }

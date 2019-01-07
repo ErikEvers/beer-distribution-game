@@ -15,6 +15,10 @@ public class Player implements IDomainModel{
         this.isConnected = isConnected;
     }
 
+    public Player() {
+
+    }
+
     public String getPlayerId() {
         return playerId;
     }
