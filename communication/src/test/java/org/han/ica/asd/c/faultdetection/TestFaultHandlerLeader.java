@@ -1,17 +1,15 @@
 package org.han.ica.asd.c.faultdetection;
 
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -46,7 +44,7 @@ public class TestFaultHandlerLeader {
 
 		when(nodeInfoList.size()).thenReturn(10);
 
-		for (int i = 1; i < 10/2; i++) {
+		for (int i = 1; i < 10; i++) {
 			assertNull(faultHandlerLeader.incrementFailure("1234"));
 
 		}

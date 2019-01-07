@@ -2,8 +2,9 @@ package org.han.ica.asd.c.model.domain_objects;
 
 
 import java.util.List;
+import java.util.Map;
 
-public class Configuration {
+public class Configuration implements IDomainModel{
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesales;
@@ -14,12 +15,16 @@ public class Configuration {
     private boolean continuePlayingWhenBankrupt;
     private boolean insightFacilities;
     private List<Facility> facilities;
-    private List<FacilityLinkedTo> facilitiesLinkedTo;
+    private Map<Facility,Facility> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
+
+    public Configuration(){
+        //Empty constructor for GUICE
+    }
 
     public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
                          int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
-                         List<FacilityLinkedTo> facilitiesLinkedTo, List<FacilityType> facilityTypes) //NOSONAR
+                         Map<Facility,Facility> facilitiesLinkedTo, List<FacilityType> facilityTypes) //NOSONAR
     {
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
@@ -33,6 +38,20 @@ public class Configuration {
         this.facilities = facilities;
         this.facilitiesLinkedTo = facilitiesLinkedTo;
         this.facilityTypes = facilityTypes;
+    }
+
+    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors,
+                         int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail,
+                         boolean insightFacilities, boolean continuePlayingWhenBankrupt){
+        this.amountOfRounds = amountOfRounds;
+        this.amountOfFactories = amountOfFactories;
+        this.amountOfWholesales = amountOfWholesales;
+        this.amountOfDistributors = amountOfDistributors;
+        this.amountOfRetailers = amountOfRetailers;
+        this.minimalOrderRetail = minimalOrderRetail;
+        this.maximumOrderRetail = maximumOrderRetail;
+        this.continuePlayingWhenBankrupt = continuePlayingWhenBankrupt;
+        this.insightFacilities = insightFacilities;
     }
 
     public int getAmountOfRounds() {
@@ -115,11 +134,11 @@ public class Configuration {
         this.facilities = facilities;
     }
 
-    public List<FacilityLinkedTo> getFacilitiesLinkedTo() {
+    public Map<Facility,Facility> getFacilitiesLinkedTo() {
         return facilitiesLinkedTo;
     }
 
-    public void setFacilitiesLinkedTo(List<FacilityLinkedTo> facilitiesLinkedTo) {
+    public void setFacilitiesLinkedTo(Map<Facility,Facility> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 

@@ -1,17 +1,23 @@
 package org.han.ica.asd.c.faultdetection;
 
-import org.han.ica.asd.c.faultdetection.exceptions.PeerCantBeReachedException;
+import org.han.ica.asd.c.Global;
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
-import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
+import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.Global;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FaultDetectorPlayer extends TimerTask {
+    @Inject private static Logger logger; //NOSONAR
+
     private long lastReceived;
     private boolean leaderIsPinging;
     private FaultDetectionClient faultDetectionClient;
@@ -74,36 +80,43 @@ public class FaultDetectorPlayer extends TimerTask {
     private void askOtherPlayers() {
 
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
-
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
 
-        for (String ip : ips) {
-            try {
-                faultDetectionClient.sendCanYouReachLeaderMessage(new CanYouReachLeaderMessage(), ip);
-            } catch (PeerCantBeReachedException se) {
+        Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll( ips.toArray(new String[0]), new CanYouReachLeaderMessage());
+        int count = 0;
+        for (Object responseMessage: response.values()) {
+            count++;
+            if (responseMessage instanceof Exception){
                 faultHandlerPlayer.incrementAmountOfFailingIps();
+            }else if(responseMessage instanceof CanYouReachLeaderMessageResponse) {
+                CanYouReachLeaderMessageResponse canYouReachLeaderMessageResponse = (CanYouReachLeaderMessageResponse) responseMessage;
+                if (canYouReachLeaderMessageResponse.getLeaderState()) {
+                    faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();
+                }
             }
         }
     }
 
     public void pingMessageReceived(PingMessage pingMessage) {
         lastReceived = System.currentTimeMillis();
-
         leaderIsPinging = true;
     }
 
-    public void canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
-        if (leaderIsPinging) {
-            faultDetectionClient.sendICanReachLeaderMessage(new ICanReachLeaderMessage(), senderIp);
+    public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage) {
+        boolean leaderIsAlive;
+
+        if(leaderIsNotPinging()){
+            leaderIsAlive = false;
+        }else{
+            try {
+                faultDetectionClient.makeConnection("LEADERIP");
+                leaderIsAlive = true;
+            } catch (NodeCantBeReachedException e) {
+                leaderIsAlive = false;
+            }
         }
+        return new CanYouReachLeaderMessageResponse(leaderIsAlive);
     }
-
-    public void iCanReachLeaderMessageReceived(ICanReachLeaderMessage iCanReachLeaderMessage) {
-
-        faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();
-    }
-
-    // public void rejoinAcceptedMessageReceived(){set lastreceived set true}?
 
     void setFaultDetectionClient(FaultDetectionClient faultDetectionClient) {
         this.faultDetectionClient = faultDetectionClient;
