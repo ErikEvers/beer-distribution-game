@@ -2,12 +2,15 @@ package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
+import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ElectionModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +40,9 @@ public class GameMessageReceiverTest {
 
     @Mock
     private IElectionObserver electionObserver;
+
+    @Mock
+    private IGameConfigurationObserver gameConfigurationObserver;
 
     @BeforeEach
     public void setUp() {
@@ -69,7 +75,17 @@ public class GameMessageReceiverTest {
 
         verify(turnModelObserver).turnModelReceived(turnModel);
     }
-    
+
+    @Test
+    public void configurationReceived() {
+        Configuration configuration = new Configuration();
+        ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
+
+        gameMessageReceiver.gameMessageReceived(configurationMessage);
+
+        verify(gameConfigurationObserver).gameConfigurationReceived(configuration);
+    }
+
     @Test
     public void roundModelRecieved() {
         Round roundModel = new Round();
