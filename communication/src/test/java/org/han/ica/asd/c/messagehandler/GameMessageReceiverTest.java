@@ -30,7 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @RunWith(JUnitPlatform.class)
 public class GameMessageReceiverTest {
 
-    GameMessageReceiver gameMessageReceiver;
+    private GameMessageReceiver gameMessageReceiver;
 
     @Mock
     private IRoundModelObserver roundModelObserver;
@@ -79,7 +79,9 @@ public class GameMessageReceiverTest {
     @Test
     public void configurationReceived() {
         Configuration configuration = new Configuration();
+
         ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
+        configurationMessage.setPhaseToCommit();
 
         gameMessageReceiver.gameMessageReceived(configurationMessage);
 

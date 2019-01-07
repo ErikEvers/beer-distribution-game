@@ -9,4 +9,8 @@ public class ConfigurationMessage extends TransactionMessage {
         super(5);
         this.configuration = configuration;
     }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 }

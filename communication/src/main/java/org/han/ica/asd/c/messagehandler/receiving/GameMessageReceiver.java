@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 
+import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.messagehandler.messagetypes.*;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class GameMessageReceiver {
 
-    private static RoundModelMessage toBecommittedRound;
+    private static TransactionMessage toBecommittedRound;
     private GameMessageFilterer gameMessageFilterer;
 
     private ArrayList<IConnectorObserver> gameMessageObservers;
@@ -46,8 +47,8 @@ public class GameMessageReceiver {
                     handleTurnMessage(turnModelMessage);
                     break;
                 case 2:
-                    RoundModelMessage roundModelMessage = (RoundModelMessage) gameMessage;
-                    handleRoundMessage(roundModelMessage);
+                    TransactionMessage roundModelMessage = (TransactionMessage) gameMessage;
+                    handleTransactionMessage(roundModelMessage);
                     break;
                 case 3:
                     ElectionMessage electionMessage = (ElectionMessage) gameMessage;
@@ -56,8 +57,9 @@ public class GameMessageReceiver {
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
                 case 5:
-                    ConfigurationMessage configurationMessage = (ConfigurationMessage) gameMessage;
-                    return handleConfigurationMessage(configurationMessage);
+                    TransactionMessage configurationMessage = (TransactionMessage) gameMessage;
+                    handleTransactionMessage(configurationMessage);
+                    break;
                 default:
                     break;
             }
@@ -79,49 +81,11 @@ public class GameMessageReceiver {
     }
 
     /**
-     * This method handles a RoundMessage
-     *
-     * @param roundModelMessage
-     */
-    private void handleRoundMessage(RoundModelMessage roundModelMessage) {
-        switch (roundModelMessage.getPhase()) {
-            case 0:
-                //stage Commit
-                toBecommittedRound = roundModelMessage;
-                break;
-            case 1:
-                //do commit
-                doCommit(roundModelMessage);
-                break;
-            case -1:
-                //rollback
-                toBecommittedRound = null;
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * Executes a commit
-     * @param roundModelMessage
-     */
-    private void doCommit(RoundModelMessage roundModelMessage) {
-        //in theory, a bug can still occur where we receive a commit message with a different content.
-        if (toBecommittedRound != null) {
-            for (IConnectorObserver observer : gameMessageObservers) {
-                if (observer instanceof IRoundModelObserver) {
-                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
-                }
-            }
-        }
-    }
-
-    /**
      * Calls the whoIsTheLeaderMessageReceived method on the 'MessageProcessor".
-     * @author Oscar
+     *
      * @param whoIsTheLeaderMessage The 'WhoIsTheLeaderMessage' that was received.
      * @return whoIsTheLeaderMessage with the response filled in. This is either the response that was excepted or an exception.
+     * @author Oscar
      * @see WhoIsTheLeaderMessage
      * @see MessageProcessor
      */
@@ -142,5 +106,45 @@ public class GameMessageReceiver {
             }
         }
         return null;
+    }
+
+    private void handleTransactionMessage(TransactionMessage transactionMessage) {
+        switch (transactionMessage.getPhase()) {
+            case 0:
+                toBecommittedRound = transactionMessage;
+                break;
+            case 1:
+                doCommit(transactionMessage);
+                break;
+            case -1:
+                toBecommittedRound = null;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Executes a commit
+     *
+     * @param transactionMessage
+     */
+    private void doCommit(TransactionMessage transactionMessage) {
+        //in theory, a bug can still occur where we receive a commit message with a different content.
+        if (toBecommittedRound != null) {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof IRoundModelObserver) {
+                    if (transactionMessage.getMessageType() == 2) {
+                        RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
+                        ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
+                    }
+                } else if (observer instanceof IGameConfigurationObserver) {
+                    if (transactionMessage.getMessageType() == 5) {
+                        ConfigurationMessage configurationMessage = (ConfigurationMessage) transactionMessage;
+                        ((IGameConfigurationObserver) observer).gameConfigurationReceived(configurationMessage.getConfiguration());
+                    }
+                }
+            }
+        }
     }
 }
