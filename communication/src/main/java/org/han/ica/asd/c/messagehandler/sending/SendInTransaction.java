@@ -26,7 +26,10 @@ public class SendInTransaction {
         this.socketClient = socketClient;
     }
 
-    public void sendRoundToAllPlayers() {
+    /**
+     * The beginning of the transaction.
+     */
+    public void sendToAllPlayers() {
         //TODO implement with this: https://stackoverflow.com/questions/9148899/returning-value-from-thread
 
         transactionMessage.setPhaseToStage();
@@ -46,6 +49,10 @@ public class SendInTransaction {
         }
     }
 
+    /**
+     * Sends a commit message to an ip.
+     * @param ip
+     */
     private void sendCanCommit(String ip) {
         Thread t = new Thread(() -> {
             try {
@@ -60,6 +67,10 @@ public class SendInTransaction {
         t.start();
     }
 
+    /**
+     * Checks if all commits are successful, if so then a commit is staged. If not, then a rollback is staged.
+     * @param isSuccess
+     */
     private void canCommitFinished(boolean isSuccess) {
         numberFinished++;
         if (isSuccess) {
@@ -76,6 +87,9 @@ public class SendInTransaction {
         }
     }
 
+    /**
+     * Send an object to every ip
+     */
     private void send() {
         for (String ip : ips) {
             Thread t = new Thread(() -> {

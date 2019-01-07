@@ -75,7 +75,7 @@ public class GameMessageClient {
      */
     public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
         RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
-        new SendInTransaction(ips, roundModelMessage, socketClient).sendRoundToAllPlayers();
+        new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 
     public void setSocketClient(SocketClient socketClient) {
