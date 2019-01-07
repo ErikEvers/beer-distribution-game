@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.businessrule;
 
 
-import junit.framework.TestCase;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
@@ -63,7 +62,7 @@ public class ActionTest {
         Action testAction1 = new Action();
         Action testAction2 = new Action();
 
-        TestCase.assertEquals(testAction1.hashCode(), testAction2.hashCode());
+        assertEquals(testAction1.hashCode(), testAction2.hashCode());
     }
 
     @Test
