@@ -37,26 +37,22 @@ public class ProgrammedAgentDAO {
     }
 
     public void updateProgrammedAgent(ProgrammedAgentDB programmedAgentOld, ProgrammedAgentDB programmedAgentNew) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PROGRAMMEDAGENT)) {
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PROGRAMMEDAGENT)) {
 
-                    conn.setAutoCommit(false);
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, programmedAgentNew.getProgrammedAgentName());
-                    pstmt.setString(2, programmedAgentOld.getProgrammedAgentName());
+                pstmt.setString(1, programmedAgentNew.getProgrammedAgentName());
+                pstmt.setString(2, programmedAgentOld.getProgrammedAgentName());
 
 
-                    pstmt.executeUpdate();
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -75,25 +71,21 @@ public class ProgrammedAgentDAO {
      * @return A list with all the ProgrammedAgents from the database.
      */
     public List<ProgrammedAgentDB> readAllProgrammedAgents () {
-        Connection conn;
         List<ProgrammedAgentDB> programmedAgents = new ArrayList<>();
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-
-                conn.setAutoCommit(false);
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS)) {
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            programmedAgents.add(new ProgrammedAgentDB(rs.getString("ProgrammedAgentName")));
-                        }
-                    }
-                    conn.commit();
-                }
+        Connection conn = databaseConnection.connect();
+            if (conn == null) {
+                return programmedAgents;
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
+                conn.setAutoCommit(false);
+                while (rs.next()) {
+                    programmedAgents.add(new ProgrammedAgentDB(rs.getString("ProgrammedAgentName")));
+                }
+                conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
+            }
         return programmedAgents;
     }
 
@@ -104,24 +96,20 @@ public class ProgrammedAgentDAO {
      * @param query A string which contains the query that has to be executed on the database.
      */
     private void executePreparedStatement(ProgrammedAgentDB programmedAgent, String query) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-                    conn.setAutoCommit(false);
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, programmedAgent.getProgrammedAgentName());
+                pstmt.setString(1, programmedAgent.getProgrammedAgentName());
 
-                    pstmt.executeUpdate();
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 }
