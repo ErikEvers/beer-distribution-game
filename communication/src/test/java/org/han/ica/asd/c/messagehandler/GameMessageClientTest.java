@@ -53,23 +53,17 @@ public class GameMessageClientTest {
     void shouldReturnResponseMessageWithIOException() throws IOException, ClassNotFoundException {
         String expected = new IOException("Something went wrong when trying to connect").getMessage();
 
-        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
 
-
-        ResponseMessage responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
-
-        assertEquals(responseMessage.getException().getMessage(), expected);
-        assertNotNull(responseMessage.getException());
+        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+        assertFalse(responseMessage);
     }
 
     @Test
     void shouldReturnResponseMessageWithClassNotFoundException() throws IOException, ClassNotFoundException {
-        String expected = new ClassNotFoundException("Sommething went wrong when reading the object").getMessage();
-
         when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
 
         boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
-
         assertFalse(responseMessage);
     }
 

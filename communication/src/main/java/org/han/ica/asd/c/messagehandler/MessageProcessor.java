@@ -7,7 +7,7 @@ import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 /**
- * Most messages are redirected to be processed by other components, but messages that can be handled by this component will be possessed here.
+ * Most messages are redirected to be processed by other components, but messages that can be handled by this component will be processed here.
  */
 public class MessageProcessor {
 

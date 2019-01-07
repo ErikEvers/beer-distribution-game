@@ -132,7 +132,8 @@ public class GameMessageReceiver {
                     break;
             }
         }
-        return new ResponseMessage(true);
+        // Returning null if the messageType doesn't expect a response.
+        return null;
     }
 
     /**
@@ -152,7 +153,7 @@ public class GameMessageReceiver {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
                 try {
-                    return new FacilityMessage(facilityMessage.getFacility(), ((IFacilityMessageObserver) observer).getAllFacilities());
+                    return new FacilityMessage(facilityMessage.getFacility(), ((IFacilityMessageObserver) observer).facilityMessageReceived(facilityMessage.getFacility()));
                 }catch (Exception e){
                     LOGGER.log(Level.SEVERE,e.getMessage());
                 }
