@@ -4,6 +4,7 @@ package org.han.ica.asd.c.socketrpc;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,24 @@ import java.util.logging.Logger;
 public class SocketClient {
 
     private static final Logger LOGGER = Logger.getLogger(SocketClient.class.getName());
+
+    /**
+     * Tries to make a connection with the specified ipAddress.
+     * It will try to send an empty object to make sure it can reach the specified ipAddress within a given time.
+     * If it can't reach an ipAddress it will throw an exception.
+     * This method is used in the FaultDetector Component and the Discovery Component.
+     *
+     * @param ipAddress The ip address with which a connection will be made.
+     * @throws IOException This exception is thrown when an ipAddress can't be reached.
+     * @author Tarik
+     */
+    public void makeConnection(String ipAddress, Object object) throws IOException {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(ipAddress, SocketSettings.PORT), 1000);
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream.writeObject(object);
+        }
+    }
 
     /**
      * This method tries to make a new socket with the given IP, sends an object and expects an object back, which will be returned.

@@ -1,9 +1,10 @@
 package org.han.ica.asd.c.gui_main_menu;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import javafx.scene.control.Button;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import javax.inject.Inject;
@@ -32,6 +33,10 @@ public class MainMenuController {
     @Named("ReplayGame")
     private IGUIHandler replayGame;
 
+    @Inject
+    @Named("JoinGame")
+    private IGUIHandler joinGame;
+
     public void initialize() {
         mainContainer.getChildren().addAll();
         setCloseButtonAction();
@@ -53,4 +58,9 @@ public class MainMenuController {
     private void setReplayButtonAction() {
         replay.setOnAction(event -> replayGame.setupScreen());
     }
+
+    public void handleJoinGameButtonClick(){
+        joinGame.setupScreen();
+    }
+
 }

@@ -6,8 +6,8 @@ import org.han.ica.asd.c.model.domain_objects.IDomainModel;
 
 import java.io.InvalidObjectException;
 
-public abstract class Wrapper {
-    public IModel startWrapping(IModel model) throws InvalidObjectException{
+public interface Wrapper {
+    default IModel startWrapping(IModel model) throws InvalidObjectException{
         if(model instanceof IDaoModel){
             return wrapToDomainModel((IDaoModel) model);
         }
@@ -19,6 +19,6 @@ public abstract class Wrapper {
         }
     }
 
-    abstract IDaoModel wrapToDaoModel(IDomainModel model);
-    abstract IDomainModel wrapToDomainModel(IDaoModel model);
+    IDaoModel wrapToDaoModel(IDomainModel model);
+    IDomainModel wrapToDomainModel(IDaoModel model);
 }

@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
+import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
@@ -37,13 +38,13 @@ public class GameMessageClient {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
                     exception = new IOException("Something went wrong when trying to connect");
-                    LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect");
+                    LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect", e);
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
                     exception = new ClassNotFoundException("Sommething went wrong when reading the object");
-                    LOGGER.log(Level.SEVERE, "Something went wrong when reading the object");
+                    LOGGER.log(Level.SEVERE, "Something went wrong when reading the object", e);
                 }
             }
         }
@@ -68,21 +69,17 @@ public class GameMessageClient {
         return whoIsTheLeaderMessageReturn;
     }
 
-    public void setSocketClient(SocketClient socketClient) {
-        this.socketClient = socketClient;
-    }
-
     /**
      * This method sends the handled round data back to every peer.
      * @param ips
      * @param roundModel
      */
     public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
-        new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
+        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
+        new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 
-    public void sendConfigurationToAllPlayers(String[] ips, Configuration configuration) {
-        new SendInTransaction(ips, configuration, socketClient).sendRoundToAllPlayers();
+    public void setSocketClient(SocketClient socketClient) {
+        this.socketClient = socketClient;
     }
-
 }
