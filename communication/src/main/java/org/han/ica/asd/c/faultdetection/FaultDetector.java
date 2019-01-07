@@ -75,7 +75,6 @@ public class FaultDetector {
         return null;
     }
 
-
     public FaultDetectorLeader makeFaultDetectorLeader(NodeInfoList nodeInfoList, ArrayList<IConnectorObserver> observers) {
         return new FaultDetectorLeader(nodeInfoList, observers);
     }
