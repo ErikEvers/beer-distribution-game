@@ -39,7 +39,6 @@ public class FaultHandlerLeader {
      * @author Oscar, Tarik
      */
     public String incrementFailure(String ip) {
-        //TODO remove println
         increment(ip);
 
         if (amountOfFailsPerIp.get(ip).equals(nodeInfoList.size())) {

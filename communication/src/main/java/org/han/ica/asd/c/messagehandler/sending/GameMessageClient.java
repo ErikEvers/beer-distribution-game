@@ -20,31 +20,33 @@ public class GameMessageClient {
      * This method sends turn data to the leader.
      * @param ip
      * @param turn
-     * @return boolean depending on whether a connection can be made or not.
+     * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
-    public boolean sendTurnModel(String ip, Round turn) {
+    public ResponseMessage sendTurnModel(String ip, Round turn) {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
 
         int nFailedAttempts = 0;
+        Exception exception = null;
 
         while (nFailedAttempts < 3) {
             try {
-                TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
-                return response.isSuccess();
+                Object response = socketClient.sendObjectWithResponse(ip, turnModelMessage);
+                return (ResponseMessage) response;
             } catch (IOException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
+                    exception = new IOException("Something went wrong when trying to connect");
                     LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect", e);
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
+                    exception = new ClassNotFoundException("Sommething went wrong when reading the object");
                     LOGGER.log(Level.SEVERE, "Something went wrong when reading the object", e);
                 }
             }
         }
-
-        return false;
+        return new ResponseMessage(false, exception);
     }
 
     /**

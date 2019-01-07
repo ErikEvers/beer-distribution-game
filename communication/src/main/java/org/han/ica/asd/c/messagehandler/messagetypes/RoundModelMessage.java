@@ -7,6 +7,7 @@ import java.io.Serializable;
 public class RoundModelMessage extends GameMessage implements Serializable{
     private Round roundModel;
     private int commitStage;
+    private boolean isSuccess;
 
     public RoundModelMessage(Round roundModel, int commitStage) {
         super(2);
@@ -20,5 +21,11 @@ public class RoundModelMessage extends GameMessage implements Serializable{
 
     public int getCommitStage() {
         return commitStage;
+    }
+
+    public boolean IsSuccess() { return isSuccess; }
+
+    public void setIsSuccess(boolean isSuccess){
+        this.isSuccess = isSuccess;
     }
 }

@@ -24,7 +24,7 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
 	private static Stage primaryStage;
 
 	@Inject private static Provider<FXMLLoaderOnSteroids> loaderProvider;
-	@Inject private static Logger logger;
+	@Inject private static Logger logger; //NOSONAR
 
 	@Inject
 	public FXMLLoaderOnSteroids(AbstractModuleExtension module) {
