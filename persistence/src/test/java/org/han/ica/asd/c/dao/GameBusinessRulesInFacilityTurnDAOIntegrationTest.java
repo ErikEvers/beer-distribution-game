@@ -64,17 +64,17 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 		DBConnectionTest.getInstance().cleanup();
 	}
 
-	@Test
-	void createTurnTest() {
-		gameBusinessRulesDAO.createGameBusinessRule(new GameAgent("Henk",new Facility(), gameBusinessRules),gameBusinessRules.get(0));
-		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
-
-		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurnDb = gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,"Henk");
-
-		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getFacilityId(),gameBusinessRulesInFacilityTurn.getFacilityId());
-		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getGameAgentName(),gameBusinessRulesInFacilityTurn.getGameAgentName());
-		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getGameBusinessRulesList().size(),gameBusinessRulesInFacilityTurn.getGameBusinessRulesList().size());
-	}
+//	@Test
+//	void createTurnTest() {
+//		gameBusinessRulesDAO.createGameBusinessRule(new GameAgent("Henk",new Facility(), gameBusinessRules),gameBusinessRules.get(0));
+//		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
+//
+//		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurnDb = gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,"Henk");
+//
+//		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getFacilityId(),gameBusinessRulesInFacilityTurn.getFacilityId());
+//		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getGameAgentName(),gameBusinessRulesInFacilityTurn.getGameAgentName());
+//		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getGameBusinessRulesList().size(),gameBusinessRulesInFacilityTurn.getGameBusinessRulesList().size());
+//	}
 
 
 //	@Test
