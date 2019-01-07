@@ -12,6 +12,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +108,9 @@ public class GameMessageReceiver {
                 case 4:
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
-
+                case 5:
+                    FacilityMessage facilityMessage = (FacilityMessage) gameMessage;
+                    return null;
                 default:
                     break;
             }
