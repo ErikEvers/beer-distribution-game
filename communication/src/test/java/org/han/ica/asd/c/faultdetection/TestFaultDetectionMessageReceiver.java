@@ -10,10 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class TestFaultDetectionMessageReceiver {
@@ -28,9 +31,30 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	void testMessages(){
+		FaultDetectionMessage realFaultDetectionMessage = new FaultMessage("test");
+
+		assertEquals(1, realFaultDetectionMessage.getMessageId());
+		assertEquals("test", ((FaultMessage) realFaultDetectionMessage).getIp());
+
+		realFaultDetectionMessage = new PingMessage();
+		assertEquals(3, realFaultDetectionMessage.getMessageId());
+
+		realFaultDetectionMessage = new FaultMessageResponse(true, "test");
+		assertEquals(2, realFaultDetectionMessage.getMessageId());
+		assertTrue(((FaultMessageResponse) realFaultDetectionMessage).getAlive());
+		assertEquals("test", ((FaultMessageResponse) realFaultDetectionMessage).getIpOfSubject());
+
+		realFaultDetectionMessage = new CanYouReachLeaderMessage();
+		((CanYouReachLeaderMessage) realFaultDetectionMessage).setLeaderState(true);
+		assertEquals(4, realFaultDetectionMessage.getMessageId());
+		assertTrue(((CanYouReachLeaderMessage) realFaultDetectionMessage).getLeaderState());
+
+	}
+
+	@Test
 	void TestFaultMessageReceivedCase(){
 		FaultDetectionMessage faultDetectionMessage = mock(FaultMessage.class);
-
 
 		doReturn(1)
 				.when(faultDetectionMessage)
