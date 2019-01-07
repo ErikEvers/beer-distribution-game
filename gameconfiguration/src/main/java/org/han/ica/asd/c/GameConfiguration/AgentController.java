@@ -57,7 +57,7 @@ public class AgentController implements IAgentController {
    */
   public List<Facility> agentsFinished(List<Facility> facilities) {
     try {
-      ProgrammedAgent defaultAgent = getDefaultAgent(this.agents);
+      ProgrammedAgent defaultAgent = getDefaultAgent(this.agents, "Default");
       for(Facility facility: facilities) {
         if(facility.getAgent() == null) {
           GameAgent gameAgent = new GameAgent(defaultAgent.getProgrammedAgentName(), facility);
@@ -74,7 +74,7 @@ public class AgentController implements IAgentController {
    * Get all the ProgrammedAgents from the database. When the persistence layer returns no ProgrammedAgents, this
    * function will throw a Exception.
    * @return -> A list with agents.
-   * @throws NoProgrammedAgentsFoundException
+   * @throws NoProgrammedAgentsFoundException -> when no agents found
    */
   private List<ProgrammedAgent> getAllProgrammedAgents() throws NoProgrammedAgentsFoundException{
     List<ProgrammedAgent> agents = iPersistenceProgrammedAgents.getAllAgents();
@@ -89,15 +89,15 @@ public class AgentController implements IAgentController {
    * To find the Default agent. The agent is found on the default agent name
    * @param agents -> All the agents from the database.
    * @return -> The default ProgrammedAgent in game
-   * @throws NoProgrammedAgentsFoundException
+   * @throws NoProgrammedAgentsFoundException -> when no default agent found.
    */
-  private ProgrammedAgent getDefaultAgent(List<ProgrammedAgent> agents) throws NoProgrammedAgentsFoundException {
+  public ProgrammedAgent getDefaultAgent(List<ProgrammedAgent> agents, String defaultName) throws NoProgrammedAgentsFoundException {
     for(ProgrammedAgent agent: agents){
-      if ("Default".equals(agent.getProgrammedAgentName())) {
+      if (defaultName.equals(agent.getProgrammedAgentName())) {
         return agent;
       }
     }
-    throw new NoProgrammedAgentsFoundException("No default agent found. Please create a default agent");
+    throw new NoProgrammedAgentsFoundException("No default agent found. Please create a default agent.");
   }
 
 }
