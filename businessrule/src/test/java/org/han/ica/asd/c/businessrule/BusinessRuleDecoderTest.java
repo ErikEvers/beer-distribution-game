@@ -119,7 +119,7 @@ class BusinessRuleDecoderTest {
                         .addChild(new DivideOperation()
                                 .addChild(new Value().addValue("inventory"))
                                 .addChild(new Value().addValue("2"))));
-        String bus = businessRule.encode();
+
         BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRule.encode());
         assertEquals(businessRule.encode(), businessRuleParsed.encode());
     }
