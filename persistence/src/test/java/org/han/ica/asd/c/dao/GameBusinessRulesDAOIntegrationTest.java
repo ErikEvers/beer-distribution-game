@@ -24,7 +24,7 @@ class GameBusinessRulesDAOIntegrationTest {
     private static final GameBusinessRules GAME_BUSINESS_RULES = new GameBusinessRules("BusinessRule","AST");
     private static final GameBusinessRules GAME_BUSINESS_RULES2 = new GameBusinessRules("BusinessRule2","AST2");
     private static final Facility testFacility = new Facility();
-    private static final GameAgent GAME_AGENT = new GameAgent("gameAgentName", testFacility);
+    private static final GameAgent GAME_AGENT = new GameAgent("gameAgentName", testFacility, gameBusinessRules);
 
     private GameBusinessRulesDAO gameBusinessRulesDAO;
 
