@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FXMLLoaderOnSteroids extends FXMLLoader {
-
 	private static final String GAME_TITLE = "Beer Distribution Game";
 	private static Stage primaryStage;
 
