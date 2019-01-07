@@ -2,8 +2,6 @@ package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.exception.GameIdNotSetException;
-import org.han.ica.asd.c.exception.PlayerNotFoundException;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
@@ -27,16 +25,17 @@ public class PlayerDAO {
     @Inject
     private IDatabaseConnection databaseConnection;
 
-    @Inject FacilityDAO facilityDAO;
+    @Inject
+    FacilityDAO facilityDAO;
 
-    public PlayerDAO () {
+    public PlayerDAO() {
         // empty for Guice
     }
 
     /**
      * A method to create a new player.
-     * @param player
-     * A domain object which contains the necessary data to create a player
+     *
+     * @param player A domain object which contains the necessary data to create a player
      */
     public void createPlayer(Player player) {
         Connection conn = null;
@@ -65,8 +64,8 @@ public class PlayerDAO {
 
     /**
      * Can update a player's name and/or ip address
-     * @param player
-     * Specifies the player to update
+     *
+     * @param player Specifies the player to update
      */
     public void updatePlayer(Player player) {
         Connection conn = null;
@@ -92,10 +91,9 @@ public class PlayerDAO {
 
     /**
      * Gets the player
-     * @param playerId
-     * Primary identifier for a player
-     * @return
-     * Returns the specified player
+     *
+     * @param playerId Primary identifier for a player
+     * @return Returns the specified player
      */
     public Player getPlayer(String playerId) {
         return null;
@@ -103,81 +101,75 @@ public class PlayerDAO {
 
     /**
      * This function gets all the players in the current game
-     * @return
-     * Returns a list of the players found in the current game
-     * @throws PlayerNotFoundException
-     * If a player could not be found within the current game,
-     * this exception will be thrown. This can also happen when a game exists only out of agents
+     *
+     * @return Returns a list of the players found in the current game
      */
-    public List<Player> getAllPlayers() throws PlayerNotFoundException {
-        Connection conn = null;
-        ResultSet rs = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(GET_ALL)) {
-                    conn.setAutoCommit(false);
+    public List<Player> getAllPlayers() {
+        List<Player> players = new ArrayList<>();
+        Connection conn = databaseConnection.connect();
+        try (PreparedStatement pstmt = conn.prepareStatement(GET_ALL)) {
 
-                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
+            conn.setAutoCommit(false);
 
-                    rs  = pstmt.executeQuery();
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
-                conn.commit();
+            DaoConfig.gameIdNotSetCheck(pstmt, 1);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                buildPlayerArray(rs, players);
             }
-        } catch (SQLException e) {
+            conn.commit();
+
+        } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
-        throw new PlayerNotFoundException("No player was found in the current game");
+        return players;
     }
 
     /**
      * Function to delete player from current game
-     * @param playerId
-     * The primary identifier of the player to be removed
+     *
+     * @param playerId The primary identifier of the player to be removed
      */
     public void deletePlayer(String playerId) {
-        Connection conn;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_PLAYER)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        try (PreparedStatement pstmt = conn.prepareStatement(DELETE_PLAYER)) {
 
-                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
-                    pstmt.setString(2, playerId);
+            conn.setAutoCommit(false);
 
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
-            }
-        } catch (SQLException e) {
+            DaoConfig.gameIdNotSetCheck(pstmt, 1);
+            pstmt.setString(2, playerId);
+
+            pstmt.executeUpdate();
+        } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
     }
 
-    private List<Player> buildPlayerArray (ResultSet rs) {
-        List<Player> players = new ArrayList<>();
+    /**
+     * Create list of players using provided result set
+     *
+     * @param rs      Result set containing the player data
+     * @param players List to add the created player objects into
+     */
+    private void buildPlayerArray(ResultSet rs, List<Player> players) {
         try {
             if (!rs.next()) {
-                return players;
-            } else {
                 do {
-                    players.add(new Player(
-                            rs.getString("PlayerId"),
-                            rs.getString("IpAddress"),
-                            facilityDAO.readSpecificFacility(rs.getString("FacilityId")),
-                            rs.getString("Name")
-                    ));
+                    players.add(createPlayer(rs));
                 } while (rs.next());
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
-        return players;
     }
 
-
+    private Player createPlayer(ResultSet rs) throws SQLException {
+        return new Player(
+                rs.getString("PlayerId"),
+                rs.getString("IpAddress"),
+                facilityDAO.readSpecificFacility(rs.getInt("")),
+                rs.getString("Name"),
+                true);
+    }
 
 }
