@@ -46,7 +46,7 @@ public class Agent extends GameAgent implements IParticipant {
         List<Round>             triggeredRounds         = new ArrayList<>();
 
         for (GameBusinessRules gameBusinessRules : gameBusinessRulesList) {
-            ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.gameBusinessRuleAST, round,facility.getFacilityId());
+            ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.gameBusinessRuleAST, round,getFacility().getFacilityId());
             if(actionModel != null) {
                 Facility targetFacility = this.resolveFacilityId(actionModel.facilityId);
                 if(targetFacility != null) {

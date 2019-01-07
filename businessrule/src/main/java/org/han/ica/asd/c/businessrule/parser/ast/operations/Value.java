@@ -52,7 +52,7 @@ public class Value extends OperationValue {
     public void encode(StringBuilder stringBuilder) {
         stringBuilder
                 .append(PREFIX)
-                .append(value.get(0));
+                .append(getFirstPartVariable());
 
         for (int i = 1, il = value.size(); i < il; i++) {
             stringBuilder
@@ -95,7 +95,7 @@ public class Value extends OperationValue {
      * @return {@link Integer}
      */
     public Integer getIntegerValue() {
-        return Integer.parseInt(this.value.get(0));
+        return Integer.parseInt(getFirstPartVariable());
     }
 
     /**
@@ -132,16 +132,16 @@ public class Value extends OperationValue {
      * @param gameValue the value of the game
      */
     public void replaceValueWithValue(String gameValue) {
-        if (hasNotBeenReplaced(value.get(0))) {
+        if (hasNotBeenReplaced(getFirstPartVariable())) {
             if (value.size() > 1) {
-                if (GameValue.checkIfFacility(value.get(1))) {
-                    value.remove(value.get(1));
+                if (GameValue.checkIfFacility(getSecondPartVariable())) {
+                    value.remove(getSecondPartVariable());
                     value.set(0, gameValue);
                     return;
                 }
             }
             value.set(0, gameValue);
-        } else if (hasNotBeenReplaced(value.get(1))) {
+        } else if (hasNotBeenReplaced(getSecondPartVariable())) {
             value.set(1, gameValue);
         }
     }

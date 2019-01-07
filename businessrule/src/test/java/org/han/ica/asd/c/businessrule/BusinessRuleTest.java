@@ -135,7 +135,7 @@ class BusinessRuleTest {
 
     @Test
     void testBusinessrule_getReplacementValue_equals_10() {
-        //BR(CS(C(CV(V(inventory))ComO(==)CV(V(inventory)))BoolO(==)CS(C(CV(V(round))ComO(!=)CV(V(3)))))
+
         BusinessRule businessRule = (BusinessRule) new BusinessRule()
                 .addChild(new ComparisonStatement()
                         .addChild(new ComparisonStatement()
