@@ -26,4 +26,18 @@ public interface IBusinessRuleStore {
      * @return Returns a two-dimensional list with all facilityId's sorted by facility type.
      */
     List<List<String>> getAllFacilities();
+
+    /**
+     * Gets all the agents from the database.
+     *
+     * @return Returns a list with all the agents programmed.
+     */
+    List<String> getAllProgrammedAgents();
+
+    /**
+     * Deletes a programmed agent with its name.
+     * 
+     * @param agentName The name of a agent.
+     */
+    void deleteProgrammedAgent(String agentName);
 }
