@@ -143,10 +143,6 @@ public class SeeOtherFacilitiesController {
      */
     private void setLineStroke(Facility parent, Facility child, EdgeLine line) {
         line.setStroke(Color.BLACK);
-
-//        if(!parent.isActive() || !child.isActive) {
-//            line.setStroke(Color.RED);
-//        }
     }
 
     /**

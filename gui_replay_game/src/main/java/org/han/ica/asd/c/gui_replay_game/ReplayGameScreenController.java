@@ -61,8 +61,7 @@ public class ReplayGameScreenController {
 
 
     public void setGameId(String gameId){
-    //TODO GET GAME VALUES.
-        System.out.println(gameId);
+        //TODO GET GAME VALUES.
     }
 
     @FXML

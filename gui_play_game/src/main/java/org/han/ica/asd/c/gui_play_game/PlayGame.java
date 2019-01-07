@@ -7,7 +7,7 @@ public class PlayGame implements IGUIHandler {
 
     @Override
     public void setData(Object[] data) {
-
+        // implement interface
     }
 
     @Override
