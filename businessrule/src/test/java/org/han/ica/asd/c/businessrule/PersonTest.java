@@ -3,8 +3,8 @@ package org.han.ica.asd.c.businessrule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.*;
-import static junit.framework.TestCase.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class PersonTest {
     private Person person = new Person("1");
