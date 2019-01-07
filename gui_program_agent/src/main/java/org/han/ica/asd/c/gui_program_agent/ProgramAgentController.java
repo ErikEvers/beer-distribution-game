@@ -54,9 +54,9 @@ public class ProgramAgentController {
     @Inject
     private IBusinessRules iBusinessRules;
 
-	@Inject
-	@Named("ProgramAgentList")
-	IGUIHandler programAgentList;
+    @Inject
+    @Named("ProgramAgentList")
+    IGUIHandler programAgentList;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
@@ -134,11 +134,20 @@ public class ProgramAgentController {
         List<Text> textFlow = new ArrayList<>();
         for (UserInputBusinessRule businessRule : result) {
             Text text = new Text(businessRule.getBusinessRule() + "\n");
-            if (businessRule.hasError()) {
+            if (!businessRule.getErrorWord().isEmpty()) {
+                Integer key = businessRule.getErrorWord().keySet().iterator().next();
+                int value = businessRule.getErrorWord().get(key) + 1;
+                textFlow.add(new Text(businessRule.getBusinessRule().substring(0, key)));
+                Text errorWord = new Text(businessRule.getBusinessRule().substring(key, value));
+                errorWord.setFill(Color.RED);
+                textFlow.add(errorWord);
+                textFlow.add(new Text(businessRule.getBusinessRule().substring(value) + "\n"));
+                errors.append(businessRule.getErrorMessage());
+            } else if (businessRule.hasError()) {
                 errors.append("User input error on line ").append(businessRule.getLineNumber()).append(": ").append(businessRule.getErrorMessage()).append("\n");
                 text.setFill(Color.RED);
+                textFlow.add(text);
             }
-            textFlow.add(text);
         }
         businessRuleTexFlow.getChildren().addAll(textFlow);
         if (errors.toString().isEmpty()) {
