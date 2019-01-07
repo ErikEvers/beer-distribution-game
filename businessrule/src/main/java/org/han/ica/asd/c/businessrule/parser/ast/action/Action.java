@@ -144,7 +144,7 @@ public class Action extends ASTNode {
         return Integer.parseInt(facilityId);
     }
 
-    public int separateFacilityId(){
+    private int separateFacilityId(){
         String[] stringSplit = person.getPerson().split(" ");
         if(stringSplit.length > 1){
             return Integer.parseInt(stringSplit[1]);
