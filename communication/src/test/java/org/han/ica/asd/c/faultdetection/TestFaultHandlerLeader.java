@@ -9,20 +9,27 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultHandlerLeader {
 	FaultHandlerLeader faultHandlerLeader;
 
 
 	@Mock
-	NodeInfoList nodeInfoList = mock(NodeInfoList.class);
+	NodeInfoList nodeInfoList;
+
 	ArrayList<IConnectorObserver> observers = spy(ArrayList.class);
 
 	@BeforeEach
 	void setUp(){
+		initMocks(this);
 		faultHandlerLeader = new FaultHandlerLeader();
 		faultHandlerLeader.setNodeInfoList(nodeInfoList);
 		faultHandlerLeader.setObservers(observers);

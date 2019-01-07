@@ -18,14 +18,15 @@ public class GameMessageClient {
     private SocketClient socketClient;
 
     @Inject
-    private static  Logger logger;
+    private static Logger logger;
 
-    public GameMessageClient(){
+    public GameMessageClient() {
         //inject purposes
     }
 
     /**
      * This method sends turn data to the leader.
+     *
      * @param ip
      * @param turn
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
@@ -44,21 +45,13 @@ public class GameMessageClient {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
                     exception = new IOException("Something went wrong when trying to connect");
-<<<<<<< HEAD
                     logger.log(Level.SEVERE, "Something went wrong when trying to connect");
-=======
-                    LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect", e);
->>>>>>> 47eef9a33686c870fd90ef6d56078ed51c2331d1
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
                     exception = new ClassNotFoundException("Sommething went wrong when reading the object");
-<<<<<<< HEAD
                     logger.log(Level.SEVERE, "Something went wrong when reading the object");
-=======
-                    LOGGER.log(Level.SEVERE, "Something went wrong when reading the object", e);
->>>>>>> 47eef9a33686c870fd90ef6d56078ed51c2331d1
                 }
             }
         }
@@ -67,24 +60,26 @@ public class GameMessageClient {
 
     /**
      * Send the whoIsTheLeaderMessage using the socketclient.
-     * @author Oscar
+     *
      * @param ip The ip to send it to.
      * @return The 'WhoIsTheLeaderMessage' with either the exception or the response filled in.
+     * @author Oscar
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip){
+    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip) {
         WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {
             whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
         } catch (IOException | ClassNotFoundException e) {
-            logger.log(Level.SEVERE,e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage());
         }
         return whoIsTheLeaderMessageReturn;
     }
 
     /**
      * This method sends the handled round data back to every peer.
+     *
      * @param ips
      * @param roundModel
      */
