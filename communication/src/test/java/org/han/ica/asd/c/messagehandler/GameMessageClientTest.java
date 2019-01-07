@@ -66,20 +66,19 @@ public class GameMessageClientTest {
     void shouldReturnResponseMessageWithClassNotFoundException() throws IOException, ClassNotFoundException {
         String expected = new ClassNotFoundException("Sommething went wrong when reading the object").getMessage();
 
-        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
 
-        ResponseMessage responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
 
-        assertEquals(responseMessage.getException().getMessage(), expected);
-        assertNotNull(responseMessage.getException());
+        assertFalse(responseMessage);
     }
 
     @Test
     void shouldReturnResponseMessageWithNoException() throws IOException, ClassNotFoundException {
-        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenReturn(new ResponseMessage(true, null));
-        ResponseMessage responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenReturn(TurnModelMessage.createResponseMessage(true));
+        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
 
-        assertNull(responseMessage.getException());
+        assertTrue(responseMessage);
     }
 
 // Still unsure on how to test this cause of threading
