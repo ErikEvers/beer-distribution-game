@@ -6,6 +6,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 public class ReplayGameList implements IGUIHandler {
     @Override
     public void setData(Object[] data) {
+        // implement interface
     }
 
     public void setupScreen() {

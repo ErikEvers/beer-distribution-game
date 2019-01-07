@@ -11,7 +11,7 @@ public class MainMenu implements IGUIHandler {
 
 	@Override
 	public void setData(Object[] data) {
-
+		// implement interface
 	}
 
 	public void setupScreen() {

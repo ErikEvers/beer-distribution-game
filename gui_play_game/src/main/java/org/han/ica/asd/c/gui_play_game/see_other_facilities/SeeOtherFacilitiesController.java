@@ -6,10 +6,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.player.PlayerComponent;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Controller for the facility overview. Accessible when turned on in the game configuration.
@@ -31,7 +34,6 @@ public class SeeOtherFacilitiesController {
 
     private FacilityDAO facilityDAO;
 
-    private String gameId;
     private RoomModel roomModel;
 
     /**
@@ -42,7 +44,6 @@ public class SeeOtherFacilitiesController {
         mainContainer.getChildren().addAll();
         playerComponent = new PlayerComponent();
         facilityDAO = new FacilityDAO();
-        gameId = "";
 
         loadFacilityView();
     }
@@ -62,14 +63,16 @@ public class SeeOtherFacilitiesController {
      */
 
     private void loadFacilityView() throws FacilityLoadingError {
-        FacilityLinkedTo[ ] links = playerComponent.seeOtherFacilities();
+        Map<Facility, List<Facility>> links = playerComponent.seeOtherFacilities();
 
         ArrayList<Facility> drawnFacilities = new ArrayList<>();
         ArrayList<FacilityRectangle> drawnFacilityRectangles = new ArrayList<>();
 
-        for(FacilityLinkedTo link : links) {
-            drawFacilities(drawnFacilities, drawnFacilityRectangles, link);
-            drawLine(drawnFacilityRectangles, link);
+        for(Facility facility : links.keySet()) {
+            for(Facility child : links.get(facility)) {
+							drawFacilities(drawnFacilities, drawnFacilityRectangles, facility, child);
+							drawLine(drawnFacilityRectangles, facility, child);
+						}
         }
     }
 
@@ -80,22 +83,22 @@ public class SeeOtherFacilitiesController {
      * Facility objects represented on screen
      * @param drawnFacilityRectangles
      * Facility rectangles visible on screen
-     * @param link
+     * @param parent
      * Link/edge through which the facilities are connected
      * @throws FacilityLoadingError
      * When a facility is of an unknown type, this is thrown.
      */
     private void drawFacilities(ArrayList<Facility> drawnFacilities,
                                 ArrayList<FacilityRectangle> drawnFacilityRectangles,
-                                FacilityLinkedTo link) throws FacilityLoadingError {
-        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId))) {
-            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId)));
-            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId));
+                                Facility parent, Facility child) throws FacilityLoadingError {
+        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(parent.getFacilityId()))) {
+            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(parent.getFacilityId())));
+            drawnFacilities.add(facilityDAO.readSpecificFacility(parent.getFacilityId()));
         }
 
-        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId))) {
-            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId)));
-            drawnFacilities.add(facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId));
+        if(!drawnFacilities.contains(facilityDAO.readSpecificFacility(child.getFacilityId()))) {
+            drawnFacilityRectangles.add(drawFacility(facilityDAO.readSpecificFacility(child.getFacilityId())));
+            drawnFacilities.add(facilityDAO.readSpecificFacility(child.getFacilityId()));
         }
     }
 
@@ -104,25 +107,27 @@ public class SeeOtherFacilitiesController {
      *
      * @param drawnFacilityRectangles
      * Facility rectangles visible on screen
-     * @param link
+     * @param parent
+		 * @param child
      * Link/edge through which the facilities are connected
      */
-    private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, FacilityLinkedTo link) {
+    private void drawLine(ArrayList<FacilityRectangle> drawnFacilityRectangles, Facility parent, Facility child) {
         EdgeLine line = new EdgeLine();
-        FacilityRectangle rectangleDeliver = new FacilityRectangle(new FacilityRectangle("",0,"Retailer","","", false));
-        FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility("", 0, "Retailer", "", "", false));
+        FacilityRectangle rectangleDeliver = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1));
+        FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1));
 
         for(FacilityRectangle rectangle : drawnFacilityRectangles) {
-            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityDeliver().getFacilityId(), gameId)) {
+
+            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(child.getFacilityId())) {
                 rectangleDeliver = rectangle;
             }
-            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(link.getFacilityOrder().getFacilityId(), gameId)) {
+            if(rectangle.getFacility() == facilityDAO.readSpecificFacility(parent.getFacilityId())) {
                 rectangleOrder = rectangle;
             }
         }
 
         line.drawLine(rectangleDeliver, rectangleOrder, rectangleDeliver.getTranslateX(), rectangleDeliver.getTranslateY());
-        setLineStroke(link, line);
+        setLineStroke(parent, child, line);
 
         facilitiesContainer.getChildren().add(line);
     }
@@ -130,17 +135,14 @@ public class SeeOtherFacilitiesController {
     /**
      * Adjusts the colour based on the link being 'active'.
      *
-     * @param link
+     * @param parent
+		 * @param child
      * Link/edge through which the facilities are connected
      * @param line
      * Visual representation of the link.
      */
-    private void setLineStroke(FacilityLinkedTo link, EdgeLine line) {
+    private void setLineStroke(Facility parent, Facility child, EdgeLine line) {
         line.setStroke(Color.BLACK);
-
-        if(!link.isActive()) {
-            line.setStroke(Color.RED);
-        }
     }
 
     /**

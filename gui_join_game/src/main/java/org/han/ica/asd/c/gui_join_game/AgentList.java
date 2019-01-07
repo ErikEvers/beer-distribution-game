@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public class AgentList implements IGUIHandler {
     @Override
     public void setData(Object[] data) {
-
+        // implement interface
     }
 
     @Override

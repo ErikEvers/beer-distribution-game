@@ -37,9 +37,5 @@ public class GameRoomController {
     public void setGameRoom(RoomModel roomModel) {
         this.roomModel = roomModel;
         gameRoom.setText(roomModel.getRoomName());
-//        while (true) {
-//            this.roomModel =iConnectorForSetup.updateRoom(this.roomModel);
-//            System.out.println(this.roomModel.getHosts().size());
-//        }
     }
 }

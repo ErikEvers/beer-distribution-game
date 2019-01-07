@@ -12,7 +12,7 @@ public class MonitorPlayers implements IGUIHandler {
 
 	@Override
 	public void setData(Object[] data) {
-
+		// implement interface
 	}
 
 	public void setupScreen() {

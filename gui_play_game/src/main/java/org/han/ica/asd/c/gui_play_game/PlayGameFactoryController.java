@@ -25,7 +25,7 @@ public class PlayGameFactoryController {
     }
 
     public void handleSendOrderButtonClick() {
-
+        // implementation coming
     }
 
     public void seeOtherFacilitiesButtonClicked() {
