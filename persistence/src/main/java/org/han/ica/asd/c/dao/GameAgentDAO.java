@@ -58,24 +58,19 @@ public class GameAgentDAO{
      * A method to delete all GameAgent within a BeerGame.
      */
     public void deleteAllGameagentsInABeergame() {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEAGENTS_IN_A_BEERGAME)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEAGENTS_IN_A_BEERGAME)) {
+                conn.setAutoCommit(false);
 
-                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
+                DaoConfig.gameIdNotSetCheck(pstmt, 1);
 
-                    pstmt.executeUpdate();
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (GameIdNotSetException | SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -85,26 +80,21 @@ public class GameAgentDAO{
      * @param gameAgent The data required to update the GameAgent.
      */
     public void updateGameagent(GameAgent gameAgent) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_GAMEAGENT)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_GAMEAGENT)) {
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, gameAgent.getGameAgentName());
-                    pstmt.setInt(2, gameAgent.getFacility().getFacilityId());
-                    DaoConfig.gameIdNotSetCheck(pstmt, 3);
+                pstmt.setString(1, gameAgent.getGameAgentName());
+                pstmt.setInt(2, gameAgent.getFacility().getFacilityId());
+                DaoConfig.gameIdNotSetCheck(pstmt, 3);
 
-                    pstmt.executeUpdate();
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (GameIdNotSetException | SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -114,30 +104,27 @@ public class GameAgentDAO{
      * @return A list of GameAgents from the BeerGame.
      */
     public List<GameAgent> readGameAgentsForABeerGame() {
-        Connection conn = null;
+        Connection conn = databaseConnection.connect();
         int i = 0;
         List<GameAgent> gameAgents = new ArrayList<>();
         List<GameBusinessRules> gameBusinessRulesStub = new ArrayList<>();
-        try {
-            conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAGENTS_FOR_A_BEERGAME)) {
-                conn.setAutoCommit(false);
-                DaoConfig.gameIdNotSetCheck(pstmt, 1);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
-                                facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
-                        List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
-                        gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
-                        i = i + 1;
-                    }
+        if(conn == null) {
+          return gameAgents;
+        }
+        try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAGENTS_FOR_A_BEERGAME)) {
+            conn.setAutoCommit(false);
+            DaoConfig.gameIdNotSetCheck(pstmt, 1);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
+                            facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
+                    List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
+                    gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
+                    i = i + 1;
                 }
-                conn.commit();
-            } catch (GameIdNotSetException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
             }
             conn.commit();
-        } catch (SQLException e) {
+        } catch (GameIdNotSetException | SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
         }
@@ -151,26 +138,21 @@ public class GameAgentDAO{
      * @param query     The sql statement that needs to be executed.
      */
     private void executePreparedStatement(GameAgent gameAgent, String query) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
-                    DaoConfig.gameIdNotSetCheck(pstmt, 2);
-                    pstmt.setString(3, gameAgent.getGameAgentName());
+                pstmt.setInt(1, gameAgent.getFacility().getFacilityId());
+                DaoConfig.gameIdNotSetCheck(pstmt, 2);
+                pstmt.setString(3, gameAgent.getGameAgentName());
 
-                    pstmt.executeUpdate();
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (GameIdNotSetException | SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 }

@@ -72,22 +72,20 @@ public class ProgrammedAgentDAO {
      */
     public List<ProgrammedAgentDB> readAllProgrammedAgents () {
         List<ProgrammedAgentDB> programmedAgents = new ArrayList<>();
-        try {
-            Connection conn = databaseConnection.connect();
+        Connection conn = databaseConnection.connect();
             if (conn == null) {
                 return programmedAgents;
             }
-
-            conn.setAutoCommit(false);
             try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
+                conn.setAutoCommit(false);
                 while (rs.next()) {
                     programmedAgents.add(new ProgrammedAgentDB(rs.getString("ProgrammedAgentName")));
                 }
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
         return programmedAgents;
     }
 

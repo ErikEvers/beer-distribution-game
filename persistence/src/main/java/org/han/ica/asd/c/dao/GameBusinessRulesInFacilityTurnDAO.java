@@ -36,28 +36,26 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 * @param gameBusinessRulesInFacilityTurn A GameBusinessRuleInFacilityTurn object which contains data which needs to be inserted in to the SQLite Database
 	 */
 	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
-		Connection conn;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
-					conn.setAutoCommit(false);
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
+				conn.setAutoCommit(false);
 
-					for (GameBusinessRules gamebusinessrule: gameBusinessRulesInFacilityTurn.getGameBusinessRulesList()) {
-						pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
-						pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityId());
-						pstmt.setString(3, DaoConfig.getCurrentGameId());
-						pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameAgentName());
-						pstmt.setString(5, gamebusinessrule.toString());
+				for (GameBusinessRules gamebusinessrule: gameBusinessRulesInFacilityTurn.getGameBusinessRulesList()) {
+					pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
+					pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityId());
+					pstmt.setString(3, DaoConfig.getCurrentGameId());
+					pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameAgentName());
+					pstmt.setString(5, gamebusinessrule.toString());
 
-						pstmt.executeUpdate();
-					}
-
+					pstmt.executeUpdate();
 				}
+
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 
@@ -67,30 +65,28 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 * @return A GameBusinessRulesInFacilityTurnDB object which contains data from the database according to the search parameters
 	 */
 	public GameBusinessRulesInFacilityTurn readTurn(int roundId, int facilityId, String gameAgentName) {
-		Connection conn;
+		Connection conn = databaseConnection.connect();
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 		List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
 
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityId);
-					try (ResultSet rs = pstmt.executeQuery()){
-						while (rs.next()) {
-						gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"),gameBusinessRulesDAO.getGameAST(rs.getString("GameBusinessRule"),gameAgentName, facilityId)));
-					    }
-					}
-					gameBusinessRulesInFacilityTurn.setFacilityId(facilityId);
-					gameBusinessRulesInFacilityTurn.setRoundId(roundId);
-					gameBusinessRulesInFacilityTurn.setGameAgentName(gameAgentName);
-					gameBusinessRulesInFacilityTurn.setGameBusinessRulesList(gameBusinessRules);
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
+				pstmt.setInt(3, facilityId);
+				try (ResultSet rs = pstmt.executeQuery()){
+					while (rs.next()) {
+					gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"),gameBusinessRulesDAO.getGameAST(rs.getString("GameBusinessRule"),gameAgentName, facilityId)));
+						}
 				}
+				gameBusinessRulesInFacilityTurn.setFacilityId(facilityId);
+				gameBusinessRulesInFacilityTurn.setRoundId(roundId);
+				gameBusinessRulesInFacilityTurn.setGameAgentName(gameAgentName);
+				gameBusinessRulesInFacilityTurn.setGameBusinessRulesList(gameBusinessRules);
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return gameBusinessRulesInFacilityTurn;
 	}
@@ -118,7 +114,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 					pstmt.executeUpdate();
 					conn.commit();
 				} catch (SQLException e) {
-					LOGGER.log(Level.SEVERE, e.toString(),e);
+					LOGGER.log(Level.SEVERE, e.toString(), e);
 					databaseConnection.rollBackTransaction(conn);
 				}
 			}

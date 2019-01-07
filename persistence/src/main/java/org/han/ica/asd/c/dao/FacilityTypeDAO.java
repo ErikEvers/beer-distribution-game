@@ -41,32 +41,28 @@ public class FacilityTypeDAO{
      * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to create a new FacilityTypeDB.
      */
     public void createFacilityType(FacilityType facilityType) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
 
-                    conn.setAutoCommit(false);
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, DaoConfig.getCurrentGameId());
-                    pstmt.setString(2, facilityType.getFacilityName());
-                    pstmt.setInt(3, facilityType.getValueIncomingGoods());
-                    pstmt.setInt(4, facilityType.getValueOutgoingGoods());
-                    pstmt.setInt(5, facilityType.getStockHoldingCosts());
-                    pstmt.setInt(6, facilityType.getOpenOrderCosts());
-                    pstmt.setInt(7, facilityType.getStartingBudget());
-                    pstmt.setInt(8, facilityType.getStartingOrder());
-                    pstmt.setInt(9,facilityType.getStartingStock());
+                pstmt.setString(1, DaoConfig.getCurrentGameId());
+                pstmt.setString(2, facilityType.getFacilityName());
+                pstmt.setInt(3, facilityType.getValueIncomingGoods());
+                pstmt.setInt(4, facilityType.getValueOutgoingGoods());
+                pstmt.setInt(5, facilityType.getStockHoldingCosts());
+                pstmt.setInt(6, facilityType.getOpenOrderCosts());
+                pstmt.setInt(7, facilityType.getStartingBudget());
+                pstmt.setInt(8, facilityType.getStartingOrder());
+                pstmt.setInt(9,facilityType.getStartingStock());
 
-                    pstmt.executeUpdate();
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -76,28 +72,26 @@ public class FacilityTypeDAO{
      * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to update an existing FacilityTypeDB.
      */
     public void updateFacilityType(FacilityType facilityType) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTYPE)) {
-                    conn.setAutoCommit(false);
-                    pstmt.setInt(1, facilityType.getValueIncomingGoods());
-                    pstmt.setInt(2, facilityType.getValueOutgoingGoods());
-                    pstmt.setInt(3, facilityType.getStockHoldingCosts());
-                    pstmt.setInt(4, facilityType.getOpenOrderCosts());
-                    pstmt.setInt(5, facilityType.getStartingBudget());
-                    pstmt.setInt(6, facilityType.getStartingBudget());
-                    pstmt.setInt(7,facilityType.getStartingStock());
-                    pstmt.setString(8, DaoConfig.getCurrentGameId());
-                    pstmt.setString(9, facilityType.getFacilityName());
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTYPE)) {
+                conn.setAutoCommit(false);
+                pstmt.setInt(1, facilityType.getValueIncomingGoods());
+                pstmt.setInt(2, facilityType.getValueOutgoingGoods());
+                pstmt.setInt(3, facilityType.getStockHoldingCosts());
+                pstmt.setInt(4, facilityType.getOpenOrderCosts());
+                pstmt.setInt(5, facilityType.getStartingBudget());
+                pstmt.setInt(6, facilityType.getStartingBudget());
+                pstmt.setInt(7,facilityType.getStartingStock());
+                pstmt.setString(8, DaoConfig.getCurrentGameId());
+                pstmt.setString(9, facilityType.getFacilityName());
 
-                    pstmt.executeUpdate();
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
     }
 
@@ -107,20 +101,18 @@ public class FacilityTypeDAO{
      * @param gameId The identifier of the game from which all FacilityTypes have to be deleted.
      */
     public void deleteAllFacilitytypesForABeergame(String gameId) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
+        Connection conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
                 conn.setAutoCommit(false);
 
                 pstmt.setString(1, gameId);
 
                 pstmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-            conn.commit();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
     }
 
     /**
@@ -129,23 +121,20 @@ public class FacilityTypeDAO{
      * @param facilityName The second part of the identifier of the FacilityTypeDB from witch a FacilityTypes has to be deleted.
      */
     public void deleteSpecificFacilityType(String facilityName) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, DaoConfig.getCurrentGameId());
-                    pstmt.setString(2, facilityName);
+                pstmt.setString(1, DaoConfig.getCurrentGameId());
+                pstmt.setString(2, facilityName);
 
-                    pstmt.executeUpdate();
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -155,51 +144,46 @@ public class FacilityTypeDAO{
      * @return A list of FacilityTypes from a specific game.
      */
     public List<FacilityType> readAllFacilityTypes() {
-        Connection conn;
+        Connection conn = databaseConnection.connect();
         ArrayList<FacilityType> types = new ArrayList<>();
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
                 conn.setAutoCommit(false);
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTYPES_FOR_A_BEERGAME)) {
-                    pstmt.setString(1, DaoConfig.getCurrentGameId());
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            types.add(new FacilityType(rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
-                                    rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
-                                    rs.getInt("StartingBudget"), rs.getInt("StartingOrder"),rs.getInt("StartingStock")));
-                        }
+                pstmt.setString(1, DaoConfig.getCurrentGameId());
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        types.add(new FacilityType(rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
+                                rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
+                                rs.getInt("StartingBudget"), rs.getInt("StartingOrder"),rs.getInt("StartingStock")));
                     }
-                    conn.commit();
                 }
+                conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return types;
     }
 
     public FacilityType readSpecificFacilityType(String facilityName) {
-        Connection conn = null;
+        Connection conn = databaseConnection.connect();
         FacilityType type = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
                 conn.setAutoCommit(false);
-
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_SPECIFIC_FACILITYTYPE)) {
-                    pstmt.setString(1, DaoConfig.getCurrentGameId());
-                    pstmt.setString(2, facilityName);
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        type = new FacilityType(rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
-                                rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
-                                rs.getInt("StartingBudget"), rs.getInt("StartingOrder"),rs.getInt("StartingStock"));
-                    }
+                pstmt.setString(1, DaoConfig.getCurrentGameId());
+                pstmt.setString(2, facilityName);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    type = new FacilityType(rs.getString("FacilityName"), rs.getInt("ValueIncomingGoods"), rs.getInt("ValueOutgoingGoods"),
+                            rs.getInt("StockholdingCosts"), rs.getInt("OpenOrderCosts"),
+                            rs.getInt("StartingBudget"), rs.getInt("StartingOrder"),rs.getInt("StartingStock"));
                 }
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
         return type;
     }
