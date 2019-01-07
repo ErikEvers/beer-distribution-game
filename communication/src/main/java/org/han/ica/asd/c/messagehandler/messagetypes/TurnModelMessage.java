@@ -17,8 +17,16 @@ public class TurnModelMessage extends GameMessage implements Serializable {
         this.turnModel = roundData;
     }
 
-    public void setIsSuccess(boolean value){
-        isSuccess = value;
+    public static TurnModelMessage createResponseMessage(boolean isSuccess){
+        TurnModelMessage turnModelMessage = new TurnModelMessage(null);
+        turnModelMessage.isSuccess = isSuccess;
+        return turnModelMessage;
+    }
+
+    public static TurnModelMessage createResponseMessage(Exception exception){
+        TurnModelMessage turnModelMessage = new TurnModelMessage(null);
+        turnModelMessage.setException(exception);
+        return turnModelMessage;
     }
 
     public boolean isSuccess(){
