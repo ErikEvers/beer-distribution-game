@@ -69,6 +69,7 @@ public class BeergameDAO {
 		ArrayList<BeerGameDB> beerGames = new ArrayList<>();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES); ResultSet rs = pstmt.executeQuery()) {
+				conn.setAutoCommit(false);
 				while (rs.next()) {
 					beerGames.add(new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
 				}
@@ -113,6 +114,7 @@ public class BeergameDAO {
 		BeerGameDB beergame = null;
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+				conn.setAutoCommit(false);
 				pstmt.setString(1,gameId);
 				try (ResultSet rs = pstmt.executeQuery()) {
 					beergame = new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
