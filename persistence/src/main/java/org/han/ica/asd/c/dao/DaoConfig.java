@@ -8,12 +8,15 @@ import java.sql.SQLException;
 public class DaoConfig {
     private static String currentGameId;
 
-    private DaoConfig(){}
+    private DaoConfig() {
+        //Empty method for Sonar.
+    }
 
-    protected static String getCurrentGameId(){
+    protected static String getCurrentGameId() {
         return currentGameId;
     }
-    protected static void setCurrentGameId(String gameId){
+
+    protected static void setCurrentGameId(String gameId) {
         DaoConfig.currentGameId = gameId;
     }
 
