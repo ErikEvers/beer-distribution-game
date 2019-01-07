@@ -70,7 +70,6 @@ public class DBConnectionTest implements IDatabaseConnection {
 
 	public void cleanup() {
         runSQLScript("cleanup.sql");
-        runSQLScript("ddl.sql");
 	}
 
 }
