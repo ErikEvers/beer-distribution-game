@@ -116,7 +116,8 @@ public class GameMessageReceiver {
                     break;
             }
         }
-        return new ResponseMessage(true);
+        // Returning null if the messageType doesn't expect a response.
+        return null;
     }
 
     /**

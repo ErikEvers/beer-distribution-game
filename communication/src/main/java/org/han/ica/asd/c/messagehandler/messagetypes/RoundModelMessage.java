@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 public class RoundModelMessage extends TransactionMessage implements Serializable{
     private Round roundModel;
-    private boolean isSuccess;
 
     public RoundModelMessage(Round roundModel) {
         super(2);
@@ -17,9 +16,4 @@ public class RoundModelMessage extends TransactionMessage implements Serializabl
         return roundModel;
     }
 
-    public boolean IsSuccess() { return isSuccess; }
-
-    public void setIsSuccess(boolean isSuccess){
-        this.isSuccess = isSuccess;
-    }
 }
