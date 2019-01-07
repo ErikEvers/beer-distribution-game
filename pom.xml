@@ -22,16 +22,19 @@
         <module>gameconfiguration</module>
         <module>gameleader</module>
         <module>gamelogic</module>
-        <module>hostmigration</module>
-        <module>localization</module>
+        <module>leadermigration</module>
         <module>player</module>
         <module>replay</module>
         <module>bootstrap</module>
+        <module>gui_main_menu</module>
         <module>gui_program_agent</module>
         <module>gui_play_game</module>
         <module>gui_configure_game</module>
         <module>gui_replay_game</module>
         <module>persistence</module>
+        <module>fxml_helper</module>
+        <module>interfaces</module>
+        <module>gui_join_game</module>
     </modules>
 
     <dependencies>
@@ -71,14 +74,22 @@
             <artifactId>guice</artifactId>
             <version>4.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>2.23.4</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.6</version>
+        </dependency>
 
+
+    </dependencies>
     <build>
         <finalName>ASD1819C</finalName>
         <plugins>

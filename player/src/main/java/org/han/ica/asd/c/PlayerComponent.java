@@ -1,12 +1,12 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.model.Facility;
-import org.han.ica.asd.c.model.Player;
-import org.han.ica.asd.c.model.ProgrammedAgent;
-import org.han.ica.asd.c.public_interfaces.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class PlayerComponent implements IPlayerComponent {
-    private Player player = new Player("0", "0", "0", null, "1234", true);
+
 
     @Override
     public void activatePlayer() {
@@ -24,8 +24,8 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public void placeOrder(int amount) {
-
+    public void placeOrder(Facility facility, int amount) {
+        throw new NotImplementedException();
     }
 
     @Override
@@ -35,11 +35,12 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public void chooseFacility(Facility facility) {
-        player.setFacilityId(facility);
+
     }
 
     @Override
     public String getFacilityName() {
-        return "facilityName";
+
+        throw new NotImplementedException();
     }
 }

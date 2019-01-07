@@ -9,18 +9,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.han.ica.asd.c.public_interfaces.IPlayerComponent;
+//import org.han.ica.asd.c.public_interfaces.IPlayerComponent;
 
 public class Main extends Application {
 
 
-    @Inject
-    @Named("PlayerComponent") protected IPlayerComponent playerComponent;
+   /* @Inject
+    @Named("PlayerComponent") protected IPlayerComponent playerComponent;*/
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/PlayGameFacilities.fxml"));
-        primaryStage.setScene(new Scene(root, 1000, 800));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
