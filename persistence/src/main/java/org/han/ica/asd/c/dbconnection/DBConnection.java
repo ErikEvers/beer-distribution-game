@@ -24,18 +24,7 @@ public class DBConnection implements IDatabaseConnection {
 
 
 	public void createNewDatabase() {
-
-		String url = CONNECTIONSTRING + DATABASENAME;
-
-		try (Connection conn = DriverManager.getConnection(url)) {
-			if (conn != null) {
-				runSQLScript("ddl.sql");
-			}
-
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
-		}
-
+		runSQLScript("ddl.sql");
 	}
 
 	public void runSQLScript(String scriptname) {
@@ -58,14 +47,13 @@ public class DBConnection implements IDatabaseConnection {
 			// then we are sure to have well formed statements
 			String[] inst = sb.toString().split(";");
 
-			Connection connect = connect2;
-			try (Statement st = connect.createStatement()) {
+			try (Statement st = connect2.createStatement()) {
 
 				for (int i = 0; i < inst.length; i++) {
 					// we ensure that there is no spaces before or after the request string
 					// in order to not execute empty statements
 					String strings = inst[i];
-					if (!strings.equals("")) {
+					if (!"".equals(strings)) {
 						st.executeUpdate(strings); //NOSONAR because the SQL Scripts are written by ourselves. SQLInjection not applicable
 					}
 				}
@@ -73,6 +61,12 @@ public class DBConnection implements IDatabaseConnection {
 
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.toString(), e);
+		} finally {
+			try {
+				connect2.close();
+			} catch (Exception e) {
+				//
+			}
 		}
 	}
 
@@ -94,6 +88,12 @@ public class DBConnection implements IDatabaseConnection {
 			conn.rollback();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				//
+			}
 		}
 	}
 

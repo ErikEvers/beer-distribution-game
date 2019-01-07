@@ -43,7 +43,7 @@ public class SendInTransaction {
             }
         } catch (Exception ex) {
             //rollback
-            LOGGER.log(Level.INFO, "Stagecommit failed, rolling back");
+            LOGGER.log(Level.INFO, "Stagecommit failed, rolling back", ex);
             RoundModelMessage rollbackRoundModelMessage = new RoundModelMessage(roundModel, -1);
             send(rollbackRoundModelMessage);
         }
@@ -57,7 +57,7 @@ public class SendInTransaction {
                 canCommitFinished(response.getIsSuccess());
 
             } catch (IOException | ClassNotFoundException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
         });
         t.setDaemon(true);
@@ -89,7 +89,7 @@ public class SendInTransaction {
                     ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, roundModelMessage);
 
                 } catch (IOException | ClassNotFoundException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage());
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
                 }
             });
             t.setDaemon(true);

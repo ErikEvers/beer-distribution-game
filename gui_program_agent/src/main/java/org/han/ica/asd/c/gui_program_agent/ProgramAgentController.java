@@ -54,9 +54,9 @@ public class ProgramAgentController {
     @Inject
     private IBusinessRules iBusinessRules;
 
-    @Inject
-    @Named("ProgramAgentList")
-    IGUIHandler programAgentList;
+	@Inject
+	@Named("ProgramAgentList")
+	IGUIHandler programAgentList;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 

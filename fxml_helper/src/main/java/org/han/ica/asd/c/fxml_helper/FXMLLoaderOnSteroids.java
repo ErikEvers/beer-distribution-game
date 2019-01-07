@@ -19,12 +19,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FXMLLoaderOnSteroids extends FXMLLoader {
-
 	private static final String GAME_TITLE = "Beer Distribution Game";
 	private static Stage primaryStage;
 
 	@Inject private static Provider<FXMLLoaderOnSteroids> loaderProvider;
-	@Inject private static Logger logger;
+	@Inject private static Logger logger; //NOSONAR
 
 	@Inject
 	public FXMLLoaderOnSteroids(AbstractModuleExtension module) {
@@ -37,7 +36,7 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
 		FXMLLoaderOnSteroids.primaryStage = primaryStage;
 	}
 
-	public static void getScreen(ResourceBundle resourceBundle, URL fxmlPath) {
+	public static <T> T getScreen(ResourceBundle resourceBundle, URL fxmlPath) {
 		FXMLLoaderOnSteroids loader = loaderProvider.get();
 		loader.setResources(resourceBundle);
 		loader.setLocation(fxmlPath);
@@ -54,5 +53,7 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.toString(), e);
 		}
+
+		return loader.getController();
 	}
 }

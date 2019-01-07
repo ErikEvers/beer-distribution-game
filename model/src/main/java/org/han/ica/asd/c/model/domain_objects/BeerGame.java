@@ -14,8 +14,15 @@ public class BeerGame implements IDomainModel{
     private String gameDate;
     private String gameEndDate;
 
-    public BeerGame(){
+    public BeerGame() {
+    //Empty constructor for Guice
+    }
 
+    public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate){
+        this.gameId = gameId;
+        this.gameName = gameName;
+        this.gameDate = gameDate;
+        this.gameEndDate = gameEndDate;
     }
 
     public BeerGame(Leader leader, List<Player> players, List<GameAgent> agents, Configuration configuration, //NOSONAR
@@ -31,6 +38,7 @@ public class BeerGame implements IDomainModel{
         this.gameDate = gameDate;
         this.gameEndDate = gameEndDate;
     }
+
 
     public Leader getLeader() {
         return leader;

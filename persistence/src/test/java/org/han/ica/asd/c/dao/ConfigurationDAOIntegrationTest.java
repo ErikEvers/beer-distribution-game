@@ -11,17 +11,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 class ConfigurationDAOIntegrationTest {
 	private static final Configuration CONFIGURATION = new Configuration(40,1,1,1,1,1,99,false,false);
 	private static final Configuration CONFIGURATION2 = new Configuration(40,1,1,1,1,1,99,false,false);
 	private static final Configuration CONFIGURATION3 = new Configuration(50,51,51,51,51,51,599,true,true);
 
 	private ConfigurationDAO configurationDAO;
+	private BeergameDAO beergameDAO;
 
 	@BeforeEach
 	public void setUp() {
-
+		DBConnectionTest.getInstance().cleanup();
 		DBConnectionTest.getInstance().createNewDatabase();
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
@@ -30,6 +30,7 @@ class ConfigurationDAOIntegrationTest {
 			}
 		});
 		configurationDAO = injector.getInstance(ConfigurationDAO.class);
+		beergameDAO = injector.getInstance(BeergameDAO.class);
 		DaoConfig.setCurrentGameId("BeerGameZutphen");
 	}
 
@@ -42,6 +43,7 @@ class ConfigurationDAOIntegrationTest {
 
 	@Test
 	void createConfigurationTest() {
+		beergameDAO.createBeergame(DaoConfig.getCurrentGameId());
 		configurationDAO.createConfiguration(CONFIGURATION);
 		Configuration configuration = configurationDAO.readConfiguration();
 
