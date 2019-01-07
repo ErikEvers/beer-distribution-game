@@ -18,13 +18,11 @@ public class Configuration implements IDomainModel{
     private boolean insightFacilities;
     private List<Facility> facilities;
     private Map<Facility, List<Facility>> facilitiesLinkedTo;
-    private List<FacilityType> facilityTypes;
 
     public Configuration(){
         //Empty constructor for GUICE
         this.facilities = new ArrayList<>();
         this.facilitiesLinkedTo = new HashMap<>();
-        this.facilityTypes = new ArrayList<>();
     }
 
     public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
@@ -42,7 +40,6 @@ public class Configuration implements IDomainModel{
         this.insightFacilities = insightFacilities;
         this.facilities = facilities;
         this.facilitiesLinkedTo = facilitiesLinkedTo;
-        this.facilityTypes = facilityTypes;
     }
 
     public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors,
@@ -145,13 +142,5 @@ public class Configuration implements IDomainModel{
 
     public void setFacilitiesLinkedTo(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
-    }
-
-    public List<FacilityType> getFacilityTypes() {
-        return facilityTypes;
-    }
-
-    public void setFacilityTypes(List<FacilityType> facilityTypes) {
-        this.facilityTypes = facilityTypes;
     }
 }
