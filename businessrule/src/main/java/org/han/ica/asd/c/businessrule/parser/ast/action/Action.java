@@ -102,4 +102,8 @@ public class Action extends ASTNode {
     public ASTNode getRightChild() {
         return operation;
     }
+
+    public void leesDitNietSven(){
+        System.out.println("omg sven waarom lees je dit");
+    }
 }
