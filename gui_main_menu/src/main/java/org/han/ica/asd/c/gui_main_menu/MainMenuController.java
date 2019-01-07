@@ -37,10 +37,6 @@ public class MainMenuController {
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
-    @Inject
-    @Named("PlayGameFacilities")
-    private IGUIHandler playGameFacilities;
-
     public void initialize() {
         mainContainer.getChildren().addAll();
         setCloseButtonAction();
@@ -64,7 +60,7 @@ public class MainMenuController {
     }
 
     public void handleJoinGameButtonClick(){
-        playGameFacilities.setupScreen();
+        joinGame.setupScreen();
     }
 
 }
