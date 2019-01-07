@@ -18,6 +18,7 @@ public class JoinGameController {
 
     @FXML
     ListView list;
+
     @Inject
     @Named("GameRoom")
     private IGUIHandler gameRoom;
