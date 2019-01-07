@@ -12,8 +12,10 @@ public class TurnModelMessage extends GameMessage implements Serializable {
 
     private Round turnModel;
     private boolean isSuccess;
+    private static final int TURN_MODEL_MESSAGE = 1;
+
     public TurnModelMessage(Round roundData) {
-        super(1);
+        super(TURN_MODEL_MESSAGE);
         this.turnModel = roundData;
     }
 

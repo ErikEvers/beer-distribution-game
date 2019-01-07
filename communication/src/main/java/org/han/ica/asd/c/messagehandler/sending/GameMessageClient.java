@@ -1,9 +1,11 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
+import org.han.ica.asd.c.messagehandler.messagetypes.FacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
@@ -65,6 +67,16 @@ public class GameMessageClient {
             LOGGER.log(Level.SEVERE,e.getMessage());
         }
         return whoIsTheLeaderMessageReturn;
+    }
+
+    public FacilityMessage sendFacilityMessage(String ip, Facility facility){
+        FacilityMessage facilityMessageReturn = new FacilityMessage(facility);
+        try {
+            facilityMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, facilityMessageReturn);
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE,e.getMessage());
+        }
+        return facilityMessageReturn;
     }
 
     /**

@@ -7,24 +7,36 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameMessageReceiver {
 
     private static RoundModelMessage toBecommittedRound;
     private GameMessageFilterer gameMessageFilterer;
 
+    private static final int TURN_MODEL_MESSAGE = 1;
+    private static final int ROUND_MESSAGE = 2;
+    private static final int ELECTION_MESSAGE = 3;
+    private static final int WHO_IS_THE_LEADER_MESSAGE = 4;
+    private static final int FACILITY_MESSAGE = 5;
+
     private ArrayList<IConnectorObserver> gameMessageObservers;
 
     private MessageProcessor messageProcessor;
+
+    private static final Logger LOGGER = Logger.getLogger(GameMessageClient.class.getName());
 
     public GameMessageReceiver(List<IConnectorObserver> gameMessageObservers) {
         this.gameMessageObservers = (ArrayList<IConnectorObserver>) gameMessageObservers;
@@ -100,22 +112,22 @@ public class GameMessageReceiver {
 
         if (gameMessageFilterer.isUnique(gameMessage)) {
             switch (gameMessage.getMessageType()) {
-                case 1:
+                case TURN_MODEL_MESSAGE:
                     TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
                     return handleTurnMessage(turnModelMessage);
-                case 2:
+                case ROUND_MESSAGE:
                     RoundModelMessage roundModelMessage = (RoundModelMessage) gameMessage;
                     handleRoundMessage(roundModelMessage);
                     break;
-                case 3:
+                case ELECTION_MESSAGE:
                     ElectionMessage electionMessage = (ElectionMessage) gameMessage;
                     return new ResponseMessage(handleElectionMessage(electionMessage));
-                case 4:
+                case WHO_IS_THE_LEADER_MESSAGE:
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
-                case 5:
+                case FACILITY_MESSAGE:
                     FacilityMessage facilityMessage = (FacilityMessage) gameMessage;
-                    return null;
+                    return handleFacilityMessage(facilityMessage);
                 default:
                     break;
             }
@@ -134,6 +146,19 @@ public class GameMessageReceiver {
      */
     private WhoIsTheLeaderMessage handleWhoIsTheLeaderMessage(WhoIsTheLeaderMessage whoIsTheLeaderMessage) {
         return messageProcessor.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
+    }
+
+    private FacilityMessage handleFacilityMessage(FacilityMessage facilityMessage){
+        for (IConnectorObserver observer : gameMessageObservers) {
+            if (observer instanceof IFacilityMessageObserver) {
+                try {
+                    return new FacilityMessage(facilityMessage.getFacility(), ((IFacilityMessageObserver) observer).getAllFacilities());
+                }catch (Exception e){
+                    LOGGER.log(Level.SEVERE,e.getMessage());
+                }
+            }
+        }
+        return null;
     }
 
     /**

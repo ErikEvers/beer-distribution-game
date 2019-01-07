@@ -2,9 +2,10 @@ package org.han.ica.asd.c.messagehandler.messagetypes;
 
 public class WhoIsTheLeaderMessage extends GameMessage {
     private String response;
+    private static final int WHO_IS_THE_LEADER_MESSAGE = 4;
 
     public WhoIsTheLeaderMessage() {
-        super(4);
+        super(WHO_IS_THE_LEADER_MESSAGE);
     }
 
     /**

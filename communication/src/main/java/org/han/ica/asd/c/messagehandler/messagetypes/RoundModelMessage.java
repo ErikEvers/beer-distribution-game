@@ -7,9 +7,10 @@ import java.io.Serializable;
 public class RoundModelMessage extends TransactionMessage implements Serializable{
     private Round roundModel;
     private boolean isSuccess;
+    private static final int ROUND_MESSAGE = 2;
 
     public RoundModelMessage(Round roundModel) {
-        super(2);
+        super(ROUND_MESSAGE);
         this.roundModel = roundModel;
     }
 
