@@ -117,14 +117,14 @@ public class TestFaultDetector {
                 .makeFaultDetectorPlayer(nodeInfoList);
 
         faultDetector.setPlayer(nodeInfoList);
-        faultDetector.canYouReachLeaderMessageReceived(any());
+        faultDetector.canYouReachLeaderMessageReceived(any(), any());
         assertNotNull(faultDetector.getFaultDetectorPlayer());
-        verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any());
+        verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), any());
     }
-
 
     @Test
     void TestFaultDetectionMessageReceiver() {
         assertNull(faultDetector.getFaultDetectionMessageReceiver());
     }
+
 }

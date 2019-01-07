@@ -3,20 +3,23 @@ package org.han.ica.asd.c.faultdetection;
 import org.han.ica.asd.c.Global;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
-import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FaultDetectorPlayer extends TimerTask {
-    @Inject private static Logger logger; //NOSONAR
+    @Inject
+    private static Logger logger;
+
+    private final long FIVEMINUTES = 300000;
+    private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
 
     private long lastReceived;
     private boolean leaderIsPinging;
@@ -57,13 +60,9 @@ public class FaultDetectorPlayer extends TimerTask {
 
     public void run() {
         if (leaderIsPinging && leaderIsNotPinging()) {
-
             leaderIsPinging = false;
-
             faultHandlerPlayer.reset();
-
             askOtherPlayers();
-
             faultHandlerPlayer.whoIsDead();
         }
     }
@@ -71,12 +70,17 @@ public class FaultDetectorPlayer extends TimerTask {
     public boolean leaderIsNotPinging() {
         // timer check timestamp if client
         long current = System.currentTimeMillis();
-
         long timeDifference = current - lastReceived;
-
         long threeIntervals = Global.FaultDetectionInterval * 3;
 
         return timeDifference > threeIntervals;
+    }
+
+    private boolean timestampIsRecentlyReceived(long lastTime) {
+        long current = System.currentTimeMillis();
+        long timeDifference = current - lastTime;
+
+        return timeDifference < FIVEMINUTES;
     }
 
     private void askOtherPlayers() {
@@ -84,15 +88,17 @@ public class FaultDetectorPlayer extends TimerTask {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
 
-        Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll( ips.toArray(new String[0]), new CanYouReachLeaderMessage());
-        int count = 0;
-        for (Object responseMessage: response.values()) {
-            count++;
-            if (responseMessage instanceof Exception){
+        // filter out ips from ips that already send a message within the past 5 minutes
+        ips.removeIf(ip -> playersWhoAlreadyCouldntReachLeader.containsKey(ip) && timestampIsRecentlyReceived(playersWhoAlreadyCouldntReachLeader.get(ip)));
+
+        Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll(ips.toArray(new String[0]), new CanYouReachLeaderMessage());
+
+        for (Object responseMessage : response.values()) {
+            if (responseMessage instanceof Exception) {
                 faultHandlerPlayer.incrementAmountOfFailingIps();
-            }else if(responseMessage instanceof CanYouReachLeaderMessageResponse) {
-                CanYouReachLeaderMessageResponse canYouReachLeaderMessageResponse = (CanYouReachLeaderMessageResponse) responseMessage;
-                if (canYouReachLeaderMessageResponse.getLeaderState()) {
+            } else if (responseMessage instanceof CanYouReachLeaderMessage) {
+                CanYouReachLeaderMessage canYouReachLeaderMessage = (CanYouReachLeaderMessage) responseMessage;
+                if (canYouReachLeaderMessage.getLeaderState()) {
                     faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();
                 }
             }
@@ -104,20 +110,25 @@ public class FaultDetectorPlayer extends TimerTask {
         leaderIsPinging = true;
     }
 
-    public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage) {
+    public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
         boolean leaderIsAlive;
+        // put senderIp in local list with currentTime
+        playersWhoAlreadyCouldntReachLeader.put(senderIp, System.currentTimeMillis());
 
-        if(leaderIsNotPinging()){
+        if (leaderIsNotPinging()) {
             leaderIsAlive = false;
-        }else{
+        } else {
             try {
-                faultDetectionClient.makeConnection("LEADERIP");
+                // TODO Leaderip get (integratie)
+                faultDetectionClient.makeConnection("0.0.0.0");
                 leaderIsAlive = true;
             } catch (NodeCantBeReachedException e) {
                 leaderIsAlive = false;
             }
         }
-        return new CanYouReachLeaderMessageResponse(leaderIsAlive);
+        canYouReachLeaderMessage.setLeaderState(leaderIsAlive);
+
+        return canYouReachLeaderMessage;
     }
 
     void setFaultDetectionClient(FaultDetectionClient faultDetectionClient) {
@@ -139,4 +150,9 @@ public class FaultDetectorPlayer extends TimerTask {
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
     }
+
+    void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> mock) {
+        this.playersWhoAlreadyCouldntReachLeader = mock;
+    }
+
 }

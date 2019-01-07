@@ -47,7 +47,7 @@ public class FaultDetectionMessageReceiver {
                 faultDetector.pingMessageReceived((PingMessage) faultDetectionMessage);
                 break;
             case 4:
-                return faultDetector.canYouReachLeaderMessageReceived((CanYouReachLeaderMessage) faultDetectionMessage);
+                return faultDetector.canYouReachLeaderMessageReceived((CanYouReachLeaderMessage) faultDetectionMessage, senderIp);
             default:
                 break;
         }

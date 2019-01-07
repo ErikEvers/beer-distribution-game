@@ -35,11 +35,16 @@ public class GameMessageReceiver {
      *
      * @param turnModelMessage
      */
-    private void handleTurnMessage(TurnModelMessage turnModelMessage) {
-        for (IConnectorObserver observer : gameMessageObservers) {
-            if (observer instanceof ITurnModelObserver) {
-                ((ITurnModelObserver) observer).turnModelReceived(turnModelMessage.getTurnModel());
+    private TurnModelMessage handleTurnMessage(TurnModelMessage turnModelMessage) {
+        try {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof ITurnModelObserver) {
+                    ((ITurnModelObserver) observer).turnModelReceived(turnModelMessage.getTurnModel());
+                }
             }
+            return TurnModelMessage.createResponseMessage(true);
+        } catch (Exception e) {
+            return TurnModelMessage.createResponseMessage(e);
         }
     }
 
@@ -95,8 +100,7 @@ public class GameMessageReceiver {
             switch (gameMessage.getMessageType()) {
                 case 1:
                     TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
-                    handleTurnMessage(turnModelMessage);
-                    break;
+                    return handleTurnMessage(turnModelMessage);
                 case 2:
                     RoundModelMessage roundModelMessage = (RoundModelMessage) gameMessage;
                     handleRoundMessage(roundModelMessage);
@@ -111,7 +115,8 @@ public class GameMessageReceiver {
                     break;
             }
         }
-        return new ResponseMessage(true);
+        // Returning null if the messageType doesn't expect a response.
+        return null;
     }
 
     /**

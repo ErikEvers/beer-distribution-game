@@ -8,8 +8,11 @@ import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 import javax.inject.Inject;
 
-public class MessageProcessor {
+/**
+ * Most messages are redirected to be processed by other components, but messages that can be handled by this component will be processed here.
+ */
 
+public class MessageProcessor {
     @Inject
     Connector connector;
 

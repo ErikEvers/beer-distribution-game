@@ -9,6 +9,8 @@ import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -75,7 +77,7 @@ public class TestFaultDetectionMessageReceiver {
 
 		faultDetectionMessageReceiver.receiveMessage(faultDetectionMessage,"senderIp");
 
-		verify(faultDetector).canYouReachLeaderMessageReceived(any());
+		verify(faultDetector).canYouReachLeaderMessageReceived(any(), eq("senderIp"));
 	}
 
 }

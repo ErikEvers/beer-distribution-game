@@ -75,13 +75,12 @@ public class FaultDetector {
         }
     }
 
-    public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage) {
+    public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
         if (faultDetectorPlayer != null) {
-            return faultDetectorPlayer.canYouReachLeaderMessageReceived(canYouReachLeaderMessage);
+            return faultDetectorPlayer.canYouReachLeaderMessageReceived(canYouReachLeaderMessage, senderIp);
         }
         return null;
     }
-
 
     public FaultDetectorLeader makeFaultDetectorLeader(NodeInfoList nodeInfoList, List<IConnectorObserver> observers) {
         faultDetectorLeader.setObservers(observers);

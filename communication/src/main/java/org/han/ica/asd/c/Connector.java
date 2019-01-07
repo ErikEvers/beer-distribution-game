@@ -202,9 +202,9 @@ public class Connector implements IConnecterForSetup {
         nodeInfoList.add(nodeInfo);
     }
 
-    public void sendTurn(Round turn) {
+    public boolean sendTurn(Round turn) {
         //TODO get real leaderIP for this function
-        gameMessageClient.sendTurnModel("leader ip", turn);
+        return gameMessageClient.sendTurnModel("leader ip", turn);
     }
 
     public void updateAllPeers(Round roundModel) {

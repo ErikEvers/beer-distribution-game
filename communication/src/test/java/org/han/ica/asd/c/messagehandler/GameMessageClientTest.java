@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
@@ -19,9 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -62,32 +60,31 @@ public class GameMessageClientTest {
     void shouldReturnResponseMessageWithIOException() throws IOException, ClassNotFoundException {
         String expected = new IOException("Something went wrong when trying to connect").getMessage();
 
-        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
 
-        ResponseMessage responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
-
-        assertEquals(responseMessage.getException().getMessage(), expected);
-        assertNotNull(responseMessage.getException());
+        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+        assertFalse(responseMessage);
+        //assertEquals(responseMessage.getException().getMessage(), expected);
+        //assertNotNull(responseMessage.getException());
     }
 
     @Test
     void shouldReturnResponseMessageWithClassNotFoundException() throws IOException, ClassNotFoundException {
         String expected = new ClassNotFoundException("Sommething went wrong when reading the object").getMessage();
 
-        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
 
-        ResponseMessage responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
 
-        assertEquals(responseMessage.getException().getMessage(), expected);
-        assertNotNull(responseMessage.getException());
+        assertFalse(responseMessage);
     }
 
     @Test
     void shouldReturnResponseMessageWithNoException() throws IOException, ClassNotFoundException {
-        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenReturn(new ResponseMessage(true, null));
-        ResponseMessage responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenReturn(TurnModelMessage.createResponseMessage(true));
+        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
 
-        assertNull(responseMessage.getException());
+        assertTrue(responseMessage);
     }
 
 // Still unsure on how to test this cause of threading

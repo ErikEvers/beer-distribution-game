@@ -2,7 +2,6 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
@@ -31,16 +30,18 @@ public class GameMessageClient {
      * @param turn
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
-    public ResponseMessage sendTurnModel(String ip, Round turn) {
+    public boolean sendTurnModel(String ip, Round turn) {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
-
         int nFailedAttempts = 0;
-        Exception exception = null;
+        Exception exception;
 
         while (nFailedAttempts < 3) {
             try {
-                Object response = socketClient.sendObjectWithResponse(ip, turnModelMessage);
-                return (ResponseMessage) response;
+                TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
+                if (response.getException() != null){
+                    logger.log(Level.INFO, response.getException().getMessage(), response.getException());
+                }
+                return response.isSuccess();
             } catch (IOException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
@@ -52,10 +53,11 @@ public class GameMessageClient {
                 if (nFailedAttempts == 3) {
                     exception = new ClassNotFoundException("Sommething went wrong when reading the object");
                     logger.log(Level.SEVERE, "Something went wrong when reading the object");
+
                 }
             }
         }
-        return new ResponseMessage(false, exception);
+        return false;
     }
 
     /**
