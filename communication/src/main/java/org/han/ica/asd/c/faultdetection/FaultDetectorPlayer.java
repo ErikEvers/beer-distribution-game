@@ -88,7 +88,7 @@ public class FaultDetectorPlayer extends TimerTask {
             count++;
             if (responseMessage instanceof Exception){
                 faultHandlerPlayer.incrementAmountOfFailingIps();
-            }else if(responseMessage instanceof CanYouReachLeaderMessageResponse) {
+            } else if(responseMessage instanceof CanYouReachLeaderMessageResponse) {
                 CanYouReachLeaderMessageResponse canYouReachLeaderMessageResponse = (CanYouReachLeaderMessageResponse) responseMessage;
                 if (canYouReachLeaderMessageResponse.getLeaderState()) {
                     faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();

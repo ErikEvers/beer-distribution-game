@@ -30,18 +30,7 @@ public class DBConnectionTest implements IDatabaseConnection {
 
 
 	public void createNewDatabase() {
-
-		String url = CONNECTIONSTRING + DATABASENAME;
-
-		try (Connection conn = DriverManager.getConnection(url)) {
-			if (conn != null) {
-				runSQLScript("ddl.sql");
-			}
-
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE,e.toString(),e);
-		}
-
+		runSQLScript("ddl.sql");
 	}
 
 	public void runSQLScript(String scriptname)
@@ -70,11 +59,17 @@ public class DBConnectionTest implements IDatabaseConnection {
 			conn.rollback();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				//
+			}
 		}
 	}
 
 	public void cleanup() {
-	runSQLScript("cleanup.sql");
+        runSQLScript("cleanup.sql");
 	}
 
 }

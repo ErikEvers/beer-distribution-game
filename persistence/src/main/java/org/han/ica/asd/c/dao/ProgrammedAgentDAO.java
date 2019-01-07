@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -23,6 +23,9 @@ public class ProgrammedAgentDAO {
     @Inject
     IDatabaseConnection databaseConnection;
 
+    @Inject
+    ProgrammedBusinessRulesDAO programmedBusinessRulesDAO;
+
     public ProgrammedAgentDAO() {
         //There has to be a constructor to inject the value above.
     }
@@ -32,11 +35,11 @@ public class ProgrammedAgentDAO {
      *
      * @param programmedAgent The model with all the data required to create a new ProgrammedAgent in the database.
      */
-    public void createProgrammedAgent(ProgrammedAgentDB programmedAgent) {
+    public void createProgrammedAgent(ProgrammedAgent programmedAgent) {
         executePreparedStatement(programmedAgent, CREATE_PROGRAMMEDAGENT);
     }
 
-    public void updateProgrammedAgent(ProgrammedAgentDB programmedAgentOld, ProgrammedAgentDB programmedAgentNew) {
+    public void updateProgrammedAgent(ProgrammedAgent programmedAgentOld, ProgrammedAgent programmedAgentNew) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PROGRAMMEDAGENT)) {
@@ -61,7 +64,7 @@ public class ProgrammedAgentDAO {
      *
      * @param programmedAgent The data needed to delete a ProgrammedAgent from the database.
      */
-    public void deleteProgrammedAgent(ProgrammedAgentDB programmedAgent) {
+    public void deleteProgrammedAgent(ProgrammedAgent programmedAgent) {
         executePreparedStatement(programmedAgent, DELETE_PROGRAMMEDAGENT);
     }
 
@@ -70,34 +73,31 @@ public class ProgrammedAgentDAO {
      *
      * @return A list with all the ProgrammedAgents from the database.
      */
-    public List<ProgrammedAgentDB> readAllProgrammedAgents () {
-        List<ProgrammedAgentDB> programmedAgents = new ArrayList<>();
-        try {
-            Connection conn = databaseConnection.connect();
-            if (conn == null) {
-                return programmedAgents;
-            }
-
+    public List<ProgrammedAgent> readAllProgrammedAgents () {
+        List<ProgrammedAgent> programmedAgents = new ArrayList<>();
+        Connection conn = databaseConnection.connect();
+        if (conn == null) {
+            return programmedAgents;
+        }
+        try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
             conn.setAutoCommit(false);
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    programmedAgents.add(new ProgrammedAgentDB(rs.getString("ProgrammedAgentName")));
-                }
-                conn.commit();
+            while (rs.next()) {
+                    programmedAgents.add(new ProgrammedAgent(rs.getString("ProgrammedAgentName"), programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(rs.getString("ProgrammedAgentName"))));
             }
+            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
         return programmedAgents;
     }
-
     /**
      * A method to execute a prepared statement with only one set variable.
      *
      * @param programmedAgent The data needed to know what to create or delete.
      * @param query A string which contains the query that has to be executed on the database.
      */
-    private void executePreparedStatement(ProgrammedAgentDB programmedAgent, String query) {
+    private void executePreparedStatement(ProgrammedAgent programmedAgent, String query) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {

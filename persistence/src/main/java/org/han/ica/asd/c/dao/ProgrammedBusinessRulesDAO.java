@@ -1,8 +1,7 @@
 package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
-import org.han.ica.asd.c.model.dao_model.ProgrammedBusinessRulesDB;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedBusinessRules;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -33,76 +32,72 @@ public class ProgrammedBusinessRulesDAO {
      * A method to create a new ProgrammedBusinessRule in the database
      *
      * @param programmedBusinessRules The data required to create a new ProgrammedBusinessRule in the database.
+     * @param programmedAgentName The data required to know from which ProgrammedAgent the data needs to be deleted.
      */
-    public void createProgrammedbusinessRule(ProgrammedBusinessRulesDB programmedBusinessRules) {
-        executePreparedStatement(programmedBusinessRules, CREATE_PROGRAMMEDBUSINESSRULE);
+    public void createProgrammedbusinessRule(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName) {
+        executePreparedStatement(programmedBusinessRules, programmedAgentName, CREATE_PROGRAMMEDBUSINESSRULE);
     }
 
     /**
      * A method to delete a specific ProgrammedBusinessRule from the database.
      *
      * @param programmedBusinessRules The data required to delete a specific ProgrammedBusinessRule from the database.
+     * @param programmedAgentName The data required to know from which ProgrammedAgent the data needs to be deleted.
      */
-    public void deleteSpecificProgrammedBusinessRule(ProgrammedBusinessRulesDB programmedBusinessRules) {
-        executePreparedStatement(programmedBusinessRules, DELETE_SPECIFIC_PROGRAMMEDBUSINESSRULE);
+    public void deleteSpecificProgrammedBusinessRule(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName) {
+        executePreparedStatement(programmedBusinessRules, programmedAgentName, DELETE_SPECIFIC_PROGRAMMEDBUSINESSRULE);
 
     }
 
     /**
      * A method to delete all ProgrammedBusinessRules from a ProgrammedAgent.
      *
-     * @param programmedAgent The data required to delete all the ProgrammedBusinessRules from a specific ProgrammedAgent.
+     * @param programmedAgentName The data required to delete all the ProgrammedBusinessRules from a specific ProgrammedAgent.
      */
-    public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(ProgrammedAgentDB programmedAgent) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
+    public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(String programmedAgentName) {
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setString(1, programmedAgent.getProgrammedAgentName());
+                    pstmt.setString(1, programmedAgentName);
 
-                    pstmt.executeUpdate();
-                }
+                pstmt.executeUpdate();
                 conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
     }
 
     /**
      * A method to retrieve all ProgrammedBusinessRules from a ProgrammedAgent from the database.
      *
-     * @param programmedAgent The ProgrammedAgent from whom the ProgrammedBusinessRules have to be retrieved.
+     * @param programmedAgentName The ProgrammedAgent from whom the ProgrammedBusinessRules have to be retrieved.
      * @return A list from all the ProgrammedBusinessRules from the ProgrammedAgent.
      */
-    public List<ProgrammedBusinessRulesDB> readAllProgrammedBusinessRulesFromAProgrammedAgent(ProgrammedAgentDB programmedAgent) {
+    public List<ProgrammedBusinessRules> readAllProgrammedBusinessRulesFromAProgrammedAgent(String programmedAgentName) {
         Connection conn = databaseConnection.connect();
-        List<ProgrammedBusinessRulesDB> programmedBusinessRules = new ArrayList<>();
-        try {
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
+        List<ProgrammedBusinessRules> programmedBusinessRules = new ArrayList<>();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
 
-                    conn.setAutoCommit(false);
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, programmedAgent.getProgrammedAgentName());
+                    pstmt.setString(1, programmedAgentName);
 
-                    try (ResultSet rs = pstmt.executeQuery()) {
-                        while (rs.next()) {
-                            programmedBusinessRules.add(new ProgrammedBusinessRulesDB(rs.getString("ProgrammedAgentName"),
-                                    rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
-                        }
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedBusinessRule"),
+                                rs.getString("ProgrammedAST")));
                     }
-                    conn.commit();
                 }
+                conn.commit();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
         }
 
         return programmedBusinessRules;
@@ -113,29 +108,26 @@ public class ProgrammedBusinessRulesDAO {
      * A method to execute the prepared statement with all the required data to create or delete a specific ProgrammedBusinessRule.
      *
      * @param programmedBusinessRules The data that is required to execute the prepared statement.
+     * @param programmedAgentName     The data required to know for which ProgrammedAgent the query has to be executed.
      * @param query                   The query that needs to be executed on the database.
      */
-    private void executePreparedStatement(ProgrammedBusinessRulesDB programmedBusinessRules, String query) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                    conn.setAutoCommit(false);
+    private void executePreparedStatement(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName, String query) {
+        Connection conn = databaseConnection.connect();
+        if (conn != null) {
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                conn.setAutoCommit(false);
 
-                    pstmt.setString(1, programmedBusinessRules.getProgrammedAgentName());
+                    pstmt.setString(1, programmedAgentName);
                     pstmt.setString(2, programmedBusinessRules.getProgrammedBusinessRule());
                     pstmt.setString(3, programmedBusinessRules.getProgrammedAST());
 
-                    pstmt.executeUpdate();
-
-                }
+                pstmt.executeUpdate();
                 conn.commit();
-            }
 
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            databaseConnection.rollBackTransaction(conn);
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+                databaseConnection.rollBackTransaction(conn);
+            }
         }
     }
 }
