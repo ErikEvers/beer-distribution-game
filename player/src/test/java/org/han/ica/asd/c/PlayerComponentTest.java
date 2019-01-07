@@ -2,6 +2,7 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +35,21 @@ public class PlayerComponentTest {
 
         //Assert
         verify(playerComponent.gameLogic, times(1)).getAllGames();
+    }
+
+    @Test
+    void seeOtherFacilitiesCallsMethodOfSameNameOnceInGameLogicTest() {
+        //Arrange
+        playerComponent.gameLogic = mock(GameLogic.class);
+
+        RoundDB roundDB = mock(RoundDB.class);
+
+        when(playerComponent.gameLogic.seeOtherFacilities()).thenReturn(roundDB);
+
+        //Act
+        playerComponent.seeOtherFacilities();
+
+        //Assert
+        verify(playerComponent.gameLogic, times(1)).seeOtherFacilities();
     }
 }
