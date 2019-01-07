@@ -24,11 +24,11 @@ public interface IBusinessRuleStore {
      * Gets all the agents from the database.
      * @return Returns a list with all the agents programmed.
      */
-    List<String> getAllProgramedAgents();
+    List<String> getAllProgrammedAgents();
 
     /**
      * Deletes a programmed agent with its name.
      * @param agentName The name of a agent.
      */
-    void deleteProgramedAgent(String agentName);
+    void deleteProgrammedAgent(String agentName);
 }
