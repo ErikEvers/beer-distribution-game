@@ -70,7 +70,7 @@ private static Connector instance = null;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public RoomModel createRoom(String roomName, String ip, String password){
