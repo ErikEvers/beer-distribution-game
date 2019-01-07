@@ -31,6 +31,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
+		DBConnectionTest.getInstance().cleanup();
 		GameBusinessRules businessRules = new GameBusinessRules("als voorraad minder dan 10 dan bestellen bij frits","gameAST");
 		rounds = new ArrayList<>();
 		gameBusinessRules = new ArrayList<>();

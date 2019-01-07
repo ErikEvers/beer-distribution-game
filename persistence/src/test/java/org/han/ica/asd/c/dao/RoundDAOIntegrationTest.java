@@ -26,6 +26,7 @@ class RoundDAOIntegrationTest {
 
 	@BeforeEach
 	void setUp() {
+		DBConnectionTest.getInstance().cleanup();
 		DBConnectionTest.getInstance().createNewDatabase();
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override

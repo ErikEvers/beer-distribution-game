@@ -29,6 +29,7 @@ class GameBusinessRulesDAOIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        DBConnectionTest.getInstance().cleanup();
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
