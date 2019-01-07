@@ -2,7 +2,9 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.RoundDB;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,4 +54,30 @@ public class PlayerComponentTest {
         //Assert
         verify(playerComponent.gameLogic, times(1)).seeOtherFacilities();
     }
+
+    @Test
+    void connectToGameCallsMethodOfSameNameOnceInGameLogicTest() {
+        //Arrange
+        playerComponent.gameLogic = mock(GameLogic.class);
+
+        //Act
+        playerComponent.connectToGame("");
+
+        //Assert
+        verify(playerComponent.gameLogic, times(1)).connectToGame("");
+    }
+
+    @Test
+    void requestFacilityUsageCallsMethodOfSameNameOnceInGameLogicTest() {
+        //Arrange
+        playerComponent.gameLogic = mock(GameLogic.class);
+        Facility facility = mock(Facility.class);
+
+        //Act
+        playerComponent.requestFacilityUsage(facility);
+
+        //Assert
+        verify(playerComponent.gameLogic, times(1)).requestFacilityUsage(facility);
+    }
+
 }
