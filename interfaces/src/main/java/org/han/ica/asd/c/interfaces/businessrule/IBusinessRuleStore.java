@@ -19,4 +19,11 @@ public interface IBusinessRuleStore {
      * @param businessRuleMap the business rules which has to be synchronized
      */
     void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap);
+
+    /**
+     * Gathers all facilityId's in a two-dimensional list. Each list in the two-dimensional list represents a facility type e.g. factory. The list with id's has to be sorted the same way they are represented in the game.
+     *
+     * @return Returns a two-dimensional list with all facilityId's sorted by facility type.
+     */
+    List<List<String>> getAllFacilities();
 }

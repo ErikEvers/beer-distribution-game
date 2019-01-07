@@ -4,7 +4,9 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +19,9 @@ public class Action extends ASTNode {
     private OperationValue operation;
     private Person person;
     private ComparisonStatement comparisonStatement;
+
+    @Inject
+    private IBusinessRuleStore businessRuleStore;
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -123,7 +128,28 @@ public class Action extends ASTNode {
      * @return Returns the facility id of the receiving end
      */
     public int getFacilityId() {
-        // TO-DO: 12/20/2018 Write the functionality to retrieve the facility id from the business rule AST
-        return 0;
+        List<List<String>> facilities = businessRuleStore.getAllFacilities();
+        String facilityId;
+
+        if(person.getPerson().contains("factory")){
+            facilityId = facilities.get(0).get(separateFacilityId()-1);
+        } else if(person.getPerson().contains("distributor")){
+            facilityId = facilities.get(1).get(separateFacilityId()-1);
+        } else if(person.getPerson().contains("wholesaler")){
+            facilityId = facilities.get(2).get(separateFacilityId()-1);
+        } else {
+            facilityId = facilities.get(3).get(separateFacilityId()-1);
+        }
+
+        return Integer.parseInt(facilityId);
+    }
+
+    public int separateFacilityId(){
+        String[] stringSplit = person.getPerson().split(" ");
+        if(stringSplit.length > 1){
+            return Integer.parseInt(stringSplit[1]);
+        } else {
+            return 1;
+        }
     }
 }
