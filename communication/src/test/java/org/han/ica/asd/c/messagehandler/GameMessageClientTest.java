@@ -4,10 +4,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
@@ -18,7 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -39,7 +43,7 @@ public class GameMessageClientTest {
     private SocketClient socketClient = new SocketClient();
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         initMocks(this);
         roundDataClient = new GameMessageClient();
         roundDataClient.setSocketClient(socketClient);
@@ -98,5 +102,36 @@ public class GameMessageClientTest {
 //
 //        verify(socketClient).sendObjectWithResponse(anyString(), any(RoundModelMessage.class));
 //    }
+
+    @Test
+    @DisplayName("Test If the sendWhoIsTheLeaderMessage calls the socketclient")
+    void TestSendWhoIsTheLeaderMessageHappyFlow() {
+        WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
+        whoIsTheLeaderMessage.setResponse("test");
+        try {
+            when(socketClient.sendObjectWithResponseGeneric(any(), any())).thenReturn(whoIsTheLeaderMessage);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        WhoIsTheLeaderMessage result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
+
+        assertEquals(whoIsTheLeaderMessage, result);
+        assertEquals("test", result.getResponse());
+    }
+
+    @Test
+    @DisplayName("Test If the sendWhoIsTheLeaderMessage throws catches exception")
+    void TestSendWhoIsTheLeaderMessageUnHappyFlow() {
+        WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
+        whoIsTheLeaderMessage.setResponse("test");
+        try {
+            when(socketClient.sendObjectWithResponseGeneric(any(), any())).thenThrow(new IOException("Error"));
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        WhoIsTheLeaderMessage result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
+
+        assertNotEquals(whoIsTheLeaderMessage, result);
+    }
 
 }

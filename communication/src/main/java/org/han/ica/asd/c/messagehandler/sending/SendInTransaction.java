@@ -4,6 +4,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,9 +19,10 @@ public class SendInTransaction {
     private int numberFinished = 0;
     private int numberOfThreads = 0;
 
-    private static final Logger LOGGER = Logger.getLogger(SendInTransaction.class.getName());
+    @Inject
+    private static Logger logger;
 
-    SendInTransaction(String[] ips, TransactionMessage transactionMessage, SocketClient socketClient) {
+    public SendInTransaction(String[] ips, TransactionMessage transactionMessage, SocketClient socketClient) {
         this.ips = ips;
         this.transactionMessage = transactionMessage;
         this.socketClient = socketClient;
@@ -33,7 +35,6 @@ public class SendInTransaction {
         //TODO implement with this: https://stackoverflow.com/questions/9148899/returning-value-from-thread
 
         transactionMessage.setPhaseToStage();
-
         numberOfSuccesses = 0;
         numberFinished = 0;
         try {
@@ -43,7 +44,7 @@ public class SendInTransaction {
             }
         } catch (Exception ex) {
             //rollback
-            LOGGER.log(Level.INFO, "Stagecommit failed, rolling back");
+            logger.log(Level.INFO, "Stagecommit failed, rolling back");
             transactionMessage.setPhaseToRollback();
             send();
         }
@@ -60,7 +61,7 @@ public class SendInTransaction {
                 canCommitFinished(response.getIsSuccess());
 
             } catch (IOException | ClassNotFoundException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                logger.log(Level.SEVERE, e.getMessage(), e);
             }
         });
         t.setDaemon(true);
@@ -97,7 +98,7 @@ public class SendInTransaction {
                     ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, transactionMessage);
 
                 } catch (IOException | ClassNotFoundException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                    logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             });
             t.setDaemon(true);

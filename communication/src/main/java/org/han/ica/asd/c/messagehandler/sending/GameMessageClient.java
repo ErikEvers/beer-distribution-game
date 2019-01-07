@@ -90,6 +90,11 @@ public class GameMessageClient {
         new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 
+    /**
+     * Sets new socketClient.
+     *
+     * @param socketClient New value of socketClient.
+     */
     public void setSocketClient(SocketClient socketClient) {
         this.socketClient = socketClient;
     }
