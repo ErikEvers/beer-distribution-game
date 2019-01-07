@@ -1,20 +1,42 @@
 package org.han.ica.asd.c.messagehandler;
 
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class MessageProcessorTest {
 
-    private NodeInfoList nodeInfoList = mock(NodeInfoList.class);
+    @Mock
+    private NodeInfoList nodeInfoList;
+
+    private MessageProcessor messageProcessor;
+
+    @Mock
+    Connector connector;
+
+    @BeforeEach
+    void setup(){
+        initMocks(this);
+        messageProcessor = new MessageProcessor();
+
+    }
 
     @Test
     @DisplayName("Test response is set to leaderIp when leaderIp is not null")
@@ -57,5 +79,17 @@ public class MessageProcessorTest {
         LeaderNotPresentException leaderNotPresentException = (LeaderNotPresentException) result.getException();
 
         assertEquals( "I dont have a leader at this moment", leaderNotPresentException.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test if the correct nodeinfolist is retrieved")
+    void TestIfTheCorrectNodeInfoListIsRetrieved(){
+        messageProcessor.setConnector(connector);
+
+        when(connector.getIps()).thenReturn(nodeInfoList);
+
+        NodeInfoList result = messageProcessor.getNodeInfoListFromConnector();
+
+        assertEquals(nodeInfoList, result);
     }
 }

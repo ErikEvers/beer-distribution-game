@@ -47,4 +47,13 @@ public class MessageProcessor {
         }
         return whoIsTheLeaderMessage;
     }
+
+    /**
+     * Sets new connector.
+     *
+     * @param connector New value of connector.
+     */
+    public void setConnector(Connector connector) {
+        this.connector = connector;
+    }
 }
