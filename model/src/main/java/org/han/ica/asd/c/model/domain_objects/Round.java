@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

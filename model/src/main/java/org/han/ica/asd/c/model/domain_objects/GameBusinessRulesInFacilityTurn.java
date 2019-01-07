@@ -3,10 +3,10 @@ package org.han.ica.asd.c.model.domain_objects;
 import java.util.List;
 
 public class GameBusinessRulesInFacilityTurn implements IDomainModel{
-    int facilityId;
-    int roundId;
-    String gameAgentName;
-    List<GameBusinessRules> gameBusinessRulesList;
+    private int facilityId;
+    private int roundId;
+    private String gameAgentName;
+    private List<GameBusinessRules> gameBusinessRulesList;
 
     public GameBusinessRulesInFacilityTurn() {
         // Empty as it also needs to be instantiated when empty
