@@ -11,9 +11,10 @@ public interface IPlayerComponent {
     void activateAgent();
     RoundDB seeOtherFacilities();
     void placeOrder(int amount);
-    void chooseFacility(Facility facility);
+    void requestFacilityUsage(Facility facility);
     void requestFacilityInfo(String info);
     void selectAgent();
     List<String> getAllGames();
-    void connectToGame();
+    void connectToGame(String game);
+    List<Facility> getAllFacilities();
 }

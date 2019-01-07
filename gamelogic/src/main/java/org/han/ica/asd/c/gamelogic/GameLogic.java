@@ -11,6 +11,7 @@ import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.observers.IConnectorObserver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IConnectedForPlayer {
     String gameId;
     private IConnectedForPlayer communication;
     private IPersistence persistence;
@@ -75,7 +76,13 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     @Override
     public List<String> getAllGames() {
+        //Yet to be implemented
         return null;
+    }
+
+    @Override
+    public void connectToGame(String game) {
+        //Yet to be implemented
     }
 
     /**
@@ -95,5 +102,26 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     public void removeAgentByPlayerId(String playerId) {
         Player player = persistence.getPlayerById(playerId);
         participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
+    }
+
+    @Override
+    public void sendTurnData(FacilityTurnDB turn) {
+        //Yet to be implemented
+    }
+
+    @Override
+    public void addObserver(IConnectorObserver observer) {
+        //Yet to be implemented
+    }
+
+    @Override
+    public void requestFacilityUsage(Facility facility) {
+        //Yet to be implemented
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        //Yet to be implemented.
+        return null;
     }
 }
