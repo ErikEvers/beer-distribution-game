@@ -107,6 +107,7 @@ public class GameMessageReceiver {
                 case 4:
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
+
                 default:
                     break;
             }
