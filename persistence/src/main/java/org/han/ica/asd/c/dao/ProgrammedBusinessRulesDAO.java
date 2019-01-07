@@ -90,7 +90,7 @@ public class ProgrammedBusinessRulesDAO {
                 try (ResultSet rs = pstmt.executeQuery()) {
                     while (rs.next()) {
                         programmedBusinessRules.add(new ProgrammedBusinessRules(rs.getString("ProgrammedAgentName"),
-                                rs.getString("ProgrammedBusinessRule"), rs.getString("ProgrammedAST")));
+                                rs.getString("ProgrammedBusinessRule")));
                     }
                 }
                 conn.commit();

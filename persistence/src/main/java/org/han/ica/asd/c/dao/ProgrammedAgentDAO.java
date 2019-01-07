@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -75,24 +75,22 @@ public class ProgrammedAgentDAO {
      */
     public List<ProgrammedAgent> readAllProgrammedAgents () {
         List<ProgrammedAgent> programmedAgents = new ArrayList<>();
-        try {
-            Connection conn = databaseConnection.connect();
-            if (conn == null) {
-                return programmedAgents;
-            }
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
-                conn.setAutoCommit(false);
-                while (rs.next()) {
+        Connection conn = databaseConnection.connect();
+        if (conn == null) {
+            return programmedAgents;
+        }
+        try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
+            conn.setAutoCommit(false);
+            while (rs.next()) {
                     programmedAgents.add(new ProgrammedAgent(rs.getString("ProgrammedAgentName"), programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(rs.getString("ProgrammedAgentName"))));
-                }
-                conn.commit();
-            } catch (SQLException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
-                databaseConnection.rollBackTransaction(conn);
             }
+            conn.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
+        }
         return programmedAgents;
     }
-
     /**
      * A method to execute a prepared statement with only one set variable.
      *
