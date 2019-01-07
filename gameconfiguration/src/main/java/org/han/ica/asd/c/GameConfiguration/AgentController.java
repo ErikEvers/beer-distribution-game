@@ -49,6 +49,12 @@ public class AgentController implements IAgentController {
     return facilities;
   }
 
+  /**
+   * This function is called from the interface when the Game Leader is done with setting the GameAgents on specific
+   * facilities.
+   * @param facilities -> All the facilities in this game.
+   * @return The list with facilities with the linked GameAgents.
+   */
   public List<Facility> agentsFinished(List<Facility> facilities) {
     try {
       ProgrammedAgent defaultAgent = getDefaultAgent(this.agents);
@@ -64,6 +70,12 @@ public class AgentController implements IAgentController {
     return facilities;
   }
 
+  /**
+   * Get all the ProgrammedAgents from the database. When the persistence layer returns no ProgrammedAgents, this
+   * function will throw a Exception.
+   * @return -> A list with agents.
+   * @throws NoProgrammedAgentsFoundException
+   */
   private List<ProgrammedAgent> getAllProgrammedAgents() throws NoProgrammedAgentsFoundException{
     List<ProgrammedAgent> agents = iPersistenceProgrammedAgents.getAllAgents();
     if(agents.isEmpty()) {
@@ -73,7 +85,12 @@ public class AgentController implements IAgentController {
   }
 
   //TODO -> Afspreken default agent name.
-
+  /**
+   * To find the Default agent. The agent is found on the default agent name
+   * @param agents -> All the agents from the database.
+   * @return -> The default ProgrammedAgent in game
+   * @throws NoProgrammedAgentsFoundException
+   */
   private ProgrammedAgent getDefaultAgent(List<ProgrammedAgent> agents) throws NoProgrammedAgentsFoundException {
     for(ProgrammedAgent agent: agents){
       if ("Default".equals(agent.getProgrammedAgentName())) {
