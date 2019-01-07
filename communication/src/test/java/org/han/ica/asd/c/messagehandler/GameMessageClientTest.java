@@ -52,16 +52,16 @@ public class GameMessageClientTest {
     @Test
     void shouldReturnResponseMessageWithIOException() throws IOException, ClassNotFoundException {
         when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
-
         boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+        
         assertFalse(responseMessage);
     }
 
     @Test
     void shouldReturnResponseMessageWithClassNotFoundException() throws IOException, ClassNotFoundException {
         when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
-
         boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
+
         assertFalse(responseMessage);
     }
 
