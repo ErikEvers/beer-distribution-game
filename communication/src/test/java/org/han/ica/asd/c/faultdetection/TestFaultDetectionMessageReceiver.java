@@ -5,7 +5,6 @@ import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
-import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,20 +75,7 @@ public class TestFaultDetectionMessageReceiver {
 
 		faultDetectionMessageReceiver.receiveMessage(faultDetectionMessage,"senderIp");
 
-		verify(faultDetector).canYouReachLeaderMessageReceived(any(),any());
-	}
-
-	@Test
-	void TestICanReachLeaderMessageReceivedCase(){
-		FaultDetectionMessage faultDetectionMessage = mock(ICanReachLeaderMessage.class);
-
-		doReturn(5)
-				.when(faultDetectionMessage)
-				.getMessageId();
-
-		faultDetectionMessageReceiver.receiveMessage(faultDetectionMessage,"senderIp");
-
-		verify(faultDetector).iCanReachLeaderMessageReceived(any());
+		verify(faultDetector).canYouReachLeaderMessageReceived(any());
 	}
 
 }

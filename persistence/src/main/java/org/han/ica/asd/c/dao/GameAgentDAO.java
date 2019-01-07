@@ -103,23 +103,23 @@ public class GameAgentDAO implements IBeerDisitributionGameDAO {
      * @return A list of GameAgents from the BeerGame.
      */
     public List<GameAgentDB> readGameAgentsForABeerGame(String gameId) {
-        Connection conn = null;
         List<GameAgentDB> gameAgents = new ArrayList<>();
-        try {
-            conn = databaseConnection.connect();
-            try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAGENTS_FOR_A_BEERGAME)) {
-                conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        if(conn == null) {
+            return gameAgents;
+        }
+        try (PreparedStatement pstmt = conn.prepareStatement(READ_GAMEAGENTS_FOR_A_BEERGAME)) {
+            conn.setAutoCommit(false);
 
-                pstmt.setString(1, gameId);
+            pstmt.setString(1, gameId);
 
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    while (rs.next()) {
-                        gameAgents.add(new GameAgentDB(rs.getString("GameId"),
-                                rs.getString("GameAgentName"), rs.getInt("FacilityId")));
-                    }
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    gameAgents.add(new GameAgentDB(rs.getString("GameId"),
+                            rs.getString("GameAgentName"), rs.getInt("FacilityId")));
                 }
-                conn.commit();
             }
+            conn.commit();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }

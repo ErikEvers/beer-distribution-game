@@ -2,14 +2,15 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
-import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.communication.IConnecterForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -23,8 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector{
-private static Connector instance = null;
+public class Connector implements IConnecterForSetup {
+    private static Connector instance = null;
     private ArrayList<IConnectorObserver> observers;
 
     @Inject
@@ -65,7 +66,7 @@ private static Connector instance = null;
     }
 
     //for tests
-    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder){
+    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder) {
         observers = new ArrayList<>();
         nodeInfoList = new NodeInfoList();
         this.finder = finder;
@@ -85,7 +86,7 @@ private static Connector instance = null;
         socketServer.startThread();
     }
 
-    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer){
+    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer) {
         observers = new ArrayList<>();
         nodeInfoList = new NodeInfoList();
         this.finder = finder;
@@ -107,19 +108,24 @@ private static Connector instance = null;
 
     //TODO replace with GUICE, inject singleton
     public static Connector getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new Connector();
         }
         return instance;
     }
 
-    public List<String> getAvailableRooms() throws DiscoveryException {
-        return finder.getAvailableRooms();
+    public List<String> getAvailableRooms() {
+        try {
+            return finder.getAvailableRooms();
+        } catch (DiscoveryException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return new ArrayList<>();
     }
 
-    public Room createRoom(String roomName, String ip, String password){
+    public RoomModel createRoom(String roomName, String ip, String password) {
         try {
-            Room createdRoom = finder.createGameRoom(roomName, ip, password);
+            RoomModel createdRoom = finder.createGameRoomModel(roomName, ip, password);
             nodeInfoList.add(new NodeInfo(ip, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -128,25 +134,38 @@ private static Connector instance = null;
         return null;
     }
 
-    public Room joinRoom(String roomName, String ip, String password){
+    public RoomModel joinRoom(String roomName, String ip, String password) {
         try {
-            Room joinedRoom = finder.joinGameRoom(roomName, ip, password);
-            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-            return joinedRoom;
+            RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
+            if (makeConnection(joinedRoom.getLeaderIP())) {
+                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+                setJoiner();
+                return joinedRoom;
+            }
+        } catch (DiscoveryException e) {
+            logger.log(Level.INFO, e.getMessage(), e);
+        }
+        return null;
+    }
+
+    public RoomModel updateRoom(RoomModel room) {
+        try {
+            return finder.getRoom(room);
         } catch (DiscoveryException e) {
             logger.log(Level.INFO, e.getMessage());
         }
         return null;
     }
 
-    public void startRoom(Room room){
+    public void startRoom(RoomModel room) {
         try {
-            for(String hostIP: room.getHosts()){
+            for (String hostIP : room.getHosts()) {
                 nodeInfoList.add(new NodeInfo(hostIP, true, false));
             }
-            room.closeGameAndStartGame();
-        } catch (RoomException e) {
-            logger.log(Level.INFO, e.getMessage());
+            finder.startGameRoom(room.getRoomName());
+            setLeader();
+        } catch (DiscoveryException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -160,10 +179,9 @@ private static Connector instance = null;
 
     public void setJoiner() {
         faultDetector.setPlayer(nodeInfoList);
-        makeConnection(nodeInfoList.get(0).getIp());
     }
 
-    public boolean makeConnection(String destinationIP){
+    public boolean makeConnection(String destinationIP) {
         try {
             new FaultDetectionClient().makeConnection(destinationIP);
             return true;
@@ -176,8 +194,8 @@ private static Connector instance = null;
     public void addToNodeInfoList(String txtIP) {
         nodeInfoList.addIp(txtIP);
     }
-    
-    public void addLeaderToNodeInfoList(String txtIp){
+
+    public void addLeaderToNodeInfoList(String txtIp) {
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setLeader(true);
         nodeInfo.setIp(txtIp);
@@ -202,7 +220,7 @@ private static Connector instance = null;
         return nodeInfoList;
     }
 
-    public void setNodeInfoList(NodeInfoList nodeInfoList){
+    public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
     }
 }

@@ -97,7 +97,7 @@ public class GameMessageClientTest {
 //        String[] s = new String[]{wrongIp};
 //
 //        when(socketClient.sendObjectWithResponse(anyString(), any(RoundModelMessage.class))).thenReturn(new ResponseMessage(true));
-//        gameMessageClient.sendRoundToAllPlayers(s, roundModel);
+//        gameMessageClient.sendToAllPlayers(s, roundModel);
 //
 //        verify(socketClient).sendObjectWithResponse(anyString(), any(RoundModelMessage.class));
 //    }

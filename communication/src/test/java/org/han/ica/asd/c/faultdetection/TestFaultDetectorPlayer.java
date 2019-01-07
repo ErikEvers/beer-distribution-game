@@ -2,7 +2,7 @@ package org.han.ica.asd.c.faultdetection;
 
 
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
-import org.han.ica.asd.c.faultdetection.messagetypes.ICanReachLeaderMessage;
+import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -34,7 +32,6 @@ class TestFaultDetectorPlayer {
 
         faultDetectorPlayer.setFaultDetectionClient(faultDetectionClient);
         faultDetectorPlayer.setFaultHandlerPlayer(faultHandlerPlayer);
-
     }
 
     @Test
@@ -75,20 +72,10 @@ class TestFaultDetectorPlayer {
 
     @Test
     void TestCanYouReachLeaderMessageReceived() {
+        Object result = faultDetectorPlayer.canYouReachLeaderMessageReceived(new CanYouReachLeaderMessage());
 
-        faultDetectorPlayer.canYouReachLeaderMessageReceived(new CanYouReachLeaderMessage(), "");
-
-        verify(faultDetectionClient).sendICanReachLeaderMessage(any(), eq(""));
-
+        assertTrue(result instanceof CanYouReachLeaderMessageResponse);
     }
 
-    @Test
-    void TestICanReachLeaderMessageReceived() {
-
-
-        faultDetectorPlayer.iCanReachLeaderMessageReceived(new ICanReachLeaderMessage());
-
-        verify(faultHandlerPlayer).incrementAmountOfConnectionsWithLeader();
-    }
 
 }

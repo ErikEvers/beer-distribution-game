@@ -38,11 +38,10 @@ public class MessageDirector implements IServerObserver {
 
         } else if (receivedObject instanceof FaultDetectionMessage) {
             FaultDetectionMessage faultDetectionMessage = (FaultDetectionMessage) receivedObject;
-            faultDetectionMessageReceiver.receiveMessage(faultDetectionMessage, senderIp);
+            return faultDetectionMessageReceiver.receiveMessage(faultDetectionMessage, senderIp);
         } else {
             return new ResponseMessage(false, new InvalidObjectException("Invalid object"));
         }
-        return null;
     }
 
     @Override

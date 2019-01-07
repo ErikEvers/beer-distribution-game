@@ -84,8 +84,12 @@ public class GameMessageReceiverTest {
     @Test
     public void roundModelReceived() {
         Round roundModel = new Round();
-        RoundModelMessage roundModelMessageStage = new RoundModelMessage(roundModel, 0);
-        RoundModelMessage roundModelMessageCommit = new RoundModelMessage(roundModel, 1);
+
+        RoundModelMessage roundModelMessageStage = new RoundModelMessage(roundModel);
+        roundModelMessageStage.setPhaseToStage();
+
+        RoundModelMessage roundModelMessageCommit = new RoundModelMessage(roundModel);
+        roundModelMessageCommit.setPhaseToCommit();
 
         when(gameMessageFilterer.isUnique(roundModelMessageStage)).thenReturn(true);
         gameMessageReceiver.gameMessageReceived(roundModelMessageStage);
@@ -95,6 +99,4 @@ public class GameMessageReceiverTest {
 
         verify(roundModelObserver).roundModelReceived(roundModel);
     }
-
-
 }
