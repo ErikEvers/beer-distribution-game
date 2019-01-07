@@ -51,12 +51,12 @@ public class ReplayGameScreenController {
 
     @FXML
     public void currentRoundEntered(ActionEvent event) {
-
+        //This function is being implemented in Branch: SIXGJM-514
     }
 
     @FXML
     public void nextRoundButtonClicked(ActionEvent event) {
-
+        //This function is being implemented in Branch: SIXGJM-514
     }
 
 
@@ -67,12 +67,12 @@ public class ReplayGameScreenController {
 
     @FXML
     public void prevRoundButtonClicked(ActionEvent event) {
-
+        //This function is being implemented in Branch: SIXGJM-514
     }
 
     @FXML
     void initialize() {
-
+        //This function is being implemented in Branch: SIXGJM-514
     }
 }
 

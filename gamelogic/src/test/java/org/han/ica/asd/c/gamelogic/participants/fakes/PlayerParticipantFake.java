@@ -9,9 +9,7 @@ public class PlayerParticipantFake extends PlayerParticipant {
                 "",
                 "",
                 new Facility(
-                        null,
-                        null,
-                        null, 0),
+                        null,1),
                 "",
                 true);
     }

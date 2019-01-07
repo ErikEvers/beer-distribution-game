@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 /**
@@ -12,7 +13,7 @@ public interface IParticipant {
      * doOrder will notify the  participant to make an order.
      * @return A FacilityTurn with an order for the current round.
      */
-    Round doOrder();
+    GameRoundAction executeTurn(Round round);
 
     /**
      * Returns the facility for the ParticipantPool to compare with other participants.
