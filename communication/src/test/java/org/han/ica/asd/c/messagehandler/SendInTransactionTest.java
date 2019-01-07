@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.messagehandler;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.messagehandler.sending.SendInTransaction;
@@ -7,13 +10,11 @@ import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.mockito.Mock;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,7 +57,6 @@ public class SendInTransactionTest {
         }
         sendInTransaction.sendToAllPlayers();
         verify(transactionMessage).setPhaseToStage();
-        verify(transactionMessage).setPhaseToCommit();
 
     }
 }
