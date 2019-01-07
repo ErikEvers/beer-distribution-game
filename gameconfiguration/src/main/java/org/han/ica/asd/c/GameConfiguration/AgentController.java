@@ -55,9 +55,9 @@ public class AgentController implements IAgentController {
    * @param facilities -> All the facilities in this game.
    * @return The list with facilities with the linked GameAgents.
    */
-  public List<Facility> agentsFinished(List<Facility> facilities) {
+  public List<Facility> agentsFinished(List<Facility> facilities, List<ProgrammedAgent> agents) {
     try {
-      ProgrammedAgent defaultAgent = getDefaultAgent(this.agents, "Default");
+      ProgrammedAgent defaultAgent = getDefaultAgent(agents, "Default");
       for(Facility facility: facilities) {
         if(facility.getAgent() == null) {
           GameAgent gameAgent = new GameAgent(defaultAgent.getProgrammedAgentName(), facility);

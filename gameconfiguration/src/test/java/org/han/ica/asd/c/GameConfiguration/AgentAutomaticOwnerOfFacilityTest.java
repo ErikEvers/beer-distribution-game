@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.fail;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class AgentAutomaticOwnerOfFacilityTest {
 
@@ -46,30 +44,22 @@ public class AgentAutomaticOwnerOfFacilityTest {
 
   @Test
   public void testAgentsAutomaticInUnownedFacilities() {
-    List<ProgrammedAgent> agents = mock(List.class);
-    List<Facility> facilities = mock(List.class);
-    String[] agentNames = {"piet", "Default", "kees"};
+    List<ProgrammedAgent> agents = new ArrayList<>();
+    List<Facility> facilities = new ArrayList<>();
+    String[] agentNames = {"Harry", "Default", "Pieter"};
     for(int i = 0; i < 3; ++i) {
       agents.add(new ProgrammedAgent(agentNames[i]));
     }
     for(int i = 0; i < 10; ++i) {
-      facilities.add(mock(Facility.class));
+      facilities.add(new Facility());
+      facilities.get(i).setFacilityId(i);
     }
+    // Do Test
+    List<Facility> testedList = agentController.agentsFinished(facilities, agents);
     for(int i = 0; i < facilities.size(); ++i)
-      facilities.get(i).setAgent(null);
+      facilities.get(i).setAgent(new GameAgent("Default", facilities.get(i)));
 
-
-    GameAgent gameAgent = mock(GameAgent.class);
-    try {
-      for (int i = 0; i < facilities.size(); ++i) {
-        doNothing().when(agentController.getDefaultAgent(agents, anyString()));
-        agentController.agentsFinished(facilities);
-        System.out.println(facilities.get(i).getAgent());
-        verify(facilities.get(i), times(1)).setAgent(gameAgent);
-      }
-    } catch(NoProgrammedAgentsFoundException e) {
-      e.printStackTrace();
-    }
+    Assert.assertEquals(facilities, testedList);
   }
 
   /**
