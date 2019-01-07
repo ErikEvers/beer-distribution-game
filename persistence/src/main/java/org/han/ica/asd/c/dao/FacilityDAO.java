@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.dao;
 
-
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.exception.GameIdNotSetException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
