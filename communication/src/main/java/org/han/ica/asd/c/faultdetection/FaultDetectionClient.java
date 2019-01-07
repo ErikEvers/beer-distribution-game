@@ -108,7 +108,6 @@ public class FaultDetectionClient {
         return socketClient.sendToAll(ips,canYouReachLeaderMessage);
     }
 
-
     /**
      * Sends the specified message to a specified ipAddress.
      * This method is used by the public methods in this class.

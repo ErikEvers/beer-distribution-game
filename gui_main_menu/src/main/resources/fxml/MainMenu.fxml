@@ -41,11 +41,11 @@
                <image>
                   <Image url="@../image/flat-beer-background_23-2147744096.jpg" />
                </image></ImageView>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Create Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Button onAction="#handleJoinGameButtonClick" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Join Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Button fx:id="createAgent" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Create Agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Button fx:id="replay" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Replay game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Close Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Create Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button onAction="#handleJoinGameButtonClick" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Join Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Button fx:id="createAgent" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Create Agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Button fx:id="replay" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Replay game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Close Game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
       </GridPane>
    </children>
