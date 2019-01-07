@@ -35,7 +35,12 @@ class BusinessRuleFactory {
         ASTNODE_CLASS_MAP = Collections.unmodifiableMap(astNodeClassMap);
     }
 
-    ASTNode create(String identifier) {
+	/**
+	 * Takes the identifier of the business rule script and transforms it into the object of the identifier
+	 * @param identifier    The identifier of the business rule script
+	 * @return              The object which the identifier represents
+	 */
+	ASTNode create(String identifier) {
         try {
             return ASTNODE_CLASS_MAP.get(identifier).newInstance();
         } catch (Exception e) {
