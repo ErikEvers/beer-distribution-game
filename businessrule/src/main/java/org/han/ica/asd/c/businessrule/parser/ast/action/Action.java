@@ -128,7 +128,7 @@ public class Action extends ASTNode {
      * @return Returns the facility id of the receiving end
      */
     public int getFacilityId() {
-        // List<List<String>> facilities = businessRuleStore.getAllFacilities();
+        // TO-DO: List<List<String>> facilities = businessRuleStore.getAllFacilities()
         // This is a mock of the function above
         List<List<String>> facilities = new ArrayList<>();
         List<String> factory = new ArrayList<>();
@@ -148,15 +148,21 @@ public class Action extends ASTNode {
 
         String facilityId;
 
-        if(person.getPerson().contains(FacilityType.FACTORY.getName())){
-            facilityId = facilities.get(FacilityType.FACTORY.getIndex()).get(separateFacilityId());
-        } else if(person.getPerson().contains(FacilityType.DISTRIBUTOR.getName())){
-            facilityId = facilities.get(FacilityType.DISTRIBUTOR.getIndex()).get(separateFacilityId());
-        } else if(person.getPerson().contains(FacilityType.WHOLESALER.getName())){
-            facilityId = facilities.get(FacilityType.WHOLESALER.getIndex()).get(separateFacilityId());
+        if(person != null){
+            if(person.getPerson().contains(FacilityType.FACTORY.getName())){
+                facilityId = facilities.get(FacilityType.FACTORY.getIndex()).get(separateFacilityId());
+            } else if(person.getPerson().contains(FacilityType.DISTRIBUTOR.getName())){
+                facilityId = facilities.get(FacilityType.DISTRIBUTOR.getIndex()).get(separateFacilityId());
+            } else if(person.getPerson().contains(FacilityType.WHOLESALER.getName())){
+                facilityId = facilities.get(FacilityType.WHOLESALER.getIndex()).get(separateFacilityId());
+            } else {
+                facilityId = facilities.get(FacilityType.RETAILER.getIndex()).get(separateFacilityId());
+            }
         } else {
-            facilityId = facilities.get(FacilityType.RETAILER.getIndex()).get(separateFacilityId());
+            // TO-DO: Randomly pick one below/above
+            facilityId = "1";
         }
+
 
         return Integer.parseInt(facilityId);
     }

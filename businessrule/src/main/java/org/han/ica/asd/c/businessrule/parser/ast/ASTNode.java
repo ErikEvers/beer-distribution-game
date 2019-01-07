@@ -16,6 +16,12 @@ public abstract class ASTNode {
         return this;
     }
 
+    /**
+     * Overridable function for adding a value to an ASTNode
+     *
+     * @param value Value that is added to the ASTNode
+     * @return Returns itself so that it can be used immediately
+     */
     public ASTNode addValue(String value) {
         return this;
     }
