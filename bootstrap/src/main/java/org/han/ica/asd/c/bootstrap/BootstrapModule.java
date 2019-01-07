@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.bootstrap;
 
-import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.MessageDirector;
@@ -23,14 +22,12 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
-import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.messagehandler.sending.SendInTransaction;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
-import java.util.logging.Logger;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
@@ -39,10 +36,11 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IDatabaseConnection.class).to(DBConnection.class);
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("RoundDAO")).to(RoundDAO.class);
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("BeergameDAO")).to(BeergameDAO.class);
-		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("GameBusinessRulesRulesInFacilityTurnDAO")).to(GameBusinessRulesInFacilityTurnDAO.class);
+		bind(IBeerDisitributionGameDAO.class)
+				.annotatedWith(Names.named("GameBusinessRulesRulesInFacilityTurnDAO"))
+				.to(GameBusinessRulesInFacilityTurnDAO.class);
 		bind(IBeerDisitributionGameDAO.class).annotatedWith(Names.named("FacilityTurnDAO")).to(FacilityTurnDAO.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
-
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
@@ -51,17 +49,15 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("ChooseFacility")).to(ChooseFacility.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ChooseAgent")).to(ChooseAgent.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
-
-		//CommunicationBinds
 		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 
-		requestStaticInjection(FXMLLoaderOnSteroids.class);
+		staticRequests();
+	}
 
-		//communication
+	private void staticRequests(){
+		requestStaticInjection(FXMLLoaderOnSteroids.class);
 		requestStaticInjection(SocketClient.class);
 		requestStaticInjection(SocketServer.class);
-
-		//FaultDetector
 		requestStaticInjection(FailLog.class);
 		requestStaticInjection(FaultDetectionClient.class);
 		requestStaticInjection(FaultDetectorLeader.class);

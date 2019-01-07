@@ -2,7 +2,6 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
-import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
@@ -38,7 +37,7 @@ public class Connector implements IConnecterForSetup {
     private GameMessageClient gameMessageClient;
 
     @Inject
-    private static Logger logger;
+    private static Logger logger;//NOSONAR
 
     @Inject
     private SocketServer socketServer;
@@ -65,26 +64,6 @@ public class Connector implements IConnecterForSetup {
         socketServer.startThread();
     }
 
-    //for tests
-    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder) {
-        observers = new ArrayList<>();
-        nodeInfoList = new NodeInfoList();
-        this.finder = finder;
-        this.gameMessageClient = gameMessageClient;
-        this.faultDetector = faultDetector;
-
-        faultDetector.setObservers(observers);
-
-        GameMessageReceiver gameMessageReceiver1 = new GameMessageReceiver();
-        gameMessageReceiver1.setObservers(observers);
-
-        MessageDirector messageDirector1 = new MessageDirector();
-        messageDirector1.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
-        messageDirector1.setGameMessageReceiver(gameMessageReceiver1);
-
-        socketServer.setServerObserver(messageDirector1);
-        socketServer.startThread();
-    }
 
     public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer) {
         observers = new ArrayList<>();

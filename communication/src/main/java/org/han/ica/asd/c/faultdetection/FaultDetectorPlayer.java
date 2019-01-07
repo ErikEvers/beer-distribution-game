@@ -19,6 +19,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private static Logger logger;
 
     private final long FIVEMINUTES = 300000;
+    
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
 
     private long lastReceived;
