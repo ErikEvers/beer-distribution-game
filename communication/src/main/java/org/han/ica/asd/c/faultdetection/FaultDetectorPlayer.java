@@ -12,11 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 public class FaultDetectorPlayer extends TimerTask {
-    @Inject
-    private static Logger logger;
 
     private static final long FIVE_MINUTES = 300000;
 
@@ -156,4 +153,12 @@ public class FaultDetectorPlayer extends TimerTask {
         this.playersWhoAlreadyCouldntReachLeader = mock;
     }
 
+    /**
+     * Gets nodeInfoList.
+     *
+     * @return Value of nodeInfoList.
+     */
+    public NodeInfoList getNodeInfoList() {
+        return nodeInfoList;
+    }
 }

@@ -1,6 +1,9 @@
 package org.han.ica.asd.c.faultdetection;
 
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,10 +12,13 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -127,4 +133,41 @@ public class TestFaultDetector {
         assertNull(faultDetector.getFaultDetectionMessageReceiver());
     }
 
+    @Test
+    void TestMakeFaultDetectorLeader(){
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(FailLog.class);
+                requestStaticInjection(FaultDetectorLeader.class);
+            }
+        });
+        faultDetector = injector.getInstance(FaultDetector.class);
+        faultDetectorLeader = injector.getInstance(FaultDetectorLeader.class);
+
+        faultDetector.setFaultDetectorLeader(faultDetectorLeader);
+
+        FaultDetectorLeader result = faultDetector.makeFaultDetectorLeader(nodeInfoList, observers);
+
+        assertEquals(observers, result.getObservers());
+        assertEquals(faultDetectorLeader, result);
+    }
+
+    @Test
+    void testMakeFaultDetectorPlayer(){
+
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(FailLog.class);
+                requestStaticInjection(FaultDetectorPlayer.class);
+            }
+        });
+        faultDetector = injector.getInstance(FaultDetector.class);
+        faultDetectorPlayer = injector.getInstance(FaultDetectorPlayer.class);
+
+        FaultDetectorPlayer result = faultDetector.makeFaultDetectorPlayer(nodeInfoList);
+
+        assertEquals(nodeInfoList, result.getNodeInfoList());
+    }
 }

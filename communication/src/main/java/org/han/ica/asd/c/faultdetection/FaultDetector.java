@@ -101,4 +101,13 @@ public class FaultDetector {
         this.observers = observers;
     }
 
+
+    /**
+     * Sets new faultDetectorLeader.
+     *
+     * @param faultDetectorLeader New value of faultDetectorLeader.
+     */
+    public void setFaultDetectorLeader(FaultDetectorLeader faultDetectorLeader) {
+        this.faultDetectorLeader = faultDetectorLeader;
+    }
 }

@@ -252,4 +252,12 @@ public class FaultDetectorLeader extends TimerTask {
     }
 
 
+    /**
+     * Gets observers.
+     *
+     * @return Value of observers.
+     */
+    public List<IConnectorObserver> getObservers() {
+        return observers;
+    }
 }
