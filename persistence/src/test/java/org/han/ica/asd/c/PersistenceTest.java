@@ -98,6 +98,7 @@
 ////		verify(((BeergameDAO)beerGameDAOMock), times(1)).getGameLog(anyString());
 //	}
 //
+
 //	@Test
 //	void logUsedBusinessRuleToCreateOrderTest() {
 //		persistence.logUsedBusinessRuleToCreateOrder(gameBusinessRulesInFacilityTurn);
