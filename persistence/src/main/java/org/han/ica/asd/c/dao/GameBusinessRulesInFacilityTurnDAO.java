@@ -66,7 +66,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 */
 	public GameBusinessRulesInFacilityTurn readTurn(int roundId, int facilityId, String gameAgentName) {
 		Connection conn = databaseConnection.connect();
-		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
+		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn();
 		List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
 
 		if (conn != null) {
