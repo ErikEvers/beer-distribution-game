@@ -108,4 +108,10 @@ public class ConnectorTest {
         connector.updateAllPeers(new Round());
         verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class), any(Round.class));
     }
+
+    @Test
+    public void sendConfigucationToAllTest() {
+        connector.sendConfiguration(new Configuration());
+        verify(gameMessageClient).sendConfigurationToAllPlayers(any(String[].class), any(Configuration.class));
+    }
 }

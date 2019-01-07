@@ -69,7 +69,7 @@ public class GameMessageReceiverTest {
 
         verify(turnModelObserver).turnModelReceived(turnModel);
     }
-
+    
     @Test
     public void roundModelRecieved() {
         Round roundModel = new Round();

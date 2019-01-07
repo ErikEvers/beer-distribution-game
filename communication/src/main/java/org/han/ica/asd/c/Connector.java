@@ -165,7 +165,7 @@ private static Connector instance = null;
 
     public void sendConfiguration(Configuration configuration) {
         List<String> ips = nodeInfoList.getAllIps();
-        gameMessageClient.sendConfigurationToAllPlayers(ips, configuration);
+        gameMessageClient.sendConfigurationToAllPlayers(ips.toArray(new String[0]), configuration);
     }
 
     public void addIP(String text) {

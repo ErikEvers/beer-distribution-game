@@ -32,6 +32,37 @@ public class GameMessageReceiver {
     }
 
     /**
+     * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
+     *
+     * @param gameMessage
+     * @return ResponseMessage
+     */
+    public Object gameMessageReceived(GameMessage gameMessage) {
+
+        if (gameMessageFilterer.isUnique(gameMessage)) {
+            switch (gameMessage.getMessageType()) {
+                case 1:
+                    TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
+                    handleTurnMessage(turnModelMessage);
+                    break;
+                case 2:
+                    RoundModelMessage roundModelMessage = (RoundModelMessage) gameMessage;
+                    handleRoundMessage(roundModelMessage);
+                    break;
+                case 3:
+                    ElectionMessage electionMessage = (ElectionMessage) gameMessage;
+                    return new ResponseMessage(handleElectionMessage(electionMessage));
+                case 4:
+                    WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
+                    return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
+                default:
+                    break;
+            }
+        }
+        return new ResponseMessage(true);
+    }
+
+    /**
      * This method handles a TurnMessage
      *
      * @param turnModelMessage
@@ -81,37 +112,6 @@ public class GameMessageReceiver {
                 }
             }
         }
-    }
-
-    /**
-     * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
-     *
-     * @param gameMessage
-     * @return ResponseMessage
-     */
-    public Object gameMessageReceived(GameMessage gameMessage) {
-
-        if (gameMessageFilterer.isUnique(gameMessage)) {
-            switch (gameMessage.getMessageType()) {
-                case 1:
-                    TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
-                    handleTurnMessage(turnModelMessage);
-                    break;
-                case 2:
-                    RoundModelMessage roundModelMessage = (RoundModelMessage) gameMessage;
-                    handleRoundMessage(roundModelMessage);
-                    break;
-                case 3:
-                    ElectionMessage electionMessage = (ElectionMessage) gameMessage;
-                    return new ResponseMessage(handleElectionMessage(electionMessage));
-                case 4:
-                    WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
-                    return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
-                default:
-                    break;
-            }
-        }
-        return new ResponseMessage(true);
     }
 
     /**
