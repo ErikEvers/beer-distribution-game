@@ -34,4 +34,8 @@ public class GameAgent implements IDomainModel{
     public void setGameBusinessRules(List<GameBusinessRules> gameBusinessRules) {
         this.gameBusinessRulesList = gameBusinessRules;
     }
+
+    public void setAgentName(String agentName) {
+        this.gameAgentName = agentName;
+    }
 }
