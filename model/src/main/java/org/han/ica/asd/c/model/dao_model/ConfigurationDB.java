@@ -22,7 +22,6 @@ public class ConfigurationDB implements IDaoModel{
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private List<FacilityType> facilityTypes;
 
-
     public ConfigurationDB(){
         //Empty constructor for GUICE
     }
