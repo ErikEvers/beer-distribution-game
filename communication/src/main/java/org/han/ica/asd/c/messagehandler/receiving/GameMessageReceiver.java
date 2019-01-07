@@ -33,19 +33,35 @@ public class GameMessageReceiver {
     }
 
     /**
+     * This method handles a TurnMessage
+     *
+     * @param turnModelMessage
+     */
+    private TurnModelMessage handleTurnMessage(TurnModelMessage turnModelMessage) {
+        try {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof ITurnModelObserver) {
+                    ((ITurnModelObserver) observer).turnModelReceived(turnModelMessage.getTurnModel());
+                }
+            }
+            return TurnModelMessage.createResponseMessage(true);
+        } catch (Exception e) {
+            return TurnModelMessage.createResponseMessage(e);
+        }
+    }
+
+    /**
      * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
      *
      * @param gameMessage
      * @return ResponseMessage
      */
     public Object gameMessageReceived(GameMessage gameMessage) {
-
         if (gameMessageFilterer.isUnique(gameMessage)) {
             switch (gameMessage.getMessageType()) {
                 case 1:
                     TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
-                    handleTurnMessage(turnModelMessage);
-                    break;
+                    return handleTurnMessage(turnModelMessage);
                 case 2:
                     TransactionMessage roundModelMessage = (TransactionMessage) gameMessage;
                     handleTransactionMessage(roundModelMessage);
@@ -64,20 +80,8 @@ public class GameMessageReceiver {
                     break;
             }
         }
-        return new ResponseMessage(true);
-    }
-
-    /**
-     * This method handles a TurnMessage
-     *
-     * @param turnModelMessage
-     */
-    private void handleTurnMessage(TurnModelMessage turnModelMessage) {
-        for (IConnectorObserver observer : gameMessageObservers) {
-            if (observer instanceof ITurnModelObserver) {
-                ((ITurnModelObserver) observer).turnModelReceived(turnModelMessage.getTurnModel());
-            }
-        }
+        // Returning null if the messageType doesn't expect a response.
+        return null;
     }
 
     /**
