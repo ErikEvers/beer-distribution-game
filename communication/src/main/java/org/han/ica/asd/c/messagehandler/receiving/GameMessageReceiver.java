@@ -50,7 +50,7 @@ public class GameMessageReceiver {
      * @param roundModelMessage
      */
     private void handleRoundMessage(RoundModelMessage roundModelMessage) {
-        switch (roundModelMessage.getCommitStage()) {
+        switch (roundModelMessage.getPhase()) {
             case 0:
                 //stage Commit
                 toBecommittedRound = roundModelMessage;
