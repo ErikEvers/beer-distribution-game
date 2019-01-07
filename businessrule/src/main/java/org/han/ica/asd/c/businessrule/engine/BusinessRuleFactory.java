@@ -13,8 +13,11 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class BusinessRuleFactory {
+	private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
     private static final Map<String, Class<? extends ASTNode>> ASTNODE_CLASS_MAP;
     static {
         Map<String, Class<? extends ASTNode>> astNodeClassMap = new TreeMap<>();
@@ -41,10 +44,13 @@ class BusinessRuleFactory {
 	 * @return              The object which the identifier represents
 	 */
 	ASTNode create(String identifier) {
-        try {
-            return ASTNODE_CLASS_MAP.get(identifier).newInstance();
-        } catch (Exception e) {
-            return null;
+	    if(ASTNODE_CLASS_MAP.containsKey(identifier)) {
+            try {
+                return ASTNODE_CLASS_MAP.get(identifier).newInstance();
+            } catch (Exception e) {
+	            LOGGER.log(Level.SEVERE, e.toString(), e);
+            }
         }
+	    return null;
     }
 }
