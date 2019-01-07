@@ -139,8 +139,6 @@ public class RoomFinderTest {
         roomFinder.startGameRoom(roomName);
     }
 
-
-
     @Test
     public void shouldReturnRoomModelWithGivenValues() throws IOException, DiscoveryException {
         RoomModel roomModel = new RoomModel();
