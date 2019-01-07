@@ -11,6 +11,11 @@ public class GameSetupStart implements IGUIHandler {
 
 
     @Override
+    public void setData(Object[] data) {
+
+    }
+
+    @Override
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/GameSetupStart.fxml"));
     }

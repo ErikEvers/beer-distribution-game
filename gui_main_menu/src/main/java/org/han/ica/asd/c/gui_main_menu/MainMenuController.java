@@ -25,6 +25,14 @@ public class MainMenuController {
     @FXML
     private Button replay;
 
+    @FXML
+    private Button createGame;
+
+    @Inject
+    @Named("GameSetupStart")
+    private IGUIHandler gameSetupStart;
+
+
     @Inject
     @Named("ProgramAgentList")
     private IGUIHandler programAgentList;
@@ -42,6 +50,7 @@ public class MainMenuController {
         setCloseButtonAction();
         setProgramAgentButtonAction();
         setReplayButtonAction();
+        setCreateGameButtonAction();
     }
 
     private void setCloseButtonAction() {
@@ -59,8 +68,13 @@ public class MainMenuController {
         replay.setOnAction(event -> replayGame.setupScreen());
     }
 
-    public void handleJoinGameButtonClick(){
+    public void handleJoinGameButtonClick() {
         joinGame.setupScreen();
     }
+
+    private void setCreateGameButtonAction() {
+        createGame.setOnAction(event -> gameSetupStart.setupScreen());
+    }
+
 
 }

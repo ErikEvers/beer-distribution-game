@@ -6,6 +6,11 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 public class GameSetupType implements IGUIHandler {
 
     @Override
+    public void setData(Object[] data) {
+
+    }
+
+    @Override
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/GameSetupType.fxml"));
     }

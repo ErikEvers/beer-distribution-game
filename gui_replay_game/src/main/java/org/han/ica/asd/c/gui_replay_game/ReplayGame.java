@@ -5,6 +5,11 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 public class ReplayGame implements IGUIHandler {
 
+    @Override
+    public void setData(Object[] data) {
+
+    }
+
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameListScreen.fxml"));
     }

@@ -83,20 +83,8 @@ public class GameSetupStartController {
     public void nextScreen() {
         nextScreenButton.setOnAction(event -> {
             fillConfiguration();
-            try {
-                System.out.println(configuration.getAmountOfRounds());
-                FXMLLoaderOnSteroids loader = FXMLLoaderOnSteroids.getLoaderProvider().get();
-                loader.setLocation(getClass().getResource("/fxml/GameSetup.fxml"));
-                Parent tableViewParent = loader.load();
-                GameSetupController gameSetupController = loader.getController();
-                gameSetupController.setConfiguration(this.configuration);
-
-                loader.getPrimaryStage().setScene(new Scene(tableViewParent));
-                loader.getPrimaryStage().show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            gameSetup.setData(new Object[]{configuration});
+            gameSetup.setupScreen();
         });
     }
 

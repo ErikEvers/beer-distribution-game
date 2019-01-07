@@ -7,6 +7,11 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 public class MainMenu implements IGUIHandler {
 
+	@Override
+	public void setData(Object[] data) {
+
+	}
+
 	public void setupScreen() {
 
 		FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/MainMenu.fxml"));
