@@ -51,6 +51,11 @@ public class JoinGameController {
         mainMenu.setupScreen();
     }
 
+    public void handleRefreshButtonClick() {
+        items.clear();
+        items.addAll(iConnectorForSetup.getAvailableRooms());
+    }
+
     public void handleListClick() {
         if(list.getSelectionModel().getSelectedItem() !=null) {
             joinGameButton.setVisible(true);

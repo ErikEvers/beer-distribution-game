@@ -38,8 +38,8 @@ public class ProgramAgentListController {
     public void initialize() {
         //TODO INJECT BUSINESS RULE STORE
         list.setItems(items);
-        items.add("hello");
-        items.add("lol");
+        items.add("Pyramid agent");
+        items.add("Agent 3");
     }
 
     @FXML

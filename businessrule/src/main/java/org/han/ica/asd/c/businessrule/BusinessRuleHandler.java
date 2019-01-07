@@ -11,6 +11,8 @@ import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
+//    @Inject
+//    private IBusinessRuleStore businessRuleStore;
     /**
      * Parses the business rules and sends it to the persistence component
      *
@@ -22,7 +24,7 @@ public class BusinessRuleHandler implements IBusinessRules {
         if (!parserPipeline.parseString(businessRules)) {
             return parserPipeline.getBusinessRulesInput();
         }
-
+//        businessRuleStore.synchronizeBusinessRules(agentName,parserPipeline.getBusinessRulesMap());
         return parserPipeline.getBusinessRulesInput();
     }
 
