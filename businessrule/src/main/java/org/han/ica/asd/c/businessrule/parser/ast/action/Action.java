@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Action extends ASTNode {
-    private static final String prefix = "A(";
+    private static final String PREFIX = "A(";
 
     private ActionReference actionName;
     private OperationValue operation;
@@ -50,7 +50,7 @@ public class Action extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
     }
 
     /**
@@ -131,14 +131,14 @@ public class Action extends ASTNode {
         List<List<String>> facilities = businessRuleStore.getAllFacilities();
         String facilityId;
 
-        if(person.getPerson().contains("factory")){
-            facilityId = facilities.get(0).get(separateFacilityId()-1);
-        } else if(person.getPerson().contains("distributor")){
-            facilityId = facilities.get(1).get(separateFacilityId()-1);
-        } else if(person.getPerson().contains("wholesaler")){
-            facilityId = facilities.get(2).get(separateFacilityId()-1);
+        if(person.getPerson().contains(FacilityType.FACTORY.getName())){
+            facilityId = facilities.get(FacilityType.FACTORY.getIndex()).get(separateFacilityId());
+        } else if(person.getPerson().contains(FacilityType.DISTRIBUTOR.getName())){
+            facilityId = facilities.get(FacilityType.DISTRIBUTOR.getIndex()).get(separateFacilityId());
+        } else if(person.getPerson().contains(FacilityType.WHOLESALER.getName())){
+            facilityId = facilities.get(FacilityType.WHOLESALER.getIndex()).get(separateFacilityId());
         } else {
-            facilityId = facilities.get(3).get(separateFacilityId()-1);
+            facilityId = facilities.get(FacilityType.RETAILER.getIndex()).get(separateFacilityId());
         }
 
         return Integer.parseInt(facilityId);
@@ -147,9 +147,9 @@ public class Action extends ASTNode {
     private int separateFacilityId(){
         String[] stringSplit = person.getPerson().split(" ");
         if(stringSplit.length > 1){
-            return Integer.parseInt(stringSplit[1]);
+            return Integer.parseInt(stringSplit[1]) - 1;
         } else {
-            return 1;
+            return 0;
         }
     }
 }
