@@ -2,6 +2,7 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
@@ -69,7 +70,7 @@ private static Connector instance = null;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public RoomModel createRoom(String roomName, String ip, String password){
@@ -98,7 +99,12 @@ private static Connector instance = null;
     }
 
     public RoomModel updateRoom(RoomModel room){
-        return finder.getRoom(room);
+        try {
+            return finder.getRoom(room);
+        } catch (DiscoveryException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return null;
     }
 
     public void startRoom(RoomModel room){
