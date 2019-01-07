@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class BeergameDAO implements IBeerDisitributionGameDAO {
+public class BeergameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameId = ?;";
@@ -40,25 +40,22 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 * @param gameName The specified name of the game
 	 */
 	public void createBeergame(String gameName) {
-		Connection conn = null;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, UUID.randomUUID().toString());
-					pstmt.setString(2, gameName);
-					pstmt.setString(3, new Date().toString());
+				pstmt.setString(1, UUID.randomUUID().toString());
+				pstmt.setString(2, gameName);
+				pstmt.setString(3, new Date().toString());
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
-			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -68,22 +65,18 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 * @return An Arraylist of BeerGames
 	 */
 	public List<BeerGameDB> readBeergames() {
-		Connection conn = null;
+		Connection conn = databaseConnection.connect();
 		ArrayList<BeerGameDB> beerGames = new ArrayList<>();
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES)) {
-
-					try (ResultSet rs = pstmt.executeQuery()) {
-						while (rs.next()) {
-							beerGames.add(new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
-						}
-					}
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES); ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					beerGames.add(new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
 				}
+				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(),e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return beerGames;
 	}
@@ -93,23 +86,20 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 * @param gameId The specified Id of the game which needs to be deleted
 	 */
 	public void deleteBeergame(String gameId) {
-		Connection conn = null;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BEERGAME)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, gameId);
+				pstmt.setString(1, gameId);
 
-					pstmt.executeUpdate();
-				}
+				pstmt.executeUpdate();
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(),e);
+				databaseConnection.rollBackTransaction(conn);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
-			databaseConnection.rollBackTransaction(conn);
 		}
 	}
 
@@ -119,20 +109,18 @@ public class BeergameDAO implements IBeerDisitributionGameDAO {
 	 * @return A beergame object
 	 */
 	public BeerGameDB getGameLog(String gameId) {
-		Connection conn = null;
+		Connection conn = databaseConnection.connect();
 		BeerGameDB beergame = null;
-		try {
-			conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
-					pstmt.setString(1,gameId);
-					try (ResultSet rs = pstmt.executeQuery()) {
-						beergame = new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
-					}
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+				pstmt.setString(1,gameId);
+				try (ResultSet rs = pstmt.executeQuery()) {
+					beergame = new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 				}
+				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(),e);
 			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 		return beergame;
 	}
