@@ -22,7 +22,7 @@ public abstract class TransactionMessage extends GameMessage {
         refreshUUID();
     }
 
-    public int getCommitStage() {
+    public int getPhase() {
         return phase;
     }
 }
