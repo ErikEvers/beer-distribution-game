@@ -21,12 +21,14 @@ import java.util.logging.Logger;
 class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAOIntegrationTest.class.getName());
 	private static GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn;
-	private static GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn2;
 	private List<Round> rounds;
 	private List<GameBusinessRules> gameBusinessRules;
 
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 	private GameBusinessRulesDAO gameBusinessRulesDAO;
+
+	private static final String GAME_ID = "BeerGameZutphen";
+	private static final String GAME_AGENT_NAME = "Henk";
 	
 
 	@BeforeEach
@@ -45,7 +47,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 			}
 		});
 		gameBusinessRulesDAO = injector.getInstance(GameBusinessRulesDAO.class);
-		DaoConfig.setCurrentGameId("BeerGameZutphen");
+		DaoConfig.setCurrentGameId(GAME_ID);
 		Injector injector1 = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -54,8 +56,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 			}
 		});
 		gameBusinessRulesInFacilityTurnDAO = injector1.getInstance(GameBusinessRulesInFacilityTurnDAO.class);
-		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1, 1, "Henk",gameBusinessRules);
-		gameBusinessRulesInFacilityTurn2 = new GameBusinessRulesInFacilityTurn(1, 1, "Sjaak",gameBusinessRules);
+		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1, 1, "Henk", gameBusinessRules);
 
 	}
 
@@ -66,10 +67,10 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 
 	@Test
 	void createTurnTest() {
-		gameBusinessRulesDAO.createGameBusinessRule(new GameAgent("Henk",new Facility(), gameBusinessRules),gameBusinessRules.get(0));
+		gameBusinessRulesDAO.createGameBusinessRule(new GameAgent(GAME_AGENT_NAME ,new Facility(), gameBusinessRules),gameBusinessRules.get(0));
 		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
 
-		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurnDb = gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,"Henk");
+		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurnDb = gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME);
 
 		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getFacilityId(),gameBusinessRulesInFacilityTurn.getFacilityId());
 		Assert.assertEquals(gameBusinessRulesInFacilityTurnDb.getGameAgentName(),gameBusinessRulesInFacilityTurn.getGameAgentName());
@@ -77,16 +78,15 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 	}
 
 
-//	@Test
-//	void deleteTurnTest() {
-//		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
-//		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn2);
-//
-//		//Check if record is created in the database
-//		Assert.assertEquals("BeerGameZutphen13_12_2018",gameBusinessRulesInFacilityTurnDAO.readTurn("BeerGameZutphen13_12_2018",1,1,2).getGameId());
-//
-//		gameBusinessRulesInFacilityTurnDAO.deleteTurn("BeerGameZutphen13_12_2018",1,1,2);
-//		Assert.assertEquals(null,gameBusinessRulesInFacilityTurnDAO.readTurn("BeerGameZutphen13_12_2018",1,1,2));
-//
-//	}
+	@Test
+	void deleteTurnTest() {
+		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
+
+		//Check if record is created in the database
+		Assert.assertNotNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
+
+		gameBusinessRulesInFacilityTurnDAO.deleteTurn(GAME_ID,1,1);
+		Assert.assertNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
+
+	}
 }

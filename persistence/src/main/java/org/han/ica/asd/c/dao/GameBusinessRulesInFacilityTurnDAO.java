@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class GameBusinessRulesInFacilityTurnDAO {
 	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRulesInFacilityTurn VALUES (?,?,?,?,?);";
 	private static final String READ_BUSINESSRULETURN = "SELECT * FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
-	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityIdOrder = ? AND FacilityIdDeliver = ?;";
+	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
 
 	@Inject
@@ -66,23 +66,25 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 */
 	public GameBusinessRulesInFacilityTurn readTurn(int roundId, int facilityId, String gameAgentName) {
 		Connection conn = databaseConnection.connect();
-		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn();
+		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 		List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
 
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BUSINESSRULETURN)) {
+				conn.setAutoCommit(false);
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				pstmt.setInt(2, roundId);
 				pstmt.setInt(3, facilityId);
 				try (ResultSet rs = pstmt.executeQuery()){
-					while (rs.next()) {
-					gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"),gameBusinessRulesDAO.getGameAST(rs.getString("GameBusinessRule"),gameAgentName, facilityId)));
-						}
+					rs.next();
+					gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"), gameBusinessRulesDAO.getGameAST(rs.getString("GameBusinessRule"), gameAgentName, facilityId)));
+					gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn();
+					gameBusinessRulesInFacilityTurn.setFacilityId(facilityId);
+					gameBusinessRulesInFacilityTurn.setRoundId(roundId);
+					gameBusinessRulesInFacilityTurn.setGameAgentName(gameAgentName);
+					gameBusinessRulesInFacilityTurn.setGameBusinessRulesList(gameBusinessRules);
 				}
-				gameBusinessRulesInFacilityTurn.setFacilityId(facilityId);
-				gameBusinessRulesInFacilityTurn.setRoundId(roundId);
-				gameBusinessRulesInFacilityTurn.setGameAgentName(gameAgentName);
-				gameBusinessRulesInFacilityTurn.setGameBusinessRulesList(gameBusinessRules);
+				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -96,10 +98,9 @@ public class GameBusinessRulesInFacilityTurnDAO {
 		 * A method which deletes a specific turn from the SQLite Database
 		 * @param gameId            The Id of the game where the specific turns are located
 		 * @param roundId           The Id of the round where the specific turns are located
-		 * @param facilityIdOrder  The Id of the FacilityDB which placed an order
-		 * @param facilityIdDeliver The Id of the FacilityDB which delivered an order
+		 * @param facilityId  The Id of the FacilityDB which did the action
 		 */
-		public void deleteTurn (String gameId,int roundId, int facilityIdOrder, int facilityIdDeliver){
+		public void deleteTurn (String gameId, int roundId, int facilityId){
 			Connection conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
@@ -108,8 +109,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 
 					pstmt.setString(1, gameId);
 					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityIdOrder);
-					pstmt.setInt(4, facilityIdDeliver);
+					pstmt.setInt(3, facilityId);
 
 					pstmt.executeUpdate();
 					conn.commit();
