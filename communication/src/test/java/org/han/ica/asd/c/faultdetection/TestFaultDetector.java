@@ -3,6 +3,7 @@ package org.han.ica.asd.c.faultdetection;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -99,9 +100,9 @@ public class TestFaultDetector {
 				.makeFaultDetectorPlayer(nodeInfoList);
 
 		faultDetector.setPlayer(nodeInfoList);
-		faultDetector.canYouReachLeaderMessageReceived(any());
+		faultDetector.canYouReachLeaderMessageReceived(new CanYouReachLeaderMessage(), "senderIp");
 		assertNotNull(faultDetector.getFaultDetectorPlayer());
-		verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any());
+		verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), eq("senderIp"));
 	}
 
 	@Test
