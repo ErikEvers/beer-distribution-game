@@ -89,11 +89,11 @@ private static Connector instance = null;
     public RoomModel joinRoom(String roomName, String ip, String password){
         try {
             RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
-            if(makeConnection(joinedRoom.getLeaderIP())){
-                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-                setJoiner();
+//            if(makeConnection(joinedRoom.getLeaderIP())){
+//                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+//                setJoiner();
                 return joinedRoom;
-            }
+//            }
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage(), e);
         }
