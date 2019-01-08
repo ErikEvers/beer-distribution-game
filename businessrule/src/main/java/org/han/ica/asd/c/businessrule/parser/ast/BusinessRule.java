@@ -19,10 +19,13 @@ public class BusinessRule extends ASTNode {
     private Action action;
     private static final String PREFIX = "BR(";
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
-    @Inject
+
+    //@Inject
     private IBusinessRuleStore businessRuleStore;
-    @Inject
+
+    //@Inject
     private NodeConverter nodeConverter = new NodeConverter();
+
     /**
      * Gets the action of the BusinessRule
      *
@@ -269,7 +272,7 @@ public class BusinessRule extends ASTNode {
             case OUTGOINGGOODS:
                 return getOutgoingGoods(round, facilityId);
             default:
-                return getId();
+                return String.valueOf(facilityId);
         }
     }
 

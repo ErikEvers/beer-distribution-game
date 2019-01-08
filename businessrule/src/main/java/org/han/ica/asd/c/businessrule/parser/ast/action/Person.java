@@ -2,6 +2,7 @@ package org.han.ica.asd.c.businessrule.parser.ast.action;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
 public class Person extends ASTNode {
@@ -15,6 +16,15 @@ public class Person extends ASTNode {
      */
     public Person(String personNode) {
         this.personNode = personNode;
+    }
+
+    public Person() {
+    }
+
+    @Override
+    public ASTNode addValue(String value) {
+        this.personNode = value;
+        return this;
     }
 
     /**

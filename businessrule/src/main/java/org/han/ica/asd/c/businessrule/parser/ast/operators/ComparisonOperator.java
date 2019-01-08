@@ -26,7 +26,7 @@ public class ComparisonOperator extends Operator {
      */
     @Override
     public ComparisonOperator addValue(String value) {
-        operatorVal = value;
+        operatorVal = findComparisonOperator(value);
         return this;
     }
 
