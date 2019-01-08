@@ -1,27 +1,27 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 public class GameBusinessRules implements IDomainModel{
-    private String gameBusinessRule;
-    private String gameAST;
+    private String gameBusinessRuleSentence;
+    private String gameBusinessRuleAST;
 
-    public GameBusinessRules(String gameAgentName, String gameBusinessRule, String gameAST) {
-        this.gameBusinessRule = gameBusinessRule;
-        this.gameAST = gameAST;
+    public GameBusinessRules(String gameBusinessRule, String gameAST) {
+        this.gameBusinessRuleSentence = gameBusinessRule;
+        this.gameBusinessRuleAST = gameAST;
     }
 
     public String getGameBusinessRule() {
-        return gameBusinessRule;
+        return gameBusinessRuleSentence;
     }
 
     public void setGameBusinessRule(String gameBusinessRule) {
-        this.gameBusinessRule = gameBusinessRule;
+        this.gameBusinessRuleSentence = gameBusinessRule;
     }
 
     public String getGameAST() {
-        return gameAST;
+        return gameBusinessRuleAST;
     }
 
     public void setGameAST(String gameAST) {
-        this.gameAST = gameAST;
+        this.gameBusinessRuleAST = gameAST;
     }
 }

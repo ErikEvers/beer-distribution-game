@@ -13,7 +13,6 @@ ENTER : [\n];
 WHERE: 'where';
 NODE : ('factory' | 'distributor' | 'wholesaler' | 'retailer') (' '?[0-9]+)?;
 
-FACILITY: 'factory' | 'distributor' | 'wholesaler' | 'retailer';
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';
 INT_VALUE: [0-9]+;
 PERCENTAGE: [0-9]+'%';
@@ -44,7 +43,7 @@ comparison: comparison_value comparison_operator comparison_value;
 comparison_value: operation | ROUND;
 operation: value #defaultOperation | operation PLUS operation #plusOperation | operation MIN operation #minOperation | priority_operation #priorityOperation;
 priority_operation: (value MUL value | value MUL priority_operation) #mulOperation | (value DIV value | value DIV priority_operation) #divOperation;
-value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE FACILITY | (LOWEST | HIGHEST);
+value: INT_VALUE | GAME_VALUE | PERCENTAGE GAME_VALUE | GAME_VALUE NODE | (LOWEST | HIGHEST);
 comparison_operator: EQUAL | NOTEQUAL | GREATER | LESS | GREATEREQUAL | LESSEQUAL;
 action: ORDER operation person? | DELIVER operation person?;
 person: (FROM | TO) NODE (WHERE comparisonstatement)?;
