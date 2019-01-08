@@ -2,7 +2,7 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
-import org.han.ica.asd.c.discovery.RoomException;
+
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
@@ -22,6 +22,7 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -146,13 +147,11 @@ public class Connector implements IConnectorForSetup {
 
     @Override
     public void chooseFacility(Facility facility) throws Exception {
-        //gameMessageClient.sendChooseFacilityMessage("leader ip", facility);
     }
 
     @Override
     public List<Facility> getAllFacilities() {
-        //return gameMessageClient.sendAllFacilitiesRequestMessage("leader ip");
-        return null;
+        return new ArrayList<Facility>();
     }
 
     public void addObserver(IConnectorObserver observer) {

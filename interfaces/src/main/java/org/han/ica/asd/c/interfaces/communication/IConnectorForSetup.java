@@ -15,6 +15,6 @@ public interface IConnectorForSetup {
     void removeYourselfFromRoom(RoomModel room);
     void startRoom(RoomModel room);
     void addObserver(IConnectorObserver connectorObserver);
-    void chooseFacility(Facility facility) throws Exception;
+    void chooseFacility(Facility facility);
     List<Facility> getAllFacilities();
 }

@@ -26,7 +26,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 	protected void configure() {
 		bind(AbstractModuleExtension.class).to(BootstrapModule.class);
 		bind(IDatabaseConnection.class).to(DBConnection.class);
-		//bind(IConnecterForSetup.class).annotatedWith(Names.named("Connector")).to(Connector.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
 
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
