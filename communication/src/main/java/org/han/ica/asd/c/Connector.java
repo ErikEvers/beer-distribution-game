@@ -11,7 +11,7 @@ import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.interfaces.communication.IConnecterForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector implements IConnecterForSetup {
+public class Connector implements IConnectorForSetup {
     private static Connector instance = null;
     private ArrayList<IConnectorObserver> observers;
     private NodeInfoList nodeInfoList;
@@ -100,7 +100,7 @@ public class Connector implements IConnecterForSetup {
                 addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
                 setJoiner();
                 return joinedRoom;
-            }
+           }
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage(), e);
         }
