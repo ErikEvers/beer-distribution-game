@@ -9,11 +9,13 @@ public interface IPlayerComponent {
     void activatePlayer();
     void activateAgent();
     Map<Facility, List<Facility>> seeOtherFacilities();
-    void placeOrder(int amount);
+    void placeOrder(Facility facility, int amount);
     void requestFacilityUsage(Facility facility);
     String requestFacilityInfo(Facility facility);
     void selectAgent();
     List<String> getAllGames();
     void connectToGame(String game);
     List<Facility> getAllFacilities();
+    void chooseFacility(Facility facility);
+    String getFacilityName();
 }

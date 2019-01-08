@@ -7,6 +7,7 @@ import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,11 +33,6 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public void activateAgent() {
-        //Yet to be implemented.
-    }
-
-    @Override
-    public void placeOrder(int amount) {
         //Yet to be implemented.
     }
 
@@ -85,6 +81,21 @@ public class PlayerComponent implements IPlayerComponent {
     }
     
     @Override
+    public void placeOrder(Facility facility, int amount) {
+        //Not implemented yet
+    }
+
+    @Override
+    public void chooseFacility(Facility facility) {
+        //Not implemented yet
+    }
+
+    @Override
+    public String getFacilityName() {
+        //Not implemented yet
+        return "";
+    }
+
     public String requestFacilityInfo(Facility facility) {
         //Fake method for testing purposes
         return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500"+facility.getFacilityId();
