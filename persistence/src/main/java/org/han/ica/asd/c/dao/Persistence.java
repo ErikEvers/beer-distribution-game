@@ -3,7 +3,7 @@ package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.interfaces.agent.GameStore;
 import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
-import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
@@ -15,10 +15,9 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
-import java.util.Map;
 
 
-public class Persistence implements IPersistence, IBusinessRuleLogger, GameStore {
+public class Persistence implements IRoundStore, IBusinessRuleLogger, GameStore {
 
 	@Inject
 	private RoundDAO roundDAO;

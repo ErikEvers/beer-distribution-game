@@ -8,7 +8,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.Map;
 
-public interface IPersistence {
+public interface IRoundStore {
     void saveRoundData(Round roundData);
     Round fetchRoundData(int roundId);
     void saveTurnData(Round turn);
