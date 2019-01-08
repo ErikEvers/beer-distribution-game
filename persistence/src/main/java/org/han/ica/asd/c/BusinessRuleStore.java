@@ -43,12 +43,12 @@ public class BusinessRuleStore implements IBusinessRuleStore {
 
     @Override
     public List<String> getAllProgrammedAgents() {
-        List<String> programmedAgentNames = null;
+        List<String> programmedAgentNames = new ArrayList<>();
 
         List<ProgrammedAgent> dbProgrammedAgents = programmedAgentDAO.readAllProgrammedAgents();
 
         for (ProgrammedAgent programmedAgent : dbProgrammedAgents){
-            programmedAgentNames.add(programmedAgent.getProgrammedAgentName());
+                programmedAgentNames.add(programmedAgent.getProgrammedAgentName());
         }
         return programmedAgentNames;
     }
