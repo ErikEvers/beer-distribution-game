@@ -50,16 +50,7 @@ public class Value extends OperationValue {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder
-                .append(PREFIX)
-                .append(getFirstPartVariable());
-
-        for (int i = 1, il = value.size(); i < il; i++) {
-            stringBuilder
-                    .append(' ')
-                    .append(value.get(i));
-        }
-        stringBuilder.append(SUFFIX);
+        stringBuilder.append(PREFIX).append(value).append(SUFFIX);
     }
 
     /**

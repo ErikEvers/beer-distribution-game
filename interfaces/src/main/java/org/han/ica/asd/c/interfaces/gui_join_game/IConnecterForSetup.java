@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.interfaces.communication;
+package org.han.ica.asd.c.interfaces.gui_join_game;
 
 
 

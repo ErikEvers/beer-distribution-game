@@ -82,6 +82,7 @@ public class ConfigurationDAO {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATIONS); ResultSet rs = pstmt.executeQuery()) {
+				conn.setAutoCommit(false);
 				while (rs.next()) {
 					configurations.add(createConfigurationObject(rs));
 				}
@@ -103,6 +104,7 @@ public class ConfigurationDAO {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATION)) {
+				conn.setAutoCommit(false);
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
 					rs.next();
