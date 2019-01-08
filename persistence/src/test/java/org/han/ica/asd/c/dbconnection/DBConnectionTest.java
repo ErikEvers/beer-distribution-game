@@ -30,6 +30,7 @@ public class DBConnectionTest implements IDatabaseConnection {
 
 
 	public void createNewDatabase() {
+		runSQLScript("cleanup.sql");
 		runSQLScript("ddl.sql");
 	}
 
@@ -56,6 +57,7 @@ public class DBConnectionTest implements IDatabaseConnection {
 
 	public void rollBackTransaction(Connection conn) {
 		try {
+			conn.setAutoCommit(false);
 			conn.rollback();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
