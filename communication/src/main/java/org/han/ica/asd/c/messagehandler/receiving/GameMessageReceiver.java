@@ -115,8 +115,7 @@ public class GameMessageReceiver {
                     ChooseFacilityMessage chooseFacilityMessage = (ChooseFacilityMessage) gameMessage;
                     return handleFacilityMessage(chooseFacilityMessage);
                 case REQUEST_ALL_FACILITIES_MESSAGE:
-                    RequestAllFacilitiesMessage requestAllFacilitiesMessage = (RequestAllFacilitiesMessage) gameMessage;
-                    return handleRequestAllFacilities(requestAllFacilitiesMessage);
+                    return handleRequestAllFacilities();
                 case CONFIGURATION_MESSAGE:
                     ConfigurationMessage configurationMessage = (ConfigurationMessage) gameMessage;
                     return handleTransactionMessage(configurationMessage);
@@ -165,12 +164,8 @@ public class GameMessageReceiver {
         try {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IFacilityMessageObserver) {
-                    try {
-                        ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
-                        return chooseFacilityMessage.createResponseMessage();
-                    } catch (Exception e) {
-                        LOGGER.log(Level.SEVERE, e.getMessage());
-                    }
+                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
+                    return chooseFacilityMessage.createResponseMessage();
                 }
             }
         }catch(Exception e){
@@ -180,16 +175,12 @@ public class GameMessageReceiver {
         return null;
     }
 
-    private RequestAllFacilitiesMessage handleRequestAllFacilities(RequestAllFacilitiesMessage requestAllFacilitiesMessage){
+    private RequestAllFacilitiesMessage handleRequestAllFacilities(){
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
-                try {
                     RequestAllFacilitiesMessage requestAllFacilitiesMessageResponse = new RequestAllFacilitiesMessage();
                     requestAllFacilitiesMessageResponse.setFacilities (((IFacilityMessageObserver) observer).getAllFacilities());
                     return requestAllFacilitiesMessageResponse;
-                }catch (Exception e){
-                    LOGGER.log(Level.SEVERE,e.getMessage());
-                }
             }
         }
         return null;

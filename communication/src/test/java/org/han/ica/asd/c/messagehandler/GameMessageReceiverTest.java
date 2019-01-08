@@ -2,15 +2,19 @@ package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
+import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ElectionModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +26,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -44,6 +53,9 @@ public class GameMessageReceiverTest {
     @Mock
     private IGameConfigurationObserver gameConfigurationObserver;
 
+    @Mock
+    private IFacilityMessageObserver facilityMessageObserver;
+
     @BeforeEach
     public void setUp() {
         initMocks(this);
@@ -53,6 +65,7 @@ public class GameMessageReceiverTest {
         observers.add(turnModelObserver);
         observers.add(electionObserver);
         observers.add(gameConfigurationObserver);
+        observers.add(facilityMessageObserver);
 
         gameMessageReceiver = new GameMessageReceiver(observers);
     }
@@ -94,7 +107,7 @@ public class GameMessageReceiverTest {
     }
 
     @Test
-    public void roundModelRecieved() {
+    public void roundModelReceived() {
         Round roundModel = new Round();
 
         RoundModelMessage roundModelMessageStage = new RoundModelMessage(roundModel);
@@ -107,5 +120,38 @@ public class GameMessageReceiverTest {
         gameMessageReceiver.gameMessageReceived(roundModelMessageCommit);
 
         verify(roundModelObserver).roundModelReceived(roundModel);
+    }
+
+    @Test
+    public void chooseFacilityMessageReceived() throws Exception {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+        gameMessageReceiver.gameMessageReceived(chooseFacilityMessage);
+        verify(facilityMessageObserver).chooseFacility(facility);
+    }
+
+    @Test
+    public void shouldReturnExceptionResponseWhenErrorIsThrown() throws Exception {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+        
+        doThrow(Exception.class).when(facilityMessageObserver).chooseFacility(any(Facility.class));
+
+        chooseFacilityMessage = (ChooseFacilityMessage) gameMessageReceiver.gameMessageReceived(chooseFacilityMessage);
+
+        assertEquals(Exception.class, chooseFacilityMessage.getException().getClass());
+    }
+
+    @Test
+    public void requestAllFacilitiesMessageReceived(){
+        List<Facility> facilities = new ArrayList<>();
+
+        RequestAllFacilitiesMessage requestAllFacilitiesMessage = new RequestAllFacilitiesMessage();
+        gameMessageReceiver.gameMessageReceived(requestAllFacilitiesMessage);
+        verify(facilityMessageObserver).getAllFacilities();
     }
 }
