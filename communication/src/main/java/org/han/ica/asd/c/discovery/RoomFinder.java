@@ -87,6 +87,16 @@ public class RoomFinder implements IFinder {
         return room;
     }
 
+    @Override
+    public void removeHostFromRoom(RoomModel roomModel, String hostIP) throws DiscoveryException {
+        try {
+            getRoom(roomModel.getRoomName()).removeHost(hostIP);
+        } catch (RoomException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new DiscoveryException(e);
+        }
+    }
+
     private Room getRoom(String roomName) throws DiscoveryException {
         try {
             return new Room(roomName, service);
