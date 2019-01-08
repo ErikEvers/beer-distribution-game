@@ -16,7 +16,11 @@ import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ParserPipeline {
     private List<UserInputBusinessRule> businessRulesInput;
@@ -86,6 +90,7 @@ public class ParserPipeline {
                 businessRulesInput.get(i).setErrorMessage("Input error found on: '" + findWordInBusinessRule(businessRule,beginErrorWord,endErrorWord) + "'");
                 businessRulesInput.get(i).setErrorWord(beginErrorWord, endErrorWord);
                 hasErrors = true;
+                ParseErrorListener.INSTANCE.getWordExceptions().remove(i+1);
             } else if (ParseErrorListener.INSTANCE.getExceptions().contains(i + lineOffset)) {
                 businessRulesInput.get(i).setErrorMessage("Input error found on: '" + businessRule + "'");
                 hasErrors = true;
