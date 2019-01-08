@@ -38,6 +38,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         this.roundProvider = roundProvider;
     }
 
+    /**
+     * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
+     */
     public void init() {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
@@ -139,10 +142,19 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
     }
 
+    /**
+     *
+     * @return the amount of turns received from players in the current round. Since each player can send one turn, this also indicates the amount of players who have sent their turn to the game leader.
+     */
     public int getTurnsReceivedInCurrentRound() {
         return turnsReceivedInCurrentRound;
     }
 
+    /**
+     * Retrieves the agent which belongs to the supplied FacilityId.
+     * @param facilityId the id of the facility that will be used to find the correct Facility instance.
+     * @return Agent object belonging to the facility.
+     */
     Agent getAgentByFacility (int facilityId) {
         for (GameAgent agent : game.getAgents()) {
             if (agent.getFacility().getFacilityId() == facilityId) {
