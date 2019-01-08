@@ -25,17 +25,22 @@ public class SendInTransaction {
      * The beginning of the transaction.
      */
     public void sendToAllPlayers() {
-        //TODO implement with this: https://stackoverflow.com/questions/9148899/returning-value-from-thread
-
         transactionMessage.setPhaseToStage();
-        handleStagePhase(socketClient.sendToAll(ips, transactionMessage));
+        try {
+            handleStagePhase(socketClient.sendToAll(ips, transactionMessage));
+        } catch (Exception e) {
+            transactionMessage.setPhaseToStage();
+        }
     }
 
-    private void handleStagePhase(Map<String, Object> map) {
+    private void handleStagePhase(Map<String, Object> map) throws Exception {
         boolean allSuccessful = true;
+        Exception e = null;
         for(Object value : map.values()) {
-            if(value instanceof Exception)
+            if(value instanceof Exception) {
                 allSuccessful = false;
+                e = (Exception) value;
+            }
         }
 
         if(allSuccessful) {
@@ -45,6 +50,7 @@ public class SendInTransaction {
         else {
             transactionMessage.setPhaseToRollback();
             socketClient.sendToAll(ips, transactionMessage);
+            throw e;
         }
     }
 }
