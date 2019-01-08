@@ -1,8 +1,10 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
 import org.han.ica.asd.c.dao.ProgrammedBusinessRulesDAO;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedBusinessRules;
 
@@ -12,13 +14,23 @@ import java.util.List;
 import java.util.Map;
 
 public class BusinessRuleStore implements IBusinessRuleStore {
-    ProgrammedBusinessRules programmedBusinessRule = new ProgrammedBusinessRules(null, null);
+    private ProgrammedBusinessRules programmedBusinessRule = new ProgrammedBusinessRules(null, null);
+    private List<Facility> facilitiesInGame = new ArrayList<>();
+    private List<String> factoryList = new ArrayList<>();
+    private List<String> distributeurList = new ArrayList<>();
+    private List<String> wholesalerList = new ArrayList<>();
+    private List<String> retailerList = new ArrayList<>();
+    private List<String> defaultList = new ArrayList<>();
+
 
     @Inject
     ProgrammedBusinessRulesDAO programmedBusinessRulesDao;
 
     @Inject
     ProgrammedAgentDAO programmedAgentDAO;
+
+    @Inject
+    FacilityDAO facilityDAO;
 
     @Override
     public List<String> readInputBusinessRules(String agentName) {
@@ -39,6 +51,48 @@ public class BusinessRuleStore implements IBusinessRuleStore {
             programmedBusinessRule.setProgrammedAST(businessRule.getValue());
             programmedBusinessRulesDao.createProgrammedbusinessRule(programmedBusinessRule, agentName);
         }
+    }
+
+    @Override
+    public List<List<String>> getAllFacilities() {
+        List<List<String>> returnList = new ArrayList<>();
+        facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
+
+        for (Facility facility: facilitiesInGame) {
+            switch (facility.getFacilityType().getFacilityName()) {
+                case "Factory":
+                    factoryList.add(Integer.toString(facility.getFacilityId()));
+                    break;
+                case "Distributor":
+                    distributeurList.add(Integer.toString(facility.getFacilityId()));
+                    break;
+                case "Wholesaler":
+                    wholesalerList.add(Integer.toString(facility.getFacilityId()));
+                    break;
+                case "Retailer":
+                    retailerList.add(Integer.toString(facility.getFacilityId()));
+                    break;
+                default:
+                    defaultList.add(Integer.toString(facility.getFacilityId()));
+            }
+        }
+
+        if(!factoryList.isEmpty()) {
+            returnList.add(factoryList);
+        }
+        if(!distributeurList.isEmpty()) {
+            returnList.add(distributeurList);
+        }
+        if(!wholesalerList.isEmpty()) {
+            returnList.add(wholesalerList);
+        }
+        if(!retailerList.isEmpty()) {
+            returnList.add(retailerList);
+        }
+        if(!defaultList.isEmpty()) {
+            returnList.add(defaultList);
+        }
+        return returnList;
     }
 
     @Override
