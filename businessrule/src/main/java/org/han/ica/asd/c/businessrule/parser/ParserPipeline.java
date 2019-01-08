@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser;
 
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.antlr.v4.runtime.CharStream;
@@ -10,6 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
+import org.han.ica.asd.c.businessrule.parser.alternatives.AlternativeFinder;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
@@ -26,6 +28,7 @@ public class ParserPipeline {
     private List<UserInputBusinessRule> businessRulesInput;
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
+    private AlternativeFinder alternativeFinder = new AlternativeFinder();
     private static final String DELETE_EMPTY_LINES = "(?m)^[ \t]*\r?\n";
     private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
     private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+";
@@ -87,7 +90,8 @@ public class ParserPipeline {
             if(ParseErrorListener.INSTANCE.getWordExceptions().containsKey(i + 1)){
                 int endErrorWord = findEndErrorWord(businessRule,ParseErrorListener.INSTANCE.getWordExceptions().get(i + lineOffset) - 1);
                 int beginErrorWord = findBeginErrorWord(businessRule, endErrorWord);
-                businessRulesInput.get(i).setErrorMessage("Input error found on: '" + findWordInBusinessRule(businessRule,beginErrorWord,endErrorWord) + "'");
+                String errorWord = findWordInBusinessRule(businessRule, beginErrorWord, endErrorWord);
+                businessRulesInput.get(i).setErrorMessage("Input error found on: '" + errorWord + "'. Did you mean: '" + alternativeFinder.findAlternative(errorWord) + "'?");
                 businessRulesInput.get(i).setErrorWord(beginErrorWord, endErrorWord);
                 hasErrors = true;
                 ParseErrorListener.INSTANCE.getWordExceptions().remove(i+1);
@@ -98,6 +102,10 @@ public class ParserPipeline {
         }
 
         return hasErrors;
+    }
+
+    private String getAlternative(String errorWord) {
+        return null;
     }
 
     private String findWordInBusinessRule(String businessRule, int beginChar, int endChar){
