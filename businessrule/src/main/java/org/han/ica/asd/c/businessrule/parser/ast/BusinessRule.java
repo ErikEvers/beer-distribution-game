@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
@@ -13,6 +14,15 @@ public class BusinessRule extends ASTNode {
     private static final String prefix = "BR(";
     private Condition condition;
     private Action action;
+
+    /**
+     * Gets the action of the BusinessRule
+     *
+     * @return Returns an action
+     */
+    public Action getAction() {
+        return action;
+    }
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -130,5 +140,14 @@ public class BusinessRule extends ASTNode {
     @Override
     public int hashCode() {
         return Objects.hash(condition, action);
+    }
+
+    /**
+     * States if the business rule is triggered
+     *
+     * @return Returns if the business rule is triggered
+     */
+    public boolean isTriggered() {
+        return ((BooleanLiteral) this.condition).getValue();
     }
 }

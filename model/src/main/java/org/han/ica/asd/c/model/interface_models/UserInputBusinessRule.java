@@ -1,9 +1,13 @@
 package org.han.ica.asd.c.model.interface_models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserInputBusinessRule {
     private String businessRule;
     private String errorMessage;
     private int lineNumber;
+    private Map<Integer,Integer> errorWord = new HashMap<>();
 
     public UserInputBusinessRule(String businessRule, int lineNumber) {
         this.businessRule = businessRule;
@@ -43,7 +47,11 @@ public class UserInputBusinessRule {
         return lineNumber;
     }
 
-    public void setLineNumber(int lineNumber) {
-        this.lineNumber = lineNumber;
+    public Map<Integer, Integer> getErrorWord() {
+        return errorWord;
+    }
+
+    public void setErrorWord(int beginChar, int endChar) {
+        this.errorWord.put(beginChar,endChar);
     }
 }

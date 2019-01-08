@@ -3,7 +3,7 @@ package org.han.ica.asd.c.leadermigration;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.model.interface_models.PlayerNotFoundException;
+import org.han.ica.asd.c.exceptions.leadermigration.PlayerNotFoundException;
 import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
 import org.han.ica.asd.c.interfaces.communication.ILeaderMigration;
 import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;

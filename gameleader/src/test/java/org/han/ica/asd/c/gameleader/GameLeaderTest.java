@@ -11,15 +11,13 @@ import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.mockito.Mockito.*;
 
 public class GameLeaderTest {
@@ -30,9 +28,6 @@ public class GameLeaderTest {
     private BeerGame gameTest;
 
     @Mock
-    private Round r;
-
-    @Mock
     private Player player;
 
     @Mock
@@ -40,8 +35,6 @@ public class GameLeaderTest {
 
     @Mock
     private Configuration con;
-
-    private Round round = new Round();
 
     private List<Facility> facilities = new ArrayList<>();
 
@@ -52,8 +45,6 @@ public class GameLeaderTest {
 
     private IConnectorForLeader iConnectorForLeader;
 
-    private GameLeader gameLeader;
-
     private Round facilityTurnModel;
 
     private ILeaderGameLogic gameLogic;
@@ -62,14 +53,16 @@ public class GameLeaderTest {
 
     private IPersistence iPersistence;
 
-    @Before
+    private GameLeader gameLeader;
+
+    @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
 
         gameTest = new BeerGame();
         facilityTurnModel = new Round();
 
-        rounds.add(r);
+        rounds.add(mock(Round.class));
 
         facilities.add(facil);
         facilities.add(facil);
@@ -79,9 +72,6 @@ public class GameLeaderTest {
         players.add(player);
 
         player.setPlayerId("1");
-
-        facilities.get(0).setPlayer(player);
-        facilities.get(1).setPlayer(player);
 
         con.setFacilities(facilities);
         gameTest.setConfiguration(con);
@@ -95,10 +85,10 @@ public class GameLeaderTest {
         gameTest.setPlayers(players);
         gameTest.setLeader(leader);
 
-        iConnectorForLeader = mock(CommunicationStub.class);
-        gameLogic = mock(GameLogicStub.class);
-        iPersistence = mock(PersistenceStub.class);
-        turnHandlerMock = mock(TurnHandler.class);
+        iConnectorForLeader = spy(CommunicationStub.class);
+        gameLogic = spy(GameLogicStub.class);
+        iPersistence = spy(PersistenceStub.class);
+        turnHandlerMock = spy(TurnHandler.class);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -107,12 +97,12 @@ public class GameLeaderTest {
                 bind(ILeaderGameLogic.class).toInstance(gameLogic);
                 bind(IPersistence.class).toInstance(iPersistence);
                 bind(TurnHandler.class).toInstance(turnHandlerMock);
-                bind(BeerGame.class).toInstance(gameTest);
-                bind(Round.class).toInstance(round);
 
+                bind(BeerGame.class).toProvider(() -> gameTest);
             }
         });
-        gameLeader = injector.getInstance(GameLeader.class);
+
+        gameLeader = spy(injector.getInstance(GameLeader.class));
     }
 
     @Test
@@ -121,7 +111,7 @@ public class GameLeaderTest {
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
 
-        Assert.assertEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
+        Assertions.assertEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
     }
 
     @Test
@@ -129,7 +119,7 @@ public class GameLeaderTest {
         gameLeader.init();
         gameLeader.turnModelReceived(facilityTurnModel);
 
-        Assert.assertNotEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
+        Assertions.assertNotEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
     }
 
     @Test
@@ -139,9 +129,11 @@ public class GameLeaderTest {
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
 
-        verify(gameLogic, times(1)).calculateRound(null);
-        verify(iPersistence, times(1)).saveRoundData(null);
-        verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(null);
+        verify(gameLogic, times(1)).calculateRound(any(Round.class));
+        verify(turnHandlerMock, times(2)).processFacilityTurn(any(Round.class), any(Round.class));
+        verify(iPersistence, times(2)).savePlayerTurn(any(Round.class));
+        verify(iPersistence, times(1)).saveRoundData(any(Round.class));
+        verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(any(Round.class));
     }
 
     @Test
@@ -151,7 +143,7 @@ public class GameLeaderTest {
 
         verify(gameLogic, times(1)).removeAgentByPlayerId(null);
 
-        Assert.assertThat(gameLeader.notifyPlayerReconnected(any(String.class)), instanceOf(BeerGame.class));
+        Assertions.assertNotNull(gameLeader.notifyPlayerReconnected(any(String.class)));
     }
 
     @Test
@@ -168,31 +160,19 @@ public class GameLeaderTest {
 
     @Test
     public void DisconnectedWrongTestCallPlayerIsDisconnectedMethod() {
-        Player playerTest = mock(Player.class);
-        Facility facility = mock(Facility.class);
-        playerTest.setPlayerId("b");
-        players.add(playerTest);
         Facility facilityTest = mock(Facility.class);
-        facility.setPlayer(playerTest);
         facilities.add(facilityTest);
-        facilities.get(2).setPlayer(playerTest);
         con.setFacilities(facilities);
 
         when(con.getFacilities()).thenReturn(facilities);
-        when(facilities.get(0).getPlayer()).thenReturn(player);
-        when(facilities.get(1).getPlayer()).thenReturn(player);
-        when(facilities.get(2).getPlayer()).thenReturn(player);
         when(player.getPlayerId()).thenReturn("b");
-
-        GameAgent gameAgent = mock(GameAgent.class);
-        when(facilities.get(0).getAgent()).thenReturn(gameAgent);
-        when(facilities.get(1).getAgent()).thenReturn(gameAgent);
-        when(facilities.get(2).getAgent()).thenReturn(gameAgent);
         when(players.get(0)).thenReturn(player);
         when(players.get(1)).thenReturn(player);
         when(players.get(2)).thenReturn(player);
         when(player.getFacility()).thenReturn(facil);
-        when(facil.getAgent()).thenReturn(gameAgent);
+
+        GameAgent gameAgent = mock(GameAgent.class);
+        doReturn(gameAgent).when(gameLeader).getAgentByFacility(anyInt());
         when(gameAgent.getGameAgentName()).thenReturn("test");
 
         gameLeader.init();
