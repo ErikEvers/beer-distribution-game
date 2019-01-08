@@ -16,7 +16,6 @@ public class DBConnection implements IDatabaseConnection {
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/main/resources/";
 	private static final String DATABASENAME = "BeerGameDB.db";
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
-	private static volatile DBConnection mInstance;
 
 	public DBConnection() {
 		//Empty constructor for GUICE

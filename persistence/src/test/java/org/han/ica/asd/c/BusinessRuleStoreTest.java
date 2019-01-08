@@ -115,8 +115,8 @@ class BusinessRuleStoreTest {
     @Test
     void getAllProgrammedAgents() {
         List<String> programmedAgentsDB = businessRuleStore.getAllProgrammedAgents();
-        Assert.assertEquals(programmedAgentsDB.size(), programmedAgents.size());
-        Assert.assertEquals(programmedAgentsDB.get(0),PROGRAMMED_AGENT_NAME);
+        Assert.assertEquals(programmedAgents.size(),programmedAgentsDB.size());
+        Assert.assertEquals(PROGRAMMED_AGENT_NAME,programmedAgentsDB.get(0));
     }
 
     @Test

@@ -1,7 +1,7 @@
-package org.han.ica.asd.c.interfaces.agent;
+package org.han.ica.asd.c.interfaces.persistence;
 
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
 public interface IGameStore {
-    BeerGame getGameLog(String gameId);
+    BeerGame getGameLog();
 }
