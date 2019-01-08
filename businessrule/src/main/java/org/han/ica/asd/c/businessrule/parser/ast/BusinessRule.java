@@ -23,8 +23,8 @@ public class BusinessRule extends ASTNode {
     //@Inject
     private IBusinessRuleStore businessRuleStore;
 
-    //@Inject
-    private NodeConverter nodeConverter = new NodeConverter();
+    @Inject
+    private NodeConverter nodeConverter;
 
     /**
      * Gets the action of the BusinessRule
@@ -205,9 +205,7 @@ public class BusinessRule extends ASTNode {
         String replacementValue;
         if (value.getValue().size() > 1) {
             String secondVariable = value.getSecondPartVariable();
-            if (GameValue.checkIfFacility(secondVariable)) {
-                replaceOnVariable(value, round, nodeConverter.getFacilityId(secondVariable), secondVariable);
-            } else if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
+            if (GameValue.checkIfFacility(secondVariable) || Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
                 replaceOnVariable(value, round, facilityId, secondVariable);
             }
         }
@@ -227,10 +225,13 @@ public class BusinessRule extends ASTNode {
      */
     private void replaceOnVariable(Value value, Round round, int facilityId, String variable) {
         GameValue gameValue = getGameValue(variable);
-        if (gameValue != null) {
-            String newReplacementValue = getReplacementValue(gameValue, round, facilityId);
+        String newReplacementValue;
+        if (GameValue.checkIfFacility(variable)) {
+            newReplacementValue = String.valueOf(nodeConverter.getFacilityId(variable));
             value.replaceValueWithValue(newReplacementValue);
-            return;
+        } else if (gameValue != null) {
+            newReplacementValue = getReplacementValue(gameValue, round, facilityId);
+            value.replaceValueWithValue(newReplacementValue);
         }
     }
 
@@ -272,7 +273,7 @@ public class BusinessRule extends ASTNode {
             case OUTGOINGGOODS:
                 return getOutgoingGoods(round, facilityId);
             default:
-                return String.valueOf(facilityId);
+                return "";
         }
     }
 
@@ -371,29 +372,6 @@ public class BusinessRule extends ASTNode {
         }
         return replacementValue;
     }
-
-    /**
-     * Gets the id based on the facility Type
-     *
-     * @param map          the map to search through
-     * @param facilityType the type of facility
-     * @return the type of facility. returns -1 when no type is found
-     */
-    private int getFacilityIdBasedOnType(Map<Facility, Integer> map, GameValue facilityType) {
-        Facility facility = null;
-        for (Map.Entry<Facility, Integer> entry : map.entrySet()) {
-            if (GameValue.valueOf(entry.getKey().getFacilityType().getFacilityName().toUpperCase()) == facilityType) {
-                facility = entry.getKey();
-                break;
-            }
-        }
-        if (facility == null) {
-            return -1;
-        } else {
-            return facility.getFacilityId();
-        }
-    }
-
 
     /**
      * States if the business rule is triggered

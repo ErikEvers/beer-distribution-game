@@ -32,12 +32,12 @@ public class BusinessRuleHandler implements IBusinessRules {
     public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
         BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
 
-        businessRuleAST.substituteTheVariablesOfBusinessruleWithGameData(roundData,facilityId);
+        businessRuleAST.substituteTheVariablesOfBusinessruleWithGameData(roundData, facilityId);
         businessRuleAST.evaluateBusinessRule();
 
-        if (businessRuleAST.isTriggered()){
+        if (businessRuleAST.isTriggered()) {
             Action action = businessRuleAST.getAction();
-        	return new ActionModel(
+            return new ActionModel(
                     action.getType(),
                     action.getAmount(),
                     action.getFacilityId());

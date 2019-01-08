@@ -133,13 +133,12 @@ public class Value extends OperationValue {
      */
     public void replaceValueWithValue(String gameValue) {
         if (hasNotBeenReplaced(getFirstPartVariable())) {
-
-            if (value.size() > 1 && GameValue.checkIfFacility(getSecondPartVariable())) {
-                value.remove(getSecondPartVariable());
-                value.set(0, gameValue);
+            if( value.size() > 1&&GameValue.checkIfFacility(getSecondPartVariable())){
+                value.set(1, gameValue);
                 return;
+            }else if(value.size() > 1){
+                value.remove(getSecondPartVariable());
             }
-
             value.set(0, gameValue);
         } else if (hasNotBeenReplaced(getSecondPartVariable())) {
             value.set(1, gameValue);
