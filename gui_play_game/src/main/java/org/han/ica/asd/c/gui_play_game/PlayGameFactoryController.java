@@ -4,11 +4,14 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public class PlayGameFactoryController {
+    private Configuration configuration;
+
     @FXML
     GridPane playGridPane;
 
@@ -29,6 +32,11 @@ public class PlayGameFactoryController {
     }
 
     public void seeOtherFacilitiesButtonClicked() {
+        seeOtherFacilities.setData(new Object[]{configuration});
         seeOtherFacilities.setupScreen();
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 }

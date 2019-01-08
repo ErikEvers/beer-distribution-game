@@ -10,7 +10,7 @@ ROUND : 'round';
 FROM : 'from';
 TO : 'to';
 WHERE: 'where';
-NODE : ('factory' | 'distributor' | 'wholesaler' | 'retailer') (' '?[0-9]+)?;
+NODE : ('factory' | 'warehouse' | 'wholesaler' | 'retailer') (' '?[0-9]+)?;
 
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders' | 'budget' | 'outgoing goods'|'ordered';
 INT_VALUE: [0-9]+;

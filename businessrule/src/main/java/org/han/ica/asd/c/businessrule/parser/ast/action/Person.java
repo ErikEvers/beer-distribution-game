@@ -11,6 +11,12 @@ public class Person extends ASTNode {
 
     /**
      * Constructor
+     */
+    public Person() {
+    }
+
+    /**
+     * Constructor
      *
      * @param personNode Person to which action has to be sent
      */
@@ -23,6 +29,18 @@ public class Person extends ASTNode {
 
     @Override
     public ASTNode addValue(String value) {
+        this.personNode = value;
+        return this;
+    }
+
+    /**
+     * Adds a value to the personNode string
+     *
+     * @param value The value that will define the personNode string
+     * @return Returns itself so that it can be used immediately
+     */
+    @Override
+    public Person addValue(String value) {
         this.personNode = value;
         return this;
     }
