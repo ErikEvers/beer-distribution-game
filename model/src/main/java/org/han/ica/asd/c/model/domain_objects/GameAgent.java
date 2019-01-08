@@ -7,11 +7,21 @@ public class GameAgent implements IDomainModel{
     private String gameAgentName;
     private Facility facility;
     private List<GameBusinessRules> gameBusinessRulesList;
+    private List<ProgrammedBusinessRules> programmedBusinessRules;
 
     public GameAgent(String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRules) {
         this.gameAgentName = gameAgentName;
         this.facility = facility;
         this.gameBusinessRulesList = Collections.unmodifiableList(gameBusinessRules);
+    }
+
+    public GameAgent(String gameAgentName, List<ProgrammedBusinessRules> programmedBusinessRules, Facility facility) {
+        this.gameAgentName = gameAgentName;
+        this.programmedBusinessRules = programmedBusinessRules;
+        this.facility = facility;
+        for(ProgrammedBusinessRules businessRules: programmedBusinessRules) {
+            gameBusinessRulesList.add(new GameBusinessRules(gameAgentName, businessRules.getProgrammedAST()));
+        }
     }
 
     public String getGameAgentName() {
@@ -31,5 +41,13 @@ public class GameAgent implements IDomainModel{
 
     public void setGameBusinessRules(List<GameBusinessRules> gameBusinessRules) {
         this.gameBusinessRulesList = gameBusinessRules;
+    }
+
+    public List<ProgrammedBusinessRules> getProgrammedBusinessRules() {
+        return programmedBusinessRules;
+    }
+
+    public void setProgrammedBusinessRules(List<ProgrammedBusinessRules> programmedBusinessRules) {
+        this.programmedBusinessRules = programmedBusinessRules;
     }
 }

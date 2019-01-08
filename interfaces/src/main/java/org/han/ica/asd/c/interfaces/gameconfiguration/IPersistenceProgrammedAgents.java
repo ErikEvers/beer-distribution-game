@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IPersistenceProgrammedAgents {
 
-  List<ProgrammedAgent> getAllAgents();
+  List<ProgrammedAgent> readAllAgents();
 }
