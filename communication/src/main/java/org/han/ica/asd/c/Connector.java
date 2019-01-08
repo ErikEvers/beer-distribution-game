@@ -147,6 +147,7 @@ public class Connector implements IConnectorForSetup {
 
     @Override
     public void chooseFacility(Facility facility) {
+        //for later use
     }
 
     @Override

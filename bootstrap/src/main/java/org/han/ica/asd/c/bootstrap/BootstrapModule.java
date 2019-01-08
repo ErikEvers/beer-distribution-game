@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
@@ -19,7 +18,6 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
-import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
