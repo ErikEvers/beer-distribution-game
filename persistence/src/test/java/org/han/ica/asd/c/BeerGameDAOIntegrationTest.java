@@ -67,6 +67,6 @@ public class BeerGameDAOIntegrationTest {
 	public void getGameLog() {
 		beergameDAO.createBeergame("BeergameZutphen");
 		List<BeerGame> beergames = beergameDAO.readBeergames();
-		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog(beergames.get(0).getGameId()).getGameName());
+		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog().getGameName());
 	}
 }

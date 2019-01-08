@@ -51,7 +51,7 @@ public class Persistence implements IPersistence {
 
 	public BeerGame getGameLog(String gameId)
 	{
-		return beergameDAO.getGameLog(gameId);
+		return beergameDAO.getGameLog();
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn)

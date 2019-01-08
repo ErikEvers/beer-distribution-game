@@ -114,17 +114,16 @@ public class BeergameDAO {
 	}
 
 	/**
-	 * A method which returns a single beergame according to the given parameters
-	 * @param gameId The name of the game which needs to be returned
+	 * A method which returns a single beergame according to the given parameter
 	 * @return A beergame object
 	 */
-	public BeerGame getGameLog(String gameId) {
+	public BeerGame getGameLog() {
 		Connection conn = databaseConnection.connect();
 		BeerGame beergame = null;
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 				conn.setAutoCommit(false);
-				pstmt.setString(1,gameId);
+				pstmt.setString(1,DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
 					beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
 					beergame.setConfiguration(configurationDAO.readConfiguration());

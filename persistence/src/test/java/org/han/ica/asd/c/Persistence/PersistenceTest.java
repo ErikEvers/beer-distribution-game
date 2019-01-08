@@ -71,7 +71,7 @@ class PersistenceTest {
 		when((roundDAOMock).getRound(anyInt())).thenReturn(round);
 
 		beerGameDAOMock = mock(BeergameDAO.class);
-		when((beerGameDAOMock).getGameLog(anyString())).thenReturn(beerGame);
+		when((beerGameDAOMock).getGameLog()).thenReturn(beerGame);
 
 		gameBusinessRulesInFacilityTurnMock = mock(GameBusinessRulesInFacilityTurnDAO.class);
 		when((gameBusinessRulesInFacilityTurnMock).readTurn(anyInt(),anyInt(),anyString())).thenReturn(gameBusinessRulesInFacilityTurn);
@@ -113,7 +113,7 @@ class PersistenceTest {
 	@Test
 	void getGameLogTest() {
 		persistence.getGameLog("BeerGame");
-		verify(((BeergameDAO)beerGameDAOMock), times(1)).getGameLog(anyString());
+		verify((beerGameDAOMock), times(1)).getGameLog();
 	}
 
 
