@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 @Singleton
 public class DBConnection implements IDatabaseConnection {
-	private static final Path currentDir = Paths.get(".");
+	private static final Path currentDir = Paths.get("");
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:"+currentDir.toAbsolutePath().toString()+File.separator+"src"+ File.separator+"main"+File.separator+"resources"+File.separator;
 	private static final String DATABASENAME = "BeerGameDB.db";
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
