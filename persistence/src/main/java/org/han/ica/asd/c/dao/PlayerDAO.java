@@ -38,27 +38,22 @@ public class PlayerDAO {
      * @param player A domain object which contains the necessary data to create a player
      */
     public void createPlayer(Player player) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(CREATE_PLAYER)) {
-                    conn.setAutoCommit(false);
+        Connection conn = databaseConnection.connect();
+        try (PreparedStatement pstmt = conn.prepareStatement(CREATE_PLAYER)) {
 
-                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
-                    pstmt.setString(2, player.getPlayerId());
-                    pstmt.setInt(3, player.getFacility().getFacilityId());
-                    pstmt.setString(4, player.getIpAddress());
-                    pstmt.setString(5, player.getName());
+            conn.setAutoCommit(false);
 
-                    pstmt.executeUpdate();
-                } catch (GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                }
-                conn.commit();
-            }
-        } catch (SQLException e) {
+            DaoConfig.gameIdNotSetCheck(pstmt, 1);
+            pstmt.setString(2, player.getPlayerId());
+            pstmt.setInt(3, player.getFacility().getFacilityId());
+            pstmt.setString(4, player.getIpAddress());
+            pstmt.setString(5, player.getName());
+
+            pstmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
         }
     }
 
@@ -68,22 +63,20 @@ public class PlayerDAO {
      * @param player Specifies the player to update
      */
     public void updatePlayer(Player player) {
-        Connection conn = null;
-        try {
-            conn = databaseConnection.connect();
-            if (conn != null) {
-                try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PLAYER)) {
-                    conn.setAutoCommit(false);
+        Connection conn = conn = databaseConnection.connect();
+        try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PLAYER)) {
 
-                    pstmt.setString(1, player.getIpAddress());
-                    pstmt.setString(2, player.getName());
-                    pstmt.setString(3, DaoConfig.getCurrentGameId());
-                    pstmt.setString(4, player.getPlayerId());
+            conn.setAutoCommit(false);
 
-                    pstmt.executeUpdate();
-                }
-                conn.commit();
-            }
+            pstmt.setString(1, player.getIpAddress());
+            pstmt.setString(2, player.getName());
+            pstmt.setString(3, DaoConfig.getCurrentGameId());
+            pstmt.setString(4, player.getPlayerId());
+
+            pstmt.executeUpdate();
+
+            conn.commit();
+
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -96,7 +89,26 @@ public class PlayerDAO {
      * @return Returns the specified player
      */
     public Player getPlayer(String playerId) {
-        return null;
+        Player player = null;
+        Connection conn = databaseConnection.connect();
+        try (PreparedStatement pstmt = conn.prepareStatement(GET_SPECIFIC)) {
+            conn.setAutoCommit(false);
+
+            DaoConfig.gameIdNotSetCheck(pstmt, 1);
+            pstmt.setString(2, playerId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                player = buildPlayer(rs);
+            }
+            conn.commit();
+            return player;
+
+        } catch (SQLException | GameIdNotSetException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
+        }
+
+        return player;
     }
 
     /**
@@ -139,6 +151,8 @@ public class PlayerDAO {
             pstmt.setString(2, playerId);
 
             pstmt.executeUpdate();
+
+            conn.commit();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -153,23 +167,28 @@ public class PlayerDAO {
      */
     private void buildPlayerArray(ResultSet rs, List<Player> players) {
         try {
-            if (!rs.next()) {
-                do {
-                    players.add(createPlayer(rs));
-                } while (rs.next());
+            if (!rs.isClosed()) {
+                while (rs.next()) {
+                    players.add(buildPlayer(rs));
+                }
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
     }
 
-    private Player createPlayer(ResultSet rs) throws SQLException {
-        return new Player(
-                rs.getString("PlayerId"),
-                rs.getString("IpAddress"),
-                facilityDAO.readSpecificFacility(rs.getInt("")),
-                rs.getString("Name"),
-                true);
+    private Player buildPlayer(ResultSet rs) throws SQLException {
+        Player player = null;
+        if (!rs.isClosed()) {
+            player = new Player(
+                    rs.getString("PlayerId"),
+                    rs.getString("IpAddress"),
+                    facilityDAO.readSpecificFacility(rs.getInt("FacilityId")),
+                    rs.getString("Name"),
+                    true);
+            return player;
+        }
+        return player;
     }
 
 }

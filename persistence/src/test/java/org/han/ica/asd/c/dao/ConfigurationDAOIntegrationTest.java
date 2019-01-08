@@ -21,7 +21,6 @@ class ConfigurationDAOIntegrationTest {
 
 	@BeforeEach
 	public void setUp() {
-		DBConnectionTest.getInstance().cleanup();
 		DBConnectionTest.getInstance().createNewDatabase();
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
@@ -37,7 +36,7 @@ class ConfigurationDAOIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
-		DBConnectionTest.getInstance().cleanup();
+//		DBConnectionTest.getInstance().cleanup();
 	}
 
 
