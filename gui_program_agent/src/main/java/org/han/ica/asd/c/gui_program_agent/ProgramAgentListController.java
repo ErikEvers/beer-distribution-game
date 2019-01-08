@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class ProgramAgentListController {
     @FXML
@@ -78,7 +79,7 @@ public class ProgramAgentListController {
     @FXML
     public void deleteButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete " + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_agent") + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.YES) {
             items.remove(selectedAgent);
