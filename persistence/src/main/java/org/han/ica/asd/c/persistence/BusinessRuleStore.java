@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.persistence;
 
 import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
