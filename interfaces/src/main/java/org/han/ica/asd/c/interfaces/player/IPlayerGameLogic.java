@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.player;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
@@ -38,4 +39,6 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
+
+    List<Agent> getSavedAgents();
 }
