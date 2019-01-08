@@ -54,8 +54,10 @@ public class ProgramAgentListController {
 
     @FXML
     public void handleMouseClickOnList(MouseEvent arg0) {
-        edit.setVisible(true);
-        delete.setVisible(true);
+        if(list.getSelectionModel().getSelectedItem() !=null) {
+            edit.setVisible(true);
+            delete.setVisible(true);
+        }
     }
 
     @FXML

@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.discovery;
 
 import org.apache.commons.validator.routines.InetAddressValidator;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 
 import java.io.IOException;
 import java.util.ArrayList;
