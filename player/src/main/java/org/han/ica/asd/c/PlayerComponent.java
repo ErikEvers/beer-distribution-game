@@ -2,7 +2,6 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.public_interfaces.IPlayerComponent;
@@ -19,12 +18,12 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public void activatePlayer() {
-        //Yet to be implemented.
+
     }
 
     @Override
     public void activateAgent() {
-        //Yet to be implemented.
+
     }
 
     @Override
@@ -34,22 +33,22 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public void placeOrder(int amount) {
-        //Yet to be implemented.
+
     }
 
     @Override
-    public void requestFacilityUsage(Facility facility) {
-        gameLogic.requestFacilityUsage(facility);
+    public void chooseFacility(Facility facility) {
+
     }
 
     @Override
     public void requestFacilityInfo(String info) {
-        //Yet to be implemented.
+
     }
 
     @Override
     public void selectAgent() {
-        //Yet to be implemented.
+
     }
 
     @Override
@@ -58,12 +57,7 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public void connectToGame(String game) {
-        gameLogic.connectToGame(game);
-    }
+    public void connectToGame() {
 
-    @Override
-    public List<Facility> getAllFacilities() {
-        return gameLogic.getAllFacilities();
     }
 }
