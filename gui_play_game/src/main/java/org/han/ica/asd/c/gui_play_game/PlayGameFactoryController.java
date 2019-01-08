@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class PlayGameFactoryController {
-    Configuration configuration;
+    private Configuration configuration;
 
     @FXML
     GridPane playGridPane;
@@ -32,6 +32,7 @@ public class PlayGameFactoryController {
     }
 
     public void seeOtherFacilitiesButtonClicked() {
+        seeOtherFacilities.setData(new Object[]{configuration});
         seeOtherFacilities.setupScreen();
     }
 

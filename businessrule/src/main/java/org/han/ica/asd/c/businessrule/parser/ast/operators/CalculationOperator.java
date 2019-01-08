@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class CalculationOperator extends Operator {
-    private static final String prefix = "CalO(";
+    private static final String PREFIX = "CalO(";
 
     /**
      * Constructor
@@ -58,7 +58,7 @@ public class CalculationOperator extends Operator {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(prefix).append(operatorVal).append(suffix);
+        stringBuilder.append(PREFIX).append(operatorVal).append(SUFFIX);
     }
 
 }
