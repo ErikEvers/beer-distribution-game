@@ -80,18 +80,18 @@
                         </AnchorPane>
                     </content>
                 </ScrollPane>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="Button" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%back_to_menu" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="Button" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%manage_players" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <GridPane.margin>
                   <Insets right="165.0" />
                </GridPane.margin></Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="Button" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%start_game" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Button>
@@ -109,8 +109,8 @@
                 </Label>
             </children>
         </HBox>
-      <Button layoutX="836.0" layoutY="90.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="Add agent" textFill="WHITE" />
-      <Button layoutX="836.0" layoutY="135.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="Remove agent" textFill="WHITE" />
-      <ComboBox layoutX="675.0" layoutY="90.0" prefHeight="25.0" prefWidth="150.0" promptText="Kies een agent..." />
+      <Button layoutX="836.0" layoutY="90.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%add_agent" textFill="WHITE" />
+      <Button layoutX="836.0" layoutY="135.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%remove_agent" textFill="WHITE" />
+      <ComboBox layoutX="675.0" layoutY="90.0" prefHeight="25.0" prefWidth="150.0" promptText="%choose_agent" />
     </children>
 </AnchorPane>
