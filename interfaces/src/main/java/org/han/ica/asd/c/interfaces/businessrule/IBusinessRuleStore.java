@@ -21,13 +21,22 @@ public interface IBusinessRuleStore {
     void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap);
 
     /**
+     * Gathers all facilityId's in a two-dimensional list. Each list in the two-dimensional list represents a facility type e.g. factory. The list with id's has to be sorted the same way they are represented in the game.
+     *
+     * @return Returns a two-dimensional list with all facilityId's sorted by facility type.
+     */
+    List<List<String>> getAllFacilities();
+
+    /**
      * Gets all the agents from the database.
+     *
      * @return Returns a list with all the agents programmed.
      */
     List<String> getAllProgrammedAgents();
 
     /**
      * Deletes a programmed agent with its name.
+     *
      * @param agentName The name of a agent.
      */
     void deleteProgrammedAgent(String agentName);

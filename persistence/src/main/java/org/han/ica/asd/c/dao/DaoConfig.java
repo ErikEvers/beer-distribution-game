@@ -16,8 +16,21 @@ public class DaoConfig {
         return currentGameId;
     }
 
-    protected static void setCurrentGameId(String gameId) {
+    /**
+     * Sets the current game id so that the data access objects don't require gameId as a paramater
+     *
+     * @param gameId
+     * The game id to set
+     */
+    public static void setCurrentGameId(String gameId) {
         DaoConfig.currentGameId = gameId;
+    }
+
+    /**
+     * Clears the game id for when the player leaves a game or stops replaying a game
+     */
+    public static void clearCurrentGameId() {
+        DaoConfig.currentGameId = null;
     }
 
     /**
