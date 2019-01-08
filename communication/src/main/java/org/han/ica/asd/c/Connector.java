@@ -4,7 +4,6 @@ import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
-import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
@@ -143,6 +142,17 @@ public class Connector implements IConnecterForSetup {
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void chooseFacility(Facility facility) throws Exception {
+        //gameMessageClient.sendChooseFacilityMessage("leader ip", facility);
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        //return gameMessageClient.sendAllFacilitiesRequestMessage("leader ip");
+        return null;
     }
 
     public void addObserver(IConnectorObserver observer) {
