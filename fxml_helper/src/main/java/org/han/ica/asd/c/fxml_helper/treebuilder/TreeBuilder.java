@@ -19,13 +19,13 @@ import java.util.Map;
  */
 public class TreeBuilder {
 
-	private static ArrayList<FacilityRectangle> factories;
-	private static ArrayList<FacilityRectangle> wholesalers;
-	private static ArrayList<FacilityRectangle> warehouses;
-	private static ArrayList<FacilityRectangle> retailers;
+	private static List<FacilityRectangle> factories;
+	private static List<FacilityRectangle> wholesalers;
+	private static List<FacilityRectangle> warehouses;
+	private static List<FacilityRectangle> retailers;
 
-	private static ArrayList<Facility> drawnFacilities;
-	private static ArrayList<FacilityRectangle> drawnFacilityRectangles;
+	private static List<Facility> drawnFacilities;
+	private static List<FacilityRectangle> drawnFacilityRectangles;
 
 	private static boolean tooltipRequired;
 	private static AnchorPane container;
@@ -146,7 +146,7 @@ public class TreeBuilder {
 	 * @param y
 	 * Y-axis on which the facility is to be drawn.
 	 */
-	private static void drawFacilityOnScreen(Facility facility, ArrayList<FacilityRectangle> facilityList, int y) {
+	private static void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
 		double rows = (container.getPrefHeight()/4);
 		double columns = 60;
 		container.getChildren().removeAll(facilityList);
