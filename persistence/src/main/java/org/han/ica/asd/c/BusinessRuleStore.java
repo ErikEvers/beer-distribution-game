@@ -58,6 +58,30 @@ public class BusinessRuleStore implements IBusinessRuleStore {
         List<List<String>> returnList = new ArrayList<>();
         facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
 
+        switchCase();
+
+        if(!factoryList.isEmpty()) {
+            returnList.add(factoryList);
+        }
+        if(!distributeurList.isEmpty()) {
+            returnList.add(distributeurList);
+        }
+        if(!wholesalerList.isEmpty()) {
+            returnList.add(wholesalerList);
+        }
+        if(!retailerList.isEmpty()) {
+            returnList.add(retailerList);
+        }
+        if(!defaultList.isEmpty()) {
+            returnList.add(defaultList);
+        }
+        return returnList;
+    }
+
+    /**
+     * A method that sees to what type a facility in a game belongs.
+     */
+    private void switchCase() {
         for (Facility facility: facilitiesInGame) {
             switch (facility.getFacilityType().getFacilityName()) {
                 case "Factory":
@@ -76,23 +100,6 @@ public class BusinessRuleStore implements IBusinessRuleStore {
                     defaultList.add(Integer.toString(facility.getFacilityId()));
             }
         }
-
-        if(!factoryList.isEmpty()) {
-            returnList.add(factoryList);
-        }
-        if(!distributeurList.isEmpty()) {
-            returnList.add(distributeurList);
-        }
-        if(!wholesalerList.isEmpty()) {
-            returnList.add(wholesalerList);
-        }
-        if(!retailerList.isEmpty()) {
-            returnList.add(retailerList);
-        }
-        if(!defaultList.isEmpty()) {
-            returnList.add(defaultList);
-        }
-        return returnList;
     }
 
     @Override
