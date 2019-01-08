@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
-import org.han.ica.asd.c.model.interface_models.PlayerNotFoundException;
+import org.han.ica.asd.c.exceptions.leadermigration.PlayerNotFoundException;
 import org.han.ica.asd.c.leadermigration.testutil.CommunicationHelper;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
