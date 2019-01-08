@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -56,7 +56,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param agent Agent that will replace the player.
      */
     @Override
-    public void letAgentTakeOverPlayer(AgentParticipant agent) {
+    public void letAgentTakeOverPlayer(Agent agent) {
         participantsPool.replacePlayerWithAgent(agent);
     }
 
