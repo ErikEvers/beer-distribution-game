@@ -46,6 +46,7 @@ public class GameMessageReceiverTest {
     @Mock
     GameMessageFilterer gameMessageFilterer;
 
+    @Mock
     private IGameConfigurationObserver gameConfigurationObserver;
 
     @BeforeEach
@@ -88,7 +89,6 @@ public class GameMessageReceiverTest {
     }
 
     @Test
-
     public void configurationReceived() {
         Configuration configuration = new Configuration();
 

@@ -49,20 +49,6 @@ public class TestFaultHandlerLeader {
 	}
 
 	@Test
-	void TestShouldReturnDeadIpWhenIncrementedTooMuch() {
-
-		when(nodeInfoList.size()).thenReturn(10);
-
-		for (int i = 1; i < 10; i++) {
-			assertNull(faultHandlerLeader.incrementFailure("1234"));
-
-		}
-
-		assertEquals("1234",faultHandlerLeader.incrementFailure("1234"));
-
-	}
-
-	@Test
 	void TestIsLeaderAliveAndIAmDisconnected() {
 		assertFalse(faultHandlerLeader.isLeaderAlive());
 		faultHandlerLeader.iAmDisconnected();

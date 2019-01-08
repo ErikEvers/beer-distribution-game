@@ -80,6 +80,7 @@ public class TestFaultDetectorLeader {
         faultDetectorLeader.setObservers(observers);
         faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
+        faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
 
 
         faultDetectorLeader.start();
@@ -109,11 +110,10 @@ public class TestFaultDetectorLeader {
                 //do nothing
             }
         };
+
+        faultDetectorLeader.setObservers(observers);
         faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
-        faultDetectorLeader.setObservers(observers);
-
-        faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setFaultDetectionClient(faultDetectionClientMock);
         faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
 
@@ -124,7 +124,7 @@ public class TestFaultDetectorLeader {
         activeIpsMock.add(testIp1);
         activeIpsMock.add(testIp2);
 
-        when(nodeInfoList.getActiveIps()).thenReturn(activeIpsMock);
+        when(nodeInfoList.getActiveIpsWithoutLeader()).thenReturn(activeIpsMock);
 
         doNothing().when(failLog).reset(any(String.class));
         doNothing().when(faultHandlerLeader).reset(any(String.class));
@@ -181,7 +181,7 @@ public class TestFaultDetectorLeader {
         activeIpsMock.add(testIp2);
 
 
-        when(nodeInfoList.getActiveIps()).thenReturn(activeIpsMock);
+        when(nodeInfoList.getActiveIpsWithoutLeader()).thenReturn(activeIpsMock);
         when(failLog.checkIfIpIsFailed(testIp1)).thenReturn(false);
         when(failLog.checkIfIpIsFailed(testIp2)).thenReturn(true);
 
