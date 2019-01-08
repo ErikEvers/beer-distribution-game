@@ -17,7 +17,7 @@ public class DaoConfig {
     }
 
     /**
-     * Sets the current game id so that the data access objects don't require gameId as an paramater
+     * Sets the current game id so that the data access objects don't require gameId as a paramater
      *
      * @param gameId
      * The game id to set
