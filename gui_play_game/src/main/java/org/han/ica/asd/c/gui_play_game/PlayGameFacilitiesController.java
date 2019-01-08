@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.gui_play_game;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +27,8 @@ public class PlayGameFacilitiesController extends PlayGame {
         superInitialize();
 
         //TODO when the facility object is saved in the player model get the facility name and set in the lblFacilities label.
+        Facility facility = new FacilityFake();
+        lblFacilities.setText(facility.toString());
 
         roundNumber = 0;
         fillComboBox();

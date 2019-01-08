@@ -1,8 +1,8 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.PlayGameFacilities;
-import org.han.ica.asd.c.PlayGameFactory;
+import org.han.ica.asd.c.gui_play_game.PlayGameFacilities;
+import org.han.ica.asd.c.gui_play_game.PlayGameFactory;
 import org.han.ica.asd.c.PlayerComponent;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
@@ -15,7 +15,6 @@ import org.han.ica.asd.c.gui_join_game.AgentList;
 import org.han.ica.asd.c.gui_join_game.GameRoom;
 import org.han.ica.asd.c.gui_join_game.JoinGame;
 import org.han.ica.asd.c.gui_main_menu.MainMenu;
-import org.han.ica.asd.c.gui_play_game.PlayGame;
 import org.han.ica.asd.c.gui_play_game.see_other_facilities.SeeOtherFacilities;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
@@ -42,7 +41,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGameFacilities")).to(PlayGameFacilities.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGameFactory")).to(PlayGameFactory.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
 
