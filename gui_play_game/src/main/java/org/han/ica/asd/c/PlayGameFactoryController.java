@@ -1,17 +1,7 @@
 package org.han.ica.asd.c;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.util.converter.IntegerStringConverter;
-
-import java.util.function.UnaryOperator;
 
 public class PlayGameFactoryController extends PlayGame {
     @FXML
@@ -20,11 +10,18 @@ public class PlayGameFactoryController extends PlayGame {
     @FXML
     private TextField step2TextField;
 
+    /**
+     * Button event handling the order sending.
+     */
     public void initialize() {
         superInitialize();
     }
 
+    /**
+     * Button event handling the order sending.
+     */
     public void handleSendOrderButtonClick() {
+        //TODO get the real order from the facility ordering from this one.
         outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
         roundNumber++;
         int step2Value = 0;
@@ -37,9 +34,13 @@ public class PlayGameFactoryController extends PlayGame {
                 step2TextField.setText(step1TextField.getText());
             }
 
+            //TODO get the real calculation result from the game logic component/from the game leader.
             inventory.setText(calculateInventory(step2Value, Integer.parseInt(outgoingGoodsNextRound.getText())));
             step1TextField.setText(outgoingOrderTextField.getText());
             outgoingOrderTextField.clear();
+
+            int order = Integer.parseInt(outgoingOrderTextField.getText());
+            playerComponent.placeOrder(null, order);
         }
     }
 }

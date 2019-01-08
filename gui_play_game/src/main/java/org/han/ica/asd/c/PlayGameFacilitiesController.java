@@ -2,14 +2,11 @@ package org.han.ica.asd.c;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-
-import javax.inject.Inject;
 
 public class PlayGameFacilitiesController extends PlayGame {
     @FXML
@@ -23,7 +20,9 @@ public class PlayGameFacilitiesController extends PlayGame {
 
     private ObservableList<FacilityFake> facilityListView = FXCollections.observableArrayList();
 
-
+    /**
+     * First code being executed.
+     */
     public void initialize() {
         superInitialize();
 
@@ -32,6 +31,9 @@ public class PlayGameFacilitiesController extends PlayGame {
         fillComboBox();
     }
 
+    /**
+     * Button event handling the order sending.
+     */
     public void handleSendOrderButtonClick() {
         if (!outgoingOrderTextField.getText().isEmpty()) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
@@ -49,12 +51,10 @@ public class PlayGameFacilitiesController extends PlayGame {
                 inventory.setText(calculateInventory(incomingGoodsNextRoundAmount, outgoingGoodsNextRoundAmount));
             }
 
-            //TODO uncomment this when playerComponent place order and gamelogic place order is implemented.
-            /* Facility facility = comboBox.getValue();
-            playerComponent.placeOrder(facility, order);*/
+            Facility facility = comboBox.getValue();
+            playerComponent.placeOrder(facility, order);
 
-
-            //TODO get the real outgoing Order from the facility ordering from this one.
+            //TODO get the real order from the facility ordering from this one.
             outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
             roundNumber++;
 
@@ -64,7 +64,11 @@ public class PlayGameFacilitiesController extends PlayGame {
         }
     }
 
+    /**
+     * Fills up the comboBox with facilities where the current facility can order.
+     */
     private void fillComboBox(){
+        //TODO Get the facilities linked to the facility currently being played by the player.
         FacilityFake warehouse = new FacilityFake();
         FacilityFake warehouse2 = new FacilityFake();
         facilityListView.add(warehouse);

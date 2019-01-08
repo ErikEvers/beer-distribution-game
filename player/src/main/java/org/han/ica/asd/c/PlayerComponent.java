@@ -10,37 +10,37 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public void activatePlayer() {
-
+        //Not implemented yet
     }
 
     @Override
     public void activateGameAgent() {
-
+        //Not implemented yet
     }
 
     @Override
     public void seeOtherFacilities() {
-
+        //Not implemented yet
     }
 
     @Override
     public void placeOrder(Facility facility, int amount) {
-        throw new NotImplementedException();
+        //Not implemented yet
     }
 
     @Override
     public void selectProgrammedAgent(ProgrammedAgent programmedagent) {
-
+        //Not implemented yet
     }
 
     @Override
     public void chooseFacility(Facility facility) {
-
+        //Not implemented yet
     }
 
     @Override
     public String getFacilityName() {
-
-        throw new NotImplementedException();
+        //Not implemented yet
+        return "";
     }
 }
