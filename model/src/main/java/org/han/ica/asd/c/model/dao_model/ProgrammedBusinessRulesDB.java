@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
+@Deprecated
 public class ProgrammedBusinessRulesDB implements IDaoModel{
     private String programmedAgentName;
     private String programmedBusinessRule;
