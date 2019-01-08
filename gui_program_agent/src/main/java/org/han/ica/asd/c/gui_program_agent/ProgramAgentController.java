@@ -56,8 +56,10 @@ public class ProgramAgentController {
     public void setAgentName(String name) {
         if(name != null) {
             agentNameInput.setText(name);
-            iBusinessRuleStore.readInputBusinessRules(name);
-            businessRuleInput.setText("default order 34 \nif round is 10 then order 34");
+            List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
+            for (String rule: rules) {
+                businessRuleInput.setText(rule + "\n");
+            }
             agentNameInput.setDisable(true);
         }
     }

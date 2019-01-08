@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.dbconnection;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,11 +21,14 @@ public class DBConnection implements IDatabaseConnection {
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
 
 	public DBConnection() {
-		this.createNewDatabase();
+		createNewDatabase();
 	}
 
 	public void createNewDatabase() {
-		runSQLScript("ddl.sql");
+		File file = new File(CONNECTIONSTRING+DATABASENAME);
+		if(!file.exists()) {
+			runSQLScript("ddl.sql");
+		}
 	}
 
 	public void runSQLScript(String scriptname) {
