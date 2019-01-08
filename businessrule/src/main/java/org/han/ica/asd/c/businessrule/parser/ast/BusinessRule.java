@@ -25,8 +25,11 @@ public class BusinessRule extends ASTNode {
     private static final String PREFIX = "BR(";
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
 
+    //@Inject
+    private IBusinessRuleStore businessRuleStore;
+
     @Inject
-    private NodeConverter nodeConverter = new NodeConverter();
+    private NodeConverter nodeConverter;
 
     /**
      * Gets the action of the BusinessRule

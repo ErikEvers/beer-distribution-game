@@ -1,15 +1,18 @@
 package org.han.ica.asd.c.businessrule;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.gamevalue.GameValue;
@@ -19,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
+import javax.inject.Provider;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -38,6 +42,73 @@ class BusinessRuleTest {
     private FacilityTurnDeliver facilityTurnDeliver;
     private FacilityTurnOrder facilityTurnOrder;
     private int facilityId = 10;
+
+    private Provider<BusinessRule> businessRuleProvider;
+    private Provider<Default> defaultProvider;
+    private Provider<Comparison> comparisonProvider;
+    private Provider<ComparisonStatement> comparisonStatementProvider;
+    private Provider<ComparisonValue> comparisonValueProvider;
+    private Provider<Value> valueProvider;
+    private Provider<BooleanOperator> booleanOperatorProvider;
+    private Provider<ComparisonOperator> comparisonOperatorProvider;
+    private Provider<MultiplyOperation> multiplyOperationProvider;
+    private Provider<DivideOperation> divideOperationProvider;
+    private Provider<SubtractOperation> subtractOperationProvider;
+    private Provider<AddOperation> addOperationProvider;
+    private Provider<Action> actionProvider;
+    private Provider<ActionReference> actionReferenceProvider;
+    private Provider<Person> personProvider;
+
+    @BeforeEach
+    public void setup() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+            }
+        });
+
+        actionProvider = injector.getProvider(Action.class);
+        personProvider = injector.getProvider(Person.class);
+        comparisonStatementProvider = injector.getProvider(ComparisonStatement.class);
+        actionReferenceProvider = injector.getProvider(ActionReference.class);
+        valueProvider = injector.getProvider(Value.class);
+        businessRuleProvider = injector.getProvider(BusinessRule.class);
+        defaultProvider = injector.getProvider(Default.class);
+        comparisonProvider = injector.getProvider(Comparison.class);
+        comparisonValueProvider = injector.getProvider(ComparisonValue.class);
+        booleanOperatorProvider = injector.getProvider(BooleanOperator.class);
+        comparisonOperatorProvider = injector.getProvider(ComparisonOperator.class);
+        multiplyOperationProvider = injector.getProvider(MultiplyOperation.class);
+        divideOperationProvider = injector.getProvider(DivideOperation.class);
+        subtractOperationProvider = injector.getProvider(SubtractOperation.class);
+        addOperationProvider = injector.getProvider(AddOperation.class);
+
+        List<FacilityTurn> facilityTurns = new ArrayList<>();
+        List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();
+        List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
+        round = Mockito.mock(Round.class);
+        facilityTurn = Mockito.mock(FacilityTurn.class);
+        facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
+        facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
+        facilityTurns.add(facilityTurn);
+        facilityTurnOrders.add(facilityTurnOrder);
+        facilityTurnDelivers.add(facilityTurnDeliver);
+        when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
+        when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
+        when(round.getFacilityTurns()).thenReturn(facilityTurns);
+
+        when(facilityTurn.getFacilityId()).thenReturn(facilityId);
+        when(facilityTurn.getStock()).thenReturn(facilityId);
+        when(facilityTurn.getRemainingBudget()).thenReturn(21);
+        when(facilityTurn.getBackorders()).thenReturn(28);
+
+        when(facilityTurnOrder.getFacilityId()).thenReturn(facilityId);
+        when(facilityTurnOrder.getOrderAmount()).thenReturn(15);
+        when(facilityTurnOrder.getFacilityIdOrderTo()).thenReturn(facilityId);
+
+        when(facilityTurnDeliver.getFacilityId()).thenReturn(facilityId);
+        when(facilityTurnDeliver.getDeliverAmount()).thenReturn(facilityId);
+    }
 
     @Test
     void testBusinessRule_getChilderen_True() {
@@ -108,58 +179,29 @@ class BusinessRuleTest {
         inOrder.verify(comparisonValue).getChildren();
     }
 
-    @BeforeEach
-    void setupTestReplaceBusinessRuleWithValue() {
-        List<FacilityTurn> facilityTurns = new ArrayList<>();
-        List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();
-        List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
-        round = Mockito.mock(Round.class);
-        facilityTurn = Mockito.mock(FacilityTurn.class);
-        facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
-        facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
-        facilityTurns.add(facilityTurn);
-        facilityTurnOrders.add(facilityTurnOrder);
-        facilityTurnDelivers.add(facilityTurnDeliver);
-        when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
-        when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
-        when(round.getFacilityTurns()).thenReturn(facilityTurns);
-
-        when(facilityTurn.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurn.getStock()).thenReturn(facilityId);
-        when(facilityTurn.getRemainingBudget()).thenReturn(21);
-        when(facilityTurn.getBackorders()).thenReturn(28);
-
-        when(facilityTurnOrder.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurnOrder.getOrderAmount()).thenReturn(15);
-        when(facilityTurnOrder.getFacilityIdOrderTo()).thenReturn(facilityId);
-
-        when(facilityTurnDeliver.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurnDeliver.getDeliverAmount()).thenReturn(facilityId);
-    }
-
     @Test
     void testBusinessrule_getReplacementValue_equals_10() {
-        BusinessRule businessRule = (BusinessRule) new BusinessRule()
-                .addChild(new ComparisonStatement()
-                        .addChild(new ComparisonStatement()
-                                .addChild(new Comparison()
-                                        .addChild(new ComparisonValue().addChild(new Value().addValue("incoming order").addValue("factory 1")))
-                                        .addChild(new ComparisonOperator("equal"))
-                                        .addChild(new ComparisonValue().addChild(new Value().addValue("back orders").addValue("retailer 1")))))
-                        .addChild(new BooleanOperator().addValue("||"))
-                        .addChild(new ComparisonStatement()
-                                .addChild(new Comparison()
-                                        .addChild(new ComparisonValue().addChild(new Value().addValue("budget")))
-                                        .addChild(new ComparisonOperator("not equal"))
-                                        .addChild(new ComparisonValue().addChild(new Value().addValue("ordered"))))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new DivideOperation()
-                                .addChild(new Value().addValue("40%").addValue("inventory"))
-                                .addChild(new Value().addValue("20%").addValue("outgoing goods"))));
+        BusinessRule businessRule = (BusinessRule) businessRuleProvider.get()
+                .addChild(comparisonStatementProvider.get()
+                        .addChild(comparisonStatementProvider.get()
+                                .addChild(comparisonProvider.get()
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("incoming order").addValue("factory 1")))
+                                        .addChild(comparisonOperatorProvider.get().addValue("equal"))
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("back orders").addValue("retailer 1")))))
+                        .addChild(booleanOperatorProvider.get().addValue("||"))
+                        .addChild(comparisonStatementProvider.get()
+                                .addChild(comparisonProvider.get()
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("budget")))
+                                        .addChild(comparisonOperatorProvider.get().addValue("not equal"))
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("ordered"))))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(divideOperationProvider.get()
+                                .addChild(valueProvider.get().addValue("40%").addValue("inventory"))
+                                .addChild(valueProvider.get().addValue("20%").addValue("outgoing goods"))));
 
 
-        String expected = "BR(CS(CS(C(CV(V(15))ComO(>=)CV(V(28))))BoolO(||)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
+        String expected = "BR(CS(CS(C(CV(V(15))ComO(==)CV(V(28))))BoolO(||)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
 
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
 

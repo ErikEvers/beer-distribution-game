@@ -21,10 +21,11 @@ public class Action extends ASTNode {
     private Person person;
     private ComparisonStatement comparisonStatement;
 
-    @Inject
+    //@Inject
     private IBusinessRuleStore businessRuleStore;
 
-    private NodeConverter nodeConverter = new NodeConverter();
+    @Inject
+    private NodeConverter nodeConverter;
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -136,8 +137,7 @@ public class Action extends ASTNode {
         if(person != null){
             facilityId = nodeConverter.getFacilityId(person.getPerson());
         } else {
-            // TO-DO: Randomly pick one below/above
-            facilityId = 1;
+            facilityId = -1;
         }
 
         return facilityId;
