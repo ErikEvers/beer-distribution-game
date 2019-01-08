@@ -1,8 +1,5 @@
 package org.han.ica.asd.c.gui_play_game;
 
-
-
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import javafx.fxml.FXML;
@@ -12,13 +9,13 @@ import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
 import java.util.function.UnaryOperator;
 
 
-public class PlayGame {
-    private Configuration configuration;
+public class PlayGame implements IGUIHandler {
+    private BeerGame beerGame;
 
     @FXML
     private GridPane playGridPane;
@@ -35,8 +32,8 @@ public class PlayGame {
     @FXML
     protected TextField outgoingGoodsNextRound;
 
-    @javax.inject.Inject
-    @javax.inject.Named("SeeOtherFacilities")
+    @Inject
+    @Named("SeeOtherFacilities")
     IGUIHandler seeOtherFacilities;
 
     @FXML
@@ -90,7 +87,15 @@ public class PlayGame {
         seeOtherFacilities.setupScreen();
     }
 
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    @Override
+    public void setData(Object[] data) {
+        beerGame = (BeerGame) data[0];
+    }
+
+    @Override
+    public void setupScreen() {
+    	PlayGameFacilities handler = new PlayGameFacilities();
+			handler.setData(new Object[]{beerGame});
+			handler.setupScreen();
     }
 }

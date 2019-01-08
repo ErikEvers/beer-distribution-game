@@ -1,10 +1,10 @@
 package org.han.ica.asd.c.gamelogic.public_interfaces;
 
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
 import java.util.Map;
-
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerGameLogic {
@@ -18,13 +18,13 @@ public interface IPlayerGameLogic {
      * Returns the current state of the game.
      * @return The current state of the game.
      */
-    Map<Facility, List<Facility>> seeOtherFacilities();
+    BeerGame seeOtherFacilities();
 
     /**
      * Replaces the player with the given agent.
      * @param agent Agent that will replace the player.
      */
-    void letAgentTakeOverPlayer(AgentParticipant agent);
+    void letAgentTakeOverPlayer(Agent agent);
 
     /**
      * Replaces the agent with the player.

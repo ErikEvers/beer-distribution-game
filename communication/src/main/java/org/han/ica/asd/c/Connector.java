@@ -9,6 +9,7 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -22,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector implements IConnecterForSetup {
+public class Connector implements IConnecterForSetup, IConnectedForPlayer {
 private static Connector instance = null;
     private ArrayList<IConnectorObserver> observers;
     private NodeInfoList nodeInfoList;
@@ -86,11 +87,11 @@ private static Connector instance = null;
     public RoomModel joinRoom(String roomName, String ip, String password){
         try {
             RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
-            if(makeConnection(joinedRoom.getLeaderIP())){
-                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-                setJoiner();
+//            if(makeConnection(joinedRoom.getLeaderIP())){
+//                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+//                setJoiner();
                 return joinedRoom;
-            }
+//            }
         } catch (DiscoveryException e) {
             LOGGER.log(Level.INFO, e.getMessage(), e);
         }
@@ -111,6 +112,11 @@ private static Connector instance = null;
         } catch (DiscoveryException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void sendTurnData(Round turn) {
+        //stub
     }
 
     public void addObserver(IConnectorObserver observer) {
