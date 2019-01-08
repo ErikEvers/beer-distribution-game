@@ -7,13 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RoomFinder implements IFinder {
     private static IResourceManager service = new GoogleDrive("/credentials.json");
     private ArrayList<String> rooms;
-    private static final Logger LOGGER = Logger.getLogger(RoomFinder.class.getName());
 
     public RoomFinder() {
         rooms = new ArrayList<>();
@@ -23,8 +20,7 @@ public class RoomFinder implements IFinder {
         try {
             updateAvailableGameRooms();
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, "No internet connection");
-            throw new DiscoveryException(e);
+            throw new DiscoveryException("No internet connection");
         }
         return rooms;
     }
@@ -40,7 +36,6 @@ public class RoomFinder implements IFinder {
             roomModel.setGameStarted(false);
             return roomModel;
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new DiscoveryException(e.getMessage());
         }
     }
@@ -57,7 +52,6 @@ public class RoomFinder implements IFinder {
             roomModel.setGameStarted(false);
             return roomModel;
         } catch (DiscoveryException | RoomException e){
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new DiscoveryException(e);
         }
     }
@@ -66,7 +60,6 @@ public class RoomFinder implements IFinder {
         try {
             getRoom(roomName).closeGameAndStartGame();
         } catch (RoomException | DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new DiscoveryException(e);
         }
     }
@@ -81,7 +74,6 @@ public class RoomFinder implements IFinder {
             room.setPassword(onlineRoom.getPassword());
             room.setGameStarted(false);
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new DiscoveryException(e);
         }
         return room;
@@ -92,7 +84,6 @@ public class RoomFinder implements IFinder {
         try {
             getRoom(roomModel.getRoomName()).removeHost(hostIP);
         } catch (RoomException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new DiscoveryException(e);
         }
     }
@@ -101,8 +92,7 @@ public class RoomFinder implements IFinder {
         try {
             return new Room(roomName, service);
         } catch (RoomException e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong with the connection");
-            throw new DiscoveryException(e);
+            throw new DiscoveryException("Something went wrong with the connection");
         }
     }
 
