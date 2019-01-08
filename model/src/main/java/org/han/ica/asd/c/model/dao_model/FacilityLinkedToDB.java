@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
+@Deprecated
 public class FacilityLinkedToDB implements IDaoModel{
     private String gameId;
     private int facilityIdOrder;
