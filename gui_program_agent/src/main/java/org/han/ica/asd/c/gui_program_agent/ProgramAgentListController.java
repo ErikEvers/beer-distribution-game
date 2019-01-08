@@ -8,9 +8,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
 
 public class ProgramAgentListController {
     @FXML
@@ -33,13 +35,18 @@ public class ProgramAgentListController {
     @Named("MainMenu")
     IGUIHandler mainMenu;
 
+    @Inject
+    @Named("BusinessruleStore")
+    IBusinessRuleStore iBusinessRuleStore;
+
     private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
-        //TODO INJECT BUSINESS RULE STORE
         list.setItems(items);
-        items.add("Pyramid agent");
-        items.add("Agent 3");
+        List<String> agents = iBusinessRuleStore.getAllProgrammedAgents();
+        if(!agents.isEmpty()){
+            items.addAll(agents);
+        }
     }
 
     @FXML
@@ -71,5 +78,6 @@ public class ProgramAgentListController {
     public void deleteButtonAction() {
         //TODO INJECT BUSINESS RULE STORE
         items.remove(list.getSelectionModel().getSelectedItem());
+        iBusinessRuleStore.deleteProgrammedAgent(list.getSelectionModel().getSelectedItem().toString());
     }
 }

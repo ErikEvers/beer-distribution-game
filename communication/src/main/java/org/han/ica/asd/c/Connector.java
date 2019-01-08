@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;

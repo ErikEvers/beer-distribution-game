@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.dbconnection;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +24,6 @@ public class DBConnection implements IDatabaseConnection {
 	public DBConnection() {
 		createNewDatabase();
 	}
-
 
 	public void createNewDatabase() {
 		File file = new File(CONNECTIONSTRING+DATABASENAME);
