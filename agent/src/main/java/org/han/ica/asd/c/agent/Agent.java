@@ -44,30 +44,20 @@ public class Agent extends GameAgent implements IParticipant {
 		Map<Facility, Integer> targetOrderMap = new HashMap<>();
 		Map<Facility, Integer> targetDeliverMap = new HashMap<>();
 		List<GameBusinessRules> triggeredBusinessRules = new ArrayList<>();
+		Iterator<GameBusinessRules> gameBusinessRulesIterator = this.getGameBusinessRules().iterator();
 
 		UnaryOperator<Boolean> canAddToOrderMap = isOrderType -> targetOrderMap.isEmpty() && isOrderType;
 		UnaryOperator<Boolean> canAddToDeliverMap = isDeliverType -> targetDeliverMap.isEmpty() && isDeliverType;
-		BooleanSupplier bothTargetMapsAreFilled = () -> targetDeliverMap.isEmpty() || targetOrderMap.isEmpty();
+		BooleanSupplier shouldIterate = () -> (targetDeliverMap.isEmpty() || targetOrderMap.isEmpty()) && gameBusinessRulesIterator.hasNext();
 
-		Iterator<GameBusinessRules> gameBusinessRulesIterator = this.getGameBusinessRules().iterator();
-		while (bothTargetMapsAreFilled.getAsBoolean() && gameBusinessRulesIterator.hasNext()) {
+		while (shouldIterate.getAsBoolean()) {
 			GameBusinessRules gameBusinessRules = gameBusinessRulesIterator.next();
 			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round);
-			if (actionModel == null) {
-				continue;
-			}
-
-			if (canAddToOrderMap.apply(actionModel.isOrderType())) {
-				Facility targetFacility = this.resolveLowerFacilityId(actionModel.facilityId);
-				if (targetFacility != null) {
-					targetOrderMap.put(targetFacility, actionModel.amount);
-					triggeredBusinessRules.add(gameBusinessRules);
-				}
-			} else if (canAddToDeliverMap.apply(actionModel.isDeliverType())) {
-				Facility targetFacility = this.resolveHigherFacilityId(actionModel.facilityId);
-				if (targetFacility != null) {
-					targetDeliverMap.put(targetFacility, actionModel.amount);
-					triggeredBusinessRules.add(gameBusinessRules);
+			if (actionModel != null) {
+				if (canAddToOrderMap.apply(actionModel.isOrderType())) {
+					this.updateTargetMap(this.resolveLowerFacilityId(actionModel.facilityId), actionModel.amount, targetOrderMap, triggeredBusinessRules, gameBusinessRules);
+				} else if (canAddToDeliverMap.apply(actionModel.isDeliverType())) {
+					this.updateTargetMap(this.resolveHigherFacilityId(actionModel.facilityId), actionModel.amount, targetDeliverMap, triggeredBusinessRules, gameBusinessRules);
 				}
 			}
 		}
@@ -75,6 +65,13 @@ public class Agent extends GameAgent implements IParticipant {
 		persistence.logUsedBusinessRuleToCreateOrder(
 				new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
 		return new GameRoundAction(targetOrderMap, targetDeliverMap);
+	}
+
+	private void updateTargetMap(Facility targetFacility, int amount, Map<Facility, Integer> targetMap, List<GameBusinessRules> triggeredBusinessRules, GameBusinessRules gameBusinessRules) {
+		if(targetFacility != null) {
+			targetMap.put(targetFacility, amount);
+			triggeredBusinessRules.add(gameBusinessRules);
+		}
 	}
 
 	/**
