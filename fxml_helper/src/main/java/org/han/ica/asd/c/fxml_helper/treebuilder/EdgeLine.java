@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_play_game.see_other_facilities;
+package org.han.ica.asd.c.fxml_helper.treebuilder;
 
 import javafx.scene.shape.Line;
 
