@@ -8,6 +8,7 @@ import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -109,5 +109,9 @@ public class ConnectorTest {
         verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class), any(Round.class));
     }
 
-
+    @Test
+    public void sendConfigucationToAllTest() {
+        connector.sendConfiguration(new Configuration());
+        verify(gameMessageClient).sendConfigurationToAllPlayers(any(String[].class), any(Configuration.class));
+    }
 }

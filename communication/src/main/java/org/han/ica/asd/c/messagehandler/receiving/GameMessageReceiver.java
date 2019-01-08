@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 
+import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.messagehandler.messagetypes.*;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
 
 public class GameMessageReceiver {
 
-    private static RoundModelMessage toBecommittedRound;
+    private static TransactionMessage toBecommittedRound;
     private GameMessageFilterer gameMessageFilterer;
 
     private static final int TURN_MODEL_MESSAGE = 1;
@@ -43,37 +44,6 @@ public class GameMessageReceiver {
         this.gameMessageObservers = (ArrayList<IConnectorObserver>) gameMessageObservers;
         gameMessageFilterer = new GameMessageFilterer();
         messageProcessor = new MessageProcessor();
-    }
-
-    /**
-     * This method handles a TurnMessage
-     *
-     * @param turnModelMessage
-     */
-    private TurnModelMessage handleTurnMessage(TurnModelMessage turnModelMessage) {
-        try {
-            for (IConnectorObserver observer : gameMessageObservers) {
-                if (observer instanceof ITurnModelObserver) {
-                    ((ITurnModelObserver) observer).turnModelReceived(turnModelMessage.getTurnModel());
-                }
-            }
-            return TurnModelMessage.createResponseMessage(true);
-        } catch (Exception e) {
-            return TurnModelMessage.createResponseMessage(e);
-        }
-    }
-
-    private ChooseFacilityMessage handleChooseFacilityMessage(ChooseFacilityMessage chooseFacilityMessage) {
-        try {
-            for (IConnectorObserver observer : gameMessageObservers) {
-                if (observer instanceof IFacilityMessageObserver) {
-                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
-                }
-            }
-            return chooseFacilityMessage;
-        } catch (Exception e) {
-            return chooseFacilityMessage.createResponseMessage(e);
-        }
     }
 
     /**
@@ -119,11 +89,10 @@ public class GameMessageReceiver {
     /**
      * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
      *
-     * @param gameMessage
+     * @param gameMessage The GameMessage that has to be handled
      * @return ResponseMessage
      */
     public Object gameMessageReceived(GameMessage gameMessage) {
-
         if (gameMessageFilterer.isUnique(gameMessage)) {
             switch (gameMessage.getMessageType()) {
                 case TURN_MODEL_MESSAGE:
@@ -151,6 +120,26 @@ public class GameMessageReceiver {
         }
         // Returning null if the messageType doesn't expect a response.
         return null;
+    }
+
+    /**
+     * This method handles a TurnMessage
+     *
+     * @param turnModelMessage The TurnModelMessage to be handled
+     */
+    private TurnModelMessage handleTurnMessage(TurnModelMessage turnModelMessage) {
+        try {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof ITurnModelObserver) {
+                    ((ITurnModelObserver) observer).turnModelReceived(turnModelMessage.getTurnModel());
+                }
+            }
+            turnModelMessage.createResponseMessage();
+            return turnModelMessage;
+        } catch (Exception e) {
+            turnModelMessage.createResponseMessage(e);
+            return turnModelMessage;
+        }
     }
 
     /**
@@ -203,13 +192,61 @@ public class GameMessageReceiver {
     /**
      * This method handles an Election message
      *
-     * @param electionMessage
+     * @param electionMessage The ElectionMessage to be handled.
      * @return Election
      */
     private Object handleElectionMessage(ElectionMessage electionMessage) {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IElectionObserver) {
                 return ((IElectionObserver) observer).electionReceived(electionMessage.getElection());
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Handles the TransactionMessage.
+     *
+     * @param transactionMessage The TransactionMessage to be handled.
+     */
+    private TransactionMessage handleTransactionMessage(TransactionMessage transactionMessage) {
+        switch (transactionMessage.getPhase()) {
+            case 0:
+                toBecommittedRound = transactionMessage;
+                break;
+            case 1:
+                return doCommit(transactionMessage);
+            case -1:
+                toBecommittedRound = null;
+                break;
+            default:
+                break;
+        }
+        return null;
+    }
+
+    /**
+     * Executes a commit
+     *
+     * @param transactionMessage The TransactionMessage to be commited.
+     */
+    private TransactionMessage doCommit(TransactionMessage transactionMessage) {
+        //in theory, a bug can still occur where we receive a commit message with a different content.
+        if (toBecommittedRound != null) {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == 2) {
+                    //noinspection ConstantConditions
+                    RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
+                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
+                    roundModelMessage.createResponseMessage();
+                    return roundModelMessage;
+                } else if (observer instanceof IGameConfigurationObserver && transactionMessage.getMessageType() == 5) {
+                    //noinspection ConstantConditions
+                    ConfigurationMessage configurationMessage = (ConfigurationMessage) transactionMessage;
+                    ((IGameConfigurationObserver) observer).gameConfigurationReceived(configurationMessage.getConfiguration());
+                    configurationMessage.createResponseMessage();
+                    return configurationMessage;
+                }
             }
         }
         return null;
