@@ -80,4 +80,16 @@ public class PlayerComponentTest {
         verify(playerComponent.gameLogic, times(1)).requestFacilityUsage(facility);
     }
 
+    @Test
+    void getAllFacilitiesCallsMethodOfSameNameOnceInGameLogicTest() {
+        //Arrange
+        playerComponent.gameLogic = mock(GameLogic.class);
+
+        //Act
+        playerComponent.getAllFacilities();
+
+        //Assert
+        verify(playerComponent.gameLogic, times(1)).getAllFacilities();
+    }
+
 }
