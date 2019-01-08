@@ -105,7 +105,7 @@ public class ParserPipeline {
     }
 
     private int findEndErrorWord(String businessRule, int charPosition){
-        if(!String.valueOf(businessRule.charAt(charPosition)).equals(" ")){
+        if(!" ".equals(String.valueOf(businessRule.charAt(charPosition)))){
             return charPosition;
         }
 
@@ -117,7 +117,7 @@ public class ParserPipeline {
             return 0;
         }
 
-        if(String.valueOf(businessRule.charAt(charPosition)).equals(" ")){
+        if(" ".equals(String.valueOf(businessRule.charAt(charPosition)))){
             return charPosition+1;
         }
 
