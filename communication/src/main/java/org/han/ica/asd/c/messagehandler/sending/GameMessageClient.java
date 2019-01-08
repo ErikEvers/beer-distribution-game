@@ -78,7 +78,7 @@ public class GameMessageClient {
         ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
         try {
             ChooseFacilityMessage response = null;
-            chooseFacilityMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
+            response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
             if (response.getException() != null){
                 LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
                 throw response.getException();

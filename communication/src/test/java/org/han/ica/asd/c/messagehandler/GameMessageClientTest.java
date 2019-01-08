@@ -1,9 +1,11 @@
 package org.han.ica.asd.c.messagehandler;
 
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,6 +76,27 @@ public class GameMessageClientTest {
 
         assertTrue(responseMessage);
     }
+
+    @Test
+    public void shouldReturnChooseFacilityMessageWithoutError() throws Exception {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+        chooseFacilityMessage.setException(new Exception());
+
+        when(socketClient.sendObjectWithResponseGeneric(anyString(), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
+        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility);
+
+        assert
+    }
+
+    @Test
+    public void shouldThrowError
+
+
+
+
+
 
 // Still unsure on how to test this cause of threading
 //    @Test
