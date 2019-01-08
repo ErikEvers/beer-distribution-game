@@ -23,7 +23,7 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IConnectedForPlayer {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     String gameId;
     private IConnectedForPlayer communication;
     private IPersistence persistence;
@@ -110,14 +110,12 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IConnected
         participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
     }
 
-    @Override
     public void sendTurnData(Round turn) {
-        //Yet to be implemented
+        communication.sendTurnData(turn);
     }
 
-    @Override
     public void addObserver(IConnectorObserver observer) {
-        //Yet to be implemented
+        communication.addObserver(observer);
     }
 
     @Override
