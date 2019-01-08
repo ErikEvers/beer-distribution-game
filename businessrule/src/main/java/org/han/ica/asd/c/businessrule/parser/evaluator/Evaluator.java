@@ -125,7 +125,7 @@ public class Evaluator {
 
         if(current instanceof DivideOperation
                 && children.get(ComparisonSide.RIGHT.get()) instanceof Value
-                && ("0".equals(((Value) children.get(ComparisonSide.RIGHT.get())).getValue()))){
+                && ((((Value) children.get(ComparisonSide.RIGHT.get())).getValue()).contains("0"))){
             this.hasErrors = true;
             inputBusinessRule.setErrorMessage("Cannot divide a value by zero");
         }
@@ -138,11 +138,9 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkOnlyOneDefaultOrderAndOneDefaultDeliver(ASTNode current, UserInputBusinessRule inputBusinessRule){
-        if(current instanceof BusinessRule){
-            int left = 0;
-            int right = 1;
-            if(current.getChildren().get(left) instanceof Default){
-                String action = ((ActionReference) current.getChildren().get(right).getChildren().get(left)).getAction();
+        if(current instanceof BusinessRule
+            && current.getLeftChild() instanceof Default){
+                String action = ((ActionReference) current.getRightChild().getLeftChild()).getAction();
 
                 if("order".equals(action)){
                     if(defaultOrderBool){
@@ -158,7 +156,7 @@ public class Evaluator {
                     defaultDeliverBool = true;
                 }
             }
-        }
+
     }
 
     /**
@@ -184,13 +182,10 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkDefaultWithoutDestination(ASTNode current, UserInputBusinessRule inputBusinessRule){
-        if(current instanceof BusinessRule){
-            int left = 0;
-            int right = 1;
-            if(current.getChildren().get(left) instanceof Default
-                    && current.getChildren().get(right).getChildren().size() > 2){
+        if(current instanceof BusinessRule
+                && current.getLeftChild() instanceof Default
+                && current.getRightChild().getChildren().size() > 2){
                 inputBusinessRule.setErrorMessage("A default rule can't specify the destination");
-            }
         }
     }
 
@@ -206,7 +201,7 @@ public class Evaluator {
         }
 
         if(current instanceof Value
-                && (((Value) current).getValue().equals("lowest") || ((Value) current).getValue().equals("highest"))
+                && (((Value) current).getValue().contains("lowest") || ((Value) current).getValue().contains("highest"))
                 && !personBool){
             this.hasErrors = true;
             inputBusinessRule.setErrorMessage("Lowest/Highest can only be used in a condition for another player");
