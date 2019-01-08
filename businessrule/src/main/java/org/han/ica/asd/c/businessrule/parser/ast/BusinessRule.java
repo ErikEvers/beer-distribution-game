@@ -318,7 +318,7 @@ public class BusinessRule extends ASTNode {
 
         for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
             if (facilityTurn.getFacilityId() == facilityId) {
-                return  = String.valueOf(facilityTurn.getRemainingBudget());
+                return  String.valueOf(facilityTurn.getRemainingBudget());
             }
         }
         return "";
