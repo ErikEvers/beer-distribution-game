@@ -91,14 +91,6 @@ public class Connector implements IConnecterForSetup {
         socketServer.startThread();
     }
 
-//    //TODO replace with GUICE, inject singleton
-//    public static Connector getInstance() {
-//        if (instance == null) {
-//            instance = new Connector();
-//        }
-//        return instance;
-//    }
-
     public List<String> getAvailableRooms() {
         try {
             return finder.getAvailableRooms();
