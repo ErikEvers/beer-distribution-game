@@ -12,14 +12,12 @@ public class TurnHandler {
     /**
      * Saves the incoming turn using the persistence layer and combines incoming turns with already received turns.
      * @param turnModel a turn sent by a game participant.
+     * @param currentRoundData the combined data of the entire round.
      */
     Round processFacilityTurn(Round turnModel, Round currentRoundData) {
-        turnModel.getTurnOrder().forEach(currentRoundData.getTurnOrder()::putIfAbsent);
-        turnModel.getTurnDeliver().forEach(currentRoundData.getTurnDeliver()::putIfAbsent);
-        turnModel.getTurnReceived().forEach(currentRoundData.getTurnReceived()::putIfAbsent);
-        turnModel.getTurnBackOrder().forEach(currentRoundData.getTurnBackOrder()::putIfAbsent);
-        turnModel.getTurnStock().forEach(currentRoundData.getTurnStock()::putIfAbsent);
-
+        currentRoundData.getFacilityOrders().addAll(turnModel.getFacilityOrders());
+        currentRoundData.getFacilityTurnDelivers().addAll(turnModel.getFacilityTurnDelivers());
+        currentRoundData.getFacilityTurns().addAll(turnModel.getFacilityTurns());
         persistenceLayer.saveFacilityTurn(turnModel);
 
         return currentRoundData;

@@ -3,31 +3,51 @@ package org.han.ica.asd.c.model.domain_objects;
 import java.util.List;
 
 public class GameBusinessRulesInFacilityTurn implements IDomainModel{
-    private List<Round> rounds;
-    private List<GameBusinessRules> businessRules;
+    private int facilityId;
+    private int roundId;
+    private String gameAgentName;
+    private List<GameBusinessRules> gameBusinessRulesList;
 
     public GameBusinessRulesInFacilityTurn() {
         // Empty as it also needs to be instantiated when empty
     }
 
-    public GameBusinessRulesInFacilityTurn(List<Round> rounds, List<GameBusinessRules> businessRules) {
-        this.rounds = rounds;
-        this.businessRules = businessRules;
+    public GameBusinessRulesInFacilityTurn(int facilityId, int roundId, String gameAgentName, List<GameBusinessRules> gameBusinessRulesList) {
+        this.facilityId = facilityId;
+        this.roundId = roundId;
+        this.gameAgentName = gameAgentName;
+        this.gameBusinessRulesList = gameBusinessRulesList;
     }
 
-    public List<Round> getRounds() {
-        return rounds;
+    public int getFacilityId() {
+        return facilityId;
     }
 
-    public void setRounds(List<Round> rounds) {
-        this.rounds = rounds;
+    public void setFacilityId(int facilityId) {
+        this.facilityId = facilityId;
     }
 
-    public List<GameBusinessRules> getBusinessRules() {
-        return businessRules;
+    public int getRoundId() {
+        return roundId;
     }
 
-    public void setBusinessRules(List<GameBusinessRules> businessRules) {
-        this.businessRules = businessRules;
+    public void setRoundId(int roundId) {
+        this.roundId = roundId;
+    }
+
+    public String getGameAgentName() {
+        return gameAgentName;
+    }
+
+    public void setGameAgentName(String gameAgentName) {
+        this.gameAgentName = gameAgentName;
+    }
+
+    public List<GameBusinessRules> getGameBusinessRulesList() {
+        return gameBusinessRulesList;
+    }
+
+    public void setGameBusinessRulesList(List<GameBusinessRules> gameBusinessRulesList) {
+        this.gameBusinessRulesList = gameBusinessRulesList;
     }
 }
