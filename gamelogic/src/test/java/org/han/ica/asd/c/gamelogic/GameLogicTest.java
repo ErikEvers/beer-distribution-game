@@ -25,7 +25,7 @@ public class GameLogicTest {
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IRoundStore.class);
         participantsPool = mock(ParticipantsPool.class);
-        gameLogic = new GameLogic("test", communication, persistence, participantsPool);
+        gameLogic = new GameLogic(communication, persistence, participantsPool);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class GameLogicTest {
     @Test
     public void seeOtherFacilitiesCallsPersistence() {
         gameLogic.seeOtherFacilities();
-        verify(persistence, times(1)).fetchRoundData(anyString(), anyInt());
+        verify(persistence, times(1)).fetchRoundData(anyInt());
     }
 
     @Test

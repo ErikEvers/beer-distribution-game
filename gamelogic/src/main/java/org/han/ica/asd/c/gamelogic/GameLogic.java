@@ -18,14 +18,12 @@ import org.han.ica.asd.c.model.domain_objects.Round;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
-    String gameId;
     private IConnectedForPlayer communication;
     private IRoundStore persistence;
     private ParticipantsPool participantsPool;
     private int round;
 
-    public GameLogic(String gameId, IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool) {
-        this.gameId = gameId;
+    public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool) {
         this.communication = communication;
         this.persistence = persistence;
         this.participantsPool = participantsPool;
@@ -48,7 +46,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      */
     @Override
     public Round seeOtherFacilities() {
-        return persistence.fetchRoundData(gameId, round);
+        return persistence.fetchRoundData(round);
     }
 
     /**
