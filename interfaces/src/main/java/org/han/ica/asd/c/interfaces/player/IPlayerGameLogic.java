@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gamelogic.public_interfaces;
+package org.han.ica.asd.c.interfaces.player;
 
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
