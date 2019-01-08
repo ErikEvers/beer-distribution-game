@@ -4,10 +4,11 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.Serializable;
 
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.TURN_MODEL_MESSAGE;
+
 public class TurnModelMessage extends GameMessage implements Serializable {
     private Round turnModel;
     private boolean isSuccess;
-    private static final int TURN_MODEL_MESSAGE = 1;
 
     public TurnModelMessage(Round roundData) {
         super(TURN_MODEL_MESSAGE);

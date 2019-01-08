@@ -22,17 +22,20 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.CONFIGURATION_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ELECTION_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_ALL_FACILITIES_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ROUND_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.TURN_MODEL_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.WHO_IS_THE_LEADER_MESSAGE;
+
 public class GameMessageReceiver {
 
     private static TransactionMessage toBecommittedRound;
     private GameMessageFilterer gameMessageFilterer;
 
-    private static final int TURN_MODEL_MESSAGE = 1;
-    private static final int ROUND_MESSAGE = 2;
-    private static final int ELECTION_MESSAGE = 3;
-    private static final int WHO_IS_THE_LEADER_MESSAGE = 4;
-    private static final int FACILITY_MESSAGE = 5;
-    private static final int REQUEST_ALL_FACILITIES_MESSAGE = 6;
+
 
     private ArrayList<IConnectorObserver> gameMessageObservers;
 
@@ -114,6 +117,9 @@ public class GameMessageReceiver {
                 case REQUEST_ALL_FACILITIES_MESSAGE:
                     RequestAllFacilitiesMessage requestAllFacilitiesMessage = (RequestAllFacilitiesMessage) gameMessage;
                     return handleRequestAllFacilities(requestAllFacilitiesMessage);
+                case CONFIGURATION_MESSAGE:
+                    ConfigurationMessage configurationMessage = (ConfigurationMessage) gameMessage;
+                    return handleTransactionMessage(configurationMessage);
                 default:
                     break;
             }
@@ -240,7 +246,7 @@ public class GameMessageReceiver {
                     ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
-                } else if (observer instanceof IGameConfigurationObserver && transactionMessage.getMessageType() == 5) {
+                } else if (observer instanceof IGameConfigurationObserver && transactionMessage.getMessageType() == 7) {
                     //noinspection ConstantConditions
                     ConfigurationMessage configurationMessage = (ConfigurationMessage) transactionMessage;
                     ((IGameConfigurationObserver) observer).gameConfigurationReceived(configurationMessage.getConfiguration());

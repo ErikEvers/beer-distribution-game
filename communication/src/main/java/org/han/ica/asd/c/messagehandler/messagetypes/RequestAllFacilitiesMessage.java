@@ -4,9 +4,10 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import java.util.List;
 
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_ALL_FACILITIES_MESSAGE;
+
 public class RequestAllFacilitiesMessage extends GameMessage{
     List<Facility> facilities;
-    private static final int REQUEST_ALL_FACILITIES_MESSAGE = 6;
 
     public RequestAllFacilitiesMessage() {
         super(REQUEST_ALL_FACILITIES_MESSAGE);

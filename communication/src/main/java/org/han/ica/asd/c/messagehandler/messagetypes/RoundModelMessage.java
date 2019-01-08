@@ -4,10 +4,10 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.Serializable;
 
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ROUND_MESSAGE;
+
 public class RoundModelMessage extends TransactionMessage implements Serializable{
     private Round roundModel;
-
-    private static final int ROUND_MESSAGE = 2;
 
     public RoundModelMessage(Round roundModel) {
         super(ROUND_MESSAGE);

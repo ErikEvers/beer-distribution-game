@@ -5,18 +5,19 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_MESSAGE;
+
 public class ChooseFacilityMessage extends GameMessage{
     private Facility facility;
     private List<Facility> availableFacilities;
-    private static final int FACILITYMESSAGE = 5;
 
     public ChooseFacilityMessage(Facility facility) {
-        super(FACILITYMESSAGE);
+        super(FACILITY_MESSAGE);
         this.facility = facility;
     }
 
     public ChooseFacilityMessage(Facility facility, List<Facility> availableFacilities) {
-        super(FACILITYMESSAGE);
+        super(FACILITY_MESSAGE);
         this.facility = facility;
         this.availableFacilities = availableFacilities;
     }
