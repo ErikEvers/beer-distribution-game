@@ -7,6 +7,10 @@ public class Player implements IDomainModel{
     private String name;
     private boolean isConnected;
 
+    public Player(){
+        //Empty constructor for Guice
+    }
+
     public Player(String playerId, String ipAddress, Facility facility, String name, boolean isConnected) {
         this.playerId = playerId;
         this.ipAddress = ipAddress;

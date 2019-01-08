@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.persistence;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

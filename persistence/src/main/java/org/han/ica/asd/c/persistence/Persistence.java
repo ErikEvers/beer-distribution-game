@@ -5,6 +5,7 @@ import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
@@ -33,9 +34,11 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 	@Inject
 	private PlayerDAO playerDAO;
 
+	@Inject
+	private IDatabaseConnection databaseConnection;
 
 	public Persistence(){
-		//Empty constructor for Guice
+		databaseConnection.createNewDatabase();
 	}
 
 	@Override

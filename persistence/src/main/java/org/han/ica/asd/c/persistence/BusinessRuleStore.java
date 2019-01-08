@@ -1,8 +1,9 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.persistence;
 
 import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
 import org.han.ica.asd.c.dao.ProgrammedBusinessRulesDAO;
+import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
@@ -32,6 +33,12 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     @Inject
     FacilityDAO facilityDAO;
 
+    @Inject
+    IDatabaseConnection databaseConnection;
+
+    public BusinessRuleStore(){
+        databaseConnection.createNewDatabase();
+    }
     /**
      * @inheritDoc
      */
