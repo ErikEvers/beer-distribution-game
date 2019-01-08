@@ -40,7 +40,7 @@ class BusinessRuleTest {
     private FacilityTurn facilityTurn;
     private FacilityTurnDeliver facilityTurnDeliver;
     private FacilityTurnOrder facilityTurnOrder;
-    private int facilityId = 11;
+    private int facilityId = 10;
 
     @Test
     void testBusinessRule_getChilderen_True() {
@@ -127,20 +127,17 @@ class BusinessRuleTest {
         when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
         when(round.getFacilityTurns()).thenReturn(facilityTurns);
 
-
         when(facilityTurn.getFacilityId()).thenReturn(facilityId);
         when(facilityTurn.getStock()).thenReturn(facilityId);
-        when(facilityTurn.getRemainingBudget()).thenReturn(facilityId);
-        when(facilityTurn.getBackorders()).thenReturn(facilityId);
-
+        when(facilityTurn.getRemainingBudget()).thenReturn(21);
+        when(facilityTurn.getBackorders()).thenReturn(28);
 
         when(facilityTurnOrder.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurnOrder.getOrderAmount()).thenReturn(facilityId);
-
+        when(facilityTurnOrder.getOrderAmount()).thenReturn(15);
+        when(facilityTurnOrder.getFacilityIdOrderTo()).thenReturn(facilityId);
 
         when(facilityTurnDeliver.getFacilityId()).thenReturn(facilityId);
         when(facilityTurnDeliver.getDeliverAmount()).thenReturn(facilityId);
-
     }
 
     @Test
@@ -151,7 +148,7 @@ class BusinessRuleTest {
                                 .addChild(new Comparison()
                                         .addChild(new ComparisonValue().addChild(new Value().addValue("incoming order").addValue("factory")))
                                         .addChild(new ComparisonOperator("equal"))
-                                        .addChild(new ComparisonValue().addChild(new Value().addValue("back orders").addValue("factory")))))
+                                        .addChild(new ComparisonValue().addChild(new Value().addValue("back orders").addValue("retailer 1")))))
                         .addChild(new BooleanOperator())
                         .addChild(new ComparisonStatement()
                                 .addChild(new Comparison()
@@ -164,8 +161,7 @@ class BusinessRuleTest {
                                 .addChild(new Value().addValue("40%").addValue("inventory"))
                                 .addChild(new Value().addValue("20%").addValue("outgoing goods"))));
 
-        String expected = "BR(CS(CS(C(CV(V(10))ComO(>=)CV(V(10))))BoolO(null)CS(C(CV(V(10))ComO(!=)CV(V(10)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
-
+        String expected = "BR(CS(CS(C(CV(V(10))ComO(>=)CV(V(28))))BoolO(null)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
 
         String result = businessRule.encode();

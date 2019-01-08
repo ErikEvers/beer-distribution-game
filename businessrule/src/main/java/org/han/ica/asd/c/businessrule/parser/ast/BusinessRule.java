@@ -7,8 +7,10 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.gamevalue.GameValue;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.*;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -17,7 +19,10 @@ public class BusinessRule extends ASTNode {
     private Action action;
     private static final String PREFIX = "BR(";
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
-
+    @Inject
+    private IBusinessRuleStore businessRuleStore;
+    @Inject
+    private NodeConverter nodeConverter = new NodeConverter();
     /**
      * Gets the action of the BusinessRule
      *
@@ -194,19 +199,18 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the facility
      */
     private void replace(Value value, Round round, int facilityId) {
+        String replacementValue;
         if (value.getValue().size() > 1) {
             String secondVariable = value.getSecondPartVariable();
-            String id;
             if (GameValue.checkIfFacility(secondVariable)) {
-                id = getReplacementValue(getGameValue(secondVariable), round, facilityId);
-                replaceOnVariable(value, round, facilityId, id);
+                replaceOnVariable(value, round, nodeConverter.getFacilityId(secondVariable), secondVariable);
             } else if (Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
                 replaceOnVariable(value, round, facilityId, secondVariable);
             }
         }
-        String firstVariable = value.getFirstPartVariable();
+        replacementValue = value.getFirstPartVariable();
         if (Pattern.matches(HAS_CHARACTERS, value.getFirstPartVariable())) {
-            replaceOnVariable(value, round, facilityId, firstVariable);
+            replaceOnVariable(value, round, facilityId, replacementValue);
         }
     }
 
@@ -223,6 +227,7 @@ public class BusinessRule extends ASTNode {
         if (gameValue != null) {
             String newReplacementValue = getReplacementValue(gameValue, round, facilityId);
             value.replaceValueWithValue(newReplacementValue);
+            return;
         }
     }
 
@@ -252,19 +257,19 @@ public class BusinessRule extends ASTNode {
     private String getReplacementValue(GameValue gameValue, Round round, int facilityId) {
         switch (gameValue) {
             case ORDERED:
-                return getOrder(round,facilityId);
+                return getOrder(round, facilityId);
             case STOCK:
-                return getStock(round,facilityId);
+                return getStock(round, facilityId);
             case BUDGET:
-                return getBudget(round,facilityId);
+                return getBudget(round, facilityId);
             case BACKLOG:
-                return getBacklog(round,facilityId);
+                return getBacklog(round, facilityId);
             case INCOMINGORDER:
-                return getIncomingOrder(round,facilityId);
+                return getIncomingOrder(round, facilityId);
             case OUTGOINGGOODS:
-                return getOutgoingGoods(round,facilityId);
+                return getOutgoingGoods(round, facilityId);
             default:
-                return String.valueOf(getFacilityIdBasedOnType(round.getTurnStock(), gameValue));
+                return getId();
         }
     }
 
@@ -274,10 +279,10 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the given facility
      * @return the order amount
      */
-    private String getOrder(Round round, int facilityId){
+    private String getOrder(Round round, int facilityId) {
         String replacementValue = "";
-        for(FacilityTurnOrder facilityTurnOrder:round.getFacilityOrders()){
-            if(facilityTurnOrder.getFacilityId()==facilityId){
+        for (FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
+            if (facilityTurnOrder.getFacilityId() == facilityId) {
                 replacementValue = String.valueOf(facilityTurnOrder.getOrderAmount());
             }
         }
@@ -290,26 +295,27 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the given facility
      * @return stock
      */
-    private String getStock(Round round, int facilityId){
+    private String getStock(Round round, int facilityId) {
         String replacementValue = "";
-        for(FacilityTurn facilityTurn:round.getFacilityTurns()){
-            if(facilityTurn.getFacilityId()==facilityId){
-                replacementValue= String.valueOf(facilityTurn.getStock());
+        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
+            if (facilityTurn.getFacilityId() == facilityId) {
+                replacementValue = String.valueOf(facilityTurn.getStock());
             }
         }
         return replacementValue;
     }
+
     /***
      * Gets the remaining budget of an facility
      * @param round the given round
      * @param facilityId the id of the given facility
      * @return budget
      */
-    private String getBudget(Round round, int facilityId){
+    private String getBudget(Round round, int facilityId) {
         String replacementValue = "";
-        for(FacilityTurn facilityTurn:round.getFacilityTurns()){
-            if(facilityTurn.getFacilityId()==facilityId){
-                replacementValue= String.valueOf(facilityTurn.getRemainingBudget());
+        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
+            if (facilityTurn.getFacilityId() == facilityId) {
+                replacementValue = String.valueOf(facilityTurn.getRemainingBudget());
             }
         }
         return replacementValue;
@@ -321,11 +327,11 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the given facility
      * @return budget
      */
-    private String getBacklog(Round round, int facilityId){
+    private String getBacklog(Round round, int facilityId) {
         String replacementValue = "";
-        for(FacilityTurn facilityTurn:round.getFacilityTurns()){
-            if(facilityTurn.getFacilityId()==facilityId){
-                replacementValue= String.valueOf(facilityTurn.getBackorders());
+        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
+            if (facilityTurn.getFacilityId() == facilityId) {
+                replacementValue = String.valueOf(facilityTurn.getBackorders());
             }
         }
         return replacementValue;
@@ -337,11 +343,11 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the given facility
      * @return incoming order amount
      */
-    private String getIncomingOrder(Round round,int facilityId){
+    private String getIncomingOrder(Round round, int facilityId) {
         String replacementValue = "";
-        for(FacilityTurnOrder facilityTurn:round.getFacilityOrders()){
-            if(facilityTurn.getFacilityIdOrderTo()==facilityId){
-                replacementValue= String.valueOf(facilityTurn.getOrderAmount());
+        for (FacilityTurnOrder facilityTurn : round.getFacilityOrders()) {
+            if (facilityTurn.getFacilityIdOrderTo() == facilityId) {
+                replacementValue = String.valueOf(facilityTurn.getOrderAmount());
             }
         }
         return replacementValue;
@@ -353,11 +359,11 @@ public class BusinessRule extends ASTNode {
      * @param facilityId the id of the given facility
      * @return outgoing goods amount
      */
-    private String getOutgoingGoods(Round round,int facilityId){
+    private String getOutgoingGoods(Round round, int facilityId) {
         String replacementValue = "";
-        for(FacilityTurnDeliver facilityTurnDeliver:round.getFacilityTurnDelivers()){
-            if(facilityTurnDeliver.getFacilityId()==facilityId){
-                replacementValue= String.valueOf(facilityTurnDeliver.getDeliverAmount());
+        for (FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
+            if (facilityTurnDeliver.getFacilityId() == facilityId) {
+                replacementValue = String.valueOf(facilityTurnDeliver.getDeliverAmount());
             }
         }
         return replacementValue;

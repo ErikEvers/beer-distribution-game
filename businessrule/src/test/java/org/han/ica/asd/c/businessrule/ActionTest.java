@@ -66,40 +66,6 @@ public class ActionTest {
     }
 
     @Test
-    void testAction_SeparateFacilityId_TwoElementString(){
-        Action action = new Action();
-        action.addChild(new Person("factory 1"));
-
-        int exp = 0;
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(action, "separateFacilityId");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(exp, res);
-    }
-
-    @Test
-    void testAction_SeparateFacilityId_OneElementString() {
-        Action action = new Action();
-        action.addChild(new Person("factory"));
-
-        int exp = 0;
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(action, "separateFacilityId");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(exp, res);
-    }
-
-    @Test
     void testAddChild_ComparisonStatement() {
         Action action = new Action();
         ComparisonStatement comparisonStatement = new ComparisonStatement();

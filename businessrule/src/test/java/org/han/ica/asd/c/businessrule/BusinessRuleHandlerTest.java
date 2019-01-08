@@ -32,7 +32,7 @@ class BusinessRuleHandlerTest {
 					.addChild(new Value().addValue("1")));
 
 		Action expectedAction = (Action) businessRule.getChildren().get(1);
-		ActionModel actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new Round());
+		ActionModel actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new Round(),10);
 
 		assertEquals(expectedAction.getType(), actualAction.type);
 		assertEquals(expectedAction.getAmount(), actualAction.amount);

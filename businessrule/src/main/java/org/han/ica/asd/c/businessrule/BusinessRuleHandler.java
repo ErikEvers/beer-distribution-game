@@ -9,9 +9,12 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
+    @Inject
+    private ParserPipeline parserPipeline;
 
     /**
      * Parses the business rules and sends it to the persistence component
@@ -20,7 +23,6 @@ public class BusinessRuleHandler implements IBusinessRules {
      * @param businessRules Business rules for the agent
      */
     public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
-        ParserPipeline parserPipeline = new ParserPipeline();
         if (!parserPipeline.parseString(businessRules)) {
             return parserPipeline.getBusinessRulesInput();
         }

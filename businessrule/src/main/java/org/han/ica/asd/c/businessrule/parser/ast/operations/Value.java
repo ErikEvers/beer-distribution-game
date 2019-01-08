@@ -50,7 +50,16 @@ public class Value extends OperationValue {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(PREFIX).append(value).append(SUFFIX);
+        stringBuilder
+                .append(PREFIX)
+                .append(value.get(0));
+
+        for (int i = 1, il = value.size(); i < il; i++) {
+            stringBuilder
+                    .append(' ')
+                    .append(value.get(i));
+        }
+        stringBuilder.append(SUFFIX);
     }
 
     /**
@@ -124,13 +133,13 @@ public class Value extends OperationValue {
      */
     public void replaceValueWithValue(String gameValue) {
         if (hasNotBeenReplaced(getFirstPartVariable())) {
-            if (value.size() > 1) {
-                if (GameValue.checkIfFacility(getSecondPartVariable())) {
-                    value.remove(getSecondPartVariable());
-                    value.set(0, gameValue);
-                    return;
-                }
+
+            if (value.size() > 1 && GameValue.checkIfFacility(getSecondPartVariable())) {
+                value.remove(getSecondPartVariable());
+                value.set(0, gameValue);
+                return;
             }
+
             value.set(0, gameValue);
         } else if (hasNotBeenReplaced(getSecondPartVariable())) {
             value.set(1, gameValue);
@@ -144,6 +153,6 @@ public class Value extends OperationValue {
      * @return true if the value does not contain any numbers or percentage. Only characters a-zA-Z need to be replaced
      */
     private boolean hasNotBeenReplaced(String value) {
-        return  !value.matches("[0-9%]+");
+        return !value.matches("[0-9%]+");
     }
 }

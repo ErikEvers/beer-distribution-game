@@ -9,7 +9,7 @@ public enum GameValue {
     HIGHEST("highest", "biggest"),
     LOWEST("lowest", "smallest"),
     FACTORY("factory"),
-    DISTIRBUTOR("distributor"),
+    REGIONALWAREHOUSE("regional warehouse"),
     WHOLESALER("wholesaler"),
     RETAILER("retailer"),
     BUDGET("budget");
@@ -56,8 +56,16 @@ public enum GameValue {
      * @return the corresponding game value
      */
     public static boolean checkIfFacility(String variable) {
+        int endOfFirstPart = variable.indexOf(" ");
+        int notFound = -1;
+        if(endOfFirstPart==notFound){
+            endOfFirstPart = variable.length();
+        }
         for (GameValue gameValue : GameValue.values()) {
-            if (gameValue.contains(variable) && isFacility(gameValue)) {
+            if(!isFacility(gameValue)){
+                continue;
+            }
+            if (gameValue.contains(variable.substring(0,endOfFirstPart)) ) {
                 return true;
             }
         }
@@ -73,7 +81,7 @@ public enum GameValue {
     private static boolean isFacility(GameValue gameValue) {
         return gameValue == GameValue.FACTORY ||
                 gameValue == GameValue.WHOLESALER ||
-                gameValue == GameValue.DISTIRBUTOR ||
+                gameValue == GameValue.REGIONALWAREHOUSE ||
                 gameValue == GameValue.RETAILER;
     }
 }
