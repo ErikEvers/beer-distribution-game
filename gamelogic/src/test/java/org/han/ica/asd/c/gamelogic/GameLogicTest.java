@@ -7,6 +7,7 @@ import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,5 +100,17 @@ public class GameLogicTest {
 
         //Assert
         verify(communication, times(1)).connectToGame("");
+    }
+
+    @Test
+    public void requestFacilityUsageCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Arrange
+        Facility facility = mock(Facility.class);
+
+        //Act
+        gameLogic.requestFacilityUsage(facility);
+
+        //Assert
+        verify(communication, times(1)).requestFacilityUsage(facility);
     }
 }
