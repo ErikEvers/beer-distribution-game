@@ -56,8 +56,8 @@ class BusinessRuleDecoderTest {
     }
 
     @Test
-    void parseBusinessRuleStringWithGreaterThanAndEqualsIsEqual() {
-        String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(inventory)))BoolO(==)CS(C(CV(V(round))ComO(<=)CV(V(3)))))A(AR(order)V(20)))";
+    void parseBusinessRuleStringWithGreaterThanAndOrIsEqual() {
+        String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(inventory)))BoolO(||)CS(C(CV(V(round))ComO(<=)CV(V(3)))))A(AR(order)V(20)))";
         BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
         assertEquals(businessRuleString, businessRuleParsed.encode());
     }
@@ -78,14 +78,14 @@ class BusinessRuleDecoderTest {
 
     @Test
     void parseDeliverForSpecificFacilityWithComplexBusinessRuleIsEqual() {
-        String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(inventory)))BoolO(==)CS(C(CV(V(round))ComO(<=)CV(V(3)))))A(AR(deliver)V(20)P(factory 2)))";
+        String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(inventory)))BoolO(||)CS(C(CV(V(round))ComO(<=)CV(V(3)))))A(AR(deliver)V(20)P(factory 2)))";
         BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
         assertEquals(businessRuleString, businessRuleParsed.encode());
     }
 
     @Test
     void parseBusinessRuleWithComparisonStatementInActionIsEqual() {
-        String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(inventory)))BoolO(==)CS(C(CV(V(round))ComO(<=)CV(V(3)))))A(AR(deliver)V(20)P(factory 2)CS(C(CV(V(inventory))ComO(<)CV(V(10))))))";
+        String businessRuleString = "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(inventory)))BoolO(||)CS(C(CV(V(round))ComO(<=)CV(V(3)))))A(AR(deliver)V(20)P(factory 2)CS(C(CV(V(inventory))ComO(<)CV(V(10))))))";
         BusinessRule businessRuleParsed = new BusinessRuleDecoder().decodeBusinessRule(businessRuleString);
         assertEquals(businessRuleString, businessRuleParsed.encode());
     }
