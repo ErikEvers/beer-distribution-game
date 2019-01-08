@@ -36,7 +36,7 @@ class ConfigurationDAOIntegrationTest {
 
 	@AfterEach
 	public void tearDown() {
-//		DBConnectionTest.getInstance().cleanup();
+		DBConnectionTest.getInstance().cleanup();
 	}
 
 
