@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
+@Deprecated
 public class GameBusinessRulesInFacilityTurnDB implements IDaoModel{
     private int roundId;
     private int facilityIdDeliver;

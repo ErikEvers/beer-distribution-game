@@ -1,10 +1,8 @@
 package org.han.ica.asd.c.dao;
 
 
-
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.BeerGameDB;
-
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -14,9 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.UUID.randomUUID;
 
 
 public class BeergameDAO {
@@ -29,6 +28,17 @@ public class BeergameDAO {
 	@Inject
 	private IDatabaseConnection databaseConnection;
 
+	@Inject
+	private ConfigurationDAO configurationDAO;
+
+	@Inject
+	private GameAgentDAO gameAgentDAO;
+
+	@Inject
+	private RoundDAO roundDAO;
+
+
+
 
 	public BeergameDAO(){
 		//Empty Constructor for GUICE
@@ -40,17 +50,18 @@ public class BeergameDAO {
 	 * @param gameName The specified name of the game
 	 */
 	public void createBeergame(String gameName) {
+		String uuid = randomUUID().toString();
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
 
 				conn.setAutoCommit(false);
-
-				pstmt.setString(1, UUID.randomUUID().toString());
+				pstmt.setString(1, uuid);
 				pstmt.setString(2, gameName);
 				pstmt.setString(3, new Date().toString());
 
 				pstmt.executeUpdate();
+				DaoConfig.setCurrentGameId(uuid);
 				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -64,14 +75,14 @@ public class BeergameDAO {
 	 *
 	 * @return An Arraylist of BeerGames
 	 */
-	public List<BeerGameDB> readBeergames() {
+	public List<BeerGame> readBeergames() {
 		Connection conn = databaseConnection.connect();
-		ArrayList<BeerGameDB> beerGames = new ArrayList<>();
+		ArrayList<BeerGame> beerGames = new ArrayList<>();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES); ResultSet rs = pstmt.executeQuery()) {
 				conn.setAutoCommit(false);
 				while (rs.next()) {
-					beerGames.add(new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+					beerGames.add(new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
 				}
 				conn.commit();
 			} catch (SQLException e) {
@@ -105,19 +116,23 @@ public class BeergameDAO {
 	}
 
 	/**
-	 * A method which returns a single beergame according to the given parameters
-	 * @param gameId The name of the game which needs to be returned
+	 * A method which returns a single beergame according to the given parameter
 	 * @return A beergame object
 	 */
-	public BeerGameDB getGameLog(String gameId) {
+	public BeerGame getGameLog() {
 		Connection conn = databaseConnection.connect();
-		BeerGameDB beergame = null;
+		BeerGame beergame = null;
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
 				conn.setAutoCommit(false);
-				pstmt.setString(1,gameId);
+				pstmt.setString(1,DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
-					beergame = new BeerGameDB(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+					if(!rs.isClosed()) {
+						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+						beergame.setConfiguration(configurationDAO.readConfiguration());
+						beergame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
+						beergame.setRounds(roundDAO.getRounds());
+					}
 				}
 				conn.commit();
 			} catch (SQLException e) {
