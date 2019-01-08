@@ -2,19 +2,19 @@ package org.han.ica.asd.c.gui_play_game;
 
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
 public class PlayGame implements IGUIHandler {
-    private Configuration configuration;
+    private BeerGame beerGame;
 
     @Override
     public void setData(Object[] data) {
-        configuration = (Configuration) data[0];
+        beerGame = (BeerGame) data[0];
     }
 
     @Override
     public void setupScreen() {
         PlayGameFactoryController controller = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/PlayGameFactory.fxml"));
-        controller.setConfiguration(configuration);
+        controller.setBeerGame(beerGame);
     }
 }
