@@ -2,7 +2,9 @@ package org.han.ica.asd.c.businessrule.parser.walker;
 
 import org.han.ica.asd.c.businessrule.BusinessRuleBaseListener;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
-import org.han.ica.asd.c.businessrule.parser.ast.*;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Person;

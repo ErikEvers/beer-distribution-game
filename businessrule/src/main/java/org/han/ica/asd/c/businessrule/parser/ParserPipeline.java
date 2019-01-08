@@ -16,11 +16,7 @@ import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ParserPipeline {
     private List<UserInputBusinessRule> businessRulesInput;

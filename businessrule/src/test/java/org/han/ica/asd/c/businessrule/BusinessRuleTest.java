@@ -18,14 +18,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.Mock;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -149,7 +146,7 @@ class BusinessRuleTest {
                                         .addChild(new ComparisonValue().addChild(new Value().addValue("incoming order").addValue("factory 1")))
                                         .addChild(new ComparisonOperator("equal"))
                                         .addChild(new ComparisonValue().addChild(new Value().addValue("back orders").addValue("retailer 1")))))
-                        .addChild(new BooleanOperator())
+                        .addChild(new BooleanOperator().addValue("||"))
                         .addChild(new ComparisonStatement()
                                 .addChild(new Comparison()
                                         .addChild(new ComparisonValue().addChild(new Value().addValue("budget")))
@@ -161,7 +158,9 @@ class BusinessRuleTest {
                                 .addChild(new Value().addValue("40%").addValue("inventory"))
                                 .addChild(new Value().addValue("20%").addValue("outgoing goods"))));
 
-        String expected = "BR(CS(CS(C(CV(V(15))ComO(>=)CV(V(28))))BoolO(null)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
+
+        String expected = "BR(CS(CS(C(CV(V(15))ComO(>=)CV(V(28))))BoolO(||)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
+
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
 
         String result = businessRule.encode();
