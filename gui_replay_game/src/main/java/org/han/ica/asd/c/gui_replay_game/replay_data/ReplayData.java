@@ -80,15 +80,15 @@ public class ReplayData {
         //dus de facilities op te halen
         //Wat hier nu aanwezig is is test code om zo de controller werkend te krijgen
 
-        FacilityType factory = new FacilityType("Factory", 1, 1, 1, 1, 1, 1);
-        FacilityType wholesaler = new FacilityType("Wholesaler", 1, 1, 1, 1, 1, 1);
-        FacilityType retailer = new FacilityType("Retailer", 1, 1, 1, 1, 1, 1);
-        FacilityType warehouse = new FacilityType("Warehouse", 1, 1, 1, 1, 1, 1);
+        FacilityType factory = new FacilityType("Factory", 1, 1, 1, 1, 1, 1, 1);
+        FacilityType wholesaler = new FacilityType("Wholesaler", 1, 1, 1, 1, 1, 1, 1);
+        FacilityType retailer = new FacilityType("Retailer", 1, 1, 1, 1, 1, 1, 1);
+        FacilityType warehouse = new FacilityType("Warehouse", 1, 1, 1, 1, 1, 1, 1);
 
-        Facility facility1 = new Facility(factory, null, null, 1);
-        Facility facility2 = new Facility(wholesaler, null, null, 2);
-        Facility facility3 = new Facility(retailer, null, null, 3);
-        Facility facility4 = new Facility(warehouse, null, null, 4);
+        Facility facility1 = new Facility(factory, 1);
+        Facility facility2 = new Facility(wholesaler, 2);
+        Facility facility3 = new Facility(retailer, 3);
+        Facility facility4 = new Facility(warehouse, 4);
 
         ArrayList<Facility> returnList = new ArrayList<>();
 
