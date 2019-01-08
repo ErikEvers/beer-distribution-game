@@ -2,8 +2,11 @@ package org.han.ica.asd.c.gui_play_game;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 public class PlayGameFactoryController extends PlayGame {
+    private Configuration configuration;
+
     @FXML
     private TextField step1TextField;
 
@@ -42,5 +45,14 @@ public class PlayGameFactoryController extends PlayGame {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
             playerComponent.placeOrder(null, order);
         }
+    }
+
+    public void seeOtherFacilitiesButtonClicked() {
+        seeOtherFacilities.setData(new Object[]{configuration});
+        seeOtherFacilities.setupScreen();
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 }

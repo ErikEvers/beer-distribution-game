@@ -17,9 +17,8 @@ import org.han.ica.asd.c.model.domain_objects.Configuration;
 import java.util.function.UnaryOperator;
 
 
-
 public class PlayGame {
-    Configuration configuration;
+    private Configuration configuration;
 
     @FXML
     private GridPane playGridPane;

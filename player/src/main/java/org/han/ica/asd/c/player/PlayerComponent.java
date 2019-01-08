@@ -2,6 +2,8 @@ package org.han.ica.asd.c.player;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
@@ -14,15 +16,20 @@ import java.util.Map;
 
 public class PlayerComponent implements IPlayerComponent {
     IPlayerGameLogic gameLogic;
+    private Configuration configuration;
 
     public PlayerComponent() {
         gameLogic = new GameLogic("", null, null, null);
     }
 
-    @Override
-    public void activatePlayer() {
-        //Yet to be implemented.
-    }
+	public PlayerComponent(Configuration configuration) {
+		this.configuration = configuration;
+	}
+
+	@Override
+	public void activatePlayer() {
+		//stub for now
+	}
 
     @Override
     public void activateAgent() {
@@ -39,6 +46,11 @@ public class PlayerComponent implements IPlayerComponent {
     public void selectAgent() {
         //Yet to be implemented.
     }
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+	}
+
     @Override
     public List<String> getAllGames() {
         return gameLogic.getAllGames();
@@ -67,7 +79,7 @@ public class PlayerComponent implements IPlayerComponent {
 
         return map;
     }
-
+    
     @Override
     public void placeOrder(Facility facility, int amount) {
         //Not implemented yet

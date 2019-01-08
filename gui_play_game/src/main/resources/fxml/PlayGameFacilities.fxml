@@ -27,6 +27,7 @@
             <children>
                 <!--The facility name can be on of the next texts: 'Regional warehouse', 'Wholesaler' or 'retailer'-->
                 <Label fx:id="lblFacilities" alignment="BOTTOM_LEFT" text="[Facilityname]" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" />
                     </GridPane.margin>
