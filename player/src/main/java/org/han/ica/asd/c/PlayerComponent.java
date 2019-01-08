@@ -5,6 +5,9 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.List;
+import java.util.Map;
+
 public class PlayerComponent implements IPlayerComponent {
 
 
@@ -19,8 +22,9 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public void seeOtherFacilities() {
+    public Map<Facility, List<Facility>> seeOtherFacilities() {
         //Not implemented yet
+        return null;
     }
 
     @Override
