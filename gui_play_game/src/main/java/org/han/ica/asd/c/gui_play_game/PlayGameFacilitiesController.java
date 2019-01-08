@@ -41,30 +41,36 @@ public class PlayGameFacilitiesController extends PlayGame {
         if (!outgoingOrderTextField.getText().isEmpty()) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
 
-            if (order < 0) {
-                outgoingOrderTextField.setText("");
-                return;
+            if (handleTextSettingOnSendOrderClick(order)) {
+                Facility facility = comboBox.getValue();
+                playerComponent.placeOrder(facility, order);
             }
-
-            if (!incomingGoodsNextRound.getText().isEmpty() && !outgoingGoodsNextRound.getText().isEmpty()) {
-                int incomingGoodsNextRoundAmount = Integer.parseInt(incomingGoodsNextRound.getText());
-                int outgoingGoodsNextRoundAmount = Integer.parseInt(outgoingGoodsNextRound.getText());
-
-                //TODO get the real calculation result from the game logic component/from the game leader.
-                inventory.setText(calculateInventory(incomingGoodsNextRoundAmount, outgoingGoodsNextRoundAmount));
-            }
-
-            Facility facility = comboBox.getValue();
-            playerComponent.placeOrder(facility, order);
-
-            //TODO get the real order from the facility ordering from this one.
-            outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
-            roundNumber++;
-
-            incomingGoodsNextRound.setText(outgoingOrderTextField.getText());
-
-            outgoingOrderTextField.setText("");
         }
+    }
+
+    private boolean handleTextSettingOnSendOrderClick(int order) {
+        if (order < 0) {
+            outgoingOrderTextField.setText("");
+            return false;
+        }
+
+        if (!incomingGoodsNextRound.getText().isEmpty() && !outgoingGoodsNextRound.getText().isEmpty()) {
+            int incomingGoodsNextRoundAmount = Integer.parseInt(incomingGoodsNextRound.getText());
+            int outgoingGoodsNextRoundAmount = Integer.parseInt(outgoingGoodsNextRound.getText());
+
+            //TODO get the real calculation result from the game logic component/from the game leader.
+            inventory.setText(calculateInventory(incomingGoodsNextRoundAmount, outgoingGoodsNextRoundAmount));
+        }
+
+
+        //TODO get the real order from the facility ordering from this one.
+        outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
+        roundNumber++;
+
+        incomingGoodsNextRound.setText(outgoingOrderTextField.getText());
+
+        outgoingOrderTextField.setText("");
+        return true;
     }
 
     /**
