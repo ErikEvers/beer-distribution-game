@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.GameConfiguration;
 
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
-import org.han.ica.asd.c.interfaces.gameconfiguration.IPersistenceProgrammedAgents;
+import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
@@ -15,7 +15,7 @@ public class GameAgentController implements IGameAgentController {
 
 
   @Inject private IGameConfigurationUserInterface gameConfigurationUserInterface;
-  @Inject private IPersistenceProgrammedAgents iPersistenceProgrammedAgents;
+  @Inject private ProgrammedAgentDAO programmedAgentDAO;
   private ProgrammedAgent defaultAgent;
   /**
    * Get all the ProgrammedAgents from the database. When the persistence layer returns no ProgrammedAgents, this
@@ -23,8 +23,8 @@ public class GameAgentController implements IGameAgentController {
    * @return -> A list with agents.
    * @throws NoProgrammedAgentsFoundException -> when no agents found
    */
-  public List<ProgrammedAgent> getAgentsForUI() throws NoProgrammedAgentsFoundException{
-    List<ProgrammedAgent> programmedAgents = iPersistenceProgrammedAgents.readAllAgents();
+  public void getAgentsForUI() throws NoProgrammedAgentsFoundException{
+    List<ProgrammedAgent> programmedAgents = programmedAgentDAO.readAllProgrammedAgents();
     for(ProgrammedAgent agent : programmedAgents) {
       if("Default".equals(agent.getProgrammedAgentName())) {
         defaultAgent = agent;
@@ -33,7 +33,7 @@ public class GameAgentController implements IGameAgentController {
     if(programmedAgents.isEmpty()) {
       throw new NoProgrammedAgentsFoundException("Could not find any programmed agents");
     }
-    return programmedAgents;
+    gameConfigurationUserInterface.sendAgentsToUI(programmedAgents);
   }
 
   public List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map) {

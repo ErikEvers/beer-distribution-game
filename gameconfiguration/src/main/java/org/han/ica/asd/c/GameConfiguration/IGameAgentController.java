@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface IGameAgentController {
 
-  List<ProgrammedAgent> getAgentsForUI() throws NoProgrammedAgentsFoundException;
+  void getAgentsForUI() throws NoProgrammedAgentsFoundException;
 
   List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map);
 

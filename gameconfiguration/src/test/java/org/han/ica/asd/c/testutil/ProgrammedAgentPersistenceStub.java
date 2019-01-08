@@ -8,8 +8,7 @@ import java.util.List;
 
 public class ProgrammedAgentPersistenceStub implements IPersistenceProgrammedAgents {
 
-  @Override
-  public List<ProgrammedAgent> getAllAgents() {
+  public List<ProgrammedAgent> readAllAgents() {
     return new ArrayList<>();
   }
 }

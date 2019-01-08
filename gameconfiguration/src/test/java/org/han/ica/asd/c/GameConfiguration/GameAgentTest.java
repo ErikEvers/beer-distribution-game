@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
+import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
 import org.han.ica.asd.c.interfaces.gameconfiguration.IPersistenceProgrammedAgents;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.Assert;
@@ -18,16 +19,16 @@ public class GameAgentTest {
 
   private IGameAgentController gameAgentController;
   private IGameConfigurationUserInterface gameConfigurationUserInterface;
-  private IPersistenceProgrammedAgents persistenceProgrammedAgents;
+  private ProgrammedAgentDAO programmedAgentDAO;
 
   @Before
   public void setup() {
-    persistenceProgrammedAgents = mock(IPersistenceProgrammedAgents.class);
+    programmedAgentDAO = mock(ProgrammedAgentDAO.class);
     gameConfigurationUserInterface = mock(IGameConfigurationUserInterface.class);
     Injector injector = Guice.createInjector(new AbstractModule() {
       @Override
       protected void configure() {
-        bind(IPersistenceProgrammedAgents.class).toInstance(persistenceProgrammedAgents);
+        bind(ProgrammedAgentDAO.class).toInstance(programmedAgentDAO);
         bind(IGameConfigurationUserInterface.class).toInstance(gameConfigurationUserInterface);
       }
     });
@@ -50,6 +51,8 @@ public class GameAgentTest {
       e.printStackTrace();
     }
   }
+
+
 
   @Test
   public void setDefaultAgentInFacilitiesTest() {
