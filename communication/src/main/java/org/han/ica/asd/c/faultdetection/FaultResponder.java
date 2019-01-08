@@ -16,6 +16,7 @@ public class FaultResponder {
 	private FaultDetectionClient faultDetectionClient;
 
 	public FaultResponder() {
+		//For inject purposes
 	}
 
 	public void faultMessageReceived(FaultMessage faultMessage, String senderIp) {

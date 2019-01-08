@@ -87,10 +87,8 @@ public class FaultDetectorPlayer extends TimerTask {
 
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
-//TODO REMOVE PRINTLNS
         // filter out ips from ips that already send a message within the past 5 minutes
         ips.removeIf(ip -> playersWhoAlreadyCouldntReachLeader.containsKey(ip) && timestampIsRecentlyReceived(playersWhoAlreadyCouldntReachLeader.get(ip)));
-        System.out.println("Dit is de grootte van de lijst na filter : " + ips.size());
         Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll(ips.toArray(new String[0]), new CanYouReachLeaderMessage());
 
         for (Object responseMessage : response.values()) {
@@ -114,8 +112,6 @@ public class FaultDetectorPlayer extends TimerTask {
         boolean leaderIsAlive;
         // put senderIp in local list with currentTime
         playersWhoAlreadyCouldntReachLeader.put(senderIp, System.currentTimeMillis());
-
-        System.out.println("Bericht ontvangen van ip en deze wordt gefilterd straks : " + senderIp);
 
         if (leaderIsNotPinging()) {
             leaderIsAlive = false;
