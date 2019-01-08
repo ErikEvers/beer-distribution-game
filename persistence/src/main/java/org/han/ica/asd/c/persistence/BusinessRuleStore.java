@@ -32,6 +32,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     @Inject
     FacilityDAO facilityDAO;
 
+
     /**
      * @inheritDoc
      */
