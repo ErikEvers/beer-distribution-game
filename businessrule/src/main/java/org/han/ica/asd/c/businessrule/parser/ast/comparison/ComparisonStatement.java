@@ -108,4 +108,14 @@ public class ComparisonStatement extends Expression {
 
         return this.left.resolveCondition();
     }
+
+    @Override
+    public ASTNode getLeftChild() {
+        return left;
+    }
+
+    @Override
+    public ASTNode getRightChild() {
+        return right;
+    }
 }

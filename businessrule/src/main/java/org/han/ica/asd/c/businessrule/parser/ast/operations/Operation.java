@@ -104,7 +104,7 @@ public abstract class Operation extends OperationValue {
         Value leftValue = (Value) this.left;
         Value rightValue = (Value) this.right;
 
-        return this.executeOperation(Integer.parseInt(leftValue.getValue()), Integer.parseInt(rightValue.getValue()));
+        return this.executeOperation(leftValue.getIntegerValue(), rightValue.getIntegerValue());
     }
 
     /**
@@ -115,4 +115,14 @@ public abstract class Operation extends OperationValue {
      * @return Returns the result of the Operation as a {@link Value}
      */
     public abstract Value executeOperation(int left, int right);
+
+    @Override
+    public ASTNode getLeftChild() {
+        return left;
+    }
+
+    @Override
+    public ASTNode getRightChild() {
+        return right;
+    }
 }

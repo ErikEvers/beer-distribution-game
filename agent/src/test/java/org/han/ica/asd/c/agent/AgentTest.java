@@ -7,7 +7,13 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -80,7 +84,7 @@ class AgentTest {
 		this.upperFacility = new Facility(new FacilityType(), 0);
 		this.lowerFacility = new Facility(new FacilityType(), 2);
 		this.configuration = new Configuration();
-		
+
 		List<Facility> list = new ArrayList<>();
 		list.add(mainFacility);
 		configuration.getFacilitiesLinkedTo().put(upperFacility, list);
@@ -113,7 +117,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						return new ActionModel(ORDER, 30, lowerFacility.getFacilityId());
 					}
 				});
@@ -142,7 +146,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
@@ -151,7 +155,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 		GameRoundAction result = agent.executeTurn(round);
-		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();;
+		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
 
 		assertEquals(5, (int) entry.getValue());
 	}
@@ -169,7 +173,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						switch (businessRule) {
 							case BUSINESS_RULE_1:
 								return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
@@ -203,7 +207,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -234,7 +238,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -265,7 +269,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -296,7 +300,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -320,7 +324,7 @@ class AgentTest {
 		Method method = agent.getClass().getDeclaredMethod(RESOLVE_LOWER_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, lowerFacility.getFacilityId());
-		assertTrue(resultFacility != null);
+		assertNotNull(resultFacility);
 	}
 
 	@Test
@@ -338,7 +342,7 @@ class AgentTest {
 		Method method = agent.getClass().getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, upperFacility.getFacilityId());
-		assertTrue(resultFacility != null);
+		assertNotNull(resultFacility);
 	}
 
 	@Test
@@ -364,7 +368,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, mainFacility.getFacilityId());
 						}
@@ -384,8 +388,8 @@ class AgentTest {
 
 	@Test
 	void testGetParticipant() {
-		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
+        Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
 
-		assertEquals(mainFacility, agent.getParticipant());
-	}
+        assertEquals(mainFacility, agent.getParticipant());
+    }
 }

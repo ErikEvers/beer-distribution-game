@@ -106,7 +106,7 @@ public class Evaluator {
         q.add(current.getChildren().get(side));
         while (!q.isEmpty()) {
             ASTNode qVal = q.remove();
-            if (qVal instanceof Value && !((Value) qVal).getValue().matches(INT_VALUE)) {
+            if (qVal instanceof Value && !((Value) qVal).getValue().get(0).matches(INT_VALUE)) {
                 this.hasErrors = true;
                 inputBusinessRule.setErrorMessage("Round can only be compared to a number");
             }
@@ -221,7 +221,7 @@ public class Evaluator {
      */
     private List<String> getAllValues(ASTNode current, List<String> nodes){
         if(current instanceof Value){
-            nodes.add(((Value) current).getValue());
+            nodes.addAll(((Value) current).getValue());
         }
 
         if(!current.getChildren().isEmpty()){

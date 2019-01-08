@@ -1,10 +1,14 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
+import org.han.ica.asd.c.gamevalue.GameValue;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Value extends OperationValue {
     private static final String PREFIX = "V(";
-    private String value;
+    private List<String> value = new ArrayList<>();
 
     /**
      * Constructor
@@ -18,7 +22,7 @@ public class Value extends OperationValue {
      * @param value the value to be saved in the object
      */
     public Value(int value) {
-        this.value = Integer.toString(value);
+        this.value.add(String.valueOf(value));
     }
 
     /**
@@ -30,15 +34,11 @@ public class Value extends OperationValue {
     @Override
     public Value addValue(String value) {
         if ("smallest".equals(value) || "lowest".equals(value)) {
-            value = "lowest";
+            this.value.add("lowest");
         } else if ("biggest".equals(value) || "highest".equals(value)) {
-            value = "highest";
-        }
-
-        if (this.value == null) {
-            this.value = value;
+            this.value.add("highest");
         } else {
-            this.value += (" " + value);
+            this.value.add(value);
         }
         return this;
     }
@@ -50,7 +50,16 @@ public class Value extends OperationValue {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(PREFIX).append(value).append(SUFFIX);
+        stringBuilder
+                .append(PREFIX)
+                .append(value.get(0));
+
+        for (int i = 1, il = value.size(); i < il; i++) {
+            stringBuilder
+                    .append(' ')
+                    .append(value.get(i));
+        }
+        stringBuilder.append(SUFFIX);
     }
 
     /**
@@ -58,8 +67,26 @@ public class Value extends OperationValue {
      *
      * @return Returns the value
      */
-    public String getValue() {
+    public List<String> getValue() {
         return this.value;
+    }
+
+    /***
+     * Gets the second part of the variable
+     *
+     * @return
+     */
+    public String getSecondPartVariable() {
+        return value.get(1);
+    }
+
+    /***
+     * Gets the first part of the variable
+     *
+     * @return
+     */
+    public String getFirstPartVariable() {
+        return value.get(0);
     }
 
     /**
@@ -68,7 +95,7 @@ public class Value extends OperationValue {
      * @return {@link Integer}
      */
     public Integer getIntegerValue() {
-        return Integer.parseInt(this.value);
+        return Integer.parseInt(getFirstPartVariable());
     }
 
     /**
@@ -97,5 +124,34 @@ public class Value extends OperationValue {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    /**
+     * Replaces the current value with the game value
+     *
+     * @param gameValue the value of the game
+     */
+    public void replaceValueWithValue(String gameValue) {
+        if (hasNotBeenReplaced(getFirstPartVariable())) {
+            if( value.size() > 1&&GameValue.checkIfFacility(getSecondPartVariable())){
+                value.set(1, gameValue);
+                return;
+            }else if(value.size() > 1){
+                value.remove(getSecondPartVariable());
+            }
+            value.set(0, gameValue);
+        } else if (hasNotBeenReplaced(getSecondPartVariable())) {
+            value.set(1, gameValue);
+        }
+    }
+
+    /**
+     * Checks if the value has not been replaced with just a number
+     *
+     * @param value the value
+     * @return true if the value does not contain any numbers or percentage. Only characters a-zA-Z need to be replaced
+     */
+    private boolean hasNotBeenReplaced(String value) {
+        return !value.matches("[0-9%]+");
     }
 }

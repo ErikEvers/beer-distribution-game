@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_play_game.see_other_facilities;
+package org.han.ica.asd.c.fxml_helper.treebuilder;
 
 import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
@@ -25,10 +25,10 @@ public class FacilityRectangle extends Rectangle {
         if ("Factory".equals(facilityType)) {
             color = "#1fff34";
 
-        } else if ("Regional warehouse".equals(facilityType)) {
+        } else if ("Regional Warehouse".equals(facilityType)) {
             color = "DODGERBLUE";
 
-        } else if ("Wholesale".equals(facilityType)) {
+        } else if ("Wholesaler".equals(facilityType)) {
             color = "#ffbc1f";
 
         } else if ("Retailer".equals(facilityType)) {

@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.action;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
@@ -21,7 +22,7 @@ public class Action extends ASTNode {
     private ComparisonStatement comparisonStatement;
 
     @Inject
-    private IBusinessRuleStore businessRuleStore;
+    private NodeConverter nodeConverter;
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -66,7 +67,7 @@ public class Action extends ASTNode {
         if(person != null){
             list.add(person);
         }
-        
+
         if(comparisonStatement != null){
             list.add(comparisonStatement);
         }
@@ -128,51 +129,23 @@ public class Action extends ASTNode {
      * @return Returns the facility id of the receiving end
      */
     public int getFacilityId() {
-        // TO-DO: List<List<String>> facilities = businessRuleStore.getAllFacilities()
-        // This is a mock of the function above
-        List<List<String>> facilities = new ArrayList<>();
-        List<String> factory = new ArrayList<>();
-        factory.add("1");
-        factory.add("2");
-        List<String> distributor = new ArrayList<>();
-        distributor.add("3");
-        distributor.add("4");
-        List<String> wholesaler = new ArrayList<>();
-        wholesaler.add("5");
-        List<String> retailer = new ArrayList<>();
-        retailer.add("6");
-        facilities.add(factory);
-        facilities.add(distributor);
-        facilities.add(wholesaler);
-        facilities.add(retailer);
-
-        String facilityId;
+        int facilityId;
 
         if(person != null){
-            if(person.getPerson().contains(FacilityType.FACTORY.getName())){
-                facilityId = facilities.get(FacilityType.FACTORY.getIndex()).get(separateFacilityId());
-            } else if(person.getPerson().contains(FacilityType.REGIONALWAREHOUSE.getName())){
-                facilityId = facilities.get(FacilityType.REGIONALWAREHOUSE.getIndex()).get(separateFacilityId());
-            } else if(person.getPerson().contains(FacilityType.WHOLESALER.getName())){
-                facilityId = facilities.get(FacilityType.WHOLESALER.getIndex()).get(separateFacilityId());
-            } else {
-                facilityId = facilities.get(FacilityType.RETAILER.getIndex()).get(separateFacilityId());
-            }
+            facilityId = nodeConverter.getFacilityId(person.getPerson());
         } else {
-            // TO-DO: Randomly pick one below/above
-            facilityId = "1";
+            facilityId = -1;
         }
 
-
-        return Integer.parseInt(facilityId);
+        return facilityId;
     }
 
-    private int separateFacilityId(){
-        String[] stringSplit = person.getPerson().split(" ");
-        if(stringSplit.length > 1){
-            return Integer.parseInt(stringSplit[1]) - 1;
-        } else {
-            return 0;
-        }
+    /***
+     * gets the right child of an action
+     * @return operation
+     */
+    @Override
+    public ASTNode getRightChild() {
+        return operation;
     }
 }

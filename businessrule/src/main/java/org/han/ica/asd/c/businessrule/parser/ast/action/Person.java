@@ -2,6 +2,7 @@ package org.han.ica.asd.c.businessrule.parser.ast.action;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 
+import javax.inject.Inject;
 import java.util.Objects;
 
 public class Person extends ASTNode {
@@ -10,11 +11,29 @@ public class Person extends ASTNode {
 
     /**
      * Constructor
+     */
+    public Person() {
+    }
+
+    /**
+     * Constructor
      *
      * @param personNode Person to which action has to be sent
      */
     public Person(String personNode) {
         this.personNode = personNode;
+    }
+
+    /**
+     * Adds a value to the personNode string
+     *
+     * @param value The value that will define the personNode string
+     * @return Returns itself so that it can be used immediately
+     */
+    @Override
+    public Person addValue(String value) {
+        this.personNode = value;
+        return this;
     }
 
     /**
