@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GraphFacility {
+
+    int id = 0;
     ArrayList<IBuyer> buyers;
     ArrayList<ISupplier> suppliers;
 
@@ -22,4 +24,12 @@ public abstract class GraphFacility {
     }
 
     public abstract String getColor();
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

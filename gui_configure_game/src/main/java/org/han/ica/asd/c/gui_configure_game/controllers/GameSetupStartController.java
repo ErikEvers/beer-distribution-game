@@ -31,6 +31,8 @@ public class GameSetupStartController {
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
     private int baseRoundNumber = 20;
+    private int baseMinNumber = 1;
+    private int baseMaxNumber = 50;
 
     @Inject
     @Named("GameSetup")
@@ -50,6 +52,12 @@ public class GameSetupStartController {
 
     @FXML
     private TextField roundNumber;
+
+    @FXML
+    private TextField minOrder;
+
+    @FXML
+    private TextField maxOrder;
 
     @FXML
     private CheckBox bankrupt;
@@ -106,6 +114,17 @@ public class GameSetupStartController {
         } else {
             configuration.setAmountOfRounds(baseRoundNumber);
         }
+        if (minOrder.getText() != null && !minOrder.getText().isEmpty()) {
+            configuration.setMinimalOrderRetail(Integer.parseInt(minOrder.getText()));
+        } else {
+            configuration.setMinimalOrderRetail(baseMinNumber);
+        }
+        if (maxOrder.getText() != null && !maxOrder.getText().isEmpty()) {
+            configuration.setMaximumOrderRetail(Integer.parseInt(maxOrder.getText()));
+        } else {
+            configuration.setMaximumOrderRetail(baseMaxNumber);
+        }
+
         configuration.setContinuePlayingWhenBankrupt(bankrupt.isSelected());
         configuration.setInsightFacilities(seeDetail.isSelected());
     }

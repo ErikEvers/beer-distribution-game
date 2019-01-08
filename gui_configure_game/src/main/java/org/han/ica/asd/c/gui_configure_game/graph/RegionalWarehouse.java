@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gui_configure_game.graph;
 public class RegionalWarehouse extends GraphFacility implements ISupplier<Wholesale>, IBuyer<Factory> {
     private static final String COLOR = "1fff34";
 
+
     public void addBuyer(Wholesale buyer) {
         buyers.add(buyer);
     }
@@ -24,7 +25,7 @@ public class RegionalWarehouse extends GraphFacility implements ISupplier<Wholes
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Regional Warehouse";
     }
 }

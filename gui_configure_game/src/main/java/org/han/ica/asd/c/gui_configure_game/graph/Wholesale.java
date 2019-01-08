@@ -23,6 +23,7 @@ public class Wholesale extends GraphFacility implements ISupplier<Retailer>, IBu
         return COLOR;
     }
 
+
     @Override
     public String toString(){
         return "Wholesale";

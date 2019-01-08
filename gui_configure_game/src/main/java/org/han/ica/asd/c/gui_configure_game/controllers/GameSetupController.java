@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphConverterToDomain;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
@@ -18,13 +19,12 @@ import javax.inject.Named;
 import javax.inject.Provider;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+import static com.google.common.collect.Iterables.isEmpty;
 
 
 public class GameSetupController implements Initializable {
@@ -36,6 +36,7 @@ public class GameSetupController implements Initializable {
     private ArrayList<FacilityRectangle> warehouses = new ArrayList<FacilityRectangle>();
     private ArrayList<FacilityRectangle> retailers = new ArrayList<FacilityRectangle>();
     private ObservableList<GraphFacility> graphFacilityListView = FXCollections.observableArrayList();
+
     private final Provider<Facility> facilityProvider;
 
 
@@ -48,6 +49,9 @@ public class GameSetupController implements Initializable {
     private double firstRectangleX;
     private double firstRectangleY;
 
+
+    @Inject
+    GraphConverterToDomain graphConverterToDomain;
 
     @Inject
     @Named("GameSetupStart")
@@ -77,6 +81,10 @@ public class GameSetupController implements Initializable {
 
     @FXML
     private Button testB;
+    @FXML
+    private Button testB1;
+    @FXML
+    private Button testB2;
 
     @FXML
     private Button next;
@@ -96,6 +104,8 @@ public class GameSetupController implements Initializable {
         setBackButtonAction();
         setNextScreen();
         test();
+        test1();
+        test2();
 
     }
 
@@ -109,7 +119,20 @@ public class GameSetupController implements Initializable {
     @FXML
     public void handleAddFacilityButtonClick() {
         drawRectangle();
-        graph.addFacility(comboBox.getSelectionModel().getSelectedItem());
+        GraphFacility graphFacility = comboBox.getSelectionModel().getSelectedItem();
+        if (graphFacility instanceof Factory) {
+            graph.addFacility(new Factory());
+        }
+        if (graphFacility instanceof RegionalWarehouse) {
+            graph.addFacility(new RegionalWarehouse());
+        }
+        if (graphFacility instanceof Wholesale) {
+            graph.addFacility(new Wholesale());
+        }
+        if (graphFacility instanceof Retailer) {
+            graph.addFacility(new Retailer());
+        }
+
         setBackButtonAction();
     }
 
@@ -385,52 +408,94 @@ public class GameSetupController implements Initializable {
         next.setOnAction(event -> gameSetupType.setupScreen());
     }
 
+    public void addIdToGraph() {
+
+        graphConverterToDomain.setGraph(graph);
+        int[] countAll = graphConverterToDomain.countAll();
+        System.out.println("factories = " + countAll[0]);
+        System.out.println("RegionalWarehouse = " + countAll[1]);
+        System.out.println("Wholesale = " + countAll[2]);
+        System.out.println("Retailer = " + countAll[3]);
+
+        int factoryindex = 1;
+        int regionalWharehouseindex = 1 + countAll[0];
+        int wholsaleindex = 1 + countAll[0] + countAll[1];
+        int retailerindex = 1 + countAll[0] + countAll[1] + countAll[2];
+
+
+        for (GraphFacility current : graph.getFacilities()) {
+            if (current instanceof Factory) {
+                current.setId(factoryindex);
+                factoryindex++;
+            } else if (current instanceof RegionalWarehouse) {
+                current.setId(regionalWharehouseindex);
+                regionalWharehouseindex++;
+            } else if (current instanceof Wholesale) {
+                current.setId(wholsaleindex);
+                wholsaleindex++;
+            } else if (current instanceof Retailer) {
+                current.setId(retailerindex);
+                retailerindex++;
+            }
+        }
+    }
+
     /**
      * further fills the confirguration by de graph made in the GUI
      */
-//    public void fillConfiguration() {
-//        int factoryAmount = 0;
-//        int wholsaleAmount = 0;
-//        int regionalWharehouseAmount = 0;
-//        int retailerAmount = 0;
-//
-//        List<Facility> facilities =  new ArrayList<>();
-//
-//        for (Object currentFacility : graph.getFacilities()) {
-//            GraphFacility graphFacility = (GraphFacility) currentFacility;
-//            if (graphFacility instanceof Factory) {
-//                factoryAmount++;
-//            }
-//            if (graphFacility instanceof Wholesale) {
-//                wholsaleAmount++;
-//            }
-//            if (graphFacility instanceof RegionalWarehouse) {
-//                regionalWharehouseAmount++;
-//            }
-//            if (graphFacility instanceof Retailer) {
-//                retailerAmount++;
-//            }
-//            if (!isEmpty(graphFacility.getSuppliers()) ){
-//                for (:) {
-//
-//                }
-//            }
-//
-//        }
-//        configuration.setAmountOfFactories(factoryAmount);
-//        configuration.setAmountOfDistributors(regionalWharehouseAmount);
-//        configuration.setAmountOfRetailers(retailerAmount);
-//        configuration.setAmountOfWholesales(wholsaleAmount);
-//
-//        // Morgen vragen naar dataBOIS hoe oplossen facility type. Waarom zit er in configuratie Type en linked to als dat ook in Facility zit.
-//        // dit refactoren naar kleinere code
-//    }
+    public void fillConfiguration() {
 
-    @FXML
-    public void test() {
-        testB.setOnAction(event -> System.out.println("button"));
+        addIdToGraph();
+
+        graphConverterToDomain.setGraph(graph);
+
+        int[] countAll = graphConverterToDomain.countAll();
+
+        configuration.setFacilities(graphConverterToDomain.allToList());
+        configuration.setFacilitiesLinkedTo(graphConverterToDomain.convertToDomeinGraph());
+        configuration.setAmountOfFactories(countAll[0]);
+        configuration.setAmountOfDistributors(countAll[1]);
+        configuration.setAmountOfWholesales(countAll[2]);
+        configuration.setAmountOfRetailers(countAll[3]);
+
     }
 
 
+    @FXML
+    public void test() {
+        testB.setOnAction(event ->
+                addIdToGraph());
+    }
+
+    @FXML
+    public void test1() {
+        testB1.setOnAction(event ->
+                printAll());
+    }
+
+
+    public void printAll() {
+        for (GraphFacility current : graph.getFacilities()) {
+            if (current instanceof Factory) {
+                System.out.println("factoryId = " + current.getId());
+            }
+            if (current instanceof RegionalWarehouse) {
+                System.out.println("RegionalWarehouse = " + current.getId());
+            }
+            if (current instanceof Wholesale) {
+                System.out.println("Wholesale = " + current.getId());
+            }
+            if (current instanceof Retailer) {
+                System.out.println("Retailer = " + current.getId());
+            }
+        }
+    }
+
+
+    @FXML
+    public void test2() {
+        testB2.setOnAction(event ->
+                System.out.println(graph.getFacilities().size()));
+    }
 
 }

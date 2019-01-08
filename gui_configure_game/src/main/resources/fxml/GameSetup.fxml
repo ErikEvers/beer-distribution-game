@@ -93,6 +93,8 @@
               </content>
             </ScrollPane>
             <Button fx:id="testB" mnemonicParsing="false" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button fx:id="testB1" alignment="TOP_CENTER" mnemonicParsing="false" text="Button" GridPane.rowIndex="1" />
+            <Button fx:id="testB2" mnemonicParsing="false" text="Button" GridPane.columnIndex="1" />
          </children>
       </GridPane>
    </children>

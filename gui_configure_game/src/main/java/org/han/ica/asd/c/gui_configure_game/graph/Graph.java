@@ -12,7 +12,7 @@ public class Graph {
     }
 
     public void addEdge(ISupplier parent, IBuyer child) throws GraphException {
-        if(facilities.contains(parent) && facilities.contains(child)) {
+        if (facilities.contains(parent) && facilities.contains(child)) {
             parent.addBuyer(child);
             child.addSupplier(parent);
         } else {
@@ -30,12 +30,12 @@ public class Graph {
     }
 
     public void removeFacility(GraphFacility graphFacility) {
-        for(GraphFacility f : facilities) {
-            if(f.getBuyers().contains(graphFacility)) {
+        for (GraphFacility f : facilities) {
+            if (f.getBuyers().contains(graphFacility)) {
                 ((ISupplier) f).removeBuyer(graphFacility);
             }
 
-            if(f.getSuppliers().contains(graphFacility)) {
+            if (f.getSuppliers().contains(graphFacility)) {
                 ((IBuyer) f).removeSupplier(graphFacility);
             }
         }
@@ -43,7 +43,7 @@ public class Graph {
         facilities.remove(graphFacility);
     }
 
-    public List getFacilities() {
+    public ArrayList<GraphFacility> getFacilities() {
         return facilities;
     }
 }
