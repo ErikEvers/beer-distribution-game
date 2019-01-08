@@ -12,17 +12,19 @@ import java.util.Map;
 
 public class PlayerComponent implements IPlayerComponent {
 
-	@Override
-	public void activatePlayer() {
-		//stub for now
-	}
 
-	@Override
-	public void activateGameAgent() {
-		//stub for now
-	}
+    @Override
+    public void activatePlayer() {
+        //Not implemented yet
+    }
 
-	public Map<Facility, List<Facility>> seeOtherFacilities() {
+    @Override
+    public void activateGameAgent() {
+        //Not implemented yet
+    }
+
+    @Override
+    public Map<Facility, List<Facility>> seeOtherFacilities() {
         //Fake method for testing purposes
         Map<Facility, List<Facility>> map = new HashMap<>();
 
@@ -34,28 +36,29 @@ public class PlayerComponent implements IPlayerComponent {
         return map;
     }
 
-	@Override
-	public void placeOrder(Facility facility, int amount) {
-		//stub for now
-	}
+    @Override
+    public void placeOrder(Facility facility, int amount) {
+        //Not implemented yet
+    }
 
-	@Override
-	public void selectProgrammedAgent(ProgrammedAgent programmedagent) {
-		//stub for now
-	}
+    @Override
+    public void selectProgrammedAgent(ProgrammedAgent programmedagent) {
+        //Not implemented yet
+    }
 
-	@Override
-	public void chooseFacility(Facility facility) {
-		//stub for now
-	}
+    @Override
+    public void chooseFacility(Facility facility) {
+        //Not implemented yet
+    }
 
-	@Override
-	public String getFacilityName() {
-		return null;
-	}
+    @Override
+    public String getFacilityName() {
+        //Not implemented yet
+        return "";
+    }
 
-	public String requestFacilityInfo(Facility facility) {
+    public String requestFacilityInfo(Facility facility) {
         //Fake method for testing purposes
-        return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
+        return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500"+facility.getFacilityId();
     }
 }

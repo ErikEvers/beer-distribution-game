@@ -3,7 +3,7 @@ package org.han.ica.asd.c.bootstrap;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.gui_play_game.PlayGameFacilities;
 import org.han.ica.asd.c.gui_play_game.PlayGameFactory;
-import org.han.ica.asd.c.PlayerComponent;
+import org.han.ica.asd.c.player.PlayerComponent;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.dbconnection.DBConnection;
