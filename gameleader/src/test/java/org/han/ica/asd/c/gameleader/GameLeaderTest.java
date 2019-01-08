@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gameleader;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
@@ -171,13 +172,13 @@ public class GameLeaderTest {
         when(players.get(2)).thenReturn(player);
         when(player.getFacility()).thenReturn(facil);
 
-        GameAgent gameAgent = mock(GameAgent.class);
+        Agent gameAgent = mock(Agent.class);
         doReturn(gameAgent).when(gameLeader).getAgentByFacility(anyInt());
         when(gameAgent.getGameAgentName()).thenReturn("test");
 
         gameLeader.init();
         gameLeader.playerIsDisconnected("b");
 
-        verify(gameLogic, times(1)).addLocalParticipant(any(AgentParticipant.class));
+        verify(gameLogic, times(1)).addLocalParticipant(any(Agent.class));
     }
 }
