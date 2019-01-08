@@ -37,8 +37,8 @@ public class Agent extends GameAgent implements IParticipant {
 	/**
 	 * Generates actions of an agent using the defined business rules.
 	 *
-	 * @param round The round data of last round used to determine what actions the agent is going to do.
-	 * @return A GameRoundAction with all actions that the agent wants to do.
+	 * @param round     The round data of last round used to determine what actions the agent is going to do.
+	 * @return          A GameRoundAction with all actions that the agent wants to do.
 	 */
 	private GameRoundAction generateRoundActions(Round round) {
 		Map<Facility, Integer> targetOrderMap = new HashMap<>();
@@ -67,6 +67,14 @@ public class Agent extends GameAgent implements IParticipant {
 		return new GameRoundAction(targetOrderMap, targetDeliverMap);
 	}
 
+	/**
+	 * Update targetMap with triggered gameBusinessRule. Preventing NULL values to be used as keys
+	 * @param targetFacility            The facility that is targeted by the business rule
+	 * @param amount                    The amount of the action
+	 * @param targetMap                 The map the action will be stored in
+	 * @param triggeredBusinessRules    A list of triggered business rules
+	 * @param gameBusinessRules         The business rule that is triggered
+	 */
 	private void updateTargetMap(Facility targetFacility, int amount, Map<Facility, Integer> targetMap, List<GameBusinessRules> triggeredBusinessRules, GameBusinessRules gameBusinessRules) {
 		if(targetFacility != null) {
 			targetMap.put(targetFacility, amount);
@@ -77,8 +85,8 @@ public class Agent extends GameAgent implements IParticipant {
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
 	 *
-	 * @param targetFacilityId The identifying integer of the facility that needs to be resolved
-	 * @return The facility below the current facility that needs to be resolved. NULL when facility is not found.
+	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
+	 * @return  The facility below the current facility that needs to be resolved. NULL when facility is not found.
 	 */
 	private Facility resolveLowerFacilityId(int targetFacilityId) {
 		List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
@@ -93,8 +101,8 @@ public class Agent extends GameAgent implements IParticipant {
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
 	 *
-	 * @param targetFacilityId The identifying integer of the facility that needs to be resolved
-	 * @return The facility above the current facility that needs to be resolved. NULL when facility is not found.
+	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
+	 * @return  The facility above the current facility that needs to be resolved. NULL when facility is not found.
 	 */
 	private Facility resolveHigherFacilityId(int targetFacilityId) {
 		for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
