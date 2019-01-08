@@ -12,6 +12,5 @@ public interface IPersistence {
     void saveRoundData(Round roundData);
     Round fetchRoundData(int roundId);
     void saveTurnData(Round turn);
-    BeerGame getGameLog(String gameId);
     Player getPlayerById(String playerId);
 }
