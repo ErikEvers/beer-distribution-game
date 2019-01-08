@@ -137,8 +137,7 @@ public class Action extends ASTNode {
         if(person != null){
             facilityId = nodeConverter.getFacilityId(person.getPerson());
         } else {
-            // TO-DO: Randomly pick one below/above
-            facilityId = 1;
+            facilityId = -1;
         }
 
         return facilityId;
