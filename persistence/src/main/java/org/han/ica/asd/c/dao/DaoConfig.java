@@ -12,9 +12,10 @@ public class DaoConfig {
         //Empty method for Sonar.
     }
 
-    protected static String getCurrentGameId() {
+    public static String getCurrentGameId() {
         return currentGameId;
     }
+
 
     /**
      * Sets the current game id so that the data access objects don't require gameId as a paramater
@@ -39,7 +40,7 @@ public class DaoConfig {
      * @param pstmt The prepared statement to whom the gameId needs to be added.
      * @param index The index on which place the gameId has to be set.
      */
-    protected static void gameIdNotSetCheck(PreparedStatement pstmt, int index) throws GameIdNotSetException, SQLException {
+    public static void gameIdNotSetCheck(PreparedStatement pstmt, int index) throws GameIdNotSetException, SQLException {
         if(DaoConfig.currentGameId == null) {
             throw new GameIdNotSetException("GameId not set");
         } else {
