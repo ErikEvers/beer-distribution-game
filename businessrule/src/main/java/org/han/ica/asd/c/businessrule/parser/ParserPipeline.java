@@ -93,7 +93,13 @@ public class ParserPipeline {
                 String errorMessage = "Input error found on: '" + errorWord + "'.";
                 String alternative = alternativeFinder.findAlternative(errorWord);
 
-                businessRulesInput.get(i).setErrorMessage(errorMessage + (!alternative.isEmpty() ? " Did you mean: '" + alternative + "'?" : " No alternatives found"));
+                if (!alternative.isEmpty()){
+                    errorMessage = errorMessage + " Did you mean: '" + alternative + "'?";
+                } else {
+                    errorMessage = errorMessage + " No alternatives found.";
+                }
+
+                businessRulesInput.get(i).setErrorMessage(errorMessage);
                 businessRulesInput.get(i).setErrorWord(beginErrorWord, endErrorWord);
                 hasErrors = true;
                 ParseErrorListener.INSTANCE.getWordExceptions().remove(i+1);

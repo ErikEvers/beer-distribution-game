@@ -6,6 +6,7 @@ import com.googlecode.concurrenttrees.suffix.ConcurrentSuffixTree;
 import com.googlecode.concurrenttrees.suffix.SuffixTree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,41 +27,9 @@ public class AlternativeFinder {
     }
 
     private void setupSuffixTree(){
-        List<String> possibleBusinessRuleValues = new ArrayList<>();
-
-        possibleBusinessRuleValues.add("then");
-        possibleBusinessRuleValues.add("default");
-        possibleBusinessRuleValues.add("order");
-        possibleBusinessRuleValues.add("deliver");
-        possibleBusinessRuleValues.add("round");
-        possibleBusinessRuleValues.add("from");
-        possibleBusinessRuleValues.add("where");
-        possibleBusinessRuleValues.add("factory");
-        possibleBusinessRuleValues.add("warehouse");
-        possibleBusinessRuleValues.add("wholesaler");
-        possibleBusinessRuleValues.add("retailer");
-        possibleBusinessRuleValues.add("inventory");
-        possibleBusinessRuleValues.add("stock");
-        possibleBusinessRuleValues.add("backlog");
-        possibleBusinessRuleValues.add("incoming order");
-        possibleBusinessRuleValues.add("back orders");
-        possibleBusinessRuleValues.add("lowest");
-        possibleBusinessRuleValues.add("smallest");
-        possibleBusinessRuleValues.add("highest");
-        possibleBusinessRuleValues.add("biggest");
-        possibleBusinessRuleValues.add("equal");
-        possibleBusinessRuleValues.add("greater");
-        possibleBusinessRuleValues.add("higher");
-        possibleBusinessRuleValues.add("than");
-        possibleBusinessRuleValues.add("less");
-        possibleBusinessRuleValues.add("lower");
-        possibleBusinessRuleValues.add("plus");
-        possibleBusinessRuleValues.add("minus");
-        possibleBusinessRuleValues.add("times");
-        possibleBusinessRuleValues.add("divided");
+        String[] possibleBusinessRuleValues = {"then", "default", "order", "deliver", "round", "from", "where", "factory", "warehouse", "wholesaler", "retailer", "inventory", "stock", "backlog", "incoming order", "back orders", "lowest", "smallest", "highest", "biggest", "equal", "greater", "higher", "than", "less", "lower", "plus", "minus", "times", "divided"};
 
         int index = 0;
-
         for (String businessRuleValue: possibleBusinessRuleValues) {
             this.suffixTree.put(businessRuleValue, index++);
         }
@@ -69,8 +38,13 @@ public class AlternativeFinder {
     public String findAlternative(String word){
         Map<CharSequence, Integer> foundMatches = new HashMap<>();
         int length = word.length();
-        int chunckSize = length > MAX_WORD_LENGTH_FOR_SMALL_CHUNK ? BIG_CHUNK_SIZE : SMALL_CHUNK_SIZE;
+        int chunckSize;
 
+        if (length > MAX_WORD_LENGTH_FOR_SMALL_CHUNK){
+            chunckSize = BIG_CHUNK_SIZE;
+        } else {
+            chunckSize = SMALL_CHUNK_SIZE;
+        }
 
         for (int i = 0; i < length && i + chunckSize <= length; i++) {
             String part = word.substring(i, i + chunckSize - 1);
@@ -86,6 +60,10 @@ public class AlternativeFinder {
             }
         }
 
+        return createStringFromFoundMatches(foundMatches);
+    }
+
+    private String createStringFromFoundMatches(Map<CharSequence, Integer> foundMatches) {
         Map<CharSequence, Integer> sorted = foundMatches
                 .entrySet()
                 .stream()
@@ -94,7 +72,6 @@ public class AlternativeFinder {
                 .collect(
                         Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                 LinkedHashMap::new));
-
         return String.join(", ", new ArrayList<>(sorted.keySet()));
     }
 }
