@@ -63,7 +63,6 @@ public class PlayerDAOIntegrationTest {
 
         Assertions.assertNull(playerDAO.getPlayer(PLAYER_ID));
 
-        playerDAO.createPlayer(player);
     }
 
     @Test
