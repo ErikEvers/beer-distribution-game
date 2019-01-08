@@ -13,13 +13,12 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.gamevalue.GameValue;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.Mock;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -38,6 +37,9 @@ class BusinessRuleTest {
     private BusinessRule businessRule = new BusinessRule();
     private Round round;
     private Facility facility;
+    private FacilityTurn facilityTurn;
+    private FacilityTurnDeliver facilityTurnDeliver;
+    private FacilityTurnOrder facilityTurnOrder;
     private int facilityId = 11;
 
     @Test
@@ -111,31 +113,38 @@ class BusinessRuleTest {
 
     @BeforeEach
     void setupTestReplaceBusinessRuleWithValue() {
+        List<FacilityTurn> facilityTurns = new ArrayList<>();
+        List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();
+        List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
         round = Mockito.mock(Round.class);
-        facility = Mockito.mock(Facility.class);
-        FacilityType facilityType = Mockito.mock(FacilityType.class);
-        facility.setFacilityType(facilityType);
-        facility.setFacilityId(facilityId);
+        facilityTurn = Mockito.mock(FacilityTurn.class);
+        facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
+        facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
+        facilityTurns.add(facilityTurn);
+        facilityTurnOrders.add(facilityTurnOrder);
+        facilityTurnDelivers.add(facilityTurnDeliver);
+        when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
+        when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
+        when(round.getFacilityTurns()).thenReturn(facilityTurns);
 
-        Map<Facility, Integer> map = new HashMap<>();
-        map.put(facility, 10);
-        Map<Facility, Map<Facility, Integer>> mapInMap = new HashMap<>();
-        mapInMap.put(facility, map);
 
-        when(facility.getFacilityType()).thenReturn(facilityType);
-        when(facility.getFacilityId()).thenReturn(facilityId);
-        when(facilityType.getFacilityName()).thenReturn("factory");
-        when(round.getTurnStock()).thenReturn(map);
-        when(round.getTurnBackOrder()).thenReturn(mapInMap);
-        when(round.getRemainingBudget()).thenReturn(map);
-        when(round.getTurnDeliver()).thenReturn(mapInMap);
-        when(round.getTurnOrder()).thenReturn(mapInMap);
-        when(round.getTurnReceived()).thenReturn(mapInMap);
+        when(facilityTurn.getFacilityId()).thenReturn(facilityId);
+        when(facilityTurn.getStock()).thenReturn(facilityId);
+        when(facilityTurn.getRemainingBudget()).thenReturn(facilityId);
+        when(facilityTurn.getBackorders()).thenReturn(facilityId);
+
+
+        when(facilityTurnOrder.getFacilityId()).thenReturn(facilityId);
+        when(facilityTurnOrder.getOrderAmount()).thenReturn(facilityId);
+
+
+        when(facilityTurnDeliver.getFacilityId()).thenReturn(facilityId);
+        when(facilityTurnDeliver.getDeliverAmount()).thenReturn(facilityId);
+
     }
 
     @Test
     void testBusinessrule_getReplacementValue_equals_10() {
-
         BusinessRule businessRule = (BusinessRule) new BusinessRule()
                 .addChild(new ComparisonStatement()
                         .addChild(new ComparisonStatement()

@@ -1,13 +1,13 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.gamevalue.GameValue;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -252,49 +252,115 @@ public class BusinessRule extends ASTNode {
     private String getReplacementValue(GameValue gameValue, Round round, int facilityId) {
         switch (gameValue) {
             case ORDERED:
-                return getValueFromHashmapInHashmap(round.getTurnOrder(), facilityId);
+                return getOrder(round,facilityId);
             case STOCK:
-                return getValue(round.getTurnStock(), facilityId);
+                return getStock(round,facilityId);
             case BUDGET:
-                return getValue(round.getRemainingBudget(), facilityId);
+                return getBudget(round,facilityId);
             case BACKLOG:
-                return getValueFromHashmapInHashmap(round.getTurnBackOrder(), facilityId);
+                return getBacklog(round,facilityId);
             case INCOMINGORDER:
-                return getValueFromHashmapInHashmap(round.getTurnReceived(), facilityId);
+                return getIncomingOrder(round,facilityId);
             case OUTGOINGGOODS:
-                return getValueFromHashmapInHashmap(round.getTurnDeliver(), facilityId);
+                return getOutgoingGoods(round,facilityId);
             default:
                 return String.valueOf(getFacilityIdBasedOnType(round.getTurnStock(), gameValue));
         }
     }
 
     /***
-     * Gets the value from hashmap in hashmap
-     *
-     * @param map the given map
-     * @param facilityId the id of the facility
-     * @return the value of the hashmap
+     * Gets the number of orders of an facility
+     * @param round the given round
+     * @param facilityId the id of the given facility
+     * @return the order amount
      */
-    private String getValueFromHashmapInHashmap(Map<Facility, Map<Facility, Integer>> map, int facilityId) {
-        Map.Entry<Facility, Map<Facility, Integer>> entry = map.entrySet().iterator().next();
-        Map<Facility, Integer> value = entry.getValue();
-        return getValue(value, facilityId);
+    private String getOrder(Round round, int facilityId){
+        String replacementValue = "";
+        for(FacilityTurnOrder facilityTurnOrder:round.getFacilityOrders()){
+            if(facilityTurnOrder.getFacilityId()==facilityId){
+                replacementValue = String.valueOf(facilityTurnOrder.getOrderAmount());
+            }
+        }
+        return replacementValue;
     }
 
     /***
-     * Gets the value from the hashmap
-     *
-     * @param map the map containing round data
-     * @param facilityId the id of the facility
-     * @return gets the value of the map and returns it as a string
+     * Gets the stock of an facility
+     * @param round the given round
+     * @param facilityId the id of the given facility
+     * @return stock
      */
-    private String getValue(Map<Facility, Integer> map, int facilityId) {
-        for (Map.Entry<Facility, Integer> entry : map.entrySet()) {
-            if (entry.getKey().getFacilityId() == facilityId) {
-                return entry.getValue().toString();
+    private String getStock(Round round, int facilityId){
+        String replacementValue = "";
+        for(FacilityTurn facilityTurn:round.getFacilityTurns()){
+            if(facilityTurn.getFacilityId()==facilityId){
+                replacementValue= String.valueOf(facilityTurn.getStock());
             }
         }
-        return "";
+        return replacementValue;
+    }
+    /***
+     * Gets the remaining budget of an facility
+     * @param round the given round
+     * @param facilityId the id of the given facility
+     * @return budget
+     */
+    private String getBudget(Round round, int facilityId){
+        String replacementValue = "";
+        for(FacilityTurn facilityTurn:round.getFacilityTurns()){
+            if(facilityTurn.getFacilityId()==facilityId){
+                replacementValue= String.valueOf(facilityTurn.getRemainingBudget());
+            }
+        }
+        return replacementValue;
+    }
+
+    /***
+     * Gets the number of open orders of an facility
+     * @param round the given round
+     * @param facilityId the id of the given facility
+     * @return budget
+     */
+    private String getBacklog(Round round, int facilityId){
+        String replacementValue = "";
+        for(FacilityTurn facilityTurn:round.getFacilityTurns()){
+            if(facilityTurn.getFacilityId()==facilityId){
+                replacementValue= String.valueOf(facilityTurn.getBackorders());
+            }
+        }
+        return replacementValue;
+    }
+
+    /***
+     * Gets the incoming order of an facility
+     * @param round the given round
+     * @param facilityId the id of the given facility
+     * @return incoming order amount
+     */
+    private String getIncomingOrder(Round round,int facilityId){
+        String replacementValue = "";
+        for(FacilityTurnOrder facilityTurn:round.getFacilityOrders()){
+            if(facilityTurn.getFacilityIdOrderTo()==facilityId){
+                replacementValue= String.valueOf(facilityTurn.getOrderAmount());
+            }
+        }
+        return replacementValue;
+    }
+
+    /***
+     * Gets the outgoing order of an facility
+     * @param round the given round
+     * @param facilityId the id of the given facility
+     * @return outgoing goods amount
+     */
+    private String getOutgoingGoods(Round round,int facilityId){
+        String replacementValue = "";
+        for(FacilityTurnDeliver facilityTurnDeliver:round.getFacilityTurnDelivers()){
+            if(facilityTurnDeliver.getFacilityId()==facilityId){
+                replacementValue= String.valueOf(facilityTurnDeliver.getDeliverAmount());
+            }
+        }
+        return replacementValue;
     }
 
     /**
