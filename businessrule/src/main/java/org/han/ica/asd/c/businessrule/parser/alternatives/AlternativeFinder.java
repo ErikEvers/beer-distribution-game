@@ -15,9 +15,10 @@ import java.util.stream.Collectors;
 
 public class AlternativeFinder {
     private SuffixTree<Integer> suffixTree;
-    private static final int BIGCHUNKSIZE = 4;
-    private static final int SMALLCHUNKSIZE = 3;
-    private static final int MAXWORDLENGTHFORSMALLCHUNK = 6;
+    private static final int BIG_CHUNK_SIZE = 4;
+    private static final int SMALL_CHUNK_SIZE = 3;
+    private static final int MAX_WORD_LENGTH_FOR_SMALL_CHUNK = 6;
+    private static final int MAX_ALTERNATIVES_SIZE = 2;
 
     public AlternativeFinder() {
         this.suffixTree = new ConcurrentSuffixTree<>(new DefaultCharArrayNodeFactory());
@@ -67,7 +68,7 @@ public class AlternativeFinder {
     public String findAlternative(String word){
         Map<CharSequence, Integer> foundMatches = new HashMap<>();
         int length = word.length();
-        int chunckSize = length > MAXWORDLENGTHFORSMALLCHUNK ? BIGCHUNKSIZE : SMALLCHUNKSIZE;
+        int chunckSize = length > MAX_WORD_LENGTH_FOR_SMALL_CHUNK ? BIG_CHUNK_SIZE : SMALL_CHUNK_SIZE;
 
 
         for (int i = 0; i < length && i + chunckSize <= length; i++) {
@@ -88,10 +89,11 @@ public class AlternativeFinder {
                 .entrySet()
                 .stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .limit(MAX_ALTERNATIVES_SIZE)
                 .collect(
                         Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                 LinkedHashMap::new));
 
-        return new ArrayList<>(sorted.keySet()).toString();
+        return String.join(", ", new ArrayList<>(sorted.keySet()));
     }
 }
