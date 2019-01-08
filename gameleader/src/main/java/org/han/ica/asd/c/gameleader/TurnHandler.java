@@ -18,7 +18,7 @@ public class TurnHandler {
         currentRoundData.getFacilityOrders().addAll(turnModel.getFacilityOrders());
         currentRoundData.getFacilityTurnDelivers().addAll(turnModel.getFacilityTurnDelivers());
         currentRoundData.getFacilityTurns().addAll(turnModel.getFacilityTurns());
-        persistenceLayer.savePlayerTurn(turnModel);
+        persistenceLayer.saveFacilityTurn(turnModel);
 
         return currentRoundData;
     }
