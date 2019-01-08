@@ -5,7 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import java.util.Objects;
 
 public class ActionReference extends ASTNode {
-    private static final String prefix = "AR(";
+    private static final String PREFIX = "AR(";
     private String action;
 
     /**
@@ -37,7 +37,7 @@ public class ActionReference extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix + action, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX + action, SUFFIX);
     }
 
     /**
