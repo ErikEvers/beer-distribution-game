@@ -20,9 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -113,7 +111,7 @@ class AgentTest {
                     }
 
                     @Override
-                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
                         return new ActionModel(ORDER, 30, lowerFacility.getFacilityId());
                     }
                 });
@@ -142,7 +140,7 @@ class AgentTest {
                     }
 
                     @Override
-                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
                         return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
                     }
                 });
@@ -151,7 +149,8 @@ class AgentTest {
         });
         injector.injectMembers(agent);
         GameRoundAction result = agent.executeTurn(round);
-        Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();;
+        Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
+        ;
 
         assertEquals(5, (int) entry.getValue());
     }
@@ -169,7 +168,7 @@ class AgentTest {
                     }
 
                     @Override
-                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
                         switch (businessRule) {
                             case BUSINESS_RULE_1:
                                 return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
@@ -203,7 +202,7 @@ class AgentTest {
                     }
 
                     @Override
-                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
                         if (!BUSINESS_RULE_3.equals(businessRule)) {
                             return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
                         }
@@ -265,7 +264,7 @@ class AgentTest {
                     }
 
                     @Override
-                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
                         if (BUSINESS_RULE_3.equals(businessRule)) {
                             return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
                         }
@@ -296,7 +295,7 @@ class AgentTest {
                     }
 
                     @Override
-                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
                         if (BUSINESS_RULE_1.equals(businessRule)) {
                             return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
                         }
@@ -364,7 +363,7 @@ class AgentTest {
                     }
 
                     @Override
-                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+                    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
                         if (BUSINESS_RULE_1.equals(businessRule)) {
                             return new ActionModel(DELIVER, 5, mainFacility.getFacilityId());
                         }

@@ -25,9 +25,6 @@ public class BusinessRule extends ASTNode {
     private static final String PREFIX = "BR(";
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
 
-    //@Inject
-    private IBusinessRuleStore businessRuleStore;
-
     @Inject
     private NodeConverter nodeConverter;
 
@@ -290,7 +287,7 @@ public class BusinessRule extends ASTNode {
     private String getOrder(Round round, int facilityId) {
         for (FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
             if (facilityTurnOrder.getFacilityId() == facilityId) {
-                return  String.valueOf(facilityTurnOrder.getOrderAmount());
+                return String.valueOf(facilityTurnOrder.getOrderAmount());
             }
         }
         return "";
@@ -318,10 +315,9 @@ public class BusinessRule extends ASTNode {
      * @return budget
      */
     private String getBudget(Round round, int facilityId) {
-
         for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
             if (facilityTurn.getFacilityId() == facilityId) {
-                return  String.valueOf(facilityTurn.getRemainingBudget());
+                return String.valueOf(facilityTurn.getRemainingBudget());
             }
         }
         return "";

@@ -1,9 +1,13 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class NodeConverter {
+    //@Inject
+    private IBusinessRuleStore businessRuleStore;
 
     /***
      * gets the facility id based on the given facility name

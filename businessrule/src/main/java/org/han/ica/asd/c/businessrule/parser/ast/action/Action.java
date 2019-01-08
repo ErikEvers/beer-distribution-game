@@ -21,9 +21,6 @@ public class Action extends ASTNode {
     private Person person;
     private ComparisonStatement comparisonStatement;
 
-    //@Inject
-    private IBusinessRuleStore businessRuleStore;
-
     @Inject
     private NodeConverter nodeConverter;
 
