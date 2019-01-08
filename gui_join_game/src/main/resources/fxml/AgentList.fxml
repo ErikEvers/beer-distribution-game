@@ -31,9 +31,9 @@
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </GridPane.margin>
             </TableView>
-            <Button onAction="#handleChooseAgentButtonClick" mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%choose_agent" wrapText="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Button mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%new_agent" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Button onAction="#handleBackToMenuButtonClick" mnemonicParsing="false" style="-fx-background-color: #ffa31a;" text="%back_to_menu" wrapText="true" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleChooseAgentButtonClick" style="-fx-background-color: #ff8000;" text="%choose_agent" textFill="WHITE" wrapText="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="%new_agent" textFill="WHITE" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#handleBackToMenuButtonClick" style="-fx-background-color: #ff8000;" text="%back_to_menu" textFill="WHITE" wrapText="true" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </children>

@@ -34,8 +34,6 @@ public class PlayGame {
     @FXML
     protected Label inventory;
 
-    protected FacilityFake facilityFake;
-
     protected OrderFake orderFake;
 
     protected int roundNumber = 0;
@@ -53,9 +51,6 @@ public class PlayGame {
 
         //TODO remove the orderfake class when integrating the game so it is playable.
         orderFake = new OrderFake();
-
-        //TODO remove the facilityFake when the correct facilitielinks is being filled in the comboBox.
-        facilityFake = new FacilityFake();
 
         //Make sure only numbers can be filled in the order textBox. This is done using a textFormatter
         UnaryOperator<TextFormatter.Change> textFieldFilter = change -> {

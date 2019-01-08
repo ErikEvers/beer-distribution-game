@@ -16,9 +16,9 @@ public class PlayGameFacilitiesController extends PlayGame {
     private TextField incomingGoodsNextRound;
 
     @FXML
-    protected ComboBox<FacilityFake> comboBox;
+    protected ComboBox<Facility> comboBox;
 
-    private ObservableList<FacilityFake> facilityListView = FXCollections.observableArrayList();
+    private ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
 
     /**
      * First code being executed.
@@ -26,7 +26,8 @@ public class PlayGameFacilitiesController extends PlayGame {
     public void initialize() {
         superInitialize();
 
-        lblFacilities.setText(facilityFake.toString());
+        //TODO when the facility object is saved in the player model get the facility name and set in in this label.
+        //lblFacilities.setText(facilityFake.toString());
         roundNumber = 0;
         fillComboBox();
     }
@@ -69,8 +70,8 @@ public class PlayGameFacilitiesController extends PlayGame {
      */
     private void fillComboBox(){
         //TODO Get the facilities linked to the facility currently being played by the player.
-        FacilityFake warehouse = new FacilityFake();
-        FacilityFake warehouse2 = new FacilityFake();
+        Facility warehouse = new Facility();
+        Facility warehouse2 = new Facility();
         facilityListView.add(warehouse);
         facilityListView.add(warehouse2);
         comboBox.setItems(facilityListView);

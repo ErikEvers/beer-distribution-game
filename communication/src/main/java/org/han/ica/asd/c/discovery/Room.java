@@ -58,7 +58,7 @@ public class Room {
     }
 
     public void addHost(String ip, String password) throws RoomException {
-        if ((this.password.equals(password) || this.password.isEmpty()) && !hosts.contains(ip) && !gameStarted) {
+        if (this.password.equals(password) && !hosts.contains(ip) && !gameStarted) {
             if (isValidIPv4(ip)) {
                 try {
                     service.createFileInFolder("H: " + ip, roomID);

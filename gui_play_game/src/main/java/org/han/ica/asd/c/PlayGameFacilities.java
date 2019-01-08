@@ -7,6 +7,11 @@ import java.util.ResourceBundle;
 
 public class PlayGameFacilities implements IGUIHandler {
     @Override
+    public void setData(Object[] data) {
+
+    }
+
+    @Override
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
     }

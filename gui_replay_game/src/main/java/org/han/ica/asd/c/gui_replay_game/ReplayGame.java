@@ -4,9 +4,14 @@ import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 public class ReplayGame implements IGUIHandler {
-
-    public void setupScreen() {
-        FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameListScreen.fxml"));
+    private String gameId;
+    @Override
+    public void setData(Object[] data) {
+        this.gameId = (String) data[0];
     }
 
+    public void setupScreen() {
+        ReplayGameScreenController replayGameScreenController =FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameScreen.fxml"));
+        replayGameScreenController.setGameId(gameId);
+    }
 }
