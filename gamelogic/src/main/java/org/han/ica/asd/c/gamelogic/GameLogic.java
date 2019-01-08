@@ -55,6 +55,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IConnected
     @Override
     public Map<Facility, List<Facility>> seeOtherFacilities() {
         //Yet to be implemented.
+        persistence.fetchRoundData("", 0);
         return null;
     }
 

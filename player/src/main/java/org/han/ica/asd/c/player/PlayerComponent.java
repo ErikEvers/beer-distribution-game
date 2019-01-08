@@ -62,6 +62,7 @@ public class PlayerComponent implements IPlayerComponent {
     @Override
     public Map<Facility, List<Facility>> seeOtherFacilities() {
         //Fake method for testing purposes
+        gameLogic.seeOtherFacilities();
         Map<Facility, List<Facility>> map = new HashMap<>();
 
         Facility facility = new Facility(new FacilityType("Distributor", 1, 1, 1, 2, 25, 1, 1), 0);
