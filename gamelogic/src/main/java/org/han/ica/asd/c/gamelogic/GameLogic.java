@@ -15,6 +15,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
@@ -52,8 +53,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IConnected
      * @return The current state of the game.
      */
     @Override
-    public Round seeOtherFacilities() {
-        return persistence.fetchRoundData(gameId, round);
+    public Map<Facility, List<Facility>> seeOtherFacilities() {
+        //Yet to be implemented.
+        return null;
     }
 
     /**

@@ -1,8 +1,7 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.player;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
@@ -32,22 +31,6 @@ public class PlayerComponentTest {
 
         //Assert
         verify(playerComponent.gameLogic, times(1)).getAllGames();
-    }
-
-    @Test
-    void seeOtherFacilitiesCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Arrange
-        playerComponent.gameLogic = mock(GameLogic.class);
-
-        Round round = mock(Round.class);
-
-        when(playerComponent.gameLogic.seeOtherFacilities()).thenReturn(round);
-
-        //Act
-        playerComponent.seeOtherFacilities();
-
-        //Assert
-        verify(playerComponent.gameLogic, times(1)).seeOtherFacilities();
     }
 
     @Test
