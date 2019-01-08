@@ -24,15 +24,6 @@ public class Person extends ASTNode {
         this.personNode = personNode;
     }
 
-    public Person() {
-    }
-
-    @Override
-    public ASTNode addValue(String value) {
-        this.personNode = value;
-        return this;
-    }
-
     /**
      * Adds a value to the personNode string
      *
