@@ -177,6 +177,15 @@ public class PlayerDAO {
         }
     }
 
+    /**
+     * Creates a single player object
+     * @param rs
+     * Result set from which to build the player
+     * @return
+     * Returns the new player object
+     * @throws SQLException
+     * Thrown when the resultset is empty
+     */
     private Player buildPlayer(ResultSet rs) throws SQLException {
         Player player = null;
         if (!rs.isClosed()) {
