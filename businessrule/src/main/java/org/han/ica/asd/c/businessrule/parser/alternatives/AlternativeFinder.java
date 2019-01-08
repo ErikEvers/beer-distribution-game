@@ -28,7 +28,6 @@ public class AlternativeFinder {
     private void setupSuffixTree(){
         List<String> possibleBusinessRuleValues = new ArrayList<>();
 
-        possibleBusinessRuleValues.add("inventory");
         possibleBusinessRuleValues.add("then");
         possibleBusinessRuleValues.add("default");
         possibleBusinessRuleValues.add("order");
@@ -37,9 +36,10 @@ public class AlternativeFinder {
         possibleBusinessRuleValues.add("from");
         possibleBusinessRuleValues.add("where");
         possibleBusinessRuleValues.add("factory");
-        possibleBusinessRuleValues.add("distributor");
+        possibleBusinessRuleValues.add("warehouse");
         possibleBusinessRuleValues.add("wholesaler");
         possibleBusinessRuleValues.add("retailer");
+        possibleBusinessRuleValues.add("inventory");
         possibleBusinessRuleValues.add("stock");
         possibleBusinessRuleValues.add("backlog");
         possibleBusinessRuleValues.add("incoming order");
@@ -48,11 +48,12 @@ public class AlternativeFinder {
         possibleBusinessRuleValues.add("smallest");
         possibleBusinessRuleValues.add("highest");
         possibleBusinessRuleValues.add("biggest");
+        possibleBusinessRuleValues.add("equal");
         possibleBusinessRuleValues.add("greater");
         possibleBusinessRuleValues.add("higher");
+        possibleBusinessRuleValues.add("than");
         possibleBusinessRuleValues.add("less");
         possibleBusinessRuleValues.add("lower");
-        possibleBusinessRuleValues.add("equal");
         possibleBusinessRuleValues.add("plus");
         possibleBusinessRuleValues.add("minus");
         possibleBusinessRuleValues.add("times");
