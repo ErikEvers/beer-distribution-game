@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="600" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_join_game.GameRoomController">
+  <children>
+    <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.0" minWidth="10.0" prefWidth="85.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="699.0" minWidth="10.0" prefWidth="699.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints maxHeight="194.0" minHeight="0.0" prefHeight="78.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="620.0" minHeight="10.0" prefHeight="579.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="220.0" minHeight="92.0" prefHeight="107.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Button mnemonicParsing="false" onMouseClicked="#handleReadyButtonClick" text="Ready" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+          <GridPane.margin>
+            <Insets right="15.0" />
+          </GridPane.margin>
+        </Button>
+        <Button mnemonicParsing="false" onMouseClicked="#handleBackToJoinGameButtonClick" text="Leave game" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+          <GridPane.margin>
+            <Insets left="5.0" top="15.0" />
+          </GridPane.margin>
+        </Rectangle>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="25.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+          <GridPane.margin>
+            <Insets bottom="15.0" left="5.0" />
+          </GridPane.margin>
+        </Rectangle>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="25.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+          <GridPane.margin>
+            <Insets left="10.0" top="15.0" />
+          </GridPane.margin>
+        </Rectangle>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="142.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+          <GridPane.margin>
+            <Insets bottom="15.0" left="10.0" />
+          </GridPane.margin>
+        </Rectangle>
+        <Label text="Wholesaler" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+          <GridPane.margin>
+            <Insets left="80.0" top="20.0" />
+          </GridPane.margin>
+        </Label>
+        <Label text="Retailer" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+          <GridPane.margin>
+            <Insets bottom="20.0" left="80.0" />
+          </GridPane.margin>
+        </Label>
+        <Label text="Factory" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+          <GridPane.margin>
+            <Insets right="20.0" top="20.0" />
+          </GridPane.margin>
+        </Label>
+        <Label text="Warehouse" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+          <GridPane.margin>
+            <Insets bottom="20.0" />
+          </GridPane.margin>
+        </Label>
+        <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" vbarPolicy="NEVER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+          <content>
+            <AnchorPane fx:id="facilitiesContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="680.0" />
+          </content>
+        </ScrollPane>
+            <Label fx:id="gameRoom" text="" GridPane.columnIndex="1">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+      </children>
+    </GridPane>
+  </children>
+</AnchorPane>

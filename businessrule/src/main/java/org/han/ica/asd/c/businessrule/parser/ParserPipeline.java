@@ -16,7 +16,11 @@ import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ParserPipeline {
     private List<UserInputBusinessRule> businessRulesInput;
@@ -75,15 +79,49 @@ public class ParserPipeline {
      */
     private boolean setSyntaxError() {
         boolean hasErrors = false;
+        int lineOffset = 1;
 
         for (int i = 0; i < businessRulesInput.size(); i++) {
-            if (ParseErrorListener.INSTANCE.getExceptions().contains(i + 1)) {
-                businessRulesInput.get(i).setErrorMessage("Input error found on '" + businessRulesInput.get(i).getBusinessRule() + "'");
+            String businessRule = businessRulesInput.get(i).getBusinessRule();
+
+            if(ParseErrorListener.INSTANCE.getWordExceptions().containsKey(i + 1)){
+                int endErrorWord = findEndErrorWord(businessRule,ParseErrorListener.INSTANCE.getWordExceptions().get(i + lineOffset) - 1);
+                int beginErrorWord = findBeginErrorWord(businessRule, endErrorWord);
+                businessRulesInput.get(i).setErrorMessage("Input error found on: '" + findWordInBusinessRule(businessRule,beginErrorWord,endErrorWord) + "'");
+                businessRulesInput.get(i).setErrorWord(beginErrorWord, endErrorWord);
+                hasErrors = true;
+                ParseErrorListener.INSTANCE.getWordExceptions().remove(i+1);
+            } else if (ParseErrorListener.INSTANCE.getExceptions().contains(i + lineOffset)) {
+                businessRulesInput.get(i).setErrorMessage("Input error found on: '" + businessRule + "'");
                 hasErrors = true;
             }
         }
 
         return hasErrors;
+    }
+
+    private String findWordInBusinessRule(String businessRule, int beginChar, int endChar){
+        return businessRule.substring(beginChar,endChar+1);
+    }
+
+    private int findEndErrorWord(String businessRule, int charPosition){
+        if(!" ".equals(String.valueOf(businessRule.charAt(charPosition)))){
+            return charPosition;
+        }
+
+        return findEndErrorWord(businessRule,charPosition-1);
+    }
+
+    private int findBeginErrorWord(String businessRule, int charPosition){
+        if(charPosition < 0){
+            return 0;
+        }
+
+        if(" ".equals(String.valueOf(businessRule.charAt(charPosition)))){
+            return charPosition+1;
+        }
+
+        return findBeginErrorWord(businessRule,charPosition-1);
     }
 
     /**

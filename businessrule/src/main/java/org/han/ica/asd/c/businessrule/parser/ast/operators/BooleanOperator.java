@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public class BooleanOperator extends Operator {
-    private static final String prefix = "BoolO(";
+    private static final String PREFIX = "BoolO(";
 
     /**
      * Constructor
@@ -83,6 +83,6 @@ public class BooleanOperator extends Operator {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(prefix).append(operatorVal).append(suffix);
+        stringBuilder.append(PREFIX).append(operatorVal).append(SUFFIX);
     }
 }
