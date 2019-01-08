@@ -13,6 +13,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -101,7 +102,7 @@ public class GameMessageClient {
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.SEVERE,e.getMessage());
         }
-        return null;
+        return new ArrayList<Facility>();
     }
 
     /**
