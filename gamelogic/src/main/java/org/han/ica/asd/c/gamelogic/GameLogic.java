@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
@@ -126,5 +127,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     public List<Facility> getAllFacilities() {
         //Yet to be implemented.
         return new ArrayList<>();
+    }
+
+    @Override
+    public List<Agent> getSavedAgents() {
+        return persistence.getSavedAgents();
     }
 }
