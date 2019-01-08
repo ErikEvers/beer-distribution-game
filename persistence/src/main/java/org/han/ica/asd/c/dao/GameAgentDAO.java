@@ -115,12 +115,14 @@ public class GameAgentDAO{
             conn.setAutoCommit(false);
             DaoConfig.gameIdNotSetCheck(pstmt, 1);
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
-                            facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
-                    List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
-                    gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
-                    i = i + 1;
+                if (!rs.isClosed()) {
+                    while (rs.next()) {
+                        gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
+                                facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
+                        List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
+                        gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
+                        i = i + 1;
+                    }
                 }
             }
             conn.commit();

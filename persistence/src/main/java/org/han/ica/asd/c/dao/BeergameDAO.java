@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,8 +53,9 @@ public class BeergameDAO {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
 
 				conn.setAutoCommit(false);
-
-				pstmt.setString(1, UUID.randomUUID().toString());
+				String UUID = java.util.UUID.randomUUID().toString();
+				DaoConfig.setCurrentGameId(UUID);
+				pstmt.setString(1, UUID);
 				pstmt.setString(2, gameName);
 				pstmt.setString(3, new Date().toString());
 
@@ -125,10 +125,12 @@ public class BeergameDAO {
 				conn.setAutoCommit(false);
 				pstmt.setString(1,DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
-					beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
-					beergame.setConfiguration(configurationDAO.readConfiguration());
-					beergame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
-					beergame.setRounds(roundDAO.getRounds());
+					if(!rs.isClosed()) {
+						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+						beergame.setConfiguration(configurationDAO.readConfiguration());
+						beergame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
+						beergame.setRounds(roundDAO.getRounds());
+					}
 				}
 				conn.commit();
 			} catch (SQLException e) {

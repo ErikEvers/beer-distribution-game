@@ -1,9 +1,8 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -66,7 +65,6 @@ public class BeerGameDAOIntegrationTest {
 	@Test
 	public void getGameLog() {
 		beergameDAO.createBeergame("BeergameZutphen");
-		List<BeerGame> beergames = beergameDAO.readBeergames();
 		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog().getGameName());
 	}
 }

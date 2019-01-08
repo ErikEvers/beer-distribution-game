@@ -83,11 +83,12 @@ public class ConfigurationDAO {
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_CONFIGURATIONS); ResultSet rs = pstmt.executeQuery()) {
 				conn.setAutoCommit(false);
+				if(!rs.isClosed()){
 				while (rs.next()) {
 					configurations.add(createConfigurationObject(rs));
 				}
 				conn.commit();
-			} catch (SQLException e) {
+			}} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
 			}
@@ -107,8 +108,10 @@ public class ConfigurationDAO {
 				conn.setAutoCommit(false);
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
-					rs.next();
-					configuration = createConfigurationObject(rs);
+					if(!rs.isClosed()) {
+						rs.next();
+						configuration = createConfigurationObject(rs);
+					}
 				}
 				conn.commit();
 			} catch (SQLException e) {
