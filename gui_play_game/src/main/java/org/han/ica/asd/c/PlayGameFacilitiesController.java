@@ -26,8 +26,8 @@ public class PlayGameFacilitiesController extends PlayGame {
     public void initialize() {
         superInitialize();
 
-        //TODO when the facility object is saved in the player model get the facility name and set in in this label.
-        //lblFacilities.setText(facilityFake.toString());
+        //TODO when the facility object is saved in the player model get the facility name and set in the lblFacilities label.
+
         roundNumber = 0;
         fillComboBox();
     }

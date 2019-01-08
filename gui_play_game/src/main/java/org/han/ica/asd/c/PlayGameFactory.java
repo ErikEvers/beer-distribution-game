@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public class PlayGameFactory implements IGUIHandler {
     @Override
     public void setData(Object[] data) {
-
+        //There is no data to be set yet
     }
 
     @Override
