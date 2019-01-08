@@ -6,8 +6,8 @@ import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
-import org.han.ica.asd.c.interfaces.agent.IGameStore;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
@@ -49,11 +49,13 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 		return roundDAO.getRound(roundId);
 	}
 
-	public BeerGame getGameLog(String gameId)
+	@Override
+	public BeerGame getGameLog()
 	{
 		return beergameDAO.getGameLog();
 	}
 
+	@Override
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn)
 	{
 		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
@@ -66,6 +68,7 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 	}
 
 
+	@Override
 	public void saveTurnData(Round round)
 	{
 		roundDAO.createRound(round.getRoundId());
