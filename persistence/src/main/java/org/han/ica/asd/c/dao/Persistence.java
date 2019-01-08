@@ -43,7 +43,8 @@ public class Persistence implements IPersistence {
 		//stub
 	}
 
-	public Round fetchRoundData(String gameId, int roundId)
+	@Override
+	public Round fetchRoundData(int roundId)
 	{
 		//stub
 		return null;

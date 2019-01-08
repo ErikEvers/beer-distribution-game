@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface IPersistence {
     void saveRoundData(Round roundData);
-    Round fetchRoundData(String gameId, int roundId);
+    Round fetchRoundData(int roundId);
     void saveTurnData(Round turn);
     BeerGame getGameLog(String gameId);
     Player getPlayerById(String playerId);
