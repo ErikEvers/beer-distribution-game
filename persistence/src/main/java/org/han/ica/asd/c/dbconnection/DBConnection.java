@@ -25,6 +25,7 @@ public class DBConnection implements IDatabaseConnection {
 		createNewDatabase();
 	}
 
+
 	public void createNewDatabase() {
 		File file = new File(CONNECTIONSTRING+DATABASENAME);
 		if(!file.exists()) {

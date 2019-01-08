@@ -28,6 +28,7 @@ public class ProgrammedAgentDAO {
 
     public ProgrammedAgentDAO() {
         //There has to be a constructor to inject the value above.
+        //databaseConnection.createNewDatabase();
     }
 
     /**
@@ -91,6 +92,7 @@ public class ProgrammedAgentDAO {
         }
         return programmedAgents;
     }
+
     /**
      * A method to execute a prepared statement with only one set variable.
      *
