@@ -82,4 +82,13 @@ public class GameLogicTest {
         gameLogic.removeAgentByPlayerId(anyString());
         verify(participantsPool, times(1)).replaceAgentWithPlayer(any(PlayerParticipant.class));
     }
+
+    @Test
+    public void getAllGamesCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Act
+        gameLogic.getAllGames();
+
+        //Assert
+        verify(communication, times(1)).getAllGames();
+    }
 }
