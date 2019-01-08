@@ -2,13 +2,16 @@ package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
+import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageFilterer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ElectionModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +32,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @RunWith(JUnitPlatform.class)
 public class GameMessageReceiverTest {
 
-    GameMessageReceiver gameMessageReceiver;
+    private GameMessageReceiver gameMessageReceiver;
 
     @Mock
     private IRoundModelObserver roundModelObserver;
@@ -43,6 +46,8 @@ public class GameMessageReceiverTest {
     @Mock
     GameMessageFilterer gameMessageFilterer;
 
+    private IGameConfigurationObserver gameConfigurationObserver;
+
     @BeforeEach
     public void setUp() {
         initMocks(this);
@@ -51,6 +56,7 @@ public class GameMessageReceiverTest {
         observers.add(roundModelObserver);
         observers.add(turnModelObserver);
         observers.add(electionObserver);
+        observers.add(gameConfigurationObserver);
 
         gameMessageReceiver = new GameMessageReceiver();
         gameMessageReceiver.setObservers(observers);
@@ -82,7 +88,24 @@ public class GameMessageReceiverTest {
     }
 
     @Test
-    public void roundModelReceived() {
+
+    public void configurationReceived() {
+        Configuration configuration = new Configuration();
+
+        ConfigurationMessage configurationMessageStage = new ConfigurationMessage(configuration);
+        configurationMessageStage.setPhaseToStage();
+
+        ConfigurationMessage configurationMessageCommit = new ConfigurationMessage(configuration);
+        configurationMessageCommit.setPhaseToCommit();
+
+        gameMessageReceiver.gameMessageReceived(configurationMessageStage);
+        gameMessageReceiver.gameMessageReceived(configurationMessageCommit);
+
+        verify(gameConfigurationObserver).gameConfigurationReceived(configuration);
+    }
+
+    @Test
+    public void roundModelRecieved() {
         Round roundModel = new Round();
 
         RoundModelMessage roundModelMessageStage = new RoundModelMessage(roundModel);

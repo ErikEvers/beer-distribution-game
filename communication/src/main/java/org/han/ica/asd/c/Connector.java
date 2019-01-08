@@ -3,16 +3,18 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
-import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.interfaces.communication.IConnecterForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
@@ -193,6 +195,11 @@ public class Connector implements IConnecterForSetup {
     public void updateAllPeers(Round roundModel) {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), roundModel);
+    }
+
+    public void sendConfiguration(Configuration configuration) {
+        List<String> ips = nodeInfoList.getAllIps();
+        gameMessageClient.sendConfigurationToAllPlayers(ips.toArray(new String[0]), configuration);
     }
 
     public void addIP(String text) {
