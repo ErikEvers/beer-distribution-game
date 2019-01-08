@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.gui_play_game;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import java.util.List;
@@ -16,4 +17,5 @@ public interface IPlayerComponent {
     List<String> getAllGames();
     void connectToGame(String game);
     List<Facility> getAllFacilities();
+    List<Agent> getSavedAgents();
 }
