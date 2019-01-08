@@ -10,7 +10,7 @@ public class Configuration implements IDomainModel{
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesales;
-    private int amountOfDistributors;
+    private int amountOfWarehouses;
     private int amountOfRetailers;
     private int minimalOrderRetail;
     private int maximumOrderRetail;
@@ -25,14 +25,14 @@ public class Configuration implements IDomainModel{
         this.facilitiesLinkedTo = new HashMap<>();
     }
 
-    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
+    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfWarehouses, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
                          int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
-                         Map<Facility, List<Facility>> facilitiesLinkedTo, List<FacilityType> facilityTypes) //NOSONAR
+                         Map<Facility, List<Facility>> facilitiesLinkedTo) //NOSONAR
     {
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
         this.amountOfWholesales = amountOfWholesales;
-        this.amountOfDistributors = amountOfDistributors;
+        this.amountOfWarehouses = amountOfWarehouses;
         this.amountOfRetailers = amountOfRetailers;
         this.minimalOrderRetail = minimalOrderRetail;
         this.maximumOrderRetail = maximumOrderRetail;
@@ -42,13 +42,13 @@ public class Configuration implements IDomainModel{
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
-    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfDistributors,
+    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfWarehouses,
                          int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail,
                          boolean insightFacilities, boolean continuePlayingWhenBankrupt){
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
         this.amountOfWholesales = amountOfWholesales;
-        this.amountOfDistributors = amountOfDistributors;
+        this.amountOfWarehouses = amountOfWarehouses;
         this.amountOfRetailers = amountOfRetailers;
         this.minimalOrderRetail = minimalOrderRetail;
         this.maximumOrderRetail = maximumOrderRetail;
@@ -80,12 +80,12 @@ public class Configuration implements IDomainModel{
         this.amountOfWholesales = amountOfWholesales;
     }
 
-    public int getAmountOfDistributors() {
-        return amountOfDistributors;
+    public int getAmountOfWarehouses() {
+        return amountOfWarehouses;
     }
 
-    public void setAmountOfDistributors(int amountOfDistributors) {
-        this.amountOfDistributors = amountOfDistributors;
+    public void setAmountOfWarehouses(int amountOfWarehouses) {
+        this.amountOfWarehouses = amountOfWarehouses;
     }
 
     public int getAmountOfRetailers() {
