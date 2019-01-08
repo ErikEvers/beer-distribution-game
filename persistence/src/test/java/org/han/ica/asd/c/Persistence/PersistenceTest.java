@@ -114,7 +114,7 @@ class PersistenceTest {
 
 	@Test
 	void fetchRoundDataTest() {
-		persistence.fetchRoundData("BeerGame",1);
+		persistence.fetchRoundData(1);
 		verify((roundDAOMock), times(1)).getRound(anyInt());
 	}
 

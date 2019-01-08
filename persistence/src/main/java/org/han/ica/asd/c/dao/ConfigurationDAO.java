@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 public class ConfigurationDAO {
 	
 	private static final String CREATE_CONFIGURATION = "INSERT INTO Configuration VALUES (?,?,?,?,?,?,?,?,?,?);";
-	private static final String READ_CONFIGURATION = "SELECT AmountOfRounds,AmountOfFactories,AmountOfWholesales,AmountOfDistributors,AmountOfRetailers,MinimalOrderRetail,MaximumOrderRetail,ContinuePlayingWhenBankrupt,InsightFacilities FROM Configuration WHERE GameId = ?;";
+	private static final String READ_CONFIGURATION = "SELECT AmountOfRounds,AmountOfFactories,AmountOfWholesalers,AmountOfWarehouses,AmountOfRetailers,MinimalOrderRetail,MaximumOrderRetail,ContinuePlayingWhenBankrupt,InsightFacilities FROM Configuration WHERE GameId = ?;";
 	private static final String READ_CONFIGURATIONS = "SELECT * FROM Configuration;";
-	private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesales = ?, AmountOfDistributors = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?;";
+	private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesalers = ?, AmountOfWarehouses = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?;";
 	private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
 
@@ -64,8 +64,8 @@ public class ConfigurationDAO {
 		pstmt.setString(1, DaoConfig.getCurrentGameId());
 		pstmt.setInt(2, configuration.getAmountOfRounds());
 		pstmt.setInt(3, configuration.getAmountOfFactories());
-		pstmt.setInt(4, configuration.getAmountOfWholesales());
-		pstmt.setInt(5, configuration.getAmountOfDistributors());
+		pstmt.setInt(4, configuration.getAmountOfWholesalers());
+		pstmt.setInt(5, configuration.getAmountOfWarehouses());
 		pstmt.setInt(6, configuration.getAmountOfRetailers());
 		pstmt.setInt(7, configuration.getMinimalOrderRetail());
 		pstmt.setInt(8, configuration.getMaximumOrderRetail());
@@ -130,8 +130,8 @@ public class ConfigurationDAO {
 	 */
 	private Configuration createConfigurationObject(ResultSet rs) throws SQLException {
 		return new Configuration(rs.getInt("AmountOfRounds"),
-				rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesales"),
-				rs.getInt("AmountOfDistributors"), rs.getInt("AmountOfRetailers"),
+				rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesalers"),
+				rs.getInt("AmountOfWarehouses"), rs.getInt("AmountOfRetailers"),
 				rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
 				rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"));
 	}
@@ -147,8 +147,8 @@ public class ConfigurationDAO {
 				conn.setAutoCommit(false);
 				pstmt.setInt(1, configuration.getAmountOfRounds());
 				pstmt.setInt(2, configuration.getAmountOfFactories());
-				pstmt.setInt(3, configuration.getAmountOfWholesales());
-				pstmt.setInt(4, configuration.getAmountOfDistributors());
+				pstmt.setInt(3, configuration.getAmountOfWholesalers());
+				pstmt.setInt(4, configuration.getAmountOfWarehouses());
 				pstmt.setInt(5, configuration.getAmountOfRetailers());
 				pstmt.setInt(6, configuration.getMinimalOrderRetail());
 				pstmt.setInt(7, configuration.getMaximumOrderRetail());

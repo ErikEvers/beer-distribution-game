@@ -5,9 +5,10 @@ import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
-import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
+import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
+import org.han.ica.asd.c.interfaces.agent.IGameStore;
+import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
@@ -16,10 +17,9 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
-import java.util.Map;
 
 
-public class Persistence implements IPersistence {
+public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore {
 
 	@Inject
 	private RoundDAO roundDAO;
@@ -43,14 +43,10 @@ public class Persistence implements IPersistence {
 		roundDAO.createRound(rounddata.getRoundId());
 	}
 
-	@Override
-	public Round fetchRoundData(String gameId, int roundId) {
-		return roundDAO.getRound(roundId);
-	}
 
 	@Override
-	public Round fetchTurnData(Round round, Map<Facility, Facility> facilityLinkedTo) {
-		return roundDAO.getRound(round.getRoundId());
+	public Round fetchRoundData(int roundId) {
+		return roundDAO.getRound(roundId);
 	}
 
 	public BeerGame getGameLog(String gameId)
