@@ -10,4 +10,5 @@ public interface IFinder {
     RoomModel joinGameRoomModel(String roomName, String hostIP, String password) throws DiscoveryException;
     void startGameRoom(String roomName) throws DiscoveryException;
     RoomModel getRoom(RoomModel roomModel) throws DiscoveryException;
+    void removeHostFromRoom(RoomModel roomModel, String hostIP) throws DiscoveryException;
 }
