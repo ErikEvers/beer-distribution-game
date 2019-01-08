@@ -7,7 +7,6 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
@@ -156,7 +155,7 @@ public class GameLeaderTest {
         gameLeader.init();
         gameLeader.iAmDisconnected();
 
-        verify(gameLogic, times(0)).addLocalParticipant(any(AgentParticipant.class));
+        verify(gameLogic, times(0)).addLocalParticipant(any(Agent.class));
     }
 
     @Test
