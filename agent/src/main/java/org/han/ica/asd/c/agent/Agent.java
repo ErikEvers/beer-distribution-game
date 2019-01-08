@@ -29,16 +29,16 @@ public class Agent extends GameAgent implements IParticipant {
 	@Named("persistence")
 	private IPersistence persistence;
 
-	/**
-	 * Constructor with default agent name and facility
-	 *
-	 * @param gameAgentName The name of the agent
-	 * @param facility      Which facility it's representing
-	 */
-	Agent(Configuration configuration, String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
-		super(gameAgentName, facility, gameBusinessRulesList);
-		this.configuration = configuration;
-	}
+    /**
+     * Constructor with default agent name and facility
+     *
+     * @param gameAgentName The name of the agent
+     * @param facility      Which facility it's representing
+     */
+	public Agent(Configuration configuration, String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
+        super(gameAgentName, facility, gameBusinessRulesList);
+        this.configuration = configuration;
+    }
 
 	/**
 	 * Generates actions of an agent using the defined business rules.

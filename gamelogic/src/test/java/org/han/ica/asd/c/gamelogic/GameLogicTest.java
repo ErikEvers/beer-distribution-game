@@ -1,9 +1,9 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
@@ -52,7 +52,7 @@ public class GameLogicTest {
 
     @Test
     public void letAgentTakeOverPlayerReplacesPlayer() {
-        gameLogic.letAgentTakeOverPlayer(mock(AgentParticipant.class));
+        gameLogic.letAgentTakeOverPlayer(mock(Agent.class));
         verify(participantsPool, times(1)).replacePlayerWithAgent(any());
     }
 
