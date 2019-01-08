@@ -119,7 +119,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     @Override
     public void requestFacilityUsage(Facility facility) {
-        //Yet to be implemented
+        communication.requestFacilityUsage(facility);
     }
 
     @Override
