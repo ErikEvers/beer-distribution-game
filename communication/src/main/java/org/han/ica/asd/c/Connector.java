@@ -17,14 +17,15 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+//@Singleton
 public class Connector implements IConnecterForSetup {
-    private static Connector instance = null;
+
     private ArrayList<IConnectorObserver> observers;
 
     @Inject
@@ -50,7 +51,12 @@ public class Connector implements IConnecterForSetup {
 
     private IFinder finder;
 
+
     public Connector() {
+    //Inject
+    }
+
+    public void start(){
         observers = new ArrayList<>();
         finder = new RoomFinder();
 
@@ -63,7 +69,6 @@ public class Connector implements IConnecterForSetup {
         socketServer.setServerObserver(messageDirector);
         socketServer.startThread();
     }
-
 
     public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer) {
         observers = new ArrayList<>();
@@ -85,13 +90,13 @@ public class Connector implements IConnecterForSetup {
         socketServer.startThread();
     }
 
-    //TODO replace with GUICE, inject singleton
-    public static Connector getInstance() {
-        if (instance == null) {
-            instance = new Connector();
-        }
-        return instance;
-    }
+//    //TODO replace with GUICE, inject singleton
+//    public static Connector getInstance() {
+//        if (instance == null) {
+//            instance = new Connector();
+//        }
+//        return instance;
+//    }
 
     public List<String> getAvailableRooms() {
         try {

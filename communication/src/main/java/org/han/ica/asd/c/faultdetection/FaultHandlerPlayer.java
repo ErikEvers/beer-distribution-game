@@ -43,10 +43,12 @@ public class FaultHandlerPlayer {
     }
 
     public String whoIsDead() {
-
+//TODO REMOVE PRINTLN's
         if (amountOfFailingIps == amountOfActiveIps) {
+            System.out.println("I AM DEAD");
             return "imDead";
         } else {
+            System.out.println("LEADER IS DEAD");
             return "leaderIsDead";
         }
     }

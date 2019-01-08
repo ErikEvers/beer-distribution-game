@@ -1,8 +1,6 @@
 package org.han.ica.asd.c.socketrpc;
 
 
-import org.han.ica.asd.c.MessageDirector;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;

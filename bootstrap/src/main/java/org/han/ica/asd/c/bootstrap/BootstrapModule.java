@@ -49,6 +49,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("ChooseFacility")).to(ChooseFacility.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ChooseAgent")).to(ChooseAgent.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
+
 		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 
 		staticRequests();
@@ -61,8 +62,8 @@ public class BootstrapModule extends AbstractModuleExtension {
 		requestStaticInjection(FailLog.class);
 		requestStaticInjection(FaultDetectionClient.class);
 		requestStaticInjection(FaultDetectorLeader.class);
-		requestStaticInjection(GameMessageClient.class);
 		requestStaticInjection(Connector.class);
+		requestStaticInjection(GameMessageClient.class);
 		requestStaticInjection(SendInTransaction.class);
 	}
 }

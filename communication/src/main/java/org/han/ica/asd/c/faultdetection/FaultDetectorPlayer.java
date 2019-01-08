@@ -20,6 +20,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
 
     private long lastReceived;
+
     private boolean leaderIsPinging;
 
     @Inject
@@ -44,6 +45,7 @@ public class FaultDetectorPlayer extends TimerTask {
     FaultDetectorPlayer() {
         this.lastReceived = System.currentTimeMillis();
         leaderIsPinging = true;
+        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
     }
 
     public void start() {
