@@ -151,8 +151,8 @@ public class Action extends ASTNode {
         if(person != null){
             if(person.getPerson().contains(FacilityType.FACTORY.getName())){
                 facilityId = facilities.get(FacilityType.FACTORY.getIndex()).get(separateFacilityId());
-            } else if(person.getPerson().contains(FacilityType.DISTRIBUTOR.getName())){
-                facilityId = facilities.get(FacilityType.DISTRIBUTOR.getIndex()).get(separateFacilityId());
+            } else if(person.getPerson().contains(FacilityType.REGIONALWAREHOUSE.getName())){
+                facilityId = facilities.get(FacilityType.REGIONALWAREHOUSE.getIndex()).get(separateFacilityId());
             } else if(person.getPerson().contains(FacilityType.WHOLESALER.getName())){
                 facilityId = facilities.get(FacilityType.WHOLESALER.getIndex()).get(separateFacilityId());
             } else {

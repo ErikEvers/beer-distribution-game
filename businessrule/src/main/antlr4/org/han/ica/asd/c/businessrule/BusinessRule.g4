@@ -11,7 +11,7 @@ FROM : 'from';
 TO : 'to';
 ENTER : [\n];
 WHERE: 'where';
-NODE : ('factory' | 'distributor' | 'wholesaler' | 'retailer') (' '?[0-9]+)?;
+NODE : ('factory' | 'regional warehouse' | 'wholesaler' | 'retailer') (' '?[0-9]+)?;
 
 GAME_VALUE: 'inventory' | 'stock' | 'backlog' | 'incoming order' | 'back orders';
 INT_VALUE: [0-9]+;
