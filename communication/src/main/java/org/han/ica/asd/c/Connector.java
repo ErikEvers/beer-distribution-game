@@ -54,10 +54,10 @@ public class Connector implements IConnecterForSetup {
 
 
     public Connector() {
-    //Inject
+        //Inject
     }
 
-    public void start(){
+    public void start() {
         observers = new ArrayList<>();
         finder = new RoomFinder();
 
@@ -117,6 +117,7 @@ public class Connector implements IConnecterForSetup {
             if (makeConnection(joinedRoom.getLeaderIP())) {
                 addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
                 setJoiner();
+
                 return joinedRoom;
             }
         } catch (DiscoveryException e) {
