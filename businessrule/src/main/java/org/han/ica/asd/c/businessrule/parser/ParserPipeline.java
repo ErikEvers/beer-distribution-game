@@ -94,7 +94,7 @@ public class ParserPipeline {
                 String alternative = alternativeFinder.findAlternative(errorWord);
 
                 StringBuilder builder = new StringBuilder();
-                builder.append(errorMessage)
+                builder.append(errorMessage);
                 if (!alternative.isEmpty()){
                     builder.append(" Did you mean: '" + alternative + "'?");
                 } else {
