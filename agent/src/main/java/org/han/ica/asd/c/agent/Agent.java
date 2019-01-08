@@ -30,7 +30,7 @@ public class Agent extends GameAgent implements IParticipant {
      * @param gameAgentName The name of the agent
      * @param facility      Which facility it's representing
      */
-    Agent(Configuration configuration, String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
+	public Agent(Configuration configuration, String gameAgentName, Facility facility, List<GameBusinessRules> gameBusinessRulesList) {
         super(gameAgentName, facility, gameBusinessRulesList);
         this.configuration = configuration;
     }

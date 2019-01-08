@@ -1,10 +1,9 @@
 package org.han.ica.asd.c.gameleader;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
@@ -69,10 +68,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public void playerIsDisconnected(String playerId) {
         for (int i = 0; i <= game.getPlayers().size(); i++) {
             if (game.getPlayers().get(i).getPlayerId().equals(playerId)) {
-                GameAgent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
+                Agent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
                 if (agent != null) {
-                    IParticipant participant = new AgentParticipant(agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
-                    gameLogic.addLocalParticipant(participant);
+                    gameLogic.addLocalParticipant(agent);
                     return;
                 }
             }
@@ -145,10 +143,10 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         return turnsReceivedInCurrentRound;
     }
 
-    GameAgent getAgentByFacility (int facilityId) {
+    Agent getAgentByFacility (int facilityId) {
         for (GameAgent agent : game.getAgents()) {
             if (agent.getFacility().getFacilityId() == facilityId) {
-                return agent;
+                return new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
             }
         }
         return null;
