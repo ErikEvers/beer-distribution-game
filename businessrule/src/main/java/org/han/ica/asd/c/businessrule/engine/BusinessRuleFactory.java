@@ -4,6 +4,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
@@ -24,6 +25,7 @@ class BusinessRuleFactory {
         astNodeClassMap.put("A", Action.class);
         astNodeClassMap.put("C", Comparison.class);
         astNodeClassMap.put("D", Default.class);
+	    astNodeClassMap.put("P", Person.class);
         astNodeClassMap.put("V", Value.class);
         astNodeClassMap.put("AR", ActionReference.class);
         astNodeClassMap.put("CV", ComparisonValue.class);
