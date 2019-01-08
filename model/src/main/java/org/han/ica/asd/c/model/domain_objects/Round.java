@@ -1,10 +1,11 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Round implements IDomainModel{
+public class Round implements IDomainModel, Serializable {
     private int roundId;
     private Map<Facility, Map<Facility, Integer>> turnOrder;
     private Map<Facility, Map<Facility, Integer>> turnDeliver;

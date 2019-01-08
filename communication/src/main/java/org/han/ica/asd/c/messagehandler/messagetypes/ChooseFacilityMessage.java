@@ -34,4 +34,7 @@ public class ChooseFacilityMessage extends GameMessage{
         chooseFacilityMessage.setException(exception);
         return chooseFacilityMessage;
     }
+    public ChooseFacilityMessage createResponseMessage(){
+        return new ChooseFacilityMessage(null);
+    }
 }

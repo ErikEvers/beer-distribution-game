@@ -144,7 +144,7 @@ private static Connector instance = null;
     }
 
     @Override
-    public void chooseFacility(Facility facility) {
+    public void chooseFacility(Facility facility) throws Exception {
         gameMessageClient.sendChooseFacilityMessage("leader ip", facility);
     }
 

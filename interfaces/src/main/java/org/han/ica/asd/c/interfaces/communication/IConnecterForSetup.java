@@ -15,7 +15,7 @@ public interface IConnecterForSetup {
     void removeHostFromRoom(RoomModel room, String hostIP);
     void removeYourselfFromRoom(RoomModel room);
     void startRoom(RoomModel room);
-
-    void chooseFacility(Facility facility);
+    void addObserver(IConnectorObserver connectorObserver);
+    void chooseFacility(Facility facility) throws Exception;
     List<Facility> getAllFacilities();
 }

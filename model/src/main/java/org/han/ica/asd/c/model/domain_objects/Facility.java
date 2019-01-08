@@ -1,8 +1,9 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Facility implements IDomainModel{
+public class Facility implements IDomainModel, Serializable {
     private FacilityType facilityType;
     private List<FacilityLinkedTo> facilitiesLinkedTo;
     private Player player;

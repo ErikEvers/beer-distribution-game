@@ -60,23 +60,24 @@ public class GameMessageClient {
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip){
+    public String sendWhoIsTheLeaderMessage(String ip){
         WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {
             whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.SEVERE,e.getMessage());
         }
-        return whoIsTheLeaderMessageReturn;
+        return whoIsTheLeaderMessageReturn.getResponse();
     }
 
-    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility){
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws Exception {
         ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
         try {
             ChooseFacilityMessage response = null;
             chooseFacilityMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
             if (response.getException() != null){
                 LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
+                throw response.getException();
             }
             return response;
         } catch (IOException | ClassNotFoundException e) {
