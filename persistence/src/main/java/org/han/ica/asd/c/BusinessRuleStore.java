@@ -32,6 +32,9 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     @Inject
     FacilityDAO facilityDAO;
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public List<String> readInputBusinessRules(String agentName) {
         List<String> returnBusinessRules = new ArrayList<>();
@@ -42,6 +45,9 @@ public class BusinessRuleStore implements IBusinessRuleStore {
         return returnBusinessRules;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap) {
         programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
@@ -53,6 +59,9 @@ public class BusinessRuleStore implements IBusinessRuleStore {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public List<List<String>> getAllFacilities() {
         List<List<String>> returnList = new ArrayList<>();
@@ -102,6 +111,9 @@ public class BusinessRuleStore implements IBusinessRuleStore {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public List<String> getAllProgrammedAgents() {
         List<String> programmedAgentNames = new ArrayList<>();
@@ -114,6 +126,9 @@ public class BusinessRuleStore implements IBusinessRuleStore {
         return programmedAgentNames;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void deleteProgrammedAgent(String agentName) {
         ProgrammedAgent programmedAgent = new ProgrammedAgent(agentName, null);
