@@ -14,12 +14,12 @@ public class PlayerComponent implements IPlayerComponent {
 
 	@Override
 	public void activatePlayer() {
-
+		//stub for now
 	}
 
 	@Override
 	public void activateGameAgent() {
-
+		//stub for now
 	}
 
 	public Map<Facility, List<Facility>> seeOtherFacilities() {
@@ -36,17 +36,17 @@ public class PlayerComponent implements IPlayerComponent {
 
 	@Override
 	public void placeOrder(int amount) {
-
+		//stub for now
 	}
 
 	@Override
 	public void selectProgrammedAgent(ProgrammedAgent programmedagent) {
-
+		//stub for now
 	}
 
 	@Override
 	public void chooseFacility(Facility facility) {
-
+		//stub for now
 	}
 
 	public String requestFacilityInfo(Facility facility) {
