@@ -78,8 +78,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     @Override
     public List<String> getAllGames() {
-        //Yet to be implemented
-        return new ArrayList<>();
+        return communication.getAllGames();
     }
 
     @Override
