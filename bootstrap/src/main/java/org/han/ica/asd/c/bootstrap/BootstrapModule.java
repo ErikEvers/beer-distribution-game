@@ -10,6 +10,7 @@ import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.faultdetection.FailLog;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
+import org.han.ica.asd.c.faultdetection.FaultResponder;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
@@ -62,6 +63,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		requestStaticInjection(FailLog.class);
 		requestStaticInjection(FaultDetectionClient.class);
 		requestStaticInjection(FaultDetectorLeader.class);
+		requestStaticInjection(FaultResponder.class);
 		requestStaticInjection(Connector.class);
 		requestStaticInjection(GameMessageClient.class);
 		requestStaticInjection(SendInTransaction.class);

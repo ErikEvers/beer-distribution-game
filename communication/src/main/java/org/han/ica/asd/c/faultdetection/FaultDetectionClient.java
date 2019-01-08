@@ -57,7 +57,6 @@ public class FaultDetectionClient {
         try {
             socketClient.makeConnection(ipAddress, new PingMessage());
         } catch (IOException e) {
-            logger.log(Level.INFO, e.getMessage(), e);
             throw new NodeCantBeReachedException(e);
         }
 
@@ -142,13 +141,11 @@ public class FaultDetectionClient {
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.writeObject(object);
             } catch (IOException se) {
-                logger.log(Level.INFO, se.getMessage(), se);
                 throw new NodeCantBeReachedException(se);
             }
             try {
                 socketClient.sendObject(ipAddress, object);
             } catch (IOException e) {
-                logger.log(Level.INFO, e.getMessage(), e);
                 throw new NodeCantBeReachedException(e);
             }
         }

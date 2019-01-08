@@ -9,12 +9,13 @@ import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class FaultResponder {
+public class FaultResponder {
 	@Inject private static Logger logger;
 
+	@Inject
 	private FaultDetectionClient faultDetectionClient;
 
-	FaultResponder() {
+	public FaultResponder() {
 	}
 
 	public void faultMessageReceived(FaultMessage faultMessage, String senderIp) {

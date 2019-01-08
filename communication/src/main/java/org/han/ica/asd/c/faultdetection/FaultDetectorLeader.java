@@ -67,11 +67,11 @@ public class FaultDetectorLeader extends TimerTask {
     public void run() {
         //TODO remove the printlns.
         //Tries to make the connection once every set interval.
-        ips = nodeInfoList.getActiveIps();
+        ips = nodeInfoList.getActiveIpsWithoutLeader();
         for (String ip : ips) {
             logger.log(Level.INFO, "Sending Ping to : {0} : {1}", new Object[]{ip, new Date()});
             makeConnection(ip);
-            logger.log(Level.INFO,"Ping Sent: {0}", new Date());
+            logger.log(Level.INFO, "Ping Sent: {0}", new Date());
         }
 
         //Checks if node wasn't reached 3 times, it then sends a faultMessage to all peers that can be reached.
@@ -93,6 +93,7 @@ public class FaultDetectorLeader extends TimerTask {
         //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        faultHandlerLeader.setObservers(observers);
     }
 
     /**
@@ -130,7 +131,7 @@ public class FaultDetectorLeader extends TimerTask {
      * @see FaultHandlerLeader
      */
     public void checkIfThisMachineIsDisconnected() {
-        if (failLog.getSuccessSize() <= 1) {
+        if (failLog.getSuccessSize() < 1) {
             //If the Leader can only reach himself and noone else, he is probably disconnected so no longer leader.
             faultHandlerLeader.iAmDisconnected();
             timer.cancel();
@@ -250,7 +251,6 @@ public class FaultDetectorLeader extends TimerTask {
         this.nodeInfoList = nodeInfoList;
         failLog.setNodeInfoList(nodeInfoList);
     }
-
 
     /**
      * Gets observers.

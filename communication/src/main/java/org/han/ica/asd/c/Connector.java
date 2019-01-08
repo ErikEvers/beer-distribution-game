@@ -17,13 +17,12 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//@Singleton
+
 public class Connector implements IConnecterForSetup {
 
     private ArrayList<IConnectorObserver> observers;

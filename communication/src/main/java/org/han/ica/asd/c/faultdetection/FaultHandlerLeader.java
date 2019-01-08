@@ -43,15 +43,17 @@ public class FaultHandlerLeader {
     public String incrementFailure(String ip) {
         increment(ip);
 
-        if (amountOfFailsPerIp.get(ip).equals(nodeInfoList.size())) {
+        if (amountOfFailsPerIp.get(ip) > 0) {
 
             nodeInfoList.updateIsConnected(ip, false);
 
             notifyObserversPlayerDied(ip);
 
             return ip;
+        } else {
+            //This should start a relay system.
+            return null;
         }
-        return null;
     }
 
     /**
@@ -113,6 +115,7 @@ public class FaultHandlerLeader {
 
     /**
      * Notifies every observer that a node can't be reached and is disconnected.
+     *
      * @param ip The ip that was not reached.
      * @author Tarik
      */
