@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.UUID.randomUUID;
+
 
 public class BeergameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
@@ -48,7 +50,7 @@ public class BeergameDAO {
 	 * @param gameName The specified name of the game
 	 */
 	public void createBeergame(String gameName) {
-		String UUID = java.util.UUID.randomUUID().toString();
+		String UUID = randomUUID().toString();
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
