@@ -77,6 +77,9 @@ class EvaluatorTest {
     @Test
     void testEvaluate_Called_evaluate() throws Exception {
         Map<UserInputBusinessRule,BusinessRule> list = new HashMap<>();
+        UserInputBusinessRule businessRulesInput = new UserInputBusinessRule("if inventory is 20 order 20",1);
+        BusinessRule businessRulesParsed = new BusinessRule();
+        list.put(businessRulesInput, businessRulesParsed);
 
         Evaluator spy = PowerMockito.spy(new Evaluator());
 

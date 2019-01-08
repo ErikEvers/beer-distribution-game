@@ -58,7 +58,7 @@ public class ActionTest {
     @Test
     void testAction_GetFacilityId_Distributor(){
         Action action = actionProvider.get();
-        action.addChild(personProvider.get().addValue("distributor 1"));
+        action.addChild(personProvider.get().addValue("regional warehouse 1"));
 
         int exp = 3;
         int res = action.getFacilityId();

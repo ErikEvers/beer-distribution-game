@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -73,7 +75,24 @@ class ParserPipelineTest {
     }
 
     @Test
-    void test(){
+    void testEncodeBusinessRules(){
+        parserPipeline.parseString("default order 20");
+
+        try {
+            Whitebox.invokeMethod(parserPipeline, "encodeBusinessRules");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Map<String, String> res = parserPipeline.getBusinessRulesMap();
+        Map<String, String> exp = new HashMap<>();
+        exp.put("default order 20","BR(D()A(AR(order)V(20)))");
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testSyntaxError(){
         boolean res = parserPipeline.parseString("defaul order 20");
 
         boolean exp = false;

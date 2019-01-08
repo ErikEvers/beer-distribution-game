@@ -43,7 +43,7 @@ public class Person extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX + personNode, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX + personNode);
     }
 
     /**
