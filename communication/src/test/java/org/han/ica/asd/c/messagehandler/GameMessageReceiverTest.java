@@ -98,7 +98,10 @@ public class GameMessageReceiverTest {
         ConfigurationMessage configurationMessageCommit = new ConfigurationMessage(configuration);
         configurationMessageCommit.setPhaseToCommit();
 
+        when(gameMessageFilterer.isUnique(configurationMessageStage)).thenReturn(true);
         gameMessageReceiver.gameMessageReceived(configurationMessageStage);
+
+        when(gameMessageFilterer.isUnique(configurationMessageCommit)).thenReturn(true);
         gameMessageReceiver.gameMessageReceived(configurationMessageCommit);
 
         verify(gameConfigurationObserver).gameConfigurationReceived(configuration);
