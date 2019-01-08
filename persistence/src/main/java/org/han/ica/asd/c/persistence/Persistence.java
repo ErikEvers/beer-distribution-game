@@ -3,6 +3,7 @@ package org.han.ica.asd.c.persistence;
 
 import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
+import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -28,6 +29,9 @@ public class Persistence implements IPersistence {
 
 	@Inject
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
+
+	@Inject
+	private PlayerDAO playerDAO;
 
 
 	public Persistence(){
@@ -62,8 +66,7 @@ public class Persistence implements IPersistence {
 
 	@Override
 	public Player getPlayerById(String playerId) {
-		//stub
-		return null;
+		return playerDAO.getPlayer(playerId);
 	}
 
 

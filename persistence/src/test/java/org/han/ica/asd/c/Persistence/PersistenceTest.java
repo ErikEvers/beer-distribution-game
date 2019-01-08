@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
+import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
@@ -14,6 +15,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,9 +38,11 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 class PersistenceTest {
 	private RoundDAO roundDAOMock;
 	private BeergameDAO beerGameDAOMock;
+	private PlayerDAO playerDAOMock;
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnMock;
 	private Persistence persistence;
 	private Round round;
+	private Player player;
 	private BeerGame beerGame;
 	private GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn;
 	private GameBusinessRules businessrules;
@@ -57,7 +61,7 @@ class PersistenceTest {
 		facilityTurnOrders.add(new FacilityTurnOrder(1,1,1));
 		facilityTurnDelivers.add(new FacilityTurnDeliver(1,1,1,1));
 
-
+		player = new Player();
 		businessRulesList = new ArrayList<>();
 		businessrules = new GameBusinessRules("Test","");
 		businessRulesList.add(businessrules);
@@ -76,6 +80,9 @@ class PersistenceTest {
 		gameBusinessRulesInFacilityTurnMock = mock(GameBusinessRulesInFacilityTurnDAO.class);
 		when((gameBusinessRulesInFacilityTurnMock).readTurn(anyInt(),anyInt(),anyString())).thenReturn(gameBusinessRulesInFacilityTurn);
 
+		playerDAOMock = mock(PlayerDAO.class);
+		when(playerDAOMock.getPlayer(anyString())).thenReturn(player);
+
 		round = mock(Round.class);
 		when(round.getFacilityTurns()).thenReturn(facilityTurns);
 		when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
@@ -90,6 +97,7 @@ class PersistenceTest {
 				bind(RoundDAO.class).toInstance(roundDAOMock);
 				bind(BeergameDAO.class).toInstance(beerGameDAOMock);
 				bind(GameBusinessRulesInFacilityTurnDAO.class).toInstance(gameBusinessRulesInFacilityTurnMock);
+				bind(PlayerDAO.class).toInstance(playerDAOMock);
 			}
 		});
 
@@ -132,5 +140,11 @@ class PersistenceTest {
 		verify((roundDAOMock),times(1)).createFacilityOrder(anyInt(),any(FacilityTurnOrder.class));
 		verify((roundDAOMock),times(1)).createFacilityDeliver(anyInt(),any(FacilityTurnDeliver.class));
 		verify((roundDAOMock),times(1)).createFacilityTurn(anyInt(),any(FacilityTurn.class));
+	}
+
+	@Test
+	void getPlayerByIdTest(){
+		persistence.getPlayerById("Henk");
+		verify((playerDAOMock),times(1)).getPlayer(anyString());
 	}
 }
