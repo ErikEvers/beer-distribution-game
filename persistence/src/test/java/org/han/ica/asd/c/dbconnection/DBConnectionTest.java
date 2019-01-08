@@ -13,12 +13,13 @@ import java.util.logging.Logger;
 @Singleton
 public class DBConnectionTest implements IDatabaseConnection {
 	private static final Path currentDir = Paths.get("");
-	private static final String CONNECTIONSTRING = "jdbc:sqlite:"+currentDir.toAbsolutePath().toString()+File.separator+"src"+ File.separator+"test"+File.separator+"resources"+File.separator;
+	private static final String CONNECTIONSTRING = "jdbc:sqlite:"+currentDir.toAbsolutePath().toString()+File.separator+"src"+File.separator+"test"+File.separator+"resources"+File.separator;
 	private static final String DATABASENAME = "BeerGameDBTest.db";
 	private static final Logger LOGGER = Logger.getLogger(DBConnectionTest.class.getName());
 	private static volatile DBConnectionTest mInstance;
 
 	public DBConnectionTest() {
+		createNewDatabase();
 	}
 
 	public static DBConnectionTest getInstance() {
@@ -34,8 +35,11 @@ public class DBConnectionTest implements IDatabaseConnection {
 
 
 	public void createNewDatabase() {
-		runSQLScript("cleanup.sql");
-		runSQLScript("ddl.sql");
+		File file = new File(CONNECTIONSTRING+DATABASENAME);
+		if(!file.exists()) {
+			runSQLScript("cleanup.sql");
+			runSQLScript("ddl.sql");
+		}
 	}
 
 	public void runSQLScript(String scriptname)
