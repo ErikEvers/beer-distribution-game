@@ -9,4 +9,5 @@ public interface IConnectedForPlayer {
     void sendTurnData(Round turn);
     void addObserver(IConnectorObserver observer);
     List<String> getAllGames();
+    void connectToGame(String game);
 }
