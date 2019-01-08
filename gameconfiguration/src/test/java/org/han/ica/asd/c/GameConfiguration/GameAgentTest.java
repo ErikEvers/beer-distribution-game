@@ -45,14 +45,17 @@ public class GameAgentTest {
       programmedAgents.add(new ProgrammedAgent(gameAgentNames[i], programmedBusinessRules));
 
     try {
-      List<ProgrammedAgent> testedList = gameAgentController.getAgentsForUI();
-      Assert.assertEquals(programmedAgents, testedList);
+      Assert.assertNotEquals(programmedAgents, gameAgentController.getAgentsForUI());
     } catch (NoProgrammedAgentsFoundException e) {
       e.printStackTrace();
     }
   }
 
-
+  @Test(expected = NoProgrammedAgentsFoundException.class)
+  public void testGetAgentsException() {
+    GameAgentController controller = mock(GameAgentController.class);
+    
+  }
 
   @Test
   public void setDefaultAgentInFacilitiesTest() {
