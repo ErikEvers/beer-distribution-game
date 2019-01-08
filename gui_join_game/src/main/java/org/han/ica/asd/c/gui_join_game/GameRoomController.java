@@ -44,7 +44,7 @@ public class GameRoomController {
     	this.configuration = new Configuration();
 
 			Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,0,0,0,0, 0), 0);
-			Facility wholesale = new Facility(new FacilityType("Wholesale", 0, 0,0,0,0,0, 0), 1);
+			Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,0,0,0,0, 0), 1);
 			Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,0,0,0,0, 0), 2);
 			Facility factory = new Facility(new FacilityType("Factory", 0, 0,0,0,0,0, 0), 3);
 
@@ -73,7 +73,7 @@ public class GameRoomController {
 
 			configuration.setAmountOfWarehouses(1);
 			configuration.setAmountOfFactories(1);
-			configuration.setAmountOfWholesales(1);
+			configuration.setAmountOfWholesalers(1);
 			configuration.setAmountOfRetailers(1);
 
 			configuration.setAmountOfRounds(20);

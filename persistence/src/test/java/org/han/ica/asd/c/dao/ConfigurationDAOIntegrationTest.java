@@ -54,7 +54,7 @@ class ConfigurationDAOIntegrationTest {
 		Assert.assertEquals(CONFIGURATION.getMinimalOrderRetail(),configuration.getMinimalOrderRetail());
 		Assert.assertEquals(CONFIGURATION.getAmountOfFactories(),configuration.getAmountOfFactories());
 		Assert.assertEquals(CONFIGURATION.getAmountOfWarehouses(),configuration.getAmountOfWarehouses());
-		Assert.assertEquals(CONFIGURATION.getAmountOfWholesales(),configuration.getAmountOfWholesales());
+		Assert.assertEquals(CONFIGURATION.getAmountOfWholesalers(),configuration.getAmountOfWholesalers());
 		Assert.assertEquals(CONFIGURATION.getAmountOfRetailers(),configuration.getAmountOfRetailers());
 		Assert.assertEquals(CONFIGURATION.isContinuePlayingWhenBankrupt(),configuration.isContinuePlayingWhenBankrupt());
 		Assert.assertEquals(CONFIGURATION.isInsightFacilities(),configuration.isInsightFacilities());
@@ -84,7 +84,7 @@ class ConfigurationDAOIntegrationTest {
 		Assert.assertEquals(CONFIGURATION3.getMinimalOrderRetail(),configurationDb.getMinimalOrderRetail());
 		Assert.assertEquals(CONFIGURATION3.getAmountOfFactories(),configurationDb.getAmountOfFactories());
 		Assert.assertEquals(CONFIGURATION3.getAmountOfWarehouses(),configurationDb.getAmountOfWarehouses());
-		Assert.assertEquals(CONFIGURATION3.getAmountOfWholesales(),configurationDb.getAmountOfWholesales());
+		Assert.assertEquals(CONFIGURATION3.getAmountOfWholesalers(),configurationDb.getAmountOfWholesalers());
 		Assert.assertEquals(CONFIGURATION3.getAmountOfRetailers(),configurationDb.getAmountOfRetailers());
 		Assert.assertEquals(CONFIGURATION3.isContinuePlayingWhenBankrupt(),configurationDb.isContinuePlayingWhenBankrupt());
 		Assert.assertEquals(CONFIGURATION3.isInsightFacilities(),configurationDb.isInsightFacilities());

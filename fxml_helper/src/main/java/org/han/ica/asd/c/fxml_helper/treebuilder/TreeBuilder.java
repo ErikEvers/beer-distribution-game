@@ -131,7 +131,7 @@ public class TreeBuilder {
 		} else if("Regional Warehouse".equalsIgnoreCase(facility.getFacilityType().getFacilityName())) {
 			drawFacilityOnScreen(facility, warehouses, 1);
 			return warehouses.get(warehouses.size()-1);
-		} else if("Wholesale".equalsIgnoreCase(facility.getFacilityType().getFacilityName())) {
+		} else if("Wholesaler".equalsIgnoreCase(facility.getFacilityType().getFacilityName())) {
 			drawFacilityOnScreen(facility, wholesalers, 2);
 			return wholesalers.get(wholesalers.size()-1);
 		} else {

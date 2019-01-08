@@ -9,7 +9,7 @@ import java.util.Map;
 public class Configuration implements IDomainModel{
     private int amountOfRounds;
     private int amountOfFactories;
-    private int amountOfWholesales;
+    private int amountOfWholesalers;
     private int amountOfWarehouses;
     private int amountOfRetailers;
     private int minimalOrderRetail;
@@ -25,13 +25,13 @@ public class Configuration implements IDomainModel{
         this.facilitiesLinkedTo = new HashMap<>();
     }
 
-    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfWarehouses, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
+    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesalers, int amountOfWarehouses, int amountOfRetailers, int minimalOrderRetail, //NOSONAR
                          int maximumOrderRetail, boolean continuePlayingWhenBankrupt, boolean insightFacilities, List<Facility> facilities, //NOSONAR
                          Map<Facility, List<Facility>> facilitiesLinkedTo) //NOSONAR
     {
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
-        this.amountOfWholesales = amountOfWholesales;
+        this.amountOfWholesalers = amountOfWholesalers;
         this.amountOfWarehouses = amountOfWarehouses;
         this.amountOfRetailers = amountOfRetailers;
         this.minimalOrderRetail = minimalOrderRetail;
@@ -42,12 +42,12 @@ public class Configuration implements IDomainModel{
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
-    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesales, int amountOfWarehouses,
+    public Configuration(int amountOfRounds, int amountOfFactories, int amountOfWholesalers, int amountOfWarehouses,
                          int amountOfRetailers, int minimalOrderRetail, int maximumOrderRetail,
                          boolean insightFacilities, boolean continuePlayingWhenBankrupt){
         this.amountOfRounds = amountOfRounds;
         this.amountOfFactories = amountOfFactories;
-        this.amountOfWholesales = amountOfWholesales;
+        this.amountOfWholesalers = amountOfWholesalers;
         this.amountOfWarehouses = amountOfWarehouses;
         this.amountOfRetailers = amountOfRetailers;
         this.minimalOrderRetail = minimalOrderRetail;
@@ -72,12 +72,12 @@ public class Configuration implements IDomainModel{
         this.amountOfFactories = amountOfFactories;
     }
 
-    public int getAmountOfWholesales() {
-        return amountOfWholesales;
+    public int getAmountOfWholesalers() {
+        return amountOfWholesalers;
     }
 
-    public void setAmountOfWholesales(int amountOfWholesales) {
-        this.amountOfWholesales = amountOfWholesales;
+    public void setAmountOfWholesalers(int amountOfWholesalers) {
+        this.amountOfWholesalers = amountOfWholesalers;
     }
 
     public int getAmountOfWarehouses() {

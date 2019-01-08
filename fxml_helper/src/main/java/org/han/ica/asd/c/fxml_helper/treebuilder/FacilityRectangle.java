@@ -28,7 +28,7 @@ public class FacilityRectangle extends Rectangle {
         } else if ("Regional Warehouse".equals(facilityType)) {
             color = "DODGERBLUE";
 
-        } else if ("Wholesale".equals(facilityType)) {
+        } else if ("Wholesaler".equals(facilityType)) {
             color = "#ffbc1f";
 
         } else if ("Retailer".equals(facilityType)) {
