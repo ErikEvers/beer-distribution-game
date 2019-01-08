@@ -185,5 +185,9 @@ public class ReplayGameScreenController {
     private void drawGraph() {
         replayGraph.setData(replayData.getChartData());
     }
+
+    public void setGameId(String gameId){
+        //TODO GET GAME VALUES.
+    }
 }
 

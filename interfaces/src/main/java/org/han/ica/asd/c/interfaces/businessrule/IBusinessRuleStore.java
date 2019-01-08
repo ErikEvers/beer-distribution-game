@@ -19,4 +19,16 @@ public interface IBusinessRuleStore {
      * @param businessRuleMap the business rules which has to be synchronized
      */
     void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap);
+
+    /**
+     * Gets all the agents from the database.
+     * @return Returns a list with all the agents programmed.
+     */
+    List<String> getAllProgrammedAgents();
+
+    /**
+     * Deletes a programmed agent with its name.
+     * @param agentName The name of a agent.
+     */
+    void deleteProgrammedAgent(String agentName);
 }
