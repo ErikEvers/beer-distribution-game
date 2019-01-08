@@ -20,8 +20,6 @@ public class Agent extends GameAgent implements IParticipant {
     @Named("businessRules")
     private IBusinessRules businessRules;
 
-    
-
     @Inject
     @Named("persistence")
     private IPersistence persistence;
