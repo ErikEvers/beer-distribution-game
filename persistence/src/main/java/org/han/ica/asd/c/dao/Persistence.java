@@ -49,12 +49,6 @@ public class Persistence implements IPersistence {
 		return null;
 	}
 
-	@Override
-	public Round fetchTurnData(Round round, Map<Facility, Facility> facilityLinkedTo) {
-		return null;
-
-	}
-
 	public BeerGame getGameLog(String gameId)
 	{
 		return null;
