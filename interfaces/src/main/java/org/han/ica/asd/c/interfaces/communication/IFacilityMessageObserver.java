@@ -5,5 +5,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
 
 public interface IFacilityMessageObserver extends IConnectorObserver {
-    List<Facility> facilityMessageReceived(Facility facility);
+    void chooseFacility(Facility facility);
+    List<Facility> getAllFacilities();
+
 }

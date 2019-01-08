@@ -5,17 +5,17 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FacilityMessage extends GameMessage{
+public class ChooseFacilityMessage extends GameMessage{
     private Facility facility;
     private List<Facility> availableFacilities;
     private static final int FACILITYMESSAGE = 5;
 
-    public FacilityMessage(Facility facility) {
+    public ChooseFacilityMessage(Facility facility) {
         super(FACILITYMESSAGE);
         this.facility = facility;
     }
 
-    public FacilityMessage(Facility facility, List<Facility> availableFacilities) {
+    public ChooseFacilityMessage(Facility facility, List<Facility> availableFacilities) {
         super(FACILITYMESSAGE);
         this.facility = facility;
         this.availableFacilities = availableFacilities;
@@ -27,5 +27,11 @@ public class FacilityMessage extends GameMessage{
 
     public List<Facility> getAvailableFacilities() {
         return availableFacilities;
+    }
+
+    public ChooseFacilityMessage createResponseMessage(Exception exception){
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(null);
+        chooseFacilityMessage.setException(exception);
+        return chooseFacilityMessage;
     }
 }

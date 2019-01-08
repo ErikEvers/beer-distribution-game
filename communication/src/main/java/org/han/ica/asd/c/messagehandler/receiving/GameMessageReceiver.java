@@ -31,6 +31,7 @@ public class GameMessageReceiver {
     private static final int ELECTION_MESSAGE = 3;
     private static final int WHO_IS_THE_LEADER_MESSAGE = 4;
     private static final int FACILITY_MESSAGE = 5;
+    private static final int REQUEST_ALL_FACILITIES_MESSAGE = 6;
 
     private ArrayList<IConnectorObserver> gameMessageObservers;
 
@@ -59,6 +60,19 @@ public class GameMessageReceiver {
             return TurnModelMessage.createResponseMessage(true);
         } catch (Exception e) {
             return TurnModelMessage.createResponseMessage(e);
+        }
+    }
+
+    private ChooseFacilityMessage handleChooseFacilityMessage(ChooseFacilityMessage chooseFacilityMessage) {
+        try {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof IFacilityMessageObserver) {
+                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
+                }
+            }
+            return chooseFacilityMessage;
+        } catch (Exception e) {
+            return chooseFacilityMessage.createResponseMessage(e);
         }
     }
 
@@ -126,8 +140,11 @@ public class GameMessageReceiver {
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
                 case FACILITY_MESSAGE:
-                    FacilityMessage facilityMessage = (FacilityMessage) gameMessage;
-                    return handleFacilityMessage(facilityMessage);
+                    ChooseFacilityMessage chooseFacilityMessage = (ChooseFacilityMessage) gameMessage;
+                    return handleFacilityMessage(chooseFacilityMessage);
+                case REQUEST_ALL_FACILITIES_MESSAGE:
+                    RequestAllFacilitiesMessage requestAllFacilitiesMessage = (RequestAllFacilitiesMessage) gameMessage;
+                    return handleRequestAllFacilities(requestAllFacilitiesMessage);
                 default:
                     break;
             }
@@ -149,11 +166,24 @@ public class GameMessageReceiver {
         return messageProcessor.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
     }
 
-    private FacilityMessage handleFacilityMessage(FacilityMessage facilityMessage){
+    private ChooseFacilityMessage handleFacilityMessage(ChooseFacilityMessage chooseFacilityMessage){
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
                 try {
-                    return new FacilityMessage(facilityMessage.getFacility(), ((IFacilityMessageObserver) observer).facilityMessageReceived(facilityMessage.getFacility()));
+                    return new ChooseFacilityMessage(chooseFacilityMessage.getFacility());
+                }catch (Exception e){
+                    LOGGER.log(Level.SEVERE,e.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    private RequestAllFacilitiesMessage handleRequestAllFacilities(RequestAllFacilitiesMessage requestAllFacilitiesMessage){
+        for (IConnectorObserver observer : gameMessageObservers) {
+            if (observer instanceof IFacilityMessageObserver) {
+                try {
+                    return new RequestAllFacilitiesMessage();
                 }catch (Exception e){
                     LOGGER.log(Level.SEVERE,e.getMessage());
                 }

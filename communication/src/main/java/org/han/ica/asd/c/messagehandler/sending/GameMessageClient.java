@@ -1,15 +1,16 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
-import org.han.ica.asd.c.messagehandler.messagetypes.FacilityMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,14 +70,34 @@ public class GameMessageClient {
         return whoIsTheLeaderMessageReturn;
     }
 
-    public FacilityMessage sendFacilityMessage(String ip, Facility facility){
-        FacilityMessage facilityMessageReturn = new FacilityMessage(facility);
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility){
+        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
         try {
-            facilityMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, facilityMessageReturn);
+            ChooseFacilityMessage response = null;
+            chooseFacilityMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
+            if (response.getException() != null){
+                LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
+            }
+            return response;
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.SEVERE,e.getMessage());
         }
-        return facilityMessageReturn;
+        return chooseFacilityMessageReturn;
+    }
+
+    public List<Facility> sendAllFacilitiesRequestMessage(String ip){
+        RequestAllFacilitiesMessage requestAllFacilitiesMessage = new RequestAllFacilitiesMessage();
+        try {
+            RequestAllFacilitiesMessage response = null;
+            response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
+            if (response.getException() != null){
+                LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
+            }
+            return response.getFacilities();
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE,e.getMessage());
+        }
+        return null;
     }
 
     /**
