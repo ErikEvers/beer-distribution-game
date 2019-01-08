@@ -13,6 +13,6 @@ public class JoinGame implements IGUIHandler {
 
     @Override
     public void setupScreen() {
-        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/JoinGame.fxml"));
+        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/JoinGame.fxml"));
     }
 }

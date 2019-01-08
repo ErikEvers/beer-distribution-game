@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.gui_main_menu;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import javafx.scene.control.Button;
@@ -12,9 +12,6 @@ import javax.inject.Named;
 
 
 public class MainMenuController {
-
-    @FXML
-    private AnchorPane mainContainer;
 
     @FXML
     private Button close;
@@ -32,40 +29,36 @@ public class MainMenuController {
     @Named("GameSetupStart")
     private IGUIHandler gameSetupStart;
 
-
     @Inject
     @Named("ProgramAgentList")
     private IGUIHandler programAgentList;
 
     @Inject
-    @Named("ReplayGame")
-    private IGUIHandler replayGame;
+    @Named("ReplayGameList")
+    private IGUIHandler replayGameList;
 
     @Inject
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
     public void initialize() {
-        mainContainer.getChildren().addAll();
-        setCloseButtonAction();
-        setProgramAgentButtonAction();
-        setReplayButtonAction();
         setCreateGameButtonAction();
     }
 
-    private void setCloseButtonAction() {
-        close.setOnAction(event -> {
-            Stage stage = (Stage) close.getScene().getWindow();
-            stage.close();
-        });
+    @FXML
+    private void closeButtonAction() {
+        Stage stage = (Stage) close.getScene().getWindow();
+        stage.close();
     }
 
-    private void setProgramAgentButtonAction() {
-        createAgent.setOnAction(event -> programAgentList.setupScreen());
+    @FXML
+    public void programAgentButtonAction() {
+        programAgentList.setupScreen();
     }
 
-    private void setReplayButtonAction() {
-        replay.setOnAction(event -> replayGame.setupScreen());
+    @FXML
+    private void replayButtonAction() {
+        replayGameList.setupScreen();
     }
 
     public void handleJoinGameButtonClick() {

@@ -51,18 +51,26 @@
                 <Button fx:id="createGame" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
                         style="-fx-background-color: ff8000;" text="Create Game" textFill="WHITE" wrapText="true"
                         GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <Button onAction="#handleJoinGameButtonClick" mnemonicParsing="false" prefHeight="25.0"
-                        prefWidth="200.0" style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Join Game"
-                        textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                <Button fx:id="createAgent" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
-                        style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Create Agent" textFill="WHITE"
-                        wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                <Button fx:id="replay" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
-                        style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Replay game" textFill="WHITE"
-                        wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
-                        style="-fx-background-color: ff8000; -fx-cursor: hand;" text="Close Game" textFill="WHITE"
-                        wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                <Button ellipsisString="" mnemonicParsing="false" prefHeight="40.0" prefWidth="200.0"
+                        style="-fx-background-color: ff8000;" text="%create_game" textFill="WHITE" wrapText="true"
+                        GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                        GridPane.valignment="CENTER"/>
+                <Button mnemonicParsing="false" onAction="#handleJoinGameButtonClick" prefHeight="40.0"
+                        prefWidth="200.0" style="-fx-background-color: ff8000;" text="%join_game" textFill="WHITE"
+                        wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                        GridPane.valignment="CENTER"/>
+                <Button mnemonicParsing="false" onAction="#programAgentButtonAction" prefHeight="40.0" prefWidth="200.0"
+                        style="-fx-background-color: ff8000;" text="%create_agent_business_rules" textFill="WHITE"
+                        wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"
+                        GridPane.valignment="CENTER"/>
+                <Button mnemonicParsing="false" onAction="#replayButtonAction" prefHeight="40.0" prefWidth="200.0"
+                        style="-fx-background-color: ff8000;" text="%replay_game" textFill="WHITE" wrapText="true"
+                        GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4"
+                        GridPane.valignment="CENTER"/>
+                <Button fx:id="close" mnemonicParsing="false" onAction="#closeButtonAction" prefHeight="40.0"
+                        prefWidth="200.0" style="-fx-background-color: ff8000;" text="%close_game" textFill="WHITE"
+                        wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5"
+                        GridPane.valignment="CENTER"/>
             </children>
         </GridPane>
     </children>

@@ -8,11 +8,12 @@ import java.util.ResourceBundle;
 public class AgentList implements IGUIHandler {
     @Override
     public void setData(Object[] data) {
+        // implement interface
 
     }
 
     @Override
     public void setupScreen() {
-        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/AgentList.fxml"));
+        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/AgentList.fxml"));
     }
 }
