@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.dao;
 
 
+import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
 import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
@@ -16,7 +17,7 @@ import javax.inject.Inject;
 import java.util.Map;
 
 
-public class Persistence implements IPersistence {
+public class Persistence implements IPersistence, IBusinessRuleLogger {
 
 	@Inject
 	private RoundDAO roundDAO;

@@ -14,5 +14,4 @@ public interface IPersistence {
     void saveTurnData(Round turn);
     BeerGame getGameLog(String gameId);
     Player getPlayerById(String playerId);
-    void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
 }
