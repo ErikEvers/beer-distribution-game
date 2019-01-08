@@ -50,18 +50,18 @@ public class BeergameDAO {
 	 * @param gameName The specified name of the game
 	 */
 	public void createBeergame(String gameName) {
-		String UUID = randomUUID().toString();
+		String uuid = randomUUID().toString();
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME)) {
 
 				conn.setAutoCommit(false);
-				pstmt.setString(1, UUID);
+				pstmt.setString(1, uuid);
 				pstmt.setString(2, gameName);
 				pstmt.setString(3, new Date().toString());
 
 				pstmt.executeUpdate();
-				DaoConfig.setCurrentGameId(UUID);
+				DaoConfig.setCurrentGameId(uuid);
 				conn.commit();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);

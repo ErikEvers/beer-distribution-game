@@ -120,7 +120,7 @@ class PersistenceTest {
 
 	@Test
 	void getGameLogTest() {
-		persistence.getGameLog("BeerGame");
+		persistence.getGameLog();
 		verify((beerGameDAOMock), times(1)).getGameLog();
 	}
 
