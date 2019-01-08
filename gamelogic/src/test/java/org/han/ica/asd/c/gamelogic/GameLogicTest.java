@@ -91,4 +91,13 @@ public class GameLogicTest {
         //Assert
         verify(communication, times(1)).getAllGames();
     }
+
+    @Test
+    public void connectToGameCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Act
+        gameLogic.connectToGame("");
+
+        //Assert
+        verify(communication, times(1)).connectToGame("");
+    }
 }
