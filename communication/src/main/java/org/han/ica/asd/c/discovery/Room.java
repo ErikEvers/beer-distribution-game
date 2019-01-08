@@ -58,7 +58,7 @@ public class Room {
     }
 
     public void addHost(String ip, String password) throws RoomException {
-        if (this.password.equals(password) && !hosts.contains(ip) && !gameStarted) {
+        if (this.password.equals(password)  && !hosts.contains(ip) && !gameStarted) {
             if (isValidIPv4(ip)) {
                 try {
                     service.createFileInFolder("H: " + ip, roomID);
@@ -70,16 +70,17 @@ public class Room {
                 throw new RoomException("Game is started or the IP is not valid.");
             }
         } else {
-            //throw new RoomException("Password doesnt match.");
+            throw new RoomException("Password doesnt match.");
         }
     }
 
-    public void removeHost(String ip) {
+    public void removeHost(String ip) throws RoomException {
         try {
             service.deleteFileByNameInFolder("H: " + ip, roomID);
             hosts.remove(ip);
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, CONNECTION_ERROR, e);
+            throw new RoomException(e);
         }
     }
 
