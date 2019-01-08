@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.dbconnection;
 
 import javax.inject.Singleton;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,7 +10,7 @@ import java.util.logging.Logger;
 
 @Singleton
 public class DBConnectionTest implements IDatabaseConnection {
-	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/test/resources/";
+	private static final String CONNECTIONSTRING = "jdbc:sqlite:src"+ File.separator+"main"+File.separator+"resources";
 	private static final String DATABASENAME = "BeerGameDBTest.db";
 	public static final Logger LOGGER = Logger.getLogger(DBConnectionTest.class.getName());
 	private static volatile DBConnectionTest mInstance;
