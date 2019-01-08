@@ -16,7 +16,7 @@ public class DaoConfig {
         return currentGameId;
     }
 
-    protected static void setCurrentGameId(String gameId) {
+    public static void setCurrentGameId(String gameId) {
         DaoConfig.currentGameId = gameId;
     }
 
