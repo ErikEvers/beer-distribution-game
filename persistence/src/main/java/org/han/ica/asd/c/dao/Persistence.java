@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.dao;
 
 
-import org.han.ica.asd.c.interfaces.agent.GameStore;
+import org.han.ica.asd.c.interfaces.agent.IGameStore;
 import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
@@ -17,7 +17,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 
 
-public class Persistence implements IRoundStore, IBusinessRuleLogger, GameStore {
+public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore {
 
 	@Inject
 	private RoundDAO roundDAO;
