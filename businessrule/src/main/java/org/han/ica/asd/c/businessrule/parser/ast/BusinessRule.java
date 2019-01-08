@@ -111,7 +111,7 @@ public class BusinessRule extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**

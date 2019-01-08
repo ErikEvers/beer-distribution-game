@@ -43,7 +43,7 @@ public class ComparisonStatement extends Expression {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**

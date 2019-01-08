@@ -51,7 +51,7 @@ public class Action extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**

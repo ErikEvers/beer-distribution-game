@@ -38,8 +38,8 @@ public class NodeConverter {
 
         if (facility.contains(FacilityType.FACTORY.getName())) {
             facilityId = facilities.get(FacilityType.FACTORY.getIndex()).get(separateFacilityId(facility));
-        } else if (facility.contains(FacilityType.DISTRIBUTOR.getName())) {
-            facilityId = facilities.get(FacilityType.DISTRIBUTOR.getIndex()).get(separateFacilityId(facility));
+        } else if (facility.contains(FacilityType.REGIONALWAREHOUSE.getName())) {
+            facilityId = facilities.get(FacilityType.REGIONALWAREHOUSE.getIndex()).get(separateFacilityId(facility));
         } else if (facility.contains(FacilityType.WHOLESALER.getName())) {
             facilityId = facilities.get(FacilityType.WHOLESALER.getIndex()).get(separateFacilityId(facility));
         } else {
@@ -57,7 +57,7 @@ public class NodeConverter {
     private int separateFacilityId(String facility) {
         String[] stringSplit = facility.split(" ");
         if (stringSplit.length > 1) {
-            return Integer.parseInt(stringSplit[1]) - 1;
+            return Integer.parseInt(stringSplit[stringSplit.length-1]) - 1;
         }
         return 0;
     }

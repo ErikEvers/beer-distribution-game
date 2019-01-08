@@ -3,7 +3,7 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import java.util.Objects;
 
 public class Default extends Condition {
-    private static final String PREFIX = "D()";
+    private static final String PREFIX = "D(";
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
@@ -12,7 +12,7 @@ public class Default extends Condition {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        stringBuilder.append(PREFIX);
+        stringBuilder.append(PREFIX).append(SUFFIX);
     }
 
     /**
