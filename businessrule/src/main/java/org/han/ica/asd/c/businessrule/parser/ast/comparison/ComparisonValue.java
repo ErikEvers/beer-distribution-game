@@ -102,4 +102,9 @@ public class ComparisonValue extends ASTNode {
     public int hashCode() {
         return Objects.hash(operationValue);
     }
+
+    @Override
+    public ASTNode getLeftChild() {
+        return operationValue;
+    }
 }

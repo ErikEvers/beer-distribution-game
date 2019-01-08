@@ -91,4 +91,13 @@ public abstract class ASTNode {
     public int hashCode() {
         return super.hashCode();
     }
+
+
+    public ASTNode getLeftChild(){
+        return null;
+    }
+
+    public ASTNode getRightChild(){
+        return null;
+    }
 }

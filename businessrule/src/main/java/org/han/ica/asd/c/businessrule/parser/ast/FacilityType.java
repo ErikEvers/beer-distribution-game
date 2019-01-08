@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.parser.ast.action;
+package org.han.ica.asd.c.businessrule.parser.ast;
 
 import java.util.AbstractMap;
 import java.util.Map;

@@ -39,7 +39,7 @@ class MultiplyOperationTest {
 
         Value value = (Value) multiplyOperation.resolveOperation();
 
-        Assertions.assertEquals("80", value.getValue());
+        Assertions.assertEquals("80", value.getValue().get(0));
     }
 
     @Test
@@ -54,6 +54,6 @@ class MultiplyOperationTest {
 
         Value value = (Value) multiplyOperation.resolveOperation();
 
-        Assertions.assertEquals("80", value.getValue());
+        Assertions.assertEquals("80", value.getValue().get(0));
     }
 }

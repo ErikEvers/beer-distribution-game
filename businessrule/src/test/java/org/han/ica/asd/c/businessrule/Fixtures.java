@@ -139,7 +139,7 @@ class Fixtures {
                 .addChild(new Comparison()
                         .addChild(new ComparisonValue().addChild(new Value().addValue("inventory")))
                         .addChild(new ComparisonOperator("is higher"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20% backlog")))))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("20%").addValue("backlog")))))
                 .addChild(new Action()
                         .addChild(new ActionReference("order"))
                         .addChild(new Value().addValue("30")));

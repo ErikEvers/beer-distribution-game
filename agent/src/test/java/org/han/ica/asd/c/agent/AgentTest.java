@@ -117,7 +117,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						return new ActionModel(ORDER, 30, lowerFacility.getFacilityId());
 					}
 				});
@@ -146,7 +146,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
@@ -173,7 +173,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						switch (businessRule) {
 							case BUSINESS_RULE_1:
 								return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
@@ -207,7 +207,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -238,7 +238,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -269,7 +269,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -300,7 +300,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -368,7 +368,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, mainFacility.getFacilityId());
 						}

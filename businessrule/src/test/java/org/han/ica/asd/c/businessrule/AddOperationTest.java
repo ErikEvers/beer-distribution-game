@@ -36,7 +36,7 @@ class AddOperationTest {
 
         Value value = (Value) addOperation.resolveOperation();
 
-        assertEquals("24", value.getValue());
+        assertEquals("24", value.getValue().get(0));
     }
 
     @Test
@@ -51,6 +51,6 @@ class AddOperationTest {
 
         Value value = (Value) addOperation.resolveOperation();
 
-        assertEquals("27", value.getValue());
+        assertEquals("27", value.getValue().get(0));
     }
 }
