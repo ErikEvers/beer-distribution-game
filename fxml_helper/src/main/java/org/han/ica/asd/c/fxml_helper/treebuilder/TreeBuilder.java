@@ -3,8 +3,11 @@ package org.han.ica.asd.c.fxml_helper.treebuilder;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +23,14 @@ public class TreeBuilder {
 	private static ArrayList<FacilityRectangle> wholesalers;
 	private static ArrayList<FacilityRectangle> warehouses;
 	private static ArrayList<FacilityRectangle> retailers;
+
+	private static ArrayList<Facility> drawnFacilities;
+	private static ArrayList<FacilityRectangle> drawnFacilityRectangles;
+
 	private static boolean tooltipRequired;
 	private static AnchorPane container;
+
+	private static BeerGame beerGame;
 
 	/**
 	 * Method that loads facilities with its relevant edges.
@@ -30,62 +39,50 @@ public class TreeBuilder {
 	 *
 	 * When a facility is of an unknown type.
 	 */
-	public static void loadFacilityView(Map<Facility, List<Facility>> links, AnchorPane container, boolean tooltipRequired) {
+	public static void loadFacilityView(BeerGame beerGame, AnchorPane container, boolean tooltipRequired) {
 		TreeBuilder.container = container;
 		TreeBuilder.tooltipRequired = tooltipRequired;
-		TreeBuilder.factories = new ArrayList<>();
-		TreeBuilder.wholesalers = new ArrayList<>();
-		TreeBuilder.warehouses = new ArrayList<>();
-		TreeBuilder.retailers = new ArrayList<>();
+		TreeBuilder.beerGame = beerGame;
+		factories = new ArrayList<>();
+		wholesalers = new ArrayList<>();
+		warehouses = new ArrayList<>();
+		retailers = new ArrayList<>();
+		drawnFacilities = new ArrayList<>();
+		drawnFacilityRectangles = new ArrayList<>();
 
-		ArrayList<Facility> drawnFacilities = new ArrayList<>();
-		ArrayList<FacilityRectangle> drawnFacilityRectangles = new ArrayList<>();
+		Map<Facility, List<Facility>> links = beerGame.getConfiguration().getFacilitiesLinkedTo();
 
 		for (Facility facility : links.keySet()) {
+			addFacility(facility);
 			for (Facility child : links.get(facility)) {
-				drawFacilities(drawnFacilities, drawnFacilityRectangles, facility, child);
-				drawLine(container, drawnFacilityRectangles, facility, child);
+				addFacility(child);
+				drawLine(facility, child);
 			}
 		}
 	}
 
 	/**
-	 * Draws the facilities in the link on the screen.
-	 *
-	 * @param drawnFacilities
-	 * Facility objects represented on screen
-	 * @param drawnFacilityRectangles
-	 * Facility rectangles visible on screen
-	 * @param parent
-	 * Link/edge through which the facilities are connected
+	 * Draws the facility in the link on the screen.
 	 */
-	private static void drawFacilities(ArrayList<Facility> drawnFacilities,
-															ArrayList<FacilityRectangle> drawnFacilityRectangles,
-															Facility parent, Facility child) {
-		if(!drawnFacilities.contains(parent)) {
-			drawnFacilityRectangles.add(drawFacility(parent));
-			drawnFacilities.add(parent);
-		}
-
-		if(!drawnFacilities.contains(child)) {
-			drawnFacilityRectangles.add(drawFacility(child));
-			drawnFacilities.add(child);
+	private static void addFacility(Facility facility) {
+		if(!drawnFacilities.contains(facility)) {
+			drawnFacilityRectangles.add(drawFacility(facility));
+			drawnFacilities.add(facility);
 		}
 	}
 
 	/**
 	 * Draws the line between facilities in a facilitylinkedto on the screen.
 	 *
-	 * @param drawnFacilityRectangles
 	 * Facility rectangles visible on screen
 	 * @param parent
 	 * @param child
 	 * Link/edge through which the facilities are connected
 	 */
-	private static void drawLine(AnchorPane container, ArrayList<FacilityRectangle> drawnFacilityRectangles, Facility parent, Facility child) {
+	private static void drawLine(Facility parent, Facility child) {
 		EdgeLine line = new EdgeLine();
-		FacilityRectangle rectangleDeliver = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1));
-		FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1));
+		FacilityRectangle rectangleDeliver = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1),"");
+		FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1),"");
 
 		for(FacilityRectangle rectangle : drawnFacilityRectangles) {
 
@@ -169,7 +166,7 @@ public class TreeBuilder {
 	 * @return New FacilityRectangle.
 	 */
 	private static FacilityRectangle createRectangle(Facility facility) {
-		FacilityRectangle rectangle = new FacilityRectangle(facility);
+		FacilityRectangle rectangle = new FacilityRectangle(facility, getPlayerName(beerGame.getPlayers(), beerGame.getAgents(), facility));
 		if(tooltipRequired) {
 			installTooltip(facility, rectangle);
 		}
@@ -184,5 +181,19 @@ public class TreeBuilder {
 				" overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
 		Tooltip tooltip = new Tooltip(tooltipString);
 		Tooltip.install(rectangle, tooltip);
+	}
+
+	private static String getPlayerName(List<Player> players, List<GameAgent> agents, Facility facility) {
+		for(Player player: players) {
+			if(player.getFacility() == facility) {
+				return player.getName();
+			}
+		}
+		for(GameAgent agent: agents) {
+			if(agent.getFacility() == facility) {
+				return agent.getGameAgentName();
+			}
+		}
+		return "";
 	}
 }
