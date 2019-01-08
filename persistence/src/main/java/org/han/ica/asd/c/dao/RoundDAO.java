@@ -32,6 +32,7 @@ public class RoundDAO {
 	private static final String DELETE_ORDERS = "DELETE FROM FacilityTurnOrder WHERE GameId = ? AND RoundId = ?;";
 	private static final String DELETE_DELIVERS = "DELETE FROM FacilityTurnDeliver WHERE GameId = ? AND RoundId = ?;";
 	private static final String DELETE_FACILITIES = "DELETE FROM FacilityTurn WHERE GameId = ? AND RoundId = ?;";
+	public static final String ROUND_ID = "RoundId";
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
@@ -85,7 +86,7 @@ public class RoundDAO {
 
 				try (ResultSet rs = pstmt.executeQuery()) {
 					round = new Round();
-					round.setRoundId(rs.getInt("RoundId"));
+					round.setRoundId(rs.getInt(ROUND_ID));
 					round.setFacilityOrders(getFacilityOrdersInRound(roundId));
 					round.setFacilityTurnDelivers(getFacilityDeliversInRound(roundId));
 					round.setFacilityTurns(getFacilitiesInRound(roundId));
@@ -166,7 +167,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					facilities.add(new FacilityTurn(rs.getInt("FacilityId"), rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
+					facilities.add(new FacilityTurn(rs.getInt("FacilityId"), rs.getInt(ROUND_ID),rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
 
 				}
 
@@ -260,7 +261,7 @@ public class RoundDAO {
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if(!rs.isClosed()) {
 						round = new Round();
-						round.setRoundId(rs.getInt("RoundId"));
+						round.setRoundId(rs.getInt(ROUND_ID));
 						round.setFacilityOrders(getFacilityOrdersInRound(round.getRoundId()));
 						round.setFacilityTurnDelivers(getFacilityDeliversInRound(round.getRoundId()));
 						round.setFacilityTurns(getFacilitiesInRound(round.getRoundId()));
