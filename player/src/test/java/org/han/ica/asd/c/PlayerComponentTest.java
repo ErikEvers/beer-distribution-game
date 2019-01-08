@@ -1,17 +1,12 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
-import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class PlayerComponentTest {
@@ -44,9 +39,9 @@ public class PlayerComponentTest {
         //Arrange
         playerComponent.gameLogic = mock(GameLogic.class);
 
-        RoundDB roundDB = mock(RoundDB.class);
+        Round round = mock(Round.class);
 
-        when(playerComponent.gameLogic.seeOtherFacilities()).thenReturn(roundDB);
+        when(playerComponent.gameLogic.seeOtherFacilities()).thenReturn(round);
 
         //Act
         playerComponent.seeOtherFacilities();

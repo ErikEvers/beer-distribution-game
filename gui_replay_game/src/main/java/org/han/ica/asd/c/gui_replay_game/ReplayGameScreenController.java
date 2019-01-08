@@ -1,8 +1,5 @@
 package org.han.ica.asd.c.gui_replay_game;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -10,6 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class ReplayGameScreenController {
 
@@ -51,22 +51,27 @@ public class ReplayGameScreenController {
 
     @FXML
     public void currentRoundEntered(ActionEvent event) {
-
+        //This function is being implemented in Branch: SIXGJM-514
     }
 
     @FXML
     public void nextRoundButtonClicked(ActionEvent event) {
+        //This function is being implemented in Branch: SIXGJM-514
+    }
 
+
+    public void setGameId(String gameId){
+        //TODO GET GAME VALUES.
     }
 
     @FXML
     public void prevRoundButtonClicked(ActionEvent event) {
-
+        //This function is being implemented in Branch: SIXGJM-514
     }
 
     @FXML
     void initialize() {
-
+        //This function is being implemented in Branch: SIXGJM-514
     }
 }
 

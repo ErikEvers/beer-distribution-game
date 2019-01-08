@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerParticipantFake;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
@@ -34,7 +35,7 @@ class ParticipantsPoolTest {
     @Test
     public void replaceAgentWithPlayerAddsPlayer() {
         AgentParticipant agent = mock(AgentParticipant.class);
-        when(agent.getParticipantId()).thenReturn(fakePlayer.getParticipantId());
+        when(agent.getParticipant()).thenReturn(fakePlayer.getParticipant());
         participantsPool.replaceAgentWithPlayer();
         assertTrue(participantsPool.getParticipants().contains(fakePlayer));
     }
@@ -42,7 +43,7 @@ class ParticipantsPoolTest {
     @Test
     public void replaceAgentWithPlayerRemovesAgent() {
         AgentParticipant agent = mock(AgentParticipant.class);
-        when(agent.getParticipantId()).thenReturn(123);
+        when(agent.getParticipant()).thenReturn(new Facility());
         participantsPool.replaceAgentWithPlayer();
         assertFalse(participantsPool.getParticipants().contains(agent));
     }
@@ -50,10 +51,11 @@ class ParticipantsPoolTest {
     @Test
     public void removeParticipantRemovesParticipantFromList() {
         AgentParticipant localAgent = mock(AgentParticipant.class);
-        when(localAgent.getParticipantId()).thenReturn(1);
+        Facility facility = new Facility();
+        when(localAgent.getParticipant()).thenReturn(facility);
         participantsPool.addParticipant(localAgent);
         int sizeBeforeRemoval = participantsPool.getParticipants().size();
-        participantsPool.removeParticipant(1);
+        participantsPool.removeParticipant(facility);
         assertEquals(sizeBeforeRemoval - 1, participantsPool.getParticipants().size());
     }
 }

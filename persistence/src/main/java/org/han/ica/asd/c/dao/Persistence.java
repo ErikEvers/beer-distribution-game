@@ -1,74 +1,100 @@
 package org.han.ica.asd.c.dao;
 
 
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
-import org.han.ica.asd.c.model.dao_model.BeerGameDB;
+import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
 import org.han.ica.asd.c.model.dao_model.FacilityLinkedToDB;
 import org.han.ica.asd.c.model.dao_model.FacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.GameBusinessRulesInFacilityTurnDB;
 import org.han.ica.asd.c.model.dao_model.RoundDB;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import java.util.Map;
 
 
 public class Persistence implements IPersistence {
 
 	@Inject
-	@Named("RoundDAO")
-	private IBeerDisitributionGameDAO roundDAO;
+	private RoundDAO roundDAO;
 
 	@Inject
-	@Named("BeergameDAO")
-	private IBeerDisitributionGameDAO beergameDAO;
+	private BeergameDAO beergameDAO;
 
 	@Inject
-	@Named("GameBusinessRulesRulesInFacilityTurnDAO")
-	private IBeerDisitributionGameDAO gameBusinessRulesInFacilityTurnDAO;
+	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 
-	@Inject
-	@Named("FacilityTurnDAO")
-	private IBeerDisitributionGameDAO facilityTurnDAO;
+
 
 
 	public Persistence(){
-		//Empty constructor for GUICE
+		//stub
 	}
 
 	public void saveRoundData(RoundDB rounddata)
 	{
-		((RoundDAO)roundDAO).createRound(rounddata.getGameId(), rounddata.getRoundId());
+		roundDAO.createRound(rounddata.getRoundId());
 	}
 
-	public RoundDB fetchRoundData(String gameId, int roundId)
-	{
-		return ((RoundDAO)roundDAO).getRound(gameId,roundId);
+	public void saveRoundData(Round rounddata) {
+		//stub
 	}
 
-	public BeerGameDB getGameLog(String gameId)
+	public Round fetchRoundData(String gameId, int roundId)
 	{
-		return ((BeergameDAO)beergameDAO).getGameLog(gameId);
+		//stub
+		return null;
+	}
+
+	@Override
+	public Round fetchTurnData(Round round, Map<Facility, Facility> facilityLinkedTo) {
+		return null;
+
+	}
+
+	public BeerGame getGameLog(String gameId)
+	{
+		return null;
 	}
 
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurnDB gameBusinessRulesInFacilityTurn)
 	{
-		((GameBusinessRulesInFacilityTurnDAO)gameBusinessRulesInFacilityTurnDAO).createTurn(gameBusinessRulesInFacilityTurn);
+		// empty for now
 	}
 
-	public FacilityTurnDB fetchTurnData(RoundDB round, FacilityLinkedToDB facility)
+	public Round fetchTurnData(Round round, Facility facility)
 	{
-		return ((FacilityTurnDAO)facilityTurnDAO).fetchTurn(round,facility);
+		//stub
+		return null;
+	}
+
+	public Round fetchTurnData(RoundDB round, FacilityLinkedToDB facility)
+	{
+		//stub
+		return null;
 	}
 
 	@Override
 	public Player getPlayerById(String playerId) {
-		throw new NotImplementedException();
+		//stub
+		return null;
+	}
+
+	@Override
+	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+		//stub
+	}
+
+	public void saveTurnData(Round turn)
+	{
+		//stub
 	}
 
 	public void saveTurnData(FacilityTurnDB turn)
 	{
-		((FacilityTurnDAO)facilityTurnDAO).createTurn(turn);
+		//for stub
 	}
 }

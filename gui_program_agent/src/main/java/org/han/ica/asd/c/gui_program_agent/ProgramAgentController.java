@@ -4,17 +4,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import org.han.ica.asd.c.businessrule.IBusinessRules;
-import org.han.ica.asd.c.businessrule.parser.UserInputBusinessRule;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,15 +26,6 @@ import java.util.logging.Logger;
 
 public class ProgramAgentController {
     @FXML
-    AnchorPane mainContainer;
-
-    @FXML
-    Button moreInfo;
-
-    @FXML
-    Button back;
-
-    @FXML
     TextField agentNameInput;
 
     @FXML
@@ -48,30 +37,31 @@ public class ProgramAgentController {
     @FXML
     TextFlow businessRuleTexFlow;
 
-    @FXML
-    Button save;
-
     @Inject
     private IBusinessRules iBusinessRules;
 
-    @Inject
-    @Named("ProgramAgentList")
-    IGUIHandler programAgentList;
+	@Inject
+	@Named("ProgramAgentList")
+	IGUIHandler programAgentList;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
     private ResourceBundle resourceBundle;
 
+    public void setAgentName(String name) {
+        if(name != null) {
+            agentNameInput.setText(name);
+            //TODO Get data from BusinessRules store
+            businessRuleInput.setText("default order 34 \nif round is 10 then order 34");
+            agentNameInput.setDisable(true);
+        }
+    }
 
     /***
      * Function for initialising the current ProgramAgent FXML. It also sets the actions of the button's
      */
     public void initialize() {
-        mainContainer.getChildren().addAll();
-        setMoreInfoButtonAction();
-        resourceBundle = ResourceBundle.getBundle("languageResources");
-        setSaveButtonAction();
-        setBackButtonAction();
+        resourceBundle = ResourceBundle.getBundle("languageResourcesGuiProgramAgent");
     }
 
     /***
@@ -101,27 +91,27 @@ public class ProgramAgentController {
      * Set the button save to have the action that sets the popup.
      * And communicates with the IBusinessRules to program the agent.
      */
-    private void setSaveButtonAction() {
-        save.setOnAction(event -> {
-            clearOldScreenValues();
-            String agentName = agentNameInput.getText();
-            String businessRulesUserInput = businessRuleInput.getText();
-            if (checkIfStringEmpty(agentName)) {
-                setProgramAgentPopup(resourceBundle.getString("agent_name_error_header"), resourceBundle.getString("agent_name_error_body"), Color.RED);
-            } else if (checkIfStringEmpty(businessRulesUserInput)) {
-                setProgramAgentPopup(resourceBundle.getString("business_rule_error_header"), resourceBundle.getString("business_rule_error_body"), Color.RED);
-            } else {
-                List<UserInputBusinessRule> result = iBusinessRules.programAgent(agentName, businessRulesUserInput);
-                setScreenValuesBasedOnResult(result);
-            }
-        });
+    @FXML
+    private void saveButtonAction() {
+        clearOldScreenValues();
+        String agentName = agentNameInput.getText();
+        String businessRulesUserInput = businessRuleInput.getText();
+        if (checkIfStringEmpty(agentName)) {
+            setProgramAgentPopup(resourceBundle.getString("agent_name_error_header"), resourceBundle.getString("agent_name_error_body"), Color.RED);
+        } else if (checkIfStringEmpty(businessRulesUserInput)) {
+            setProgramAgentPopup(resourceBundle.getString("business_rule_error_header"), resourceBundle.getString("business_rule_error_body"), Color.RED);
+        } else {
+            List<UserInputBusinessRule> result = iBusinessRules.programAgent(agentName, businessRulesUserInput);
+            setScreenValuesBasedOnResult(result);
+        }
     }
 
     /***
      * Set the button back to have the action to go back to list with agent's
      */
-    private void setBackButtonAction() {
-        back.setOnAction(event -> programAgentList.setupScreen());
+    @FXML
+    private void backButtonAction() {
+        programAgentList.setupScreen();
     }
 
     /**
@@ -160,18 +150,17 @@ public class ProgramAgentController {
      * Set the action for the MoreInfo Button.
      * It opens the new info stage.
      */
-    private void setMoreInfoButtonAction() {
-        moreInfo.setOnAction(event -> {
-            Parent root;
-            try {
-                root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"), resourceBundle);
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.show();
-            } catch (IOException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
-            }
-        });
+    @FXML
+    private void moreInfoButtonAction() {
+        Parent root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/ProgramAgentInfo.fxml"), resourceBundle);
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
     }
 
     private boolean checkIfStringEmpty(String value) {

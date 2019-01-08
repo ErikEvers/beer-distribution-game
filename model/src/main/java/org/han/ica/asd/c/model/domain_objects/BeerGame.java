@@ -14,7 +14,6 @@ public class BeerGame implements IDomainModel{
     private String gameDate;
     private String gameEndDate;
 
-
     public BeerGame(Leader leader, List<Player> players, List<GameAgent> agents, Configuration configuration, //NOSONAR
                     List<Round> rounds, String gameId, String gameName, String gameDate, String gameEndDate) //NOSONAR
     {
@@ -27,6 +26,10 @@ public class BeerGame implements IDomainModel{
         this.gameName = gameName;
         this.gameDate = gameDate;
         this.gameEndDate = gameEndDate;
+    }
+
+    public BeerGame() {
+
     }
 
     public Leader getLeader() {

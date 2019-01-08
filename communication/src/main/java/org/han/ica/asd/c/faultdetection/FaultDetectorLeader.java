@@ -5,9 +5,13 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.observers.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -2,9 +2,9 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.model.dao_model.RoundDB;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.public_interfaces.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public RoundDB seeOtherFacilities() {
+    public Round seeOtherFacilities() {
         return gameLogic.seeOtherFacilities();
     }
 
