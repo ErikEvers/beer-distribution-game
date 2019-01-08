@@ -113,4 +113,16 @@ public class GameLogicTest {
         //Assert
         verify(communication, times(1)).requestFacilityUsage(facility);
     }
+
+    @Test
+    public void getSavedAgentsCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Arrange
+        when(persistence.getSavedAgents()).thenReturn(null);
+
+        //Act
+        gameLogic.getSavedAgents();
+
+        //Assert
+        verify(persistence, times(1)).getSavedAgents();
+    }
 }

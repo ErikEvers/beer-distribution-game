@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.player;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +69,20 @@ public class PlayerComponentTest {
 
         //Assert
         verify(playerComponent.gameLogic, times(1)).getAllFacilities();
+    }
+
+    @Test
+    void getSavedAgentsCallsMethodOfSameNameOnceInGameLogicTest() {
+        //Arrange
+        playerComponent.gameLogic = mock(GameLogic.class);
+
+        when(playerComponent.gameLogic.getSavedAgents()).thenReturn(null);
+
+        //Act
+        playerComponent.getSavedAgents();
+
+        //Assert
+        verify(playerComponent.gameLogic, times(1)).getSavedAgents();
     }
 
 }
