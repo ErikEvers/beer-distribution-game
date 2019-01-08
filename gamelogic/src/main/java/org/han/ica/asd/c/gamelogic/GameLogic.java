@@ -83,7 +83,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     @Override
     public void connectToGame(String game) {
-        //Yet to be implemented
+        communication.connectToGame(game);
     }
 
     public Round calculateRound(Round round) {
