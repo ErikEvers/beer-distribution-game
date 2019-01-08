@@ -24,7 +24,7 @@ public class BusinessRule extends ASTNode {
     private IBusinessRuleStore businessRuleStore;
 
     @Inject
-    private NodeConverter nodeConverter;
+    private NodeConverter nodeConverter = new NodeConverter();
 
     /**
      * Gets the action of the BusinessRule
