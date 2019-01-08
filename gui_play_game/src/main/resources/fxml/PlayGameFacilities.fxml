@@ -24,7 +24,7 @@
                 <RowConstraints maxHeight="186.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <!--The facility name can be on of the next texts: 'Regional warehouse', 'Wholesaler' or 'retailer'-->
+                <!--The facility name can be on of the next texts: 'Regional warehouse', 'Wholesalerr' or 'retailer'-->
                 <Label alignment="BOTTOM_LEFT" text="[Facilityname]" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" />

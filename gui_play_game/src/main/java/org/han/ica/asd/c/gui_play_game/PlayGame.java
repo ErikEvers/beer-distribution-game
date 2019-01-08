@@ -5,7 +5,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 public class PlayGame implements IGUIHandler {
-    Configuration configuration;
+    private Configuration configuration;
 
     @Override
     public void setData(Object[] data) {
