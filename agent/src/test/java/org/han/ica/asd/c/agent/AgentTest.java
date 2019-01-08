@@ -20,9 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -80,7 +78,7 @@ class AgentTest {
 		this.upperFacility = new Facility(new FacilityType(), 0);
 		this.lowerFacility = new Facility(new FacilityType(), 2);
 		this.configuration = new Configuration();
-		
+
 		List<Facility> list = new ArrayList<>();
 		list.add(mainFacility);
 		configuration.getFacilitiesLinkedTo().put(upperFacility, list);
@@ -151,7 +149,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 		GameRoundAction result = agent.executeTurn(round);
-		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();;
+		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
 
 		assertEquals(5, (int) entry.getValue());
 	}
@@ -320,7 +318,7 @@ class AgentTest {
 		Method method = agent.getClass().getDeclaredMethod(RESOLVE_LOWER_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, lowerFacility.getFacilityId());
-		assertTrue(resultFacility != null);
+		assertNotNull(resultFacility);
 	}
 
 	@Test
@@ -338,7 +336,7 @@ class AgentTest {
 		Method method = agent.getClass().getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, upperFacility.getFacilityId());
-		assertTrue(resultFacility != null);
+		assertNotNull(resultFacility);
 	}
 
 	@Test
