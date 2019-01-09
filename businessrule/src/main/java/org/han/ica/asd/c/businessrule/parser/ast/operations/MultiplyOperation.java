@@ -11,6 +11,9 @@ public class MultiplyOperation extends Operation {
 
     private Provider<CalculationOperator> calculationOperatorProvider;
 
+    public MultiplyOperation() {
+    }
+
     @Inject
     public MultiplyOperation(Provider<CalculationOperator> calculationOperatorProvider) {
         this.calculationOperatorProvider = calculationOperatorProvider;

@@ -11,6 +11,9 @@ public class DivideOperation extends Operation {
 
     private Provider<CalculationOperator> calculationOperatorProvider;
 
+    public DivideOperation() {
+    }
+
     @Inject
     public DivideOperation(Provider<CalculationOperator> calculationOperatorProvider) {
         this.calculationOperatorProvider = calculationOperatorProvider;

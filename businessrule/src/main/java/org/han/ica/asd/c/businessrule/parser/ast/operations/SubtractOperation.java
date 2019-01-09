@@ -11,6 +11,9 @@ public class SubtractOperation extends Operation {
 
     private Provider<CalculationOperator> calculationOperatorProvider;
 
+    public SubtractOperation() {
+    }
+
     @Inject
     public SubtractOperation(Provider<CalculationOperator> calculationOperatorProvider) {
         this.calculationOperatorProvider = calculationOperatorProvider;

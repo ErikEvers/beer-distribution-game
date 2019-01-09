@@ -1,20 +1,43 @@
 package org.han.ica.asd.c.businessrule;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.inject.Provider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AddOperationTest {
+    private Provider<AddOperation> addOperationProvider;
+    private Provider<Value> valueProvider;
+    private Provider<CalculationOperator> calculationOperatorProvider;
+
+    @BeforeEach
+    public void setup() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+            }
+        });
+        addOperationProvider = injector.getProvider(AddOperation.class);
+        valueProvider = injector.getProvider(Value.class);
+        calculationOperatorProvider = injector.getProvider(CalculationOperator.class);
+    }
+
     @Test
     void testComparisonStatement_Equals_True() {
-        AddOperation addOperation = new AddOperation();
-        addOperation.addChild(new Value().addValue("20"));
-        addOperation.addChild(new CalculationOperator("+"));
-        addOperation.addChild(new Value().addValue("4"));
+        AddOperation addOperation = addOperationProvider.get();
+        addOperation.addChild(valueProvider.get().addValue("20"));
+        addOperation.addChild(calculationOperatorProvider.get().addValue("+"));
+        addOperation.addChild(valueProvider.get().addValue("4"));
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -29,10 +52,10 @@ class AddOperationTest {
 
     @Test
     void testResolvingAddOperation() {
-        Operation addOperation = new AddOperation();
-        addOperation.addChild(new Value().addValue("20"))
-                .addChild(new CalculationOperator("+"))
-                .addChild(new Value().addValue("4"));
+        Operation addOperation = addOperationProvider.get();
+        addOperation.addChild(valueProvider.get().addValue("20"))
+                .addChild(calculationOperatorProvider.get().addValue("+"))
+                .addChild(valueProvider.get().addValue("4"));
 
         Value value = (Value) addOperation.resolveOperation();
 

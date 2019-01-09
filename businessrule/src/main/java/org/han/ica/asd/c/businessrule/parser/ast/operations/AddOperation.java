@@ -11,6 +11,9 @@ public class AddOperation extends Operation {
 
     private Provider<CalculationOperator> calculationOperatorProvider;
 
+    public AddOperation() {
+    }
+
     @Inject
     public AddOperation(Provider<CalculationOperator> calculationOperatorProvider) {
         this.calculationOperatorProvider = calculationOperatorProvider;
