@@ -29,18 +29,18 @@ public class GameLogicTest {
     }
 
     @Test
-    public void placeOrderCallsPersistence() {
+    public void submitTurnCallsPersistence() {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
-        gameLogic.placeOrder(turn);
+        gameLogic.submitTurn(turn);
         verify(persistence, times(1)).saveTurnData(turn);
     }
 
     @Test
-    public void placeOrderCallsCommunication() {
+    public void submitTurnCallsCommunication() {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
-        gameLogic.placeOrder(turn);
+        gameLogic.submitTurn(turn);
         verify(communication, times(1)).sendTurnData(turn);
     }
 

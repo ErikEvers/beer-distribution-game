@@ -48,6 +48,14 @@ public class PlayGameFacilitiesController extends PlayGame {
         }
     }
 
+    public void handleSendDeliveryButtonClick(){
+        playerComponent.sendDelivery(null, 0);
+    }
+
+    public void submitTurn(){
+        playerComponent.submitTurn();
+    }
+
     private boolean handleTextSettingOnSendOrderClick(int order) {
         if (order < 0) {
             outgoingOrderTextField.setText("");

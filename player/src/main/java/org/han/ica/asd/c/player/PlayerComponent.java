@@ -1,30 +1,37 @@
 package org.han.ica.asd.c.player;
 
-import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
-import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+import org.han.ica.asd.c.model.domain_objects.*;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PlayerComponent implements IPlayerComponent {
-    IPlayerGameLogic gameLogic;
+    private static Provider<Round> roundProvider;
+    private static Provider<FacilityTurnOrder> facilityTurnOrderProvider;
+    private static Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
+
     private Configuration configuration;
+    private Facility facility;
+    private Player player;
+    private Round round;
 
-    public PlayerComponent() {
-        gameLogic = new GameLogic("", null, null, null);
+    @Inject
+    private IPlayerGameLogic gameLogic;
+
+    public PlayerComponent(){}
+
+    @Inject
+	public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider) {
+		this.roundProvider = roundProvider;
+		this.facilityTurnOrderProvider = facilityTurnOrderProvider;
+		this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
     }
-
-	public PlayerComponent(Configuration configuration) {
-		this.configuration = configuration;
-	}
 
 	@Override
 	public void activatePlayer() {
@@ -79,10 +86,33 @@ public class PlayerComponent implements IPlayerComponent {
 
         return map;
     }
+
+    public void startNewTurn() {
+        round = roundProvider.get();
+    }
     
     @Override
-    public void placeOrder(Facility facility, int amount) {
-        //Not implemented yet
+    public void placeOrder(Facility faciliy, int amount) {
+        round.setRoundId(gameLogic.getRound());
+        FacilityTurnOrder facilityTurnOrder = facilityTurnOrderProvider.get();
+        facilityTurnOrder.setFacilityId(player.getFacility().getFacilityId());
+        facilityTurnOrder.setFacilityIdOrderTo(facility.getFacilityId());
+        facilityTurnOrder.setOrderAmount(amount);
+        round.getFacilityOrders().add(facilityTurnOrder);
+    }
+
+    @Override
+    public void sendDelivery(Facility faciliy, int amount) {
+        round.setRoundId(gameLogic.getRound());
+        FacilityTurnDeliver facilityTurnDeliver = facilityTurnDeliverProvider.get();
+        facilityTurnDeliver.setFacilityId(player.getFacility().getFacilityId());
+        facilityTurnDeliver.setFacilityIdDeliverTo(facility.getFacilityId());
+        facilityTurnDeliver.setDeliverAmount(amount);
+        round.getFacilityTurnDelivers().add(facilityTurnDeliver);
+    }
+
+    public void submitTurn() {
+        gameLogic.submitTurn(round);
     }
 
     @Override
@@ -99,5 +129,9 @@ public class PlayerComponent implements IPlayerComponent {
     public String requestFacilityInfo(Facility facility) {
         //Fake method for testing purposes
         return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500"+facility.getFacilityId();
+    }
+
+    public Facility getFacility() {
+        return facility;
     }
 }

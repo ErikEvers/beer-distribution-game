@@ -9,10 +9,10 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerGameLogic {
     /**
-     * Sends and saves an order of the player / agent.
+     * Sends and saves an turn of the player / agent.
      * @param turn
      */
-    void placeOrder(Round turn);
+    void submitTurn(Round turn);
 
     /**
      * Returns the current state of the game.
@@ -38,4 +38,6 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
+
+    int getRound();
 }

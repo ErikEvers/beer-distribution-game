@@ -10,6 +10,8 @@ public interface IPlayerComponent {
     void activateAgent();
     Map<Facility, List<Facility>> seeOtherFacilities();
     void placeOrder(Facility facility, int amount);
+    void sendDelivery(Facility facility, int amount);
+    void submitTurn();
     void requestFacilityUsage(Facility facility);
     String requestFacilityInfo(Facility facility);
     void selectAgent();

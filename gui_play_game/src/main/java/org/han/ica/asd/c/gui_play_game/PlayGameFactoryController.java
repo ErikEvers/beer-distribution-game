@@ -47,6 +47,14 @@ public class PlayGameFactoryController extends PlayGame {
         }
     }
 
+    public void handleSendDeliveryButtonClick(){
+        playerComponent.sendDelivery(null, 0);
+    }
+
+    public void submitTurn(){
+        playerComponent.submitTurn();
+    }
+
     public void seeOtherFacilitiesButtonClicked() {
         seeOtherFacilities.setData(new Object[]{configuration});
         seeOtherFacilities.setupScreen();

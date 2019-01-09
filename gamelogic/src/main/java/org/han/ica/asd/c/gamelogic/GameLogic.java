@@ -28,6 +28,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     private ParticipantsPool participantsPool;
     private int round;
 
+    public GameLogic(){
+        this.round = 0;
+    }
+
     public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool) {
         this.communication = communication;
         this.persistence = persistence;
@@ -40,9 +44,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param turn
      */
     @Override
-    public void placeOrder(Round turn) {
-        persistence.saveTurnData(turn);
+    public void submitTurn(Round turn) {
         communication.sendTurnData(turn);
+        persistence.saveTurnData(turn);
     }
 
     /**
@@ -116,5 +120,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     public List<Facility> getAllFacilities() {
         //Yet to be implemented.
         return new ArrayList<>();
+    }
+
+    public int getRound() {
+        return round;
     }
 }
