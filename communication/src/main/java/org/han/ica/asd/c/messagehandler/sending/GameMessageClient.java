@@ -1,15 +1,22 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
-import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,14 +74,43 @@ public class GameMessageClient {
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip) {
+    public String sendWhoIsTheLeaderMessage(String ip){
         WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {
             whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
-        return whoIsTheLeaderMessageReturn;
+        return whoIsTheLeaderMessageReturn.getResponse();
+    }
+
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException {
+        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
+        try {
+            ChooseFacilityMessage response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
+            if (response.getException() != null){
+                throw (FacilityNotAvailableException) response.getException();
+            }
+            return response;
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Level.SEVERE,e.getMessage());
+        }
+        return chooseFacilityMessageReturn;
+    }
+
+    public List<Facility> sendAllFacilitiesRequestMessage(String ip){
+        RequestAllFacilitiesMessage requestAllFacilitiesMessage = new RequestAllFacilitiesMessage();
+        try {
+            RequestAllFacilitiesMessage response = null;
+            response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
+            if (response.getException() != null){
+                logger.log(Level.INFO, response.getException().getMessage(), response.getException());
+            }
+            return response.getFacilities();
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Level.SEVERE,e.getMessage());
+        }
+        return new ArrayList<Facility>();
     }
 
     /**

@@ -137,6 +137,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     @Override
     public void deleteProgrammedAgent(String agentName) {
         ProgrammedAgent programmedAgent = new ProgrammedAgent(agentName, null);
+        programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
         programmedAgentDAO.deleteProgrammedAgent(programmedAgent);
     }
 }
