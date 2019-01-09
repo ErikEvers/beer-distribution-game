@@ -6,6 +6,7 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
@@ -20,10 +21,12 @@ class AverageCalculationDAOIntegrationTest {
     private static final FacilityType FACTORYTYPE = new FacilityType("Factory",1,1,1,1,1,1,1);
     private static final Facility FACTORYONE = new Facility(FACTORYTYPE, 1);
     private static final Facility FACTORYTWO = new Facility(FACTORYTYPE, 2);
+    private static final FacilityTurn FACILITY_TURN = new FacilityTurn(1,1,1,0, 1,false);
 
     private AverageCalculationDAO averageCalculationDAO;
     private FacilityDAO facilityDAO;
     private FacilityTypeDAO facilityTypeDAO;
+    private RoundDAO roundDAO;
 
     @BeforeEach
     void setUp() {
@@ -37,6 +40,8 @@ class AverageCalculationDAOIntegrationTest {
         DBConnectionTest.getInstance().createNewDatabase();
         DaoConfig.setCurrentGameId("BeerGameTest");
         averageCalculationDAO = injector.getInstance(AverageCalculationDAO.class);
+        roundDAO = injector.getInstance(RoundDAO.class);
+        facilityTypeDAO = injector.getInstance(FacilityTypeDAO.class);
 
         Injector injectorFaclityDAO = Guice.createInjector(new AbstractModule() {
             @Override
@@ -47,14 +52,6 @@ class AverageCalculationDAOIntegrationTest {
         });
 
         facilityDAO = injectorFaclityDAO.getInstance(FacilityDAO.class);
-
-        Injector injectorFacilityTypeDAO = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(IDatabaseConnection.class).to(DBConnectionTest.class);
-            }
-        });
-        facilityTypeDAO = injectorFacilityTypeDAO.getInstance(FacilityTypeDAO.class);
     }
 
     @AfterEach
@@ -77,6 +74,16 @@ class AverageCalculationDAOIntegrationTest {
 
     @Test
     void readFacilityTurnForFacility() {
+        facilityTypeDAO.createFacilityType(FACTORYTYPE);
+        facilityDAO.createFacility(FACTORYONE);
+        roundDAO.createFacilityTurn(1,FACILITY_TURN);
+
+        FacilityTurn facilityTurnDb = averageCalculationDAO.readFacilityTurnForFacility(1, 1);
+
+        Assert.assertEquals(FACILITY_TURN.getFacilityId(), facilityTurnDb.getFacilityId());
+        Assert.assertEquals(FACILITY_TURN.getRoundId(), facilityTurnDb.getRoundId());
+        Assert.assertEquals(FACILITY_TURN.getRemainingBudget(), facilityTurnDb.getRemainingBudget());
+        Assert.assertEquals(FACILITY_TURN.getStock(), facilityTurnDb.getStock());
     }
 
     @Test

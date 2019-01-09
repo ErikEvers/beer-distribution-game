@@ -62,6 +62,7 @@ public class AverageCalculationDAO {
 
     /**
      * A method to retrieve all the FacilityTurns for a certain facility within a specific round.
+     *There is a backorderAmountStub because this value needs to be calculated but is not necessary for this function.
      *
      * @param roundId    The first part of the identifier for what data needs to be recovered.
      * @param facilityId The first part of the identifier for what data needs to be recovered.
