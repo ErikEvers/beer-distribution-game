@@ -87,7 +87,7 @@ public class BusinessRule extends ASTNode {
     }
 
     /**
-     * Transforms an {@link ASTNode} based on his type
+     * Transforms an {@link ASTNode} based on his type. Will calculate values with percentages to it's result
      *
      * @param node The node to transform
      */
@@ -99,6 +99,11 @@ public class BusinessRule extends ASTNode {
                 Operation operation = (Operation) operationValue;
                 comparisonValue.setOperationValue(operation.resolveOperation());
             }
+        }
+        if(node instanceof Value) {
+            Value value = ((Value)node);
+            Integer integerValue = value.getIntegerValue();
+            value.resetValues().addValue(String.valueOf(integerValue));
         }
 
         node.getChildren().forEach(this::transformChild);
