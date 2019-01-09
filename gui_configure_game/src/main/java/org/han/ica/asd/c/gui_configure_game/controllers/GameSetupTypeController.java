@@ -1,7 +1,9 @@
 package org.han.ica.asd.c.gui_configure_game.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
@@ -10,17 +12,17 @@ import org.han.ica.asd.c.model.domain_objects.FacilityType;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.awt.*;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public class GameSetupTypeController {
+public class GameSetupTypeController implements Initializable {
 
-    String facString = "Factory";
-    String wholeString = "Wholesaler";
-    String regWarehouseString = "Regional warehouse";
-    String retailString = "Retailer";
+    private String facString = "Factory";
+    private String wholeString = "Wholesaler";
+    private String regWarehouseString = "Regional warehouse";
+    private String retailString = "Retailer";
 
     /**
      * Factory for FXML
@@ -112,7 +114,8 @@ public class GameSetupTypeController {
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
      */
-    public void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         mainContainer.getChildren().addAll();
         backButton();
     }
@@ -138,14 +141,25 @@ public class GameSetupTypeController {
         this.onlineGame = onlineGame;
     }
 
-    public void nextScreenButton(){
-        fillConfigurationList();
-        fillConfigurationGraph();
-        
+    public void nextScreenButton() throws Exception {
+        try {
+            fillConfigurationList();
+            fillConfigurationGraph();
+            for (Facility fac : configuration.getFacilities()) {
+                System.out.println(fac.getFacilityType().getFacilityName());
+                System.out.println(fac.getFacilityType().getStartingBudget());
+                System.out.println("----------");
+            }
+        } finally {
+            throw new Exception("Linken aan volgend scherm");
+        }
     }
 
 
-    public void fillConfigurationList() {
+    /**
+     * Fills the list of the configuration with the parameters from the textfield in the GUI
+     */
+    private void fillConfigurationList() {
         for (Facility current : configuration.getFacilities()) {
 
             if (current.getFacilityType().getFacilityName().equals(facString)) {
@@ -163,7 +177,10 @@ public class GameSetupTypeController {
         }
     }
 
-    public void fillConfigurationGraph() {
+    /**
+     * Fills the Graph of the configuration with the parameters from the textfield in the GUI
+     */
+    private void fillConfigurationGraph() {
 
         for (Map.Entry<Facility, List<Facility>> entry : configuration.getFacilitiesLinkedTo().entrySet()) {
             if (entry.getKey().getFacilityType().getFacilityName().equals(facString)) {
@@ -197,23 +214,52 @@ public class GameSetupTypeController {
 
     }
 
-
-    public FacilityType setFactoryType(FacilityType facility) {
+    /**
+     * fills the factory with the types
+     *
+     * @param facility facility instance
+     * @return facilitytype
+     */
+    private FacilityType setFactoryType(FacilityType facility) {
         return getFacilityType(facility, inGoodsFactory, outGoodsFactory, stockHoldingFactory, startingBudgetFactory, startingOrderFactory, startingStockFactory, openOrderCostFactory);
     }
 
-    public FacilityType setWholsaleType(FacilityType facility) {
+    /**
+     * fills the wholesale with the types
+     *
+     * @param facility facility instance
+     * @return facilitytype
+     */
+    private FacilityType setWholsaleType(FacilityType facility) {
         return getFacilityType(facility, inGoodsWholesale, outGoodsWholesale, stockHoldingWholesale, startingBudgetWholesale, startingOrderWholesale, startingStockWholesale, openOrderCostWholesale);
     }
 
-    public FacilityType setRegionalWarehouseType(FacilityType facility) {
+    /**
+     * fills the Regional warehouse with the types
+     *
+     * @param facility facility instance
+     * @return facilitytype
+     */
+    private FacilityType setRegionalWarehouseType(FacilityType facility) {
         return getFacilityType(facility, inGoodsRegionalWharehouse, outGoodsRegionalWharehouse, stockHoldingRegionalWharehouse, startingBudgetRegionalWharehouse, startingOrderRegionalWharehouse, startingStockRegionalWharehouse, openOrderCostRegionalWarehouse);
     }
 
-    public FacilityType setRetailerType(FacilityType facility) {
+    /**
+     * fills the retailer with the types
+     *
+     * @param facility facility instance
+     * @return facilitytype
+     */
+    private FacilityType setRetailerType(FacilityType facility) {
         return getFacilityType(facility, inGoodsRetailer, outGoodsRetailer, stockHoldingRetailer, startingBudgetRetailer, startingOrderRetailer, startingStockRetailer, openOrderCostRetailer);
     }
 
+    /**
+     * fills a facility with the types
+     *
+     * @param facility facility instance
+     * @return facilitytype
+     */
     private FacilityType getFacilityType(FacilityType facility, TextField inGoods, TextField outGoods, TextField stockHolding, TextField startingBudget, TextField startingOrder, TextField startingStock, TextField openOrderCost) {
         if ((inGoods.getText() != null && !inGoods.getText().isEmpty())) {
             facility.setValueIncomingGoods(Integer.parseInt(inGoods.getText()));
@@ -238,6 +284,5 @@ public class GameSetupTypeController {
         }
         return facility;
     }
-
-
 }
+

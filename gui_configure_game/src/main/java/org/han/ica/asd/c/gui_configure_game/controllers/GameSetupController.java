@@ -11,12 +11,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphConverterToDomain;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
+
 
 import java.net.URL;
 
