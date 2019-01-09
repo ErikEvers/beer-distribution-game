@@ -3,6 +3,7 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
@@ -37,7 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector implements IConnectorForSetup {
+public class Connector implements IConnectorForSetup, IConnectorForLeader {
     private static Connector instance = null;
 
     private ArrayList<IConnectorObserver> observers;
@@ -199,6 +200,17 @@ public class Connector implements IConnectorForSetup {
         observers.add(observer);
     }
 
+    /**
+     * The data of a specific round gets sent to the participants of said game.
+     *
+     * @param allData
+     */
+    @Override
+    public void sendRoundDataToAllPlayers(Round allData) {
+        List<String> ips = nodeInfoList.getAllIps();
+        gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
+    }
+
     public void setLeader() {
         faultDetector.setLeader(nodeInfoList);
     }
@@ -234,11 +246,7 @@ public class Connector implements IConnectorForSetup {
         return gameMessageClient.sendTurnModel("leader ip", turn);
     }
 
-    public void updateAllPeers(Round roundModel) {
-        List<String> ips = nodeInfoList.getAllIps();
-        gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), roundModel);
-    }
-
+    @Override
     public void sendGameStart(BeerGame beerGame) {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
