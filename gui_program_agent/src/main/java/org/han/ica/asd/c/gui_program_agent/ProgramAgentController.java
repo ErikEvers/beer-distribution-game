@@ -58,7 +58,7 @@ public class ProgramAgentController {
             agentNameInput.setText(name);
             List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
             for (String rule: rules) {
-                businessRuleInput.setText(rule + "\n");
+                businessRuleInput.appendText(rule + "\n");
             }
             agentNameInput.setDisable(true);
         }
