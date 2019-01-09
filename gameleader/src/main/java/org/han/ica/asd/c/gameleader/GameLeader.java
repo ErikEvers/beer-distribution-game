@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
@@ -8,12 +9,13 @@ import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
 
-public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver {
+public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
@@ -90,6 +92,11 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public BeerGame notifyPlayerReconnected(String playerId) {
         gameLogic.removeAgentByPlayerId(playerId);
         return this.game;
+    }
+
+    @Override
+    public void chooseFacility(Facility facility) throws Exception {
+        throw new NotImplementedException();
     }
 
     public GamePlayerId getGameData(String playerIp) {
