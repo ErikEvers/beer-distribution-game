@@ -119,8 +119,21 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         return new ArrayList<>();
     }
 
+    /**
+     * @param currentRound The current round to save.
+     */
     @Override
     public void startNewRound(Round currentRound) {
         persistence.saveRoundData(currentRound);
+    }
+
+    /**
+     * Gets the current round number.
+     *
+     * @return The current round number
+     */
+    @Override
+    public int getCurrentRoundNumber() {
+        return round;
     }
 }

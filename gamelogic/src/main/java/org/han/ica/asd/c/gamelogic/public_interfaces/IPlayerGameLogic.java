@@ -39,5 +39,15 @@ public interface IPlayerGameLogic {
 
     List<Facility> getAllFacilities();
 
+    /**
+     * Saves the current round and starts the new round.
+     * @param currentRound The current round to save.
+     */
     void startNewRound(Round currentRound);
+
+    /**
+     * Gets the current round number.
+     * @return The current round number
+     */
+    int getCurrentRoundNumber();
 }
