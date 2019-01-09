@@ -125,6 +125,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     @Override
     public void startNewRound(Round currentRound) {
         persistence.saveRoundData(currentRound);
+        round++;
     }
 
     /**
