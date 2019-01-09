@@ -27,19 +27,22 @@ public class FacilityRectangle extends StackPane {
         this.facility = facility;
 				this.setCursor(Cursor.HAND);
 
+				Text text = new Text(owner);
+				double textSize = text.getFont().getSize();
+
 				Rectangle rectangle = new Rectangle(51, 36, Color.web(determineColor(facility.getFacilityType().getFacilityName())));
 				rectangle.setStroke(Color.BLACK);
 				rectangle.setStrokeType(StrokeType.INSIDE);
 				rectangle.setArcHeight(5);
 				rectangle.setArcWidth(5);
+				rectangle.setWidth((text.getText().length() * textSize) + 5);
+
+				this.getChildren().addAll(rectangle, text);
 
 				this.setTranslateX(rectangle.getTranslateX());
 				this.setTranslateY(rectangle.getTranslateY());
 				this.setHeight(rectangle.getHeight());
 				this.setWidth(rectangle.getWidth());
-
-				Text text = new Text(owner);
-        this.getChildren().addAll(rectangle, text);
     }
 
 	/**
