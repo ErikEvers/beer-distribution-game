@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
+import org.han.ica.asd.c.businessrule.engine.IBusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
@@ -17,7 +17,7 @@ public class BusinessRuleHandler implements IBusinessRules {
     private ParserPipeline parserPipeline;
 
     @Inject
-    private BusinessRuleDecoder businessRuleDecoder;
+    private IBusinessRuleDecoder businessRuleDecoder;
 
     /**
      * Parses the business rules and sends it to the persistence component

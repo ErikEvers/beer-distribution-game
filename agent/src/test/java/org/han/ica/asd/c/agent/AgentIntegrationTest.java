@@ -9,7 +9,10 @@ import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleFactory;
+import org.han.ica.asd.c.businessrule.engine.IBusinessRuleDecoder;
+import org.han.ica.asd.c.businessrule.engine.IBusinessRuleFactory;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
+import org.han.ica.asd.c.businessrule.parser.ast.INodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
@@ -21,6 +24,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -48,20 +52,18 @@ class AgentIntegrationTest {
             new Facility(
                     new FacilityType("retail 1", 3, 3, 10, 30, 1000, 3, 40), 3)));
     private Map<Facility, List<Facility>> facilitiesLinkedTo;
-    private List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-            new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(40)))BoolO(||)CS(C(CV(V(round))ComO(<=)CV(V(3)))))A(AR(order)V(20)P(factory 1)))"),
-            new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(40)))BoolO(||)CS(C(CV(V(round))ComO(>)CV(V(3)))))A(AR(order)V(20)P(factory 1)CS(C(CV(V(inventory))ComO(<)CV(V(10))))))"),
-            new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(10)))")));
+    private Injector participantInjector;
+    private Configuration configuration;
 
     @BeforeEach
     void beforeEach() {
         facilitiesLinkedTo = new HashMap<>();
         facilitiesLinkedTo.put(facilityList.get(0), Collections.singletonList(facilityList.get(1)));
         facilitiesLinkedTo.put(facilityList.get(1), Arrays.asList(facilityList.get(0), facilityList.get(2)));
-        facilitiesLinkedTo.put(facilityList.get(1), Arrays.asList(facilityList.get(1), facilityList.get(3)));
-        facilitiesLinkedTo.put(facilityList.get(1), Collections.singletonList(facilityList.get(2)));
+        facilitiesLinkedTo.put(facilityList.get(2), Arrays.asList(facilityList.get(1), facilityList.get(3)));
+        facilitiesLinkedTo.put(facilityList.get(3), Collections.singletonList(facilityList.get(2)));
 
-        Configuration configuration = new Configuration(
+        configuration = new Configuration(
                 10,
                 1,
                 1,
@@ -74,52 +76,13 @@ class AgentIntegrationTest {
                 facilityList,
                 facilitiesLinkedTo);
 
-        Injector businessRuleFactoryInjector = Guice.createInjector(new AbstractModule() {
+        participantInjector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Action.class).toProvider(new Provider<Action>() {
-                    @Override
-                    public Action get() {
-                        Injector injector = Guice.createInjector(new AbstractModule() {
-                            @Override
-                            protected void configure() {
-                                bind(NodeConverter.class).toInstance(new NodeConverter());
-                            }
-                        });
-                        return injector.getInstance(Action.class);
-                    }
-                });
-                bind(Comparison.class).toProvider((Provider<Comparison>) Comparison::new);
-                bind(Default.class).toProvider((Provider<Default>) Default::new);
-                bind(Person.class).toProvider((Provider<Person>) Person::new);
-                bind(Value.class).toProvider((Provider<Value>) Value::new);
-                bind(ActionReference.class).toProvider((Provider<ActionReference>) ActionReference::new);
-                bind(ComparisonValue.class).toProvider((Provider<ComparisonValue>) ComparisonValue::new);
-                bind(ComparisonStatement.class).toProvider((Provider<ComparisonStatement>) ComparisonStatement::new);
-                bind(AddOperation.class).toProvider((Provider<AddOperation>) AddOperation::new);
-                bind(DivideOperation.class).toProvider((Provider<DivideOperation>) DivideOperation::new);
-                bind(MultiplyOperation.class).toProvider((Provider<MultiplyOperation>) MultiplyOperation::new);
-                bind(SubtractOperation.class).toProvider((Provider<SubtractOperation>) SubtractOperation::new);
-                bind(CalculationOperator.class).toProvider((Provider<CalculationOperator>) CalculationOperator::new);
-                bind(ComparisonOperator.class).toProvider((Provider<ComparisonOperator>) ComparisonOperator::new);
-                bind(BooleanOperator.class).toProvider((Provider<BooleanOperator>) BooleanOperator::new);
-            }});
-        BusinessRuleFactory businessRuleFactory = businessRuleFactoryInjector.getInstance(BusinessRuleFactory.class);
-
-        Injector businessRuleDecoderInjector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(BusinessRuleFactory.class).toInstance(businessRuleFactory);
-            }
-        });
-        BusinessRuleDecoder businessRuleDecoder = businessRuleDecoderInjector.getInstance(BusinessRuleDecoder.class);
-
-        Injector participantInjector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
+                bind(INodeConverter.class).to(NodeConverter.class);
                 bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
-                bind(BusinessRuleDecoder.class).toInstance(businessRuleDecoder);
-                bind(NodeConverter.class).toInstance(new NodeConverter());
+                bind(IBusinessRuleFactory.class).to(BusinessRuleFactory.class);
+                bind(IBusinessRuleDecoder.class).to(BusinessRuleDecoder.class);
                 bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                     @Override
                     public void saveFacilityTurn(Round data) {
@@ -144,15 +107,78 @@ class AgentIntegrationTest {
                     public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
                     }
                 });
+                bind(IBusinessRuleStore.class).toInstance(new IBusinessRuleStore() {
+                    @Override
+                    public List<String> readInputBusinessRules(String agentName) {
+                        return null;
+                    }
+
+                    @Override
+                    public void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap) {
+                    }
+
+                    @Override
+                    public List<List<String>> getAllFacilities() {
+                        return Lists.newArrayList(
+                                Lists.newArrayList("0"),
+                                Lists.newArrayList("1"),
+                                Lists.newArrayList("2"),
+                                Lists.newArrayList("3")
+                        );
+                    }
+
+                    @Override
+                    public List<String> getAllProgrammedAgents() {
+                        return null;
+                    }
+
+                    @Override
+                    public void deleteProgrammedAgent(String agentName) {
+                    }
+                });
             }
         });
-
-        participant = new Agent(configuration, "RegionalWarehouseTestDummy", facilityList.get(1), businessRulesList);
-        participantInjector.injectMembers(participant);
     }
 
     @Test
     void test() {
+        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(<)CV(V(3)))))A(AR(order)V(20)P(factory 1)))"),
+                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(>)CV(V(3)))))A(AR(order)V(20)P(factory 1)CS(C(CV(V(inventory))ComO(<)CV(V(10))))))"),
+                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(10)))")));
+        participant = new Agent(configuration, "RegionalWarehouseTestDummy", facilityList.get(1), businessRulesList);
+        participantInjector.injectMembers(participant);
+
+        Round round = new Round(
+                2,
+                Arrays.asList(
+                        new FacilityTurn(0, 1, 40, 0, 1000, false),
+                        new FacilityTurn(1, 1, 40, 0, 1000, false),
+                        new FacilityTurn(2, 1, 40, 0, 1000, false),
+                        new FacilityTurn(3, 1, 40, 0, 1000, false)),
+                // Hoe order je als je factory bent.
+                Arrays.asList(
+                        new FacilityTurnOrder(1, 0, 20),
+                        new FacilityTurnOrder(2, 1, 20),
+                        new FacilityTurnOrder(3, 2, 20)),
+                Arrays.asList(
+                        new FacilityTurnDeliver(0, 1, 0, 20),
+                        new FacilityTurnDeliver(1, 2, 0, 20),
+                        new FacilityTurnDeliver(2, 3, 0, 20)));
+
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        assertEquals(new Integer(20), gameRoundAction.targetOrderMap.get(facilityList.get(0)));
+    }
+
+    @Test
+    void test2() {
+        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(<)CV(V(3)))))A(AR(order)V(20)P(factory 1)))"),
+                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(>)CV(V(3)))))A(AR(order)V(20)P(factory 1)CS(C(CV(V(inventory))ComO(<)CV(V(10))))))"),
+                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(10)))")));
+        participant = new Agent(configuration, "RegionalWarehouseTestDummy", facilityList.get(1), businessRulesList);
+        participantInjector.injectMembers(participant);
+
         Round round = new Round(
                 2,
                 Arrays.asList(

@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.action;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.INodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
@@ -22,7 +23,10 @@ public class Action extends ASTNode {
     private ComparisonStatement comparisonStatement;
 
     @Inject
-    private NodeConverter nodeConverter;
+    private INodeConverter nodeConverter;
+
+    public Action() {
+    }
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
