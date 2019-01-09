@@ -4,16 +4,14 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.GameAgent;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Optional;
 
 public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver {
     @Inject private IConnectorForLeader connectorForLeader;
@@ -23,19 +21,22 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
+    private final Provider<Player> playerProvider;
 
     private BeerGame game;
     
     private Round currentRoundData;
 
+    private int highestPlayerId = 0;
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
     private int roundId = 1;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider) {
+    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider) {
         this.beerGameProvider = beerGameProvider;
         this.roundProvider = roundProvider;
+        this.playerProvider = playerProvider;
     }
 
     /**
@@ -89,6 +90,24 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public BeerGame notifyPlayerReconnected(String playerId) {
         gameLogic.removeAgentByPlayerId(playerId);
         return this.game;
+    }
+
+    public ConfigPlayerId getGameData(String playerIp) {
+        Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getIpAddress().equals(playerIp)).findFirst();
+        Player actualPlayer;
+        if(!connectingPlayerO.isPresent()) {
+            actualPlayer = playerProvider.get();
+            actualPlayer.setPlayerId(Integer.toString(highestPlayerId + 1));
+            actualPlayer.setIpAddress(playerIp);
+            if(highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
+                highestPlayerId = Integer.parseInt(actualPlayer.getPlayerId());
+            }
+        } else {
+            actualPlayer = connectingPlayerO.get();
+        }
+        game.getPlayers().add(actualPlayer);
+
+        return new ConfigPlayerId(game.getConfiguration(), actualPlayer.getPlayerId());
     }
 
     /**
