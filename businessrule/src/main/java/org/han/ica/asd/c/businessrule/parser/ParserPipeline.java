@@ -32,17 +32,16 @@ public class ParserPipeline {
     private Provider<Counter> counterProvider;
     private Provider<Evaluator> evaluatorProvider;
     private Provider<AlternativeFinder> alternativeFinderProvider;
+    private Provider<ASTListener> astListenerProvider;
     private AlternativeFinder alternativeFinder;
 
-    public ParserPipeline() {
-    }
-
     @Inject
-    public ParserPipeline(Provider<Counter> counterProvider, Provider<Evaluator> evaluatorProvider, Provider<AlternativeFinder> alternativeFinderProvider) {
+    public ParserPipeline(Provider<ASTListener> astListenerProvider, Provider<Counter> counterProvider, Provider<Evaluator> evaluatorProvider, Provider<AlternativeFinder> alternativeFinderProvider) {
         this.counterProvider = counterProvider;
         this.evaluatorProvider = evaluatorProvider;
         this.alternativeFinderProvider = alternativeFinderProvider;
-        alternativeFinder = alternativeFinderProvider.get();
+        this.astListenerProvider = astListenerProvider;
+        alternativeFinder = this.alternativeFinderProvider.get();
     }
 
     /**
@@ -67,8 +66,7 @@ public class ParserPipeline {
 
         ParseTree parseTree = parser.businessrules();
 
-        Injector injector = Guice.createInjector();
-        ASTListener listener = injector.getInstance(ASTListener.class);
+        ASTListener listener = astListenerProvider.get();
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, parseTree);
 
