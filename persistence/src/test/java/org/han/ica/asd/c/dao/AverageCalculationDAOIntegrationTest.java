@@ -7,6 +7,8 @@ import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +24,9 @@ class AverageCalculationDAOIntegrationTest {
     private static final Facility FACTORYONE = new Facility(FACTORYTYPE, 1);
     private static final Facility FACTORYTWO = new Facility(FACTORYTYPE, 2);
     private static final FacilityTurn FACILITY_TURN = new FacilityTurn(1,1,1,0, 1,false);
+    private static final FacilityTurnDeliver FACILITY_TURN_DELIVER = new FacilityTurnDeliver(1,2,0,4);
+    private static final FacilityTurnOrder FACILITY_TURN_ORDER1 = new FacilityTurnOrder(1,2,50);
+    private static final FacilityTurnOrder FACILITY_TURN_ORDER2 = new FacilityTurnOrder(1,3,60);
 
     private AverageCalculationDAO averageCalculationDAO;
     private FacilityDAO facilityDAO;
@@ -88,6 +93,16 @@ class AverageCalculationDAOIntegrationTest {
 
     @Test
     void readFacilityTurnOrderForFacility() {
+        facilityTypeDAO.createFacilityType(FACTORYTYPE);
+        facilityDAO.createFacility(FACTORYONE);
+        roundDAO.createFacilityTurn(1,FACILITY_TURN);
+        roundDAO.createFacilityOrder(1, FACILITY_TURN_ORDER1);
+        roundDAO.createFacilityOrder(1, FACILITY_TURN_ORDER2);
+
+        List<FacilityTurnOrder> facilityTurnOrderDb = averageCalculationDAO.readFacilityTurnOrderForFacility(1, 1);
+        Assert.assertEquals(2, facilityTurnOrderDb.size());
+        Assert.assertEquals(FACILITY_TURN_ORDER1.getOrderAmount(), facilityTurnOrderDb.get(0).getOrderAmount());
+        Assert.assertEquals(FACILITY_TURN_ORDER2.getOrderAmount(), facilityTurnOrderDb.get(1).getOrderAmount());
     }
 
     @Test
