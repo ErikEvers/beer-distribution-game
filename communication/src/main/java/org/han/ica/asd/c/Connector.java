@@ -206,10 +206,9 @@ public class Connector implements IConnectorForSetup {
         return false;
     }
 
-
     public boolean sendTurn(Round turn) {
-        //TODO get real leaderIP for this function
-        return gameMessageClient.sendTurnModel("leader ip", turn);
+        Leader leader =  persistence.getGameLog().getLeader();
+        return gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
     }
 
     public void updateAllPeers(Round roundModel) {
