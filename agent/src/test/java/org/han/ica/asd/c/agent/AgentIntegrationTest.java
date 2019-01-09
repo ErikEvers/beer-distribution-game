@@ -3,9 +3,11 @@ package org.han.ica.asd.c.agent;
 import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
+import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
@@ -58,10 +60,20 @@ class AgentIntegrationTest {
                 false,
                 facilityList,
                 facilitiesLinkedTo);
+
+        Injector businessRuleDecorderInjector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind();
+            }
+        });
+        BusinessRuleDecoder businessRuleDecoder = businessRuleDecorderInjector.getInstance(BusinessRuleDecoder.class);
+
         Injector participantInjector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
+                bind(BusinessRuleDecoder.class).toInstance(businessRuleDecoder);
                 bind(NodeConverter.class).toInstance(new NodeConverter());
                 bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                     @Override
@@ -87,7 +99,6 @@ class AgentIntegrationTest {
                     public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
                     }
                 });
-
             }
         });
 
