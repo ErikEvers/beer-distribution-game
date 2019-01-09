@@ -27,6 +27,10 @@ public class BeergameDAO {
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
 	private static final String UPDATE_ENDDATE = "UPDATE Beergame SET GameEndDate = ? WHERE GameId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
+	public static final String GAME_ID = "GameId";
+	public static final String GAME_NAME = "GameName";
+	public static final String GAME_DATE = "GameDate";
+	public static final String GAME_END_DATE = "GameEndDate";
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
@@ -119,7 +123,7 @@ public class BeergameDAO {
 			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAMES); ResultSet rs = pstmt.executeQuery()) {
 				conn.setAutoCommit(false);
 				while (rs.next()) {
-					beerGames.add(new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate")));
+					beerGames.add(new BeerGame(rs.getString(GAME_ID), rs.getString(GAME_NAME), rs.getString(GAME_DATE), rs.getString(GAME_END_DATE)));
 				}
 				conn.commit();
 			} catch (SQLException e) {
@@ -209,7 +213,7 @@ public class BeergameDAO {
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if(!rs.isClosed()) {
-						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+						beergame = new BeerGame(rs.getString(GAME_ID), rs.getString(GAME_NAME), rs.getString(GAME_DATE), rs.getString(GAME_END_DATE));
 						beergame.setConfiguration(configurationDAO.readConfiguration());
 						beergame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
 						beergame.setRounds(roundDAO.getRounds());
@@ -231,7 +235,6 @@ public class BeergameDAO {
 	 * @return
 	 */
 	private List<BeerGame> getBeerGames(Connection conn, String readOngoingBeergame) {
-		BeerGame beerGame;
 		List<BeerGame> beergames = new ArrayList<>();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
@@ -256,7 +259,7 @@ public class BeergameDAO {
 		try (ResultSet rs = pstmt.executeQuery()) {
 			if(!rs.isClosed()) {
 				while (rs.next()) {
-					beerGame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+					beerGame = new BeerGame(rs.getString(GAME_ID), rs.getString(GAME_NAME), rs.getString(GAME_DATE), rs.getString(GAME_END_DATE));
 					DaoConfig.setCurrentGameId(beerGame.getGameId());
 					beerGame.setConfiguration(configurationDAO.readConfiguration());
 					beerGame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
