@@ -46,7 +46,7 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 
 	@Override
 	public Round fetchFacilityTurn(int roundId) {
-		return roundDAO.getRound(roundId);
+		return fetchRoundData(roundId);
 	}
 
 	@Override
@@ -65,6 +65,11 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 	public BeerGame getGameLog()
 	{
 		return beergameDAO.getGameLog();
+	}
+
+	@Override
+	public void saveGameLog(BeerGame beerGame) {
+		beergameDAO.createBeergame(beerGame);
 	}
 
 	@Override
