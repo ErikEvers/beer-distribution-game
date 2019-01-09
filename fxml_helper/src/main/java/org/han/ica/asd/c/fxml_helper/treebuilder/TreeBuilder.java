@@ -81,6 +81,13 @@ public class TreeBuilder {
 			rectangleDeliver = exisitingDeliver.get();
 		} else {
 			rectangleDeliver = drawFacility(parent);
+
+			EventHandler<MouseEvent> eventHandler =
+					e -> {
+						lastClickedFacility = rectangleDeliver.getFacility();
+					};
+			rectangleDeliver.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
+
 			drawnFacilities.add(rectangleDeliver);
 		}
 
@@ -90,6 +97,13 @@ public class TreeBuilder {
 			rectangleOrder = exisitingOrder.get();
 		} else {
 			rectangleOrder = drawFacility(child);
+
+			EventHandler<MouseEvent> eventHandler =
+					e -> {
+						lastClickedFacility = rectangleOrder.getFacility();
+					};
+			rectangleOrder.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
+
 			drawnFacilities.add(rectangleOrder);
 		}
 
