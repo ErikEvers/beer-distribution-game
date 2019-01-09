@@ -10,6 +10,7 @@ import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
@@ -114,5 +115,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     @Override
     public List<Facility> getAllFacilities() {
         return communication.getAllFacilities();
+    }
+
+    @Override
+    public void selectAgent(ProgrammedAgent programmedAgent) {
+        persistence.saveSelectedAgent(programmedAgent);
+        communication.sendSelectedAgent(programmedAgent);
     }
 }

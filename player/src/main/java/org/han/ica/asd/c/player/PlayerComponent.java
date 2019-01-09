@@ -3,9 +3,7 @@ package org.han.ica.asd.c.player;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.player.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,8 +44,8 @@ public class PlayerComponent implements IPlayerComponent {
 
 
     @Override
-    public void selectAgent() {
-        //Yet to be implemented.
+    public void selectAgent(ProgrammedAgent programmedAgent) {
+        gameLogic.selectAgent(programmedAgent);
     }
 
 	public void setConfiguration(Configuration configuration) {
