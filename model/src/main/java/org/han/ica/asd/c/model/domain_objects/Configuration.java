@@ -54,6 +54,8 @@ public class Configuration implements IDomainModel{
         this.maximumOrderRetail = maximumOrderRetail;
         this.continuePlayingWhenBankrupt = continuePlayingWhenBankrupt;
         this.insightFacilities = insightFacilities;
+        this.facilities = new ArrayList<>();
+        this.facilitiesLinkedTo = new HashMap<>();
     }
 
     public int getAmountOfRounds() {
