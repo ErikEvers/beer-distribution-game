@@ -3,19 +3,22 @@ package org.han.ica.asd.c.businessrule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
-import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
 import org.han.ica.asd.c.gamevalue.GameValue;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,44 +48,35 @@ class BusinessRuleTest {
     private int facilityId = 10;
 
     private Provider<BusinessRule> businessRuleProvider;
-    private Provider<Default> defaultProvider;
     private Provider<Comparison> comparisonProvider;
     private Provider<ComparisonStatement> comparisonStatementProvider;
     private Provider<ComparisonValue> comparisonValueProvider;
     private Provider<Value> valueProvider;
     private Provider<BooleanOperator> booleanOperatorProvider;
     private Provider<ComparisonOperator> comparisonOperatorProvider;
-    private Provider<MultiplyOperation> multiplyOperationProvider;
     private Provider<DivideOperation> divideOperationProvider;
-    private Provider<SubtractOperation> subtractOperationProvider;
-    private Provider<AddOperation> addOperationProvider;
     private Provider<Action> actionProvider;
     private Provider<ActionReference> actionReferenceProvider;
-    private Provider<Person> personProvider;
 
     @BeforeEach
     void setup() {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
+                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
             }
         });
 
         actionProvider = injector.getProvider(Action.class);
-        personProvider = injector.getProvider(Person.class);
         comparisonStatementProvider = injector.getProvider(ComparisonStatement.class);
         actionReferenceProvider = injector.getProvider(ActionReference.class);
         valueProvider = injector.getProvider(Value.class);
         businessRuleProvider = injector.getProvider(BusinessRule.class);
-        defaultProvider = injector.getProvider(Default.class);
         comparisonProvider = injector.getProvider(Comparison.class);
         comparisonValueProvider = injector.getProvider(ComparisonValue.class);
         booleanOperatorProvider = injector.getProvider(BooleanOperator.class);
         comparisonOperatorProvider = injector.getProvider(ComparisonOperator.class);
-        multiplyOperationProvider = injector.getProvider(MultiplyOperation.class);
         divideOperationProvider = injector.getProvider(DivideOperation.class);
-        subtractOperationProvider = injector.getProvider(SubtractOperation.class);
-        addOperationProvider = injector.getProvider(AddOperation.class);
 
         List<FacilityTurn> facilityTurns = new ArrayList<>();
         List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();

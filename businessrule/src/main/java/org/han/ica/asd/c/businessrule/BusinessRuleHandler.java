@@ -12,15 +12,26 @@ import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
-    @Inject
+    private Provider<ParserPipeline> parserPipelineProvider;
+    private Provider<BusinessRuleDecoder> businessRuleDecoderProvider;
+
     private ParserPipeline parserPipeline;
+    private BusinessRuleDecoder businessRuleDecoder;
+
+    @Named("BusinessruleStore")
+    public IBusinessRuleStore iBusinessRuleStore;
 
     @Inject
-    @Named("BusinessruleStore")
-    private IBusinessRuleStore iBusinessRuleStore;
+    public BusinessRuleHandler(Provider<ParserPipeline> parserPipelineProvider, Provider<BusinessRuleDecoder> businessRuleDecoderProvider) {
+        this.parserPipelineProvider = parserPipelineProvider;
+        this.businessRuleDecoderProvider = businessRuleDecoderProvider;
+        parserPipeline = this.parserPipelineProvider.get();
+        businessRuleDecoder = this.businessRuleDecoderProvider.get();
+    }
 
     /**
      * Parses the business rules and sends it to the persistence component
@@ -37,7 +48,7 @@ public class BusinessRuleHandler implements IBusinessRules {
     }
 
     public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
-        BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
+        BusinessRule businessRuleAST = businessRuleDecoder.decodeBusinessRule(businessRule);
 
         businessRuleAST.substituteTheVariablesOfBusinessruleWithGameData(roundData, facilityId);
         businessRuleAST.evaluateBusinessRule();

@@ -23,21 +23,51 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ASTListener extends BusinessRuleBaseListener {
-    private final Provider<BusinessRule> businessRuleProvider;
-    private final Provider<Default> defaultProvider;
-    private final Provider<Comparison> comparisonProvider;
-    private final Provider<ComparisonStatement> comparisonStatementProvider;
-    private final Provider<ComparisonValue> comparisonValueProvider;
-    private final Provider<Value> valueProvider;
-    private final Provider<BooleanOperator> booleanOperatorProvider;
-    private final Provider<ComparisonOperator> comparisonOperatorProvider;
-    private final Provider<MultiplyOperation> multiplyOperationProvider;
-    private final Provider<DivideOperation> divideOperationProvider;
-    private final Provider<SubtractOperation> subtractOperationProvider;
-    private final Provider<AddOperation> addOperationProvider;
-    private final Provider<Action> actionProvider;
-    private final Provider<ActionReference> actionReferenceProvider;
-    private final Provider<Person> personProvider;
+    @Inject
+    private Provider<BusinessRule> businessRuleProvider;
+
+    @Inject
+    private Provider<Default> defaultProvider;
+
+    @Inject
+    private Provider<Comparison> comparisonProvider;
+
+    @Inject
+    private Provider<ComparisonStatement> comparisonStatementProvider;
+
+    @Inject
+    private Provider<ComparisonValue> comparisonValueProvider;
+
+    @Inject
+    private Provider<Value> valueProvider;
+
+    @Inject
+    private Provider<BooleanOperator> booleanOperatorProvider;
+
+    @Inject
+    private Provider<ComparisonOperator> comparisonOperatorProvider;
+
+    @Inject
+    private Provider<MultiplyOperation> multiplyOperationProvider;
+
+    @Inject
+    private Provider<DivideOperation> divideOperationProvider;
+
+    @Inject
+    private Provider<SubtractOperation> subtractOperationProvider;
+
+    @Inject
+    private Provider<AddOperation> addOperationProvider;
+
+    @Inject
+    private Provider<Action> actionProvider;
+
+    @Inject
+    private Provider<ActionReference> actionReferenceProvider;
+
+    @Inject
+    private Provider<Person> personProvider;
+
     private List<BusinessRule> businessRules;
     private Deque<ASTNode> currentContainer;
 
@@ -45,27 +75,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      * Constructor
      */
     @Inject
-    public ASTListener(Provider<BusinessRule> businessRuleProvider,
-                       Provider<Default> defaultProvider,
-                       Provider<Comparison> comparisonProvider,
-                       Provider<ComparisonStatement> comparisonStatementProvider,
-                       Provider<ComparisonValue> comparisonValueProvider,
-                       Provider<Value> valueProvider, Provider<BooleanOperator> booleanOperatorProvider, Provider<ComparisonOperator> comparisonOperatorProvider, Provider<MultiplyOperation> multiplyOperationProvider, Provider<DivideOperation> divideOperationProvider, Provider<SubtractOperation> subtractOperationProvider, Provider<AddOperation> addOperationProvider, Provider<Action> actionProvider, Provider<ActionReference> actionReferenceProvider, Provider<Person> personProvider) {
-        this.businessRuleProvider = businessRuleProvider;
-        this.defaultProvider = defaultProvider;
-        this.comparisonProvider = comparisonProvider;
-        this.comparisonStatementProvider = comparisonStatementProvider;
-        this.comparisonValueProvider = comparisonValueProvider;
-        this.valueProvider = valueProvider;
-        this.booleanOperatorProvider = booleanOperatorProvider;
-        this.comparisonOperatorProvider = comparisonOperatorProvider;
-        this.multiplyOperationProvider = multiplyOperationProvider;
-        this.divideOperationProvider = divideOperationProvider;
-        this.subtractOperationProvider = subtractOperationProvider;
-        this.addOperationProvider = addOperationProvider;
-        this.actionProvider = actionProvider;
-        this.actionReferenceProvider = actionReferenceProvider;
-        this.personProvider = personProvider;
+    public ASTListener() {
         businessRules  = new ArrayList<>();
         currentContainer = new LinkedList<>();
     }
@@ -381,7 +391,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     @Override
     public void enterPerson(BusinessRuleParser.PersonContext ctx) {
-        Person person = (Person) personProvider.get().addValue(ctx.getChild(1).toString());
+        Person person = personProvider.get().addValue(ctx.getChild(1).toString());
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
             parent.addChild(person);

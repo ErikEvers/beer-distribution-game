@@ -2,16 +2,22 @@ package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Objects;
 
 public class DivideOperation extends Operation {
     private static final String PREFIX = "Div(";
 
-    /**
-     * Constructor
-     */
+    @Inject
+    private Provider<CalculationOperator> calculationOperatorProvider;
+
     public DivideOperation() {
-        super.calculationOperator = new CalculationOperator(OperationType.DIV.getOperation());
+    }
+    @Inject
+    public DivideOperation(Provider<CalculationOperator> calculationOperatorProvider) {
+        this.calculationOperatorProvider = calculationOperatorProvider;
+        super.calculationOperator = calculationOperatorProvider.get().addValue(OperationType.DIV.getOperation());
     }
 
     /**
