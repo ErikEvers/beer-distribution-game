@@ -16,14 +16,13 @@ public class FaultMessageResponse extends FaultDetectionMessage {
     private Boolean isAlive;
     private String ipOfSubject;
 
-    public FaultMessageResponse(Boolean isAlive, String ipOfSubject){
+    public FaultMessageResponse(Boolean isAlive, String ipOfSubject) {
         super(2);
         this.isAlive = isAlive;
-        this.ipOfSubject= ipOfSubject;
+        this.ipOfSubject = ipOfSubject;
     }
 
     /**
-     *
      * @return
      */
     public Boolean getAlive() {
@@ -31,26 +30,10 @@ public class FaultMessageResponse extends FaultDetectionMessage {
     }
 
     /**
-     *
-     * @param alive
-     */
-    public void setAlive(Boolean alive) {
-        isAlive = alive;
-    }
-
-    /**
-     *
      * @return
      */
     public String getIpOfSubject() {
         return ipOfSubject;
     }
 
-    /**
-     *
-     * @param ipOfSubject
-     */
-    public void setIpOfSubject(String ipOfSubject) {
-        this.ipOfSubject = ipOfSubject;
-    }
 }

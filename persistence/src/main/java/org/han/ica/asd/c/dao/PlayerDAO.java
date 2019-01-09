@@ -58,6 +58,16 @@ public class PlayerDAO {
     }
 
     /**
+     * A method which inserts multiple players in a database
+     * @param players A list of players which needs to be inserted
+     */
+    public void insertPlayers(List<Player> players) {
+        for (Player player : players) {
+            createPlayer(player);
+        }
+    }
+
+    /**
      * Can update a player's name and/or ip address
      *
      * @param player Specifies the player to update

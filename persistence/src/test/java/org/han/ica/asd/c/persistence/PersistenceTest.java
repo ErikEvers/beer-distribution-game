@@ -60,7 +60,7 @@ class PersistenceTest {
 		facilityTurnOrders.add(new FacilityTurnOrder(1,1,1));
 		facilityTurnDelivers.add(new FacilityTurnDeliver(1,1,1,1));
 
-		player = new Player();
+		player = new Player("1","234",null,"Henk", true);
 		businessRulesList = new ArrayList<>();
 		businessrules = new GameBusinessRules("Test","");
 		businessRulesList.add(businessrules);
@@ -134,7 +134,7 @@ class PersistenceTest {
 
 	@Test
 	void saveTurnDataTest() {
-		persistence.saveTurnData(round);
+		persistence.saveFacilityTurn(round);
 		verify((roundDAOMock), times(1)).createRound(anyInt());
 		verify((roundDAOMock),times(1)).createFacilityOrder(anyInt(),any(FacilityTurnOrder.class));
 		verify((roundDAOMock),times(1)).createFacilityDeliver(anyInt(),any(FacilityTurnDeliver.class));

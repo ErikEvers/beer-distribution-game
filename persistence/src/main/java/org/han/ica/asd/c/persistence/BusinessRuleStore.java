@@ -51,6 +51,10 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      */
     @Override
     public void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap) {
+        if(!this.getAllProgrammedAgents().contains(agentName)) {
+            programmedAgentDAO.createProgrammedAgent(new ProgrammedAgent(agentName, null));
+        }
+
         programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
 
         for (Map.Entry<String, String> businessRule : businessRuleMap.entrySet()){
@@ -133,6 +137,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     @Override
     public void deleteProgrammedAgent(String agentName) {
         ProgrammedAgent programmedAgent = new ProgrammedAgent(agentName, null);
+        programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
         programmedAgentDAO.deleteProgrammedAgent(programmedAgent);
     }
 }
