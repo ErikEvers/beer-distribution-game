@@ -98,6 +98,7 @@ public class GameLogicTest {
         Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
     }
 
+    @Test
     public void roundModelReceivedCallsLocalParticipants() {
         gameLogic.roundModelReceived(mock(Round.class));
         verify(participantsPool, times(1)).excecuteRound(any(Round.class));
