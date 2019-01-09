@@ -138,9 +138,12 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkOnlyOneDefaultOrderAndOneDefaultDeliver(ASTNode current, UserInputBusinessRule inputBusinessRule){
+        int left = 0;
+        int right = 1;
+
         if(current instanceof BusinessRule
-            && current.getLeftChild() instanceof Default){
-                String action = ((ActionReference) current.getRightChild().getLeftChild()).getAction();
+            && current.getChildren().get(left) instanceof Default){
+                String action = ((ActionReference) current.getChildren().get(right).getChildren().get(left)).getAction();
 
                 if("order".equals(action)){
                     if(defaultOrderBool){
@@ -182,9 +185,12 @@ public class Evaluator {
      * @param inputBusinessRule The rule that gets an error if check fails.
      */
     private void checkDefaultWithoutDestination(ASTNode current, UserInputBusinessRule inputBusinessRule){
+        int left = 0;
+        int right = 1;
+
         if(current instanceof BusinessRule
-                && current.getLeftChild() instanceof Default
-                && current.getRightChild().getChildren().size() > 2){
+                && current.getChildren().get(left) instanceof Default
+                && current.getChildren().get(right).getChildren().size() > 2){
                 inputBusinessRule.setErrorMessage("A default rule can't specify the destination");
         }
     }
