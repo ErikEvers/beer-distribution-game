@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
 import junit.framework.TestCase;
-import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
@@ -21,7 +20,6 @@ import static org.mockito.Mockito.spy;
 
 public class TestNodeInfoList {
 
-    NodeInfo nodeInfo = mock(NodeInfo.class);
     NodeInfoList nodeInfoList;
     Player leaderPlayer;
     Leader leader;
