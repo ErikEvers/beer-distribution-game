@@ -10,7 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,26 +23,40 @@ class RoundCalculatorTest {
     private Facility retailer;
     private Facility demand;
     private RoundCalculator roundCalculator;
-    private List<FacilityLinkedTo> facilityLinkedToList;
+    private Map<Facility, List<Facility>> facilityLinkedTo;
 
     @BeforeEach
     public void setup() {
-//        //TODO: Use the new Map implementation for FacilityLinkedTo
+        //TODO: Use the new Map implementation for FacilityLinkedTo
         FacilityType facilityType = new FacilityType("Manufacturer", 3, 3,5, 25, 500, 10, 40);
         FacilityType facilityType1 = new FacilityType("RegionalWarehouse", 4, 4,5, 25, 500, 10, 40);
         FacilityType facilityType2 = new FacilityType("Wholesale", 5, 5,5, 25, 500, 10, 40);
         FacilityType facilityType3 = new FacilityType("Retailer", 6, 6,5, 25, 500, 10, 40);
         FacilityType facilityType4 = new FacilityType("Demand", 7, 7,5, 25, 500, 10, 1000);
-//
-//        manufacturer = new Facility("0", 0, facilityType, "0", "0");
-//        regionalWarehouse = new Facility("0", 0, facilityType1, "0", "0");
-//        wholesale = new Facility("0", 0, facilityType2, "0", "0");
-//        retailer = new Facility("0", 0, facilityType3, "0", "0");
-//        demand = new Facility("0", 0, facilityType4, "0", "0");
-//
-//        facilityLinkedToList = new ArrayList<>();
 
+        manufacturer = new Facility(facilityType, 0);
+        regionalWarehouse = new Facility(facilityType1, 1);
+        wholesale = new Facility(facilityType2, 2);
+        retailer = new Facility(facilityType3, 3);
+        demand = new Facility(facilityType4, 4);
 
+        facilityLinkedTo = new HashMap<>();
+
+        ArrayList<Facility> belowManufacturer = new ArrayList<>();
+        belowManufacturer.add(regionalWarehouse);
+        facilityLinkedTo.put(manufacturer, belowManufacturer);
+
+        ArrayList<Facility> belowRegionalWarehouse = new ArrayList<>();
+        belowRegionalWarehouse.add(wholesale);
+        facilityLinkedTo.put(regionalWarehouse, belowRegionalWarehouse);
+
+        ArrayList<Facility> belowWholesale = new ArrayList<>();
+        belowWholesale.add(retailer);
+        facilityLinkedTo.put(wholesale, belowWholesale);
+
+        ArrayList<Facility> belowRetailer = new ArrayList<>();
+        belowRetailer.add(demand);
+        facilityLinkedTo.put(retailer, belowRetailer);
     }
 
     private Round setupPreviousRoundObjectWithoutBacklog() {
