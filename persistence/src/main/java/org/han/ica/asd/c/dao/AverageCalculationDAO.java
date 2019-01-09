@@ -47,7 +47,7 @@ public class AverageCalculationDAO {
             pstmt.setString(2, facilityType);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next() && !rs.isClosed()) {
+                while (!rs.isClosed() && rs.next()) {
                         facilityIds.add(rs.getInt(FACILITY_ID));
                 }
             }
@@ -112,7 +112,7 @@ public class AverageCalculationDAO {
             pstmt.setInt(3, facilityId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next() && !rs.isClosed()) {
+                while (!rs.isClosed() && rs.next()) {
                         facilityOrderAmounts.add(new FacilityTurnOrder(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
                 }
             }
@@ -144,7 +144,7 @@ public class AverageCalculationDAO {
             pstmt.setInt(3, facilityId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next() && !rs.isClosed()) {
+                while (!rs.isClosed() && rs.next()) {
                         facilityTurnDelivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
                 }
             }

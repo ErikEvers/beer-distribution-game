@@ -11,7 +11,6 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.junit.Assert;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +35,6 @@ class AverageCalculationDAOIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        DBConnectionTest.getInstance().cleanup();
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
@@ -49,7 +47,7 @@ class AverageCalculationDAOIntegrationTest {
         roundDAO = injector.getInstance(RoundDAO.class);
         facilityTypeDAO = injector.getInstance(FacilityTypeDAO.class);
 
-        Injector injectorFaclityDAO = Guice.createInjector(new AbstractModule() {
+        Injector injectorFacilityDAO = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(IDatabaseConnection.class).to(DBConnectionTest.class);
@@ -57,12 +55,7 @@ class AverageCalculationDAOIntegrationTest {
             }
         });
 
-        facilityDAO = injectorFaclityDAO.getInstance(FacilityDAO.class);
-    }
-
-    @AfterEach
-    void tearDown() {
-        DBConnectionTest.getInstance().cleanup();
+        facilityDAO = injectorFacilityDAO.getInstance(FacilityDAO.class);
     }
 
     @Test
