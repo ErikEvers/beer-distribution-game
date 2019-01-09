@@ -37,6 +37,9 @@ public class BeergameDAO {
 	@Inject
 	private RoundDAO roundDAO;
 
+	@Inject
+	private PlayerDAO playerDAO;
+
 
 
 
@@ -132,6 +135,7 @@ public class BeergameDAO {
 						beergame.setConfiguration(configurationDAO.readConfiguration());
 						beergame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
 						beergame.setRounds(roundDAO.getRounds());
+						beergame.setPlayers(playerDAO.getAllPlayers());
 					}
 				}
 				conn.commit();
