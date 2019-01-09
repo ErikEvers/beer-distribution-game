@@ -192,6 +192,7 @@ public class BeergameDAO {
 					if(!rs.isClosed()) {
 						while (rs.next()) {
 							beerGame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+							DaoConfig.setCurrentGameId(beerGame.getGameId());
 							beerGame.setConfiguration(configurationDAO.readConfiguration());
 							beerGame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
 							beerGame.setRounds(roundDAO.getRounds());
