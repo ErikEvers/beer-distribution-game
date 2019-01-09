@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 
@@ -13,4 +14,5 @@ public interface IConnectedForPlayer {
     void connectToGame(String game);
     void requestFacilityUsage(Facility facility);
     List<Facility> getAllFacilities();
+    void sendSelectedAgent(ProgrammedAgent programmedAgent);
 }

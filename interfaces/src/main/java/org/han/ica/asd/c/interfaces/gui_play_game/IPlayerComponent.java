@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.interfaces.gui_play_game;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ public interface IPlayerComponent {
     void placeOrder(int amount);
     void requestFacilityUsage(Facility facility);
     String requestFacilityInfo(Facility facility);
-    void selectAgent();
+    void selectAgent(ProgrammedAgent agent);
     List<String> getAllGames();
     void connectToGame(String game);
     List<Facility> getAllFacilities();

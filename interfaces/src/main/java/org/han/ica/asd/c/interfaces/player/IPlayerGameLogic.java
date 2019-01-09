@@ -4,6 +4,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
 import java.util.Map;
 
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerGameLogic {
@@ -31,4 +32,6 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
+
+    void selectAgent(ProgrammedAgent programmedAgent);
 }
