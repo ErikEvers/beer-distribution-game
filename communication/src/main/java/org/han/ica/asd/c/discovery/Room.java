@@ -71,7 +71,7 @@ public class Room {
                 throw new RoomException("Game is started or the IP is not valid.");
             }
         } else {
-            throw new RoomException("Password doesnt match.");
+            //throw new RoomException("Password doesnt match.");
         }
     }
 

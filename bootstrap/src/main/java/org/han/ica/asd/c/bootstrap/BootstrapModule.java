@@ -1,8 +1,12 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.gui_play_game.PlayGameFacilities;
-import org.han.ica.asd.c.gui_play_game.PlayGameFactory;
+import org.han.ica.asd.c.gamelogic.GameLogic;
+import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.gui_play_game.PlayGameSetupScreen;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
+import org.han.ica.asd.c.persistence.Persistence;
 import org.han.ica.asd.c.player.PlayerComponent;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.MessageDirector;
@@ -29,6 +33,7 @@ import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.persistence.BusinessRuleStore;
@@ -54,10 +59,15 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("JoinGame")).to(JoinGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGameFacilities")).to(PlayGameFacilities.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGameFactory")).to(PlayGameFactory.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
-        bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+
+		bind(IConnectedForPlayer.class).to(Connector.class);
+		bind(IRoundStore.class).to(Persistence.class);
+		bind(IPlayerGameLogic.class).to(GameLogic.class);
+
+		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
 
 		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 

@@ -15,11 +15,10 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
@@ -29,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
@@ -41,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector implements IConnectorForSetup {
+public class Connector implements IConnectorForSetup, IConnectedForPlayer {
     private static Connector instance = null;
 
     private ArrayList<IConnectorObserver> observers;
@@ -197,6 +195,11 @@ public class Connector implements IConnectorForSetup {
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void sendTurnData(Round turn) {
+        //stub
     }
 
     public void addObserver(IConnectorObserver observer) {

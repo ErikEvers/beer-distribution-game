@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.gamelogic;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -26,29 +29,38 @@ public class GameLogicTest {
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IRoundStore.class);
         participantsPool = mock(ParticipantsPool.class);
-        gameLogic = new GameLogic(communication, persistence, participantsPool);
+
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IRoundStore.class).toInstance(persistence);
+                bind(IConnectedForPlayer.class).toInstance(communication);
+            }
+        });
+        gameLogic = injector.getInstance(GameLogic.class);
+        gameLogic.setParticipantsPool(participantsPool);
     }
 
     @Test
-    public void placeOrderCallsPersistence() {
+    public void submitTurnCallsPersistence() {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
-        gameLogic.placeOrder(turn);
+        gameLogic.submitTurn(turn);
         verify(persistence, times(1)).saveTurnData(turn);
     }
 
     @Test
-    public void placeOrderCallsCommunication() {
+    public void submitTurnCallsCommunication() {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
-        gameLogic.placeOrder(turn);
+        gameLogic.submitTurn(turn);
         verify(communication, times(1)).sendTurnData(turn);
     }
 
     @Test
     public void seeOtherFacilitiesCallsPersistence() {
         gameLogic.seeOtherFacilities();
-        verify(persistence, times(1)).fetchRoundData(anyInt());
+        verify(persistence, times(1)).getCurrentBeerGame();
     }
 
     @Test
@@ -92,9 +104,9 @@ public class GameLogicTest {
 
     @Test
     public void roundModelReceivedIncrementsRound() {
-        int currentRoundNumber = gameLogic.getCurrentRoundNumber();
+        int currentRoundNumber = gameLogic.getRound();
         gameLogic.roundModelReceived(mock(Round.class));
-        int newRoundNumber = gameLogic.getCurrentRoundNumber();
+        int newRoundNumber = gameLogic.getRound();
         Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
     }
 
