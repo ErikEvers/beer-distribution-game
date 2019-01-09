@@ -1,7 +1,6 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.IFinder;
-
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -18,9 +17,10 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
-
 
 import javax.inject.Inject;
 import java.io.BufferedReader;
@@ -61,6 +61,7 @@ public class Connector implements IConnectorForSetup {
     @Inject
     private GameMessageReceiver gameMessageReceiver;
 
+    @Inject
     private IFinder finder;
 
 
@@ -127,8 +128,8 @@ public class Connector implements IConnectorForSetup {
         return null;
     }
 
-    public RoomModel joinRoom(String roomName, String ip, String password) throws RoomException, DiscoveryException {
-        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
+    public RoomModel joinRoom(String roomName,  String password) throws RoomException, DiscoveryException {
+        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
         if (makeConnection(joinedRoom.getLeaderIP())) {
             addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
             setJoiner();
