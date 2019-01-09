@@ -1,8 +1,9 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -25,6 +26,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -77,8 +79,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     private IGameStore persistence;
 
-    public Connector() {
-        //Inject
+    Provider<GameLeader> gameLeaderProvider;
+
+    @Inject
+    public Connector(Provider<GameLeader> gameLeaderProvider) {
+        this.gameLeaderProvider = gameLeaderProvider;
     }
 
     public void start() {
@@ -138,6 +143,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public RoomModel createRoom(String roomName, String password) {
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
+            GameLeader leader = gameLeaderProvider.get();
+            leader.init(externalIP);
             nodeInfoList.add(new NodeInfo(externalIP, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {

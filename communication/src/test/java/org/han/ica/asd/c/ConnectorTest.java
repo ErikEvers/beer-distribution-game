@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.IResourceManager;
 import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomFinder;

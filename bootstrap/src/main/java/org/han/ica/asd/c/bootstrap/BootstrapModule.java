@@ -4,6 +4,9 @@ import com.google.inject.name.Names;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.gui_play_game.PlayGameSetupScreen;
+import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
+import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.persistence.Persistence;
@@ -13,7 +16,7 @@ import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.faultdetection.FailLog;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
@@ -64,8 +67,12 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
 
 		bind(IConnectedForPlayer.class).to(Connector.class);
+		bind(IConnectorForLeader.class).to(Connector.class);
+		bind(IConnectorForSetup.class).to(Connector.class);
 		bind(IGameStore.class).to(Persistence.class);
+		bind(IPersistence.class).to(Persistence.class);
 		bind(IPlayerGameLogic.class).to(GameLogic.class);
+		bind(ILeaderGameLogic.class).to(GameLogic.class);
 
 		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
 

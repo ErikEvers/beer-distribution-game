@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.MessageDirector;
-import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.faultdetection.FailLog;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
@@ -43,7 +43,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

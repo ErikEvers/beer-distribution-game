@@ -97,17 +97,18 @@ public class GameLeaderTest {
                 bind(ILeaderGameLogic.class).toInstance(gameLogic);
                 bind(IPersistence.class).toInstance(iPersistence);
                 bind(TurnHandler.class).toInstance(turnHandlerMock);
+                bind(GameLeader.class).toInstance(mock(GameLeader.class));
 
                 bind(BeerGame.class).toProvider(() -> gameTest);
             }
         });
 
-        gameLeader = spy(injector.getInstance(GameLeader.class));
+        gameLeader = injector.getInstance(GameLeader.class);
     }
 
     @Test
     public void facilitiesIs2AndTurnModelReceivedIsCalledTwice_TurnsReceived_IS_Zero() {
-        gameLeader.init();
+        gameLeader.init("");
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
 
@@ -116,7 +117,7 @@ public class GameLeaderTest {
 
     @Test
     public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() {
-        gameLeader.init();
+        gameLeader.init("");
         gameLeader.turnModelReceived(facilityTurnModel);
 
         Assertions.assertNotEquals(gameLeader.getTurnsReceivedInCurrentRound(), 0);
@@ -124,7 +125,7 @@ public class GameLeaderTest {
 
     @Test
     public void verifyThatMethodsAreCalled() {
-        gameLeader.init();
+        gameLeader.init("");
 
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
@@ -138,7 +139,7 @@ public class GameLeaderTest {
 
     @Test
     public void notifyReconnected() {
-        gameLeader.init();
+        gameLeader.init("");
         gameLeader.notifyPlayerReconnected(any(String.class));
 
         verify(gameLogic, times(1)).removeAgentByPlayerId(null);
@@ -152,7 +153,7 @@ public class GameLeaderTest {
 
         players.add(player);
         gameTest.setPlayers(players);
-        gameLeader.init();
+        gameLeader.init("");
         gameLeader.iAmDisconnected();
 
         verify(gameLogic, times(0)).addLocalParticipant(any(Agent.class));
@@ -175,7 +176,7 @@ public class GameLeaderTest {
         doReturn(gameAgent).when(gameLeader).getAgentByFacility(anyInt());
         when(gameAgent.getGameAgentName()).thenReturn("test");
 
-        gameLeader.init();
+        gameLeader.init("");
         gameLeader.playerIsDisconnected("b");
 
         verify(gameLogic, times(1)).addLocalParticipant(any(Agent.class));
