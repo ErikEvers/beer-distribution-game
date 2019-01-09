@@ -15,11 +15,11 @@ import org.han.ica.asd.c.faultdetection.FaultResponder;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
-import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
+import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
@@ -27,7 +27,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageFilterer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ElectionModel;
@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -69,10 +68,10 @@ public class GameMessageReceiverTest {
     private IElectionObserver electionObserver;
 
     @Mock
-    GameMessageFilterer gameMessageFilterer;
+    private GameMessageFilterer gameMessageFilterer;
 
     @Mock
-    private IGameConfigurationObserver gameConfigurationObserver;
+    private IGameStartObserver gameStartObserver;
 
     @Mock
     private IFacilityMessageObserver facilityMessageObserver;
@@ -102,7 +101,7 @@ public class GameMessageReceiverTest {
         observers.add(roundModelObserver);
         observers.add(turnModelObserver);
         observers.add(electionObserver);
-        observers.add(gameConfigurationObserver);
+        observers.add(gameStartObserver);
         observers.add(facilityMessageObserver);
 
         gameMessageReceiver.setObservers(observers);
@@ -134,22 +133,22 @@ public class GameMessageReceiverTest {
     }
 
     @Test
-    public void configurationReceived() {
-        Configuration configuration = new Configuration();
+    public void gameStartReceived() {
+        BeerGame beerGame = new BeerGame();
 
-        ConfigurationMessage configurationMessageStage = new ConfigurationMessage(configuration);
-        configurationMessageStage.setPhaseToStage();
+        GameStartMessage gameStartMessageStage = new GameStartMessage(beerGame);
+        gameStartMessageStage.setPhaseToStage();
 
-        ConfigurationMessage configurationMessageCommit = new ConfigurationMessage(configuration);
-        configurationMessageCommit.setPhaseToCommit();
+        GameStartMessage gameStartMessageCommit = new GameStartMessage(beerGame);
+        gameStartMessageCommit.setPhaseToCommit();
 
-        when(gameMessageFilterer.isUnique(configurationMessageStage)).thenReturn(true);
-        gameMessageReceiver.gameMessageReceived(configurationMessageStage);
+        when(gameMessageFilterer.isUnique(gameStartMessageStage)).thenReturn(true);
+        gameMessageReceiver.gameMessageReceived(gameStartMessageStage);
 
-        when(gameMessageFilterer.isUnique(configurationMessageCommit)).thenReturn(true);
-        gameMessageReceiver.gameMessageReceived(configurationMessageCommit);
+        when(gameMessageFilterer.isUnique(gameStartMessageCommit)).thenReturn(true);
+        gameMessageReceiver.gameMessageReceived(gameStartMessageCommit);
 
-        verify(gameConfigurationObserver).gameConfigurationReceived(configuration);
+        verify(gameStartObserver).gameStartReceived(beerGame);
     }
 
     @Test
