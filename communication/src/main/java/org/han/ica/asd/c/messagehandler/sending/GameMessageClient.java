@@ -5,10 +5,10 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 
-import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -117,9 +117,9 @@ public class GameMessageClient {
         new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 
-    public void sendConfigurationToAllPlayers(String[] ips, Configuration configuration) {
-        ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
-        new SendInTransaction(ips, configurationMessage, socketClient).sendToAllPlayers();
+    public void sendStartGameToAllPlayers(String[] ips, BeerGame beerGame) {
+        GameStartMessage gameStartMessage = new GameStartMessage(beerGame);
+        new SendInTransaction(ips, gameStartMessage, socketClient).sendToAllPlayers();
     }
 
     /**
