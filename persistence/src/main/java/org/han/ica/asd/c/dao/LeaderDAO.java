@@ -2,7 +2,7 @@ package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.Leader;
-
+import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -24,14 +24,14 @@ public class LeaderDAO {
 	@Inject
 	PlayerDAO playerDAO;
 
-	public void insertLeader(Leader leader) {
+	public void insertLeader(Player player) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_LEADER)) {
 				conn.setAutoCommit(false);
 
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
-				pstmt.setString(2,leader.getPlayer().getPlayerId());
+				pstmt.setString(2, player.getPlayerId());
 				pstmt.setString(3, new Date().toString());
 
 				pstmt.executeUpdate();
