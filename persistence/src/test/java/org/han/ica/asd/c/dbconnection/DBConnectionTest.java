@@ -46,7 +46,11 @@ public class DBConnectionTest implements IDatabaseConnection {
 	{
 		StringBuilder sb = new StringBuilder();
 
-		DBConnection.findFileAndRun(scriptname, sb, connect(), LOGGER);
+		try {
+			DBConnection.findFileAndRun(scriptname, sb, connect(), LOGGER);
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE,e.toString(),e);
+		}
 
 	}
 
