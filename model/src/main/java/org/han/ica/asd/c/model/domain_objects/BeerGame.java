@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BeerGame implements IDomainModel{
@@ -29,7 +30,9 @@ public class BeerGame implements IDomainModel{
     }
 
     public BeerGame() {
-
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
     }
 
     public Leader getLeader() {

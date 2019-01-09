@@ -1,12 +1,12 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
-import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +18,14 @@ public class GameLogicTest {
     private GameLogic gameLogic;
     private ParticipantsPool participantsPool;
     private IConnectedForPlayer communication;
-    private IPersistence persistence;
+    private IRoundStore persistence;
 
     @BeforeEach
     public void setup() {
         communication = mock(IConnectedForPlayer.class);
-        persistence = mock(IPersistence.class);
+        persistence = mock(IRoundStore.class);
         participantsPool = mock(ParticipantsPool.class);
-        gameLogic = new GameLogic("test", communication, persistence, participantsPool);
+        gameLogic = new GameLogic(communication, persistence, participantsPool);
     }
 
     @Test
@@ -47,12 +47,12 @@ public class GameLogicTest {
     @Test
     public void seeOtherFacilitiesCallsPersistence() {
         gameLogic.seeOtherFacilities();
-        verify(persistence, times(1)).fetchRoundData(anyString(), anyInt());
+        verify(persistence, times(1)).fetchRoundData(anyInt());
     }
 
     @Test
     public void letAgentTakeOverPlayerReplacesPlayer() {
-        gameLogic.letAgentTakeOverPlayer(mock(AgentParticipant.class));
+        gameLogic.letAgentTakeOverPlayer(mock(Agent.class));
         verify(participantsPool, times(1)).replacePlayerWithAgent(any());
     }
 
