@@ -9,8 +9,11 @@ import java.util.Objects;
 public class MultiplyOperation extends Operation {
     private static final String PREFIX = "Mul(";
 
+    @Inject
     private Provider<CalculationOperator> calculationOperatorProvider;
 
+    public MultiplyOperation() {
+    }
     @Inject
     public MultiplyOperation(Provider<CalculationOperator> calculationOperatorProvider) {
         this.calculationOperatorProvider = calculationOperatorProvider;

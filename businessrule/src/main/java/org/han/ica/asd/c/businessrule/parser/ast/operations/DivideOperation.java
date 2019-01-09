@@ -9,8 +9,11 @@ import java.util.Objects;
 public class DivideOperation extends Operation {
     private static final String PREFIX = "Div(";
 
+    @Inject
     private Provider<CalculationOperator> calculationOperatorProvider;
 
+    public DivideOperation() {
+    }
     @Inject
     public DivideOperation(Provider<CalculationOperator> calculationOperatorProvider) {
         this.calculationOperatorProvider = calculationOperatorProvider;

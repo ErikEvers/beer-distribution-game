@@ -9,8 +9,11 @@ import java.util.Objects;
 public class AddOperation extends Operation {
     private static final String PREFIX = "Add(";
 
+    @Inject
     private Provider<CalculationOperator> calculationOperatorProvider;
 
+    public AddOperation() {
+    }
     @Inject
     public AddOperation(Provider<CalculationOperator> calculationOperatorProvider) {
         this.calculationOperatorProvider = calculationOperatorProvider;

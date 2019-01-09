@@ -34,6 +34,8 @@ public class ParserPipeline {
     @Inject
     private AlternativeFinder alternativeFinder;
 
+    public ParserPipeline() {
+    }
     @Inject
     public ParserPipeline(Provider<Counter> counterProvider, Provider<Evaluator> evaluatorProvider) {
         this.counterProvider = counterProvider;
@@ -125,7 +127,9 @@ public class ParserPipeline {
         StringBuilder builder = new StringBuilder();
         builder.append(errorMessage);
         if (!alternative.isEmpty()){
-            builder.append(" Did you mean: '" + alternative + "'?");
+            builder.append(" Did you mean: '")
+                    .append(alternative)
+                    .append("'?");
         } else {
             builder.append(" No alternatives found.");
         }
