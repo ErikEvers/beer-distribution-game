@@ -13,4 +13,5 @@ public interface IRoundStore {
     Round fetchRoundData(int roundId);
     void saveTurnData(Round turn);
     Player getPlayerById(String playerId);
+    BeerGame getCurrentBeerGame();
 }
