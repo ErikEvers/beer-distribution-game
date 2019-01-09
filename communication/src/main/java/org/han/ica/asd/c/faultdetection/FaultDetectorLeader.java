@@ -7,7 +7,7 @@ import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -29,21 +29,29 @@ import java.util.logging.Logger;
  * @see FaultDetectorPlayer
  */
 public class FaultDetectorLeader extends TimerTask {
-    //TODO make the nodeinfolist the same over every class
+    @Inject
     private NodeInfoList nodeInfoList;
+
+    @Inject
     private FaultDetectionClient faultDetectionClient;
+
+    @Inject
     private FaultHandlerLeader faultHandlerLeader;
-    private List<String> ips;
+
+    @Inject
     private FailLog failLog;
+
+    @Inject
+    private static Logger logger;//NOSONAR
+
+    private List<String> ips;
+
     private Timer timer;
 
-    private static final Logger LOGGER = Logger.getLogger(FaultDetector.class.getName());
+    private List<IConnectorObserver> observers;
 
-    FaultDetectorLeader(NodeInfoList nodeInfoList, ArrayList<IConnectorObserver> observers) {
-        this.nodeInfoList = nodeInfoList;
-        faultHandlerLeader = new FaultHandlerLeader(nodeInfoList, observers);
-        faultDetectionClient = new FaultDetectionClient();
-        failLog = new FailLog(nodeInfoList);
+    public FaultDetectorLeader() {
+        //for inject purposes
     }
 
     /**
@@ -59,11 +67,11 @@ public class FaultDetectorLeader extends TimerTask {
     public void run() {
         //TODO remove the printlns.
         //Tries to make the connection once every set interval.
-        ips = nodeInfoList.getActiveIps();
+        ips = nodeInfoList.getActiveIpsWithoutLeader();
         for (String ip : ips) {
-            LOGGER.log(Level.INFO, "Sending Ping to : {0} : {1}", new Object[]{ip, new Date()});
+            logger.log(Level.INFO, "Sending Ping to : {0} : {1}", new Object[]{ip, new Date()});
             makeConnection(ip);
-            LOGGER.log(Level.INFO,"Ping Sent: {0}", new Date());
+            logger.log(Level.INFO, "Ping Sent: {0}", new Date());
         }
 
         //Checks if node wasn't reached 3 times, it then sends a faultMessage to all peers that can be reached.
@@ -85,6 +93,7 @@ public class FaultDetectorLeader extends TimerTask {
         //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        faultHandlerLeader.setObservers(observers);
     }
 
     /**
@@ -122,7 +131,7 @@ public class FaultDetectorLeader extends TimerTask {
      * @see FaultHandlerLeader
      */
     public void checkIfThisMachineIsDisconnected() {
-        if (failLog.getSuccesSize() <= 1) {
+        if (failLog.getSuccessSize() < 1) {
             //If the Leader can only reach himself and noone else, he is probably disconnected so no longer leader.
             faultHandlerLeader.iAmDisconnected();
             timer.cancel();
@@ -164,7 +173,6 @@ public class FaultDetectorLeader extends TimerTask {
      * @see NodeInfoList
      */
     private void makeConnection(String ip) {
-
         try {
             faultDetectionClient.makeConnection(ip);
             failLog.reset(ip);
@@ -188,7 +196,6 @@ public class FaultDetectorLeader extends TimerTask {
      * @see NodeInfoList
      */
     private void sendFaultMessage(String failingIp) {
-        //Checks for every ip if it is alive(without failures) it then sends a faultmessage to that ip.
         for (String ip : ips) {
             if (failLog.isAlive(ip)) {
                 faultDetectionClient.sendFaultMessage(new FaultMessage(failingIp), ip);
@@ -234,5 +241,23 @@ public class FaultDetectorLeader extends TimerTask {
 
     void setTimer(Timer t) {
         this.timer = t;
+    }
+
+    public void setObservers(List<IConnectorObserver> observers) {
+        this.observers = observers;
+    }
+
+    public void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
+        failLog.setNodeInfoList(nodeInfoList);
+    }
+
+    /**
+     * Gets observers.
+     *
+     * @return Value of observers.
+     */
+    public List<IConnectorObserver> getObservers() {
+        return observers;
     }
 }

@@ -4,21 +4,17 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.Serializable;
 
-public class RoundModelMessage extends GameMessage implements Serializable{
-    private Round roundModel;
-    private int commitStage;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ROUND_MESSAGE;
 
-    public RoundModelMessage(Round roundModel, int commitStage) {
-        super(2);
+public class RoundModelMessage extends TransactionMessage implements Serializable{
+    private Round roundModel;
+
+    public RoundModelMessage(Round roundModel) {
+        super(ROUND_MESSAGE);
         this.roundModel = roundModel;
-        this.commitStage = commitStage;
     }
 
     public Round getRoundModel() {
         return roundModel;
-    }
-
-    public int getCommitStage() {
-        return commitStage;
     }
 }

@@ -15,6 +15,11 @@ public class BeerGame implements IDomainModel{
     private String gameDate;
     private String gameEndDate;
 
+    public BeerGame() {
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
+    }
 
     public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate){
         this.gameId = gameId;
@@ -35,12 +40,6 @@ public class BeerGame implements IDomainModel{
         this.gameName = gameName;
         this.gameDate = gameDate;
         this.gameEndDate = gameEndDate;
-    }
-
-    public BeerGame() {
-        this.players = new ArrayList<>();
-        this.agents = new ArrayList<>();
-        this.rounds = new ArrayList<>();
     }
 
     public Leader getLeader() {

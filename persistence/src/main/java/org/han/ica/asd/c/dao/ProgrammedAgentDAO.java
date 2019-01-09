@@ -28,6 +28,7 @@ public class ProgrammedAgentDAO {
 
     public ProgrammedAgentDAO() {
         //There has to be a constructor to inject the value above.
+        //databaseConnection.createNewDatabase();
     }
 
     /**
@@ -73,7 +74,7 @@ public class ProgrammedAgentDAO {
      *
      * @return A list with all the ProgrammedAgents from the database.
      */
-    public List<ProgrammedAgent> readAllProgrammedAgents () {
+    public List<ProgrammedAgent> readAllProgrammedAgents() {
         List<ProgrammedAgent> programmedAgents = new ArrayList<>();
         Connection conn = databaseConnection.connect();
         if (conn == null) {
@@ -82,7 +83,7 @@ public class ProgrammedAgentDAO {
         try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_PROGRAMMEDAGENTS); ResultSet rs = pstmt.executeQuery()) {
             conn.setAutoCommit(false);
             while (rs.next()) {
-                    programmedAgents.add(new ProgrammedAgent(rs.getString("ProgrammedAgentName"), programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(rs.getString("ProgrammedAgentName"))));
+                programmedAgents.add(new ProgrammedAgent(rs.getString("ProgrammedAgentName"), programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(rs.getString("ProgrammedAgentName"))));
             }
             conn.commit();
         } catch (SQLException e) {
@@ -91,11 +92,12 @@ public class ProgrammedAgentDAO {
         }
         return programmedAgents;
     }
+
     /**
      * A method to execute a prepared statement with only one set variable.
      *
      * @param programmedAgent The data needed to know what to create or delete.
-     * @param query A string which contains the query that has to be executed on the database.
+     * @param query           A string which contains the query that has to be executed on the database.
      */
     private void executePreparedStatement(ProgrammedAgent programmedAgent, String query) {
         Connection conn = databaseConnection.connect();

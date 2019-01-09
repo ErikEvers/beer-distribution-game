@@ -43,7 +43,6 @@ public class FaultHandlerPlayer {
     }
 
     public String whoIsDead() {
-
         if (amountOfFailingIps == amountOfActiveIps) {
             return "imDead";
         } else {
