@@ -17,6 +17,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author Carsten Flokstra en Jelle Dimmendaal
+ * zie commit f95bd5c9dea
+ */
 public class ConfigurationDAO {
 
     private static final String CREATE_CONFIGURATION = "INSERT INTO Configuration VALUES (?,?,?,?,?,?,?,?,?,?);";
@@ -228,7 +232,11 @@ public class ConfigurationDAO {
         }));
     }
 
-
+    /**
+     * Takes all facility links from the database
+     * @return
+     * Returns a map of facility links
+     */
     public Map<Facility, List<Facility>> readFacilityLinks() {
         Connection conn = databaseConnection.connect();
         Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
@@ -250,7 +258,8 @@ public class ConfigurationDAO {
     }
 
     /**
-     * @param facilitiesLinkedTo
+     * Updates the already existing facility links with the ones in the given Map
+     * @param facilitiesLinkedTo Map with the updated facility links
      */
     public void updateFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         facilitiesLinkedTo.forEach((k, v) -> v.forEach(lowerFacility -> {
@@ -273,12 +282,6 @@ public class ConfigurationDAO {
         }));
     }
 
-    /**
-     *
-     * @param linkedFacilities
-     * @param rs
-     * @throws SQLException
-     */
     private void packageLinkedFacilities(Map<Facility, List<Facility>> linkedFacilities, ResultSet rs) throws SQLException {
         Facility lastKnownParent = null;
 
