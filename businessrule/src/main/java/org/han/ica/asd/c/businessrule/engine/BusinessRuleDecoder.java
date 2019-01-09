@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule.engine;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 
+import javax.inject.Inject;
 import java.util.Deque;
 import java.util.LinkedList;
 
