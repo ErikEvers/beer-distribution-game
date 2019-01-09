@@ -106,8 +106,8 @@ public class Value extends OperationValue {
      */
     public Integer getIntegerValue() {
         String firstPartVariable = getFirstPartVariable();
-        if(firstPartVariable.startsWith("%")) {
-            return (int) (Integer.parseInt(firstPartVariable.substring(1)) / 100.0f * Integer.parseInt(getSecondPartVariable()) + 0.5f);
+        if(firstPartVariable.endsWith("%")) {
+            return (int)(Integer.parseInt(firstPartVariable.replaceFirst("%", "")) / 100.0f * Integer.parseInt(getSecondPartVariable()) + 0.5f);
         }
 
         return Integer.parseInt(firstPartVariable);
