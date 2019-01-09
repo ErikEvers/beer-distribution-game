@@ -38,4 +38,10 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
+
+    /**
+     * Gets the current round number.
+     * @return The current round number
+     */
+    int getCurrentRoundNumber();
 }

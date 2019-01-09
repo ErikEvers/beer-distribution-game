@@ -4,6 +4,7 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
@@ -22,7 +23,7 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver {
     private IConnectedForPlayer communication;
     private IRoundStore persistence;
     private ParticipantsPool participantsPool;
@@ -116,5 +117,25 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     public List<Facility> getAllFacilities() {
         //Yet to be implemented.
         return new ArrayList<>();
+    }
+
+    /**
+     * @param currentRound The current round to save.
+     */
+    @Override
+    public void roundModelReceived(Round currentRound) {
+        persistence.saveRoundData(currentRound);
+        participantsPool.excecuteRound(currentRound);
+        round++;
+    }
+
+    /**
+     * Gets the current round number.
+     *
+     * @return The current round number
+     */
+    @Override
+    public int getCurrentRoundNumber() {
+        return round;
     }
 }

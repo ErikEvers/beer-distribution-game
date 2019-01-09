@@ -19,7 +19,7 @@ public class PlayerComponent implements IPlayerComponent {
     private Configuration configuration;
 
     public PlayerComponent() {
-        gameLogic = new GameLogic("", null, null, null);
+        gameLogic = new GameLogic(null, null, null);
     }
 
 	public PlayerComponent(Configuration configuration) {

@@ -8,6 +8,7 @@ import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -81,5 +82,25 @@ public class GameLogicTest {
         when(persistence.getPlayerById(anyString())).thenReturn(new PlayerFake());
         gameLogic.removeAgentByPlayerId(anyString());
         verify(participantsPool, times(1)).replaceAgentWithPlayer(any(PlayerParticipant.class));
+    }
+
+    @Test
+    public void roundModelReceivedSavesOldRoundToDatabase() {
+        gameLogic.roundModelReceived(mock(Round.class));
+        verify(persistence, times(1)).saveRoundData(any());
+    }
+
+    @Test
+    public void roundModelReceivedIncrementsRound() {
+        int currentRoundNumber = gameLogic.getCurrentRoundNumber();
+        gameLogic.roundModelReceived(mock(Round.class));
+        int newRoundNumber = gameLogic.getCurrentRoundNumber();
+        Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
+    }
+
+    @Test
+    public void roundModelReceivedCallsLocalParticipants() {
+        gameLogic.roundModelReceived(mock(Round.class));
+        verify(participantsPool, times(1)).excecuteRound(any(Round.class));
     }
 }
