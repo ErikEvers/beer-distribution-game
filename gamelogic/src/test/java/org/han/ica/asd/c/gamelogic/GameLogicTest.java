@@ -8,6 +8,7 @@ import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.gamelogic.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,5 +116,29 @@ public class GameLogicTest {
 
         //Assert
         verify(communication, times(1)).getAllFacilities();
+    }
+
+    @Test
+    public void selectAgentCallsSaveSelectedAgentOnceInIPersistence() {
+        //Arrange
+        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
+
+        //Act
+        gameLogic.selectAgent(programmedAgent);
+
+        //Assert
+        verify(persistence, times(1)).saveSelectedAgent(programmedAgent);
+    }
+
+    @Test
+    public void selectAgentCallsSendSelectedAgentOnceInIConnectedForPlayer() {
+        //Arrange
+        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
+
+        //Act
+        gameLogic.selectAgent(programmedAgent);
+
+        //Assert
+        verify(communication, times(1)).sendSelectedAgent(programmedAgent);
     }
 }
