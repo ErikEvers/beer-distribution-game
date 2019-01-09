@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -38,6 +39,9 @@ public class ProgramAgentController {
     @FXML
     TextFlow businessRuleTexFlow;
 
+    @FXML
+    Button save;
+
     @Inject
     private IBusinessRules iBusinessRules;
 
@@ -55,6 +59,9 @@ public class ProgramAgentController {
 
     public void setAgentName(String name) {
         if(name != null) {
+            if ("Default".equals(name)){
+                save.setDisable(true);
+            }
             agentNameInput.setText(name);
             List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
             for (String rule: rules) {
