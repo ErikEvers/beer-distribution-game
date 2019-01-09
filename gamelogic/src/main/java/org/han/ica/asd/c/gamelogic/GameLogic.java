@@ -4,11 +4,13 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -23,11 +25,12 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
     private IConnectedForPlayer communication;
     private IRoundStore persistence;
     private ParticipantsPool participantsPool;
     private int round;
+    private BeerGame beerGame;
 
     public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool) {
         this.communication = communication;
@@ -126,6 +129,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void roundModelReceived(Round currentRound) {
         persistence.saveRoundData(currentRound);
         participantsPool.excecuteRound(currentRound);
+        beerGame.getRounds().add(currentRound);
         round++;
     }
 
@@ -137,5 +141,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public int getCurrentRoundNumber() {
         return round;
+    }
+
+    @Override
+    public void gameStartReceived(BeerGame beerGame) {
+        this.beerGame = beerGame;
     }
 }
