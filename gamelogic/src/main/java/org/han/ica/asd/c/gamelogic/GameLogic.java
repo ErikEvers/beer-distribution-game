@@ -23,7 +23,7 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver {
     private IConnectedForPlayer communication;
     private IRoundStore persistence;
     private ParticipantsPool participantsPool;
@@ -123,7 +123,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param currentRound The current round to save.
      */
     @Override
-    public void startNewRound(Round currentRound) {
+    public void roundModelReceived(Round currentRound) {
         persistence.saveRoundData(currentRound);
         round++;
     }

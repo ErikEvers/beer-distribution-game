@@ -85,15 +85,15 @@ public class GameLogicTest {
     }
 
     @Test
-    public void startNewRoundSavesOldRoundToDatabase() {
-        gameLogic.startNewRound(mock(Round.class));
+    public void roundModelReceivedSavesOldRoundToDatabase() {
+        gameLogic.roundModelReceived(mock(Round.class));
         verify(persistence, times(1)).saveRoundData(any());
     }
 
     @Test
-    public void startNewRoundIncrementsRound() {
+    public void roundModelReceivedIncrementsRound() {
         int currentRoundNumber = gameLogic.getCurrentRoundNumber();
-        gameLogic.startNewRound(mock(Round.class));
+        gameLogic.roundModelReceived(mock(Round.class));
         int newRoundNumber = gameLogic.getCurrentRoundNumber();
         Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
     }
