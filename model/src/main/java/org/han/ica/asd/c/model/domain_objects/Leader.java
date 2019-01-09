@@ -22,4 +22,8 @@ public class Leader implements IDomainModel{
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
+
+    public setTimestamp(LocalDateTime timestamp){
+        this.timestamp = timestamp;
+    }
 }

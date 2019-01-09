@@ -222,6 +222,7 @@ public class BeergameDAO {
 						beergame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
 						beergame.setRounds(roundDAO.getRounds());
 						beergame.setPlayers(playerDAO.getAllPlayers());
+						beergame.setLeader(leaderDAO.getLeader());
 					}
 				}
 				conn.commit();
