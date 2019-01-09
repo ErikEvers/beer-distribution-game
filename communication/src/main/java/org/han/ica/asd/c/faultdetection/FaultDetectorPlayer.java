@@ -50,7 +50,6 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     public void start() {
-        //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
     }
@@ -69,7 +68,6 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     public boolean leaderIsNotPinging() {
-        // timer check timestamp if client
         long current = System.currentTimeMillis();
         long timeDifference = current - lastReceived;
         long threeIntervals = Global.FaultDetectionInterval * 3;
@@ -85,7 +83,6 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     private void askOtherPlayers() {
-
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
         // filter out ips from ips that already send a message within the past 5 minutes
@@ -138,7 +135,6 @@ public class FaultDetectorPlayer extends TimerTask {
     public NodeInfoList getNodeInfoList() {
         return nodeInfoList;
     }
-
 
     /**
      * Sets new faultDetectionClient.

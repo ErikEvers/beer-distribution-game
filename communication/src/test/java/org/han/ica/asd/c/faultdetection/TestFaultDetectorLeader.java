@@ -59,7 +59,6 @@ public class TestFaultDetectorLeader {
         });
 
         faultDetectorLeader = injector.getInstance(FaultDetectorLeader.class);
-
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
         faultDetectorLeader.setObservers(observers);
     }
@@ -67,9 +66,7 @@ public class TestFaultDetectorLeader {
     @Test
     @DisplayName("Tests if the Timer is used and the method scheduleAtAFixedRate has been called")
     void TestStartMethodCallsTimerMethod() {
-
         Timer toTest = mock(Timer.class);
-
         FaultDetectorLeader faultDetectorLeader = new FaultDetectorLeader() {
 
             public Timer createTimer(Boolean isDeamon) {
@@ -82,16 +79,13 @@ public class TestFaultDetectorLeader {
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
         faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
 
-
         faultDetectorLeader.start();
         verify(toTest, times(1)).scheduleAtFixedRate(faultDetectorLeader, 0, 10000);
-
     }
 
     @Test
     @DisplayName("Test if run is calling the right methods, and sets the status of isconnected to true if the machine is reached")
     void testRun() {
-
         FaultDetectionClient faultDetectionClientMock = new FaultDetectionClient() {
             public void makeConnection(String ipAddress) {
                 //doNothing
@@ -110,7 +104,6 @@ public class TestFaultDetectorLeader {
                 //do nothing
             }
         };
-
         faultDetectorLeader.setObservers(observers);
         faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
@@ -130,7 +123,6 @@ public class TestFaultDetectorLeader {
         doNothing().when(faultHandlerLeader).reset(any(String.class));
         doNothing().when(nodeInfoList).updateIsConnected(any(String.class), any(boolean.class));
 
-
         faultDetectorLeader.run();
 
         verify(failLog, times(1)).reset(testIp1);
@@ -144,7 +136,6 @@ public class TestFaultDetectorLeader {
     @Test
     @DisplayName("Test if makeConnection handles the peerCantReachedException")
     void testRunThrowsException() {
-
         FaultDetectionClient faultDetectionClientMock = new FaultDetectionClient() {
             public void makeConnection(String ipAddress) throws NodeCantBeReachedException {
                 throw new NodeCantBeReachedException();
@@ -180,7 +171,6 @@ public class TestFaultDetectorLeader {
         activeIpsMock.add(testIp1);
         activeIpsMock.add(testIp2);
 
-
         when(nodeInfoList.getActiveIpsWithoutLeader()).thenReturn(activeIpsMock);
         when(failLog.checkIfIpIsFailed(testIp1)).thenReturn(false);
         when(failLog.checkIfIpIsFailed(testIp2)).thenReturn(true);
@@ -198,7 +188,6 @@ public class TestFaultDetectorLeader {
     @Test
     @DisplayName("Test if the SendfaultmessagesToActivePlayers only sends to active players, And actually calls the sendfaultmessage method")
     void TestSendFaultMessageToActivePlayersWith1ActivePlayerAnd1InactivePlayer() {
-
         faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setFaultDetectionClient(faultDetectionClient);
         faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
@@ -223,13 +212,11 @@ public class TestFaultDetectorLeader {
         faultDetectorLeader.sendFaultMessagesToActivePlayers(activeIpsMock);
 
         verify(faultDetectionClient, times(1)).sendFaultMessage(any(FaultMessage.class), any(String.class));
-
     }
 
     @Test
     @DisplayName("Test if faulMessageReponseReceived doesnt call the incrementfailure method when isalive = true")
     void TestFaultMessageResponseReceiver() {
-
         String testIp1 = "TestIp1";
 
         faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
@@ -244,13 +231,11 @@ public class TestFaultDetectorLeader {
         verify(faultMessageResponse, times(1)).getAlive();
         verify(faultMessageResponse, times(1)).getIpOfSubject();
         verify(faultHandlerLeader, times(0)).incrementFailure(testIp1);
-
     }
 
     @Test
     @DisplayName("Test if faulMessageReponseReceived calls the incrementfailure method when isalive = false")
     void TestFaultMessageResponseReceiverCallsIncrementFailure() {
-
         String testIp1 = "TestIp1";
 
         faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
@@ -265,7 +250,6 @@ public class TestFaultDetectorLeader {
         verify(faultMessageResponse, times(1)).getAlive();
         verify(faultMessageResponse, times(1)).getIpOfSubject();
         verify(faultHandlerLeader, times(1)).incrementFailure(testIp1);
-
     }
 
     @Test
@@ -284,8 +268,6 @@ public class TestFaultDetectorLeader {
         verify(timer).cancel();
         verify(timer).purge();
     }
-
-
 }
 
 

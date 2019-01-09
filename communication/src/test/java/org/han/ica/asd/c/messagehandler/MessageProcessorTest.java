@@ -1,9 +1,6 @@
 package org.han.ica.asd.c.messagehandler;
 
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
@@ -15,9 +12,6 @@ import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -35,7 +29,6 @@ public class MessageProcessorTest {
     void setup(){
         initMocks(this);
         messageProcessor = new MessageProcessor();
-
     }
 
     @Test

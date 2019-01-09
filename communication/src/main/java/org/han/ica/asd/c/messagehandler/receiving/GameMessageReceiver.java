@@ -115,7 +115,6 @@ public class GameMessageReceiver {
         return null;
     }
 
-
     /**
      * Handles the TransactionMessage.
      *
@@ -163,7 +162,6 @@ public class GameMessageReceiver {
         }
         return null;
     }
-
 
     public void setObservers(ArrayList<IConnectorObserver> observers) {
         this.gameMessageObservers = observers;

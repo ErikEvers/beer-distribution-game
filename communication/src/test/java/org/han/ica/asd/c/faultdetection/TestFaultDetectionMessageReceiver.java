@@ -31,25 +31,33 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
-	void testMessages(){
-		FaultDetectionMessage realFaultDetectionMessage = new FaultMessage("test");
+	void testFaultMessage(){
+		FaultMessage faultMessage = new FaultMessage("test");
 
-		assertEquals(1, realFaultDetectionMessage.getMessageId());
-		assertEquals("test", ((FaultMessage) realFaultDetectionMessage).getIp());
+		assertEquals(1, faultMessage.getMessageId());
+		assertEquals("test", faultMessage.getIp());
+	}
 
-		realFaultDetectionMessage = new PingMessage();
-		assertEquals(3, realFaultDetectionMessage.getMessageId());
+	@Test
+	void testPingMessage(){
+		PingMessage pingMessage = new PingMessage();
+		assertEquals(3, pingMessage.getMessageId());
+	}
 
-		realFaultDetectionMessage = new FaultMessageResponse(true, "test");
+	@Test
+	void testFaultMessageResponse(){
+		FaultMessageResponse realFaultDetectionMessage = new FaultMessageResponse(true, "test");
 		assertEquals(2, realFaultDetectionMessage.getMessageId());
-		assertTrue(((FaultMessageResponse) realFaultDetectionMessage).getAlive());
-		assertEquals("test", ((FaultMessageResponse) realFaultDetectionMessage).getIpOfSubject());
+		assertTrue(realFaultDetectionMessage.getAlive());
+		assertEquals("test", realFaultDetectionMessage.getIpOfSubject());
+	}
 
-		realFaultDetectionMessage = new CanYouReachLeaderMessage();
-		((CanYouReachLeaderMessage) realFaultDetectionMessage).setLeaderState(true);
-		assertEquals(4, realFaultDetectionMessage.getMessageId());
-		assertTrue(((CanYouReachLeaderMessage) realFaultDetectionMessage).getLeaderState());
-
+	@Test
+	void testCanYouReachLeaderMessage(){
+		CanYouReachLeaderMessage reachLeaderMessage = new CanYouReachLeaderMessage();
+		reachLeaderMessage.setLeaderState(true);
+		assertEquals(4, reachLeaderMessage.getMessageId());
+		assertTrue(reachLeaderMessage.getLeaderState());
 	}
 
 	@Test

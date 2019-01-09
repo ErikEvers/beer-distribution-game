@@ -1,8 +1,5 @@
 package org.han.ica.asd.c.messagehandler;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.messagehandler.sending.SendInTransaction;
@@ -33,7 +30,6 @@ public class SendInTransactionTest {
     @Mock
     ResponseMessage responseMessage;
 
-
     @BeforeEach
     void setup() {
         initMocks(this);
@@ -57,6 +53,5 @@ public class SendInTransactionTest {
         }
         sendInTransaction.sendToAllPlayers();
         verify(transactionMessage).setPhaseToStage();
-
     }
 }

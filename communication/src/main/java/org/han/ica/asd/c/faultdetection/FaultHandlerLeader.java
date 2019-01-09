@@ -51,7 +51,7 @@ public class FaultHandlerLeader {
 
             return ip;
         } else {
-            //This should start a relay system.
+            //TODO Call Relay system here when implemented.
             return null;
         }
     }

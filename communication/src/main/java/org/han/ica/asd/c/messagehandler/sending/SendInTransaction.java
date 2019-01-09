@@ -9,13 +9,9 @@ public class SendInTransaction {
     private String[] ips;
     private TransactionMessage transactionMessage;
     private SocketClient socketClient;
-
     private int numberOfSuccesses = 0;
     private int numberFinished = 0;
     private int numberOfThreads = 0;
-
-
-
 
     public SendInTransaction(String[] ips, TransactionMessage transactionMessage, SocketClient socketClient) {
         this.ips = ips;
