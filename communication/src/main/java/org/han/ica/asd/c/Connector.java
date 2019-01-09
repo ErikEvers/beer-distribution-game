@@ -3,6 +3,7 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
@@ -16,9 +17,6 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
@@ -28,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
@@ -242,9 +239,9 @@ public class Connector implements IConnectorForSetup {
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), roundModel);
     }
 
-    public void sendConfiguration(Configuration configuration) {
+    public void sendGameStart(BeerGame beerGame) {
         List<String> ips = nodeInfoList.getAllIps();
-        gameMessageClient.sendConfigurationToAllPlayers(ips.toArray(new String[0]), configuration);
+        gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
     public void addIP(String text) {
