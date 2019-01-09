@@ -146,7 +146,7 @@ public class ConnectorTest {
 
     public void sendRoundToAllTest() {
         doNothing().when(gameMessageClient).sendRoundToAllPlayers(any(), any());
-        connector.updateAllPeers(new Round());
+        connector.sendRoundDataToAllPlayers(new Round());
         verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class), any(Round.class));
     }
 
