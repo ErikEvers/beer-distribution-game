@@ -274,6 +274,7 @@ public class ConfigurationDAO {
     }
 
     /**
+     *
      * @param linkedFacilities
      * @param rs
      * @throws SQLException
@@ -289,7 +290,6 @@ public class ConfigurationDAO {
                     linkedFacilities.put(lastKnownParent, new ArrayList<>());
                 }
                 linkedFacilities.get(lastKnownParent).add(facilityDAO.readSpecificFacility(rs.getInt("FacilityIdDelivering")));
-                System.out.println(""+linkedFacilities.get(lastKnownParent).get(0).getFacilityId());
             }
         }
 
