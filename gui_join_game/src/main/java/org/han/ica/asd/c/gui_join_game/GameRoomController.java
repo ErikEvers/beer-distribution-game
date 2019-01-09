@@ -8,6 +8,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -42,6 +43,9 @@ public class GameRoomController {
     @Inject
     @Named("PlayGame")
     private IGUIHandler playGame;
+
+		@Inject
+		private IGameStore persistence;
 
     private IConnectorForSetup iConnectorForSetup;
 
@@ -109,6 +113,8 @@ public class GameRoomController {
 			DaoConfig.setCurrentGameId("123");
 
 			PlayerComponent.setPlayer(henk);
+
+			persistence.saveGameLog(beerGame);
 
 			new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
 		}

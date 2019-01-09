@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.gamelogic;
 
-import javafx.scene.control.Alert;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
@@ -8,16 +7,15 @@ import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
-import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private IConnectedForPlayer communication;
 
     @Inject
-    private IRoundStore persistence;
+    private IGameStore persistence;
 
 	private ParticipantsPool participantsPool;
 
@@ -53,7 +51,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void submitTurn(Round turn) {
         communication.sendTurnData(turn);
-        persistence.saveTurnData(turn);
+        persistence.saveRoundData(turn);
         System.out.println("=============== TURN AFGEROND =====================");
     }
 
@@ -63,7 +61,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public BeerGame seeOtherFacilities() {
-        return persistence.getCurrentBeerGame();
+        return persistence.getGameLog();
     }
 
     /**

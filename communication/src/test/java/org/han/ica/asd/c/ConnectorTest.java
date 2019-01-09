@@ -17,7 +17,7 @@ import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
@@ -146,13 +146,13 @@ public class ConnectorTest {
 
     public void sendRoundToAllTest() {
         doNothing().when(gameMessageClient).sendRoundToAllPlayers(any(), any());
-        connector.updateAllPeers(new Round());
+        connector.sendRoundDataToAllPlayers(new Round());
         verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class), any(Round.class));
     }
 
     @Test
     public void sendConfigucationToAllTest() {
-        connector.sendConfiguration(new Configuration());
-        verify(gameMessageClient).sendConfigurationToAllPlayers(any(String[].class), any(Configuration.class));
+        connector.sendGameStart(new BeerGame());
+        verify(gameMessageClient).sendStartGameToAllPlayers(any(String[].class), any(BeerGame.class));
     }
 }
