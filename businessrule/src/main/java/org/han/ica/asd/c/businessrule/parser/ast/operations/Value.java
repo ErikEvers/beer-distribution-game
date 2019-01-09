@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Value extends OperationValue {
     private static final String PREFIX = "V(";
-    private List<String> value = new ArrayList<>();
+    private List<String> values = new ArrayList<>();
 
     /**
      * Constructor
@@ -22,7 +22,7 @@ public class Value extends OperationValue {
      * @param value the value to be saved in the object
      */
     public Value(int value) {
-        this.value.add(String.valueOf(value));
+        this.values.add(String.valueOf(value));
     }
 
     /**
@@ -34,12 +34,22 @@ public class Value extends OperationValue {
     @Override
     public Value addValue(String value) {
         if ("smallest".equals(value) || "lowest".equals(value)) {
-            this.value.add("lowest");
+            this.values.add("lowest");
         } else if ("biggest".equals(value) || "highest".equals(value)) {
-            this.value.add("highest");
+            this.values.add("highest");
         } else {
-            this.value.add(value);
+            this.values.add(value);
         }
+        return this;
+    }
+
+    /**
+     * Reset the values of the value list
+     *
+     * @return Returns itself so that it can be used immediately
+     */
+    public Value resetValues() {
+        values.clear();
         return this;
     }
 
@@ -52,12 +62,12 @@ public class Value extends OperationValue {
     public void encode(StringBuilder stringBuilder) {
         stringBuilder
                 .append(PREFIX)
-                .append(value.get(0));
+                .append(values.get(0));
 
-        for (int i = 1, il = value.size(); i < il; i++) {
+        for (int i = 1, il = values.size(); i < il; i++) {
             stringBuilder
                     .append(' ')
-                    .append(value.get(i));
+                    .append(values.get(i));
         }
         stringBuilder.append(SUFFIX);
     }
@@ -68,34 +78,39 @@ public class Value extends OperationValue {
      * @return Returns the value
      */
     public List<String> getValue() {
-        return this.value;
+        return this.values;
     }
 
     /***
      * Gets the second part of the variable
      *
-     * @return
+     * @return {@link String}
      */
     public String getSecondPartVariable() {
-        return value.get(1);
+        return this.values.get(1);
     }
 
     /***
      * Gets the first part of the variable
      *
-     * @return
+     * @return {@link String}
      */
     public String getFirstPartVariable() {
-        return value.get(0);
+        return this.values.get(0);
     }
 
     /**
-     * Returns the {@link Integer} representation of the value
+     * Returns the {@link Integer} representation of the value. If representation uses a percentage it will calculate the percentage of the value
      *
      * @return {@link Integer}
      */
     public Integer getIntegerValue() {
-        return Integer.parseInt(getFirstPartVariable());
+        String firstPartVariable = getFirstPartVariable();
+        if(firstPartVariable.startsWith("%")) {
+            return (int) (Integer.parseInt(firstPartVariable.substring(1)) / 100.0f * Integer.parseInt(getSecondPartVariable()) + 0.5f);
+        }
+
+        return Integer.parseInt(firstPartVariable);
     }
 
     /**
@@ -113,7 +128,7 @@ public class Value extends OperationValue {
         if (!super.equals(o))
             return false;
         Value valueObject = (Value) o;
-        return Objects.equals(value, valueObject.value);
+        return Objects.equals(this.values, valueObject.values);
     }
 
     /**
@@ -123,7 +138,7 @@ public class Value extends OperationValue {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return Objects.hash(values);
     }
 
     /**
@@ -133,15 +148,15 @@ public class Value extends OperationValue {
      */
     public void replaceValueWithValue(String gameValue) {
         if (hasNotBeenReplaced(getFirstPartVariable())) {
-            if( value.size() > 1&&GameValue.checkIfFacility(getSecondPartVariable())){
-                value.set(1, gameValue);
+            if( this.values.size() > 1 && GameValue.checkIfFacility(getSecondPartVariable())){
+                this.values.set(1, gameValue);
                 return;
-            }else if(value.size() > 1){
-                value.remove(getSecondPartVariable());
+            }else if(this.values.size() > 1){
+                this.values.remove(getSecondPartVariable());
             }
-            value.set(0, gameValue);
+            this.values.set(0, gameValue);
         } else if (hasNotBeenReplaced(getSecondPartVariable())) {
-            value.set(1, gameValue);
+            this.values.set(1, gameValue);
         }
     }
 
