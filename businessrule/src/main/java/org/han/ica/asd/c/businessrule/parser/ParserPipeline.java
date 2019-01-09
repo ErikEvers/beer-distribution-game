@@ -101,9 +101,13 @@ public class ParserPipeline {
             }
         }
 
+        clearParseErrorListener();
+        return hasErrors;
+    }
+
+    private void clearParseErrorListener(){
         ParseErrorListener.INSTANCE.getExceptions().clear();
         ParseErrorListener.INSTANCE.getWordExceptions().clear();
-        return hasErrors;
     }
 
     private String extendErrorMessageWithAlternative(String errorMessage, String alternative){

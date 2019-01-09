@@ -5,7 +5,6 @@ import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
