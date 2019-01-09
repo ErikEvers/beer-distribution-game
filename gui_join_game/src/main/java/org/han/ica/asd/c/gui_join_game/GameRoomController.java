@@ -6,7 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
-import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -41,9 +41,7 @@ public class GameRoomController {
     @Named("PlayGame")
     private IGUIHandler playGame;
 
-    @Inject
-    @Named("Connector")
-    private IConnecterForSetup iConnectorForSetup;
+    private IConnectorForSetup iConnectorForSetup;
 
     public void initialize() {
 			Configuration configuration = new Configuration();
@@ -108,7 +106,9 @@ public class GameRoomController {
 		}
 
     public void handleBackToJoinGameButtonClick() {
+    	iConnectorForSetup.removeYourselfFromRoom(roomModel);
         joinGame.setupScreen();
+
     }
 
     public void handleReadyButtonClick() {
@@ -120,4 +120,8 @@ public class GameRoomController {
         this.roomModel = roomModel;
         gameRoom.setText(roomModel.getRoomName());
     }
+
+	public void setIConnectorForSetup(IConnectorForSetup iConnectorForSetup) {
+    	this.iConnectorForSetup = iConnectorForSetup;
+	}
 }
