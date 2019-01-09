@@ -9,7 +9,7 @@ import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
-import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,18 +21,18 @@ public class GameLogicTest {
     private GameLogic gameLogic;
     private ParticipantsPool participantsPool;
     private IConnectedForPlayer communication;
-    private IRoundStore persistence;
+    private IGameStore persistence;
 
     @BeforeEach
     public void setup() {
         communication = mock(IConnectedForPlayer.class);
-        persistence = mock(IRoundStore.class);
+        persistence = mock(IGameStore.class);
         participantsPool = mock(ParticipantsPool.class);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IRoundStore.class).toInstance(persistence);
+                bind(IGameStore.class).toInstance(persistence);
                 bind(IConnectedForPlayer.class).toInstance(communication);
             }
         });
@@ -45,7 +45,7 @@ public class GameLogicTest {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
-        verify(persistence, times(1)).saveTurnData(turn);
+        verify(persistence, times(1)).saveRoundData(turn);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class GameLogicTest {
     @Test
     public void seeOtherFacilitiesCallsPersistence() {
         gameLogic.seeOtherFacilities();
-        verify(persistence, times(1)).getCurrentBeerGame();
+        verify(persistence, times(1)).getGameLog();
     }
 
     @Test

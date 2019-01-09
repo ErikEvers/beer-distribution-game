@@ -5,7 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class PlayerComponentTest {
             @Override
             protected void configure() {
                 bind(IPlayerGameLogic.class).toInstance(logicMock);
-                bind(IRoundStore.class).to(PersistenceStub.class);
+                bind(IGameStore.class).to(PersistenceStub.class);
             }
         });
         playerComponent = injector.getInstance(PlayerComponent.class);

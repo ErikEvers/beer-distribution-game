@@ -5,7 +5,7 @@ import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.gui_play_game.PlayGameSetupScreen;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
-import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.persistence.Persistence;
 import org.han.ica.asd.c.player.PlayerComponent;
 import org.han.ica.asd.c.Connector;
@@ -64,7 +64,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
 
 		bind(IConnectedForPlayer.class).to(Connector.class);
-		bind(IRoundStore.class).to(Persistence.class);
+		bind(IGameStore.class).to(Persistence.class);
 		bind(IPlayerGameLogic.class).to(GameLogic.class);
 
 		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
