@@ -24,7 +24,8 @@ class AverageCalculationDAOIntegrationTest {
     private static final Facility FACTORYONE = new Facility(FACTORYTYPE, 1);
     private static final Facility FACTORYTWO = new Facility(FACTORYTYPE, 2);
     private static final FacilityTurn FACILITY_TURN = new FacilityTurn(1,1,1,0, 1,false);
-    private static final FacilityTurnDeliver FACILITY_TURN_DELIVER = new FacilityTurnDeliver(1,2,0,4);
+    private static final FacilityTurnDeliver FACILITY_TURN_DELIVER1 = new FacilityTurnDeliver(1,2,0,4);
+    private static final FacilityTurnDeliver FACILITY_TURN_DELIVER2 = new FacilityTurnDeliver(1,3,10,5);
     private static final FacilityTurnOrder FACILITY_TURN_ORDER1 = new FacilityTurnOrder(1,2,50);
     private static final FacilityTurnOrder FACILITY_TURN_ORDER2 = new FacilityTurnOrder(1,3,60);
 
@@ -79,8 +80,6 @@ class AverageCalculationDAOIntegrationTest {
 
     @Test
     void readFacilityTurnForFacility() {
-        facilityTypeDAO.createFacilityType(FACTORYTYPE);
-        facilityDAO.createFacility(FACTORYONE);
         roundDAO.createFacilityTurn(1,FACILITY_TURN);
 
         FacilityTurn facilityTurnDb = averageCalculationDAO.readFacilityTurnForFacility(1, 1);
@@ -93,9 +92,6 @@ class AverageCalculationDAOIntegrationTest {
 
     @Test
     void readFacilityTurnOrderForFacility() {
-        facilityTypeDAO.createFacilityType(FACTORYTYPE);
-        facilityDAO.createFacility(FACTORYONE);
-        roundDAO.createFacilityTurn(1,FACILITY_TURN);
         roundDAO.createFacilityOrder(1, FACILITY_TURN_ORDER1);
         roundDAO.createFacilityOrder(1, FACILITY_TURN_ORDER2);
 
@@ -107,5 +103,14 @@ class AverageCalculationDAOIntegrationTest {
 
     @Test
     void readFacilityTurnDeliverForFacility() {
+        roundDAO.createFacilityDeliver(1, FACILITY_TURN_DELIVER1);
+        roundDAO.createFacilityDeliver(1, FACILITY_TURN_DELIVER2);
+
+        List<FacilityTurnDeliver> facilityTurnDeliverDb = averageCalculationDAO.readFacilityTurnDeliverForFacility(1, 1);
+        Assert.assertEquals(2, facilityTurnDeliverDb.size());
+        Assert.assertEquals(FACILITY_TURN_DELIVER1.getDeliverAmount(), facilityTurnDeliverDb.get(0).getDeliverAmount());
+        Assert.assertEquals(FACILITY_TURN_DELIVER1.getOpenOrderAmount(), facilityTurnDeliverDb.get(0).getOpenOrderAmount());
+        Assert.assertEquals(FACILITY_TURN_DELIVER2.getDeliverAmount(), facilityTurnDeliverDb.get(1).getDeliverAmount());
+        Assert.assertEquals(FACILITY_TURN_DELIVER2.getOpenOrderAmount(), facilityTurnDeliverDb.get(1).getOpenOrderAmount());
     }
 }

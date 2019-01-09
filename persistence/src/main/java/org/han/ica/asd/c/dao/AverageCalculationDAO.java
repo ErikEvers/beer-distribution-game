@@ -21,7 +21,7 @@ public class AverageCalculationDAO {
     private static final String READ_ALL_FACILITIES_WITH_FACILITYTYPE = "SELECT FacilityId FROM Facility WHERE GameId = ? AND FacilityName = ?;";
     private static final String READ_FACILITYTURN_FOR_FACILITY = "SELECT * FROM FacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
     private static final String READ_FACILITYTURNORDER_FOR_FACILITY = "SELECT * FROM FacilityTurnOrder WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
-    private static final String READ_FACILITYTURNDELIVER_FOR_FACILITY = "SELECT * FROM FacilityTurnOrder WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
+    private static final String READ_FACILITYTURNDELIVER_FOR_FACILITY = "SELECT * FROM FacilityTurnDeliver WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
     private static final String FACILITY_ID = "FacilityId";
 
     @Inject
@@ -133,7 +133,7 @@ public class AverageCalculationDAO {
      */
     public List<FacilityTurnDeliver> readFacilityTurnDeliverForFacility(int roundId, int facilityId) {
         Connection conn = databaseConnection.connect();
-        List<FacilityTurnDeliver> facilitydeliverAmounts = new ArrayList<>();
+        List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
         try (PreparedStatement pstmt = conn.prepareStatement(READ_FACILITYTURNDELIVER_FOR_FACILITY)) {
             conn.setAutoCommit(false);
 
@@ -143,7 +143,7 @@ public class AverageCalculationDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    facilitydeliverAmounts.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
+                    facilityTurnDelivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
                 }
             }
 
@@ -152,7 +152,7 @@ public class AverageCalculationDAO {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
         }
-        return facilitydeliverAmounts;
+        return facilityTurnDelivers;
     }
 
 }
