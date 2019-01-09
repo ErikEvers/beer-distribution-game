@@ -7,5 +7,4 @@ import java.util.List;
 public interface IFacilityMessageObserver extends IConnectorObserver {
     void chooseFacility(Facility facility) throws Exception;
     List<Facility> getAllFacilities();
-
 }

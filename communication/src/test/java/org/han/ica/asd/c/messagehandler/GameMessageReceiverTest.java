@@ -91,7 +91,6 @@ public class GameMessageReceiverTest {
                 requestStaticInjection(Connector.class);
                 requestStaticInjection(GameMessageClient.class);
                 bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
-
             }
         });
         gameMessageReceiver = inject.getInstance(GameMessageReceiver.class);
@@ -102,7 +101,7 @@ public class GameMessageReceiverTest {
         observers.add(electionObserver);
         observers.add(gameConfigurationObserver);
         observers.add(facilityMessageObserver);
-        
+
         gameMessageReceiver.setObservers(observers);
         gameMessageReceiver.setGameMessageFilterer(gameMessageFilterer);
     }
