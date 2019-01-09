@@ -3,16 +3,16 @@ package org.han.ica.asd.c.gamelogic.public_interfaces;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
-import java.util.Map;
+
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerGameLogic {
     /**
-     * Sends and saves an order of the player / agent.
+     * Sends and saves an turn of the player / agent.
      * @param turn
      */
-    void placeOrder(Round turn);
+    void submitTurn(Round turn);
 
     /**
      * Returns the current state of the game.
@@ -38,4 +38,6 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
+
+    int getRound();
 }

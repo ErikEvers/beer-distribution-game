@@ -10,11 +10,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.player.PlayerComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayGameFactoryController extends PlayGame {
 

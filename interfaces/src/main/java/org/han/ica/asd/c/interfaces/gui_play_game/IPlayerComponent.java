@@ -12,6 +12,8 @@ public interface IPlayerComponent {
     void activateAgent();
     BeerGame seeOtherFacilities();
     void placeOrder(Facility facility, int amount);
+    void sendDelivery(Facility facility, int amount);
+    void submitTurn();
     void requestFacilityUsage(Facility facility);
     void selectAgent();
     List<String> getAllGames();

@@ -186,10 +186,11 @@ public abstract class PlayGame {
     }
 
     protected void handleSendDeliveryButtonClick() {
-
+        playerComponent.sendDelivery(null, 0);
     }
 
     @FXML
     protected void submitTurnButonClicked() {
+        playerComponent.submitTurn();
     }
 }
