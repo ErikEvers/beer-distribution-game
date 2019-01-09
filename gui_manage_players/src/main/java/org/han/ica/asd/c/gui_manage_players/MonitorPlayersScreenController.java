@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_spelers_beheren;
+package org.han.ica.asd.c.gui_manage_players;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gameconfiguration.GameConfiguration;
 import org.han.ica.asd.c.model.domain_objects.Player;
 

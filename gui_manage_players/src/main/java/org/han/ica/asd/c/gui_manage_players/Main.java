@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_spelers_beheren;
+package org.han.ica.asd.c.gui_manage_players;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
