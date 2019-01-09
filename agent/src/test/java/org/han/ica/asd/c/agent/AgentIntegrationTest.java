@@ -6,12 +6,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
-import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
-import org.han.ica.asd.c.businessrule.engine.BusinessRuleFactory;
-import org.han.ica.asd.c.businessrule.engine.IBusinessRuleDecoder;
-import org.han.ica.asd.c.businessrule.engine.IBusinessRuleFactory;
-import org.han.ica.asd.c.businessrule.parser.ast.INodeConverter;
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
@@ -38,10 +32,7 @@ class AgentIntegrationTest {
     private Injector participantInjector = Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-            bind(INodeConverter.class).to(NodeConverter.class);
             bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
-            bind(IBusinessRuleFactory.class).to(BusinessRuleFactory.class);
-            bind(IBusinessRuleDecoder.class).to(BusinessRuleDecoder.class);
             bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                 @Override
                 public void saveFacilityTurn(Round data) {

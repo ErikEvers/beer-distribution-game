@@ -2,16 +2,22 @@ package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Objects;
 
 public class MultiplyOperation extends Operation {
     private static final String PREFIX = "Mul(";
 
-    /**
-     * Constructor
-     */
+    @Inject
+    private Provider<CalculationOperator> calculationOperatorProvider;
+
     public MultiplyOperation() {
-        super.calculationOperator = new CalculationOperator(OperationType.MUL.getOperation());
+    }
+    @Inject
+    public MultiplyOperation(Provider<CalculationOperator> calculationOperatorProvider) {
+        this.calculationOperatorProvider = calculationOperatorProvider;
+        super.calculationOperator = calculationOperatorProvider.get().addValue(OperationType.MUL.getOperation());
     }
 
     /**

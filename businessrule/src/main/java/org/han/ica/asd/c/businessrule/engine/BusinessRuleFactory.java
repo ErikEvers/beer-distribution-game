@@ -25,7 +25,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class BusinessRuleFactory implements IBusinessRuleFactory{
+public class BusinessRuleFactory {
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
     private final Map<String, Provider<? extends ASTNode>> astNodeProviderMap;
 
@@ -65,7 +65,12 @@ public class BusinessRuleFactory implements IBusinessRuleFactory{
         astNodeProviderMap = Collections.unmodifiableMap(astNodeClassMap);
     }
 
-    @Override
+    /**
+     * Takes the identifier of the business rule script and transforms it into the object of the identifier
+     *
+     * @param identifier The identifier of the business rule script
+     * @return The object which the identifier represents
+     */
     public ASTNode create(String identifier) {
         if (astNodeProviderMap.containsKey(identifier)) {
             try {

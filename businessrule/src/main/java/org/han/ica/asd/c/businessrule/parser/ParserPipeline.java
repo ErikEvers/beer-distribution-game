@@ -2,6 +2,7 @@ package org.han.ica.asd.c.businessrule.parser;
 
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -17,17 +18,31 @@ import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
+import javax.inject.Provider;
 import java.util.*;
 
 public class ParserPipeline {
     private List<UserInputBusinessRule> businessRulesInput;
     private List<BusinessRule> businessRulesParsed;
     private Map<String, String> businessRulesMap = new HashMap<>();
-    private AlternativeFinder alternativeFinder = new AlternativeFinder();
     private static final String DELETE_EMPTY_LINES = "(?m)^[ \t]*\r?\n";
     private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
     private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+.";
 
+    private Provider<Counter> counterProvider;
+    private Provider<Evaluator> evaluatorProvider;
+    private Provider<AlternativeFinder> alternativeFinderProvider;
+    private Provider<ASTListener> astListenerProvider;
+    private AlternativeFinder alternativeFinder;
+
+    @Inject
+    public ParserPipeline(Provider<ASTListener> astListenerProvider, Provider<Counter> counterProvider, Provider<Evaluator> evaluatorProvider, Provider<AlternativeFinder> alternativeFinderProvider) {
+        this.counterProvider = counterProvider;
+        this.evaluatorProvider = evaluatorProvider;
+        this.alternativeFinderProvider = alternativeFinderProvider;
+        this.astListenerProvider = astListenerProvider;
+        alternativeFinder = this.alternativeFinderProvider.get();
+    }
 
     /**
      * Parses the business rules that are provided
@@ -51,8 +66,7 @@ public class ParserPipeline {
 
         ParseTree parseTree = parser.businessrules();
 
-        Injector injector = Guice.createInjector();
-        ASTListener listener = injector.getInstance(ASTListener.class);
+        ASTListener listener = astListenerProvider.get();
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, parseTree);
 
@@ -114,7 +128,9 @@ public class ParserPipeline {
         StringBuilder builder = new StringBuilder();
         builder.append(errorMessage);
         if (!alternative.isEmpty()){
-            builder.append(" Did you mean: '" + alternative + "'?");
+            builder.append(" Did you mean: '")
+                    .append(alternative)
+                    .append("'?");
         } else {
             builder.append(" No alternatives found.");
         }
@@ -149,7 +165,7 @@ public class ParserPipeline {
      * Encodes the business rules and puts them in a map so that they can be sent and stored in the database.
      */
     private void encodeBusinessRules() {
-        Counter newLineCounter = new Counter();
+        Counter newLineCounter = counterProvider.get();
         if (!businessRulesParsed.isEmpty()) {
             for (int i = 0; i < businessRulesInput.size(); i++) {
                 if (businessRulesInput.get(i).getBusinessRule().isEmpty() || ParseErrorListener.INSTANCE.getExceptions().contains(i + 1) || !businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)) {
@@ -165,8 +181,8 @@ public class ParserPipeline {
      * Evaluates the business rules so that they are correct and usable.
      */
     private boolean evaluate() {
-        Evaluator evaluator = new Evaluator();
-        Counter newLineCounter = new Counter();
+        Evaluator evaluator = evaluatorProvider.get();
+        Counter newLineCounter = counterProvider.get();
         Map<UserInputBusinessRule, BusinessRule> map = new LinkedHashMap<>();
         boolean hasErrors = false;
 

@@ -2,11 +2,13 @@ package org.han.ica.asd.c.businessrule.parser.ast.action;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.INodeConverter;
+import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,10 +22,16 @@ public class Action extends ASTNode {
     private Person person;
     private ComparisonStatement comparisonStatement;
 
-    @Inject
-    private INodeConverter nodeConverter;
+    private NodeConverter nodeConverter;
+    private Provider<NodeConverter> nodeConverterProvider;
 
     public Action() {
+    }
+
+    @Inject
+    public Action(Provider<NodeConverter> nodeConverterProvider) {
+        this.nodeConverterProvider = nodeConverterProvider;
+        nodeConverter = this.nodeConverterProvider.get();
     }
 
     /**

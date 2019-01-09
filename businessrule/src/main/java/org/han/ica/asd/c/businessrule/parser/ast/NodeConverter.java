@@ -2,12 +2,10 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 
 import com.google.inject.Inject;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
-
 import javax.inject.Named;
-import java.util.ArrayList;
 import java.util.List;
 
-public class NodeConverter implements INodeConverter {
+public class NodeConverter {
     @Inject
     @Named("BusinessruleStore")
     private IBusinessRuleStore businessRuleStore;

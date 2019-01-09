@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public class BusinessRuleDecoder implements IBusinessRuleDecoder{
+public class BusinessRuleDecoder {
     private static final char LEFT_PARENTHESES = '(';
     private static final char RIGHT_PARENTHESES = ')';
     private static final byte TOKEN_NOT_FOUND = -1;
@@ -20,7 +20,7 @@ public class BusinessRuleDecoder implements IBusinessRuleDecoder{
     private static final String RIGHT_PARENTHESIS_SPLIT_TOKEN = "\\)";
 
     @Inject
-    private IBusinessRuleFactory businessRuleFactory;
+    private BusinessRuleFactory businessRuleFactory;
 
     /**
      * Decode an entire business rule script to a business rule tree with all the properties
