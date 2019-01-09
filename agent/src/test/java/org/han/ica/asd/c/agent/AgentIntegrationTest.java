@@ -140,7 +140,7 @@ class AgentIntegrationTest {
 
     @Test
     void testBusinessRulesOfAgentUsesBusinessRuleWithOrBooleanOperatorInventoryIsGreaterOrEqualsTo40() {
-        Integer inventory = 40;
+        int inventory = 40;
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
                 new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(<)CV(V(3)))))A(AR(order)V(20)P(factory 1)))"),
                 new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(>)CV(V(3)))))A(AR(order)V(20)P(factory 1)CS(C(CV(V(inventory))ComO(<)CV(V(10))))))"),

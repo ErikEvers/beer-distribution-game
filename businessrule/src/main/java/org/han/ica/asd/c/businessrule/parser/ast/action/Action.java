@@ -162,4 +162,12 @@ public class Action extends ASTNode {
     public ASTNode getRightChild() {
         return operation;
     }
+
+    public boolean hasComparisonStatement(){
+        return this.comparisonStatement != null;
+    }
+
+    public ASTNode getComparisonStatement(){
+        return this.comparisonStatement;
+    }
 }

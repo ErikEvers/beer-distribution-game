@@ -208,6 +208,10 @@ public class BusinessRule extends ASTNode {
             findLeafAndReplace(astNode.getLeftChild(), round, facilityId);
             if (hasMultipleChildren(astNode)) {
                 findLeafAndReplace(astNode.getRightChild(), round, facilityId);
+
+                if (astNode instanceof Action && ((Action) astNode).hasComparisonStatement()){
+                    findLeafAndReplace(((Action) astNode).getComparisonStatement(), round, facilityId);
+                }
             }
         }
     }
