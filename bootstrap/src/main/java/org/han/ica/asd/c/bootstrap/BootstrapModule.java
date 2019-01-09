@@ -3,9 +3,7 @@ package org.han.ica.asd.c.bootstrap;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.gui_play_game.PlayGame;
-import org.han.ica.asd.c.gui_play_game.PlayGameFacilities;
-import org.han.ica.asd.c.gui_play_game.PlayGameFactory;
+import org.han.ica.asd.c.gui_play_game.PlayGameSetupScreen;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.persistence.Persistence;
@@ -45,9 +43,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("JoinGame")).to(JoinGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGame.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGameFacilities")).to(PlayGameFacilities.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGameFactory")).to(PlayGameFactory.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
 

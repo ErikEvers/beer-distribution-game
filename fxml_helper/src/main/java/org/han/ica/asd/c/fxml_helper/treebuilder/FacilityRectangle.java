@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.fxml_helper.treebuilder;
 
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -12,22 +14,22 @@ public class FacilityRectangle extends StackPane {
     private Facility facility;
 
     public FacilityRectangle(Facility facility, String owner){
-    		super();
+        super();
         this.facility = facility;
-				this.setCursor(Cursor.HAND);
+        this.setCursor(Cursor.HAND);
 
-				Rectangle rectangle = new Rectangle(51, 36, Color.web(determineColor(facility.getFacilityType().getFacilityName())));
-				rectangle.setStroke(Color.BLACK);
-				rectangle.setStrokeType(StrokeType.INSIDE);
-				rectangle.setArcHeight(5);
-				rectangle.setArcWidth(5);
+        Rectangle rectangle = new Rectangle(51, 36, Color.web(determineColor(facility.getFacilityType().getFacilityName())));
+        rectangle.setStroke(Color.BLACK);
+        rectangle.setStrokeType(StrokeType.INSIDE);
+        rectangle.setArcHeight(5);
+        rectangle.setArcWidth(5);
 
-				this.setTranslateX(rectangle.getTranslateX());
-				this.setTranslateY(rectangle.getTranslateY());
-				this.setHeight(rectangle.getHeight());
-				this.setWidth(rectangle.getWidth());
+        this.setTranslateX(rectangle.getTranslateX());
+        this.setTranslateY(rectangle.getTranslateY());
+        this.setHeight(rectangle.getHeight());
+        this.setWidth(rectangle.getWidth());
 
-				Text text = new Text(owner);
+        Text text = new Text(owner);
         this.getChildren().addAll(rectangle, text);
     }
 

@@ -7,6 +7,7 @@ import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -15,6 +16,7 @@ import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
+import org.han.ica.asd.c.player.PlayerComponent;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,8 +29,8 @@ public class GameRoomController {
     private RoomModel roomModel;
     private BeerGame beerGame;
 
-		@FXML
-		private AnchorPane facilitiesContainer;
+	@FXML
+	private AnchorPane facilitiesContainer;
 
     @FXML
     private Label gameRoom;
@@ -44,6 +46,10 @@ public class GameRoomController {
     @Inject
     @Named("Connector")
     private IConnecterForSetup iConnectorForSetup;
+
+    @Inject
+	@Named("PlayerComponent")
+	private IPlayerComponent playerComponent;
 
     public void initialize() {
 			Configuration configuration = new Configuration();
@@ -104,6 +110,8 @@ public class GameRoomController {
 
 			DaoConfig.setCurrentGameId("123");
 
+			PlayerComponent.setPlayer(henk);
+
 			TreeBuilder.loadFacilityView(beerGame, facilitiesContainer, false);
 		}
 
@@ -112,6 +120,7 @@ public class GameRoomController {
     }
 
     public void handleReadyButtonClick() {
+    	playerComponent.chooseFacility(TreeBuilder.getLastClickedFacility());
         playGame.setData(new Object[]{beerGame});
         playGame.setupScreen();
     }

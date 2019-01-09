@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.fxml_helper.treebuilder;
 
+import javafx.event.EventHandler;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -31,6 +33,8 @@ public class TreeBuilder {
 	private static AnchorPane container;
 
 	private static BeerGame beerGame;
+
+	private static Facility lastClickedFacility;
 
 	/**
 	 * Method that loads facilities with its relevant edges.
@@ -85,6 +89,15 @@ public class TreeBuilder {
 		FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1),"");
 
 		for(FacilityRectangle rectangle : drawnFacilityRectangles) {
+
+
+			EventHandler<MouseEvent> eventHandler =
+				e -> {
+					lastClickedFacility = rectangle.getFacility();
+				};
+
+			//Adding the event handler
+			rectangle.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
 
 			if(rectangle.getFacility() == child) {
 				rectangleDeliver = rectangle;
@@ -195,5 +208,9 @@ public class TreeBuilder {
 			}
 		}
 		return "";
+	}
+
+	public static Facility getLastClickedFacility() {
+		return lastClickedFacility;
 	}
 }

@@ -2,20 +2,29 @@ package org.han.ica.asd.c.gui_play_game;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
+import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.player.PlayerComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 
-public class PlayGame implements IGUIHandler {
-    private BeerGame beerGame;
+public abstract class PlayGame {
+    protected BeerGame beerGame;
 
     @FXML
     private GridPane playGridPane;
@@ -43,9 +52,20 @@ public class PlayGame implements IGUIHandler {
 
     protected int roundNumber = 0;
 
-
     @Inject
     @Named("PlayerComponent") protected IPlayerComponent playerComponent;
+
+    @FXML
+    protected TextField incomingGoodsNextRound;
+
+    @FXML
+    protected ComboBox<Facility> comboBox;
+
+    @FXML
+    protected ComboBox<Facility> cmbChooseOutgoingDelivery;
+
+    @FXML
+    protected TextField txtOutgoingDelivery;
 
     /**
      * superInitialization of the two controller subclasses. Has code needed for both initializations.
@@ -58,15 +78,19 @@ public class PlayGame implements IGUIHandler {
         orderFake = new OrderFake();
 
         //Make sure only numbers can be filled in the order textBox. This is done using a textFormatter
-        UnaryOperator<TextFormatter.Change> textFieldFilter = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("-?([0-9]*)?")){
-                return change;
-            }
-            return null;
-        };
+        UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
+    }
+
+    protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
+        return change -> {
+                String newText = change.getControlNewText();
+                if (newText.matches("-?([0-9]*)?")){
+                    return change;
+                }
+                return null;
+            };
     }
 
     /**
@@ -87,15 +111,85 @@ public class PlayGame implements IGUIHandler {
         seeOtherFacilities.setupScreen();
     }
 
-    @Override
-    public void setData(Object[] data) {
-        beerGame = (BeerGame) data[0];
+    public void setBeerGame(BeerGame beerGame) {
+        this.beerGame = beerGame;
     }
 
-    @Override
-    public void setupScreen() {
-    	PlayGameFacilities handler = new PlayGameFacilities();
-			handler.setData(new Object[]{beerGame});
-			handler.setupScreen();
+    public abstract void fillComboBox();
+
+    protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
+        ArrayList<Facility> facilities = new ArrayList<>();
+
+        beerGame.getConfiguration().getFacilities().forEach(
+                t -> {
+                    Facility facilityPlayedByPlayer = PlayerComponent.getPlayer().getFacility();
+
+                    if (t != facilityPlayedByPlayer) {
+                        List<Facility> facilitiesLinkedToFacilities = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(t);
+                        if (facilitiesLinkedToFacilities != null) {
+                            if (facilitiesLinkedToFacilities.contains(facilityPlayedByPlayer)) {
+                                facilities.add(t);
+                            }
+                        }
+                    }
+                }
+        );
+
+        ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
+        facilityListView.addAll(facilities);
+        comboBox.setItems(facilityListView);
+    }
+
+    protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
+        ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
+        facilityListView.addAll(beerGame.getConfiguration().getFacilitiesLinkedToFacilities(PlayerComponent.getPlayer().getFacility()));
+        comboBox.setItems(facilityListView);
+    }
+
+    /**
+     * Button event handling the order sending.
+     */
+    protected void handleSendOrderButtonClick() {
+        if (!outgoingOrderTextField.getText().isEmpty()) {
+            int order = Integer.parseInt(outgoingOrderTextField.getText());
+
+            if (handleTextSettingOnSendOrderClick(order)) {
+                Facility facility = comboBox.getValue();
+                playerComponent.placeOrder(facility, order);
+            }
+        }
+    }
+
+    private boolean handleTextSettingOnSendOrderClick(int order) {
+        if (order < 0) {
+            outgoingOrderTextField.setText("");
+            return false;
+        }
+
+        if (!incomingGoodsNextRound.getText().isEmpty() && !outgoingGoodsNextRound.getText().isEmpty()) {
+            int incomingGoodsNextRoundAmount = Integer.parseInt(incomingGoodsNextRound.getText());
+            int outgoingGoodsNextRoundAmount = Integer.parseInt(outgoingGoodsNextRound.getText());
+
+            //TODO get the real calculation result from the game logic component/from the game leader.
+            inventory.setText(calculateInventory(incomingGoodsNextRoundAmount, outgoingGoodsNextRoundAmount));
+        }
+
+
+        //TODO get the real order from the facility ordering from this one.
+        outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
+        roundNumber++;
+
+        incomingGoodsNextRound.setText(outgoingOrderTextField.getText());
+
+        outgoingOrderTextField.setText("");
+        return true;
+    }
+
+    protected void handleSendDeliveryButtonClick() {
+
+    }
+
+    @FXML
+    protected void submitTurnButonClicked() {
     }
 }
