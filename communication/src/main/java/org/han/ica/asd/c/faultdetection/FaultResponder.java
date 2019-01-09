@@ -1,10 +1,16 @@
 package org.han.ica.asd.c.faultdetection;
 
-import org.han.ica.asd.c.faultdetection.exceptions.PeerCantBeReachedException;
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 
+import javax.inject.Inject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 class FaultResponder {
+	@Inject private static Logger logger; //NOSONAR
+
 	private FaultDetectionClient faultDetectionClient;
 
 	FaultResponder() {
@@ -27,7 +33,8 @@ class FaultResponder {
 			faultDetectionClient.makeConnection(failingIp);
 			faultDetectionClient.sendFaultMessageResponse(new FaultMessageResponse(true, failingIp), senderIp);
 
-		} catch (PeerCantBeReachedException e) {
+		} catch (NodeCantBeReachedException e) {
+			logger.log(Level.INFO, e.getMessage(), e);
 			faultDetectionClient.sendFaultMessageResponse(new FaultMessageResponse(false, failingIp), senderIp);
 		}
 	}

@@ -23,7 +23,6 @@
         <module>gameleader</module>
         <module>gamelogic</module>
         <module>leadermigration</module>
-        <module>localization</module>
         <module>player</module>
         <module>replay</module>
         <module>bootstrap</module>
@@ -33,7 +32,12 @@
         <module>gui_configure_game</module>
         <module>gui_replay_game</module>
         <module>persistence</module>
-    </modules>
+        <module>gui_spelers_beheren</module>
+        <module>fxml_helper</module>
+        <module>interfaces</module>
+        <module>gui_join_game</module>
+			  <module>exceptions</module>
+		</modules>
 
     <dependencies>
         <dependency>

@@ -1,32 +1,47 @@
 package org.han.ica.asd.c.gamelogic.public_interfaces;
 
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
-
+import java.util.List;
 import java.util.Map;
+
+import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerGameLogic {
     /**
      * Sends and saves an order of the player / agent.
      * @param turn
      */
-    void placeOrder(Map<Facility, Map<Facility, Integer>> turn);
+    void placeOrder(Round turn);
 
     /**
      * Returns the current state of the game.
      * @return The current state of the game.
      */
-    Round seeOtherFacilities();
+    Map<Facility, List<Facility>> seeOtherFacilities();
 
     /**
      * Replaces the player with the given agent.
      * @param agent Agent that will replace the player.
      */
-    void letAgentTakeOverPlayer(AgentParticipant agent);
+    void letAgentTakeOverPlayer(Agent agent);
 
     /**
      * Replaces the agent with the player.
      */
     void letPlayerTakeOverAgent();
+
+    List<String> getAllGames();
+
+    void connectToGame(String game);
+
+    void requestFacilityUsage(Facility facility);
+
+    List<Facility> getAllFacilities();
+
+    /**
+     * Gets the current round number.
+     * @return The current round number
+     */
+    int getCurrentRoundNumber();
 }

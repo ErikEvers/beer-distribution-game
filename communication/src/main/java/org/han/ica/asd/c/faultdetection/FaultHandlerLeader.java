@@ -2,8 +2,8 @@ package org.han.ica.asd.c.faultdetection;
 
 
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.observers.IConnectorObserver;
-import org.han.ica.asd.c.observers.IPlayerDisconnectedObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +39,9 @@ public class FaultHandlerLeader {
      * @author Oscar, Tarik
      */
     public String incrementFailure(String ip) {
-        //TODO remove println
         increment(ip);
 
-        if (amountOfFailsPerIp.get(ip) >= (nodeInfoList.size() / 2)) {
+        if (amountOfFailsPerIp.get(ip).equals(nodeInfoList.size())) {
 
             nodeInfoList.updateIsConnected(ip, false);
 

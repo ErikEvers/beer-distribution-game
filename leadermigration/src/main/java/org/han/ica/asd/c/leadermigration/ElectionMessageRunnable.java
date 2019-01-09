@@ -1,11 +1,15 @@
 package org.han.ica.asd.c.leadermigration;
 
-import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
-import org.han.ica.asd.c.model.dao_model.Player;
+import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
+import org.han.ica.asd.c.model.interface_models.ElectionModel;
+import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
 import java.util.List;
 
+/**
+ * Runnable for sending an election message to a player.
+ */
 public class ElectionMessageRunnable implements Runnable {
 	private Thread t;
 	private ElectionModel electionModel;
@@ -15,13 +19,21 @@ public class ElectionMessageRunnable implements Runnable {
 
 	@Inject private IConnectorForLeaderElection communication;
 
+	/**
+	 * Empty constructor for dependency injection.
+	 */
 	ElectionMessageRunnable() {
+		// default
 	}
 
+
+	/**
+	 * Execute the runnable, which sends the election message and handles the response.
+	 */
 	@Override
 	public void run() {
 		synchronized(lock) {
-			// This if statement ensures to not send this to yourself.
+			// This if statement ensures to not send the election message to yourself.
 			if (!electionModel.getCurrentPlayer().equals(player)) {
 				electionModel.setReceivingPlayer(player);
 				ElectionModel model = communication.sendElectionMessage(electionModel, player);
@@ -32,7 +44,14 @@ public class ElectionMessageRunnable implements Runnable {
 		}
 	}
 
-	public void start(Object lock, List<Player> receivedPlayers, ElectionModel electionModel, Player player) {
+	/**
+	 * Create a new thread and start it with all required data.
+	 * @param lock object used for synchronizing across threads.
+	 * @param receivedPlayers players that have responded on the election message.
+	 * @param electionModel object that should be sent in the election message.
+	 * @param player player that should receive the election message.
+	 */
+	void start(Object lock, List<Player> receivedPlayers, ElectionModel electionModel, Player player) {
 		this.electionModel = electionModel;
 		this.player = player;
 		this.receivedPlayers = receivedPlayers;
@@ -43,7 +62,11 @@ public class ElectionMessageRunnable implements Runnable {
 		}
 	}
 
-	public void join() throws InterruptedException {
+	/**
+	 * Wait for the thread to finish.
+	 * @throws InterruptedException can be thrown if the thread is interrupted.
+	 */
+	void join() throws InterruptedException {
 		t.join();
 	}
 }

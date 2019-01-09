@@ -6,14 +6,21 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.gamelogic.participants.IParticipant;
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
+import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
+import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
+import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,18 +29,16 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
-    String gameId;
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver {
     private IConnectedForPlayer communication;
-    private IPersistence persistence;
+    private IRoundStore persistence;
     private ParticipantsPool participantsPool;
     private int round;
 
     private ArrayList<FacilityLinkedTo> facilitityLinks;
     private final BeerGame beerGame;
 
-    public GameLogic(String gameId, IConnectedForPlayer communication, IPersistence persistence, ParticipantsPool participantsPool, BeerGame beerGame) {
-        this.gameId = gameId;
+    public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool, BeerGame beerGame) {
         this.communication = communication;
         this.persistence = persistence;
         this.participantsPool = participantsPool;
@@ -51,7 +56,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param turn
      */
     @Override
-    public void placeOrder(Map<Facility, Map<Facility, Integer>> turn) {
+    public void placeOrder(Round turn) {
         persistence.saveTurnData(turn);
         communication.sendTurnData(turn);
     }
@@ -61,8 +66,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @return The current state of the game.
      */
     @Override
-    public Round seeOtherFacilities() {
-        return persistence.fetchRoundData(gameId, round);
+    public Map<Facility, List<Facility>> seeOtherFacilities() {
+        //Yet to be implemented.
+        persistence.fetchRoundData(0);
+        return null;
     }
 
     /**
@@ -70,7 +77,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param agent Agent that will replace the player.
      */
     @Override
-    public void letAgentTakeOverPlayer(AgentParticipant agent) {
+    public void letAgentTakeOverPlayer(Agent agent) {
         participantsPool.replacePlayerWithAgent(agent);
     }
 
@@ -80,6 +87,17 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     @Override
     public void letPlayerTakeOverAgent() {
         participantsPool.replaceAgentWithPlayer();
+    }
+
+    @Override
+    public List<String> getAllGames() {
+        //Yet to be implemented
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void connectToGame(String game) {
+        //Yet to be implemented
     }
 
     /**
@@ -116,5 +134,36 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     BeerGame getBeerGame() {
         return beerGame;
+    }
+
+    @Override
+    public void requestFacilityUsage(Facility facility) {
+        //Yet to be implemented
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        //Yet to be implemented.
+        return new ArrayList<>();
+    }
+
+    /**
+     * @param currentRound The current round to save.
+     */
+    @Override
+    public void roundModelReceived(Round currentRound) {
+        persistence.saveRoundData(currentRound);
+        participantsPool.excecuteRound(currentRound);
+        round++;
+    }
+
+    /**
+     * Gets the current round number.
+     *
+     * @return The current round number
+     */
+    @Override
+    public int getCurrentRoundNumber() {
+        return round;
     }
 }

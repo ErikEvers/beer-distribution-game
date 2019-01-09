@@ -1,34 +1,28 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class Round {
+public class Round implements IDomainModel{
     private int roundId;
-    private Map<Facility, Map<Facility, Integer>> turnOrder;
-    private Map<Facility, Map<Facility, Integer>> turnDeliver;
-    private Map<Facility, Map<Facility, Integer>> turnReceived;
-    private Map<Facility, Map<Facility, Integer>> turnBackOrder;
-    private Map<Facility, Integer> turnStock;
-    private Map<Facility, Integer> remainingBudget;
+    private List<FacilityTurn> facilityTurns;
+    private List<FacilityTurnOrder> facilityOrders;
+    private List<FacilityTurnDeliver>facilityTurnDelivers;
 
     public Round () {
-        // Round may be void of data
+       facilityTurns = new ArrayList<>();
+       facilityOrders = new ArrayList<>();
+       facilityTurnDelivers = new ArrayList<>();
     }
 
-    public Round(int roundId, Map<Facility, Map<Facility, Integer>> turnOrder, Map<Facility, Map<Facility, Integer>> turnDeliver, //NOSONAR
-                 Map<Facility, Map<Facility, Integer>> turnReceived, Map<Facility, Map<Facility, Integer>> turnBackOrder, //NOSONAR
-                 Map<Facility, Integer> turnStock, Map<Facility, Integer> remainingBudget) //NOSONAR
-    {
+    public Round(int roundId, List<FacilityTurn> facilityTurns, List<FacilityTurnOrder> facilityOrders, List<FacilityTurnDeliver> facilityTurnDelivers) {
         this.roundId = roundId;
-        this.turnOrder = turnOrder;
-        this.turnDeliver = turnDeliver;
-        this.turnReceived = turnReceived;
-        this.turnBackOrder = turnBackOrder;
-        this.turnStock = turnStock;
-        this.remainingBudget = remainingBudget;
+        this.facilityTurns = facilityTurns;
+        this.facilityOrders = facilityOrders;
+        this.facilityTurnDelivers = facilityTurnDelivers;
     }
 
     //Order
@@ -138,51 +132,27 @@ public class Round {
         this.roundId = roundId;
     }
 
-    public Map<Facility, Map<Facility, Integer>> getTurnOrder() {
-        return turnOrder;
+    public List<FacilityTurn> getFacilityTurns() {
+        return facilityTurns;
     }
 
-    public void setTurnOrder(Map<Facility, Map<Facility, Integer>> turnOrder) {
-        this.turnOrder = turnOrder;
+    public void setFacilityTurns(List<FacilityTurn> facilityTurns) {
+        this.facilityTurns = facilityTurns;
     }
 
-    public Map<Facility, Map<Facility, Integer>> getTurnDeliver() {
-        return turnDeliver;
+    public List<FacilityTurnOrder> getFacilityOrders() {
+        return facilityOrders;
     }
 
-    public void setTurnDeliver(Map<Facility, Map<Facility, Integer>> turnDeliver) {
-        this.turnDeliver = turnDeliver;
+    public void setFacilityOrders(List<FacilityTurnOrder> facilityOrders) {
+        this.facilityOrders = facilityOrders;
     }
 
-    public Map<Facility, Map<Facility, Integer>> getTurnReceived() {
-        return turnReceived;
+    public List<FacilityTurnDeliver> getFacilityTurnDelivers() {
+        return facilityTurnDelivers;
     }
 
-    public void setTurnReceived(Map<Facility, Map<Facility, Integer>> turnReceived) {
-        this.turnReceived = turnReceived;
-    }
-
-    public Map<Facility, Map<Facility, Integer>> getTurnBackOrder() {
-        return turnBackOrder;
-    }
-
-    public void setTurnBackOrder(Map<Facility, Map<Facility, Integer>> turnBackOrder) {
-        this.turnBackOrder = turnBackOrder;
-    }
-
-    public Map<Facility, Integer> getTurnStock() {
-        return turnStock;
-    }
-
-    public void setTurnStock(Map<Facility, Integer> turnStock) {
-        this.turnStock = turnStock;
-    }
-
-    public Map<Facility, Integer> getRemainingBudget() {
-        return remainingBudget;
-    }
-
-    public void setRemainingBudget(Map<Facility, Integer> remainingBudget) {
-        this.remainingBudget = remainingBudget;
+    public void setFacilityTurnDelivers(List<FacilityTurnDeliver> facilityTurnDelivers) {
+        this.facilityTurnDelivers = facilityTurnDelivers;
     }
 }

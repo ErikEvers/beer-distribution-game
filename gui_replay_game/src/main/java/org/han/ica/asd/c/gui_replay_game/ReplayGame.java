@@ -1,31 +1,17 @@
 package org.han.ica.asd.c.gui_replay_game;
 
-import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-public class ReplayGame {
-    private final Provider<FXMLLoaderOnSteroids> loaderProvider;
-
-    @Inject
-    public ReplayGame(Provider<FXMLLoaderOnSteroids> loaderProvider){
-        this.loaderProvider = loaderProvider;
+public class ReplayGame implements IGUIHandler {
+    private String gameId;
+    @Override
+    public void setData(Object[] data) {
+        this.gameId = (String) data[0];
     }
 
-
-    public void setupScreen(Stage primaryStage) throws Exception {
-        FXMLLoaderOnSteroids loader = loaderProvider.get();
-        loader.setLocation(getClass().getResource("/fxml/ReplayGameScreen.fxml"));
-
-        primaryStage.setScene(new Scene(loader.load()));
-        primaryStage.show();
+    public void setupScreen() {
+        ReplayGameScreenController replayGameScreenController =FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameScreen.fxml"));
+        replayGameScreenController.setGameId(gameId);
     }
-
 }

@@ -1,20 +1,23 @@
 package org.han.ica.asd.c.businessrule.parser.ast.operators;
 
 public enum ComparisonType {
-    EQUAL("=="),
-    NOT("!="),
-    GREATER(">"),
-    LESS("<");
+    EQUAL("==", "=","equal","is"),
+    NOT("!=","not equal"),
+    GREATER(">", "greater", "higher" ),
+    LESS("<","lower","less"),
+    GREATER_EQUAL(">=", "greater than or equal to","higher than or equal to"),
+    LESS_EQUAL("<=","less than or equal to","lower than or equal to");
 
 
-    private String comparisonSymbol;
+
+    private String[] comparisonSymbol;
 
     /**
      * Constructor
      *
      * @param comparisonSymbol The comparison symbol
      */
-    ComparisonType(String comparisonSymbol) {
+    ComparisonType(String... comparisonSymbol) {
         this.comparisonSymbol = comparisonSymbol;
     }
 
@@ -23,8 +26,21 @@ public enum ComparisonType {
      *
      * @return Returns the comparison symbol
      */
-    public String getComparisonSymbol() {
+    public String[] get() {
         return comparisonSymbol;
+    }
+
+    public String get(int i) {
+        return comparisonSymbol[i];
+    }
+
+    public boolean contains(String s){
+        for (String symbol : comparisonSymbol) {
+            if(symbol.contains(s)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -35,8 +51,10 @@ public enum ComparisonType {
      */
     public static ComparisonType getComparisonTypeFromComparisonSymbol(String comparisonSymbol) {
         for (ComparisonType comparisonType : ComparisonType.values()) {
-            if (comparisonType.comparisonSymbol.equalsIgnoreCase(comparisonSymbol)) {
-                return comparisonType;
+            for (String i:comparisonType.comparisonSymbol) {
+                if (i.equalsIgnoreCase(comparisonSymbol)) {
+                    return comparisonType;
+                }
             }
         }
         return null;

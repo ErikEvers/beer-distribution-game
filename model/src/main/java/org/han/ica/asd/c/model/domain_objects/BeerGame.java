@@ -1,8 +1,9 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class BeerGame {
+public class BeerGame implements IDomainModel{
 
     private Leader leader;
     private List<Player> players;
@@ -14,6 +15,18 @@ public class BeerGame {
     private String gameDate;
     private String gameEndDate;
 
+    public BeerGame() {
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
+    }
+
+    public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate){
+        this.gameId = gameId;
+        this.gameName = gameName;
+        this.gameDate = gameDate;
+        this.gameEndDate = gameEndDate;
+    }
 
     public BeerGame(Leader leader, List<Player> players, List<GameAgent> agents, Configuration configuration, //NOSONAR
                     List<Round> rounds, String gameId, String gameName, String gameDate, String gameEndDate) //NOSONAR

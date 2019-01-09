@@ -1,16 +1,17 @@
 package org.han.ica.asd.c.gamelogic.participants.domain_models;
 
-import org.han.ica.asd.c.gamelogic.participants.IParticipant;
-import org.han.ica.asd.c.model.dao_model.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 /**
  * Wrapper for the player domain class. This wrapper implements the IParticipant interface.
  */
 public class PlayerParticipant extends Player implements IParticipant {
-    public PlayerParticipant(String playerId, String ipAddress, Facility facilityId, String name, boolean isConnected) {
-        super(playerId, ipAddress, facilityId, name, isConnected);
+    public PlayerParticipant(String playerId, String ipAddress, Facility facility, String name, boolean isConnected) {
+        super(playerId, ipAddress, facility, name, isConnected);
     }
 
     public PlayerParticipant(Player player) {
@@ -24,21 +25,20 @@ public class PlayerParticipant extends Player implements IParticipant {
     }
 
     /**
-     * doOrder will notify the  participant to make an order.
-     * @return A FacilityTurn with an order for the current round.
+     * executeTurn will notify the  participant to make an order and/ or deliver.
+     * @return A GameRoundAction with an orders and/ or delivers for the current round.
      */
     @Override
-    public FacilityTurn doOrder() {
-        //TODO: Implement this method.
+    public GameRoundAction executeTurn(Round round) {
         return null;
     }
 
     /**
-     * Returns the identifier for the ParticipantPool to compare with other participants.
-     * @return The identifier of the participant.
+     * Returns the facility for the ParticipantPool to compare with other participants.
+     * @return The facility of the participant.
      */
     @Override
-    public int getParticipantId() {
-        return this.getFacility().getFacilityId();
+    public Facility getParticipant() {
+        return this.getFacility();
     }
 }

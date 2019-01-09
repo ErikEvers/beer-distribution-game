@@ -1,8 +1,9 @@
 package org.han.ica.asd.c.leadermigration;
 
-import org.han.ica.asd.c.exceptions.PlayerNotFoundException;
-import org.han.ica.asd.c.leadermigration.componentInterfaces.IConnectorForLeaderElection;
-import org.han.ica.asd.c.model.dao_model.Player;
+import org.han.ica.asd.c.exceptions.leadermigration.PlayerNotFoundException;
+import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
+import org.han.ica.asd.c.model.interface_models.ElectionModel;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.net.UnknownHostException;
@@ -11,10 +12,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Logic behind the leader election process.
+ */
 public class ElectionHandler {
 
 	private List<Player> receivedPlayers;
-  @Inject private static Logger logger;
+  @Inject private static Logger logger; //NOSONAR
   @Inject private ElectionModel electionModel;
   @Inject private IConnectorForLeaderElection communication;
   @Inject private IpHandler ipHandler;
@@ -37,7 +41,9 @@ public class ElectionHandler {
   }
 
   /**
-   * Send every player an election message to be elected as the leader of the network
+   * Send every player an election message to be elected as the leader of the network.
+	 * For every a new thread is started to send and receive the actual message.
+	 * A lock object is created and passed to each thread to maintain thread safety.
    * @param players -> All the connected players (without the current player)
    */
   public List<Player> sendElectionMessage(Player[] players) {
