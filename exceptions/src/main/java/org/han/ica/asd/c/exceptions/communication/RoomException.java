@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.discovery;
+package org.han.ica.asd.c.exceptions.communication;
 
 public class RoomException extends Exception{
 

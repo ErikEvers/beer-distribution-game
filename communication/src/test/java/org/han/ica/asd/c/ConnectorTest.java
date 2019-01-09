@@ -4,14 +4,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.discovery.DiscoveryException;
-
 import org.han.ica.asd.c.discovery.IResourceManager;
 import org.han.ica.asd.c.discovery.Room;
-import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.faultdetection.FailLog;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
@@ -29,8 +28,10 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;

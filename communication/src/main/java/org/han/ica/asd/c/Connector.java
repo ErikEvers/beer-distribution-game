@@ -1,11 +1,12 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
 
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
@@ -127,19 +128,13 @@ public class Connector implements IConnectorForSetup {
         return null;
     }
 
-
-    public RoomModel joinRoom(String roomName, String password) {
-        try {
-            RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
-            if (makeConnection(joinedRoom.getLeaderIP())) {
-                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-                setJoiner();
-                return joinedRoom;
-            }
-        } catch (DiscoveryException e) {
-            logger.log(Level.INFO, e.getMessage(), e);
+    public RoomModel joinRoom(String roomName, String ip, String password) throws RoomException, DiscoveryException {
+        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
+        if (makeConnection(joinedRoom.getLeaderIP())) {
+            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+            setJoiner();
         }
-        return null;
+        return joinedRoom;
     }
 
     public RoomModel updateRoom(RoomModel room) {

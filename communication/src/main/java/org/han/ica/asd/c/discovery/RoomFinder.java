@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.discovery;
 
 import org.han.ica.asd.c.discovery.impl.GoogleDrive;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import java.io.IOException;
@@ -40,20 +42,16 @@ public class RoomFinder implements IFinder {
         }
     }
 
-    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password) throws DiscoveryException {
+    public RoomModel joinGameRoomModel(String roomName, String hostIP, String password) throws DiscoveryException, RoomException {
         RoomModel roomModel = new RoomModel();
-        try {
-            Room created = getRoom(roomName);
-            created.addHost(hostIP, password);
-            roomModel.setRoomName(roomName);
-            roomModel.setLeaderIP(created.getLeaderIP());
-            roomModel.setHosts(created.getHosts());
-            roomModel.setPassword(password);
-            roomModel.setGameStarted(false);
-            return roomModel;
-        } catch (DiscoveryException | RoomException e){
-            throw new DiscoveryException(e);
-        }
+        Room created = getRoom(roomName);
+        created.addHost(hostIP, password);
+        roomModel.setRoomName(roomName);
+        roomModel.setLeaderIP(created.getLeaderIP());
+        roomModel.setHosts(created.getHosts());
+        roomModel.setPassword(password);
+        roomModel.setGameStarted(false);
+        return roomModel;
     }
 
     public void startGameRoom(String roomName) throws DiscoveryException {

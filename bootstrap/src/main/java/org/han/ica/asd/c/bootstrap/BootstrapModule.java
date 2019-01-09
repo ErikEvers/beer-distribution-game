@@ -23,19 +23,23 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.han.ica.asd.c.socketrpc.SocketServer;
-
+import org.han.ica.asd.c.persistence.BusinessRuleStore;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
 	protected void configure() {
 		bind(AbstractModuleExtension.class).to(BootstrapModule.class);
+		bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
 		bind(IDatabaseConnection.class).to(DBConnection.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
+
+
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGameList.class);
