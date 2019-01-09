@@ -25,20 +25,22 @@ class RoundCalculatorTest {
 
     @BeforeEach
     public void setup() {
-        //TODO: Use the new Map implementation for FacilityLinkedTo
-        FacilityType facilityType = new FacilityType("Manufacturer", "", 3, 3,5, 25, 500, 10);
-        FacilityType facilityType1 = new FacilityType("RegionalWarehouse", "", 4, 4,5, 25, 500, 10);
-        FacilityType facilityType2 = new FacilityType("Wholesale", "", 5, 5,5, 25, 500, 10);
-        FacilityType facilityType3 = new FacilityType("Retailer", "", 6, 6,5, 25, 500, 10);
-        FacilityType facilityType4 = new FacilityType("Demand", "", 7, 7,5, 25, 500, 10);
-        
-        manufacturer = new Facility("0", 0, facilityType, "0", "0");
-        regionalWarehouse = new Facility("0", 0, facilityType1, "0", "0");
-        wholesale = new Facility("0", 0, facilityType2, "0", "0");
-        retailer = new Facility("0", 0, facilityType3, "0", "0");
-        demand = new Facility("0", 0, facilityType4, "0", "0");
+//        //TODO: Use the new Map implementation for FacilityLinkedTo
+        FacilityType facilityType = new FacilityType("Manufacturer", 3, 3,5, 25, 500, 10, 40);
+        FacilityType facilityType1 = new FacilityType("RegionalWarehouse", 4, 4,5, 25, 500, 10, 40);
+        FacilityType facilityType2 = new FacilityType("Wholesale", 5, 5,5, 25, 500, 10, 40);
+        FacilityType facilityType3 = new FacilityType("Retailer", 6, 6,5, 25, 500, 10, 40);
+        FacilityType facilityType4 = new FacilityType("Demand", 7, 7,5, 25, 500, 10, 1000);
+//
+//        manufacturer = new Facility("0", 0, facilityType, "0", "0");
+//        regionalWarehouse = new Facility("0", 0, facilityType1, "0", "0");
+//        wholesale = new Facility("0", 0, facilityType2, "0", "0");
+//        retailer = new Facility("0", 0, facilityType3, "0", "0");
+//        demand = new Facility("0", 0, facilityType4, "0", "0");
+//
+//        facilityLinkedToList = new ArrayList<>();
 
-        facilityLinkedToList = new ArrayList<>();
+
     }
 
     private Round setupPreviousRoundObjectWithoutBacklog() {
@@ -55,12 +57,6 @@ class RoundCalculatorTest {
 
     private Round setupCalculatedRoundObject() {
         Round calculatedRound = new Round();
-        calculatedRound.setRoundId(1);
-        calculatedRound.addFacilityStock(40, manufacturer);
-        calculatedRound.addFacilityStock(40, regionalWarehouse);
-        calculatedRound.addFacilityStock(40, wholesale);
-        calculatedRound.addFacilityStock(40, retailer);
-        calculatedRound.addFacilityStock(10000, demand);
 
         calculatedRound.addFacilityRemainingBudget(500, manufacturer);
         calculatedRound.addFacilityRemainingBudget(500, regionalWarehouse);
