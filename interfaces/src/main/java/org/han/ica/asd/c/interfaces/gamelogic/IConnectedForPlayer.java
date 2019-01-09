@@ -12,4 +12,5 @@ public interface IConnectedForPlayer {
     List<String> getAllGames();
     void connectToGame(String game);
     void requestFacilityUsage(Facility facility);
+    List<Facility> getAllFacilities();
 }
