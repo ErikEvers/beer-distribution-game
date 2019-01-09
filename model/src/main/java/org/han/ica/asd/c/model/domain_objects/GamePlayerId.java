@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class ConfigPlayerId {
+public class GamePlayerId {
     private String playerId;
-    private Configuration config;
+    private BeerGame beerGame;
 
-    public ConfigPlayerId(Configuration config, String playerId) {
-        this.config = config;
+    public GamePlayerId(BeerGame beerGame, String playerId) {
+        this.beerGame = beerGame;
         this.playerId = playerId;
     }
 }

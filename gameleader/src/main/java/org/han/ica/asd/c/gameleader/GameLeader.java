@@ -92,7 +92,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         return this.game;
     }
 
-    public ConfigPlayerId getGameData(String playerIp) {
+    public GamePlayerId getGameData(String playerIp) {
         Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getIpAddress().equals(playerIp)).findFirst();
         Player actualPlayer;
         if(!connectingPlayerO.isPresent()) {
@@ -107,7 +107,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         }
         game.getPlayers().add(actualPlayer);
 
-        return new ConfigPlayerId(game.getConfiguration(), actualPlayer.getPlayerId());
+        return new GamePlayerId(game, actualPlayer.getPlayerId());
     }
 
     /**
