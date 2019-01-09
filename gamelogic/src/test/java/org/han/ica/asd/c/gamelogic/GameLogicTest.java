@@ -83,7 +83,14 @@ public class GameLogicTest {
         verify(participantsPool, times(1)).replaceAgentWithPlayer(any(PlayerParticipant.class));
     }
 
-    @Test public void startNewRoundSavesOldRoundToDatabase() {
+    @Test
+    public void startNewRoundSavesOldRoundToDatabase() {
+        gameLogic.startNewRound(mock(Round.class));
+        verify(persistence, times(1)).saveRoundData(any());
+    }
+
+    @Test
+    public void startNewRoundIncrementsRound() {
         gameLogic.startNewRound(mock(Round.class));
         verify(persistence, times(1)).saveRoundData(any());
     }
