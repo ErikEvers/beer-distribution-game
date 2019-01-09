@@ -6,6 +6,10 @@ public class FacilityTurnDeliver {
 	private int openOrderAmount;
 	private int deliverAmount;
 
+	public FacilityTurnDeliver() {
+
+	}
+
 	public FacilityTurnDeliver(int facilityId, int facilityIdDeliverTo, int openOrderAmount, int deliverAmount) {
 		this.facilityId = facilityId;
 		this.facilityIdDeliverTo = facilityIdDeliverTo;

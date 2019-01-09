@@ -115,6 +115,16 @@
                         </Label>
                     </children>
                 </GridPane>
+            <Label text="Incoming goods next round:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets bottom="50.0" left="30.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Incoming orders next round:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets left="30.0" top="60.0" />
+               </GridPane.margin>
+            </Label>
                 <TextField fx:id="outgoingGoodsNextRound" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="30.0" top="85.0" />

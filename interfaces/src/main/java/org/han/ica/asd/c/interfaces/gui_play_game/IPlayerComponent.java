@@ -21,4 +21,5 @@ public interface IPlayerComponent {
     List<Facility> getAllFacilities();
     void chooseFacility(Facility facility);
     String getFacilityName();
+    void startNewTurn();
 }

@@ -81,6 +81,7 @@ public abstract class PlayGame {
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
+        playerComponent.startNewTurn();
     }
 
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
@@ -152,11 +153,8 @@ public abstract class PlayGame {
     protected void handleSendOrderButtonClick() {
         if (!outgoingOrderTextField.getText().isEmpty()) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
-
-            if (handleTextSettingOnSendOrderClick(order)) {
-                Facility facility = comboBox.getValue();
-                playerComponent.placeOrder(facility, order);
-            }
+            Facility facility = comboBox.getValue();
+            playerComponent.placeOrder(facility, order);
         }
     }
 
@@ -186,11 +184,17 @@ public abstract class PlayGame {
     }
 
     protected void handleSendDeliveryButtonClick() {
-        playerComponent.sendDelivery(null, 0);
+        if (!txtOutgoingDelivery.getText().isEmpty()) {
+            int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
+            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), delivery);
+        }
     }
 
     @FXML
     protected void submitTurnButonClicked() {
-        playerComponent.submitTurn();
+        int order = Integer.parseInt(outgoingOrderTextField.getText());
+        if (handleTextSettingOnSendOrderClick(order)) {
+            playerComponent.submitTurn();
+        }
     }
 }

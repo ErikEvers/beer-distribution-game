@@ -39,6 +39,24 @@ public class PlayGameFactoryController extends PlayGame {
      */
     public void handleSendOrderButtonClick() {
         //TODO get the real order from the facility ordering from this one.
+        int order = Integer.parseInt(outgoingOrderTextField.getText());
+        playerComponent.placeOrder(null, order);
+    }
+
+    @Override
+    public void fillComboBox() {
+        fillOutGoingDeliveryFacilityComboBox(cmbChooseOutgoingDelivery);
+    }
+
+    /**
+     * Button event handling the order delivering.
+     */
+    public void handleSendDeliveryButtonClick(ActionEvent actionEvent) {
+        super.handleSendDeliveryButtonClick();
+    }
+
+    public void submitTurnButonClicked(MouseEvent mouseEvent) {
+
         outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
         roundNumber++;
         int step2Value = 0;
@@ -56,24 +74,8 @@ public class PlayGameFactoryController extends PlayGame {
             step1TextField.setText(outgoingOrderTextField.getText());
             outgoingOrderTextField.clear();
 
-            int order = Integer.parseInt(outgoingOrderTextField.getText());
-            playerComponent.placeOrder(null, order);
         }
-    }
 
-    @Override
-    public void fillComboBox() {
-        fillOutGoingDeliveryFacilityComboBox(cmbChooseOutgoingDelivery);
-    }
-
-    /**
-     * Button event handling the order delivering.
-     */
-    public void handleSendDeliveryButtonClick(ActionEvent actionEvent) {
-        super.handleSendDeliveryButtonClick();
-    }
-
-    public void submitTurnButonClicked(MouseEvent mouseEvent) {
         super.submitTurnButonClicked();
     }
 }

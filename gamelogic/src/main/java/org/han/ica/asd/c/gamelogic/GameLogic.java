@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic;
 
+import javafx.scene.control.Alert;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
@@ -25,28 +26,23 @@ import java.util.List;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
+    @Inject
     private IConnectedForPlayer communication;
 
-		@Inject
+    @Inject
     private IRoundStore persistence;
 
 	private ParticipantsPool participantsPool;
+
     private int round;
 
     public GameLogic(){
         this.round = 0;
     }
 
-    public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool) {
-        this.communication = communication;
-        this.persistence = persistence;
+    public void setParticipantsPool(ParticipantsPool participantsPool) {
         this.participantsPool = participantsPool;
-        this.round = 0;
     }
-
-		public void setParticipantsPool(ParticipantsPool participantsPool) {
-			this.participantsPool = participantsPool;
-		}
 
     /**
      * Sends and saves an order of the player / agent.
@@ -56,6 +52,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     public void submitTurn(Round turn) {
         communication.sendTurnData(turn);
         persistence.saveTurnData(turn);
+        System.out.println("=============== TURN AFGEROND =====================");
     }
 
     /**

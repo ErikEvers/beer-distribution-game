@@ -98,7 +98,7 @@ public class GameRoomController {
 
 			this.beerGame = new BeerGame();
 			this.beerGame.setConfiguration(configuration);
-			Player henk = new Player("1", "111", retailer, "Henk", true);
+			Player henk = new Player("1", "111", wholesale, "Henk", true);
 			this.beerGame.getPlayers().add(henk);
 			this.beerGame.getAgents().add(new GameAgent("wholesaleAgent", wholesale, new ArrayList<>()));
 			this.beerGame.getAgents().add(new GameAgent("warehouseAgent", warehouse, new ArrayList<>()));
