@@ -87,7 +87,6 @@ class ConfigurationDAOIntegrationTest {
 		Assert.assertEquals(CONFIGURATION3.getAmountOfRetailers(),configurationDb.getAmountOfRetailers());
 		Assert.assertEquals(CONFIGURATION3.isContinuePlayingWhenBankrupt(),configurationDb.isContinuePlayingWhenBankrupt());
 		Assert.assertEquals(CONFIGURATION3.isInsightFacilities(),configurationDb.isInsightFacilities());
-
 	}
 
 	@Test

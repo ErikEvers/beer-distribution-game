@@ -56,6 +56,7 @@ public class ConfigurationDAO {
                 conn.setAutoCommit(false);
 
                 setPreparedStatement(configuration, pstmt);
+                createFacilityLinks(configuration.getFacilitiesLinkedTo());
 
                 pstmt.executeUpdate();
 
