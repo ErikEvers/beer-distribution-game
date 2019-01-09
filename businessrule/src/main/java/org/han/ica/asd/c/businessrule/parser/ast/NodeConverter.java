@@ -11,6 +11,7 @@ public class NodeConverter {
     private IBusinessRuleStore businessRuleStore;
 
     public NodeConverter() {
+        //Empty constructor for Guice
     }
 
     /***

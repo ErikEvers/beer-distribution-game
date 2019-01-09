@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleFactory;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
@@ -18,6 +19,8 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,21 +43,23 @@ class BusinessRuleDecoderTest {
         Injector businessRuleFactoryInjector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Action.class).toProvider((Provider<Action>) Action::new);
-                bind(Comparison.class).toProvider((Provider<Comparison>) Comparison::new);
-                bind(Default.class).toProvider((Provider<Default>) Default::new);
-                bind(Person.class).toProvider((Provider<Person>) Person::new);
-                bind(Value.class).toProvider((Provider<Value>) Value::new);
-                bind(ActionReference.class).toProvider((Provider<ActionReference>) ActionReference::new);
-                bind(ComparisonValue.class).toProvider((Provider<ComparisonValue>) ComparisonValue::new);
-                bind(ComparisonStatement.class).toProvider((Provider<ComparisonStatement>) ComparisonStatement::new);
-                bind(AddOperation.class).toProvider((Provider<AddOperation>) AddOperation::new);
-                bind(DivideOperation.class).toProvider((Provider<DivideOperation>) DivideOperation::new);
-                bind(MultiplyOperation.class).toProvider((Provider<MultiplyOperation>) MultiplyOperation::new);
-                bind(SubtractOperation.class).toProvider((Provider<SubtractOperation>) SubtractOperation::new);
-                bind(CalculationOperator.class).toProvider((Provider<CalculationOperator>) CalculationOperator::new);
-                bind(ComparisonOperator.class).toProvider((Provider<ComparisonOperator>) ComparisonOperator::new);
-                bind(BooleanOperator.class).toProvider((Provider<BooleanOperator>) BooleanOperator::new);
+
+                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+//                bind(Action.class).toProvider((Provider<Action>) Action::new);
+//                bind(Comparison.class).toProvider((Provider<Comparison>) Comparison::new);
+//                bind(Default.class).toProvider((Provider<Default>) Default::new);
+//                bind(Person.class).toProvider((Provider<Person>) Person::new);
+//                bind(Value.class).toProvider((Provider<Value>) Value::new);
+//                bind(ActionReference.class).toProvider((Provider<ActionReference>) ActionReference::new);
+//                bind(ComparisonValue.class).toProvider((Provider<ComparisonValue>) ComparisonValue::new);
+//                bind(ComparisonStatement.class).toProvider((Provider<ComparisonStatement>) ComparisonStatement::new);
+//                bind(AddOperation.class).toProvider((Provider<AddOperation>) AddOperation::new);
+//                bind(DivideOperation.class).toProvider((Provider<DivideOperation>) DivideOperation::new);
+//                bind(MultiplyOperation.class).toProvider((Provider<MultiplyOperation>) MultiplyOperation::new);
+//                bind(SubtractOperation.class).toProvider((Provider<SubtractOperation>) SubtractOperation::new);
+//                bind(CalculationOperator.class).toProvider((Provider<CalculationOperator>) CalculationOperator::new);
+//                bind(ComparisonOperator.class).toProvider((Provider<ComparisonOperator>) ComparisonOperator::new);
+//                bind(BooleanOperator.class).toProvider((Provider<BooleanOperator>) BooleanOperator::new);
         }});
         businessRuleFactory = businessRuleFactoryInjector.getInstance(BusinessRuleFactory.class);
 
@@ -62,6 +67,7 @@ class BusinessRuleDecoderTest {
             @Override
             protected void configure() {
                 bind(BusinessRuleFactory.class).toInstance(businessRuleFactory);
+                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
             }
         });
 
