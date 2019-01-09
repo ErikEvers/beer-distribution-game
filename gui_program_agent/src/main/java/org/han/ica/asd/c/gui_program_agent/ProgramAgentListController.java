@@ -64,9 +64,14 @@ public class ProgramAgentListController {
 
     @FXML
     public void handleMouseClickOnList() {
-        if (list.getSelectionModel().getSelectedItem() != null) {
-            edit.setVisible(true);
+        Object selectedItem = list.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            if ("Default".equals(selectedItem.toString())){
+                delete.setDisable(true);
+            }
+
             delete.setVisible(true);
+            edit.setVisible(true);
         }
     }
 
@@ -80,6 +85,7 @@ public class ProgramAgentListController {
     public void deleteButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_agent") + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
+
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.YES) {
             items.remove(selectedAgent);
