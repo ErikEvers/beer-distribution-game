@@ -3,7 +3,10 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.discovery.IFinder;
 
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
@@ -37,6 +40,9 @@ public class Connector implements IConnectorForSetup {
     private static Connector instance = null;
 
     private ArrayList<IConnectorObserver> observers;
+
+    @Inject
+    IGameStore persistence;
 
     @Inject
     private NodeInfoList nodeInfoList;
@@ -120,7 +126,6 @@ public class Connector implements IConnectorForSetup {
     public RoomModel createRoom(String roomName, String password) {
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
-            nodeInfoList.add(new NodeInfo(externalIP, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
             logger.log(Level.INFO, e.getMessage());
@@ -130,10 +135,6 @@ public class Connector implements IConnectorForSetup {
 
     public RoomModel joinRoom(String roomName, String ip, String password) throws RoomException, DiscoveryException {
         RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
-        if (makeConnection(joinedRoom.getLeaderIP())) {
-            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-            setJoiner();
-        }
         return joinedRoom;
     }
 
@@ -148,11 +149,7 @@ public class Connector implements IConnectorForSetup {
 
     public void startRoom(RoomModel room) {
         try {
-            for (String hostIP : room.getHosts()) {
-                nodeInfoList.add(new NodeInfo(hostIP, true, false));
-            }
             finder.startGameRoom(room.getRoomName());
-            setLeader();
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -189,12 +186,16 @@ public class Connector implements IConnectorForSetup {
         observers.add(observer);
     }
 
-    public void setLeader() {
-        faultDetector.setLeader(nodeInfoList);
-    }
+    public void startFaultDetector(){
+        List<Player> playerList = persistence.getGameLog().getPlayers();
+        Leader leader =  persistence.getGameLog().getLeader();
+        nodeInfoList.init(playerList,leader);
 
-    public void setJoiner() {
-        faultDetector.setPlayer(nodeInfoList);
+        if(getExternalIP().equals(leader.getPlayer().getIpAddress())){
+            faultDetector.setLeader(nodeInfoList);
+        }else{
+            faultDetector.setPlayer(nodeInfoList);
+        }
     }
 
     public boolean makeConnection(String destinationIP) {
@@ -207,17 +208,6 @@ public class Connector implements IConnectorForSetup {
         return false;
     }
 
-    public void addToNodeInfoList(String txtIP) {
-        nodeInfoList.addIp(txtIP);
-    }
-
-
-    public void addLeaderToNodeInfoList(String txtIp) {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setLeader(true);
-        nodeInfo.setIp(txtIp);
-        nodeInfoList.add(nodeInfo);
-    }
 
     public boolean sendTurn(Round turn) {
         //TODO get real leaderIP for this function
@@ -232,10 +222,6 @@ public class Connector implements IConnectorForSetup {
     public void sendConfiguration(Configuration configuration) {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendConfigurationToAllPlayers(ips.toArray(new String[0]), configuration);
-    }
-
-    public void addIP(String text) {
-        nodeInfoList.addIp(text);
     }
 
     public NodeInfoList getIps() {
@@ -269,5 +255,9 @@ public class Connector implements IConnectorForSetup {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
         return ip;
+    }
+
+    public void setPersistence(IGameStore persistence) {
+        this.persistence = persistence;
     }
 }
