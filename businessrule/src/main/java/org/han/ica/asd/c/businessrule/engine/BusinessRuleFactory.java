@@ -23,7 +23,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class BusinessRuleFactory {
+public class BusinessRuleFactory {
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
     private static final Map<String, Class<? extends ASTNode>> ASTNODE_CLASS_MAP;
 
@@ -53,7 +53,7 @@ class BusinessRuleFactory {
      * @param identifier The identifier of the business rule script
      * @return The object which the identifier represents
      */
-    ASTNode create(String identifier) {
+    public ASTNode create(String identifier) {
         if (ASTNODE_CLASS_MAP.containsKey(identifier)) {
             try {
                 return ASTNODE_CLASS_MAP.get(identifier).newInstance();

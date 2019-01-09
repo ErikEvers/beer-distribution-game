@@ -8,7 +8,19 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
+import org.han.ica.asd.c.businessrule.engine.BusinessRuleFactory;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -16,6 +28,7 @@ import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Provider;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,13 +74,45 @@ class AgentIntegrationTest {
                 facilityList,
                 facilitiesLinkedTo);
 
-        Injector businessRuleDecorderInjector = Guice.createInjector(new AbstractModule() {
+        Injector businessRuleFactoryInjector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind();
+                bind(Action.class).toProvider(new Provider<Action>() {
+                    @Override
+                    public Action get() {
+                        Injector injector = Guice.createInjector(new AbstractModule() {
+                            @Override
+                            protected void configure() {
+                                bind(NodeConverter.class).toInstance(new NodeConverter());
+                            }
+                        });
+                        return injector.getInstance(Action.class);
+                    }
+                });
+                bind(Comparison.class).toProvider((Provider<Comparison>) Comparison::new);
+                bind(Default.class).toProvider((Provider<Default>) Default::new);
+                bind(Person.class).toProvider((Provider<Person>) Person::new);
+                bind(Value.class).toProvider((Provider<Value>) Value::new);
+                bind(ActionReference.class).toProvider((Provider<ActionReference>) ActionReference::new);
+                bind(ComparisonValue.class).toProvider((Provider<ComparisonValue>) ComparisonValue::new);
+                bind(ComparisonStatement.class).toProvider((Provider<ComparisonStatement>) ComparisonStatement::new);
+                bind(AddOperation.class).toProvider((Provider<AddOperation>) AddOperation::new);
+                bind(DivideOperation.class).toProvider((Provider<DivideOperation>) DivideOperation::new);
+                bind(MultiplyOperation.class).toProvider((Provider<MultiplyOperation>) MultiplyOperation::new);
+                bind(SubtractOperation.class).toProvider((Provider<SubtractOperation>) SubtractOperation::new);
+                bind(CalculationOperator.class).toProvider((Provider<CalculationOperator>) CalculationOperator::new);
+                bind(ComparisonOperator.class).toProvider((Provider<ComparisonOperator>) ComparisonOperator::new);
+                bind(BooleanOperator.class).toProvider((Provider<BooleanOperator>) BooleanOperator::new);
+            }});
+        BusinessRuleFactory businessRuleFactory = businessRuleFactoryInjector.getInstance(BusinessRuleFactory.class);
+
+        Injector businessRuleDecoderInjector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(BusinessRuleFactory.class).toInstance(businessRuleFactory);
             }
         });
-        BusinessRuleDecoder businessRuleDecoder = businessRuleDecorderInjector.getInstance(BusinessRuleDecoder.class);
+        BusinessRuleDecoder businessRuleDecoder = businessRuleDecoderInjector.getInstance(BusinessRuleDecoder.class);
 
         Injector participantInjector = Guice.createInjector(new AbstractModule() {
             @Override
