@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.interfaces.player;
 
-import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +18,6 @@ public interface IPlayerGameLogic {
      * @return The current state of the game.
      */
     Map<Facility, List<Facility>> seeOtherFacilities();
-
-    /**
-     * Replaces the player with the given agent.
-     * @param agent Agent that will replace the player.
-     */
-    void letAgentTakeOverPlayer(AgentParticipant agent);
 
     /**
      * Replaces the agent with the player.

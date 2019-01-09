@@ -1,13 +1,10 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
-
-import java.util.List;
 import java.util.Map;
 
 public interface IPersistence {

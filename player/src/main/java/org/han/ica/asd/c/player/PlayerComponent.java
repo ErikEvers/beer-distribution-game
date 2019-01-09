@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.player;
 
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.player.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;

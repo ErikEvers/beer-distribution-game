@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.player;
 
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;

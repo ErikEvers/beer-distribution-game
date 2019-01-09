@@ -1,8 +1,6 @@
 package org.han.ica.asd.c.interfaces.gui_play_game;
 
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-
 import java.util.List;
 import java.util.Map;
 
