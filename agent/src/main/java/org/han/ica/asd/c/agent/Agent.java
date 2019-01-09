@@ -29,6 +29,7 @@ public class Agent extends GameAgent implements IParticipant {
 	@Named("persistence")
 	private IPersistence persistence;
 
+
     /**
      * Constructor with default agent name and facility
      *
