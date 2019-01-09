@@ -9,6 +9,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
+import org.han.ica.asd.c.messagehandler.receiving.GameMessageFilterer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -24,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,6 +44,9 @@ public class GameMessageReceiverTest {
     private IElectionObserver electionObserver;
 
     @Mock
+    GameMessageFilterer gameMessageFilterer;
+
+    @Mock
     private IGameConfigurationObserver gameConfigurationObserver;
 
     @BeforeEach
@@ -54,13 +59,17 @@ public class GameMessageReceiverTest {
         observers.add(electionObserver);
         observers.add(gameConfigurationObserver);
 
-        gameMessageReceiver = new GameMessageReceiver(observers);
+        gameMessageReceiver = new GameMessageReceiver();
+        gameMessageReceiver.setObservers(observers);
+        gameMessageReceiver.setGameMessageFilterer(gameMessageFilterer);
     }
 
     @Test
     public void electionReceived() {
         ElectionModel election = new ElectionModel();
         ElectionMessage electionMessage = new ElectionMessage(election);
+
+        when(gameMessageFilterer.isUnique(electionMessage)).thenReturn(true);
 
         gameMessageReceiver.gameMessageReceived(electionMessage);
 
@@ -71,6 +80,8 @@ public class GameMessageReceiverTest {
     public void turnModelReceived() {
         Round turnModel = new Round();
         TurnModelMessage turnModelMessage = new TurnModelMessage(turnModel);
+
+        when(gameMessageFilterer.isUnique(turnModelMessage)).thenReturn(true);
 
         gameMessageReceiver.gameMessageReceived(turnModelMessage);
 
@@ -87,7 +98,10 @@ public class GameMessageReceiverTest {
         ConfigurationMessage configurationMessageCommit = new ConfigurationMessage(configuration);
         configurationMessageCommit.setPhaseToCommit();
 
+        when(gameMessageFilterer.isUnique(configurationMessageStage)).thenReturn(true);
         gameMessageReceiver.gameMessageReceived(configurationMessageStage);
+
+        when(gameMessageFilterer.isUnique(configurationMessageCommit)).thenReturn(true);
         gameMessageReceiver.gameMessageReceived(configurationMessageCommit);
 
         verify(gameConfigurationObserver).gameConfigurationReceived(configuration);
@@ -103,7 +117,10 @@ public class GameMessageReceiverTest {
         RoundModelMessage roundModelMessageCommit = new RoundModelMessage(roundModel);
         roundModelMessageCommit.setPhaseToCommit();
 
+        when(gameMessageFilterer.isUnique(roundModelMessageStage)).thenReturn(true);
         gameMessageReceiver.gameMessageReceived(roundModelMessageStage);
+
+        when(gameMessageFilterer.isUnique(roundModelMessageCommit)).thenReturn(true);
         gameMessageReceiver.gameMessageReceived(roundModelMessageCommit);
 
         verify(roundModelObserver).roundModelReceived(roundModel);

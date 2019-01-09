@@ -1,15 +1,27 @@
 package org.han.ica.asd.c;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import org.han.ica.asd.c.discovery.DiscoveryException;
+
 import org.han.ica.asd.c.discovery.IResourceManager;
 import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomException;
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.faultdetection.FailLog;
+import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
+import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
+import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.socketrpc.IServerObserver;
+import org.han.ica.asd.c.socketrpc.SocketClient;
+import org.han.ica.asd.c.socketrpc.SocketServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +34,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -42,12 +55,38 @@ public class ConnectorTest {
     RoomFinder finder;
 
     @Mock
+    SocketServer socketServer;
+
+    @Mock
+    NodeInfoList nodeInfoList;
+
+    @Mock
     IResourceManager service;
 
     @BeforeEach
     public void setUp() {
         initMocks(this);
-        connector = new Connector(faultDetector, gameMessageClient, finder);
+
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                //CommunicationBinds
+                bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
+
+                //communication
+                requestStaticInjection(SocketClient.class);
+                requestStaticInjection(SocketServer.class);
+
+                //FaultDetector
+                requestStaticInjection(FailLog.class);
+                requestStaticInjection(FaultDetectorLeader.class);
+                requestStaticInjection(Connector.class);
+                requestStaticInjection(FaultDetectionClient.class);
+            }
+        });
+
+        connector = new Connector(faultDetector, gameMessageClient, finder, socketServer);
+        connector.setNodeInfoList(nodeInfoList);
     }
 
     @Test
@@ -105,6 +144,7 @@ public class ConnectorTest {
     }
 
     public void sendRoundToAllTest() {
+        doNothing().when(gameMessageClient).sendRoundToAllPlayers(any(), any());
         connector.updateAllPeers(new Round());
         verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class), any(Round.class));
     }
