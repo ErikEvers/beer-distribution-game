@@ -107,4 +107,13 @@ public class GameLogicTest {
         //Assert
         verify(communication, times(1)).requestFacilityUsage(facility);
     }
+
+    @Test
+    public void getAllFacilitiesCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Act
+        gameLogic.getAllFacilities();
+
+        //Assert
+        verify(communication, times(1)).getAllFacilities();
+    }
 }
