@@ -48,7 +48,10 @@ public class LeaderDAO {
 	public Leader getLeader(){
 		Leader leader = null;
 		Connection conn = databaseConnection.connect();
-		if (conn != null) {
+
+		if (conn == null) {
+			return leader;
+		}
 			try (PreparedStatement pstmt = conn.prepareStatement(GET_LEADER)) {
 				conn.setAutoCommit(false);
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
@@ -65,7 +68,7 @@ public class LeaderDAO {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
 			}
-		}
+
 		return leader;
 	}
 
