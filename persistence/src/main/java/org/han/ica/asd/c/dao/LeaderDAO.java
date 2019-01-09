@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,6 +56,8 @@ public class LeaderDAO {
 					if(!rs.isClosed()) {
 						rs.next();
 						leader = new Leader(playerDAO.getPlayer(rs.getString("PlayerId")));
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+						leader.setTimestamp(LocalDateTime.parse(rs.getString("Timestamp"), formatter));
 					}
 				}
 				conn.commit();
