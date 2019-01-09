@@ -23,7 +23,7 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     private IConnectedForPlayer communication;
     private IRoundStore persistence;
     private ParticipantsPool participantsPool;
@@ -117,10 +117,5 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public List<Facility> getAllFacilities() {
         //Yet to be implemented.
         return new ArrayList<>();
-    }
-
-    @Override
-    public void roundModelReceived(Round roundModel) {
-
     }
 }
