@@ -24,7 +24,7 @@ public class ConfigurationDAO {
     private static final String READ_CONFIGURATIONS = "SELECT * FROM Configuration;";
     private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesalers = ?, AmountOfWarehouses = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?;";
     private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
-    private static final String GET_LOWER_LINKED_FACILITIES = "SELECT flt.FacilityIdOrdering FROM FacilityLinkedTo flt WHERE flt.GameId = ? AND flt.FacilityIdOrdering = ?;";
+    private static final String GET_LOWER_LINKED_FACILITIES = "SELECT flt.FacilityIdOrdering FROM FacilityLinkedTo flt WHERE flt.GameId = ?";
     private static final String SET_LOWER_LINKED_FACILITIES = "INSERT INTO FacilityLinkedTo VALUES (?,?,?)";
     private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdOrdering = ?, FacilityIdDelivering = ? WHERE GameId = ?;";
     private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
@@ -145,7 +145,10 @@ public class ConfigurationDAO {
                 rs.getInt("AmountOfFactories"), rs.getInt("AmountOfWholesalers"),
                 rs.getInt("AmountOfWarehouses"), rs.getInt("AmountOfRetailers"),
                 rs.getInt("MinimalOrderRetail"), rs.getInt("MaximumOrderRetail"),
-                rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"));
+                rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"),
+                facilityDAO.readAllFacilitiesInGame(),
+                readFacilityLinks()
+                );
     }
 
     /**
@@ -225,11 +228,7 @@ public class ConfigurationDAO {
         }));
     }
 
-    /**
-     * Returns a map of Facilities with their respective lower linked facilities
-     *
-     * @return Map with Facilities as key and list with their respective
-     */
+
     public Map<Facility, List<Facility>> readFacilityLinks() {
         Connection conn = databaseConnection.connect();
         Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
@@ -237,10 +236,12 @@ public class ConfigurationDAO {
             try (PreparedStatement pstmt = conn.prepareStatement(GET_LOWER_LINKED_FACILITIES)) {
                 conn.setAutoCommit(false);
 
+                DaoConfig.gameIdNotSetCheck(pstmt, 1);
+
                 packageLinkedFacilities(facilitiesLinkedTo, pstmt.executeQuery());
 
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | GameIdNotSetException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
             }
@@ -288,6 +289,7 @@ public class ConfigurationDAO {
                     linkedFacilities.put(lastKnownParent, new ArrayList<>());
                 }
                 linkedFacilities.get(lastKnownParent).add(facilityDAO.readSpecificFacility(rs.getInt("FacilityIdDelivering")));
+                System.out.println(""+linkedFacilities.get(lastKnownParent).get(0).getFacilityId());
             }
         }
 
