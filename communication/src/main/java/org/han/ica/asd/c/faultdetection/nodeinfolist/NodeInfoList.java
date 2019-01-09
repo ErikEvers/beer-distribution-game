@@ -4,7 +4,6 @@ package org.han.ica.asd.c.faultdetection.nodeinfolist;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -14,13 +13,13 @@ import java.util.Objects;
  * This list class is used to keep all the details of all the nodes in.
  * This list has a couple of methods to make looping through the list easier.
  *
- * @author Oscar
- * @see NodeInfo
+ * @author Oscar, Tarik
+ * @see Player
  */
 
 public class NodeInfoList extends ArrayList<Player> {
 
-    private List<Player> nodeList;
+    private List<Player> playerList;
 
     private Leader leader;
 
@@ -28,21 +27,21 @@ public class NodeInfoList extends ArrayList<Player> {
     //inject
     }
 
-    public NodeInfoList(Leader leader, List<Player> nodeList) {
+    public NodeInfoList(Leader leader, List<Player> playerList) {
         this.leader = leader;
-        this.nodeList = nodeList;
+        this.playerList = playerList;
     }
 
     public void init(List<Player> playerList, Leader leader){
-        this.nodeList = playerList;
+        this.playerList = playerList;
         this.leader = leader;
     }
     /**
-     * Retrieves all the ip's from the 'NodeInfo' objects in the 'NodeInfoList'.
+     * Retrieves all the ip's from the 'Player' objects in the 'PlayerList'.
      *
-     * @return A List of strings filled with all the ip's that are in the 'NodeInfoList'
-     * @author Oscar
-     * @see NodeInfo
+     * @return A List of strings filled with all the ip's that are in the 'PlayerList'
+     * @author Oscar, Tarik
+     * @see Player
      * @see NodeInfoList
      */
     public List<String> getAllIps() {
@@ -55,7 +54,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * connected to the game.
      *
      * @return A List of all the active ips/nodes.
-     * @author Oscar
+     * @author Oscar, Tarik
      * @see NodeInfoList
      */
     public List<String> getActiveIps() {
@@ -69,7 +68,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * connected to the game.
      *
      * @return A List of all the active ips/nodes.
-     * @author Oscar
+     * @author Oscar, Tarik
      * @see NodeInfoList
      */
 
@@ -77,11 +76,17 @@ public class NodeInfoList extends ArrayList<Player> {
         return getIpsFromPlayerList("GetConnectedWithoutLeader");
     }
 
-
+    /**
+     * Returns a list with ips after filtering with predefined conditions.
+     *
+     * @return A (filtered) List.
+     * @author Tarik
+     * @see NodeInfoList
+     */
     public List<String>  getIpsFromPlayerList(String condition){
         ArrayList<String> list = new ArrayList<>();
         Player leader = this.leader.getPlayer();
-        nodeList.forEach((node)-> {
+        playerList.forEach((node)-> {
             switch (condition) {
                 case "GetUnfiltered":
                     list.add(node.getIpAddress());
@@ -108,7 +113,6 @@ public class NodeInfoList extends ArrayList<Player> {
      */
     public String getLeaderIp() {
         Player leader = this.leader.getPlayer();
-
         if (leader.isConnected()) {
                 return leader.getIpAddress();
             }
@@ -120,36 +124,36 @@ public class NodeInfoList extends ArrayList<Player> {
      * This node is identified by the ip address parameter.
      *
      * @param ip          The ip of the node that has to be updated.
-     * @param isConnected The value that needs to be set to the isConnected attribute of the NodeInfo.
+     * @param isConnected The value that needs to be set to the isConnected attribute of the 'Player' Object.
      * @author Oscar
-     * @see NodeInfo
+     * @see Player
      */
     public void updateIsConnected(String ip, Boolean isConnected) {
-        for (Player nodeInfo : nodeList) {
-            if (nodeInfo.getIpAddress().equals(ip)) {
-                nodeInfo.setConnected(isConnected);
+        for (Player player : playerList) {
+            if (player.getIpAddress().equals(ip)) {
+                player.setConnected(isConnected);
             }
         }
     }
 
     /**
-     * Retrieves the NodeInfo object for the given index.
+     * Retrieves the 'Player' object for the given index.
      *
-     * @param index The index of the NodeInfo that is required.
-     * @return The requested NodeInfo object.
+     * @param index The index of the 'Player' object that is required.
+     * @return The requested 'Player' object.
      */
     @Override
-    public Player get(int index) { return nodeList.get(index);}
+    public Player get(int index) { return playerList.get(index);}
 
     /**
-     * Adds a NodeInfo object to the NodeInfoList, it then returns true after it did its job.
+     * Adds a 'Player' object to the PlayerList, it then returns true after it did its job.
      *
-     * @param n The NodeInfo object to be added to the NodeInfoList.
+     * @param p The 'Player' object to be added to the PlayerList.
      * @return True after the object is added to the list.
      */
     @Override
-    public boolean add(Player n) {
-        nodeList.add(nodeList.size(), n);
+    public boolean add(Player p) {
+        playerList.add(playerList.size(), p);
         return true;
     }
 
@@ -161,7 +165,7 @@ public class NodeInfoList extends ArrayList<Player> {
      */
     @Override
     public int size() {
-        return nodeList.size();
+        return playerList.size();
     }
 
     /**
