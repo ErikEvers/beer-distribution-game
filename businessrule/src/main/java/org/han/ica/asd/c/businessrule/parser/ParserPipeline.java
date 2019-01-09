@@ -183,8 +183,12 @@ public class ParserPipeline {
                 }
             }
             return evaluator.evaluate(map) || hasErrors;
+        } else {
+            for (UserInputBusinessRule input : businessRulesInput) {
+                input.setErrorMessage("Only legitimate business rules are allowed");
+            }
+            return true;
         }
-        return true;
     }
 
     /***
