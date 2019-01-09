@@ -3,8 +3,12 @@ package org.han.ica.asd.c.gui_join_game;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
@@ -40,10 +44,13 @@ public class JoinGameController {
 
     public void handleJoinGameButtonClick() {
         //TODO Join room on IConnectorForSetup. If logged in succesful then set Room
-        RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),"145.74.199.201","");
-        if (result != null) {
+        try {
+            RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(), "145.74.199.201", "");
             gameRoom.setData(new Object[]{result});
             gameRoom.setupScreen();
+        } catch (RoomException | DiscoveryException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,e.getMessage(), ButtonType.CLOSE);
+            alert.showAndWait();
         }
     }
 

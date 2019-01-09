@@ -2,9 +2,14 @@ package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.Connector;
+import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.dbconnection.DBConnection;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.faultdetection.FailLog;
+import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
+import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
+import org.han.ica.asd.c.faultdetection.FaultResponder;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
@@ -19,16 +24,22 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
 import org.han.ica.asd.c.gui_manage_players.MonitorPlayers;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
-import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
+import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.socketrpc.IServerObserver;
+import org.han.ica.asd.c.socketrpc.SocketClient;
+import org.han.ica.asd.c.socketrpc.SocketServer;
+import org.han.ica.asd.c.persistence.BusinessRuleStore;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
 	protected void configure() {
 		bind(AbstractModuleExtension.class).to(BootstrapModule.class);
+		bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
 		bind(IDatabaseConnection.class).to(DBConnection.class);
-		bind(IConnecterForSetup.class).annotatedWith(Names.named("Connector")).to(Connector.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
+
 
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
@@ -42,7 +53,20 @@ public class BootstrapModule extends AbstractModuleExtension {
         bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("ManagePlayers")).to(MonitorPlayers.class);
 
-		requestStaticInjection(FXMLLoaderOnSteroids.class);
+		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 
+		staticRequests();
+	}
+
+	private void staticRequests(){
+		requestStaticInjection(FXMLLoaderOnSteroids.class);
+		requestStaticInjection(SocketClient.class);
+		requestStaticInjection(SocketServer.class);
+		requestStaticInjection(FailLog.class);
+		requestStaticInjection(FaultDetectionClient.class);
+		requestStaticInjection(FaultDetectorLeader.class);
+		requestStaticInjection(FaultResponder.class);
+		requestStaticInjection(Connector.class);
+		requestStaticInjection(GameMessageClient.class);
 	}
 }
