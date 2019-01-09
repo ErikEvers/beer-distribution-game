@@ -1,26 +1,18 @@
 package org.han.ica.asd.c.discovery;
 
-import org.han.ica.asd.c.discovery.DiscoveryException;
-import org.han.ica.asd.c.discovery.IResourceManager;
-import org.han.ica.asd.c.discovery.Room;
-import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.junit.jupiter.api.condition.DisabledOnJre;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

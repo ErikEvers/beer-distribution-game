@@ -18,16 +18,20 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
+import org.han.ica.asd.c.persistence.BusinessRuleStore;
 
 public class BootstrapModule extends AbstractModuleExtension {
 	@Override
 	protected void configure() {
 		bind(AbstractModuleExtension.class).to(BootstrapModule.class);
+		bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
 		bind(IDatabaseConnection.class).to(DBConnection.class);
 		bind(IConnecterForSetup.class).annotatedWith(Names.named("Connector")).to(Connector.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
+
 
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
@@ -39,6 +43,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+
 
 		requestStaticInjection(FXMLLoaderOnSteroids.class);
 

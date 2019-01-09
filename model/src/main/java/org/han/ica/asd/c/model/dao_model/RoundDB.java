@@ -3,6 +3,7 @@ package org.han.ica.asd.c.model.dao_model;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class RoundDB implements IDaoModel{
     private String gameId;
     private int roundId;
