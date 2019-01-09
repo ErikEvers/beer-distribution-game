@@ -59,7 +59,6 @@ public class ParserPipeline {
         this.businessRulesParsed = listener.getBusinessRules();
 
         if(setSyntaxError()){
-            ParseErrorListener.INSTANCE.getExceptions().clear();
             return false;
         }
 
@@ -82,6 +81,10 @@ public class ParserPipeline {
         for (int i = 0; i < businessRulesInput.size(); i++) {
             String businessRule = businessRulesInput.get(i).getBusinessRule();
 
+            if(!businessRule.matches(REGEX_START_WITH_IF_OR_DEFAULT)){
+                break;
+            }
+
             if(ParseErrorListener.INSTANCE.getWordExceptions().containsKey(i + 1)){
                 int endErrorWord = findEndErrorWord(businessRule,ParseErrorListener.INSTANCE.getWordExceptions().get(i + lineOffset) - 1);
                 int beginErrorWord = findBeginErrorWord(businessRule, endErrorWord);
@@ -92,14 +95,19 @@ public class ParserPipeline {
                 businessRulesInput.get(i).setErrorMessage(extendErrorMessageWithAlternative(errorMessage, alternative));
                 businessRulesInput.get(i).setErrorWord(beginErrorWord, endErrorWord);
                 hasErrors = true;
-                ParseErrorListener.INSTANCE.getWordExceptions().remove(i+1);
             } else if (ParseErrorListener.INSTANCE.getExceptions().contains(i + lineOffset)) {
                 businessRulesInput.get(i).setErrorMessage("Input error found on: '" + businessRule + "'");
                 hasErrors = true;
             }
         }
 
+        clearParseErrorListener();
         return hasErrors;
+    }
+
+    private void clearParseErrorListener(){
+        ParseErrorListener.INSTANCE.getExceptions().clear();
+        ParseErrorListener.INSTANCE.getWordExceptions().clear();
     }
 
     private String extendErrorMessageWithAlternative(String errorMessage, String alternative){
@@ -189,8 +197,7 @@ public class ParserPipeline {
         String[] lines = businessRuleUserInput.split(REGEX_SPLIT_ON_NEW_LINE);
         List<UserInputBusinessRule> businessRules = new ArrayList<>();
         for (int i = 0; i < lines.length; i++) {
-            businessRules.add(new UserInputBusinessRule(lines[i], i + 1) {
-            });
+            businessRules.add(new UserInputBusinessRule(lines[i], i + 1));
         }
         return businessRules;
     }

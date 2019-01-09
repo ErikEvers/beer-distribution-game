@@ -15,6 +15,7 @@ import java.util.*;
 public class Evaluator {
     private boolean hasErrors = false;
     private static final String INT_VALUE = "\\d+";
+    private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+.";
     private boolean defaultOrderBool = false;
     private boolean defaultDeliverBool = false;
     private boolean personBool;
@@ -27,6 +28,10 @@ public class Evaluator {
      */
     public boolean evaluate(Map<UserInputBusinessRule, BusinessRule> businessRulesMap) {
         for (Map.Entry<UserInputBusinessRule, BusinessRule> entry : businessRulesMap.entrySet()) {
+            if(!entry.getKey().getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)){
+                break;
+            }
+
             Deque<ASTNode> deque = new LinkedList<>();
             deque.push(entry.getValue());
             evaluateBusinessRule(deque, entry.getKey());
