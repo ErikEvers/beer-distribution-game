@@ -67,4 +67,14 @@ public class BeerGameDAOIntegrationTest {
 		beergameDAO.createBeergame("BeergameZutphen");
 		Assert.assertEquals("BeergameZutphen",beergameDAO.getGameLog().getGameName());
 	}
+
+	@Test
+	public void getGameLogOfOngoingGame(){
+		beergameDAO.createBeergame("BeergameZutphen");
+		beergameDAO.updateEnddate();
+		beergameDAO.createBeergame("BeergameArnhem");
+		beergameDAO.createBeergame("BeergameNijmegen");
+		beergameDAO.createBeergame("BeergameDeventer");
+		Assert.assertEquals(3,beergameDAO.getGameLogFromOngoingGame().size());
+	}
 }
