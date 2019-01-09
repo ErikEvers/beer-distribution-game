@@ -38,4 +38,6 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
+
+    void startNewRound(Round currentRound);
 }
