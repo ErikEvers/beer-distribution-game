@@ -12,7 +12,7 @@ public class PersistenceStub implements IPersistence {
 	}
 
 	@Override
-	public Round fetchFacilityTurn(int roundId, int facilityId) {
+	public Round fetchFacilityTurn(int roundId) {
 		return null;
 	}
 
