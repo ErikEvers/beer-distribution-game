@@ -45,29 +45,29 @@ public class LeaderDAO {
 		}
 	}
 
-	public Leader getLeader(){
+	public Leader getLeader() {
 		Leader leader = null;
 		Connection conn = databaseConnection.connect();
 
 		if (conn == null) {
 			return leader;
 		}
-			try (PreparedStatement pstmt = conn.prepareStatement(GET_LEADER)) {
-				conn.setAutoCommit(false);
-				pstmt.setString(1, DaoConfig.getCurrentGameId());
-				try (ResultSet rs = pstmt.executeQuery()) {
-					if(!rs.isClosed()) {
-						rs.next();
-						leader = new Leader(playerDAO.getPlayer(rs.getString("PlayerId")));
-						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-						leader.setTimestamp(LocalDateTime.parse(rs.getString("Timestamp"), formatter));
-					}
+		try (PreparedStatement pstmt = conn.prepareStatement(GET_LEADER)) {
+			conn.setAutoCommit(false);
+			pstmt.setString(1, DaoConfig.getCurrentGameId());
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (!rs.isClosed()) {
+					rs.next();
+					leader = new Leader(playerDAO.getPlayer(rs.getString("PlayerId")));
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+					leader.setTimestamp(LocalDateTime.parse(rs.getString("Timestamp"), formatter));
 				}
-				conn.commit();
-			} catch (SQLException e) {
-				LOGGER.log(Level.SEVERE, e.toString(), e);
-				databaseConnection.rollBackTransaction(conn);
 			}
+			conn.commit();
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, e.toString(), e);
+			databaseConnection.rollBackTransaction(conn);
+		}
 
 		return leader;
 	}
