@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class GameAgent implements IDomainModel{
         this.gameAgentName = gameAgentName;
         this.programmedBusinessRules = programmedBusinessRules;
         this.facility = facility;
+        gameBusinessRulesList = new ArrayList<>();
         for(ProgrammedBusinessRules businessRules: programmedBusinessRules) {
             gameBusinessRulesList.add(new GameBusinessRules(gameAgentName, businessRules.getProgrammedAST()));
         }

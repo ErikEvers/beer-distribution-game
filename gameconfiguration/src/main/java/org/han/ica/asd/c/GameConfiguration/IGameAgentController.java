@@ -12,6 +12,6 @@ public interface IGameAgentController {
 
   void getAgentsForUI() throws NoProgrammedAgentsFoundException;
 
-  List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map);
+  List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map, List<ProgrammedAgent> programmedAgents);
 
 }
