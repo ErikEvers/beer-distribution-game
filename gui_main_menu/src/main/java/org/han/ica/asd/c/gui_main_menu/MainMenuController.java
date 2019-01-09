@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-import javafx.scene.control.Button;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import javax.inject.Inject;
@@ -15,15 +14,6 @@ public class MainMenuController {
 
     @FXML
     private Button close;
-
-    @FXML
-    private Button createAgent;
-
-    @FXML
-    private Button replay;
-
-    @FXML
-    private Button createGame;
 
     @Inject
     @Named("GameSetupStart")
@@ -42,7 +32,7 @@ public class MainMenuController {
     private IGUIHandler joinGame;
 
     public void initialize() {
-        setCreateGameButtonAction();
+
     }
 
     @FXML
@@ -61,12 +51,14 @@ public class MainMenuController {
         replayGameList.setupScreen();
     }
 
+    @FXML
     public void handleJoinGameButtonClick() {
         joinGame.setupScreen();
     }
 
+    @FXML
     private void setCreateGameButtonAction() {
-        createGame.setOnAction(event -> gameSetupStart.setupScreen());
+        gameSetupStart.setupScreen();
     }
 
 

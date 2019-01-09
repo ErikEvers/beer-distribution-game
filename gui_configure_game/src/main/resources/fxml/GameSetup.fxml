@@ -41,7 +41,7 @@
                   <Insets left="15.0" />
                </GridPane.margin>
             </Label>
-            <Button fx:id="next" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Next" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button mnemonicParsing="false" onAction="#setNextScreen" prefHeight="25.0" prefWidth="89.0" text="Next" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets right="15.0" />
                </GridPane.margin>
@@ -92,9 +92,6 @@
                 <AnchorPane fx:id="facilitiesContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="680.0" />
               </content>
             </ScrollPane>
-            <Button fx:id="testB" mnemonicParsing="false" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Button fx:id="testB1" alignment="TOP_CENTER" mnemonicParsing="false" text="Button" GridPane.rowIndex="1" />
-            <Button fx:id="testB2" mnemonicParsing="false" text="Button" GridPane.columnIndex="1" />
          </children>
       </GridPane>
    </children>

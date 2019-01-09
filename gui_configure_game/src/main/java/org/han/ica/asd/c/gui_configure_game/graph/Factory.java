@@ -1,14 +1,14 @@
 package org.han.ica.asd.c.gui_configure_game.graph;
 
-public class Factory extends GraphFacility implements ISupplier<RegionalWarehouse> {
+public class Factory extends GraphFacility {
     private static final String COLOR = "DODGERBLUE";
 
 
-    public void addBuyer(RegionalWarehouse buyer) {
+     void addBuyer(RegionalWarehouse buyer) {
         buyers.add(buyer);
     }
 
-    public void removeBuyer(RegionalWarehouse buyer) {
+     void removeBuyer(RegionalWarehouse buyer) {
         buyers.remove(buyer);
     }
 

@@ -1,14 +1,14 @@
 package org.han.ica.asd.c.gui_configure_game.graph;
 
-public class Retailer extends GraphFacility implements IBuyer<Wholesale> {
+public class Retailer extends GraphFacility  {
     private static final String COLOR = "ff2151";
 
 
-    public void addSupplier(Wholesale supplier) {
+     void addSupplier(Wholesale supplier) {
         suppliers.add(supplier);
     }
 
-    public void removeSupplier(Wholesale supplier) {
+     void removeSupplier(Wholesale supplier) {
         suppliers.remove(supplier);
     }
 

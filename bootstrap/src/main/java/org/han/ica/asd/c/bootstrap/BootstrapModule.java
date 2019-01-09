@@ -33,6 +33,7 @@ public class BootstrapModule extends AbstractModuleExtension {
         bind(IBusinessRules.class).to(BusinessRuleHandler.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
+        bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGame.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("JoinGame")).to(JoinGame.class);

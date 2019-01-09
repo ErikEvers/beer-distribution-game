@@ -5,21 +5,35 @@ import java.util.List;
 
 public abstract class GraphFacility {
 
-    int id = 0;
-    ArrayList<IBuyer> buyers;
-    ArrayList<ISupplier> suppliers;
+    private int id = 0;
+    ArrayList<GraphFacility> buyers;
+    ArrayList<GraphFacility> suppliers;
 
 
-    public GraphFacility() {
-        buyers = new ArrayList<IBuyer>();
-        suppliers = new ArrayList<ISupplier>();
+     GraphFacility() {
+        buyers = new ArrayList<>();
+        suppliers = new ArrayList<>();
     }
 
-    public List getBuyers() {
+
+     void removeSupplier(GraphFacility supplier) {
+        suppliers.remove(supplier);
+    }
+
+
+    void addBuyer(GraphFacility supplier) {
+        buyers.add(supplier);
+    }
+
+    void removeBuyer(GraphFacility buyer) {
+        buyers.remove(buyer);
+    }
+
+    public List<GraphFacility> getBuyers() {
         return buyers;
     }
 
-    public List getSuppliers() {
+     List<GraphFacility> getSuppliers() {
         return suppliers;
     }
 

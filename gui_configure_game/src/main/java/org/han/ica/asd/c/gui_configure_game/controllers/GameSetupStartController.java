@@ -28,11 +28,9 @@ import java.util.logging.Logger;
 
 public class GameSetupStartController {
 
-    private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
-
-    private int baseRoundNumber = 20;
-    private int baseMinNumber = 1;
-    private int baseMaxNumber = 50;
+    private final int baseRoundNumber = 20;
+    private final int baseMinNumber = 1;
+    private final int baseMaxNumber = 50;
 
     @Inject
     @Named("GameSetup")
@@ -46,7 +44,6 @@ public class GameSetupStartController {
     @Inject
     private Configuration configuration;
 
-    //To Do vragen over gamename in db
     @FXML
     private TextField gameName;
 
@@ -64,6 +61,9 @@ public class GameSetupStartController {
 
     @FXML
     private CheckBox seeDetail;
+
+    @FXML
+    private CheckBox offlineGame;
 
     @FXML
     private AnchorPane mainContainer;
@@ -92,6 +92,10 @@ public class GameSetupStartController {
         nextScreenButton.setOnAction(event -> {
             fillConfiguration();
             gameSetup.setData(new Object[]{configuration});
+            gameSetup.setData(new Object[]{gameName.getText()});
+            if (offlineGame.isSelected()) {
+                gameSetup.setData(new Object[]{"FALSE"});
+            }
             gameSetup.setupScreen();
         });
     }
@@ -101,9 +105,10 @@ public class GameSetupStartController {
      * Button function to return to the previous screen
      */
     @FXML
-    public void backButton() {
+    private void backButton() {
         back.setOnAction(event -> mainMenu.setupScreen());
     }
+
 
     /**
      * Fill the injected configuration based on the values given in GUI

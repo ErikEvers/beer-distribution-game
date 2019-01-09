@@ -1,22 +1,22 @@
 package org.han.ica.asd.c.gui_configure_game.graph;
 
-public class RegionalWarehouse extends GraphFacility implements ISupplier<Wholesale>, IBuyer<Factory> {
+public class RegionalWarehouse extends GraphFacility {
     private static final String COLOR = "1fff34";
 
 
-    public void addBuyer(Wholesale buyer) {
+     void addBuyer(Wholesale buyer) {
         buyers.add(buyer);
     }
 
-    public void removeBuyer(Wholesale buyer) {
+     void removeBuyer(Wholesale buyer) {
         buyers.remove(buyer);
     }
 
-    public void addSupplier(Factory supplier) {
+     void addSupplier(Factory supplier) {
         suppliers.add(supplier);
     }
 
-    public void removeSupplier(Factory supplier) {
+     void removeSupplier(Factory supplier) {
         suppliers.remove(supplier);
     }
 

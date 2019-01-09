@@ -24,20 +24,16 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.google.common.collect.Iterables.isEmpty;
-
 
 public class GameSetupController implements Initializable {
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
-    private ArrayList<FacilityRectangle> factories = new ArrayList<FacilityRectangle>();
-    private ArrayList<FacilityRectangle> wholesalers = new ArrayList<FacilityRectangle>();
-    private ArrayList<FacilityRectangle> warehouses = new ArrayList<FacilityRectangle>();
-    private ArrayList<FacilityRectangle> retailers = new ArrayList<FacilityRectangle>();
+    private ArrayList<FacilityRectangle> factories = new ArrayList<>();
+    private ArrayList<FacilityRectangle> wholesalers = new ArrayList<>();
+    private ArrayList<FacilityRectangle> warehouses = new ArrayList<>();
+    private ArrayList<FacilityRectangle> retailers = new ArrayList<>();
     private ObservableList<GraphFacility> graphFacilityListView = FXCollections.observableArrayList();
-
-    private final Provider<Facility> facilityProvider;
 
 
     private int mouseClickedCount = 0;
@@ -64,8 +60,12 @@ public class GameSetupController implements Initializable {
     @Inject
     private Graph graph;
 
-
+    /**
+     * Configuration variables that sould be passed down to the next screen
+     */
     private Configuration configuration;
+    private String gameName = "";
+    private String onlineGame = "TRUE";
 
     @FXML
     private ComboBox<GraphFacility> comboBox;
@@ -79,19 +79,16 @@ public class GameSetupController implements Initializable {
     @FXML
     private Button back;
 
-    @FXML
-    private Button testB;
-    @FXML
-    private Button testB1;
-    @FXML
-    private Button testB2;
 
-    @FXML
-    private Button next;
+    private int factoryindex = 1;
+    private int regionalWharehouseindex = 1;
+    private int wholsaleindex = 1;
+    private int retailerindex = 1;
+
 
     @Inject
     public GameSetupController(Provider<Facility> facilityProvider) {
-        this.facilityProvider = facilityProvider;
+
     }
 
     /**
@@ -102,15 +99,18 @@ public class GameSetupController implements Initializable {
         mainContainer.getChildren().addAll();
         fillComboBox();
         setBackButtonAction();
-        setNextScreen();
-        test();
-        test1();
-        test2();
-
     }
 
-    public void setConfiguration(Configuration configuration) {
+    void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+    }
+
+    public void setOnlineGame(String onlineGame) {
+        this.onlineGame = onlineGame;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
     }
 
     /**
@@ -118,38 +118,58 @@ public class GameSetupController implements Initializable {
      */
     @FXML
     public void handleAddFacilityButtonClick() {
-        drawRectangle();
+
+        graphConverterToDomain.setGraph(graph);
+        int[] countAll = graphConverterToDomain.countAll();
+
+        int factoryindexIn = factoryindex + countAll[0];
+        int regionalWharehouseindexIn = regionalWharehouseindex + countAll[0] + countAll[1];
+        int wholsaleindexIn = wholsaleindex + countAll[0] + countAll[1] + countAll[2];
+        int retailerindexIn = retailerindex + countAll[0] + countAll[1] + countAll[2] + countAll[3];
+
         GraphFacility graphFacility = comboBox.getSelectionModel().getSelectedItem();
+
         if (graphFacility instanceof Factory) {
-            graph.addFacility(new Factory());
+            GraphFacility toDraw = new Factory();
+            toDraw.setId(factoryindexIn);
+            graph.addFacility(toDraw);
+            drawRectangle(toDraw);
         }
         if (graphFacility instanceof RegionalWarehouse) {
-            graph.addFacility(new RegionalWarehouse());
+            GraphFacility toDraw = new RegionalWarehouse();
+            toDraw.setId(regionalWharehouseindexIn);
+            graph.addFacility(toDraw);
+            drawRectangle(toDraw);
         }
         if (graphFacility instanceof Wholesale) {
-            graph.addFacility(new Wholesale());
+            GraphFacility toDraw = new Wholesale();
+            toDraw.setId(wholsaleindexIn);
+            graph.addFacility(toDraw);
+            drawRectangle(toDraw);
         }
         if (graphFacility instanceof Retailer) {
-            graph.addFacility(new Retailer());
+            GraphFacility toDraw = new Retailer();
+            toDraw.setId(retailerindexIn);
+            graph.addFacility(toDraw);
+            drawRectangle(toDraw);
         }
-
+        updateId();
         setBackButtonAction();
     }
 
     /**
      * Method draws a rectangle based on the selected facility.
      */
-    private void drawRectangle() {
-        GraphFacility graphFacility = comboBox.getSelectionModel().getSelectedItem();
+    private void drawRectangle(GraphFacility graphFacility) {
 
         if (graphFacility instanceof Factory) {
-            drawFactory();
+            drawFactory(graphFacility);
         } else if (graphFacility instanceof RegionalWarehouse) {
-            drawRegionalWarehouse();
+            drawRegionalWarehouse(graphFacility);
         } else if (graphFacility instanceof Wholesale) {
-            drawWholesaler();
+            drawWholesaler(graphFacility);
         } else if (graphFacility instanceof Retailer) {
-            drawRetailer();
+            drawRetailer(graphFacility);
         }
     }
 
@@ -157,7 +177,7 @@ public class GameSetupController implements Initializable {
      * Method to keep track of what rectangle(facility) is clicked and draws a line between rectangles.
      *
      * @param rectangle facility that is clicked.
-     * @throws GraphException
+     * @throws GraphException Facility not found in list
      */
     private void handleFacilityRectangleClick(FacilityRectangle rectangle) throws GraphException {
         if (mouseClickedCount == NOT_CLICKED_YET) {
@@ -186,15 +206,19 @@ public class GameSetupController implements Initializable {
 
         if (graphFacility instanceof Factory) {
             factories.remove(rectangle);
+
         }
         if (graphFacility instanceof RegionalWarehouse) {
             warehouses.remove(rectangle);
+
         }
         if (graphFacility instanceof Wholesale) {
             wholesalers.remove(rectangle);
+
         }
         if (graphFacility instanceof Retailer) {
             retailers.remove(rectangle);
+
         }
 
         for (EdgeLine line : rectangle.getLines()) {
@@ -252,11 +276,12 @@ public class GameSetupController implements Initializable {
      * @param x  x coordinate of first rectangle.
      * @param y  y coordinate of first rectangle.
      * @return New line.
-     * @throws GraphException
+     * @throws GraphException when a facility is not in the list
      */
     private EdgeLine createLine(FacilityRectangle r1, FacilityRectangle r2, double x, double y) throws GraphException {
         final EdgeLine line = new EdgeLine();
         line.setCursor(Cursor.HAND);
+
 
         if (r1.getGraphFacility() instanceof Factory && r2.getGraphFacility() instanceof RegionalWarehouse) {
             connect(r1, r2, x, y, line);
@@ -272,7 +297,7 @@ public class GameSetupController implements Initializable {
 
         line.setOnMousePressed(event -> {
             if (event.isSecondaryButtonDown()) {
-                graph.removeEdge((ISupplier) line.getSupplier().getGraphFacility(), (IBuyer) line.getBuyer().getGraphFacility());
+                graph.removeChild(line.getSupplier().getGraphFacility(), line.getBuyer().getGraphFacility());
                 line.getSupplier().getLines().remove(line);
                 facilitiesContainer.getChildren().remove(line);
             }
@@ -308,24 +333,29 @@ public class GameSetupController implements Initializable {
      * @param x    x coordinate of first rectangle.
      * @param y    y coordinate of first rectangle.
      * @param line Line to be drawn.
-     * @throws GraphException
+     * @throws GraphException when a facility is missing from the list
      */
     private void connect(FacilityRectangle r1, FacilityRectangle r2, double x, double y, EdgeLine line) throws GraphException {
+
         line.drawLine(r1, r2, x, y);
         line.setSupplier(r1);
         line.setBuyer(r2);
+
         r1.getLines().add(line);
         r2.getLines().add(line);
-        graph.addEdge((ISupplier) r1.getGraphFacility(), (IBuyer) r2.getGraphFacility());
+        graph.addEdge(r1.getGraphFacility(), r2.getGraphFacility());
     }
 
     /**
      * Method draws a rectangle(Factory).
+     *
+     * @param graphFacility graph version of facility
      */
-    private void drawFactory() {
+    private void drawFactory(GraphFacility graphFacility) {
         double collumns = 60;
         facilitiesContainer.getChildren().removeAll(factories);
-        factories.add(createRectangle(comboBox.getSelectionModel().getSelectedItem()));
+        factories.add(createRectangle(graphFacility));
+
         for (int i = 0; i < factories.size(); i++) {
             factories.get(i).setTranslateX(collumns * i);
             factories.get(i).setTranslateY(0);
@@ -338,12 +368,14 @@ public class GameSetupController implements Initializable {
 
     /**
      * Method draws a rectangle(RegionalWarehouse).
+     *
+     * @param graphFacility graph version of facility
      */
-    private void drawRegionalWarehouse() {
+    private void drawRegionalWarehouse(GraphFacility graphFacility) {
         double rows = (facilitiesContainer.getPrefHeight() / 4);
         double collumns = 60;
         facilitiesContainer.getChildren().removeAll(warehouses);
-        warehouses.add(createRectangle(comboBox.getSelectionModel().getSelectedItem()));
+        warehouses.add(createRectangle(graphFacility));
         for (int i = 0; i < warehouses.size(); i++) {
             warehouses.get(i).setTranslateX(collumns * i);
             warehouses.get(i).setTranslateY(rows * 1);
@@ -356,12 +388,14 @@ public class GameSetupController implements Initializable {
 
     /**
      * Method draws a rectangle(Wholesaler).
+     *
+     * @param graphFacility graph version of facility
      */
-    private void drawWholesaler() {
+    private void drawWholesaler(GraphFacility graphFacility) {
         double rows = (facilitiesContainer.getPrefHeight() / 4);
         double collumns = 60;
         facilitiesContainer.getChildren().removeAll(wholesalers);
-        wholesalers.add(createRectangle(comboBox.getSelectionModel().getSelectedItem()));
+        wholesalers.add(createRectangle(graphFacility));
         for (int i = 0; i < wholesalers.size(); i++) {
             wholesalers.get(i).setTranslateX(collumns * i);
             wholesalers.get(i).setTranslateY(rows * 2);
@@ -374,12 +408,14 @@ public class GameSetupController implements Initializable {
 
     /**
      * Method draws a rectangle(Retailer).
+     *
+     * @param graphFacility graph version of facility
      */
-    private void drawRetailer() {
+    private void drawRetailer(GraphFacility graphFacility) {
         double rows = (facilitiesContainer.getPrefHeight() / 4);
         double collumns = 60;
         facilitiesContainer.getChildren().removeAll(retailers);
-        retailers.add(createRectangle(comboBox.getSelectionModel().getSelectedItem()));
+        retailers.add(createRectangle(graphFacility));
         for (int i = 0; i < retailers.size(); i++) {
             retailers.get(i).setTranslateX(collumns * i);
             retailers.get(i).setTranslateY(rows * 3);
@@ -394,7 +430,7 @@ public class GameSetupController implements Initializable {
      * Button function to return to the previous screen
      */
     @FXML
-    public void setBackButtonAction() {
+    private void setBackButtonAction() {
         back.setOnAction(event -> gameSetupStart.setupScreen());
     }
 
@@ -402,40 +438,37 @@ public class GameSetupController implements Initializable {
      * Button function to proceed to the next screen
      */
     @FXML
-    public void setNextScreen() {
-        //  graphToFacilityChecker.graphChecker(graph.getFacilities().size(), graph);
-        // open popUp scherm.
-        next.setOnAction(event -> gameSetupType.setupScreen());
+    private void setNextScreen() {
+        // TODO: 9-1-2019  graphToFacilityChecker.graphChecker(graph.getFacilities().size(), graph); pen popUp scherm bij error.
+        fillConfiguration();
+        gameSetupType.setupScreen();
     }
 
-    public void addIdToGraph() {
+    private void updateId() {
 
         graphConverterToDomain.setGraph(graph);
         int[] countAll = graphConverterToDomain.countAll();
-        System.out.println("factories = " + countAll[0]);
-        System.out.println("RegionalWarehouse = " + countAll[1]);
-        System.out.println("Wholesale = " + countAll[2]);
-        System.out.println("Retailer = " + countAll[3]);
 
-        int factoryindex = 1;
-        int regionalWharehouseindex = 1 + countAll[0];
-        int wholsaleindex = 1 + countAll[0] + countAll[1];
-        int retailerindex = 1 + countAll[0] + countAll[1] + countAll[2];
+
+        int factoryindexToGraph = 1;
+        int regionalWharehouseindexToGraph = 1 + countAll[0];
+        int wholsaleindexToGraph = 1 + countAll[0] + countAll[1];
+        int retailerindexToGraph = 1 + countAll[0] + countAll[1] + countAll[2];
 
 
         for (GraphFacility current : graph.getFacilities()) {
             if (current instanceof Factory) {
-                current.setId(factoryindex);
-                factoryindex++;
+                current.setId(factoryindexToGraph);
+                factoryindexToGraph++;
             } else if (current instanceof RegionalWarehouse) {
-                current.setId(regionalWharehouseindex);
-                regionalWharehouseindex++;
+                current.setId(regionalWharehouseindexToGraph);
+                regionalWharehouseindexToGraph++;
             } else if (current instanceof Wholesale) {
-                current.setId(wholsaleindex);
-                wholsaleindex++;
+                current.setId(wholsaleindexToGraph);
+                wholsaleindexToGraph++;
             } else if (current instanceof Retailer) {
-                current.setId(retailerindex);
-                retailerindex++;
+                current.setId(retailerindexToGraph);
+                retailerindexToGraph++;
             }
         }
     }
@@ -445,57 +478,19 @@ public class GameSetupController implements Initializable {
      */
     public void fillConfiguration() {
 
-        addIdToGraph();
-
         graphConverterToDomain.setGraph(graph);
 
         int[] countAll = graphConverterToDomain.countAll();
 
         configuration.setFacilities(graphConverterToDomain.allToList());
         configuration.setFacilitiesLinkedTo(graphConverterToDomain.convertToDomeinGraph());
+        configuration.setFacilities(graphConverterToDomain.allToList());
+        configuration.setFacilitiesLinkedTo(graphConverterToDomain.convertToDomeinGraph());
         configuration.setAmountOfFactories(countAll[0]);
-        configuration.setAmountOfDistributors(countAll[1]);
-        configuration.setAmountOfWholesales(countAll[2]);
+        configuration.setAmountOfWarehouses(countAll[1]);
+        configuration.setAmountOfWholesalers(countAll[2]);
         configuration.setAmountOfRetailers(countAll[3]);
 
-    }
-
-
-    @FXML
-    public void test() {
-        testB.setOnAction(event ->
-                addIdToGraph());
-    }
-
-    @FXML
-    public void test1() {
-        testB1.setOnAction(event ->
-                printAll());
-    }
-
-
-    public void printAll() {
-        for (GraphFacility current : graph.getFacilities()) {
-            if (current instanceof Factory) {
-                System.out.println("factoryId = " + current.getId());
-            }
-            if (current instanceof RegionalWarehouse) {
-                System.out.println("RegionalWarehouse = " + current.getId());
-            }
-            if (current instanceof Wholesale) {
-                System.out.println("Wholesale = " + current.getId());
-            }
-            if (current instanceof Retailer) {
-                System.out.println("Retailer = " + current.getId());
-            }
-        }
-    }
-
-
-    @FXML
-    public void test2() {
-        testB2.setOnAction(event ->
-                System.out.println(graph.getFacilities().size()));
     }
 
 }

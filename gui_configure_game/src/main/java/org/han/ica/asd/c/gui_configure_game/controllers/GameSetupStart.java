@@ -12,7 +12,7 @@ public class GameSetupStart implements IGUIHandler {
 
     @Override
     public void setData(Object[] data) {
-
+        // Method from super
     }
 
     @Override
