@@ -33,11 +33,15 @@ public class DBConnection implements IDatabaseConnection {
 
 	public void runSQLScript(String scriptname) {
 		StringBuilder sb = new StringBuilder();
-		findFileAndRun(scriptname, sb, connect(), LOGGER);
+		try {
+			findFileAndRun(scriptname, sb, connect(), LOGGER);
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE,e.toString(),e);
+		}
 
 	}
 
-	static void findFileAndRun(String scriptname, StringBuilder sb, Connection connect2, Logger logger) {
+	static void findFileAndRun(String scriptname, StringBuilder sb, Connection connect2, Logger logger) throws SQLException {
 		String s;
 		try(FileReader fr = new FileReader(new File(Thread.currentThread().getContextClassLoader().getResource(scriptname).toURI()))){
 			BufferedReader br = new BufferedReader(fr);
@@ -62,10 +66,11 @@ public class DBConnection implements IDatabaseConnection {
 					}
 				}
 			}
-			connect2.commit();
-
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.toString(), e);
+		}
+		finally {
+			connect2.close();
 		}
 	}
 
