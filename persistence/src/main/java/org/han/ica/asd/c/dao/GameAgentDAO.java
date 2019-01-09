@@ -127,10 +127,7 @@ public class GameAgentDAO{
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (!rs.isClosed()) {
                     while (rs.next()) {
-                        gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
-                                facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
-                        List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
-                        gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
+                        createGameAgentModel(i, gameAgents, gameBusinessRulesStub, rs);
                         i = i + 1;
                     }
                 }
@@ -141,6 +138,13 @@ public class GameAgentDAO{
             databaseConnection.rollBackTransaction(conn);
         }
         return gameAgents;
+    }
+
+    private void createGameAgentModel(int i, List<GameAgent> gameAgents, List<GameBusinessRules> gameBusinessRulesStub, ResultSet rs) throws SQLException {
+        gameAgents.add(new GameAgent(rs.getString("GameAgentName"),
+                facilityDAO.readSpecificFacility(rs.getInt("FacilityId")), gameBusinessRulesStub));
+        List<GameBusinessRules> actualGameBusinessRules = gameBusinessRulesDAO.readAllGameBusinessRulesForGameAgentInAGame(gameAgents.get(i));
+        gameAgents.get(i).setGameBusinessRules(actualGameBusinessRules);
     }
 
     /**
