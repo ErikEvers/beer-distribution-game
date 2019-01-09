@@ -1,11 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IConnectedForPlayer;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
+
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
@@ -13,9 +9,7 @@ import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +26,10 @@ public class GameLogicTest {
     @BeforeEach
     void setup() {
         communication = mock(IConnectedForPlayer.class);
-        persistence = mock(IPersistence.class);
+        persistence = mock(IRoundStore.class);
         participantsPool = mock(ParticipantsPool.class);
-        gameLogic = new GameLogic("test", communication, persistence, participantsPool, new BeerGame(null, null,null,null,null,"", "", "",""));
+        BeerGame beerGame = mock(BeerGame.class);
+        gameLogic = new GameLogic(communication, persistence, participantsPool, beerGame);
     }
 
     @Test
