@@ -31,6 +31,6 @@ public class SeeOtherFacilitiesController {
     public void setBeerGame(BeerGame beerGame) {
         this.beerGame = beerGame;
         playerComponent.setConfiguration(beerGame.getConfiguration());
-        TreeBuilder.loadFacilityView(beerGame, facilitiesContainer, true);
+        new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, true);
     }
 }

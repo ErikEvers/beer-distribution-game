@@ -142,6 +142,11 @@ public class Action extends ASTNode {
         return facilityId;
     }
 
+    @Override
+    public ASTNode getLeftChild() {
+        return actionName;
+    }
+
     /***
      * gets the right child of an action
      * @return operation

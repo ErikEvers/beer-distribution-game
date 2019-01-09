@@ -126,6 +126,17 @@ public class BusinessRule extends ASTNode {
         return list;
     }
 
+
+    @Override
+    public ASTNode getLeftChild() {
+        return condition;
+    }
+
+    @Override
+    public ASTNode getRightChild() {
+        return action;
+    }
+
     /**
      * Equals function used for unit testing
      *

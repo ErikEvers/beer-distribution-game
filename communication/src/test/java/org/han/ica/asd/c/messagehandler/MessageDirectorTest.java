@@ -1,8 +1,7 @@
-package communicationcomponent.messagehandler;
+package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
-import org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
@@ -38,7 +37,9 @@ public class MessageDirectorTest {
     @BeforeEach
     void init() {
         initMocks(this);
-        messageDirector = new MessageDirector(gameMessageReceiver, faultDetectionMessageReceiver);
+        messageDirector = new MessageDirector();
+        messageDirector.setGameMessageReceiver(gameMessageReceiver);
+        messageDirector.setFaultDetectionMessageReceiver(faultDetectionMessageReceiver);
     }
 
     @Test

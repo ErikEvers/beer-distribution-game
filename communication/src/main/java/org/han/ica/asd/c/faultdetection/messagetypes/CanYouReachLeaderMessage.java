@@ -13,8 +13,18 @@ import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
  */
 public class CanYouReachLeaderMessage extends FaultDetectionMessage {
 
+    private boolean leaderState;
+
     public CanYouReachLeaderMessage() {
         super(4);
+    }
+
+    public void setLeaderState(boolean leaderState) {
+        this.leaderState = leaderState;
+    }
+
+    public boolean getLeaderState() {
+        return leaderState;
     }
 }
 

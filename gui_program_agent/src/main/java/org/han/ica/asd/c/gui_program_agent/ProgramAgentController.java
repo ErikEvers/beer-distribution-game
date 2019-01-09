@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -11,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
@@ -37,6 +39,9 @@ public class ProgramAgentController {
     @FXML
     TextFlow businessRuleTexFlow;
 
+    @FXML
+    Button save;
+
     @Inject
     private IBusinessRules iBusinessRules;
 
@@ -44,15 +49,24 @@ public class ProgramAgentController {
     @Named("ProgramAgentList")
     IGUIHandler programAgentList;
 
+    @Inject
+    @Named("BusinessruleStore")
+    IBusinessRuleStore iBusinessRuleStore;
+
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
     private ResourceBundle resourceBundle;
 
     public void setAgentName(String name) {
         if(name != null) {
+            if ("Default".equals(name)){
+                save.setDisable(true);
+            }
             agentNameInput.setText(name);
-            //TODO Get data from BusinessRules store
-            businessRuleInput.setText("default order 34 \nif round is 10 then order 34");
+            List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
+            for (String rule: rules) {
+                businessRuleInput.appendText(rule + "\n");
+            }
             agentNameInput.setDisable(true);
         }
     }

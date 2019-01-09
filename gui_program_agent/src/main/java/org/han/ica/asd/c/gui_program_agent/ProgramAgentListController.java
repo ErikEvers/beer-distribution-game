@@ -3,14 +3,19 @@ package org.han.ica.asd.c.gui_program_agent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class ProgramAgentListController {
     @FXML
@@ -33,13 +38,18 @@ public class ProgramAgentListController {
     @Named("MainMenu")
     IGUIHandler mainMenu;
 
+    @Inject
+    @Named("BusinessruleStore")
+    IBusinessRuleStore iBusinessRuleStore;
+
     private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
-        //TODO INJECT BUSINESS RULE STORE
         list.setItems(items);
-        items.add("Pyramid agent");
-        items.add("Agent 3");
+        List<String> agents = iBusinessRuleStore.getAllProgrammedAgents();
+        if (!agents.isEmpty()) {
+            items.addAll(agents);
+        }
     }
 
     @FXML
@@ -53,21 +63,33 @@ public class ProgramAgentListController {
     }
 
     @FXML
-    public void handleMouseClickOnList(MouseEvent arg0) {
-        edit.setVisible(true);
-        delete.setVisible(true);
+    public void handleMouseClickOnList() {
+        Object selectedItem = list.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            if ("Default".equals(selectedItem.toString())){
+                delete.setDisable(true);
+            }
+
+            delete.setVisible(true);
+            edit.setVisible(true);
+        }
     }
 
     @FXML
     public void editButtonAction() {
         programAgent.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
         programAgent.setupScreen();
-
     }
 
     @FXML
     public void deleteButtonAction() {
-        //TODO INJECT BUSINESS RULE STORE
-        items.remove(list.getSelectionModel().getSelectedItem());
+        Object selectedAgent = list.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_agent") + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.YES) {
+            items.remove(selectedAgent);
+            iBusinessRuleStore.deleteProgrammedAgent(selectedAgent.toString());
+        }
     }
 }

@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.socketrpc;
 
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 
 public class SocketClient {
 
-    private static final Logger LOGGER = Logger.getLogger(SocketClient.class.getName());
+    @Inject private static Logger logger;
 
     /**
      * Tries to make a connection with the specified ipAddress.
@@ -128,7 +129,7 @@ public class SocketClient {
                     Object response = sendObjectWithResponse(ip, object);
                     map.put(ip, response);
                 } catch (IOException | ClassNotFoundException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                    logger.log(Level.SEVERE, e.getMessage(), e);
                     map.put(ip, e);
                 }
                 cdl.countDown();
@@ -140,7 +141,7 @@ public class SocketClient {
         try {
             cdl.await();
         } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
             Thread.currentThread().interrupt();
         }
         return map;
