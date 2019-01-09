@@ -7,17 +7,29 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
+
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.CONFIGURATION_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ELECTION_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_GAME_DATA_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ROUND_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.TURN_MODEL_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.WHO_IS_THE_LEADER_MESSAGE;
 
 public class GameMessageReceiver {
 
@@ -36,28 +48,74 @@ public class GameMessageReceiver {
     }
 
     /**
+     * This method handles a RoundMessage
+     *
+     * @param roundModelMessage
+     */
+    private void handleRoundMessage(RoundModelMessage roundModelMessage) {
+        switch (roundModelMessage.getPhase()) {
+            case 0:
+                //stage Commit
+                toBecommittedRound = roundModelMessage;
+                break;
+            case 1:
+                //do commit
+                doCommit(roundModelMessage);
+                break;
+            case -1:
+                //rollback
+                toBecommittedRound = null;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Executes a commit
+     *
+     * @param roundModelMessage
+     */
+    private void doCommit(RoundModelMessage roundModelMessage) {
+        //in theory, a bug can still occur where we receive a commit message with a different content.
+        if (toBecommittedRound != null) {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof IRoundModelObserver) {
+                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
+                }
+            }
+        }
+    }
+
+    /**
      * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
      *
      * @param gameMessage The GameMessage that has to be handled
      * @return ResponseMessage
      */
-    public Object gameMessageReceived(GameMessage gameMessage) {
+    public Object gameMessageReceived(GameMessage gameMessage, String senderIp) {
         if (gameMessageFilterer.isUnique(gameMessage)) {
             switch (gameMessage.getMessageType()) {
-                case 1:
+                case TURN_MODEL_MESSAGE:
                     TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
                     return handleTurnMessage(turnModelMessage);
-                case 2:
-                    TransactionMessage roundModelMessage = (TransactionMessage) gameMessage;
-                    return handleTransactionMessage(roundModelMessage);
-                case 3:
+                case ROUND_MESSAGE:
+                    RoundModelMessage roundModelMessage = (RoundModelMessage) gameMessage;
+                    handleRoundMessage(roundModelMessage);
+                    break;
+                case ELECTION_MESSAGE:
                     ElectionMessage electionMessage = (ElectionMessage) gameMessage;
                     return new ResponseMessage(handleElectionMessage(electionMessage));
-                case 4:
+                case WHO_IS_THE_LEADER_MESSAGE:
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
-                case 5:
-                    TransactionMessage configurationMessage = (TransactionMessage) gameMessage;
+                case FACILITY_MESSAGE:
+                    ChooseFacilityMessage chooseFacilityMessage = (ChooseFacilityMessage) gameMessage;
+                    return handleFacilityMessage(chooseFacilityMessage);
+                case REQUEST_GAME_DATA_MESSAGE:
+                    return handleRequestGameData(senderIp);
+                case CONFIGURATION_MESSAGE:
+                    ConfigurationMessage configurationMessage = (ConfigurationMessage) gameMessage;
                     return handleTransactionMessage(configurationMessage);
                 default:
                     break;
@@ -98,6 +156,31 @@ public class GameMessageReceiver {
      */
     private WhoIsTheLeaderMessage handleWhoIsTheLeaderMessage(WhoIsTheLeaderMessage whoIsTheLeaderMessage) {
         return messageProcessor.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
+    }
+
+    private ChooseFacilityMessage handleFacilityMessage(ChooseFacilityMessage chooseFacilityMessage){
+        try {
+            for (IConnectorObserver observer : gameMessageObservers) {
+                if (observer instanceof IFacilityMessageObserver) {
+                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
+                    return chooseFacilityMessage.createResponseMessage();
+                }
+            }
+        }catch(Exception e){
+            return chooseFacilityMessage.createResponseMessage(e);
+        }
+        return null;
+    }
+
+    private RequestGameDataMessage handleRequestGameData(String playerIp){
+        for (IConnectorObserver observer : gameMessageObservers) {
+            if (observer instanceof IFacilityMessageObserver) {
+                    RequestGameDataMessage requestAllFacilitiesMessageResponse = new RequestGameDataMessage();
+                    requestAllFacilitiesMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
+                    return requestAllFacilitiesMessageResponse;
+            }
+        }
+        return null;
     }
 
     /**
@@ -151,7 +234,7 @@ public class GameMessageReceiver {
                     ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
-                } else if (observer instanceof IGameConfigurationObserver && transactionMessage.getMessageType() == 5) {
+                } else if (observer instanceof IGameConfigurationObserver && transactionMessage.getMessageType() == 7) {
                     //noinspection ConstantConditions
                     ConfigurationMessage configurationMessage = (ConfigurationMessage) transactionMessage;
                     ((IGameConfigurationObserver) observer).gameConfigurationReceived(configurationMessage.getConfiguration());

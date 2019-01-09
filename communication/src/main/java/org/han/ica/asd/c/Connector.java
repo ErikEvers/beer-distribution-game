@@ -1,9 +1,10 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.IFinder;
-
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
@@ -17,17 +18,24 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
-
 
 import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +54,6 @@ public class Connector implements IConnectorForSetup {
 
     @Inject
     private GameMessageClient gameMessageClient;
-    private String externalIP;
 
     @Inject
     private static Logger logger;//NOSONAR
@@ -60,8 +67,11 @@ public class Connector implements IConnectorForSetup {
     @Inject
     private GameMessageReceiver gameMessageReceiver;
 
+    @Inject
     private IFinder finder;
 
+    private String externalIP;
+    private String internalIP;
 
     public Connector() {
         //Inject
@@ -71,11 +81,15 @@ public class Connector implements IConnectorForSetup {
         observers = new ArrayList<>();
         finder = new RoomFinder();
 
-        gameMessageClient = new GameMessageClient();
-        faultDetector = new FaultDetector();
         faultDetector.setObservers(observers);
 
-        externalIP = getExternalIP();
+        try {
+            externalIP = getExternalIP();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        
+        internalIP = getInternalIP();
 
         faultDetector.setObservers(observers);
         gameMessageReceiver.setObservers(observers);
@@ -128,8 +142,8 @@ public class Connector implements IConnectorForSetup {
         return null;
     }
 
-    public RoomModel joinRoom(String roomName, String ip, String password) throws RoomException, DiscoveryException {
-        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
+    public RoomModel joinRoom(String roomName,  String password) throws RoomException, DiscoveryException {
+        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
         if (makeConnection(joinedRoom.getLeaderIP())) {
             addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
             setJoiner();
@@ -167,22 +181,22 @@ public class Connector implements IConnectorForSetup {
     }
 
     @Override
+    public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
+        gameMessageClient.sendChooseFacilityMessage("leader ip", facility);
+    }
+
+    @Override
+    public GamePlayerId getGameData() throws ClassNotFoundException, IOException {
+        return gameMessageClient.sendGameDataRequestMessage("leader ip");
+    }
+
+    @Override
     public void removeYourselfFromRoom(RoomModel room) {
         try {
             finder.removeHostFromRoom(room, externalIP);
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void chooseFacility(Facility facility) {
-        //for later use
-    }
-
-    @Override
-    public List<Facility> getAllFacilities() {
-        return new ArrayList<Facility>();
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -242,31 +256,60 @@ public class Connector implements IConnectorForSetup {
         return nodeInfoList;
     }
 
-
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
     }
 
-    public String getExternalIP() {
-        URL whatismyip = null;
-        try {
-            whatismyip = new URL("http://checkip.amazonaws.com");
-        } catch (MalformedURLException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-        BufferedReader in = null;
-        try {
-            in = new BufferedReader(new InputStreamReader(
-                    whatismyip.openStream()));
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-        String ip = null;
-        try {
+    /**
+     * Gets the external IP of your router.
+     *
+     * @return The IP.
+     */
+    private String getExternalIP() throws IOException {
+        URL whatismyip = new URL("http://checkip.amazonaws.com");
+        String ip;
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
-            in.close();
-        } catch (IOException e) {
+        }
+        return ip;
+    }
+
+    /**
+     * Gets the local ip4 address from ethernet connection.
+     *
+     * @return The IP.
+     */
+    private String getInternalIP() {
+        String ip = null;
+
+        try {
+            ip = getIpOfInterFace(NetworkInterface.getNetworkInterfaces());
+        } catch (SocketException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return ip;
+    }
+
+    /**
+     * Gets the ip4 address of an ethernet interface.
+     *
+     * @param nets List of network interfaces.
+     * @return The IP.
+     */
+    private String getIpOfInterFace(Enumeration<NetworkInterface> nets) {
+        String ip = null;
+
+        if (nets != null) {
+            for (NetworkInterface netint : Collections.list(nets)) {
+                if (netint.getName().contains("eth")) {
+                    for (InetAddress inetAddress : Collections.list(netint.getInetAddresses())) {
+                        if (inetAddress instanceof Inet4Address) {
+                            ip = inetAddress.getHostAddress();
+                        }
+                    }
+                }
+            }
         }
         return ip;
     }
