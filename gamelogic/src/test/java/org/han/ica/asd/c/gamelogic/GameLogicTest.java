@@ -104,9 +104,9 @@ public class GameLogicTest {
 
     @Test
     public void roundModelReceivedIncrementsRound() {
-        int currentRoundNumber = gameLogic.getCurrentRoundNumber();
+        int currentRoundNumber = gameLogic.getRound();
         gameLogic.roundModelReceived(mock(Round.class));
-        int newRoundNumber = gameLogic.getCurrentRoundNumber();
+        int newRoundNumber = gameLogic.getRound();
         Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
     }
 
