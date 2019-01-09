@@ -267,14 +267,11 @@ public class Connector implements IConnectorForSetup {
      */
     private String getExternalIP() throws IOException {
         URL whatismyip = new URL("http://checkip.amazonaws.com");
-
         String ip;
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-
-
         return ip;
     }
 
