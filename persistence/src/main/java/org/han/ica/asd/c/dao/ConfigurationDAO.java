@@ -26,7 +26,7 @@ public class ConfigurationDAO {
     private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
     private static final String GET_LOWER_LINKED_FACILITIES = "SELECT flt.FacilityIdOrdering FROM FacilityLinkedTo flt WHERE flt.GameId = ? AND flt.FacilityIdOrdering = ?;";
     private static final String SET_LOWER_LINKED_FACILITIES = "INSERT INTO FacilityLinkedTo VALUES (?,?,?)";
-    private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdOrdering = ?, FacilityIdDelivering";
+    private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdOrdering = ?, FacilityIdDelivering = ? WHERE GameId = ?;";
     private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
 
     @Inject
@@ -202,9 +202,10 @@ public class ConfigurationDAO {
      * @param facilitiesLinkedTo The facilities that are linked
      */
     public void createFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
-        Connection conn = databaseConnection.connect();
-        if (conn != null) {
-            facilitiesLinkedTo.forEach((k, v) -> v.forEach(lowerFacility -> {
+        facilitiesLinkedTo.forEach((k, v) -> v.forEach(lowerFacility -> {
+            Connection conn = databaseConnection.connect();
+            if (conn != null) {
+
                 try (PreparedStatement pstmt = conn.prepareStatement(SET_LOWER_LINKED_FACILITIES)) {
                     conn.setAutoCommit(false);
 
@@ -218,14 +219,15 @@ public class ConfigurationDAO {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                     databaseConnection.rollBackTransaction(conn);
                 }
-            }));
-        }
+
+            }
+        }));
     }
 
     /**
      * Returns a map of Facilities with their respective lower linked facilities
-     * @return
-     * Map with Facilities as key and list with their respective
+     *
+     * @return Map with Facilities as key and list with their respective
      */
     public Map<Facility, List<Facility>> readFacilityLinks() {
         Connection conn = databaseConnection.connect();
@@ -245,25 +247,31 @@ public class ConfigurationDAO {
         return facilitiesLinkedTo;
     }
 
+    /**
+     * @param facilitiesLinkedTo
+     */
     public void updateFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
-        Connection conn = databaseConnection.connect();
-        if (conn != null) {
-            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LOWER_LINKED_FACILITIES)){
-                conn.setAutoCommit(false);
+        facilitiesLinkedTo.forEach((k, v) -> v.forEach(lowerFacility -> {
+            Connection conn = databaseConnection.connect();
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LOWER_LINKED_FACILITIES)) {
+                    conn.setAutoCommit(false);
 
+                    pstmt.setInt(1, k.getFacilityId());
+                    pstmt.setInt(2, lowerFacility.getFacilityId());
+                    DaoConfig.gameIdNotSetCheck(pstmt, 3);
 
-
-                pstmt.executeUpdate();
-                conn.commit();
-            } catch (SQLException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
-                databaseConnection.rollBackTransaction(conn);
+                    pstmt.executeUpdate();
+                    conn.commit();
+                } catch (SQLException | GameIdNotSetException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
+                    databaseConnection.rollBackTransaction(conn);
+                }
             }
-        }
+        }));
     }
 
     /**
-     *
      * @param linkedFacilities
      * @param rs
      * @throws SQLException
