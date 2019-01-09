@@ -4,6 +4,7 @@ import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
@@ -172,8 +173,8 @@ public class Connector implements IConnectorForSetup {
     }
 
     @Override
-    public List<Facility> getAllFacilities() {
-        return gameMessageClient.sendAllFacilitiesRequestMessage("leader ip");
+    public GamePlayerId getGameData() throws ClassNotFoundException, IOException {
+        return gameMessageClient.sendGameDataRequestMessage("leader ip");
     }
 
     @Override

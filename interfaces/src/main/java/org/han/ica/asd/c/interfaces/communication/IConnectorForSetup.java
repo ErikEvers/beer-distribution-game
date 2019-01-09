@@ -5,8 +5,10 @@ import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IConnectorForSetup {
@@ -20,5 +22,5 @@ public interface IConnectorForSetup {
     void startRoom(RoomModel room);
     void addObserver(IConnectorObserver connectorObserver);
     void chooseFacility(Facility facility) throws FacilityNotAvailableException;
-    List<Facility> getAllFacilities();
+    GamePlayerId getGameData() throws IOException, ClassNotFoundException;
 }

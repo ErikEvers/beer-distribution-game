@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.InvalidObjectException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -56,7 +57,7 @@ public class MessageDirectorTest {
     void shouldReturnSuccessfullObject() {
         ResponseMessage expected = new ResponseMessage(true);
 
-        when(gameMessageReceiver.gameMessageReceived(gameMessage)).thenReturn(expected);
+        when(gameMessageReceiver.gameMessageReceived(gameMessage, "")).thenReturn(expected);
 
         ResponseMessage actual = (ResponseMessage) messageDirector.serverObjectReceived(gameMessage, "");
 
