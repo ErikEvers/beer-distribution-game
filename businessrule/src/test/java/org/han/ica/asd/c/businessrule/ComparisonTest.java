@@ -33,7 +33,6 @@ class ComparisonTest {
 
     @Test
     void testComparison_Equals_False() {
-        System.out.println("Test");
         comparison.addChild(new ComparisonValue().addChild(new Value().addValue("inventory")));
         comparison.addChild(new ComparisonOperator("is"));
         comparison.addChild(new ComparisonValue().addChild(new Value().addValue("30")));

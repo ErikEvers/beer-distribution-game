@@ -2,10 +2,7 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.socketrpc.SocketClient;
-
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SendInTransaction {
 
@@ -13,9 +10,7 @@ public class SendInTransaction {
     private TransactionMessage transactionMessage;
     private SocketClient socketClient;
 
-    private static final Logger LOGGER = Logger.getLogger(SendInTransaction.class.getName());
-
-    SendInTransaction(String[] ips, TransactionMessage transactionMessage, SocketClient socketClient) {
+    public SendInTransaction(String[] ips, TransactionMessage transactionMessage, SocketClient socketClient) {
         this.ips = ips;
         this.transactionMessage = transactionMessage;
         this.socketClient = socketClient;
@@ -47,6 +42,7 @@ public class SendInTransaction {
             transactionMessage.setPhaseToCommit();
             socketClient.sendToAll(ips, transactionMessage);
         }
+
         else {
             transactionMessage.setPhaseToRollback();
             socketClient.sendToAll(ips, transactionMessage);

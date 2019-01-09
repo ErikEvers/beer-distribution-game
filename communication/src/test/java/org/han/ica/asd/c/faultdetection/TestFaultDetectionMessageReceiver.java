@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
+
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
@@ -8,10 +9,14 @@ import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class TestFaultDetectionMessageReceiver {
@@ -21,13 +26,43 @@ public class TestFaultDetectionMessageReceiver {
 
 	@BeforeEach
 	void setUp(){
-		faultDetectionMessageReceiver = new FaultDetectionMessageReceiver(faultDetector);
+		faultDetectionMessageReceiver = new FaultDetectionMessageReceiver();
+		faultDetectionMessageReceiver.setFaultDetector(faultDetector);
+	}
+
+	@Test
+	void testFaultMessage(){
+		FaultMessage faultMessage = new FaultMessage("test");
+
+		assertEquals(1, faultMessage.getMessageId());
+		assertEquals("test", faultMessage.getIp());
+	}
+
+	@Test
+	void testPingMessage(){
+		PingMessage pingMessage = new PingMessage();
+		assertEquals(3, pingMessage.getMessageId());
+	}
+
+	@Test
+	void testFaultMessageResponse(){
+		FaultMessageResponse realFaultDetectionMessage = new FaultMessageResponse(true, "test");
+		assertEquals(2, realFaultDetectionMessage.getMessageId());
+		assertTrue(realFaultDetectionMessage.getAlive());
+		assertEquals("test", realFaultDetectionMessage.getIpOfSubject());
+	}
+
+	@Test
+	void testCanYouReachLeaderMessage(){
+		CanYouReachLeaderMessage reachLeaderMessage = new CanYouReachLeaderMessage();
+		reachLeaderMessage.setLeaderState(true);
+		assertEquals(4, reachLeaderMessage.getMessageId());
+		assertTrue(reachLeaderMessage.getLeaderState());
 	}
 
 	@Test
 	void TestFaultMessageReceivedCase(){
 		FaultDetectionMessage faultDetectionMessage = mock(FaultMessage.class);
-
 
 		doReturn(1)
 				.when(faultDetectionMessage)

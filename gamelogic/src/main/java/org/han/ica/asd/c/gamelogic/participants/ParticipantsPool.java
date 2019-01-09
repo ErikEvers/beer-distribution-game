@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -41,7 +41,7 @@ public class ParticipantsPool {
      * Replaces the local player with the given agent.
      * @param agent The agent to replace the local player with.
      */
-    public void replacePlayerWithAgent(AgentParticipant agent) {
+    public void replacePlayerWithAgent(Agent agent) {
         participants.remove(player);
         participants.add(agent);
     }

@@ -3,9 +3,9 @@ package org.han.ica.asd.c.faultdetection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class TestFaultHandlerPlayer {
 	FaultHandlerPlayer faultHandlerPlayer;

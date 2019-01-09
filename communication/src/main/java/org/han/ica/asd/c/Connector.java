@@ -1,11 +1,12 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
-
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
@@ -16,13 +17,15 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
+import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,107 +36,144 @@ import java.util.logging.Logger;
 
 public class Connector implements IConnectorForSetup {
     private static Connector instance = null;
+
     private ArrayList<IConnectorObserver> observers;
+
+    @Inject
     private NodeInfoList nodeInfoList;
+
+    @Inject
     private FaultDetector faultDetector;
-    private IFinder finder;
+
+    @Inject
     private GameMessageClient gameMessageClient;
     private String externalIP;
 
-    private static final Logger LOGGER = Logger.getLogger(Connector.class.getName());
+    @Inject
+    private static Logger logger;//NOSONAR
+
+    @Inject
+    private SocketServer socketServer;
+
+    @Inject
+    private MessageDirector messageDirector;
+
+    @Inject
+    private GameMessageReceiver gameMessageReceiver;
+
+    @Inject
+    private IFinder finder;
+
 
     public Connector() {
+        //Inject
+    }
+
+    public void start() {
         observers = new ArrayList<>();
-        nodeInfoList = new NodeInfoList();
         finder = new RoomFinder();
-        gameMessageClient = new GameMessageClient();
-        faultDetector = new FaultDetector(observers);
+
+        faultDetector.setObservers(observers);
+
         externalIP = getExternalIP();
 
-        SocketServer socketServer = new SocketServer(new MessageDirector(new GameMessageReceiver(observers), faultDetector.getFaultDetectionMessageReceiver()));
+        faultDetector.setObservers(observers);
+        gameMessageReceiver.setObservers(observers);
+
+        messageDirector.setGameMessageReceiver(gameMessageReceiver);
+        messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
+
+        socketServer.setServerObserver(messageDirector);
         socketServer.startThread();
     }
 
-    //for tests
-    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder){
+    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer) {
         observers = new ArrayList<>();
         nodeInfoList = new NodeInfoList();
         this.finder = finder;
         this.gameMessageClient = gameMessageClient;
         this.faultDetector = faultDetector;
 
-        SocketServer socketServer = new SocketServer(new MessageDirector(new GameMessageReceiver(observers), faultDetector.getFaultDetectionMessageReceiver()));
-        socketServer.startThread();
-    }
+        faultDetector.setObservers(observers);
 
-    //TODO replace with GUICE, inject singleton
-    public static Connector getInstance() {
-        if (instance == null){
-            instance = new Connector();
-        }
-        return instance;
+        GameMessageReceiver gameMessageReceiver1 = new GameMessageReceiver();
+        gameMessageReceiver1.setObservers(observers);
+
+        MessageDirector messageDirector1 = new MessageDirector();
+        messageDirector1.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
+        messageDirector1.setGameMessageReceiver(gameMessageReceiver1);
+
+        socketServer.setServerObserver(messageDirector1);
+        socketServer.startThread();
     }
 
     public List<String> getAvailableRooms() {
         try {
             return finder.getAvailableRooms();
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
         return new ArrayList<>();
     }
 
-    public RoomModel createRoom(String roomName, String password){
+
+    public RoomModel createRoom(String roomName, String password) {
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             nodeInfoList.add(new NodeInfo(externalIP, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage(), e);
+            logger.log(Level.INFO, e.getMessage());
         }
         return null;
     }
 
-    public RoomModel joinRoom(String roomName, String password){
-        try {
-            RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
-            if(makeConnection(joinedRoom.getLeaderIP())){
-                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-                setJoiner();
-                return joinedRoom;
-           }
-        } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage(), e);
+    public RoomModel joinRoom(String roomName,  String password) throws RoomException, DiscoveryException {
+        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
+        if (makeConnection(joinedRoom.getLeaderIP())) {
+            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+            setJoiner();
         }
-        return null;
+        return joinedRoom;
     }
 
-    public RoomModel updateRoom(RoomModel room){
+    public RoomModel updateRoom(RoomModel room) {
         try {
             return finder.getRoom(room);
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.INFO, e.getMessage());
         }
         return null;
     }
 
-    public void startRoom(RoomModel room){
+    public void startRoom(RoomModel room) {
         try {
-            for(String hostIP: room.getHosts()){
+            for (String hostIP : room.getHosts()) {
                 nodeInfoList.add(new NodeInfo(hostIP, true, false));
             }
             finder.startGameRoom(room.getRoomName());
             setLeader();
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
-    public void removeHostFromRoom(RoomModel room, String hostIP){
+
+    public void removeHostFromRoom(RoomModel room, String hostIP) {
         try {
             finder.removeHostFromRoom(room, hostIP);
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
+        gameMessageClient.sendChooseFacilityMessage("leader ip", facility);
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        return gameMessageClient.sendAllFacilitiesRequestMessage("leader ip");
     }
 
     @Override
@@ -141,18 +181,8 @@ public class Connector implements IConnectorForSetup {
         try {
             finder.removeHostFromRoom(room, externalIP);
         } catch (DiscoveryException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void chooseFacility(Facility facility) {
-        //for later use
-    }
-
-    @Override
-    public List<Facility> getAllFacilities() {
-        return new ArrayList<Facility>();
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -167,12 +197,12 @@ public class Connector implements IConnectorForSetup {
         faultDetector.setPlayer(nodeInfoList);
     }
 
-    public boolean makeConnection(String destinationIP){
+    public boolean makeConnection(String destinationIP) {
         try {
             new FaultDetectionClient().makeConnection(destinationIP);
             return true;
         } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
         return false;
     }
@@ -181,7 +211,8 @@ public class Connector implements IConnectorForSetup {
         nodeInfoList.addIp(txtIP);
     }
 
-    public void addLeaderToNodeInfoList(String txtIp){
+
+    public void addLeaderToNodeInfoList(String txtIp) {
         NodeInfo nodeInfo = new NodeInfo();
         nodeInfo.setLeader(true);
         nodeInfo.setIp(txtIp);
@@ -211,26 +242,30 @@ public class Connector implements IConnectorForSetup {
         return nodeInfoList;
     }
 
-    public String getExternalIP(){
+    public void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
+    }
+
+    public String getExternalIP() {
         URL whatismyip = null;
         try {
             whatismyip = new URL("http://checkip.amazonaws.com");
         } catch (MalformedURLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(
                     whatismyip.openStream()));
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
         String ip = null;
         try {
             ip = in.readLine();
             in.close();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
         return ip;
     }

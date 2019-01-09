@@ -7,12 +7,12 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 public class PersistenceStub implements IPersistence {
 
 	@Override
-	public void savePlayerTurn(Round data) {
+	public void saveFacilityTurn(Round data) {
 
 	}
 
 	@Override
-	public Round fetchPlayerTurn(int roundId, int facilityId) {
+	public Round fetchFacilityTurn(int roundId, int facilityId) {
 		return null;
 	}
 

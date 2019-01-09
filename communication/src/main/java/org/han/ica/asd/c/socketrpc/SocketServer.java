@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.socketrpc;
 
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -10,14 +12,17 @@ import java.util.logging.Logger;
 
 public class SocketServer {
 
+    @Inject
+    @Named("MessageDirector")
     private IServerObserver serverObserver;
 
-    private static final Logger LOGGER = Logger.getLogger(SocketServer.class.getName());
+    @Inject
+    private static Logger logger;
 
     private boolean isRunning = true;
 
-    public SocketServer(IServerObserver serverObserver) {
-        this.serverObserver = serverObserver;
+    public SocketServer() {
+        //inject purposes
     }
 
     public void startThread() {
@@ -28,13 +33,12 @@ public class SocketServer {
 
     private void start() {
         try (ServerSocket serverSocket = new ServerSocket(4445)) {
-            LOGGER.log(Level.INFO, "SocketServer started");
-
+            logger.log(Level.INFO, "SocketServer started");
             while (isRunning) {
                 startServer(serverSocket);
             }
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "A server could not be started " + e);
+            logger.log(Level.SEVERE, "A server could not be started " + e);
         }
     }
 
@@ -53,9 +57,13 @@ public class SocketServer {
             }
             socket.close();
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong with the connection " + e);
+            logger.log(Level.SEVERE, "Something went wrong with the connection " + e);
         } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "Something went wrong when trying to get an object " + e);
+            logger.log(Level.SEVERE, "Something went wrong when trying to get an object " + e);
         }
+    }
+
+    public void setServerObserver(IServerObserver serverObserver) {
+        this.serverObserver = serverObserver;
     }
 }

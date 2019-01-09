@@ -12,19 +12,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
+
 
 public class FaultDetectorPlayer extends TimerTask {
-    @Inject private static Logger logger; //NOSONAR
 
     private static final long FIVE_MINUTES = 300000;
+
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
 
     private long lastReceived;
+
     private boolean leaderIsPinging;
+
+    @Inject
     private FaultDetectionClient faultDetectionClient;
+
+    @Inject
     private FaultHandlerPlayer faultHandlerPlayer;
+
+    @Inject
     private NodeInfoList nodeInfoList;
+
     private Timer timer;
 
     boolean getLeaderIsPinging() {
@@ -35,19 +43,13 @@ public class FaultDetectorPlayer extends TimerTask {
         return lastReceived;
     }
 
-    FaultDetectorPlayer(NodeInfoList nodeInfoList) {
-        this.nodeInfoList = nodeInfoList;
+    FaultDetectorPlayer() {
         this.lastReceived = System.currentTimeMillis();
-
-        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
-        faultHandlerPlayer = new FaultHandlerPlayer();
-        faultDetectionClient = new FaultDetectionClient();
-
         leaderIsPinging = true;
+        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
     }
 
     public void start() {
-        //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
     }
@@ -66,7 +68,6 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     public boolean leaderIsNotPinging() {
-        // timer check timestamp if client
         long current = System.currentTimeMillis();
         long timeDifference = current - lastReceived;
         long threeIntervals = Global.FaultDetectionInterval * 3;
@@ -80,20 +81,18 @@ public class FaultDetectorPlayer extends TimerTask {
 
         return timeDifference < FIVE_MINUTES;
     }
-    private void askOtherPlayers() {
 
+    private void askOtherPlayers() {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
-
         // filter out ips from ips that already send a message within the past 5 minutes
         ips.removeIf(ip -> playersWhoAlreadyCouldntReachLeader.containsKey(ip) && timestampIsRecentlyReceived(playersWhoAlreadyCouldntReachLeader.get(ip)));
+        Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll(ips.toArray(new String[0]), new CanYouReachLeaderMessage());
 
-        Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll( ips.toArray(new String[0]), new CanYouReachLeaderMessage());
-
-        for (Object responseMessage: response.values()) {
-            if (responseMessage instanceof Exception){
+        for (Object responseMessage : response.values()) {
+            if (responseMessage instanceof Exception) {
                 faultHandlerPlayer.incrementAmountOfFailingIps();
-            }else if(responseMessage instanceof CanYouReachLeaderMessage) {
+            } else if (responseMessage instanceof CanYouReachLeaderMessage) {
                 CanYouReachLeaderMessage canYouReachLeaderMessage = (CanYouReachLeaderMessage) responseMessage;
                 if (canYouReachLeaderMessage.getLeaderState()) {
                     faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();
@@ -112,9 +111,9 @@ public class FaultDetectorPlayer extends TimerTask {
         // put senderIp in local list with currentTime
         playersWhoAlreadyCouldntReachLeader.put(senderIp, System.currentTimeMillis());
 
-        if(leaderIsNotPinging()){
+        if (leaderIsNotPinging()) {
             leaderIsAlive = false;
-        }else{
+        } else {
             try {
                 // TODO Leaderip get (integratie)
                 faultDetectionClient.makeConnection("0.0.0.0");
@@ -128,21 +127,66 @@ public class FaultDetectorPlayer extends TimerTask {
         return canYouReachLeaderMessage;
     }
 
-    void setFaultDetectionClient(FaultDetectionClient faultDetectionClient) {
+    /**
+     * Gets nodeInfoList.
+     *
+     * @return Value of nodeInfoList.
+     */
+    public NodeInfoList getNodeInfoList() {
+        return nodeInfoList;
+    }
+
+    /**
+     * Sets new faultDetectionClient.
+     *
+     * @param faultDetectionClient New value of faultDetectionClient.
+     */
+    public void setFaultDetectionClient(FaultDetectionClient faultDetectionClient) {
         this.faultDetectionClient = faultDetectionClient;
     }
 
-    void setFaultHandlerPlayer(FaultHandlerPlayer faultHandlerPlayer) {
-        this.faultHandlerPlayer = faultHandlerPlayer;
-    }
-
-    void setLastReceived(long lastReceived) {
-        this.lastReceived = lastReceived;
-    }
-
-    void setLeaderIsPinging(boolean leaderIsPinging) {
+    /**
+     * Sets new leaderIsPinging.
+     *
+     * @param leaderIsPinging New value of leaderIsPinging.
+     */
+    public void setLeaderIsPinging(boolean leaderIsPinging) {
         this.leaderIsPinging = leaderIsPinging;
     }
 
-    void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> mock){ this.playersWhoAlreadyCouldntReachLeader = mock; }
+    /**
+     * Sets new lastReceived.
+     *
+     * @param lastReceived New value of lastReceived.
+     */
+    public void setLastReceived(long lastReceived) {
+        this.lastReceived = lastReceived;
+    }
+
+    /**
+     * Sets new nodeInfoList.
+     *
+     * @param nodeInfoList New value of nodeInfoList.
+     */
+    public void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
+    }
+
+    /**
+     * Sets new faultHandlerPlayer.
+     *
+     * @param faultHandlerPlayer New value of faultHandlerPlayer.
+     */
+    public void setFaultHandlerPlayer(FaultHandlerPlayer faultHandlerPlayer) {
+        this.faultHandlerPlayer = faultHandlerPlayer;
+    }
+
+    /**
+     * Sets new playersWhoAlreadyCouldntReachLeader.
+     *
+     * @param playersWhoAlreadyCouldntReachLeader New value of playersWhoAlreadyCouldntReachLeader.
+     */
+    public void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> playersWhoAlreadyCouldntReachLeader) {
+        this.playersWhoAlreadyCouldntReachLeader = playersWhoAlreadyCouldntReachLeader;
+    }
 }
