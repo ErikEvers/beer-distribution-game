@@ -3,6 +3,7 @@ package org.han.ica.asd.c.interfaces.communication;
 
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
@@ -17,6 +18,6 @@ public interface IConnectorForSetup {
     void removeYourselfFromRoom(RoomModel room);
     void startRoom(RoomModel room);
     void addObserver(IConnectorObserver connectorObserver);
-    void chooseFacility(Facility facility);
+    void chooseFacility(Facility facility) throws FacilityNotAvailableException;
     List<Facility> getAllFacilities();
 }

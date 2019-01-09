@@ -3,6 +3,7 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.discovery.IFinder;
 
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
@@ -71,8 +72,6 @@ public class Connector implements IConnectorForSetup {
         observers = new ArrayList<>();
         finder = new RoomFinder();
 
-        gameMessageClient = new GameMessageClient();
-        faultDetector = new FaultDetector();
         faultDetector.setObservers(observers);
 
         externalIP = getExternalIP();
@@ -167,22 +166,22 @@ public class Connector implements IConnectorForSetup {
     }
 
     @Override
+    public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
+        gameMessageClient.sendChooseFacilityMessage("leader ip", facility);
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        return gameMessageClient.sendAllFacilitiesRequestMessage("leader ip");
+    }
+
+    @Override
     public void removeYourselfFromRoom(RoomModel room) {
         try {
             finder.removeHostFromRoom(room, externalIP);
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void chooseFacility(Facility facility) {
-        //for later use
-    }
-
-    @Override
-    public List<Facility> getAllFacilities() {
-        return new ArrayList<Facility>();
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -241,7 +240,6 @@ public class Connector implements IConnectorForSetup {
     public NodeInfoList getIps() {
         return nodeInfoList;
     }
-
 
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
