@@ -20,24 +20,7 @@ public class NodeConverter implements INodeConverter {
      * @return the identifier
      */
     public int getFacilityId(String facility) {
-        // TO-DO: List<List<String>> facilities = businessRuleStore.getAllFacilities()
-        // This is a mock of the function above
         List<List<String>> facilities = businessRuleStore.getAllFacilities();
-//        List<List<String>> facilities = new ArrayList<>();
-//        List<String> factory = new ArrayList<>();
-//        factory.add("1");
-//        factory.add("2");
-//        List<String> distributor = new ArrayList<>();
-//        distributor.add("3");
-//        distributor.add("4");
-//        List<String> wholesaler = new ArrayList<>();
-//        wholesaler.add("5");
-//        List<String> retailer = new ArrayList<>();
-//        retailer.add("6");
-//        facilities.add(factory);
-//        facilities.add(distributor);
-//        facilities.add(wholesaler);
-//        facilities.add(retailer);
 
         String facilityId;
 
