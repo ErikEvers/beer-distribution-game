@@ -125,8 +125,7 @@ public class Connector implements IConnectorForSetup {
 
     public RoomModel createRoom(String roomName, String password) {
         try {
-            RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
-            return createdRoom;
+            return finder.createGameRoomModel(roomName, externalIP, password);
         } catch (DiscoveryException e) {
             logger.log(Level.INFO, e.getMessage());
         }
@@ -134,8 +133,7 @@ public class Connector implements IConnectorForSetup {
     }
 
     public RoomModel joinRoom(String roomName, String ip, String password) throws RoomException, DiscoveryException {
-        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
-        return joinedRoom;
+        return finder.joinGameRoomModel(roomName, ip, password);
     }
 
     public RoomModel updateRoom(RoomModel room) {
@@ -179,7 +177,7 @@ public class Connector implements IConnectorForSetup {
 
     @Override
     public List<Facility> getAllFacilities() {
-        return new ArrayList<Facility>();
+        return new ArrayList<>();
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -192,9 +190,9 @@ public class Connector implements IConnectorForSetup {
         nodeInfoList.init(playerList,leader);
 
         if(getExternalIP().equals(leader.getPlayer().getIpAddress())){
-            faultDetector.setLeader(nodeInfoList);
+            faultDetector.startFaultDetectorLeader(nodeInfoList);
         }else{
-            faultDetector.setPlayer(nodeInfoList);
+            faultDetector.startFaultDetectorPlayer(nodeInfoList);
         }
     }
 
