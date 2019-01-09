@@ -125,12 +125,10 @@ public class GameAgentDAO{
             conn.setAutoCommit(false);
             DaoConfig.gameIdNotSetCheck(pstmt, 1);
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (!rs.isClosed()) {
-                    while (rs.next()) {
+                    while (!rs.isClosed() && rs.next()) {
                         createGameAgentModel(i, gameAgents, gameBusinessRulesStub, rs);
                         i = i + 1;
                     }
-                }
             }
             conn.commit();
         } catch (GameIdNotSetException | SQLException e) {
