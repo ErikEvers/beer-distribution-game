@@ -3,10 +3,12 @@ package org.han.ica.asd.c.persistence;
 
 import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
+import org.han.ica.asd.c.dao.LeaderDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
@@ -19,7 +21,9 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 
 
-public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistence {
+
+public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistence, IPersistenceLeaderMigration {
+
 
 	@Inject
 	private RoundDAO roundDAO;
@@ -32,6 +36,9 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 
 	@Inject
 	private PlayerDAO playerDAO;
+
+	@Inject
+	private LeaderDAO leaderDAO;
 
 
 	public Persistence(){
@@ -88,9 +95,16 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
-
 	@Override
 	public Player getPlayerById(String playerId) {
 		return playerDAO.getPlayer(playerId);
 	}
+
+	@Override
+	public void saveNewLeader(Player newLeader) {
+		leaderDAO.insertLeader(newLeader);
+	}
 }
+
+
+
