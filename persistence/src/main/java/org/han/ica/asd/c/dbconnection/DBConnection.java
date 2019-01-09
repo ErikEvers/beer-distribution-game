@@ -62,17 +62,13 @@ public class DBConnection implements IDatabaseConnection {
 					}
 				}
 			}
+			connect2.commit();
 
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.toString(), e);
-		} finally {
-			try {
-				connect2.close();
-			} catch (Exception e) {
-				//
-			}
 		}
 	}
+
 
 	public Connection connect() {
 		// SQLite connection string
