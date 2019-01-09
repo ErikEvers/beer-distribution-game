@@ -105,7 +105,7 @@ public class BeergameDAO {
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
-				leaderDAO.insertLeader(beerGame.getLeader());
+				leaderDAO.insertLeader(beerGame.getLeader().getPlayer());
 
 
 			} catch (SQLException e) {

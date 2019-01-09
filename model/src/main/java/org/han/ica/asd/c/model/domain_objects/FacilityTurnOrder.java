@@ -5,6 +5,10 @@ public class FacilityTurnOrder {
 	private int facilityIdOrderTo;
 	private int orderAmount;
 
+	public FacilityTurnOrder() {
+
+	}
+
 	public FacilityTurnOrder(int facilityId, int facilityIdOrderTo, int orderAmount) {
 		this.facilityId = facilityId;
 		this.facilityIdOrderTo = facilityIdOrderTo;

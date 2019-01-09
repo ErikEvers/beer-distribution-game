@@ -5,11 +5,17 @@ import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
-import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
@@ -18,16 +24,22 @@ import org.han.ica.asd.c.model.domain_objects.Round;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
+    @Inject
     private IConnectedForPlayer communication;
-    private IRoundStore persistence;
-    private ParticipantsPool participantsPool;
+
+    @Inject
+    private IGameStore persistence;
+
+	private ParticipantsPool participantsPool;
+
     private int round;
 
-    public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool) {
-        this.communication = communication;
-        this.persistence = persistence;
-        this.participantsPool = participantsPool;
+    public GameLogic(){
         this.round = 0;
+    }
+
+    public void setParticipantsPool(ParticipantsPool participantsPool) {
+        this.participantsPool = participantsPool;
     }
 
     /**
@@ -35,9 +47,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @param turn
      */
     @Override
-    public void placeOrder(Round turn) {
-        persistence.saveTurnData(turn);
+    public void submitTurn(Round turn) {
         communication.sendTurnData(turn);
+        persistence.saveRoundData(turn);
+        System.out.println("=============== TURN AFGEROND =====================");
     }
 
     /**
@@ -45,8 +58,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      * @return The current state of the game.
      */
     @Override
-    public Round seeOtherFacilities() {
-        return persistence.fetchRoundData(round);
+    public BeerGame seeOtherFacilities() {
+        return persistence.getGameLog();
     }
 
     /**
@@ -67,6 +80,16 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     }
 
     @Override
+    public List<String> getAllGames() {
+        //Yet to be implemented
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void connectToGame(String game) {
+        //Yet to be implemented
+    }
+
     public Round calculateRound(Round round) {
         return null;
     }
@@ -88,5 +111,20 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
     public void removeAgentByPlayerId(String playerId) {
         Player player = persistence.getPlayerById(playerId);
         participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
+    }
+
+    @Override
+    public void requestFacilityUsage(Facility facility) {
+        //Yet to be implemented
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        //Yet to be implemented.
+        return new ArrayList<>();
+    }
+
+    public int getRound() {
+        return round;
     }
 }

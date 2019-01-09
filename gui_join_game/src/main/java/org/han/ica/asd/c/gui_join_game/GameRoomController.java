@@ -6,7 +6,9 @@ import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -15,6 +17,7 @@ import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
+import org.han.ica.asd.c.player.PlayerComponent;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,8 +30,8 @@ public class GameRoomController {
     private RoomModel roomModel;
     private BeerGame beerGame;
 
-		@FXML
-		private AnchorPane facilitiesContainer;
+	@FXML
+	private AnchorPane facilitiesContainer;
 
     @FXML
     private Label gameRoom;
@@ -41,7 +44,14 @@ public class GameRoomController {
     @Named("PlayGame")
     private IGUIHandler playGame;
 
+		@Inject
+		private IGameStore persistence;
+
     private IConnectorForSetup iConnectorForSetup;
+
+    @Inject
+	@Named("PlayerComponent")
+	private IPlayerComponent playerComponent;
 
     public void initialize() {
 			Configuration configuration = new Configuration();
@@ -90,7 +100,7 @@ public class GameRoomController {
 
 			this.beerGame = new BeerGame();
 			this.beerGame.setConfiguration(configuration);
-			Player henk = new Player("1", "111", retailer, "Henk", true);
+			Player henk = new Player("1", "111", wholesale, "Henk", true);
 			this.beerGame.getPlayers().add(henk);
 			this.beerGame.getAgents().add(new GameAgent("wholesaleAgent", wholesale, new ArrayList<>()));
 			this.beerGame.getAgents().add(new GameAgent("warehouseAgent", warehouse, new ArrayList<>()));
@@ -102,6 +112,10 @@ public class GameRoomController {
 
 			DaoConfig.setCurrentGameId("123");
 
+			PlayerComponent.setPlayer(henk);
+
+			persistence.saveGameLog(beerGame);
+
 			new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
 		}
 
@@ -112,6 +126,7 @@ public class GameRoomController {
     }
 
     public void handleReadyButtonClick() {
+    	playerComponent.chooseFacility(TreeBuilder.getLastClickedFacility());
         playGame.setData(new Object[]{beerGame});
         playGame.setupScreen();
     }

@@ -54,6 +54,8 @@ public class Configuration implements IDomainModel{
         this.maximumOrderRetail = maximumOrderRetail;
         this.continuePlayingWhenBankrupt = continuePlayingWhenBankrupt;
         this.insightFacilities = insightFacilities;
+        this.facilities = new ArrayList<>();
+        this.facilitiesLinkedTo = new HashMap<>();
     }
 
     public int getAmountOfRounds() {
@@ -142,5 +144,9 @@ public class Configuration implements IDomainModel{
 
     public void setFacilitiesLinkedTo(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
+    }
+
+    public List<Facility> getFacilitiesLinkedToFacilities(Facility facility) {
+        return facilitiesLinkedTo.get(facility);
     }
 }

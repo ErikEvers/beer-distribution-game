@@ -8,7 +8,6 @@ import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -22,7 +21,9 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 
 
-public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore, IPersistence, IPersistenceLeaderMigration {
+
+public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistence, IPersistenceLeaderMigration {
+
 
 	@Inject
 	private RoundDAO roundDAO;
@@ -46,7 +47,7 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 
 	@Override
 	public void saveFacilityTurn(Round data) {
-		saveTurnData(data);
+		saveRoundData(data);
 	}
 
 	@Override
@@ -57,7 +58,18 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 	@Override
 	public void saveRoundData(Round rounddata)
 	{
-		saveTurnData(rounddata);
+		roundDAO.createRound(rounddata.getRoundId());
+		for (FacilityTurn facilityTurn: rounddata.getFacilityTurns()) {
+			roundDAO.createFacilityTurn(rounddata.getRoundId(),facilityTurn);
+		}
+
+		for (FacilityTurnOrder facilityTurnOrder: rounddata.getFacilityOrders()) {
+			roundDAO.createFacilityOrder(rounddata.getRoundId(),facilityTurnOrder);
+		}
+
+		for (FacilityTurnDeliver facilityTurnDeliver: rounddata.getFacilityTurnDelivers()) {
+			roundDAO.createFacilityDeliver(rounddata.getRoundId(),facilityTurnDeliver);
+		}
 	}
 
 
@@ -83,28 +95,9 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
 	}
 
-
 	@Override
 	public Player getPlayerById(String playerId) {
 		return playerDAO.getPlayer(playerId);
-	}
-
-
-	@Override
-	public void saveTurnData(Round round)
-	{
-		roundDAO.createRound(round.getRoundId());
-		for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
-			roundDAO.createFacilityTurn(round.getRoundId(),facilityTurn);
-		}
-
-		for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
-			roundDAO.createFacilityOrder(round.getRoundId(),facilityTurnOrder);
-		}
-
-		for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
-			roundDAO.createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
-		}
 	}
 
 	@Override
@@ -112,3 +105,6 @@ public class Persistence implements IRoundStore, IBusinessRuleLogger, IGameStore
 		leaderDAO.insertLeader(newLeader);
 	}
 }
+
+
+
