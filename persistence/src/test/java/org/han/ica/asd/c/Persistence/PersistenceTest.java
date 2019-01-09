@@ -9,14 +9,7 @@ import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
-import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +54,7 @@ class PersistenceTest {
 		facilityTurnOrders.add(new FacilityTurnOrder(1,1,1));
 		facilityTurnDelivers.add(new FacilityTurnDeliver(1,1,1,1));
 
-		player = new Player();
+		player = new Player("1", "146.123.164.78", new Facility(), "Flokkie", true);
 		businessRulesList = new ArrayList<>();
 		businessrules = new GameBusinessRules("Test","");
 		businessRulesList.add(businessrules);
