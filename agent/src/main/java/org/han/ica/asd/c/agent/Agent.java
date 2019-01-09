@@ -69,8 +69,8 @@ public class Agent extends GameAgent implements IParticipant {
 			}
 		}
 
-//		//persistence.logUsedBusinessRuleToCreateOrder(
-//				new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
+		persistence.logUsedBusinessRuleToCreateOrder(
+				new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
 		return new GameRoundAction(targetOrderMap, targetDeliverMap);
 	}
 
