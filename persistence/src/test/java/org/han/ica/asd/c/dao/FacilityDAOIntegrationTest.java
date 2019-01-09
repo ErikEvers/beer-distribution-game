@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 class FacilityDAOIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(FacilityDAOIntegrationTest.class.getName());
     private static final FacilityType FACILITY_TYPE = new FacilityType("Factory", 1, 1, 1, 1, 1, 1, 1);
-    private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesale", 1, 1, 1, 1, 1, 1, 1);
-    private static final FacilityType FACILITY_TYPE2_UPDATE = new FacilityType("Distributor", 1, 1, 1, 1, 1, 1, 2);
+    private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesaler", 1, 1, 1, 1, 1, 1, 1);
+    private static final FacilityType FACILITY_TYPE2_UPDATE = new FacilityType("Warehouse", 1, 1, 1, 1, 1, 1, 2);
     private static final Facility FACILITY = new Facility(FACILITY_TYPE, 1);
     private static final Facility FACILITY2 = new Facility(FACILITY_TYPE2, 2);
     private static final Facility FACILITY2_UPDATE = new Facility(FACILITY_TYPE2_UPDATE, 2);

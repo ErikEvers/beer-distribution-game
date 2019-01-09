@@ -5,7 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import java.util.Objects;
 
 public class MultiplyOperation extends Operation {
-    private static final String prefix = "Mul(";
+    private static final String PREFIX = "Mul(";
 
     /**
      * Constructor
@@ -21,7 +21,7 @@ public class MultiplyOperation extends Operation {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, prefix, suffix);
+        super.encode(stringBuilder, PREFIX, SUFFIX);
     }
 
     /**
@@ -54,6 +54,6 @@ public class MultiplyOperation extends Operation {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(prefix);
+        return Objects.hash(PREFIX);
     }
 }

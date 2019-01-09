@@ -3,10 +3,10 @@ package org.han.ica.asd.c.gameleader;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
@@ -131,7 +131,7 @@ public class GameLeaderTest {
 
         verify(gameLogic, times(1)).calculateRound(any(Round.class));
         verify(turnHandlerMock, times(2)).processFacilityTurn(any(Round.class), any(Round.class));
-        verify(iPersistence, times(2)).savePlayerTurn(any(Round.class));
+        verify(iPersistence, times(2)).saveFacilityTurn(any(Round.class));
         verify(iPersistence, times(1)).saveRoundData(any(Round.class));
         verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(any(Round.class));
     }
@@ -155,7 +155,7 @@ public class GameLeaderTest {
         gameLeader.init();
         gameLeader.iAmDisconnected();
 
-        verify(gameLogic, times(0)).addLocalParticipant(any(AgentParticipant.class));
+        verify(gameLogic, times(0)).addLocalParticipant(any(Agent.class));
     }
 
     @Test
@@ -171,13 +171,13 @@ public class GameLeaderTest {
         when(players.get(2)).thenReturn(player);
         when(player.getFacility()).thenReturn(facil);
 
-        GameAgent gameAgent = mock(GameAgent.class);
+        Agent gameAgent = mock(Agent.class);
         doReturn(gameAgent).when(gameLeader).getAgentByFacility(anyInt());
         when(gameAgent.getGameAgentName()).thenReturn("test");
 
         gameLeader.init();
         gameLeader.playerIsDisconnected("b");
 
-        verify(gameLogic, times(1)).addLocalParticipant(any(AgentParticipant.class));
+        verify(gameLogic, times(1)).addLocalParticipant(any(Agent.class));
     }
 }

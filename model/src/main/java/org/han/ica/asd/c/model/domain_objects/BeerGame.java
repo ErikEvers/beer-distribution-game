@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BeerGame implements IDomainModel{
@@ -14,9 +15,6 @@ public class BeerGame implements IDomainModel{
     private String gameDate;
     private String gameEndDate;
 
-    public BeerGame() {
-    //Empty constructor for Guice
-    }
 
     public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate){
         this.gameId = gameId;
@@ -39,6 +37,11 @@ public class BeerGame implements IDomainModel{
         this.gameEndDate = gameEndDate;
     }
 
+    public BeerGame() {
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
+    }
 
     public Leader getLeader() {
         return leader;

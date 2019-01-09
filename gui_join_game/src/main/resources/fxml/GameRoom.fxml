@@ -50,7 +50,7 @@
             <Insets bottom="15.0" left="10.0" />
           </GridPane.margin>
         </Rectangle>
-        <Label text="Wholesale" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+        <Label text="Wholesaler" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
           <GridPane.margin>
             <Insets left="80.0" top="20.0" />
           </GridPane.margin>
@@ -65,7 +65,7 @@
             <Insets right="20.0" top="20.0" />
           </GridPane.margin>
         </Label>
-        <Label text="Distributor" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+        <Label text="Warehouse" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
           <GridPane.margin>
             <Insets bottom="20.0" />
           </GridPane.margin>

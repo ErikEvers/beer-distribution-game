@@ -8,12 +8,9 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.Map;
 
-public interface IPersistence {
+public interface IRoundStore {
     void saveRoundData(Round roundData);
-    Round fetchRoundData(String gameId, int roundId);
+    Round fetchRoundData(int roundId);
     void saveTurnData(Round turn);
-    Round fetchTurnData(Round round, Map<Facility, Facility> facilityLinkedTo);
-    BeerGame getGameLog(String gameId);
     Player getPlayerById(String playerId);
-    void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
 }
