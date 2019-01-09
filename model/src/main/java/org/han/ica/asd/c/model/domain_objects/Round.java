@@ -1,9 +1,10 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Round implements IDomainModel{
+public class Round implements IDomainModel, Serializable {
     private int roundId;
     private List<FacilityTurn> facilityTurns;
     private List<FacilityTurnOrder> facilityOrders;
