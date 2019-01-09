@@ -1,8 +1,9 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.discovery.DiscoveryException;
 import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
@@ -83,18 +84,13 @@ private static Connector instance = null;
         return null;
     }
 
-    public RoomModel joinRoom(String roomName, String ip, String password){
-        try {
+    public RoomModel joinRoom(String roomName, String ip, String password) throws RoomException, DiscoveryException {
             RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
 //            if(makeConnection(joinedRoom.getLeaderIP())){
 //                addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
 //                setJoiner();
                 return joinedRoom;
 //            }
-        } catch (DiscoveryException e) {
-            LOGGER.log(Level.INFO, e.getMessage(), e);
-        }
-        return null;
     }
 
     public RoomModel updateRoom(RoomModel room){
@@ -125,7 +121,7 @@ private static Connector instance = null;
         faultDetector.setPlayer(nodeInfoList);
     }
 
-    public boolean makeConnection(String destinationIP){
+    public boolean makeConnection(String destinationIP) {
         try {
             new FaultDetectionClient().makeConnection(destinationIP);
             return true;
