@@ -97,4 +97,9 @@ public class GameLogicTest {
         int newRoundNumber = gameLogic.getCurrentRoundNumber();
         Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
     }
+
+    public void roundModelReceivedCallsLocalParticipants() {
+        gameLogic.roundModelReceived(mock(Round.class));
+        verify(participantsPool, times(1)).excecuteRound(any(Round.class));
+    }
 }
