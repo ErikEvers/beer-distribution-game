@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic.roundcalculator;
 
+import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
@@ -22,11 +23,16 @@ class RoundCalculatorTest {
     private Facility wholesale;
     private Facility retailer;
     private Facility demand;
+
+    private GameLogic gameLogic;
     private RoundCalculator roundCalculator;
+
     private Map<Facility, List<Facility>> facilityLinkedTo;
 
     @BeforeEach
     public void setup() {
+        gameLogic = new GameLogic(null,null, null, null);
+
         //TODO: Use the new Map implementation for FacilityLinkedTo
         FacilityType facilityType = new FacilityType("Manufacturer", 3, 3,5, 25, 500, 10, 40);
         FacilityType facilityType1 = new FacilityType("RegionalWarehouse", 4, 4,5, 25, 500, 10, 40);
@@ -87,7 +93,7 @@ class RoundCalculatorTest {
         Round previousRound = setupPreviousRoundObjectWithoutBacklog();
 
         //TODO: Make the rest of the tests like the one below. Replace the null value with the new FacilityLinksTo list.
-        Round calculatedRound = roundCalculator.calculateRound(previousRound, setupCalculatedRoundObject(), null);
+        Round calculatedRound = roundCalculator.calculateRound(previousRound, setupCalculatedRoundObject(), facilityLinkedTo);
 
 
 
@@ -136,7 +142,7 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacilityForManufacturer() {
-        
+
 
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility(25, manufacturer, manufacturer);
     }
