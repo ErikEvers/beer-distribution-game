@@ -1,6 +1,10 @@
 package org.han.ica.asd.c.faultdetection.nodeinfolist;
 
 
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.model.domain_objects.Player;
+
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -14,15 +18,17 @@ import java.util.Objects;
  * @see NodeInfo
  */
 
-public class NodeInfoList extends ArrayList<NodeInfo> {
+public class NodeInfoList extends ArrayList<Player> {
 
-    private ArrayList<NodeInfo> nodeList;
+    @Inject
+    IGameStore persistence;
+
+    private List<Player> nodeList;
+
 
     public NodeInfoList() {
-        nodeList = new ArrayList<>();
+        nodeList = persistence.getGameLog().getPlayers();
     }
-
-
     /**
      * Retrieves all the ip's from the 'NodeInfo' objects in the 'NodeInfoList'.
      *
@@ -34,8 +40,8 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
     public List<String> getAllIps() {
         ArrayList<String> list = new ArrayList<>();
 
-        for (NodeInfo node : nodeList) {
-            list.add(node.getIp());
+        for (Player node : nodeList) {
+            list.add(node.getIpAddress());
         }
         return list;
     }
@@ -52,9 +58,9 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
     public List<String> getActiveIps() {
         ArrayList<String> list = new ArrayList<>();
 
-        for (NodeInfo node : nodeList) {
-            if (node.getConnected()) {
-                list.add(node.getIp());
+        for (Player node : nodeList) {
+            if (node.isConnected()) {
+                list.add(node.getIpAddress());
             }
         }
         return list;
@@ -72,11 +78,13 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
      */
 
     public List<String> getActiveIpsWithoutLeader() {
+        Player leader = persistence.getGameLog().getLeader().getPlayer();
+
         ArrayList<String> list = new ArrayList<>();
 
-        for (NodeInfo node : nodeList) {
-            if (node.getConnected() && !node.getLeader()) {
-                list.add(node.getIp());
+        for (Player node : nodeList) {
+            if (node.isConnected() && node != leader) {
+                list.add(node.getIpAddress());
             }
         }
         return list;
@@ -91,44 +99,44 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
      * @see org.han.ica.asd.c.messagehandler.MessageProcessor
      */
     public String getLeaderIp() {
-        for (NodeInfo node : nodeList) {
-            if (node.getConnected() && node.getLeader()) {
-                return node.getIp();
+        Player leader = persistence.getGameLog().getLeader().getPlayer();
+
+        if (leader.isConnected()) {
+                return leader.getIpAddress();
             }
-        }
         return null;
     }
 
-    /**
-     * Retrieves the value of 'isConnected' for the node that is linked to the given ip.
-     * For the given ip it will lookup the value of isConnected in the 'NodeInfoList'.
-     *
-     * @param ip Is the ip that links to specific node.
-     * @return The value of isConnected for the node that is linked to the ip.
-     * @author Oscar
-     * @see NodeInfoList
-     */
-    public boolean getStatusOfOneNode(String ip) {
-        for (NodeInfo node : nodeList) {
-            if (node.getIp().equals(ip)) {
-                return node.getConnected();
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Creates a NodeInfo object with the given ip and adds it to the 'NodeInfoList'.
-     * It also initially sets the value of 'isConnected' to true.
-     *
-     * @param ip The ip of the node that needs to be added.
-     * @author Oscar
-     */
-    public void addIp(String ip) {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(ip);
-        nodeList.add(nodeInfo);
-    }
+//    /**
+//     * Retrieves the value of 'isConnected' for the node that is linked to the given ip.
+//     * For the given ip it will lookup the value of isConnected in the 'NodeInfoList'.
+//     *
+//     * @param ip Is the ip that links to specific node.
+//     * @return The value of isConnected for the node that is linked to the ip.
+//     * @author Oscar
+//     * @see NodeInfoList
+//     */
+//    public boolean getStatusOfOneNode(String ip) {
+//        for (Player node : nodeList) {
+//            if (node.getIpAddress().equals(ip)) {
+//                return node.isConnected();
+//            }
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * Creates a NodeInfo object with the given ip and adds it to the 'NodeInfoList'.
+//     * It also initially sets the value of 'isConnected' to true.
+//     *
+//     * @param ip The ip of the node that needs to be added.
+//     * @author Oscar
+//     */
+//    public void addIp(String ip) {
+//        NodeInfo nodeInfo = new NodeInfo();
+//        nodeInfo.setIp(ip);
+//        nodeList.add(nodeInfo);
+//    }
 
     /**
      * Updates the isConnected attribute of a specific node.
@@ -140,8 +148,8 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
      * @see NodeInfo
      */
     public void updateIsConnected(String ip, Boolean isConnected) {
-        for (NodeInfo nodeInfo : nodeList) {
-            if (nodeInfo.getIp().equals(ip)) {
+        for (Player nodeInfo : nodeList) {
+            if (nodeInfo.getIpAddress().equals(ip)) {
                 nodeInfo.setConnected(isConnected);
             }
         }
@@ -154,9 +162,7 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
      * @return The requested NodeInfo object.
      */
     @Override
-    public NodeInfo get(int index) {
-        return nodeList.get(index);
-    }
+    public Player get(int index) { return nodeList.get(index);}
 
     /**
      * Adds a NodeInfo object to the NodeInfoList, it then returns true after it did its job.
@@ -165,7 +171,7 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
      * @return True after the object is added to the list.
      */
     @Override
-    public boolean add(NodeInfo n) {
+    public boolean add(Player n) {
         nodeList.add(nodeList.size(), n);
         return true;
     }
@@ -196,10 +202,10 @@ public class NodeInfoList extends ArrayList<NodeInfo> {
         if (!(o instanceof List))
             return false;
 
-        ListIterator<NodeInfo> e1 = listIterator();
+        ListIterator<Player> e1 = listIterator();
         ListIterator<?> e2 = ((List<?>) o).listIterator();
         while (e1.hasNext() && e2.hasNext()) {
-            NodeInfo o1 = e1.next();
+            Player o1 = e1.next();
             Object o2 = e2.next();
             if (!(Objects.equals(o1, o2)))
                 return false;

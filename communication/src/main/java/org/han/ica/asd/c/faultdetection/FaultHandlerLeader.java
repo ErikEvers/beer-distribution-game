@@ -45,6 +45,8 @@ public class FaultHandlerLeader {
 
         if (amountOfFailsPerIp.get(ip) > 0) {
 
+            // Dit is om niet meer te pingen tot er een rejoin request gedaan word.
+            // Dan moet het dus weer op true gezet worden
             nodeInfoList.updateIsConnected(ip, false);
 
             notifyObserversPlayerDied(ip);
@@ -65,17 +67,17 @@ public class FaultHandlerLeader {
         return iAmDisconnected;
     }
 
-    /**
-     * Retrieves the value of isConnected of a specific ipAddress
-     *
-     * @param ip The ip of which the status is requested.
-     * @return The value of isConnected for the specified ipAddress.
-     * @author Oscar, Tarik
-     */
-    public boolean isPeerAlive(String ip) {
-        //TODO probably remove this method entirely
-        return nodeInfoList.getStatusOfOneNode(ip);
-    }
+//    /**
+//     * Retrieves the value of isConnected of a specific ipAddress
+//     *
+//     * @param ip The ip of which the status is requested.
+//     * @return The value of isConnected for the specified ipAddress.
+//     * @author Oscar, Tarik
+//     */
+//    public boolean isPeerAlive(String ip) {
+//        //TODO probably remove this method entirely
+//        return nodeInfoList.getStatusOfOneNode(ip);
+//    }
 
     /**
      * Resets the amount of failures for a specific node, given the ip of said node.

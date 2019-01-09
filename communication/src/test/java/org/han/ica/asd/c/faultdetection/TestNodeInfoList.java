@@ -91,22 +91,22 @@ public class TestNodeInfoList {
     }
 
 
-    @Test
-    @DisplayName("Test if the getStatusOfOneNode returns the right value")
-    void TestGetStatusOfOneNode() {
-        NodeInfo nodeInfo1 = new NodeInfo();
-        nodeInfo1.setIp(testIp1);
-        nodeInfo1.setConnected(true);
-
-        NodeInfo nodeInfo2 = new NodeInfo();
-        nodeInfo2.setIp(testIp2);
-        nodeInfo2.setConnected(false);
-
-        nodeInfoList.add(nodeInfo1);
-
-        assertTrue(nodeInfoList.getStatusOfOneNode(testIp1));
-        assertFalse(nodeInfoList.getStatusOfOneNode(testIp2));
-    }
+//    @Test
+//    @DisplayName("Test if the getStatusOfOneNode returns the right value")
+//    void TestGetStatusOfOneNode() {
+//        NodeInfo nodeInfo1 = new NodeInfo();
+//        nodeInfo1.setIp(testIp1);
+//        nodeInfo1.setConnected(true);
+//
+//        NodeInfo nodeInfo2 = new NodeInfo();
+//        nodeInfo2.setIp(testIp2);
+//        nodeInfo2.setConnected(false);
+//
+//        nodeInfoList.add(nodeInfo1);
+//
+//        assertTrue(nodeInfoList.getStatusOfOneNode(testIp1));
+//        assertFalse(nodeInfoList.getStatusOfOneNode(testIp2));
+//    }
 
     @Test
     @DisplayName("Test if AddIp function adds the ip to the nodeInfoList")
