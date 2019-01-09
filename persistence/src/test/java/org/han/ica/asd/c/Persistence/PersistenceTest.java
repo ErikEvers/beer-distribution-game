@@ -61,7 +61,7 @@ class PersistenceTest {
 		facilityTurnOrders.add(new FacilityTurnOrder(1,1,1));
 		facilityTurnDelivers.add(new FacilityTurnDeliver(1,1,1,1));
 
-		player = new Player();
+		player = new Player("1", "234", null, "Henk", true);
 		businessRulesList = new ArrayList<>();
 		businessrules = new GameBusinessRules("Test","");
 		businessRulesList.add(businessrules);
