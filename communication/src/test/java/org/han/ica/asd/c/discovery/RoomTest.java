@@ -142,7 +142,7 @@ public class RoomTest {
         assertFalse(room.getHosts().contains(newIP));
     }
 
-    @Test
+    @Test (expected = RoomException.class)
     public void shouldThrowErrorWhenRemovingHostWithNoConnection() throws IOException, RoomException {
         String roomName = "Beergame";
         String newIP = "192.168.100.1";

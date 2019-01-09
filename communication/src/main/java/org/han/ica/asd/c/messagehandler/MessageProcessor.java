@@ -6,7 +6,15 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
+import javax.inject.Inject;
+
+/**
+ * Most messages are redirected to be processed by other components, but messages that can be handled by this component will be processed here.
+ */
+
 public class MessageProcessor {
+    @Inject
+    Connector connector;
 
     /**
      * Gets the current 'NodeInfoList' from the connector instance.
@@ -17,7 +25,6 @@ public class MessageProcessor {
      * @see NodeInfoList
      */
     public NodeInfoList getNodeInfoListFromConnector() {
-        Connector connector = Connector.getInstance();
         return connector.getIps();
     }
 
@@ -39,5 +46,14 @@ public class MessageProcessor {
             whoIsTheLeaderMessage.setException(new LeaderNotPresentException("I dont have a leader at this moment"));
         }
         return whoIsTheLeaderMessage;
+    }
+
+    /**
+     * Sets new connector.
+     *
+     * @param connector New value of connector.
+     */
+    public void setConnector(Connector connector) {
+        this.connector = connector;
     }
 }

@@ -1,85 +1,104 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
+import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameMessageClient {
 
-    private SocketClient socketClient = new SocketClient();
+    @Inject
+    private SocketClient socketClient;
 
-    private static final Logger LOGGER = Logger.getLogger(GameMessageClient.class.getName());
+    @Inject
+    private static Logger logger;
+
+    public GameMessageClient() {
+        //inject purposes
+    }
 
     /**
      * This method sends turn data to the leader.
+     *
      * @param ip
      * @param turn
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
-    public ResponseMessage sendTurnModel(String ip, Round turn) {
+    public boolean sendTurnModel(String ip, Round turn) {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
-
         int nFailedAttempts = 0;
-        Exception exception = null;
 
         while (nFailedAttempts < 3) {
             try {
-                Object response = socketClient.sendObjectWithResponse(ip, turnModelMessage);
-                return (ResponseMessage) response;
+                TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
+                if (response.getException() != null){
+                    logger.log(Level.INFO, response.getException().getMessage(), response.getException());
+                }
+                return response.isSuccess();
             } catch (IOException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    exception = new IOException("Something went wrong when trying to connect");
-                    LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect", e);
+                    logger.log(Level.SEVERE, "Something went wrong when trying to connect");
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    exception = new ClassNotFoundException("Sommething went wrong when reading the object");
-                    LOGGER.log(Level.SEVERE, "Something went wrong when reading the object", e);
+                    logger.log(Level.SEVERE, "Something went wrong when reading the object");
                 }
             }
         }
-        return new ResponseMessage(false, exception);
+        return false;
     }
 
     /**
      * Send the whoIsTheLeaderMessage using the socketclient.
-     * @author Oscar
+     *
      * @param ip The ip to send it to.
      * @return The 'WhoIsTheLeaderMessage' with either the exception or the response filled in.
+     * @author Oscar
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip){
+    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip) {
         WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {
             whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
         } catch (IOException | ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE,e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage());
         }
         return whoIsTheLeaderMessageReturn;
     }
 
-    public void setSocketClient(SocketClient socketClient) {
-        this.socketClient = socketClient;
-    }
-
     /**
      * This method sends the handled round data back to every peer.
+     *
      * @param ips
      * @param roundModel
      */
     public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
-        new SendInTransaction(ips, roundModel, socketClient).sendRoundToAllPlayers();
+        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
+        new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 
+    public void sendConfigurationToAllPlayers(String[] ips, Configuration configuration) {
+        ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
+        new SendInTransaction(ips, configurationMessage, socketClient).sendToAllPlayers();
+    }
 
-
+    /**
+     * Sets new socketClient.
+     *
+     * @param socketClient New value of socketClient.
+     */
+    public void setSocketClient(SocketClient socketClient) {
+        this.socketClient = socketClient;
+    }
 }
