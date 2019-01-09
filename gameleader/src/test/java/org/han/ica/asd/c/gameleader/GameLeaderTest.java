@@ -131,7 +131,7 @@ public class GameLeaderTest {
 
         verify(gameLogic, times(1)).calculateRound(any(Round.class));
         verify(turnHandlerMock, times(2)).processFacilityTurn(any(Round.class), any(Round.class));
-        verify(iPersistence, times(2)).savePlayerTurn(any(Round.class));
+        verify(iPersistence, times(2)).saveFacilityTurn(any(Round.class));
         verify(iPersistence, times(1)).saveRoundData(any(Round.class));
         verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(any(Round.class));
     }

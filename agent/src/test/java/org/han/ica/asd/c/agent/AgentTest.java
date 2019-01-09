@@ -48,11 +48,11 @@ class AgentTest {
 
 	private IPersistence persistence = new IPersistence() {
 		@Override
-		public void savePlayerTurn(Round data) {
+		public void saveFacilityTurn(Round data) {
 		}
 
 		@Override
-		public Round fetchPlayerTurn(int roundId, int facilityId) {
+		public Round fetchFacilityTurn(int roundId, int facilityId) {
 			return null;
 		}
 
