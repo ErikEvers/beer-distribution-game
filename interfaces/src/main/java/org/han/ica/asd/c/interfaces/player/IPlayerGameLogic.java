@@ -39,6 +39,4 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
-
-    List<Agent> getSavedAgents();
 }

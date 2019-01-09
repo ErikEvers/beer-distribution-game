@@ -18,5 +18,4 @@ public interface IPersistence {
     BeerGame getGameLog(String gameId);
     Player getPlayerById(String playerId);
     void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
-    List<Agent> getSavedAgents();
 }

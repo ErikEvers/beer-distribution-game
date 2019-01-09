@@ -71,11 +71,6 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public List<Agent> getSavedAgents() {
-        return gameLogic.getSavedAgents();
-    }
-
-    @Override
     public Map<Facility, List<Facility>> seeOtherFacilities() {
         //Fake method for testing purposes
         gameLogic.seeOtherFacilities();

@@ -128,9 +128,4 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
         //Yet to be implemented.
         return new ArrayList<>();
     }
-
-    @Override
-    public List<Agent> getSavedAgents() {
-        return persistence.getSavedAgents();
-    }
 }

@@ -70,19 +70,4 @@ public class PlayerComponentTest {
         //Assert
         verify(playerComponent.gameLogic, times(1)).getAllFacilities();
     }
-
-    @Test
-    void getSavedAgentsCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Arrange
-        playerComponent.gameLogic = mock(GameLogic.class);
-
-        when(playerComponent.gameLogic.getSavedAgents()).thenReturn(null);
-
-        //Act
-        playerComponent.getSavedAgents();
-
-        //Assert
-        verify(playerComponent.gameLogic, times(1)).getSavedAgents();
-    }
-
 }

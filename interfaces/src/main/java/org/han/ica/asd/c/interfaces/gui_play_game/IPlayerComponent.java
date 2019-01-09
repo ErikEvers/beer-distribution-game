@@ -17,5 +17,4 @@ public interface IPlayerComponent {
     List<String> getAllGames();
     void connectToGame(String game);
     List<Facility> getAllFacilities();
-    List<Agent> getSavedAgents();
 }
