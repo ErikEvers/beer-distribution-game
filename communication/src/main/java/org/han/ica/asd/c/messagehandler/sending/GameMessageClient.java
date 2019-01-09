@@ -74,7 +74,6 @@ public class GameMessageClient {
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-
     public String sendWhoIsTheLeaderMessage(String ip){
         WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {

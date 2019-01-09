@@ -15,5 +15,4 @@ public class ConfigurationMessage extends TransactionMessage {
     public Configuration getConfiguration() {
         return configuration;
     }
-    
 }

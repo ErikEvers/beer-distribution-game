@@ -17,5 +17,4 @@ public class RoundModelMessage extends TransactionMessage implements Serializabl
     public Round getRoundModel() {
         return roundModel;
     }
-
 }

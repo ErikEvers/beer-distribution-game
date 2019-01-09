@@ -47,7 +47,6 @@ public class GameMessageReceiver {
 
     private TransactionMessage toBecommittedRound;
 
-
     public GameMessageReceiver() {
         //inject purposes
     }

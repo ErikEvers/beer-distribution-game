@@ -102,8 +102,7 @@ public class GameMessageReceiverTest {
         observers.add(electionObserver);
         observers.add(gameConfigurationObserver);
         observers.add(facilityMessageObserver);
-
-   //     gameMessageReceiver = new GameMessageReceiver();
+        
         gameMessageReceiver.setObservers(observers);
         gameMessageReceiver.setGameMessageFilterer(gameMessageFilterer);
     }
@@ -186,7 +185,7 @@ public class GameMessageReceiverTest {
         facility.setFacilityId(123);
 
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
-        
+
         when(gameMessageFilterer.isUnique(any())).thenReturn(true);
         doThrow(Exception.class).when(facilityMessageObserver).chooseFacility(any(Facility.class));
 

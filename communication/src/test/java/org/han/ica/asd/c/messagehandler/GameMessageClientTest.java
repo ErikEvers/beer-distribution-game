@@ -102,11 +102,6 @@ public class GameMessageClientTest {
         assertNull(response.getException());
     }
 
-
-
-
-
-
 // Still unsure on how to test this cause of threading
 //    @Test
 //    public void sendRoundToAllPlayersSuccess() throws IOException, ClassNotFoundException {
