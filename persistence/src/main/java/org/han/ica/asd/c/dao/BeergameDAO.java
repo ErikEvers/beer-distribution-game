@@ -47,6 +47,9 @@ public class BeergameDAO {
 	@Inject
 	private PlayerDAO playerDAO;
 
+	@Inject
+	private LeaderDAO leaderDAO;
+
 
 
 
@@ -102,6 +105,7 @@ public class BeergameDAO {
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
+				leaderDAO.insertLeader(beerGame.getLeader());
 
 
 			} catch (SQLException e) {
