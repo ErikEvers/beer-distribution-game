@@ -45,22 +45,22 @@
                                           <Insets left="10.0" top="10.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <CheckBox fx:id="factoryCheckBox" mnemonicParsing="false" selected="true" text="Factory">
+                                    <CheckBox fx:id="factoryCheckBox" mnemonicParsing="false" text="Factory">
                                        <VBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
                                        </VBox.margin>
                                     </CheckBox>
-                                    <CheckBox fx:id="warehouseCheckBox" mnemonicParsing="false" selected="true" text="Regional Warehouse">
+                                    <CheckBox fx:id="warehouseCheckBox" mnemonicParsing="false" text="Regional Warehouse">
                                        <VBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="20.0" top="20.0" />
                                        </VBox.margin>
                                     </CheckBox>
-                                    <CheckBox fx:id="wholesaleCheckBox" mnemonicParsing="false" selected="true" text="Wholesale">
+                                    <CheckBox fx:id="wholesalerCheckBox" mnemonicParsing="false" text="Wholesale">
                                        <VBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="20.0" top="20.0" />
                                        </VBox.margin>
                                     </CheckBox>
-                                    <CheckBox fx:id="retailCheckBox" mnemonicParsing="false" selected="true" text="Retail">
+                                    <CheckBox fx:id="retailCheckBox" mnemonicParsing="false" text="Retail">
                                        <VBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="20.0" top="20.0" />
                                        </VBox.margin>

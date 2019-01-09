@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gui_replay_game.replay_game_controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -14,7 +15,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
-import org.han.ica.asd.c.gui_replay_game.replay_data.ReplayData;
+import org.han.ica.asd.c.gamevalue.GameValue;
+import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
+import org.han.ica.asd.c.replay_data.ReplayComponent;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
 public class ReplayGameScreenController {
@@ -35,13 +38,16 @@ public class ReplayGameScreenController {
     private CheckBox warehouseCheckBox;
 
     @FXML
-    private CheckBox wholesaleCheckBox;
+    private CheckBox wholesalerCheckBox;
 
     @FXML
     private CheckBox retailCheckBox;
 
     @FXML
     private ComboBox<Facility> facilityComboBox;
+
+    @FXML
+    private ComboBox<GameValue> attributeComboBox;
 
     @FXML
     private Button prevRoundButton;
@@ -58,11 +64,11 @@ public class ReplayGameScreenController {
     @FXML
     private Button backButton;
 
-    private ReplayData replayData;
+    private IVisualisedPlayedGameData replayComponent;
 
     @FXML
     public void currentRoundEntered(ActionEvent event) {
-        replayData.updateCurrentRound(Integer.parseInt(currentRoundTextfield.getText()));
+        replayComponent.updateCurrentRound(Integer.parseInt(currentRoundTextfield.getText()));
 
         updateCurrentRound();
         drawGraph();
@@ -70,7 +76,7 @@ public class ReplayGameScreenController {
 
     @FXML
     public void nextRoundButtonClicked(ActionEvent event) {
-        if (replayData.incrementCurrentRound()) {
+        if (replayComponent.incrementCurrentRound()) {
             updateCurrentRound();
             drawGraph();
         }
@@ -78,7 +84,7 @@ public class ReplayGameScreenController {
 
     @FXML
     public void prevRoundButtonClicked(ActionEvent event) {
-        if (replayData.decrementCurrentRound()) {
+        if (replayComponent.decrementCurrentRound()) {
             updateCurrentRound();
             drawGraph();
         }
@@ -86,34 +92,82 @@ public class ReplayGameScreenController {
 
     @FXML
     void initialize() {
-        this.replayData = new ReplayData();
+        this.replayComponent = new ReplayComponent();
 
         currentRoundTextfield.setTextFormatter(NumericTextFormatter.getTextFormatter());
 
-        totalRoundsTextfield.setText(replayData.getTotalRoundsString());
+        totalRoundsTextfield.setText(replayComponent.getTotalRoundsString());
 
-        initializeComboBox();
+        initializeFacilityComboBox();
+        initializeAttributeComboBox();
         initializeCheckBoxes();
         updateCurrentRound();
         drawGraph();
     }
 
-    private void initializeComboBox() {
+    private void initializeAttributeComboBox() {
+        setAttributeComboBoxConverter();
+
+        attributeComboBox.valueProperty().addListener((obs, oldVal, newVal) ->
+                attributeComboBoxUpdated(newVal));
+
+        fillAttributeComboBox();
+
+        attributeComboBox.getSelectionModel().select(GameValue.BUDGET);
+    }
+
+    private void fillAttributeComboBox() {
+        ArrayList<GameValue> attributes = new ArrayList<>();
+
+        for(GameValue gameValue:GameValue.values()){
+            for(String synonym:gameValue.getValue()) {
+                if (!GameValue.checkIfFacility(synonym)){
+                    attributes.add(gameValue);
+                    break;
+                }
+            }
+        }
+
+        ObservableList<GameValue> observableList = FXCollections.observableArrayList(attributes);
+
+        attributeComboBox.setItems(observableList);
+    }
+
+    private void setAttributeComboBoxConverter() {
+        attributeComboBox.setConverter(new StringConverter<GameValue>() {
+            @Override
+            public String toString(GameValue object) {
+                return object.getValue()[0];
+            }
+
+            @Override
+            public GameValue fromString(String string) {
+                for(GameValue gameValue:GameValue.values()){
+                    if(gameValue.contains(string)){
+                        return gameValue;
+                    }
+                }
+                return null;
+            }
+        });
+    }
+
+    private void attributeComboBoxUpdated(GameValue newVal) {
+        replayComponent.setAttribute(newVal);
+        drawGraph();
+    }
+
+    private void initializeFacilityComboBox() {
         facilityComboBox.getItems().clear();
-
-        ObservableList<Facility> observableList = FXCollections.observableArrayList(replayData.getAllFacilities());
-
+        ObservableList<Facility> observableList = FXCollections.observableArrayList(replayComponent.getAllFacilities());
         facilityComboBox.setItems(observableList);
-
         facilityComboBox.valueProperty().addListener((obs, oldVal, newVal) ->
                 facilityComboBoxUpdated(oldVal, newVal));
-
         facilityComboBox.setConverter(new StringConverter<Facility>() {
             @Override
             public String toString(Facility object) {
                 return object.getFacilityType().getFacilityName() + " " + object.getFacilityId();
             }
-
             @Override
             public Facility fromString(String string) {
                 return null;
@@ -122,10 +176,10 @@ public class ReplayGameScreenController {
     }
 
     private void facilityComboBoxUpdated(Facility facilityOld, Facility facilityNew) {
-        replayData.removeDisplayedFacility(facilityOld);
+        replayComponent.removeDisplayedFacility(facilityOld);
         if (facilityNew != null) {
             clearCheckBoxes();
-            replayData.addDisplayedFacility(facilityNew);
+            replayComponent.addDisplayedFacility(facilityNew);
         }
         drawGraph();
     }
@@ -134,7 +188,7 @@ public class ReplayGameScreenController {
         factoryCheckBox.selectedProperty().setValue(false);
         retailCheckBox.selectedProperty().setValue(false);
         warehouseCheckBox.selectedProperty().setValue(false);
-        wholesaleCheckBox.selectedProperty().setValue(false);
+        wholesalerCheckBox.selectedProperty().setValue(false);
     }
 
     private void clearComboBox() {
@@ -148,42 +202,47 @@ public class ReplayGameScreenController {
                 retailCheckBoxUpdated(newValue));
         warehouseCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
                 warehouseCheckBoxUpdated(newValue));
-        wholesaleCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
-                wholesaleCheckBoxUpdated(newValue));
+        wholesalerCheckBox.selectedProperty().addListener((observable, oldValue, newValue) ->
+                wholesalerCheckBoxUpdated(newValue));
+
+        factoryCheckBox.selectedProperty().setValue(true);
+        retailCheckBox.selectedProperty().setValue(true);
+        warehouseCheckBox.selectedProperty().setValue(true);
+        wholesalerCheckBox.selectedProperty().setValue(true);
     }
 
-    private void wholesaleCheckBoxUpdated(Boolean newValue) {
-        facilityCheckBoxUpdated(newValue, 2);
+    private void wholesalerCheckBoxUpdated(Boolean newValue) {
+        facilityCheckBoxUpdated(newValue, GameValue.WHOLESALER);
     }
 
     private void warehouseCheckBoxUpdated(Boolean newValue) {
-        facilityCheckBoxUpdated(newValue, 4);
+        facilityCheckBoxUpdated(newValue, GameValue.REGIONALWAREHOUSE);
     }
 
     private void retailCheckBoxUpdated(Boolean newValue) {
-        facilityCheckBoxUpdated(newValue, 3);
+        facilityCheckBoxUpdated(newValue, GameValue.RETAILER);
     }
 
     private void factoryCheckBoxUpdated(Boolean newValue) {
-        facilityCheckBoxUpdated(newValue, 1);
+        facilityCheckBoxUpdated(newValue, GameValue.FACTORY);
     }
 
-    private void facilityCheckBoxUpdated(Boolean newValue, int id) {
+    private void facilityCheckBoxUpdated(Boolean newValue, GameValue facility) {
         if (!newValue) {
-            replayData.removeDisplayedFacility(id);
+            replayComponent.removeDisplayedFacility(facility);
         } else {
             clearComboBox();
-            replayData.addDisplayedFacility(id);
+            replayComponent.addDisplayedFacility(facility);
         }
         drawGraph();
     }
 
     private void updateCurrentRound() {
-        currentRoundTextfield.setText(replayData.getCurrentRoundString());
+        currentRoundTextfield.setText(replayComponent.getCurrentRoundString());
     }
 
     private void drawGraph() {
-        replayGraph.setData(replayData.getChartData());
+        replayGraph.setData(replayComponent.getChartData());
     }
 
     public void setGameId(String gameId){

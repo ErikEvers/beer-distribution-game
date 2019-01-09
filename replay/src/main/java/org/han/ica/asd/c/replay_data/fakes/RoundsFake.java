@@ -1,8 +1,5 @@
-package org.han.ica.asd.c.gui_replay_game.replay_data.fakes;
+package org.han.ica.asd.c.replay_data.fakes;
 
-import org.han.ica.asd.c.model.domain_objects.Facility;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

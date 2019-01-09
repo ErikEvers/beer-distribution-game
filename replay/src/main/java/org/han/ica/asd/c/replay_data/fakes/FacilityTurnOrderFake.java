@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_replay_game.replay_data.fakes;
+package org.han.ica.asd.c.replay_data.fakes;
 
 public class FacilityTurnOrderFake {
     private int facilityId;
