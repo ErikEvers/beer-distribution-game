@@ -104,7 +104,7 @@ public class GameRoomController {
 
 			DaoConfig.setCurrentGameId("123");
 
-			TreeBuilder.loadFacilityView(beerGame, facilitiesContainer, false);
+			new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
 		}
 
     public void handleBackToJoinGameButtonClick() {
