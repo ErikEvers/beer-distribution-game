@@ -6,6 +6,8 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
+import javax.inject.Inject;
+
 /**
  * Wrapper for the player domain class. This wrapper implements the IParticipant interface.
  */

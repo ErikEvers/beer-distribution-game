@@ -2,7 +2,7 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
@@ -10,13 +10,12 @@ import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,19 +97,13 @@ public class GameMessageClient {
         return chooseFacilityMessageReturn;
     }
 
-    public List<Facility> sendAllFacilitiesRequestMessage(String ip){
-        RequestAllFacilitiesMessage requestAllFacilitiesMessage = new RequestAllFacilitiesMessage();
-        try {
-            RequestAllFacilitiesMessage response = null;
-            response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
-            if (response.getException() != null){
-                logger.log(Level.INFO, response.getException().getMessage(), response.getException());
-            }
-            return response.getFacilities();
-        } catch (IOException | ClassNotFoundException e) {
-            logger.log(Level.SEVERE,e.getMessage());
+    public GamePlayerId sendGameDataRequestMessage(String ip) throws IOException, ClassNotFoundException{
+        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
+        RequestGameDataMessage response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
+        if (response.getException() != null){
+            logger.log(Level.INFO, response.getException().getMessage(), response.getException());
         }
-        return new ArrayList<Facility>();
+        return response.getGameData();
     }
 
     /**

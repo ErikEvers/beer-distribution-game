@@ -143,4 +143,8 @@ public class Configuration implements IDomainModel{
     public void setFacilitiesLinkedTo(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
+
+    public List<Facility> getFacilitiesLinkedToFacilities(Facility facility) {
+        return facilitiesLinkedTo.get(facility);
+    }
 }

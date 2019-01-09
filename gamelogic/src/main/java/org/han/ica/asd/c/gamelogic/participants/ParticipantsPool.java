@@ -5,6 +5,7 @@ import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class ParticipantsPool {
     private List<IParticipant> participants;
     private PlayerParticipant player;
 
+    @Inject
     public ParticipantsPool(PlayerParticipant playerParticipant) {
         participants = new LinkedList<>();
         participants.add(playerParticipant);

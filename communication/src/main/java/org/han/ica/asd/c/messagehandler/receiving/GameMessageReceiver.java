@@ -12,7 +12,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.GAME_START_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ELECTION_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_ALL_FACILITIES_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_GAME_DATA_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ROUND_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.TURN_MODEL_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.WHO_IS_THE_LEADER_MESSAGE;
@@ -93,7 +93,7 @@ public class GameMessageReceiver {
      * @param gameMessage The GameMessage that has to be handled
      * @return ResponseMessage
      */
-    public Object gameMessageReceived(GameMessage gameMessage) {
+    public Object gameMessageReceived(GameMessage gameMessage, String senderIp) {
         if (gameMessageFilterer.isUnique(gameMessage)) {
             switch (gameMessage.getMessageType()) {
                 case TURN_MODEL_MESSAGE:
@@ -112,11 +112,11 @@ public class GameMessageReceiver {
                 case FACILITY_MESSAGE:
                     ChooseFacilityMessage chooseFacilityMessage = (ChooseFacilityMessage) gameMessage;
                     return handleFacilityMessage(chooseFacilityMessage);
-                case REQUEST_ALL_FACILITIES_MESSAGE:
-                    return handleRequestAllFacilities();
                 case GAME_START_MESSAGE:
                     TransactionMessage gameStartMessage = (TransactionMessage) gameMessage;
                     return handleTransactionMessage(gameStartMessage);
+                case REQUEST_GAME_DATA_MESSAGE:
+                    return handleRequestGameData(senderIp);
                 default:
                     break;
             }
@@ -172,11 +172,11 @@ public class GameMessageReceiver {
         return null;
     }
 
-    private RequestAllFacilitiesMessage handleRequestAllFacilities(){
+    private RequestGameDataMessage handleRequestGameData(String playerIp){
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
-                    RequestAllFacilitiesMessage requestAllFacilitiesMessageResponse = new RequestAllFacilitiesMessage();
-                    requestAllFacilitiesMessageResponse.setFacilities (((IFacilityMessageObserver) observer).getAllFacilities());
+                    RequestGameDataMessage requestAllFacilitiesMessageResponse = new RequestGameDataMessage();
+                    requestAllFacilitiesMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
                     return requestAllFacilitiesMessageResponse;
             }
         }

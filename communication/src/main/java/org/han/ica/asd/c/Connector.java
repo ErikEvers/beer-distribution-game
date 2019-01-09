@@ -6,6 +6,7 @@ import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
@@ -16,6 +17,7 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -38,7 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Connector implements IConnectorForSetup, IConnectorForLeader {
+public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
     private static Connector instance = null;
 
     private ArrayList<IConnectorObserver> observers;
@@ -183,8 +185,8 @@ public class Connector implements IConnectorForSetup, IConnectorForLeader {
     }
 
     @Override
-    public List<Facility> getAllFacilities() {
-        return gameMessageClient.sendAllFacilitiesRequestMessage("leader ip");
+    public GamePlayerId getGameData() throws ClassNotFoundException, IOException {
+        return gameMessageClient.sendGameDataRequestMessage("leader ip");
     }
 
     @Override
@@ -194,6 +196,11 @@ public class Connector implements IConnectorForSetup, IConnectorForLeader {
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void sendTurnData(Round turn) {
+        //stub
     }
 
     public void addObserver(IConnectorObserver observer) {

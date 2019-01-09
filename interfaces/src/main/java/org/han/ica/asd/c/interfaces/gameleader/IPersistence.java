@@ -21,7 +21,7 @@ public interface IPersistence {
      * @param facilityId, the identifier of the facility of which the round actions are to be retrieved.
      * @return the round data for that facility in that round.
      */
-    Round fetchFacilityTurn(int roundId, int facilityId);
+    Round fetchFacilityTurn(int roundId);
 
     /**
      * Store the actions of a specific round.

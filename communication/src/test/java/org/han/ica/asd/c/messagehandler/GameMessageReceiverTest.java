@@ -21,7 +21,7 @@ import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageFilterer;
@@ -47,6 +47,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -115,7 +116,7 @@ public class GameMessageReceiverTest {
 
         when(gameMessageFilterer.isUnique(electionMessage)).thenReturn(true);
 
-        gameMessageReceiver.gameMessageReceived(electionMessage);
+        gameMessageReceiver.gameMessageReceived(electionMessage, anyString());
 
         verify(electionObserver).electionReceived(election);
     }
@@ -127,7 +128,7 @@ public class GameMessageReceiverTest {
 
         when(gameMessageFilterer.isUnique(turnModelMessage)).thenReturn(true);
 
-        gameMessageReceiver.gameMessageReceived(turnModelMessage);
+        gameMessageReceiver.gameMessageReceived(turnModelMessage, anyString());
 
         verify(turnModelObserver).turnModelReceived(turnModel);
     }
@@ -143,10 +144,10 @@ public class GameMessageReceiverTest {
         gameStartMessageCommit.setPhaseToCommit();
 
         when(gameMessageFilterer.isUnique(gameStartMessageStage)).thenReturn(true);
-        gameMessageReceiver.gameMessageReceived(gameStartMessageStage);
+        gameMessageReceiver.gameMessageReceived(gameStartMessageStage, "");
 
         when(gameMessageFilterer.isUnique(gameStartMessageCommit)).thenReturn(true);
-        gameMessageReceiver.gameMessageReceived(gameStartMessageCommit);
+        gameMessageReceiver.gameMessageReceived(gameStartMessageCommit, "");
 
         verify(gameStartObserver).gameStartReceived(beerGame);
     }
@@ -162,10 +163,10 @@ public class GameMessageReceiverTest {
         roundModelMessageCommit.setPhaseToCommit();
 
         when(gameMessageFilterer.isUnique(roundModelMessageStage)).thenReturn(true);
-        gameMessageReceiver.gameMessageReceived(roundModelMessageStage);
+        gameMessageReceiver.gameMessageReceived(roundModelMessageStage, anyString());
 
         when(gameMessageFilterer.isUnique(roundModelMessageCommit)).thenReturn(true);
-        gameMessageReceiver.gameMessageReceived(roundModelMessageCommit);
+        gameMessageReceiver.gameMessageReceived(roundModelMessageCommit, anyString());
 
         verify(roundModelObserver).roundModelReceived(roundModel);
     }
@@ -176,7 +177,7 @@ public class GameMessageReceiverTest {
         facility.setFacilityId(123);
         when(gameMessageFilterer.isUnique(any())).thenReturn(true);
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
-        gameMessageReceiver.gameMessageReceived(chooseFacilityMessage);
+        gameMessageReceiver.gameMessageReceived(chooseFacilityMessage, anyString());
         verify(facilityMessageObserver).chooseFacility(facility);
     }
 
@@ -190,17 +191,16 @@ public class GameMessageReceiverTest {
         when(gameMessageFilterer.isUnique(any())).thenReturn(true);
         doThrow(Exception.class).when(facilityMessageObserver).chooseFacility(any(Facility.class));
 
-        chooseFacilityMessage = (ChooseFacilityMessage) gameMessageReceiver.gameMessageReceived(chooseFacilityMessage);
+        chooseFacilityMessage = (ChooseFacilityMessage) gameMessageReceiver.gameMessageReceived(chooseFacilityMessage, anyString());
 
         assertEquals(Exception.class, chooseFacilityMessage.getException().getClass());
     }
 
     @Test
     public void requestAllFacilitiesMessageReceived(){
-        List<Facility> facilities = new ArrayList<>();
         when(gameMessageFilterer.isUnique(any())).thenReturn(true);
-        RequestAllFacilitiesMessage requestAllFacilitiesMessage = new RequestAllFacilitiesMessage();
-        gameMessageReceiver.gameMessageReceived(requestAllFacilitiesMessage);
-        verify(facilityMessageObserver).getAllFacilities();
+        RequestGameDataMessage requestGameDataMessage = new RequestGameDataMessage();
+        gameMessageReceiver.gameMessageReceived(requestGameDataMessage, anyString());
+        verify(facilityMessageObserver).getGameData(anyString());
     }
 }
