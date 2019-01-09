@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
 import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
@@ -15,6 +16,8 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
+import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,10 +43,11 @@ class ParserPipelineTest {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
+                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
             }
         });
         parserPipelineProvider = injector.getProvider(ParserPipeline.class);
-        parserPipeline = parserPipelineProvider.get();
+        parserPipeline = this.parserPipelineProvider.get();
     }
 
     @Test

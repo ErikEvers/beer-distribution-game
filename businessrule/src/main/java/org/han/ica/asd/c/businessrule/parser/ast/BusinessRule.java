@@ -13,6 +13,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +26,17 @@ public class BusinessRule extends ASTNode {
     private static final String PREFIX = "BR(";
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
 
-    @Inject
     private NodeConverter nodeConverter;
+    private Provider<NodeConverter> nodeConverterProvider;
+
+    public BusinessRule() {
+    }
+
+    @Inject
+    public BusinessRule(Provider<NodeConverter> nodeConverterProvider) {
+        this.nodeConverterProvider = nodeConverterProvider;
+        nodeConverter = nodeConverterProvider.get();
+    }
 
     /**
      * Gets the action of the BusinessRule

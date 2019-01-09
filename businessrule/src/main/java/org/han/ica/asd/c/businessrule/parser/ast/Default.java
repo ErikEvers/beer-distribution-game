@@ -7,11 +7,11 @@ import java.util.Objects;
 public class Default extends Condition {
     private static final String PREFIX = "D(";
 
-    @Inject
     private Provider<BooleanLiteral> booleanLiteralProvider;
 
     public Default() {
     }
+
     @Inject
     public Default(Provider<BooleanLiteral> booleanLiteralProvider) {
         this.booleanLiteralProvider = booleanLiteralProvider;

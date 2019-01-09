@@ -28,18 +28,21 @@ public class ParserPipeline {
     private static final String DELETE_EMPTY_LINES = "(?m)^[ \t]*\r?\n";
     private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
     private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+.";
+
     private Provider<Counter> counterProvider;
     private Provider<Evaluator> evaluatorProvider;
-
-    @Inject
+    private Provider<AlternativeFinder> alternativeFinderProvider;
     private AlternativeFinder alternativeFinder;
 
     public ParserPipeline() {
     }
+
     @Inject
-    public ParserPipeline(Provider<Counter> counterProvider, Provider<Evaluator> evaluatorProvider) {
+    public ParserPipeline(Provider<Counter> counterProvider, Provider<Evaluator> evaluatorProvider, Provider<AlternativeFinder> alternativeFinderProvider) {
         this.counterProvider = counterProvider;
         this.evaluatorProvider = evaluatorProvider;
+        this.alternativeFinderProvider = alternativeFinderProvider;
+        alternativeFinder = alternativeFinderProvider.get();
     }
 
     /**

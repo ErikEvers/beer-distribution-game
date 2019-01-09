@@ -7,6 +7,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,8 +21,17 @@ public class Action extends ASTNode {
     private Person person;
     private ComparisonStatement comparisonStatement;
 
-    @Inject
     private NodeConverter nodeConverter;
+    private Provider<NodeConverter> nodeConverterProvider;
+
+    public Action() {
+    }
+
+    @Inject
+    public Action(Provider<NodeConverter> nodeConverterProvider) {
+        this.nodeConverterProvider = nodeConverterProvider;
+        nodeConverter = this.nodeConverterProvider.get();
+    }
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode

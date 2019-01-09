@@ -12,18 +12,27 @@ import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
-    @Inject
-    private ParserPipeline parserPipeline;
+    private Provider<ParserPipeline> parserPipelineProvider;
+    private Provider<BusinessRuleDecoder> businessRuleDecoderProvider;
 
-    @Inject
+    private ParserPipeline parserPipeline;
     private BusinessRuleDecoder businessRuleDecoder;
 
     @Inject
     @Named("BusinessruleStore")
     public IBusinessRuleStore iBusinessRuleStore;
+
+    @Inject
+    public BusinessRuleHandler(Provider<ParserPipeline> parserPipelineProvider, Provider<BusinessRuleDecoder> businessRuleDecoderProvider) {
+        this.parserPipelineProvider = parserPipelineProvider;
+        this.businessRuleDecoderProvider = businessRuleDecoderProvider;
+        parserPipeline = this.parserPipelineProvider.get();
+        businessRuleDecoder = this.businessRuleDecoderProvider.get();
+    }
 
     /**
      * Parses the business rules and sends it to the persistence component

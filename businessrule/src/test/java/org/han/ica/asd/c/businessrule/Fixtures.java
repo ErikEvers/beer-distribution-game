@@ -21,41 +21,41 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 class Fixtures {
-    private static Provider<Value> valueProvider;
-    private static Provider<Comparison> comparisonProvider;
-    private static Provider<ComparisonValue> comparisonValueProvider;
-    private static Provider<ComparisonOperator> comparisonOperatorProvider;
-    private static Provider<Action> actionProvider;
-    private static Provider<ActionReference> actionReferenceProvider;
-    private static Provider<BusinessRule> businessRuleProvider;
-    private static Provider<ComparisonStatement> comparisonStatementProvider;
-    private static Provider<DivideOperation> divideOperationProvider;
-    private static Provider<CalculationOperator> calculationOperatorProvider;
-    private static Provider<BooleanOperator> booleanOperatorProvider;
-    private static Provider<Default> defaultProvider;
-    private static Provider<AddOperation> addOperationProvider;
-    private static Provider<SubtractOperation> subtractOperationProvider;
+    private  Provider<Value> valueProvider;
+    private  Provider<Comparison> comparisonProvider;
+    private  Provider<ComparisonValue> comparisonValueProvider;
+    private  Provider<ComparisonOperator> comparisonOperatorProvider;
+    private  Provider<Action> actionProvider;
+    private  Provider<ActionReference> actionReferenceProvider;
+    private  Provider<BusinessRule> businessRuleProvider;
+    private  Provider<ComparisonStatement> comparisonStatementProvider;
+    private  Provider<DivideOperation> divideOperationProvider;
+    private  Provider<CalculationOperator> calculationOperatorProvider;
+    private  Provider<BooleanOperator> booleanOperatorProvider;
+    private  Provider<Default> defaultProvider;
+    private  Provider<AddOperation> addOperationProvider;
+    private  Provider<SubtractOperation> subtractOperationProvider;
 
     @Inject
     public Fixtures(Provider<SubtractOperation> subtractOperationProvider, Provider<AddOperation> addOperationProvider, Provider<BooleanOperator> booleanOperatorProvider, Provider<Default> defaultProvider, Provider<Value> valueProvider, Provider<Comparison> comparisonProvider, Provider<ComparisonValue> comparisonValueProvider, Provider<ComparisonOperator> comparisonOperatorProvider, Provider<Action> actionProvider, Provider<ActionReference> actionReferenceProvider, Provider<BusinessRule> businessRuleProvider, Provider<BusinessRuleHandler> businessRuleHandlerProvider, Provider<ComparisonStatement> comparisonStatementProvider, Provider<DivideOperation> divideOperationProvider, Provider<CalculationOperator> calculationOperatorProvider, Provider<BooleanLiteral> booleanLiteralProvider, Provider<Evaluator> evaluatorProvider) {
-        Fixtures.valueProvider = valueProvider;
-        Fixtures.comparisonProvider = comparisonProvider;
-        Fixtures.comparisonValueProvider = comparisonValueProvider;
-        Fixtures.comparisonOperatorProvider = comparisonOperatorProvider;
-        Fixtures.actionProvider = actionProvider;
-        Fixtures.actionReferenceProvider = actionReferenceProvider;
-        Fixtures.businessRuleProvider = businessRuleProvider;
-        Fixtures.comparisonStatementProvider = comparisonStatementProvider;
-        Fixtures.divideOperationProvider = divideOperationProvider;
-        Fixtures.calculationOperatorProvider = calculationOperatorProvider;
-        Fixtures.defaultProvider = defaultProvider;
-        Fixtures.booleanOperatorProvider = booleanOperatorProvider;
-        Fixtures.addOperationProvider = addOperationProvider;
-        Fixtures.subtractOperationProvider = subtractOperationProvider;
+        this.valueProvider = valueProvider;
+        this.comparisonProvider = comparisonProvider;
+        this.comparisonValueProvider = comparisonValueProvider;
+        this.comparisonOperatorProvider = comparisonOperatorProvider;
+        this.actionProvider = actionProvider;
+        this.actionReferenceProvider = actionReferenceProvider;
+        this.businessRuleProvider = businessRuleProvider;
+        this.comparisonStatementProvider = comparisonStatementProvider;
+        this.divideOperationProvider = divideOperationProvider;
+        this.calculationOperatorProvider = calculationOperatorProvider;
+        this.defaultProvider = defaultProvider;
+        this.booleanOperatorProvider = booleanOperatorProvider;
+        this.addOperationProvider = addOperationProvider;
+        this.subtractOperationProvider = subtractOperationProvider;
     }
 
     //Setup a businessRule to test a basic rule
-    static BusinessRule BasicRule() {
+     BusinessRule BasicRule() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()
@@ -70,7 +70,7 @@ class Fixtures {
     }
 
     //Setup a businessRule to test a and rule.
-    static BusinessRule BasicRuleAND() {
+     BusinessRule BasicRuleAND() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()
@@ -90,7 +90,7 @@ class Fixtures {
     }
 
     //Setup a businessRule to test a or rule.
-    static BusinessRule BasicRuleOR() {
+     BusinessRule BasicRuleOR() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()
@@ -110,7 +110,7 @@ class Fixtures {
     }
 
     //Setup a businessRule to test a calculation.
-    static BusinessRule RuleCalculate() {
+     BusinessRule RuleCalculate() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()
@@ -127,7 +127,7 @@ class Fixtures {
     }
 
     //Setup a businessrule to test multiple calculations
-    static BusinessRule RuleMultipleCalculate() {
+     BusinessRule RuleMultipleCalculate() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()
@@ -147,7 +147,7 @@ class Fixtures {
     }
 
     //Setup a businessrule to test Default rule
-    static BusinessRule RuleDefault() {
+     BusinessRule RuleDefault() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(defaultProvider.get())
                 .addChild(actionProvider.get()
@@ -157,7 +157,7 @@ class Fixtures {
     }
 
     //Setup a businessrule to test Round rule
-    static BusinessRule RuleWithRound() {
+     BusinessRule RuleWithRound() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()
@@ -171,7 +171,7 @@ class Fixtures {
     }
 
     //Setup a businessrule to test Percentage rule
-    static BusinessRule RulePercentage() {
+     BusinessRule RulePercentage() {
         BusinessRule businessRule = businessRuleProvider.get();
         businessRule.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()

@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
@@ -17,6 +18,8 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,12 +38,19 @@ class EvaluateBusinessRuleTest {
     private Provider<BusinessRule> businessRuleProvider;
     private Provider<ComparisonStatement> comparisonStatementProvider;
     private Provider<BooleanLiteral> booleanLiteralProvider;
+    private Provider<AddOperation> addOperationProvider;
+    private Provider<CalculationOperator> calculationOperatorProvider;
+    private Provider<Default> defaultProvider;
+    private Provider<BooleanOperator> booleanOperatorProvider;
+    private Provider<SubtractOperation> subtractOperationProvider;
+    
 
     @BeforeEach
     public void setup() {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
+                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
             }
         });
         valueProvider = injector.getProvider(Value.class);
@@ -52,6 +62,11 @@ class EvaluateBusinessRuleTest {
         businessRuleProvider = injector.getProvider(BusinessRule.class);
         comparisonStatementProvider = injector.getProvider(ComparisonStatement.class);
         booleanLiteralProvider = injector.getProvider(BooleanLiteral.class);
+        addOperationProvider = injector.getProvider(AddOperation.class);
+        calculationOperatorProvider = injector.getProvider(CalculationOperator.class);
+        defaultProvider = injector.getProvider(Default.class);
+        booleanOperatorProvider = injector.getProvider(BooleanOperator.class);
+        subtractOperationProvider = injector.getProvider(SubtractOperation.class);
     }
 
     @Test
@@ -84,9 +99,9 @@ class EvaluateBusinessRuleTest {
                 .addChild(comparisonProvider.get()
                         .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("10")))
                         .addChild(comparisonOperatorProvider.get().addValue("is"))
-                        .addChild(comparisonValueProvider.get().addChild(new AddOperation()
+                        .addChild(comparisonValueProvider.get().addChild(addOperationProvider.get()
                                 .addChild(valueProvider.get().addValue("20"))
-                                .addChild(new CalculationOperator("+"))
+                                .addChild(calculationOperatorProvider.get().addValue("+"))
                                 .addChild(valueProvider.get().addValue("4"))))))
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))
@@ -108,9 +123,9 @@ class EvaluateBusinessRuleTest {
         BusinessRule businessRuleBefore = businessRuleProvider.get();
         businessRuleBefore.addChild(comparisonStatementProvider.get()
                 .addChild(comparisonProvider.get()
-                        .addChild(comparisonValueProvider.get().addChild(new AddOperation()
+                        .addChild(comparisonValueProvider.get().addChild(addOperationProvider.get()
                                 .addChild(valueProvider.get().addValue("20"))
-                                .addChild(new CalculationOperator("+"))
+                                .addChild(calculationOperatorProvider.get().addValue("+"))
                                 .addChild(valueProvider.get().addValue("4"))))
                         .addChild(comparisonOperatorProvider.get().addValue("is"))
                         .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("24")))))
@@ -132,7 +147,7 @@ class EvaluateBusinessRuleTest {
     @Test
     void testResolvingDefaultCondition() {
         BusinessRule businessRuleBefore = businessRuleProvider.get();
-        businessRuleBefore.addChild(new Default())
+        businessRuleBefore.addChild(defaultProvider.get())
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))
                         .addChild(valueProvider.get().addValue("30")));
@@ -153,7 +168,7 @@ class EvaluateBusinessRuleTest {
         BusinessRule businessRuleBefore = businessRuleProvider.get();
         businessRuleBefore.addChild(comparisonStatementProvider.get()
                 .addChild(booleanLiteralProvider.get().setValue(true))
-                .addChild(new BooleanOperator("and"))
+                .addChild(booleanOperatorProvider.get().addValue("and"))
                 .addChild(booleanLiteralProvider.get().setValue(false)))
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))
@@ -175,7 +190,7 @@ class EvaluateBusinessRuleTest {
         BusinessRule businessRuleBefore = businessRuleProvider.get();
         businessRuleBefore.addChild(comparisonStatementProvider.get()
                 .addChild(booleanLiteralProvider.get().setValue(false))
-                .addChild(new BooleanOperator("or"))
+                .addChild(booleanOperatorProvider.get().addValue("or"))
                 .addChild(booleanLiteralProvider.get().setValue(false)))
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))
@@ -292,9 +307,9 @@ class EvaluateBusinessRuleTest {
                 .addChild(comparisonProvider.get()
                         .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))
                         .addChild(comparisonOperatorProvider.get().addValue("is"))
-                        .addChild(comparisonValueProvider.get().addChild(new SubtractOperation()
+                        .addChild(comparisonValueProvider.get().addChild(subtractOperationProvider.get()
                                 .addChild(valueProvider.get().addValue("30"))
-                                .addChild(new CalculationOperator("-"))
+                                .addChild(calculationOperatorProvider.get().addValue("-"))
                                 .addChild(valueProvider.get().addValue("10"))))))
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))

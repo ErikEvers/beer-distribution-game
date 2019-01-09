@@ -3,12 +3,16 @@ package org.han.ica.asd.c.businessrule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +35,7 @@ public class ActionTest {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
+                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
             }
         });
         actionProvider = injector.getProvider(Action.class);
@@ -49,7 +54,7 @@ public class ActionTest {
         Action action = actionProvider.get();
         action.addChild(personProvider.get().addValue("factory 1"));
 
-        int exp = 1;
+        int exp = 0;
         int res = action.getFacilityId();
 
         assertEquals(exp, res);
@@ -60,7 +65,7 @@ public class ActionTest {
         Action action = actionProvider.get();
         action.addChild(personProvider.get().addValue("regional warehouse 1"));
 
-        int exp = 3;
+        int exp = 1;
         int res = action.getFacilityId();
 
         assertEquals(exp, res);
@@ -71,7 +76,7 @@ public class ActionTest {
         Action action = actionProvider.get();
         action.addChild(personProvider.get().addValue("wholesaler 1"));
 
-        int exp = 5;
+        int exp = 2;
         int res = action.getFacilityId();
 
         assertEquals(exp, res);
@@ -82,7 +87,7 @@ public class ActionTest {
         Action action = actionProvider.get();
         action.addChild(personProvider.get().addValue("retailer 1"));
 
-        int exp = 6;
+        int exp = 3;
         int res = action.getFacilityId();
 
         assertEquals(exp, res);
