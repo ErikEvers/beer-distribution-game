@@ -1,4 +1,4 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.persistence;
 
 import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
@@ -32,6 +32,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     @Inject
     FacilityDAO facilityDAO;
 
+
     /**
      * @inheritDoc
      */
@@ -50,6 +51,10 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      */
     @Override
     public void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap) {
+        if(!this.getAllProgrammedAgents().contains(agentName)) {
+            programmedAgentDAO.createProgrammedAgent(new ProgrammedAgent(agentName, null));
+        }
+
         programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
 
         for (Map.Entry<String, String> businessRule : businessRuleMap.entrySet()){

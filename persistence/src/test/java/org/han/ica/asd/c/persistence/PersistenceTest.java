@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.Persistence;
+package org.han.ica.asd.c.persistence;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -9,8 +9,14 @@ import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.domain_objects.*;
-import org.han.ica.asd.c.persistence.Persistence;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -53,8 +59,7 @@ class PersistenceTest {
 		facilityTurns.add(new FacilityTurn(1,1,1,1,1,false));
 		facilityTurnOrders.add(new FacilityTurnOrder(1,1,1));
 		facilityTurnDelivers.add(new FacilityTurnDeliver(1,1,1,1));
-
-		player = new Player("1","146.123.164.78",new Facility(),"Flokkie",true);
+		player = new Player("1","234",null,"Henk", true);
 		businessRulesList = new ArrayList<>();
 		businessrules = new GameBusinessRules("Test","");
 		businessRulesList.add(businessrules);
