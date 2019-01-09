@@ -42,7 +42,7 @@ public class GameAgent implements IDomainModel{
     public void setGameBusinessRules(List<GameBusinessRules> gameBusinessRules) {
         this.gameBusinessRulesList = gameBusinessRules;
     }
-
+    
     public List<ProgrammedBusinessRules> getProgrammedBusinessRules() {
         return programmedBusinessRules;
     }
