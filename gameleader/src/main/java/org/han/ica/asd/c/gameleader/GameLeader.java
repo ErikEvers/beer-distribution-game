@@ -5,10 +5,15 @@ import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
