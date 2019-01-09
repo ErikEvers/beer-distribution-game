@@ -47,8 +47,8 @@ public class AverageCalculationDAO {
             pstmt.setString(2, facilityType);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    facilityIds.add(rs.getInt(FACILITY_ID));
+                while (rs.next() && !rs.isClosed()) {
+                        facilityIds.add(rs.getInt(FACILITY_ID));
                 }
             }
 
@@ -62,7 +62,7 @@ public class AverageCalculationDAO {
 
     /**
      * A method to retrieve all the FacilityTurns for a certain facility within a specific round.
-     *There is a backorderAmountStub because this value needs to be calculated but is not necessary for this function.
+     * There is a backorderAmountStub because this value needs to be calculated but is not necessary for this function.
      *
      * @param roundId    The first part of the identifier for what data needs to be recovered.
      * @param facilityId The first part of the identifier for what data needs to be recovered.
@@ -80,7 +80,9 @@ public class AverageCalculationDAO {
             pstmt.setInt(3, facilityId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                facilityTurn = new FacilityTurn(rs.getInt(FACILITY_ID), rs.getInt("RoundId"), rs.getInt("Stock"), backorderAmountStub, rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt"));
+                if (!rs.isClosed()) {
+                    facilityTurn = new FacilityTurn(rs.getInt(FACILITY_ID), rs.getInt("RoundId"), rs.getInt("Stock"), backorderAmountStub, rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt"));
+                }
             }
 
             conn.commit();
@@ -110,8 +112,8 @@ public class AverageCalculationDAO {
             pstmt.setInt(3, facilityId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    facilityOrderAmounts.add(new FacilityTurnOrder(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
+                while (rs.next() && !rs.isClosed()) {
+                        facilityOrderAmounts.add(new FacilityTurnOrder(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
                 }
             }
 
@@ -142,8 +144,8 @@ public class AverageCalculationDAO {
             pstmt.setInt(3, facilityId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    facilityTurnDelivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
+                while (rs.next() && !rs.isClosed()) {
+                        facilityTurnDelivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
                 }
             }
 
