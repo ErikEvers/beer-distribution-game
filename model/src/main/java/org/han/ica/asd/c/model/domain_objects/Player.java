@@ -15,8 +15,8 @@ public class Player implements IDomainModel{
         this.isConnected = isConnected;
     }
 
-    public Player() {
-
+    public String concatIpId() {
+        return playerId.concat(ipAddress);
     }
 
     public String getPlayerId() {
@@ -57,9 +57,5 @@ public class Player implements IDomainModel{
 
     public void setConnected(boolean connected) {
         isConnected = connected;
-    }
-
-    public String concatIpId() {
-        return playerId.concat(ipAddress);
     }
 }

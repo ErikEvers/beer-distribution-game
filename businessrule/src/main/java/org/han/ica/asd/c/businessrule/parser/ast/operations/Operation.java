@@ -83,8 +83,8 @@ public abstract class Operation extends OperationValue {
      *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
-    public void encode(StringBuilder stringBuilder, String prefix, String suffix) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+    public void encode(StringBuilder stringBuilder, String prefix) {
+        super.encode(stringBuilder, getChildren(), prefix);
     }
 
     /**

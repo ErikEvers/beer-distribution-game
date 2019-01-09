@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.model.dao_model;
 
+@Deprecated
 public class FacilityTurnDB implements IDaoModel{
     private int roundId;
     private int facilityIdOrder;

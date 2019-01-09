@@ -21,7 +21,7 @@ public class SubtractOperation extends Operation {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, PREFIX, SUFFIX);
+        super.encode(stringBuilder, PREFIX);
     }
 
     /**
