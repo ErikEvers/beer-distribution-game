@@ -6,6 +6,8 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.MessageDirector;
+import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.faultdetection.FailLog;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
@@ -91,6 +93,7 @@ public class GameMessageReceiverTest {
                 requestStaticInjection(Connector.class);
                 requestStaticInjection(GameMessageClient.class);
                 bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
+                bind(IFinder.class).to(RoomFinder.class);
             }
         });
         gameMessageReceiver = inject.getInstance(GameMessageReceiver.class);
