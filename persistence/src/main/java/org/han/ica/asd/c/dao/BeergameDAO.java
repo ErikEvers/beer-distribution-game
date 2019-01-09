@@ -22,6 +22,7 @@ public class BeergameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameId = ?;";
+	private static final String READ_ONGOING_BEERGAME = "SELECT * FROM Beergame WHERE GameEndDate = '' OR GameEndDate = null;";
 	private static final String DELETE_BEERGAME = "DELETE FROM Beergame WHERE GameId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(BeergameDAO.class.getName());
 
@@ -119,16 +120,32 @@ public class BeergameDAO {
 	}
 
 	/**
-	 * A method which returns a single beergame according to the given parameter
+	 * A method which returns a single beergame
 	 * @return A beergame object
 	 */
 	public BeerGame getGameLog() {
 		Connection conn = databaseConnection.connect();
 		BeerGame beergame = null;
+		beergame = getBeerGame(conn, beergame, READ_BEERGAME);
+		return beergame;
+	}
+
+	/**
+	 * A method which returns a single ongoing beergame
+	 * @return A beergame object
+	 */
+	public BeerGame getGameLogFromOngoingGame() {
+		Connection conn = databaseConnection.connect();
+		BeerGame beergame = null;
+		beergame = getBeerGame(conn, beergame, READ_ONGOING_BEERGAME);
+		return beergame;
+	}
+
+	private BeerGame getBeerGame(Connection conn, BeerGame beergame, String readOngoingBeergame) {
 		if (conn != null) {
-			try (PreparedStatement pstmt = conn.prepareStatement(READ_BEERGAME)) {
+			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
 				conn.setAutoCommit(false);
-				pstmt.setString(1,DaoConfig.getCurrentGameId());
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if(!rs.isClosed()) {
 						beergame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
@@ -145,6 +162,7 @@ public class BeergameDAO {
 		}
 		return beergame;
 	}
+
 
 }
 
