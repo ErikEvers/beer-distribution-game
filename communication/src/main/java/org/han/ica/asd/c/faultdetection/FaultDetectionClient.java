@@ -7,7 +7,11 @@ import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
+import javax.inject.Inject;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,10 +26,17 @@ import java.util.logging.Logger;
  * @see FaultResponder
  */
 public class FaultDetectionClient {
-    private static final Logger LOGGER = Logger.getLogger(FaultDetectionClient.class.getName());
+    @Inject
+    private static Logger logger;
+
+    @Inject
+    private ObjectOutputStream outputStream;
+
+    private boolean isConnected = false;
+
     private SocketClient socketClient;
 
-    public FaultDetectionClient(){
+    public FaultDetectionClient() {
         this.socketClient = new SocketClient();
     }
 
@@ -46,7 +57,6 @@ public class FaultDetectionClient {
         try {
             socketClient.makeConnection(ipAddress, new PingMessage());
         } catch (IOException e) {
-            LOGGER.log(Level.INFO, e.getMessage(), e);
             throw new NodeCantBeReachedException(e);
         }
 
@@ -68,7 +78,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessageResponse, ipToSendTo);
         } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -87,7 +97,7 @@ public class FaultDetectionClient {
         try {
             sendObject(faultMessage, ipAddress);
         } catch (NodeCantBeReachedException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -97,17 +107,14 @@ public class FaultDetectionClient {
      * the exception to the class that calls the method.
      *
      * @param canYouReachLeaderMessage The 'CanYouReachLeaderMessage' that is sent to the specified ipAddress.
-     * @param ips                All ips to send the 'CanYouReachLeaderMessage' to.
-     * @throws NodeCantBeReachedException The exception that is thrown if an exception occurred when sending the
-     *                                    'CanYouReachLeaderMessage'
+     * @param ips All ips to send the 'CanYouReachLeaderMessage' to.
      * @author Tarik
      * @see CanYouReachLeaderMessage
      * @see FaultDetectorPlayer
      */
     public Map<String, Object> sendCanYouReachLeaderMessageToAll(String[] ips, CanYouReachLeaderMessage canYouReachLeaderMessage) {
-        return socketClient.sendToAll(ips,canYouReachLeaderMessage);
+        return socketClient.sendToAll(ips, canYouReachLeaderMessage);
     }
-
 
     /**
      * Sends the specified message to a specified ipAddress.
@@ -122,17 +129,27 @@ public class FaultDetectionClient {
      * @see NodeCantBeReachedException
      */
     private void sendObject(Object object, String ipAddress) throws NodeCantBeReachedException {
-        try {
-            socketClient.sendObject(ipAddress,object);
-        } catch (IOException e) {
-            LOGGER.log(Level.INFO, e.getMessage(), e);
-            throw new NodeCantBeReachedException(e);
+        outputStream = null;
+        isConnected = false;
+        boolean isConnecting = true;
+
+        while (!isConnected && isConnecting) {
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(ipAddress, 4445), 2000);
+                isConnected = true;
+
+                outputStream = new ObjectOutputStream(socket.getOutputStream());
+                outputStream.writeObject(object);
+            } catch (IOException se) {
+                throw new NodeCantBeReachedException(se);
+            }
+            try {
+                socketClient.sendObject(ipAddress, object);
+            } catch (IOException e) {
+                throw new NodeCantBeReachedException(e);
+            }
         }
     }
 }
-
-
-
-
 
 

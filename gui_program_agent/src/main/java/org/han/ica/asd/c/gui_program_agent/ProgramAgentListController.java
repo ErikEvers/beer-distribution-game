@@ -1,42 +1,89 @@
 package org.han.ica.asd.c.gui_program_agent;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class ProgramAgentListController {
     @FXML
     AnchorPane mainContainer;
 
     @FXML
-    Button programAgent;
+    Button edit;
 
     @FXML
-    Button back;
+    Button delete;
+
+    @FXML
+    ListView list;
 
     @Inject
     @Named("ProgramAgent")
-    IGUIHandler programAgent1;
+    IGUIHandler programAgent;
 
     @Inject
     @Named("MainMenu")
     IGUIHandler mainMenu;
 
+    @Inject
+    @Named("BusinessruleStore")
+    IBusinessRuleStore iBusinessRuleStore;
+
+    private ObservableList<String> items = FXCollections.observableArrayList();
+
     public void initialize() {
-        mainContainer.getChildren().addAll();
-        setProgramAgentButtonAction();
-        setBackButtonAction();
+        list.setItems(items);
+        List<String> agents = iBusinessRuleStore.getAllProgrammedAgents();
+        if (!agents.isEmpty()) {
+            items.addAll(agents);
+        }
     }
 
-    private void setBackButtonAction() {
-        back.setOnAction(event -> mainMenu.setupScreen());
+    @FXML
+    private void backButtonAction() {
+        mainMenu.setupScreen();
     }
 
-    private void setProgramAgentButtonAction() {
-        programAgent.setOnAction(event -> programAgent1.setupScreen());
+    @FXML
+    private void programAgentButtonAction() {
+        programAgent.setupScreen();
+    }
+
+    @FXML
+    public void handleMouseClickOnList() {
+        if (list.getSelectionModel().getSelectedItem() != null) {
+            edit.setVisible(true);
+            delete.setVisible(true);
+        }
+    }
+
+    @FXML
+    public void editButtonAction() {
+        programAgent.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
+        programAgent.setupScreen();
+    }
+
+    @FXML
+    public void deleteButtonAction() {
+        Object selectedAgent = list.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_agent") + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.YES) {
+            items.remove(selectedAgent);
+            iBusinessRuleStore.deleteProgrammedAgent(selectedAgent.toString());
+        }
     }
 }

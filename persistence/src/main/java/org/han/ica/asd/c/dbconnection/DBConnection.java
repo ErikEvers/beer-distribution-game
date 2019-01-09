@@ -4,6 +4,8 @@ import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,29 +15,20 @@ import java.util.logging.Logger;
 
 @Singleton
 public class DBConnection implements IDatabaseConnection {
-	private static final String CONNECTIONSTRING = "jdbc:sqlite:src/main/resources/";
+	private static final Path currentDir = Paths.get("");
+	private static final String CONNECTIONSTRING = "jdbc:sqlite:"+currentDir.toAbsolutePath().toString()+File.separator+"persistence"+ File.separator+"src"+ File.separator+"main"+File.separator+"resources"+File.separator;
 	private static final String DATABASENAME = "BeerGameDB.db";
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
-	private static volatile DBConnection mInstance;
 
 	public DBConnection() {
-		//Empty constructor for GUICE
+		createNewDatabase();
 	}
 
-
 	public void createNewDatabase() {
-
-		String url = CONNECTIONSTRING + DATABASENAME;
-
-		try (Connection conn = DriverManager.getConnection(url)) {
-			if (conn != null) {
-				runSQLScript("ddl.sql");
-			}
-
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
+		File file = new File(CONNECTIONSTRING+DATABASENAME);
+		if(!file.exists()) {
+			runSQLScript("ddl.sql");
 		}
-
 	}
 
 	public void runSQLScript(String scriptname) {
@@ -58,8 +51,7 @@ public class DBConnection implements IDatabaseConnection {
 			// then we are sure to have well formed statements
 			String[] inst = sb.toString().split(";");
 
-			Connection connect = connect2;
-			try (Statement st = connect.createStatement()) {
+			try (Statement st = connect2.createStatement()) {
 
 				for (int i = 0; i < inst.length; i++) {
 					// we ensure that there is no spaces before or after the request string
@@ -73,6 +65,12 @@ public class DBConnection implements IDatabaseConnection {
 
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.toString(), e);
+		} finally {
+			try {
+				connect2.close();
+			} catch (Exception e) {
+				//
+			}
 		}
 	}
 
@@ -94,6 +92,12 @@ public class DBConnection implements IDatabaseConnection {
 			conn.rollback();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
+		} finally {
+			try {
+				conn.close();
+			} catch (Exception e) {
+				//
+			}
 		}
 	}
 

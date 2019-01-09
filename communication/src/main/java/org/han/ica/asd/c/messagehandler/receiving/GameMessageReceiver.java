@@ -3,20 +3,25 @@ package org.han.ica.asd.c.messagehandler.receiving;
 
 import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
-import org.han.ica.asd.c.messagehandler.messagetypes.*;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 
+import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,21 +37,19 @@ import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.WHO_IS_TH
 
 public class GameMessageReceiver {
 
-    private static TransactionMessage toBecommittedRound;
+    @Inject
     private GameMessageFilterer gameMessageFilterer;
 
-
+    @Inject
+    private MessageProcessor messageProcessor;
 
     private ArrayList<IConnectorObserver> gameMessageObservers;
 
-    private MessageProcessor messageProcessor;
+    private TransactionMessage toBecommittedRound;
 
-    private static final Logger LOGGER = Logger.getLogger(GameMessageClient.class.getName());
 
-    public GameMessageReceiver(List<IConnectorObserver> gameMessageObservers) {
-        this.gameMessageObservers = (ArrayList<IConnectorObserver>) gameMessageObservers;
-        gameMessageFilterer = new GameMessageFilterer();
-        messageProcessor = new MessageProcessor();
+    public GameMessageReceiver() {
+        //inject purposes
     }
 
     /**
@@ -169,7 +172,6 @@ public class GameMessageReceiver {
                 }
             }
         }catch(Exception e){
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             return chooseFacilityMessage.createResponseMessage(e);
         }
         return null;
@@ -247,5 +249,13 @@ public class GameMessageReceiver {
             }
         }
         return null;
+    }
+
+    public void setObservers(ArrayList<IConnectorObserver> observers) {
+        this.gameMessageObservers = observers;
+    }
+
+    public void setGameMessageFilterer(GameMessageFilterer gameMessageFilterer) {
+        this.gameMessageFilterer = gameMessageFilterer;
     }
 }

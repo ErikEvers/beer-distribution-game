@@ -1,39 +1,71 @@
 package org.han.ica.asd.c.gui_join_game;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class JoinGameController {
-    private String localIp;
-    private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.gui_join_game.JoinGameController.class.getName());
+    @FXML
+    Button joinGameButton;
+
+    @FXML
+    ListView list;
 
     @Inject
-    @Named("ChooseFacility")
-    private IGUIHandler chooseFacility;
+    @Named("GameRoom")
+    private IGUIHandler gameRoom;
 
-    public void initialize(){
+    @Inject
+    @Named("MainMenu")
+    private IGUIHandler mainMenu;
+
+    @Inject
+    @Named("Connector")
+    private IConnecterForSetup iConnectorForSetup;
+
+    private ObservableList<String> items = FXCollections.observableArrayList();
+
+    public void initialize() {
+        items.addAll(iConnectorForSetup.getAvailableRooms());
+        list.setItems(items);
+    }
+
+    public void handleJoinGameButtonClick() {
+        //TODO Join room on IConnectorForSetup. If logged in succesful then set Room
         try {
-            setLocalIp(getLocalIp());
-        } catch (UnknownHostException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
+            RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(), "145.74.199.201", "");
+            gameRoom.setData(new Object[]{result});
+            gameRoom.setupScreen();
+        } catch (RoomException | DiscoveryException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,e.getMessage(), ButtonType.CLOSE);
+            alert.showAndWait();
         }
     }
 
-    private String getLocalIp() throws UnknownHostException {
-        return InetAddress.getLocalHost().getHostAddress();
+    public void handleBackToMenuButtonClick() {
+        mainMenu.setupScreen();
     }
 
-    public void handleJoinGameButtonClick(){
-        chooseFacility.setupScreen();
+    public void handleRefreshButtonClick() {
+        items.clear();
+        items.addAll(iConnectorForSetup.getAvailableRooms());
     }
 
-    public void setLocalIp(String localIp) {
-        this.localIp = localIp;
+    public void handleListClick() {
+        if(list.getSelectionModel().getSelectedItem() !=null) {
+            joinGameButton.setVisible(true);
+        }
     }
 }

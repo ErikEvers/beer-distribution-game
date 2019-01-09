@@ -13,7 +13,9 @@
 *.iml
 .idea
 persistence/src/test/resources/BeerGameDBTest.db
+persistence/src/test/resources/BeerGameDBTest.db-journal
 persistence/src/main/resources/BeerGameDB.db
+persistence/src/main/resources/BeerGameDB.db-journal
 
 *.iws
 *.ipr
@@ -45,4 +47,3 @@ bin
 # other
 *.swp
 *.bak
-

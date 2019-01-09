@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ComparisonStatement extends Expression {
-    private static final String prefix = "CS(";
+    private static final String PREFIX = "CS(";
     private Expression left;
     private BooleanOperator booleanOperator;
     private Expression right;
@@ -43,7 +43,7 @@ public class ComparisonStatement extends Expression {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
     }
 
     /**

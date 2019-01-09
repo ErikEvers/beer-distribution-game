@@ -12,7 +12,7 @@
         </dependency>
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
-            <artifactId>communication</artifactId>
+            <artifactId>agent</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -20,16 +20,13 @@
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>communication</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
-            <artifactId>communication</artifactId>
+            <artifactId>interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.han.ica.asd.c</groupId>
-            <artifactId>communication</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

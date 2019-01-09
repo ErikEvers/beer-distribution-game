@@ -5,7 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import java.util.Objects;
 
 public class DivideOperation extends Operation {
-    private static final String prefix = "Div(";
+    private static final String PREFIX = "Div(";
 
     /**
      * Constructor
@@ -21,7 +21,7 @@ public class DivideOperation extends Operation {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, prefix, suffix);
+        super.encode(stringBuilder, PREFIX, SUFFIX);
     }
 
     /**
@@ -54,6 +54,6 @@ public class DivideOperation extends Operation {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(prefix);
+        return Objects.hash(PREFIX);
     }
 }

@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
@@ -12,6 +13,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,19 @@ import java.util.logging.Logger;
 
 public class GameMessageClient {
 
-    private SocketClient socketClient = new SocketClient();
+    @Inject
+    private SocketClient socketClient;
 
-    private static final Logger LOGGER = Logger.getLogger(GameMessageClient.class.getName());
+    @Inject
+    private static Logger logger;
+
+    public GameMessageClient() {
+        //inject purposes
+    }
 
     /**
      * This method sends turn data to the leader.
+     *
      * @param ip
      * @param turn
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
@@ -38,18 +47,18 @@ public class GameMessageClient {
             try {
                 TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
                 if (response.getException() != null){
-                    LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
+                    logger.log(Level.INFO, response.getException().getMessage(), response.getException());
                 }
                 return response.isSuccess();
             } catch (IOException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    LOGGER.log(Level.SEVERE, "Something went wrong when trying to connect", e);
+                    logger.log(Level.SEVERE, "Something went wrong when trying to connect");
                 }
             } catch (ClassNotFoundException e) {
                 nFailedAttempts++;
                 if (nFailedAttempts == 3) {
-                    LOGGER.log(Level.SEVERE, "Something went wrong when reading the object", e);
+                    logger.log(Level.SEVERE, "Something went wrong when reading the object");
                 }
             }
         }
@@ -58,34 +67,34 @@ public class GameMessageClient {
 
     /**
      * Send the whoIsTheLeaderMessage using the socketclient.
-     * @author Oscar
+     *
      * @param ip The ip to send it to.
      * @return The 'WhoIsTheLeaderMessage' with either the exception or the response filled in.
+     * @author Oscar
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
+
     public String sendWhoIsTheLeaderMessage(String ip){
         WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {
             whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
         } catch (IOException | ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE,e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage());
         }
         return whoIsTheLeaderMessageReturn.getResponse();
     }
 
-    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws Exception {
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException {
         ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
         try {
-            ChooseFacilityMessage response = null;
-            response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
+            ChooseFacilityMessage response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
             if (response.getException() != null){
-                LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
-                throw response.getException();
+                throw (FacilityNotAvailableException) response.getException();
             }
             return response;
         } catch (IOException | ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE,e.getMessage());
+            logger.log(Level.SEVERE,e.getMessage());
         }
         return chooseFacilityMessageReturn;
     }
@@ -96,17 +105,18 @@ public class GameMessageClient {
             RequestAllFacilitiesMessage response = null;
             response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
             if (response.getException() != null){
-                LOGGER.log(Level.INFO, response.getException().getMessage(), response.getException());
+                logger.log(Level.INFO, response.getException().getMessage(), response.getException());
             }
             return response.getFacilities();
         } catch (IOException | ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE,e.getMessage());
+            logger.log(Level.SEVERE,e.getMessage());
         }
         return new ArrayList<Facility>();
     }
 
     /**
      * This method sends the handled round data back to every peer.
+     *
      * @param ips
      * @param roundModel
      */
@@ -120,6 +130,11 @@ public class GameMessageClient {
         new SendInTransaction(ips, configurationMessage, socketClient).sendToAllPlayers();
     }
 
+    /**
+     * Sets new socketClient.
+     *
+     * @param socketClient New value of socketClient.
+     */
     public void setSocketClient(SocketClient socketClient) {
         this.socketClient = socketClient;
     }

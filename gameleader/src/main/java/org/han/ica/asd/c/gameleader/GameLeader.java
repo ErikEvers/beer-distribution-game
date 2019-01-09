@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.gameleader;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
@@ -25,10 +25,12 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private final Provider<Round> roundProvider;
 
     private BeerGame game;
-    private Round currentRoundData = new Round();
+    
+    private Round currentRoundData;
 
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
+    private int roundId = 1;
 
     @Inject
     public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider) {
@@ -36,9 +38,14 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         this.roundProvider = roundProvider;
     }
 
+    /**
+     * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
+     */
     public void init() {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
+        this.currentRoundData = roundProvider.get();
+        this.currentRoundData.setRoundId(roundId);
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
 
@@ -57,15 +64,18 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
     /**
      * This method is called when a player disconnects, which this class is notified of by the IPlayerDisconnected interface.
-     * Using this playerId an IParticipant object is created with the facilityId and gameAgentName corresponding to the playerId, which is sent to the Game Logic component.
+     * Using this playerId an IParticipant object is created with the facility and gameAgentName corresponding to the playerId, which is sent to the Game Logic component.
      *
      * @param playerId the Id of the player that disconnected.
      */
     public void playerIsDisconnected(String playerId) {
-        for (int i = 0; i <= game.getConfiguration().getFacilities().size(); i++) {
-            if (game.getConfiguration().getFacilities().get(i).getPlayer().getPlayerId().equals(playerId)) {
-                IParticipant participant = new AgentParticipant(game.getConfiguration().getFacilities().get(i).getAgent().getGameAgentName(), game.getConfiguration().getFacilities().get(i));
-                gameLogic.addLocalParticipant(participant);
+        for (int i = 0; i <= game.getPlayers().size(); i++) {
+            if (game.getPlayers().get(i).getPlayerId().equals(playerId)) {
+                Agent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
+                if (agent != null) {
+                    gameLogic.addLocalParticipant(agent);
+                    return;
+                }
             }
         }
     }
@@ -117,6 +127,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     private void startNextRound() {
         currentRoundData = roundProvider.get();
+        //TODO: check if game is done? (round count exceeds config max)
+        roundId++;
+        currentRoundData.setRoundId(roundId);
         turnsReceivedInCurrentRound = 0;
     }
 
@@ -128,4 +141,28 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private boolean checkIfPlayerIsLocalPlayer(Player p) {
         return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
     }
+
+    /**
+     *
+     * @return the amount of turns received from players in the current round. Since each player can send one turn, this also indicates the amount of players who have sent their turn to the game leader.
+     */
+    public int getTurnsReceivedInCurrentRound() {
+        return turnsReceivedInCurrentRound;
+    }
+
+    /**
+     * Retrieves the agent which belongs to the supplied FacilityId.
+     * @param facilityId the id of the facility that will be used to find the correct Facility instance.
+     * @return Agent object belonging to the facility.
+     */
+    Agent getAgentByFacility (int facilityId) {
+        for (GameAgent agent : game.getAgents()) {
+            if (agent.getFacility().getFacilityId() == facilityId) {
+                return new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
+            }
+        }
+        return null;
+    }
+
+
 }

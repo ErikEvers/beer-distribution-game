@@ -1,18 +1,16 @@
-DROP TABLE Beergame;
-DROP TABLE ProgrammedBusinessRules;
-DROP TABLE ProgrammedAgent;
-DROP TABLE GameBusinessRules;
-DROP TABLE GameBusinessRulesInFacilityTurn;
-DROP TABLE Leader;
-DROP TABLE Player;
-DROP TABLE GameAgent;
-DROP TABLE FacilityTurn;
-DROP TABLE FacilityLinkedTo;
-DROP TABLE Facility;
-DROP TABLE FacilityType;
-DROP TABLE Configuration;
-DROP TABLE Round;
-
-
-
-
+DROP TABLE IF EXISTS Beergame;
+DROP TABLE IF EXISTS ProgrammedBusinessRules;
+DROP TABLE IF EXISTS ProgrammedAgent;
+DROP TABLE IF EXISTS GameBusinessRules;
+DROP TABLE IF EXISTS GameBusinessRulesInFacilityTurn;
+DROP TABLE IF EXISTS Leader;
+DROP TABLE IF EXISTS Player;
+DROP TABLE IF EXISTS GameAgent;
+DROP TABLE IF EXISTS FacilityTurn;
+DROP TABLE IF EXISTS FacilityLinkedTo;
+DROP TABLE IF EXISTS Facility;
+DROP TABLE IF EXISTS FacilityType;
+DROP TABLE IF EXISTS Configuration;
+DROP TABLE IF EXISTS Round;
+DROP TABLE IF EXISTS FacilityTurnOrder;
+DROP TABLE IF EXISTS FacilityTurnDeliver;

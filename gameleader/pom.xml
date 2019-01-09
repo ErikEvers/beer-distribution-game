@@ -18,28 +18,23 @@
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>model</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>communication</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.han.ica.asd.c</groupId>
             <artifactId>gamelogic</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.han.ica.asd.c</groupId>
+            <artifactId>agent</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

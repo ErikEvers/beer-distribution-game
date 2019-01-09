@@ -38,4 +38,5 @@ public class ChooseFacilityMessage extends GameMessage{
     public ChooseFacilityMessage createResponseMessage(){
         return new ChooseFacilityMessage(null);
     }
+
 }

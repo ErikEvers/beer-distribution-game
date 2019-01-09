@@ -1,10 +1,11 @@
 package org.han.ica.asd.c.discovery;
 
-
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -79,8 +79,8 @@ public class RoomFinderTest {
         assertEquals(password, room.getPassword());
     }
 
-    @Test(expected = DiscoveryException.class)
-    public void shouldThrowErrorJoiningRoomWhenJoiningWithWrongIP() throws IOException, DiscoveryException {
+    @Test(expected = RoomException.class)
+    public void shouldThrowErrorJoiningRoomWhenJoiningWithWrongIP() throws IOException, DiscoveryException, RoomException {
         String hostIP = "192.168.1.1900";
 
         when(service.getFolderID(roomName)).thenReturn(roomID);
@@ -92,7 +92,7 @@ public class RoomFinderTest {
     }
 
     @Test (expected = DiscoveryException.class)
-    public void shouldThrowErrorWhenJoiningRoomThatDoesNotExist() throws IOException, DiscoveryException {
+    public void shouldThrowErrorWhenJoiningRoomThatDoesNotExist() throws IOException, DiscoveryException, RoomException {
         String hostIP = "192.168.1.190";
 
         when(service.getFolderID(roomName)).thenThrow(IOException.class);
