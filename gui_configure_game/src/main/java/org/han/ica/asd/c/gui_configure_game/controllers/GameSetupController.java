@@ -19,8 +19,10 @@ import javax.inject.Named;
 import javax.inject.Provider;
 
 import java.net.URL;
-import java.util.*;
 
+
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,7 +89,7 @@ public class GameSetupController implements Initializable {
 
 
     @Inject
-    public GameSetupController(Provider<Facility> facilityProvider) {
+    public GameSetupController() {
 
     }
 
@@ -441,6 +443,11 @@ public class GameSetupController implements Initializable {
     private void setNextScreen() {
         // TODO: 9-1-2019  graphToFacilityChecker.graphChecker(graph.getFacilities().size(), graph); pen popUp scherm bij error.
         fillConfiguration();
+        Object[] data = new Object[3];
+        data[0] = configuration;
+        data[1] = gameName;
+        data[2] = onlineGame;
+        gameSetupType.setData(data);
         gameSetupType.setupScreen();
     }
 

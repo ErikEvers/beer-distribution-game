@@ -21,7 +21,7 @@
                 <RowConstraints maxHeight="220.0" minHeight="61.0" prefHeight="61.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="nextScreenButton" mnemonicParsing="false" text="Next" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                <Button mnemonicParsing="false" onAction="#nextScreenButton" text="Next" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets right="15.0" />
                     </GridPane.margin>
@@ -41,7 +41,7 @@
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="22.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="93.0" layoutY="230.0" text="Wholesale" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label layoutX="92.0" layoutY="364.0" text="Distributor" />
+                            <Label fx:id="stockHoldingRegionalwarehouse" layoutX="92.0" layoutY="364.0" text="RegionalWharehouse" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="22.0" layoutY="483.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="92.0" layoutY="492.0" text="Retailer" />
                         <Label layoutX="316.0" layoutY="26.0" text="Please insert a value. Leave blank for a standard ruleset">
@@ -54,36 +54,36 @@
                         <Label layoutX="308.0" layoutY="126.0" text="Stock holding cost" />
                         <Label layoutX="515.0" layoutY="126.0" text="Starting budget" />
                         <Label layoutX="308.0" layoutY="166.0" text="Starting order" />
-                        <TextField layoutX="424.0" layoutY="162.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="122.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="627.0" layoutY="122.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="627.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="627.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="627.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" />
+                        <TextField fx:id="startingOrderFactory" layoutX="424.0" layoutY="162.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <TextField fx:id="stockHoldingFactory" layoutX="424.0" layoutY="122.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="inGoodsFactory" layoutX="424.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <TextField fx:id="startingBudgetFactory" layoutX="627.0" layoutY="122.0" prefHeight="25.0" prefWidth="55.0" text="20" />
+                        <TextField fx:id="outGoodsFactory" layoutX="627.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="4" />
+                        <TextField fx:id="outGoodsWholesale" layoutX="627.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="10" />
+                        <TextField fx:id="startingBudgetWholesale" layoutX="627.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="45" />
+                        <TextField fx:id="inGoodsWholesale" layoutX="424.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="7" />
+                        <TextField fx:id="stockHoldingWholesale" layoutX="424.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderWholesale" layoutX="424.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="1" />
                         <Label layoutX="308.0" layoutY="305.0" text="Starting order" />
                         <Label layoutX="515.0" layoutY="265.0" text="Starting budget" />
                         <Label layoutX="308.0" layoutY="265.0" text="Stock holding cost" />
                         <Label layoutX="513.0" layoutY="229.0" text="Outgoing goods" />
                         <Label layoutX="309.0" layoutY="229.0" text="Incoming goods" />
-                        <TextField layoutX="627.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="627.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="424.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" />
+                        <TextField fx:id="outGoodsRegionalWharehouse" layoutX="627.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="7" />
+                        <TextField fx:id="startingBudgetRegionalWharehouse" layoutX="627.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="30" />
+                        <TextField fx:id="inGoodsRegionalWharehouse" layoutX="424.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="4" />
+                        <TextField fx:id="stockHoldingRegionalWharehouse" layoutX="424.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderRegionalWharehouse" layoutX="424.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="1" />
                         <Label layoutX="308.0" layoutY="440.0" text="Starting order" />
                         <Label layoutX="515.0" layoutY="400.0" text="Starting budget" />
                         <Label layoutX="308.0" layoutY="400.0" text="Stock holding cost" />
                         <Label layoutX="513.0" layoutY="364.0" text="Outgoing goods" />
                         <Label layoutX="309.0" layoutY="364.0" text="Incoming goods" />
-                        <TextField layoutX="628.0" layoutY="488.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="628.0" layoutY="524.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="425.0" layoutY="488.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="425.0" layoutY="524.0" prefHeight="25.0" prefWidth="55.0" />
-                        <TextField layoutX="425.0" layoutY="564.0" prefHeight="25.0" prefWidth="55.0" />
+                        <TextField fx:id="outGoodsRetailer" layoutX="628.0" layoutY="488.0" prefHeight="25.0" prefWidth="55.0" text="13" />
+                        <TextField fx:id="startingBudgetRetailer" layoutX="628.0" layoutY="524.0" prefHeight="25.0" prefWidth="55.0" text="60" />
+                        <TextField fx:id="inGoodsRetailer" layoutX="425.0" layoutY="488.0" prefHeight="25.0" prefWidth="55.0" text="10" />
+                        <TextField fx:id="stockHoldingRetailer" layoutX="425.0" layoutY="524.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderRetailer" layoutX="425.0" layoutY="564.0" prefHeight="25.0" prefWidth="55.0" text="1" />
                         <Label layoutX="309.0" layoutY="568.0" text="Starting order" />
                         <Label layoutX="516.0" layoutY="528.0" text="Starting budget" />
                         <Label layoutX="309.0" layoutY="528.0" text="Stock holding cost" />
@@ -94,6 +94,22 @@
                         <Line endX="800.0" layoutX="122.0" layoutY="471.0" startX="-140.0" stroke="#1fff34" />
                         <Line endX="800.0" layoutX="132.0" layoutY="606.0" startX="-140.0" stroke="#ff2151" />
                         <Line endX="800.0" layoutX="112.0" layoutY="68.0" startX="-140.0" stroke="#d78f48" />
+                        <TextField fx:id="startingStockFactory" layoutX="627.0" layoutY="162.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="openOrderCostFactory" layoutX="803.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <Label layoutX="516.0" layoutY="166.0" text="Starting stock" />
+                        <Label layoutX="692.0" layoutY="90.0" text="Open order cost" />
+                        <TextField fx:id="startingStockWholesale" layoutX="628.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="startingStockRegionalWharehouse" layoutX="627.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="startingStockRetailer" layoutX="627.0" layoutY="564.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="openOrderCostWholesale" layoutX="803.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <TextField fx:id="openOrderCostRegionalWarehouse" layoutX="803.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <TextField fx:id="openOrderCostRetailer" layoutX="803.0" layoutY="489.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <Label layoutX="692.0" layoutY="230.0" text="Open order cost" />
+                        <Label layoutX="692.0" layoutY="364.0" text="Open order cost" />
+                        <Label layoutX="692.0" layoutY="492.0" text="Open order cost" />
+                        <Label layoutX="513.0" layoutY="305.0" text="Starting stock" />
+                        <Label layoutX="513.0" layoutY="440.0" text="Starting stock" />
+                        <Label layoutX="516.0" layoutY="568.0" text="Starting stock" />
                             </children></AnchorPane>
                     </content>
                 </ScrollPane>

@@ -43,7 +43,8 @@ public class GameSetupStartController {
 
     @Inject
     private Configuration configuration;
-
+    private String gameNamef = "";
+    private String onlineGame = "TRUE";
     @FXML
     private TextField gameName;
 
@@ -90,12 +91,14 @@ public class GameSetupStartController {
     @FXML
     public void nextScreen() {
         nextScreenButton.setOnAction(event -> {
+            Object[] data = new Object[3];
             fillConfiguration();
-            gameSetup.setData(new Object[]{configuration});
-            gameSetup.setData(new Object[]{gameName.getText()});
+            data[0] = configuration;
+            data[1] = gameNamef;
             if (offlineGame.isSelected()) {
-                gameSetup.setData(new Object[]{"FALSE"});
-            }
+                data[2] = "FALSE";
+            } else data[2] = onlineGame;
+            gameSetup.setData(data);
             gameSetup.setupScreen();
         });
     }
@@ -114,6 +117,9 @@ public class GameSetupStartController {
      * Fill the injected configuration based on the values given in GUI
      */
     private void fillConfiguration() {
+        if (gameName.getText() != null && !roundNumber.getText().isEmpty()) {
+            gameNamef = gameName.getText();
+        }
         if (roundNumber.getText() != null && !roundNumber.getText().isEmpty()) {
             configuration.setAmountOfRounds(Integer.parseInt(roundNumber.getText()));
         } else {
