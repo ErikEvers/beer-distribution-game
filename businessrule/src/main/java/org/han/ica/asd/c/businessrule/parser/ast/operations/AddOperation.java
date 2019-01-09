@@ -2,16 +2,19 @@ package org.han.ica.asd.c.businessrule.parser.ast.operations;
 
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Objects;
 
 public class AddOperation extends Operation {
     private static final String PREFIX = "Add(";
 
-    /**
-     * Constructor
-     */
-    public AddOperation() {
-        super.calculationOperator = new CalculationOperator(OperationType.ADD.getOperation());
+    private Provider<CalculationOperator> calculationOperatorProvider;
+
+    @Inject
+    public AddOperation(Provider<CalculationOperator> calculationOperatorProvider) {
+        this.calculationOperatorProvider = calculationOperatorProvider;
+        super.calculationOperator = calculationOperatorProvider.get().addValue(OperationType.ADD.getOperation());
     }
 
     /**

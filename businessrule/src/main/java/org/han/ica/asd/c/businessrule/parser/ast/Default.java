@@ -1,9 +1,18 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Objects;
 
 public class Default extends Condition {
     private static final String PREFIX = "D(";
+
+    private Provider<BooleanLiteral> booleanLiteralProvider;
+
+    @Inject
+    public Default(Provider<BooleanLiteral> booleanLiteralProvider) {
+        this.booleanLiteralProvider = booleanLiteralProvider;
+    }
 
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
@@ -43,6 +52,6 @@ public class Default extends Condition {
      */
     @Override
     public BooleanLiteral resolveCondition() {
-        return new BooleanLiteral(true);
+        return booleanLiteralProvider.get().setValue(true);
     }
 }

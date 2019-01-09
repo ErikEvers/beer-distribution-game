@@ -19,8 +19,11 @@ public class BusinessRuleHandler implements IBusinessRules {
     private ParserPipeline parserPipeline;
 
     @Inject
+    private BusinessRuleDecoder businessRuleDecoder;
+
+    @Inject
     @Named("BusinessruleStore")
-    private IBusinessRuleStore iBusinessRuleStore;
+    public IBusinessRuleStore iBusinessRuleStore;
 
     /**
      * Parses the business rules and sends it to the persistence component
@@ -37,7 +40,7 @@ public class BusinessRuleHandler implements IBusinessRules {
     }
 
     public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
-        BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
+        BusinessRule businessRuleAST = businessRuleDecoder.decodeBusinessRule(businessRule);
 
         businessRuleAST.substituteTheVariablesOfBusinessruleWithGameData(roundData, facilityId);
         businessRuleAST.evaluateBusinessRule();

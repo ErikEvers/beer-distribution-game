@@ -20,6 +20,11 @@ public class BooleanLiteral extends Expression {
         return this.value;
     }
 
+    public BooleanLiteral setValue(boolean value){
+        this.value = value;
+        return this;
+    }
+
     /**
      * Not supported for {@link BooleanLiteral}
      *

@@ -5,6 +5,8 @@ import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanType;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +17,16 @@ public class ComparisonStatement extends Expression {
     private Expression left;
     private BooleanOperator booleanOperator;
     private Expression right;
+
+    private Provider<BooleanLiteral> booleanLiteralProvider;
+
+    public ComparisonStatement() {
+    }
+
+    @Inject
+    public ComparisonStatement(Provider<BooleanLiteral> booleanLiteralProvider) {
+        this.booleanLiteralProvider = booleanLiteralProvider;
+    }
 
     /**
      * Adds a child ASTNode to a parent(this) ASTNode
@@ -100,9 +112,9 @@ public class ComparisonStatement extends Expression {
     public BooleanLiteral resolveCondition() {
         if (this.booleanOperator != null) {
             if (booleanOperator.getValue() == BooleanType.AND) {
-                return new BooleanLiteral(this.left.resolveCondition().getValue() && this.right.resolveCondition().getValue());
+                return booleanLiteralProvider.get().setValue(this.left.resolveCondition().getValue() && this.right.resolveCondition().getValue());
             } else if (booleanOperator.getValue() == BooleanType.OR) {
-                return new BooleanLiteral(this.left.resolveCondition().getValue() || this.right.resolveCondition().getValue());
+                return booleanLiteralProvider.get().setValue(this.left.resolveCondition().getValue() || this.right.resolveCondition().getValue());
             }
         }
 
