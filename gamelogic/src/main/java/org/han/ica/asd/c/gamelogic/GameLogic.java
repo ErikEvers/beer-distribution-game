@@ -43,7 +43,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         this.persistence = persistence;
         this.participantsPool = participantsPool;
         this.round = 0;
-        facilitityLinks = new ArrayList<>();
+        facilitityLinks = new ArrayList<FacilityLinkedTo>();
         this.beerGame = beerGame;
     }
 
@@ -132,7 +132,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         return  roundCalculator.calculateRound(previousRound, round, facilitityLinks);
     }
 
-    BeerGame getBeerGame() {
+    public BeerGame getBeerGame() {
         return beerGame;
     }
 
