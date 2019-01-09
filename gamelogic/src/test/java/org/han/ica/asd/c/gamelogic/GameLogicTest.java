@@ -8,6 +8,7 @@ import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -91,6 +92,9 @@ public class GameLogicTest {
 
     @Test
     public void startNewRoundIncrementsRound() {
-        
+        int currentRoundNumber = gameLogic.getCurrentRoundNumber();
+        gameLogic.startNewRound(mock(Round.class));
+        int newRoundNumber = gameLogic.getCurrentRoundNumber();
+        Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
     }
 }
