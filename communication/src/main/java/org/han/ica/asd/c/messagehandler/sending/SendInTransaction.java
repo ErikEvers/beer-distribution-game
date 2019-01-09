@@ -19,15 +19,16 @@ public class SendInTransaction {
     /**
      * The beginning of the transaction.
      */
-    public void sendToAllPlayers() {
+    public void sendToAllPlayers() throws Exception {
         transactionMessage.setPhaseToStage();
-        try {
-            handleStagePhase(socketClient.sendToAll(ips, transactionMessage));
-        } catch (Exception e) {
-            transactionMessage.setPhaseToStage();
-        }
+        handleStagePhase(socketClient.sendToAll(ips, transactionMessage));
     }
 
+    /**
+     * Handles the stage phase. Throws an exception when the map contains one.
+     * @param map Contains the respond objects.
+     * @throws Exception Throws an exception when the respond object is an exception.
+     */
     private void handleStagePhase(Map<String, Object> map) throws Exception {
         boolean allSuccessful = true;
         Exception e = null;
@@ -46,6 +47,8 @@ public class SendInTransaction {
         else {
             transactionMessage.setPhaseToRollback();
             socketClient.sendToAll(ips, transactionMessage);
+
+            transactionMessage.setPhaseToStage();
             throw e;
         }
     }

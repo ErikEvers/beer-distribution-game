@@ -116,17 +116,30 @@ public class GameMessageClient {
     /**
      * This method sends the handled round data back to every peer.
      *
-     * @param ips
-     * @param roundModel
+     * @param ips The ips to send the round to.
+     * @param roundModel The round object.
      */
     public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
         RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
-        new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
+        try {
+            new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
     }
 
+    /**
+     * This method sends the configuration data to every peer.
+     * @param ips The ips to send the configuration to.
+     * @param configuration The configuration object.
+     */
     public void sendConfigurationToAllPlayers(String[] ips, Configuration configuration) {
         ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
-        new SendInTransaction(ips, configurationMessage, socketClient).sendToAllPlayers();
+        try {
+            new SendInTransaction(ips, configurationMessage, socketClient).sendToAllPlayers();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
     }
 
     /**
