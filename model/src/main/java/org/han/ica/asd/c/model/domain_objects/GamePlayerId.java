@@ -8,4 +8,12 @@ public class GamePlayerId {
         this.beerGame = beerGame;
         this.playerId = playerId;
     }
+
+    public BeerGame getBeerGame() {
+        return beerGame;
+    }
+
+    public String getPlayerId() {
+        return playerId;
+    }
 }

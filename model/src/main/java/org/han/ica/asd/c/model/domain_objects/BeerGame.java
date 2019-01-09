@@ -57,6 +57,10 @@ public class BeerGame implements IDomainModel{
         return players;
     }
 
+    public Player getPlayerById(String playerId) {
+        return players.stream().filter(player -> player.getPlayerId() == playerId).findFirst().get();
+    }
+
     public void setPlayers(List<Player> players) {
         this.players = players;
     }

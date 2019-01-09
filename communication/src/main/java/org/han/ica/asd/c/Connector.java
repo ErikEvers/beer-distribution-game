@@ -4,6 +4,7 @@ import org.han.ica.asd.c.discovery.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
@@ -42,6 +43,7 @@ import java.util.logging.Logger;
 
 public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
     private static Connector instance = null;
+    private static String leaderIp = null;
 
     private ArrayList<IConnectorObserver> observers;
 
@@ -71,6 +73,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     private String externalIP;
     private String internalIP;
+
+    @Inject
+    private IGameStore persistence;
 
     public Connector() {
         //Inject
@@ -147,6 +152,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
             setJoiner();
         }
+        Connector.leaderIp = joinedRoom.getLeaderIP();
         return joinedRoom;
     }
 
@@ -181,18 +187,19 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
-        gameMessageClient.sendChooseFacilityMessage("leader ip", facility);
+        gameMessageClient.sendChooseFacilityMessage(leaderIp, facility);
     }
 
     @Override
     public GamePlayerId getGameData() throws ClassNotFoundException, IOException {
-        return gameMessageClient.sendGameDataRequestMessage("leader ip");
+        return gameMessageClient.sendGameDataRequestMessage(leaderIp);
     }
 
     @Override
     public void removeYourselfFromRoom(RoomModel room) {
         try {
             finder.removeHostFromRoom(room, externalIP);
+            Connector.leaderIp = null;
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -249,8 +256,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     public boolean sendTurn(Round turn) {
-        //TODO get real leaderIP for this function
-        return gameMessageClient.sendTurnModel("leader ip", turn);
+        return gameMessageClient.sendTurnModel(persistence.getGameLog().getLeader().getPlayer().getIpAddress(), turn);
     }
 
     @Override
