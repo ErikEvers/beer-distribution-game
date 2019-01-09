@@ -6,6 +6,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class BeerGameDB implements IDaoModel{
     private String gameId;
     private String gameName;
