@@ -417,4 +417,119 @@ class EvaluateBusinessRuleTest {
 
         assertEquals(businessRuleAfter, businessRuleBefore);
     }
+
+    @Test
+    void testResolvingBusinessRuleWithPercentageValues() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("25%").addValue("20")))
+                        .addChild(new ComparisonOperator("less than or equal to"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("50%").addValue("15")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("50%").addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("15")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingBusinessRuleWithPercentageValuesOfComparisonIsNotLessThanOrEqualTo() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("220%").addValue("100")))
+                        .addChild(new ComparisonOperator("less than or equal to"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("195%").addValue("100")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("50%").addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("15")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertNotEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingBusinessRuleWithPercentageValuesGreaterThan100() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("220%").addValue("100")))
+                        .addChild(new ComparisonOperator("less than or equal to"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("195%").addValue("100")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("50%").addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("15")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertNotEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingBusinessRuleWithZeroPercentageEquals() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("0%").addValue("0")))
+                        .addChild(new ComparisonOperator("greater than or equal to"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("0%").addValue("1000000")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("0%").addValue("30")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("0")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingBusinessRuleWithPercentagesAndZeroValuesEquals() {
+        BusinessRule businessRuleBefore = new BusinessRule();
+        businessRuleBefore.addChild(new ComparisonStatement()
+                .addChild(new Comparison()
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("40918341%").addValue("0")))
+                        .addChild(new ComparisonOperator("greater than or equal to"))
+                        .addChild(new ComparisonValue().addChild(new Value().addValue("34128341%").addValue("0")))))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("1234567890%").addValue("0")));
+
+        BusinessRule businessRuleAfter = new BusinessRule();
+        businessRuleAfter.addChild(new BooleanLiteral(true))
+                .addChild(new Action()
+                        .addChild(new ActionReference("order"))
+                        .addChild(new Value().addValue("0")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
 }

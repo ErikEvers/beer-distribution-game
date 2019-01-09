@@ -22,6 +22,7 @@ import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.rules.Timeout;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
@@ -58,7 +59,7 @@ class BusinessRuleTest {
     private Provider<ActionReference> actionReferenceProvider;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
@@ -174,7 +175,7 @@ class BusinessRuleTest {
     }
 
     @Test
-    void testBusinessrule_getReplacementValue_equals_10() {
+    void testBusinessruleGetReplacementValueEquals10() {
         BusinessRule businessRule = (BusinessRule) businessRuleProvider.get()
                 .addChild(comparisonStatementProvider.get()
                         .addChild(comparisonStatementProvider.get()
@@ -203,16 +204,74 @@ class BusinessRuleTest {
     }
 
     @Test
-    void testGameValue_ORDERED_contains_ordered() {
+    void testGameValueORDEREDContainsOrdered() {
         assertTrue(GameValue.ORDERED.contains("ordered"));
     }
 
-
     @Test
-    void testGame_ORDERED_getValue_Equals_ordered() {
+    void testGameORDEREDGetValueEqualsOrdered() {
         String[] actual = GameValue.ORDERED.getValue();
         String[] expected = {"ordered"};
-        assertEquals(expected, actual);
+        assertEquals(expected[0], actual[0]);
     }
 
+    @Test
+    void testBusinessRuleGetOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getOrderMethod = BusinessRule.class.getDeclaredMethod("getOrder", Round.class, int.class);
+        getOrderMethod.setAccessible(true);
+        BusinessRule businessRule = new BusinessRule();
+        String order = (String) getOrderMethod.invoke(businessRule, new Round(), 0);
+
+        assertTrue(order.isEmpty());
+    }
+
+    @Test
+    void testBusinessRuleGetStockEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getStockMethod = BusinessRule.class.getDeclaredMethod("getStock", Round.class, int.class);
+        getStockMethod.setAccessible(true);
+        BusinessRule businessRule = new BusinessRule();
+        String stock = (String) getStockMethod.invoke(businessRule, new Round(), 0);
+
+        assertTrue(stock.isEmpty());
+    }
+
+    @Test
+    void testBusinessRuleGetBudgetEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getBudgetMethod = BusinessRule.class.getDeclaredMethod("getBudget", Round.class, int.class);
+        getBudgetMethod.setAccessible(true);
+        BusinessRule businessRule = new BusinessRule();
+        String budget = (String) getBudgetMethod.invoke(businessRule, new Round(), 0);
+
+        assertTrue(budget.isEmpty());
+    }
+
+    @Test
+    void testBusinessRuleGetBacklogEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getBacklogMethod = BusinessRule.class.getDeclaredMethod("getBacklog", Round.class, int.class);
+        getBacklogMethod.setAccessible(true);
+        BusinessRule businessRule = new BusinessRule();
+        String backlog = (String) getBacklogMethod.invoke(businessRule, new Round(), 0);
+
+        assertTrue(backlog.isEmpty());
+    }
+
+    @Test
+    void testBusinessRuleGetIncomingOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getIncomingOrderMethod = BusinessRule.class.getDeclaredMethod("getIncomingOrder", Round.class, int.class);
+        getIncomingOrderMethod.setAccessible(true);
+        BusinessRule businessRule = new BusinessRule();
+        String incomingOrder = (String) getIncomingOrderMethod.invoke(businessRule, new Round(), 0);
+
+        assertTrue(incomingOrder.isEmpty());
+    }
+
+    @Test
+    void testBusinessRuleGetOutgoingOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getOutgoingGoodsMethod = BusinessRule.class.getDeclaredMethod("getOutgoingGoods", Round.class, int.class);
+        getOutgoingGoodsMethod.setAccessible(true);
+        BusinessRule businessRule = new BusinessRule();
+        String outgoingOrder = (String) getOutgoingGoodsMethod.invoke(businessRule, new Round(), 0);
+
+        assertTrue(outgoingOrder.isEmpty());
+    }
 }
