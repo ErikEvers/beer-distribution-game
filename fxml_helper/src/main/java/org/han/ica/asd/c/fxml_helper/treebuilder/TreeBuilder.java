@@ -15,7 +15,8 @@ import java.util.Map;
 
 /**
  * Class responsible for displaying the facility tree.
- * Most of the code is created by Rick Zweers.
+ * @author Rick Zweers
+ * @author Yarno Boelens
  */
 public class TreeBuilder {
 
@@ -37,7 +38,8 @@ public class TreeBuilder {
 	 *
 	 * First it draws the facilities connected through the edge (if they haven't been drawn yet). Then it draws the corresponding edge between the facilities.
 	 *
-	 * When a facility is of an unknown type.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
 	public static void loadFacilityView(BeerGame beerGame, AnchorPane container, boolean tooltipRequired) {
 		TreeBuilder.container = container;
@@ -63,6 +65,8 @@ public class TreeBuilder {
 
 	/**
 	 * Draws the facility in the link on the screen.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
 	private static void addFacility(Facility facility) {
 		if(!drawnFacilities.contains(facility)) {
@@ -78,6 +82,8 @@ public class TreeBuilder {
 	 * @param parent
 	 * @param child
 	 * Link/edge through which the facilities are connected
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
 	private static void drawLine(Facility parent, Facility child) {
 		EdgeLine line = new EdgeLine();
@@ -108,6 +114,9 @@ public class TreeBuilder {
 	 * Link/edge through which the facilities are connected
 	 * @param line
 	 * Visual representation of the link.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
+	 * TODO: add red stroke whenever either facility is bankrupt
 	 */
 	private static void setLineStroke(Facility parent, Facility child, EdgeLine line) {
 		line.setStroke(Color.BLACK);
@@ -116,10 +125,10 @@ public class TreeBuilder {
 	/**
 	 * Calls the drawFacilityOnScreen method in different ways depending on the type of the given facility.
 	 *
-	 * @param facility
-	 * Facility to be drawn.
-	 * @return
-	 * Returns facility that was drawn.
+	 * @param facility Facility to be drawn.
+	 * @return Returns facility that was drawn.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
 	private static FacilityRectangle drawFacility(Facility facility) {
 		if("Factory".equalsIgnoreCase(facility.getFacilityType().getFacilityName())) {
@@ -139,12 +148,11 @@ public class TreeBuilder {
 
 	/**
 	 * Draws the facility on the screen.
-	 * @param facility
-	 * Facility to be drawn.
-	 * @param facilityList
-	 * List of drawn facility rectangles.
-	 * @param y
-	 * Y-axis on which the facility is to be drawn.
+	 * @param facility Facility to be drawn.
+	 * @param facilityList List of drawn facility rectangles.
+	 * @param y Y-axis on which the facility is to be drawn.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
 	private static void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
 		double rows = (container.getPrefHeight()/4);
@@ -164,6 +172,8 @@ public class TreeBuilder {
 	/**
 	 * Method creates a new FacilityRectangle based on the facility given to the method.
 	 * @return New FacilityRectangle.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
 	private static FacilityRectangle createRectangle(Facility facility) {
 		FacilityRectangle rectangle = new FacilityRectangle(facility, getPlayerName(beerGame.getPlayers(), beerGame.getAgents(), facility));
@@ -175,6 +185,8 @@ public class TreeBuilder {
 
 	/**
 	 * Installs the tooltip with information regarding the facility on the rectangle.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
 	private static void installTooltip(Facility facility, FacilityRectangle rectangle) {
 		String tooltipString = facility.getFacilityType().getFacilityName() + " - " + facility.getFacilityId() +
@@ -183,6 +195,14 @@ public class TreeBuilder {
 		Tooltip.install(rectangle, tooltip);
 	}
 
+	/**
+	 * Fetch the name of the player or agent that is controlling the facility.
+	 * @param players list of all players.
+	 * @param agents list of all agents.
+	 * @param facility the facility to check.
+	 * @return name of the controlling entity.
+	 * @author Yarno Boelens
+	 */
 	private static String getPlayerName(List<Player> players, List<GameAgent> agents, Facility facility) {
 		for(Player player: players) {
 			if(player.getFacility() == facility) {
