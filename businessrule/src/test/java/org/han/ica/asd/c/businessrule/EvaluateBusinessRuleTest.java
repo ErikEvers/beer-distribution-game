@@ -1,6 +1,11 @@
 package org.han.ica.asd.c.businessrule;
 
-import org.han.ica.asd.c.businessrule.parser.ast.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
@@ -12,30 +17,60 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.inject.Provider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class EvaluateBusinessRuleTest {
+    private Provider<Value> valueProvider;
+    private Provider<Comparison> comparisonProvider;
+    private Provider<ComparisonValue> comparisonValueProvider;
+    private Provider<ComparisonOperator> comparisonOperatorProvider;
+    private Provider<Action> actionProvider;
+    private Provider<ActionReference> actionReferenceProvider;
+    private Provider<BusinessRule> businessRuleProvider;
+    private Provider<ComparisonStatement> comparisonStatementProvider;
+    private Provider<BooleanLiteral> booleanLiteralProvider;
+
+    @BeforeEach
+    public void setup() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+            }
+        });
+        valueProvider = injector.getProvider(Value.class);
+        comparisonOperatorProvider = injector.getProvider(ComparisonOperator.class);
+        comparisonProvider = injector.getProvider(Comparison.class);
+        comparisonValueProvider = injector.getProvider(ComparisonValue.class);
+        actionProvider = injector.getProvider(Action.class);
+        actionReferenceProvider = injector.getProvider(ActionReference.class);
+        businessRuleProvider = injector.getProvider(BusinessRule.class);
+        comparisonStatementProvider = injector.getProvider(ComparisonStatement.class);
+        booleanLiteralProvider = injector.getProvider(BooleanLiteral.class);
+    }
 
     @Test
     void testResolvingComparisonStatementWithOneComparisonCondition() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
-                        .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))
+                        .addChild(comparisonOperatorProvider.get().addValue("is"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -44,24 +79,24 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingComparisonStatementWithOperationOnRightSide() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("10")))
-                        .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new AddOperation()
-                                .addChild(new Value().addValue("20"))
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("10")))
+                        .addChild(comparisonOperatorProvider.get().addValue("is"))
+                        .addChild(comparisonValueProvider.get().addChild(new AddOperation()
+                                .addChild(valueProvider.get().addValue("20"))
                                 .addChild(new CalculationOperator("+"))
-                                .addChild(new Value().addValue("4"))))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+                                .addChild(valueProvider.get().addValue("4"))))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(false))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(false))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -70,24 +105,24 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingComparisonStatementWithOperationOnLeftSide() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new AddOperation()
-                                .addChild(new Value().addValue("20"))
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(new AddOperation()
+                                .addChild(valueProvider.get().addValue("20"))
                                 .addChild(new CalculationOperator("+"))
-                                .addChild(new Value().addValue("4"))))
-                        .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("24")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+                                .addChild(valueProvider.get().addValue("4"))))
+                        .addChild(comparisonOperatorProvider.get().addValue("is"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("24")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -96,17 +131,17 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingDefaultCondition() {
-        BusinessRule businessRuleBefore = new BusinessRule();
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
         businessRuleBefore.addChild(new Default())
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -115,20 +150,20 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingAndComparisonStatement() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new BooleanLiteral(true))
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(booleanLiteralProvider.get().setValue(true))
                 .addChild(new BooleanOperator("and"))
-                .addChild(new BooleanLiteral(false)))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+                .addChild(booleanLiteralProvider.get().setValue(false)))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(false))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(false))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -137,20 +172,20 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingOrComparisonStatement() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new BooleanLiteral(false))
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(booleanLiteralProvider.get().setValue(false))
                 .addChild(new BooleanOperator("or"))
-                .addChild(new BooleanLiteral(false)))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+                .addChild(booleanLiteralProvider.get().setValue(false)))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(false))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(false))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -159,21 +194,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingEqualsComparison() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("19")))
-                        .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("19")))
+                        .addChild(comparisonOperatorProvider.get().addValue("is"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -182,21 +217,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingNotEqualsComparison() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("19")))
-                        .addChild(new ComparisonOperator("not equal"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("19")))
+                        .addChild(comparisonOperatorProvider.get().addValue("not equal"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -205,21 +240,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingHigherThanComparison() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("19")))
-                        .addChild(new ComparisonOperator("higher"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("19")))
+                        .addChild(comparisonOperatorProvider.get().addValue("higher"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(false))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(false))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -228,21 +263,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingLowerThanComparison() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("19")))
-                        .addChild(new ComparisonOperator("lower than"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("19")))
+                        .addChild(comparisonOperatorProvider.get().addValue("lower than"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -251,25 +286,25 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingEqualsComparisonWithOperation() {
-        BusinessRule businessRuleBefore = new BusinessRule();
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
 
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
-                        .addChild(new ComparisonOperator("is"))
-                        .addChild(new ComparisonValue().addChild(new SubtractOperation()
-                                .addChild(new Value().addValue("30"))
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))
+                        .addChild(comparisonOperatorProvider.get().addValue("is"))
+                        .addChild(comparisonValueProvider.get().addChild(new SubtractOperation()
+                                .addChild(valueProvider.get().addValue("30"))
                                 .addChild(new CalculationOperator("-"))
-                                .addChild(new Value().addValue("10"))))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+                                .addChild(valueProvider.get().addValue("10"))))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -278,21 +313,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingGreaterEqualsComparisonGreater() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("51")))
-                        .addChild(new ComparisonOperator("higher than or equal to"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("50")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("51")))
+                        .addChild(comparisonOperatorProvider.get().addValue("higher than or equal to"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("50")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -301,21 +336,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingGreaterEqualsComparisonEqual() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("51")))
-                        .addChild(new ComparisonOperator("higher than or equal to"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("50")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("51")))
+                        .addChild(comparisonOperatorProvider.get().addValue("higher than or equal to"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("50")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -324,21 +359,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingLessEqualsComparisonLess() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("19")))
-                        .addChild(new ComparisonOperator("less than or equal to"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("19")))
+                        .addChild(comparisonOperatorProvider.get().addValue("less than or equal to"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 
@@ -347,21 +382,21 @@ class EvaluateBusinessRuleTest {
 
     @Test
     void testResolvingLessEqualsComparisonEqual() {
-        BusinessRule businessRuleBefore = new BusinessRule();
-        businessRuleBefore.addChild(new ComparisonStatement()
-                .addChild(new Comparison()
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))
-                        .addChild(new ComparisonOperator("less than or equal to"))
-                        .addChild(new ComparisonValue().addChild(new Value().addValue("20")))))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))
+                        .addChild(comparisonOperatorProvider.get().addValue("less than or equal to"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
-        BusinessRule businessRuleAfter = new BusinessRule();
-        businessRuleAfter.addChild(new BooleanLiteral(true))
-                .addChild(new Action()
-                        .addChild(new ActionReference("order"))
-                        .addChild(new Value().addValue("30")));
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("30")));
 
         businessRuleBefore.evaluateBusinessRule();
 

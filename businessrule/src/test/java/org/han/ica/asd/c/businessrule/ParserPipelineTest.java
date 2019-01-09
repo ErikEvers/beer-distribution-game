@@ -1,10 +1,26 @@
 package org.han.ica.asd.c.businessrule;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.businessrule.parser.ParserPipeline;
+import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
+import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.*;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
+import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +30,21 @@ import static junit.framework.TestCase.assertEquals;
 
 class ParserPipelineTest {
 
-    private ParserPipeline parserPipeline = new ParserPipeline();
+    private ParserPipeline parserPipeline;
+
+    private Provider<ParserPipeline> parserPipelineProvider;
+
+
+    @BeforeEach
+    public void setup() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+            }
+        });
+        parserPipelineProvider = injector.getProvider(ParserPipeline.class);
+        parserPipeline = parserPipelineProvider.get();
+    }
 
     @Test
     void testParserPipelineTest_getBusinessRulesMap() {

@@ -3,7 +3,6 @@ package org.han.ica.asd.c.businessrule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
@@ -64,13 +63,13 @@ class AddOperationTest {
 
     @Test
     void testResolvingMultipleAddOperations() {
-        Operation addOperation = new AddOperation();
-        addOperation.addChild(new AddOperation()
-                .addChild(new Value().addValue("20"))
-                .addChild(new CalculationOperator("+"))
-                .addChild(new Value().addValue("4")))
-                .addChild(new CalculationOperator("+"))
-                .addChild(new Value().addValue("3"));
+        Operation addOperation = addOperationProvider.get();
+        addOperation.addChild(addOperationProvider.get()
+                .addChild(valueProvider.get().addValue("20"))
+                .addChild(calculationOperatorProvider.get().addValue("+"))
+                .addChild(valueProvider.get().addValue("4")))
+                .addChild(calculationOperatorProvider.get().addValue("+"))
+                .addChild(valueProvider.get().addValue("3"));
 
         Value value = (Value) addOperation.resolveOperation();
 
