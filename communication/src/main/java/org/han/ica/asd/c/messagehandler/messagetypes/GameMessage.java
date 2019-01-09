@@ -26,6 +26,13 @@ public abstract class GameMessage implements Serializable {
     }
 
     /**
+     * Sets the messageId variable to a new random UUID.
+     */
+    protected void refreshUUID() {
+        messageId = UUID.randomUUID();
+    }
+
+    /**
      * Gets exception.
      *
      * @return Value of exception.

@@ -2,16 +2,20 @@ package org.han.ica.asd.c.faultdetection;
 
 
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
-import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 
@@ -27,7 +31,8 @@ class TestFaultDetectorPlayer {
         faultHandlerPlayer = mock(FaultHandlerPlayer.class);
         faultDetectionClient = mock(FaultDetectionClient.class);
 
-        faultDetectorPlayer = new FaultDetectorPlayer(nodeInfoList);
+        faultDetectorPlayer = new FaultDetectorPlayer();
+        faultDetectorPlayer.setNodeInfoList(nodeInfoList);
 
         faultDetectorPlayer.setFaultDetectionClient(faultDetectionClient);
         faultDetectorPlayer.setFaultHandlerPlayer(faultHandlerPlayer);
@@ -71,9 +76,14 @@ class TestFaultDetectorPlayer {
 
     @Test
     void TestCanYouReachLeaderMessageReceived() {
-        Object result = faultDetectorPlayer.canYouReachLeaderMessageReceived(new CanYouReachLeaderMessage());
+        HashMap<String, Long> mock = spy(HashMap.class);
+        faultDetectorPlayer.setPlayersWhoAlreadyCouldntReachLeader(mock);
 
-        assertTrue(result instanceof CanYouReachLeaderMessageResponse);
+        Object result = faultDetectorPlayer.canYouReachLeaderMessageReceived(new CanYouReachLeaderMessage(), "ip");
+
+        verify(mock).put(eq("ip"),any());
+        assertTrue(mock.containsKey("ip"));
+        assertTrue(result instanceof CanYouReachLeaderMessage);
     }
 
 

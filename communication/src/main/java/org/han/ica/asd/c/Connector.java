@@ -60,8 +60,8 @@ public class Connector implements IConnectorForSetup {
     @Inject
     private GameMessageReceiver gameMessageReceiver;
 
-    @Inject
     private IFinder finder;
+
 
     public Connector() {
         //Inject
@@ -71,6 +71,8 @@ public class Connector implements IConnectorForSetup {
         observers = new ArrayList<>();
         finder = new RoomFinder();
 
+        gameMessageClient = new GameMessageClient();
+        faultDetector = new FaultDetector();
         faultDetector.setObservers(observers);
 
         externalIP = getExternalIP();
@@ -126,12 +128,12 @@ public class Connector implements IConnectorForSetup {
         return null;
     }
 
-    public RoomModel joinRoom(String roomName, String password) throws RoomException, DiscoveryException {
-        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
-//        if (makeConnection(joinedRoom.getLeaderIP())) {
-//            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-//            setJoiner();
-//        }
+    public RoomModel joinRoom(String roomName, String ip, String password) throws RoomException, DiscoveryException {
+        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, ip, password);
+        if (makeConnection(joinedRoom.getLeaderIP())) {
+            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
+            setJoiner();
+        }
         return joinedRoom;
     }
 
