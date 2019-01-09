@@ -46,6 +46,16 @@ public class GameAgentDAO{
     }
 
     /**
+     * A method which inserts a list of GameAgents
+     * @param agents A list of gameagents
+     */
+    public void insertGameAgents(List<GameAgent> agents) {
+        for (GameAgent agent: agents) {
+            createGameAgent(agent);
+        }
+    }
+
+    /**
      * A method to delete a specific GameAgent.
      *
      * @param gameAgent The data required to delete a specific GameAgent.

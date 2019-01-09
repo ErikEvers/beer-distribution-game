@@ -54,6 +54,39 @@ public class RoundDAO {
 	}
 
 	/**
+	 * A method which inserts multiple rounds into the database
+	 * @param rounds
+	 */
+	public void insertRounds(List<Round> rounds) {
+		for (Round round: rounds) {
+			createRound(round.getRoundId());
+			for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
+				createFacilityTurn(round.getRoundId(),facilityTurn);
+			}
+
+			for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
+				createFacilityOrder(round.getRoundId(),facilityTurnOrder);
+			}
+
+			for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
+				createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+			}
+			createRound(round.getRoundId());
+			for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
+				createFacilityTurn(round.getRoundId(),facilityTurn);
+			}
+
+			for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
+				createFacilityOrder(round.getRoundId(),facilityTurnOrder);
+			}
+
+			for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
+				createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+			}
+		}
+	}
+
+	/**
 	 * A method which deletes a specific round in the SQLite Database
 	 *
 	 * @param roundId The id of the round which needs to be deleted

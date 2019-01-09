@@ -26,6 +26,9 @@ public class BeerGame implements IDomainModel{
         this.gameName = gameName;
         this.gameDate = gameDate;
         this.gameEndDate = gameEndDate;
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
     }
 
     public BeerGame(Leader leader, List<Player> players, List<GameAgent> agents, Configuration configuration, //NOSONAR

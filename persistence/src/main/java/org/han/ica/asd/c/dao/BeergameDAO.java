@@ -20,6 +20,7 @@ import static java.util.UUID.randomUUID;
 
 public class BeergameDAO {
 	private static final String CREATE_BEERGAME = "INSERT INTO Beergame(GameId, GameName, GameDate) VALUES (?,?,?);";
+	private static final String CREATE_BEERGAME_FROM_MODEL = "INSERT INTO Beergame(GameId, GameName, GameDate,GameEndDate) VALUES (?,?,?,?);";
 	private static final String READ_BEERGAMES = "SELECT * FROM Beergame;";
 	private static final String READ_BEERGAME = "SELECT * FROM Beergame WHERE GameId = ?;";
 	private static final String READ_ONGOING_BEERGAME = "SELECT * FROM Beergame WHERE GameEndDate IS NULL;";
@@ -68,6 +69,37 @@ public class BeergameDAO {
 				pstmt.executeUpdate();
 				DaoConfig.setCurrentGameId(uuid);
 				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
+			}
+		}
+	}
+
+	/**
+	 * Creates a beergame object in the database with a Beergame Model
+	 * @param beerGame A beergame which needs to be inserted
+	 */
+	public void createBeergame(BeerGame beerGame) {
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME_FROM_MODEL)) {
+
+				conn.setAutoCommit(false);
+				pstmt.setString(1, beerGame.getGameId());
+				pstmt.setString(2, beerGame.getGameName());
+				pstmt.setString(3, beerGame.getGameDate());
+				pstmt.setString(4, beerGame.getGameEndDate());
+				pstmt.executeUpdate();
+				conn.commit();
+				DaoConfig.setCurrentGameId(beerGame.getGameId());
+
+				configurationDAO.createConfiguration(beerGame.getConfiguration());
+				roundDAO.insertRounds(beerGame.getRounds());
+				playerDAO.insertPlayers(beerGame.getPlayers());
+				gameAgentDAO.insertGameAgents(beerGame.getAgents());
+
+
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -141,6 +173,9 @@ public class BeergameDAO {
 
 	}
 
+	/**
+	 * A method which updates the GameEndDate of a game.
+	 */
 	public void updateEnddate(){
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
@@ -160,6 +195,13 @@ public class BeergameDAO {
 		}
 	}
 
+	/**
+	 * A helper method which returns a beergame object
+	 * @param conn
+	 * @param beergame
+	 * @param readOngoingBeergame
+	 * @return
+	 */
 	private BeerGame getBeerGame(Connection conn, BeerGame beergame, String readOngoingBeergame) {
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
@@ -182,6 +224,12 @@ public class BeergameDAO {
 		return beergame;
 	}
 
+	/**
+	 * Helper function which returns a list of beergames
+	 * @param conn
+	 * @param readOngoingBeergame
+	 * @return
+	 */
 	private List<BeerGame> getBeerGames(Connection conn, String readOngoingBeergame) {
 		BeerGame beerGame;
 		List<BeerGame> beergames = new ArrayList<>();
@@ -195,6 +243,13 @@ public class BeergameDAO {
 		return beergames;
 	}
 
+	/**
+	 * Helper method to execute a prepared statement
+	 * @param conn
+	 * @param beergames
+	 * @param pstmt
+	 * @throws SQLException
+	 */
 	private void executePrepareStatment(Connection conn, List<BeerGame> beergames, PreparedStatement pstmt) throws SQLException {
 		BeerGame beerGame;
 		conn.setAutoCommit(false);
@@ -216,5 +271,8 @@ public class BeergameDAO {
 
 
 }
+
+
+
 
 
