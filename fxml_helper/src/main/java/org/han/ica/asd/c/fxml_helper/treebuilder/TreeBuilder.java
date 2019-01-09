@@ -48,6 +48,8 @@ public class TreeBuilder {
 		retailers = new ArrayList<>();
 		drawnFacilities = new ArrayList<>();
 
+		container.getChildren().clear();
+
 		Map<Facility, List<Facility>> links = beerGame.getConfiguration().getFacilitiesLinkedTo();
 
 		for (Facility facility : links.keySet()) {

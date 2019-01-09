@@ -134,7 +134,7 @@ class PersistenceTest {
 
 	@Test
 	void saveTurnDataTest() {
-		persistence.saveTurnData(round);
+		persistence.saveFacilityTurn(round);
 		verify((roundDAOMock), times(1)).createRound(anyInt());
 		verify((roundDAOMock),times(1)).createFacilityOrder(anyInt(),any(FacilityTurnOrder.class));
 		verify((roundDAOMock),times(1)).createFacilityDeliver(anyInt(),any(FacilityTurnDeliver.class));
