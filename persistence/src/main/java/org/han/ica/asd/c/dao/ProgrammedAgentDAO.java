@@ -27,7 +27,6 @@ public class ProgrammedAgentDAO {
     ProgrammedBusinessRulesDAO programmedBusinessRulesDAO;
 
     public ProgrammedAgentDAO() {
-        //There has to be a constructor to inject the value above.
     }
 
     /**
