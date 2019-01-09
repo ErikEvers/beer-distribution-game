@@ -10,6 +10,7 @@ import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,7 @@ public class GameLogicTest {
         });
         gameLogic = injector.getInstance(GameLogic.class);
         gameLogic.setParticipantsPool(participantsPool);
+        gameLogic.gameStartReceived(mock(BeerGame.class));
     }
 
     @Test
