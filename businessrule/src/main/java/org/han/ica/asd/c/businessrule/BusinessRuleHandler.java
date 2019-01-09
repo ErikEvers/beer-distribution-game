@@ -18,8 +18,9 @@ public class BusinessRuleHandler implements IBusinessRules {
     @Inject
     private ParserPipeline parserPipeline;
 
+    @Inject
     @Named("BusinessruleStore")
-    IBusinessRuleStore iBusinessRuleStore;
+    private IBusinessRuleStore iBusinessRuleStore;
 
     /**
      * Parses the business rules and sends it to the persistence component
