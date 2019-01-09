@@ -187,26 +187,31 @@ public class BeergameDAO {
 		List<BeerGame> beergames = new ArrayList<>();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
-				conn.setAutoCommit(false);
-				try (ResultSet rs = pstmt.executeQuery()) {
-					if(!rs.isClosed()) {
-						while (rs.next()) {
-							beerGame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
-							DaoConfig.setCurrentGameId(beerGame.getGameId());
-							beerGame.setConfiguration(configurationDAO.readConfiguration());
-							beerGame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
-							beerGame.setRounds(roundDAO.getRounds());
-							beerGame.setPlayers(playerDAO.getAllPlayers());
-							beergames.add(beerGame);
-						}
-					}
-				}
-				conn.commit();
+				executePrepareStatment(conn, beergames, pstmt);
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 			}
 		}
 		return beergames;
+	}
+
+	private void executePrepareStatment(Connection conn, List<BeerGame> beergames, PreparedStatement pstmt) throws SQLException {
+		BeerGame beerGame;
+		conn.setAutoCommit(false);
+		try (ResultSet rs = pstmt.executeQuery()) {
+			if(!rs.isClosed()) {
+				while (rs.next()) {
+					beerGame = new BeerGame(rs.getString("GameId"), rs.getString("GameName"), rs.getString("GameDate"), rs.getString("GameEndDate"));
+					DaoConfig.setCurrentGameId(beerGame.getGameId());
+					beerGame.setConfiguration(configurationDAO.readConfiguration());
+					beerGame.setAgents(gameAgentDAO.readGameAgentsForABeerGame());
+					beerGame.setRounds(roundDAO.getRounds());
+					beerGame.setPlayers(playerDAO.getAllPlayers());
+					beergames.add(beerGame);
+				}
+			}
+		}
+		conn.commit();
 	}
 
 
