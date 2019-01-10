@@ -2,16 +2,13 @@ package org.han.ica.asd.c.messagehandler.messagetypes;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.CHOOSE_FACILITY_MESSAGE;
 
 public class ChooseFacilityMessage extends GameMessage{
     private Facility facility;
 
     public ChooseFacilityMessage(Facility facility) {
-        super(FACILITY_MESSAGE);
+        super(CHOOSE_FACILITY_MESSAGE);
         this.facility = facility;
     }
 
