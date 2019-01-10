@@ -3,6 +3,7 @@ package org.han.ica.asd.c.player;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -17,6 +18,7 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +36,10 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
     @Inject
     private IConnectorForSetup communication;
+
+    @Inject
+		@Named("PlayGame")
+    private IGUIHandler playGame;
 
     @Inject
 		public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
@@ -151,12 +157,16 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
     @Override
     public void setUi(IPlayGame game) {
-        this.ui = game;
+        ui = game;
     }
 
     public Facility getFacility() {
         return player.getFacility();
     }
+
+    public void startGame() {
+    	playGame.setupScreen();
+		}
 
     /**
      * doOrder will notify the  participant to make an order.

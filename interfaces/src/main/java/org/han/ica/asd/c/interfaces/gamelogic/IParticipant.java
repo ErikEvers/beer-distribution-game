@@ -15,10 +15,11 @@ public interface IParticipant {
      * @return A FacilityTurn with an order for the current round.
      */
     GameRoundAction executeTurn(BeerGame beerGame);
-
     /**
      * Returns the facility for the ParticipantPool to compare with other participants.
      * @return The facility instance.
      */
     Facility getParticipant();
+
+    void startGame();
 }

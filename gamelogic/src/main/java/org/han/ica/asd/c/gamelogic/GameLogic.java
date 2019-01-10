@@ -158,6 +158,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void gameStartReceived(BeerGame beerGame) {
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame);
+        player.startGame();
 				participantsPool.excecuteRound(this.beerGame);
     }
 }
