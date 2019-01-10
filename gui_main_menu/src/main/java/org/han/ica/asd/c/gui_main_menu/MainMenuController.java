@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.Button;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gameleader.GameLeader;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,6 +30,9 @@ public class MainMenuController {
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
+		@Inject
+		private IConnectorForSetup connector;
+
     public void initialize() {
 
     }
@@ -46,6 +51,11 @@ public class MainMenuController {
     private void replayButtonAction() {
          replayGameList.setupScreen();
     }
+
+    public void handleCreateGameButtonClick() {
+			connector.start();
+			connector.createRoom("12345", "");
+		}
 
     public void handleJoinGameButtonClick(){
         joinGame.setupScreen();

@@ -2,21 +2,20 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RequestAllFacilitiesMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 
-import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,8 +34,8 @@ public class GameMessageClient {
     /**
      * This method sends turn data to the leader.
      *
-     * @param ip
-     * @param turn
+     * @param ip The IP to send the turn to.
+     * @param turn The turn object to be send.
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
     public boolean sendTurnModel(String ip, Round turn) {
@@ -98,19 +97,13 @@ public class GameMessageClient {
         return chooseFacilityMessageReturn;
     }
 
-    public List<Facility> sendAllFacilitiesRequestMessage(String ip){
-        RequestAllFacilitiesMessage requestAllFacilitiesMessage = new RequestAllFacilitiesMessage();
-        try {
-            RequestAllFacilitiesMessage response = null;
-            response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
-            if (response.getException() != null){
-                logger.log(Level.INFO, response.getException().getMessage(), response.getException());
-            }
-            return response.getFacilities();
-        } catch (IOException | ClassNotFoundException e) {
-            logger.log(Level.SEVERE,e.getMessage());
+    public GamePlayerId sendGameDataRequestMessage(String ip) throws IOException, ClassNotFoundException{
+        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
+        RequestGameDataMessage response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
+        if (response.getException() != null){
+            logger.log(Level.INFO, response.getException().getMessage(), response.getException());
         }
-        return new ArrayList<Facility>();
+        return response.getGameData();
     }
 
     /**
@@ -129,14 +122,15 @@ public class GameMessageClient {
     }
 
     /**
-     * This method sends the configuration data to every peer.
-     * @param ips The ips to send the configuration to.
-     * @param configuration The configuration object.
+     * This method sends the GameStart data to every peer.
+     *
+     * @param ips The ips to send the GameStart data to.
+     * @param beerGame The BeerGame object.
      */
-    public void sendConfigurationToAllPlayers(String[] ips, Configuration configuration) {
-        ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
+    public void sendStartGameToAllPlayers(String[] ips, BeerGame beerGame) {
+        GameStartMessage gameStartMessage = new GameStartMessage(beerGame);
         try {
-            new SendInTransaction(ips, configurationMessage, socketClient).sendToAllPlayers();
+            new SendInTransaction(ips, gameStartMessage, socketClient).sendToAllPlayers();
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }

@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class GameBusinessRules implements IDomainModel{
+import java.io.Serializable;
+
+public class GameBusinessRules implements IDomainModel, Serializable {
     private String gameBusinessRuleSentence;
     private String gameBusinessRuleAST;
 

@@ -1,9 +1,15 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class FacilityTurnOrder {
+import java.io.Serializable;
+
+public class FacilityTurnOrder implements Serializable {
 	private int facilityId;
 	private int facilityIdOrderTo;
 	private int orderAmount;
+
+	public FacilityTurnOrder() {
+
+	}
 
 	public FacilityTurnOrder(int facilityId, int facilityIdOrderTo, int orderAmount) {
 		this.facilityId = facilityId;

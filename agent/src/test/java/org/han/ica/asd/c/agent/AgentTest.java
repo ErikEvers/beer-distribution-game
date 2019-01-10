@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
@@ -48,11 +49,16 @@ class AgentTest {
 
 	private IPersistence persistence = new IPersistence() {
 		@Override
+		public void saveGameLog(BeerGame beerGame) {
+
+		}
+
+		@Override
 		public void saveFacilityTurn(Round data) {
 		}
 
 		@Override
-		public Round fetchFacilityTurn(int roundId, int facilityId) {
+		public Round fetchFacilityTurn(int roundId) {
 			return null;
 		}
 
