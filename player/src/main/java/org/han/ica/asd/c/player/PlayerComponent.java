@@ -122,7 +122,7 @@ public class PlayerComponent implements IPlayerComponent {
         try {
             communication.chooseFacility(facility, player.getPlayerId());
         } catch (FacilityNotAvailableException e) {
-					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular room, try another one :)", ButtonType.CLOSE);
+					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
 					alert.showAndWait();
         }
     }
@@ -136,9 +136,9 @@ public class PlayerComponent implements IPlayerComponent {
         PlayerComponent.player = player;
     }
 
-    public static Player getPlayer() {
-        return player;
-    }
+    public Player getPlayer() {
+		return player;
+	}
 
     public Facility getFacility() {
         return player.getFacility();

@@ -213,12 +213,12 @@ public class TreeBuilder {
 	 */
 	private String getPlayerName(List<Player> players, List<GameAgent> agents, Facility facility) {
 		for(Player player: players) {
-			if(player.getFacility() == facility) {
+			if(player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return player.getName();
 			}
 		}
 		for(GameAgent agent: agents) {
-			if(agent.getFacility() == facility) {
+			if(agent.getFacility() != null && agent.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return agent.getGameAgentName();
 			}
 		}

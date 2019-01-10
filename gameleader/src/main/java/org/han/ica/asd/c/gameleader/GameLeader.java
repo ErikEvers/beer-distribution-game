@@ -114,7 +114,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         game.setGameId(randomUUID().toString());
         game.setGameName(gameName);
         game.setGameDate("2019-01-01 0:00:00");
-        Player henk = new Player("1", leaderIp, retailer, "Yarno", true);
+        Player henk = new Player("0", leaderIp, retailer, "Yarno", true);
         game.getPlayers().add(henk);
         game.setLeader(new Leader(henk));
 
@@ -171,11 +171,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     public void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException {
 			Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst();
 			Player actualPlayer;
-			if(!connectingPlayerO.isPresent()) {
-				actualPlayer = playerProvider.get();
-				Optional<Player> facilityTaken = game.getPlayers().stream().filter(player -> player.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
+			if(connectingPlayerO.isPresent()) {
+				actualPlayer = connectingPlayerO.get();
+				Optional<Player> facilityTaken = game.getPlayers().stream().filter(player -> player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
 				if(!facilityTaken.isPresent()) {
 					actualPlayer.setFacility(facility);
+					game.getPlayers().add(actualPlayer);
+					return;
 				}
 			}
 			throw new FacilityNotAvailableException();
@@ -188,6 +190,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
             actualPlayer = playerProvider.get();
             actualPlayer.setPlayerId(Integer.toString(highestPlayerId + 1));
             actualPlayer.setIpAddress(playerIp);
+            actualPlayer.setName("Piet paaltjes");
             if(highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
                 highestPlayerId = Integer.parseInt(actualPlayer.getPlayerId());
             }

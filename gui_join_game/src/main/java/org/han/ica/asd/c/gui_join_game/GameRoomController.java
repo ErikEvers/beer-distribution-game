@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.gui_join_game;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.dao.DaoConfig;
@@ -15,6 +17,7 @@ import org.han.ica.asd.c.player.PlayerComponent;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 
 public class GameRoomController {
 	private RoomModel roomModel;
@@ -54,6 +57,16 @@ public class GameRoomController {
     public void handleReadyButtonClick() {
     	playerComponent.chooseFacility(TreeBuilder.getLastClickedFacility());
     }
+
+    public void handleRefreshButtonClick() {
+    	try {
+				beerGame = iConnectorForSetup.getGameData().getBeerGame();
+				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
+			} catch (IOException | ClassNotFoundException e) {
+				Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong with updating the room data", ButtonType.CLOSE);
+				alert.showAndWait();
+			}
+		}
 
     public void setGameData(RoomModel roomModel, BeerGame beerGame) {
         this.roomModel = roomModel;

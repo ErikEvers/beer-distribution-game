@@ -2,14 +2,18 @@ package org.han.ica.asd.c.gui_play_game;
 
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.player.PlayerComponent;
 
+import javax.inject.Inject;
 import java.util.ResourceBundle;
 
 public class PlayGameSetupScreen implements IGUIHandler {
     BeerGame beerGame;
+
+    @Inject
+    IPlayerComponent playerComponent;
 
     @Override
     public void setData(Object[] data) {
@@ -20,7 +24,7 @@ public class PlayGameSetupScreen implements IGUIHandler {
     public void setupScreen() {
         final String factoryName = "Factory";
         final String retailerName = "Retailer";
-        Player player = PlayerComponent.getPlayer();
+        Player player = playerComponent.getPlayer();
 
         PlayGame playGame;
 
