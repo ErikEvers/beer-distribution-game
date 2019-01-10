@@ -1,8 +1,5 @@
 package org.han.ica.asd.c.businessrule.parser.evaluator;
 
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
-import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.Default;
@@ -11,8 +8,15 @@ import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 public class Evaluator {
     private boolean hasErrors = false;
