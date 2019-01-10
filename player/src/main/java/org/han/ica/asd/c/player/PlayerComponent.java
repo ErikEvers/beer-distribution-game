@@ -2,6 +2,7 @@ package org.han.ica.asd.c.player;
 
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -19,6 +20,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
     private static Player player;
     private Round round;
+    private IPlayGame ui;
 
     @Inject
     private IPlayerGameLogic gameLogic;
@@ -131,6 +133,11 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
         return player;
     }
 
+    @Override
+    public void setUi(IPlayGame game) {
+        this.ui = game;
+    }
+
     public Facility getFacility() {
         return player.getFacility();
     }
@@ -143,6 +150,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
      */
     @Override
     public GameRoundAction executeTurn(Round round) {
+        ui.refreshInterfaceWithCurrentStatus(round);
         return null;
     }
 

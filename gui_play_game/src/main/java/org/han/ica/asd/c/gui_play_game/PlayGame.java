@@ -11,9 +11,12 @@ import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
 
-public abstract class PlayGame {
+public abstract class PlayGame implements IPlayGame {
     protected BeerGame beerGame;
 
     @FXML
@@ -79,6 +82,7 @@ public abstract class PlayGame {
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
+        playerComponent.setUi(this);
         playerComponent.startNewTurn();
     }
 
@@ -194,5 +198,11 @@ public abstract class PlayGame {
         if (handleTextSettingOnSendOrderClick(order)) {
             playerComponent.submitTurn();
         }
+    }
+
+    @Override
+    public void refreshInterfaceWithCurrentStatus(Round status) {
+        // status.getFacilityTurnDelivers().stream().filter(facilityTurn -> facilityTurn.getFacilityIdDeliverTo() == playerComponent.getPlayer().getFacility().getFacilityId());
+        // inventory.setText(Integer.toString(status.getStock()));
     }
 }

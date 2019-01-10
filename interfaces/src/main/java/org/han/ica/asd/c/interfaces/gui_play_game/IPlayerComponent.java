@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.gui_play_game;
 
+
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
@@ -23,4 +24,5 @@ public interface IPlayerComponent {
     String getFacilityName();
     void startNewTurn();
     Player getPlayer();
+    void setUi(IPlayGame game);
 }
