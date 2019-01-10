@@ -13,6 +13,9 @@ import org.han.ica.asd.c.faultdetection.FaultResponder;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gameconfiguration.GameAgentService;
+import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
+import org.han.ica.asd.c.gui_configure_game.assign_agents_to_facilities.AssignAgents;
 import org.han.ica.asd.c.gui_join_game.AgentList;
 import org.han.ica.asd.c.gui_join_game.GameRoom;
 import org.han.ica.asd.c.gui_join_game.JoinGame;
@@ -23,8 +26,8 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
-import org.han.ica.asd.c.gui_manage_players.MonitorPlayers;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+import org.han.ica.asd.c.gui_manage_players.ManagePlayers;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
@@ -39,6 +42,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
 		bind(IDatabaseConnection.class).to(DBConnection.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
+		bind(IGameAgentService.class).to(GameAgentService.class);
 
 
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
@@ -51,7 +55,8 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
-        bind(IGUIHandler.class).annotatedWith(Names.named("ManagePlayers")).to(MonitorPlayers.class);
+        bind(IGUIHandler.class).annotatedWith(Names.named("ManagePlayers")).to(ManagePlayers.class);
+        bind(IGUIHandler.class).annotatedWith(Names.named("AssignAgents")).to(AssignAgents.class);
 
 		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 

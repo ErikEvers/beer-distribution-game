@@ -28,6 +28,10 @@ public class MainMenuController {
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
+    @Inject
+    @Named("AssignAgents")
+    private IGUIHandler assignAgents;
+
     public void initialize() {
 
     }
@@ -50,5 +54,9 @@ public class MainMenuController {
     public void handleJoinGameButtonClick(){
         joinGame.setupScreen();
     }
+
+    @FXML
+    public void handleAssignAgentsButtonClick() { assignAgents.setupScreen(); }
+
 
 }

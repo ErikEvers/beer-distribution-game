@@ -6,14 +6,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.han.ica.asd.c.gameconfiguration.GameConfiguration;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gameconfiguration.ManagePlayersService;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class ManagePlayersScreenController {
 
-	@Inject GameConfiguration gameConfiguration;
+	@Inject
+	ManagePlayersService gameConfiguration;
+
+	@Inject
+	@Named("AssignAgents")
+	public IGUIHandler assignAgents;
 
 	@FXML private Button kickPlayerButton;
 	@FXML private TableView<Player> playerTable;
@@ -44,7 +51,7 @@ public class ManagePlayersScreenController {
 	 * Return to the game room
 	 */
 	public void handleReturnToGameRoomButtonClick() {
-		// coming up
+		assignAgents.setupScreen();
 	}
 
 	/**

@@ -19,6 +19,6 @@ public class Main extends Application {
 			}
 		});
 		FXMLLoaderOnSteroids.setPrimaryStage(primaryStage);
-		injector.getInstance(MonitorPlayers.class).setupScreen();
+		injector.getInstance(ManagePlayers.class).setupScreen();
 	}
 }

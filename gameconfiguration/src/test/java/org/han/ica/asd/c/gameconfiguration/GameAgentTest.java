@@ -17,7 +17,7 @@
 //
 //public class GameAgentTest {
 //
-//  private IGameAgentController gameAgentController;
+//  private IGameAgentService gameAgentController;
 //  private IGameConfigurationUserInterface gameConfigurationUserInterface;
 //  private ProgrammedAgentDAO programmedAgentDAO;
 //
@@ -32,8 +32,8 @@
 //        bind(IGameConfigurationUserInterface.class).toInstance(gameConfigurationUserInterface);
 //      }
 //    });
-//    gameAgentController = mock(IGameAgentController.class);
-//    gameAgentController = injector.getInstance(GameAgentController.class);
+//    gameAgentController = mock(IGameAgentService.class);
+//    gameAgentController = injector.getInstance(GameAgentService.class);
 //  }
 //
 //  @Test
