@@ -22,6 +22,7 @@ public class BusinessRuleHandler implements IBusinessRules {
     private ParserPipeline parserPipeline;
     private BusinessRuleDecoder businessRuleDecoder;
 
+    @Inject
     @Named("BusinessruleStore")
     public IBusinessRuleStore iBusinessRuleStore;
 
