@@ -4,6 +4,10 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
+import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
+import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
+import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -23,7 +27,7 @@ import java.util.List;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
     @Inject
     private IConnectedForPlayer communication;
 
@@ -33,6 +37,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 	private ParticipantsPool participantsPool;
 
     private int round;
+    private BeerGame beerGame;
 
     public GameLogic(){
         this.round = 0;
@@ -59,7 +64,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
      */
     @Override
     public BeerGame seeOtherFacilities() {
-        return persistence.getGameLog();
+        return beerGame;
     }
 
     /**
@@ -126,5 +131,22 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic {
 
     public int getRound() {
         return round;
+    }
+
+    /**
+     * @param currentRound The current round to save.
+     */
+    @Override
+    public void roundModelReceived(Round currentRound) {
+        persistence.saveRoundData(currentRound);
+        participantsPool.excecuteRound(currentRound);
+        beerGame.getRounds().add(currentRound);
+        round++;
+    }
+
+    @Override
+    public void gameStartReceived(BeerGame beerGame) {
+        this.beerGame = beerGame;
+        persistence.saveGameLog(beerGame);
     }
 }

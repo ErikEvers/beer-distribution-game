@@ -10,7 +10,9 @@ import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +40,7 @@ public class GameLogicTest {
         });
         gameLogic = injector.getInstance(GameLogic.class);
         gameLogic.setParticipantsPool(participantsPool);
+        gameLogic.gameStartReceived(mock(BeerGame.class));
     }
 
     @Test
@@ -54,12 +57,6 @@ public class GameLogicTest {
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
         verify(communication, times(1)).sendTurnData(turn);
-    }
-
-    @Test
-    public void seeOtherFacilitiesCallsPersistence() {
-        gameLogic.seeOtherFacilities();
-        verify(persistence, times(1)).getGameLog();
     }
 
     @Test
@@ -93,5 +90,25 @@ public class GameLogicTest {
         when(persistence.getPlayerById(anyString())).thenReturn(new PlayerFake());
         gameLogic.removeAgentByPlayerId(anyString());
         verify(participantsPool, times(1)).replaceAgentWithPlayer(any(PlayerParticipant.class));
+    }
+
+    @Test
+    public void roundModelReceivedSavesOldRoundToDatabase() {
+        gameLogic.roundModelReceived(mock(Round.class));
+        verify(persistence, times(1)).saveRoundData(any());
+    }
+
+    @Test
+    public void roundModelReceivedIncrementsRound() {
+        int currentRoundNumber = gameLogic.getRound();
+        gameLogic.roundModelReceived(mock(Round.class));
+        int newRoundNumber = gameLogic.getRound();
+        Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
+    }
+
+    @Test
+    public void roundModelReceivedCallsLocalParticipants() {
+        gameLogic.roundModelReceived(mock(Round.class));
+        verify(participantsPool, times(1)).excecuteRound(any(Round.class));
     }
 }
