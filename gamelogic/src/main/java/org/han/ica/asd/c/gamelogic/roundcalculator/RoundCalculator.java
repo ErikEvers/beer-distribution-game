@@ -105,9 +105,6 @@ public class RoundCalculator {
                 }
             }
         }
-
-
-
     }
 
     /**
@@ -133,9 +130,10 @@ public class RoundCalculator {
      */
     private int calculateBackLogCost(Round round, Facility facilityOrder, Facility facilityDeliver) {
         int remainingBudgetFacilityDeliver = round.getRemainingBudgetByFacility(facilityDeliver);
-        if (round.isTurnBackLogFilledByFacility(facilityOrder)) {
+        int backOrders = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
+
+        if (backOrders > 0) {
             FacilityType facilityType = facilityDeliver.getFacilityType();
-            int backOrders = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
             int backlogCosts = backOrders * facilityType.getOpenOrderCosts();
 
             return (remainingBudgetFacilityDeliver - backlogCosts);
