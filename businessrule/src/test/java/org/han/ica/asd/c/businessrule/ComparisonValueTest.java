@@ -1,25 +1,46 @@
 package org.han.ica.asd.c.businessrule;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.*;
 
 class ComparisonValueTest {
-    private ComparisonValue comparisonValue = new ComparisonValue();
+    private ComparisonValue comparisonValue;
 
+    private Provider<Value> valueProvider;
+    private Provider<ComparisonValue> comparisonValueProvider;
+
+
+    @BeforeEach
+    public void setup() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+            }
+        });
+        valueProvider = injector.getProvider(Value.class);
+        comparisonValueProvider = injector.getProvider(ComparisonValue.class);
+        comparisonValue = comparisonValueProvider.get();
+    }
+    
     @Test
     void testComparisonValue_Equals_True() {
-        comparisonValue.addChild(new Value().addValue("hello"));
+        comparisonValue.addChild(valueProvider.get().addValue("hello"));
 
-        ComparisonValue equalComparisonValue = new ComparisonValue();
+        ComparisonValue equalComparisonValue = comparisonValueProvider.get();
 
-        equalComparisonValue.addChild(new Value().addValue("hello"));
+        equalComparisonValue.addChild(valueProvider.get().addValue("hello"));
 
         boolean res = comparisonValue.equals(equalComparisonValue);
 
@@ -35,11 +56,11 @@ class ComparisonValueTest {
     @Test
     void testComparisonValue_Equals_False() {
 
-        comparisonValue.addChild(new Value().addValue("hello"));
+        comparisonValue.addChild(valueProvider.get().addValue("hello"));
 
-        ComparisonValue equalComparisonValue = new ComparisonValue();
+        ComparisonValue equalComparisonValue = comparisonValueProvider.get();
 
-        equalComparisonValue.addChild(new Value().addValue("bye"));
+        equalComparisonValue.addChild(valueProvider.get().addValue("bye"));
 
         boolean res = comparisonValue.equals(equalComparisonValue);
 
@@ -48,7 +69,7 @@ class ComparisonValueTest {
 
     @Test
     void testComparisonValue_Equals_False2() {
-        comparisonValue.addChild(new Value().addValue("hello"));
+        comparisonValue.addChild(valueProvider.get().addValue("hello"));
 
         boolean res = comparisonValue.equals(null);
 
@@ -57,19 +78,19 @@ class ComparisonValueTest {
 
     @Test
     void testComparisonValue_getChilderen_False() {
-        comparisonValue.addChild(new Value().addValue("hello"));
+        comparisonValue.addChild(valueProvider.get().addValue("hello"));
 
         List<ASTNode> res = comparisonValue.getChildren();
 
         List<ASTNode> exp = new ArrayList<>();
-        exp.add(new Value().addValue("hello"));
+        exp.add(valueProvider.get().addValue("hello"));
 
         assertEquals(exp, res);
     }
 
     @Test
     void testComparisonValue_encode_Called() {
-        ComparisonValue cv = new ComparisonValue();
+        ComparisonValue cv = comparisonValueProvider.get();
         StringBuilder exp = new StringBuilder().append("CV()");
         StringBuilder res = new StringBuilder();
 
@@ -80,8 +101,8 @@ class ComparisonValueTest {
 
     @Test
     void testComparisonValue_hashCode_True() {
-        ComparisonValue cv1 = new ComparisonValue();
-        ComparisonValue cv2 = new ComparisonValue();
+        ComparisonValue cv1 = comparisonValueProvider.get();
+        ComparisonValue cv2 = comparisonValueProvider.get();
 
         assertEquals(cv1.hashCode(), cv2.hashCode());
     }
