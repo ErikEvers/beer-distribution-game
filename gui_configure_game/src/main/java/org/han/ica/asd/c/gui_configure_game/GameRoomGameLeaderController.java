@@ -2,14 +2,19 @@ package org.han.ica.asd.c.gui_configure_game;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
+import org.han.ica.asd.c.fxml_helper.treebuilder.FacilitySelectedEvent;
+import org.han.ica.asd.c.fxml_helper.treebuilder.FacilitySelectedEventHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import javax.inject.Inject;
@@ -39,6 +44,12 @@ public class GameRoomGameLeaderController {
 
 	public void initialize() {
 		gameRoom.setText(gameLeader.getBeerGame().getGameName());
+		facilitiesContainer.addEventHandler(FacilitySelectedEvent.FACILITY_SELECTED_EVENT, new FacilitySelectedEventHandler(){
+			@Override
+			public void handleFacilitySelection(FacilityRectangle facilityRectangle) {
+				handleRefreshButtonClick();
+			}
+		});
 		reloadTree();
 	}
 
