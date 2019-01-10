@@ -80,6 +80,7 @@ class AgentTest {
 	private Facility upperFacility;
 	private Facility lowerFacility;
 	private Configuration configuration;
+	private BeerGame beerGame;
 	private Round round;
 
 	@BeforeEach
@@ -99,8 +100,10 @@ class AgentTest {
 		list.add(lowerFacility);
 		configuration.getFacilitiesLinkedTo().put(mainFacility, list);
 
+		beerGame = new BeerGame();
 		round = new Round();
 		round.setRoundId(0);
+		beerGame.getRounds().add(round);
 	}
 
 	private List<GameBusinessRules> gameBusinessRuleList = Lists.newArrayList(
@@ -123,7 +126,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						return new ActionModel(ORDER, 30, lowerFacility.getFacilityId());
 					}
 				});
@@ -132,7 +135,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn(beerGame);
 		Map.Entry<Facility, Integer> entry = result.targetOrderMap.entrySet().iterator().next();
 
 		assertEquals(30, (int) entry.getValue());
@@ -152,7 +155,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
@@ -160,7 +163,7 @@ class AgentTest {
 			}
 		});
 		injector.injectMembers(agent);
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn(beerGame);
 		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
 
 		assertEquals(5, (int) entry.getValue());
@@ -179,7 +182,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						switch (businessRule) {
 							case BUSINESS_RULE_1:
 								return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
@@ -194,7 +197,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn(beerGame);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -213,7 +216,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -225,7 +228,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn(beerGame);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(0, result.targetDeliverMap.size());
@@ -244,7 +247,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -256,7 +259,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn(beerGame);
 
 		assertEquals(0, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -275,7 +278,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						if (BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -287,7 +290,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn(beerGame);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -306,7 +309,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -318,7 +321,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn(beerGame);
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -374,7 +377,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+					public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, mainFacility.getFacilityId());
 						}
@@ -386,7 +389,7 @@ class AgentTest {
 		});
 		injector.injectMembers(agent);
 
-		agent.executeTurn(round);
+		agent.executeTurn(beerGame);
 
 		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));
 		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));

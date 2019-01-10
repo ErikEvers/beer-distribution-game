@@ -4,6 +4,7 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerParticipantFake;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,7 +69,7 @@ class ParticipantsPoolTest {
         Agent agentMock = mock(Agent.class);
         participantsPool.addParticipant(playerMock);
         participantsPool.addParticipant(agentMock);
-        participantsPool.excecuteRound(any(Round.class));
+        participantsPool.excecuteRound(any(BeerGame.class));
         verify(playerMock, times(1)).executeTurn(any());
         verify(agentMock, times(1)).executeTurn(any());
     }

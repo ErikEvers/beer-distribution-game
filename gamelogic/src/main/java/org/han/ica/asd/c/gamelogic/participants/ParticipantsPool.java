@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -90,9 +91,9 @@ public class ParticipantsPool {
         }
     }
 
-    public void excecuteRound(Round round) {
+    public void excecuteRound(BeerGame beerGame) {
         for (IParticipant participant : participants) {
-            participant.executeTurn(round);
+            participant.executeTurn(beerGame);
         }
     }
 }

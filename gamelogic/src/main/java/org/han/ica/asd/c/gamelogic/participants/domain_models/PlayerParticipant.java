@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gamelogic.participants.domain_models;
 
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -31,7 +32,7 @@ public class PlayerParticipant extends Player implements IParticipant {
      * @return A GameRoundAction with an orders and/ or delivers for the current round.
      */
     @Override
-    public GameRoundAction executeTurn(Round round) {
+    public GameRoundAction executeTurn(BeerGame beerGame) {
         return null;
     }
 

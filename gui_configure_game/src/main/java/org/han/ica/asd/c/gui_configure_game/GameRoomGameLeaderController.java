@@ -26,10 +26,6 @@ public class GameRoomGameLeaderController {
 	private IGUIHandler joinGame;
 
 	@Inject
-	@Named("PlayGame")
-	private IGUIHandler playGame;
-
-	@Inject
 	@Named("Connector")
 	private IConnectorForSetup iConnectorForSetup;
 
@@ -56,8 +52,6 @@ public class GameRoomGameLeaderController {
 
 	public void handleStartButtonClick() {
 		gameLeader.startGame();
-		playGame.setData(new Object[]{gameLeader.getBeerGame()});
-		playGame.setupScreen();
 	}
 
 	public void setRoomModel(RoomModel roomModel) {

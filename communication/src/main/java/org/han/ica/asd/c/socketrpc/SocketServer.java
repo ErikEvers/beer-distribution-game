@@ -14,7 +14,7 @@ public class SocketServer {
 
     @Inject
     @Named("MessageDirector")
-    private IServerObserver serverObserver;
+    public static IServerObserver serverObserver;
 
     @Inject
     private static Logger logger;

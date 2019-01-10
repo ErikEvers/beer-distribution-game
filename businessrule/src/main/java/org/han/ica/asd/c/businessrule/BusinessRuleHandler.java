@@ -6,6 +6,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
@@ -34,7 +35,7 @@ public class BusinessRuleHandler implements IBusinessRules {
         return parserPipeline.getBusinessRulesInput();
     }
 
-    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
+    public ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame) {
         BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
 
         //TODO: 12/7/2018 Substitute variables in BusinessRule(tree)

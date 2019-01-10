@@ -71,18 +71,6 @@ public class RoundDAO {
 			for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
 				createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
 			}
-			createRound(round.getRoundId());
-			for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
-				createFacilityTurn(round.getRoundId(),facilityTurn);
-			}
-
-			for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
-				createFacilityOrder(round.getRoundId(),facilityTurnOrder);
-			}
-
-			for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
-				createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
-			}
 		}
 	}
 

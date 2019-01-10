@@ -161,8 +161,8 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
      * @return A FacilityTurn with an order for the current round.
      */
     @Override
-    public GameRoundAction executeTurn(Round round) {
-        ui.refreshInterfaceWithCurrentStatus(round);
+    public GameRoundAction executeTurn(BeerGame beerGame) {
+        ui.refreshInterfaceWithCurrentStatus(beerGame);
         return null;
     }
 

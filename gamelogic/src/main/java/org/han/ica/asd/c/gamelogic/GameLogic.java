@@ -30,7 +30,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Inject
     private IGameStore persistence;
 
-		private ParticipantsPool participantsPool;
+		private static ParticipantsPool participantsPool;
 
     private int round;
     private BeerGame beerGame;
@@ -39,13 +39,15 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Inject
     public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
         this.round = 0;
-        participantsPool = participantsPoolProvider.get();
+        if(participantsPool == null) {
+					participantsPool = participantsPoolProvider.get();
+				}
         this.communication = communication;
         this.communication.addObserver(this);
     }
 
     public void setParticipantsPool(ParticipantsPool participantsPool) {
-        this.participantsPool = participantsPool;
+        GameLogic.participantsPool = participantsPool;
     }
 
     /**
@@ -146,7 +148,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void roundModelReceived(Round currentRound) {
         persistence.saveRoundData(currentRound);
-        participantsPool.excecuteRound(currentRound);
+        this.beerGame.getRounds().add(currentRound);
+        participantsPool.excecuteRound(this.beerGame);
         beerGame.getRounds().add(currentRound);
         round++;
     }
@@ -155,6 +158,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void gameStartReceived(BeerGame beerGame) {
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame);
-				participantsPool.excecuteRound(this.beerGame.getRounds().get(0));
+				participantsPool.excecuteRound(this.beerGame);
     }
 }

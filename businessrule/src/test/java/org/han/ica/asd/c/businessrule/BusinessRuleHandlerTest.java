@@ -10,6 +10,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.AddOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ class BusinessRuleHandlerTest {
 					.addChild(new Value().addValue("1")));
 
 		Action expectedAction = (Action) businessRule.getChildren().get(1);
-		ActionModel actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new Round());
+		ActionModel actualAction = new BusinessRuleHandler().evaluateBusinessRule(businessRule.encode(), new BeerGame());
 
 		assertEquals(expectedAction.getType(), actualAction.type);
 		assertEquals(expectedAction.getAmount(), actualAction.amount);

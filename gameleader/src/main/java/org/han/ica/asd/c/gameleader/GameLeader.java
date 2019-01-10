@@ -14,6 +14,7 @@ import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
@@ -120,9 +121,28 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         Player henk = new Player("0", leaderIp, retailer, "Yarno", true);
         game.getPlayers().add(henk);
         game.setLeader(new Leader(henk));
+
+        Round firstRound = roundProvider.get();
+        firstRound.setRoundId(roundId);
+
+        List<FacilityTurn> turns = new ArrayList<>();
+				for(Facility facility: game.getConfiguration().getFacilities()) {
+					turns.add(
+							new FacilityTurn(
+								facility.getFacilityId(),
+								roundId,
+								facility.getFacilityType().getStartingStock(),
+								0,
+								facility.getFacilityType().getStartingBudget(),
+								false));
+				}
+
+        firstRound.setFacilityTurns(turns);
+        game.getRounds().add(firstRound);
+
 				playerComponent.setPlayer(henk);
 
-        this.currentRoundData = roundProvider.get();
+        this.currentRoundData = firstRound;
         this.currentRoundData.setRoundId(roundId);
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
@@ -235,7 +255,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
     public void startGame() {
-			persistence.saveGameLog(game);
+			//persistence.saveGameLog(game);
 			connectorForLeader.startRoom(roomModel);
 			connectorForLeader.sendGameStart(game);
 		}
