@@ -45,6 +45,7 @@ public class GameSetupStartController {
     private Configuration configuration;
     private String gameNamef = "";
     private String onlineGame = "TRUE";
+
     @FXML
     private TextField gameName;
 
@@ -83,6 +84,7 @@ public class GameSetupStartController {
         mainContainer.getChildren().addAll();
         nextScreen();
         backButton();
+        this.gameName.setText(gameNamef);
     }
 
     /**
@@ -103,6 +105,9 @@ public class GameSetupStartController {
         });
     }
 
+    public void ifSet() {
+
+    }
 
     /**
      * Button function to return to the previous screen
@@ -139,5 +144,11 @@ public class GameSetupStartController {
         configuration.setContinuePlayingWhenBankrupt(bankrupt.isSelected());
         configuration.setInsightFacilities(seeDetail.isSelected());
     }
+
+
+    void setGameName(String gamename) {
+        this.gameNamef = gamename;
+    }
+
 
 }

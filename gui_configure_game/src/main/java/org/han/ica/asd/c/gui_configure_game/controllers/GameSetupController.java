@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gui_configure_game.controllers;
 
+import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
 import javafx.fxml.Initializable;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_configure_game.graph.*;
@@ -77,20 +78,11 @@ public class GameSetupController implements Initializable {
     @FXML
     private AnchorPane facilitiesContainer;
 
-    @FXML
-    private Button back;
-
 
     private int factoryindex = 1;
     private int regionalWharehouseindex = 1;
     private int wholsaleindex = 1;
     private int retailerindex = 1;
-
-
-    @Inject
-    public GameSetupController() {
-
-    }
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
@@ -99,18 +91,17 @@ public class GameSetupController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         mainContainer.getChildren().addAll();
         fillComboBox();
-        setBackButtonAction();
     }
 
     void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    public void setOnlineGame(String onlineGame) {
+    void setOnlineGame(String onlineGame) {
         this.onlineGame = onlineGame;
     }
 
-    public void setGameName(String gameName) {
+    void setGameName(String gameName) {
         this.gameName = gameName;
     }
 
@@ -119,6 +110,7 @@ public class GameSetupController implements Initializable {
      */
     @FXML
     public void handleAddFacilityButtonClick() {
+        System.out.println(gameName + "+" + onlineGame + "+" + configuration.getMaximumOrderRetail());
 
         graphConverterToDomain.setGraph(graph);
         int[] countAll = graphConverterToDomain.countAll();
@@ -155,7 +147,6 @@ public class GameSetupController implements Initializable {
             drawRectangle(toDraw);
         }
         updateId();
-        setBackButtonAction();
     }
 
     /**
@@ -432,7 +423,17 @@ public class GameSetupController implements Initializable {
      */
     @FXML
     private void setBackButtonAction() {
-        back.setOnAction(event -> gameSetupStart.setupScreen());
+        Object[] data = new Object[3];
+        data[0] = gameName;
+        gameSetupStart.setData(data);
+        gameSetupStart.setupScreen();
+    }
+
+    public void popUpError() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "The graph is either incomplete or does not have a complete line of facilities");
+        alert.setHeaderText("Warning");
+        alert.setTitle("Warning");
+        alert.showAndWait();
     }
 
     /**
@@ -441,13 +442,16 @@ public class GameSetupController implements Initializable {
     @FXML
     private void setNextScreen() {
         // TODO: 9-1-2019  graphToFacilityChecker.graphChecker(graph.getFacilities().size(), graph); pen popUp scherm bij error.
-        fillConfiguration();
-        Object[] data = new Object[3];
-        data[0] = configuration;
-        data[1] = gameName;
-        data[2] = onlineGame;
-        gameSetupType.setData(data);
-        gameSetupType.setupScreen();
+            fillConfiguration();
+            Object[] data = new Object[3];
+            data[0] = configuration;
+            data[1] = gameName;
+            data[2] = onlineGame;
+            gameSetupType.setData(data);
+            gameSetupType.setupScreen();
+
+          //  popUpError();
+
     }
 
     private void updateId() {
@@ -482,7 +486,7 @@ public class GameSetupController implements Initializable {
     /**
      * further fills the confirguration by de graph made in the GUI
      */
-    public void fillConfiguration() {
+    private void fillConfiguration() {
 
         graphConverterToDomain.setGraph(graph);
 
