@@ -140,4 +140,12 @@ public class BusinessRuleStore implements IBusinessRuleStore {
         programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
         programmedAgentDAO.deleteProgrammedAgent(programmedAgent);
     }
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+        List<ProgrammedBusinessRules> programmedBusinessRulesList = programmedBusinessRulesDao.readAllProgrammedBusinessRulesFromAProgrammedAgent(agentName);
+        return new ProgrammedAgent(agentName, programmedBusinessRulesList);
+    }
 }

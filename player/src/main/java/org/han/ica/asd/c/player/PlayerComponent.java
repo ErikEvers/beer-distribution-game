@@ -1,26 +1,47 @@
 package org.han.ica.asd.c.player;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedBusinessRules;
+import org.han.ica.asd.c.model.domain_objects.Round;
+
 import javax.inject.Inject;
-import org.han.ica.asd.c.model.domain_objects.*;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PlayerComponent implements IPlayerComponent {
     private Provider<Round> roundProvider;
     private Provider<FacilityTurnOrder> facilityTurnOrderProvider;
     private Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
 
+    private Configuration configuration;
+
     private static Player player;
     private Round round;
 
     @Inject
     private IPlayerGameLogic gameLogic;
+
+    @Inject
+    @Named("BusinessruleStore")
+    IBusinessRuleStore iBusinessRuleStore;
+
+    @Inject
+    @Named("GameLogic")
+    IPlayerGameLogic iPlayerGameLogic;
 
     @Inject
 	public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider) {
@@ -31,12 +52,23 @@ public class PlayerComponent implements IPlayerComponent {
 
 	@Override
 	public void activatePlayer() {
-		//stub for now
+        iPlayerGameLogic.letPlayerTakeOverAgent();
 	}
 
     @Override
-    public void activateAgent() {
-        //Yet to be implemented.
+    public void activateGameAgent(String agentName, Facility facility) {
+        ProgrammedAgent programmedAgent = iBusinessRuleStore.getProgrammedGameAgent(agentName);
+
+        List <ProgrammedBusinessRules> programmedBusinessRules = programmedAgent.getProgrammedBusinessRules();
+
+        List<GameBusinessRules> gameBusinessRules = programmedBusinessRules
+                .stream()
+                .map(programmedBusinessRule -> new GameBusinessRules(programmedBusinessRule.getProgrammedBusinessRule(), programmedBusinessRule.getProgrammedAST()))
+                .collect(Collectors.toList());
+
+        Agent agent = new Agent(configuration, agentName, facility, gameBusinessRules);
+
+        iPlayerGameLogic.letAgentTakeOverPlayer(agent);
     }
 
     @Override
