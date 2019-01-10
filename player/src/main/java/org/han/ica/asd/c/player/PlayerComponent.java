@@ -89,7 +89,6 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
             facilityTurnOrder.setFacilityIdOrderTo(facility.getFacilityId());
             facilityTurnOrder.setOrderAmount(amount);
             round.getFacilityOrders().add(facilityTurnOrder);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnOrderOptional.get().setOrderAmount(facilityTurnOrderOptional.get().getOrderAmount() + amount);
         }
@@ -104,7 +103,6 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
             facilityTurnDeliver.setFacilityIdDeliverTo(facility.getFacilityId());
             facilityTurnDeliver.setDeliverAmount(amount);
             round.getFacilityTurnDelivers().add(facilityTurnDeliver);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnDeliverOptional.get().setDeliverAmount(facilityTurnDeliverOptional.get().getDeliverAmount() + amount);
         }
@@ -150,7 +148,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
      */
     @Override
     public GameRoundAction executeTurn(Round round) {
-        ui.refreshInterfaceWithCurrentStatus(round);
+        ui.refreshInterfaceWithCurrentStatus(gameLogic.getRound());
         return null;
     }
 
