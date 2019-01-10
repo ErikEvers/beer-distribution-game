@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.gui_configure_game.graph;
 
+import javafx.scene.Parent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +17,19 @@ public class Graph {
 
     /**
      * adds childs to a parent.
+     *
      * @param parent parent node
-     * @param child child node
+     * @param child  child node
      * @throws GraphException no facility detected in the list
      */
     public void addEdge(GraphFacility parent, GraphFacility child) throws GraphException {
-        if (facilities.contains( parent) && facilities.contains(child)) {
+        if (facilities.contains(parent) && facilities.contains(child)) {
             for (int i = 0; i < facilities.size(); i++) {
                 if (facilities.get(i).getId() == parent.getId()) {
                     facilities.get(i).addBuyer(child);
+                }
+                if (facilities.get(i).getId() == child.getId()) {
+                    facilities.get(i).addSupplier(parent);
                 }
             }
         } else {
@@ -33,8 +39,9 @@ public class Graph {
 
     /**
      * removes edge from the graph
+     *
      * @param parent parent node
-     * @param child child node
+     * @param child  child node
      */
     void removeEdge(GraphFacility parent, GraphFacility child) {
         parent.removeBuyer(child);
@@ -47,9 +54,13 @@ public class Graph {
                 if (facilities.get(i).getId() == parent.getId()) {
                     facilities.get(i).removeBuyer(child);
                 }
+                if (facilities.get(i).getId() == child.getId()) {
+                    facilities.get(i).removeSupplier(parent);
+                }
             }
         }
     }
+
     public void addFacility(GraphFacility graphFacility) {
         facilities.add(graphFacility);
     }

@@ -10,30 +10,35 @@ public abstract class GraphFacility {
     ArrayList<GraphFacility> suppliers;
 
 
-     GraphFacility() {
+    GraphFacility() {
         buyers = new ArrayList<>();
         suppliers = new ArrayList<>();
     }
 
 
-     void removeSupplier(GraphFacility supplier) {
+    void removeSupplier(GraphFacility supplier) {
         suppliers.remove(supplier);
     }
 
 
-    void addBuyer(GraphFacility supplier) {
-        buyers.add(supplier);
+    void addBuyer(GraphFacility buyer) {
+        buyers.add(buyer);
+    }
+
+    void addSupplier(GraphFacility supplier) {
+        suppliers.add(supplier);
     }
 
     void removeBuyer(GraphFacility buyer) {
         buyers.remove(buyer);
     }
 
+
     public List<GraphFacility> getBuyers() {
         return buyers;
     }
 
-     List<GraphFacility> getSuppliers() {
+    public List<GraphFacility> getSuppliers() {
         return suppliers;
     }
 

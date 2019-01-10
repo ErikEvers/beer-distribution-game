@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphConverterToDomain;
+import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphToFacilityChecker;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 
@@ -50,6 +51,10 @@ public class GameSetupController implements Initializable {
 
     @Inject
     GraphConverterToDomain graphConverterToDomain;
+
+    @Inject
+    GraphToFacilityChecker graphToFacilityChecker;
+
 
     @Inject
     @Named("GameSetupStart")
@@ -441,7 +446,7 @@ public class GameSetupController implements Initializable {
      */
     @FXML
     private void setNextScreen() {
-        // TODO: 9-1-2019  graphToFacilityChecker.graphChecker(graph.getFacilities().size(), graph); pen popUp scherm bij error.
+        if (graphToFacilityChecker.oneOfEverything(graph) && graphToFacilityChecker.graphChecker(graph.getFacilities())) {
             fillConfiguration();
             Object[] data = new Object[3];
             data[0] = configuration;
@@ -449,8 +454,9 @@ public class GameSetupController implements Initializable {
             data[2] = onlineGame;
             gameSetupType.setData(data);
             gameSetupType.setupScreen();
-
-          //  popUpError();
+        } else {
+            popUpError();
+        }
 
     }
 
