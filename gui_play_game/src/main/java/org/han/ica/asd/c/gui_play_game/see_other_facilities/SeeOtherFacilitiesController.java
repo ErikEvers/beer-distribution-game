@@ -26,6 +26,6 @@ public class SeeOtherFacilitiesController {
      * Initialises the facility overview screen by calling the loadFacilityView() method.
      */
     public void initialize() {
-        new TreeBuilder().loadFacilityView(playerComponent.seeOtherFacilities(), facilitiesContainer, true);
+        new TreeBuilder().loadFacilityView(playerComponent.getBeerGame(), facilitiesContainer, true);
     }
 }

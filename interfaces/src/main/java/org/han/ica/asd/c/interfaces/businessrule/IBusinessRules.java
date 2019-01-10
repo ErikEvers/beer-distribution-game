@@ -10,5 +10,5 @@ import java.util.List;
 public interface IBusinessRules {
     List<UserInputBusinessRule> programAgent(String agentName, String businessRules);
 
-    ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame);
+    ActionModel evaluateBusinessRule(String businessRule, BeerGame beerGame, int facilityId);
 }

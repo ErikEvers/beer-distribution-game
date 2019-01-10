@@ -7,8 +7,6 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -101,15 +99,15 @@ public class GameLogicTest {
 
     @Test
     public void roundModelReceivedIncrementsRound() {
-        int currentRoundNumber = gameLogic.getRound();
+        int currentRoundNumber = gameLogic.getRoundId();
         gameLogic.roundModelReceived(mock(Round.class));
-        int newRoundNumber = gameLogic.getRound();
+        int newRoundNumber = gameLogic.getRoundId();
         Assert.assertEquals(currentRoundNumber + 1, newRoundNumber);
     }
 
     @Test
     public void roundModelReceivedCallsLocalParticipants() {
         gameLogic.roundModelReceived(mock(Round.class));
-        verify(participantsPool, times(1)).excecuteRound(any(BeerGame.class));
+        verify(participantsPool, times(1)).excecuteRound();
     }
 }

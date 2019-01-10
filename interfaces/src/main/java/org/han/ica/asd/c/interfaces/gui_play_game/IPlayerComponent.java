@@ -11,7 +11,7 @@ import java.util.Map;
 public interface IPlayerComponent {
     void activatePlayer();
     void activateAgent();
-    BeerGame seeOtherFacilities();
+    BeerGame getBeerGame();
     void placeOrder(Facility facility, int amount);
     void sendDelivery(Facility facility, int amount);
     void submitTurn();

@@ -33,7 +33,7 @@
                   <Font size="50.0" />
                </font>
             </Label>
-             <Label text="Incoming orders next round:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+             <Label text="Incoming orders:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                  <GridPane.margin>
                      <Insets left="30.0" top="60.0" />
                  </GridPane.margin>
@@ -93,7 +93,7 @@
                            <Font size="21.0" />
                        </font>
                    </Label>
-                   <Label text="0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                   <Label fx:id="backOrders" text="0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                        <font>
                            <Font size="21.0" />
                        </font>
@@ -140,7 +140,7 @@
                   </Label>
                </children>
             </GridPane>
-            <TextField fx:id="outgoingGoodsNextRound" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <TextField fx:id="incomingOrdersTextField" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="30.0" top="85.0" />
                </GridPane.margin></TextField>
@@ -156,7 +156,7 @@
                <GridPane.margin>
                   <Insets left="300.0" top="20.0" />
                </GridPane.margin></Button>
-             <Button mnemonicParsing="false" onMouseClicked="#submitTurnButonClicked" style="-fx-background-color: #ff8000;" text="Submit turn" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+             <Button mnemonicParsing="false" onMouseClicked="#submitTurnButtonClicked" style="-fx-background-color: #ff8000;" text="Submit turn" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                  <GridPane.margin>
                      <Insets left="0.0" top="20.0" />
                  </GridPane.margin></Button>

@@ -2,10 +2,15 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
@@ -16,7 +21,6 @@ import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
-import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -28,6 +32,7 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,6 +55,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     private static String leaderIp = null;
 
     private static ArrayList<IConnectorObserver> observers;
+
+    @Inject
+    IGameStore persistence;
 
     @Inject
     private NodeInfoList nodeInfoList;
@@ -77,9 +85,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     private String externalIP;
     private String internalIP;
-
-    @Inject
-    private IGameStore persistence;
 
     Provider<GameLeader> gameLeaderProvider;
 
@@ -146,7 +151,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
             leader.init(externalIP, createdRoom);
-            nodeInfoList.add(new NodeInfo(externalIP, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
             logger.log(Level.INFO, e.getMessage());
@@ -157,11 +161,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public RoomModel joinRoom(String roomName,  String password) throws RoomException, DiscoveryException {
         RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
         if (makeConnection(joinedRoom.getLeaderIP())) {
-            addLeaderToNodeInfoList(joinedRoom.getLeaderIP());
-            setJoiner();
+            Connector.leaderIp = joinedRoom.getLeaderIP();
+            return joinedRoom;
+        }else{
+            throw new DiscoveryException("Can't connect to leader");
         }
-        Connector.leaderIp = joinedRoom.getLeaderIP();
-        return joinedRoom;
     }
 
     public RoomModel updateRoom(RoomModel room) {
@@ -209,7 +213,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
     }
 
-    @Override
     public void sendTurnData(Round turn) {
         //stub
     }
@@ -226,17 +229,21 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param allData
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round allData) {
+    public void sendRoundDataToAllPlayers(Round allData) throws TransactionException {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
     }
 
-    public void setLeader() {
-        faultDetector.setLeader(nodeInfoList);
-    }
+    public void startFaultDetector(){
+        List<Player> playerList = persistence.getGameLog().getPlayers();
+        Leader leader =  persistence.getGameLog().getLeader();
+        nodeInfoList.init(playerList,leader);
 
-    public void setJoiner() {
-        faultDetector.setPlayer(nodeInfoList);
+        if(externalIP.equals(leader.getPlayer().getIpAddress())){
+            faultDetector.startFaultDetectorLeader(nodeInfoList);
+        }else{
+            faultDetector.startFaultDetectorPlayer(nodeInfoList);
+        }
     }
 
     public boolean makeConnection(String destinationIP) {
@@ -249,30 +256,15 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return false;
     }
 
-    public void addToNodeInfoList(String txtIP) {
-        nodeInfoList.addIp(txtIP);
-    }
-
-
-    public void addLeaderToNodeInfoList(String txtIp) {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setLeader(true);
-        nodeInfo.setIp(txtIp);
-        nodeInfoList.add(nodeInfo);
-    }
-
     public boolean sendTurn(Round turn) {
-        return gameMessageClient.sendTurnModel(persistence.getGameLog().getLeader().getPlayer().getIpAddress(), turn);
+        Leader leader =  persistence.getGameLog().getLeader();
+        return gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
     }
 
-		@Override
-		public void sendGameStart(BeerGame beerGame) {
-			List<String> playerIps = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
-			gameMessageClient.sendStartGameToAllPlayers(playerIps.toArray(new String[0]), beerGame);
-		}
-
-    public void addIP(String text) {
-        nodeInfoList.addIp(text);
+    @Override
+    public void sendGameStart(BeerGame beerGame) throws TransactionException {
+        List<String> ips = nodeInfoList.getAllIps();
+        gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
     public NodeInfoList getIps() {
@@ -335,5 +327,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             }
         }
         return ip;
+    }
+
+    public void setPersistence(IGameStore persistence) {
+        this.persistence = persistence;
     }
 }

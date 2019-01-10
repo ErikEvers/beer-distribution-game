@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
@@ -68,6 +69,9 @@ public class GameRoomGameLeaderController {
 			gameLeader.startGame();
 		} catch (BeerGameException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR, "Can't start a game unless every player controls a facility", ButtonType.CLOSE);
+			alert.showAndWait();
+		} catch (TransactionException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
 			alert.showAndWait();
 		}
 	}

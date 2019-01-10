@@ -3,6 +3,7 @@ package org.han.ica.asd.c.businessrule.engine;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 
+import javax.inject.Inject;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -17,6 +18,9 @@ public class BusinessRuleDecoder {
 
     private static final String LEFT_PARENTHESIS_SPLIT_TOKEN = "\\(";
     private static final String RIGHT_PARENTHESIS_SPLIT_TOKEN = "\\)";
+
+    @Inject
+    private BusinessRuleFactory businessRuleFactory;
 
     /**
      * Decode an entire business rule script to a business rule tree with all the properties
@@ -47,7 +51,7 @@ public class BusinessRuleDecoder {
 
         ASTNode node = null;
         if (!currentIteration[CURRENT_TOKEN].isEmpty()) {
-            node = new BusinessRuleFactory().create(currentIteration[CURRENT_TOKEN]);
+            node = businessRuleFactory.create(currentIteration[CURRENT_TOKEN]);
 
             if (node == null) {
                 astNodeDeque.peek()

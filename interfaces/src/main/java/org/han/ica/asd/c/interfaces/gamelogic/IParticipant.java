@@ -14,7 +14,7 @@ public interface IParticipant {
      * doOrder will notify the  participant to make an order.
      * @return A FacilityTurn with an order for the current round.
      */
-    GameRoundAction executeTurn(BeerGame beerGame);
+    GameRoundAction executeTurn();
     /**
      * Returns the facility for the ParticipantPool to compare with other participants.
      * @return The facility instance.

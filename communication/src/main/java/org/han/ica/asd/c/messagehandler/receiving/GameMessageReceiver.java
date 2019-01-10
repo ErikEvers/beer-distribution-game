@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -17,7 +18,6 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 import javax.inject.Inject;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.GAME_START_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ELECTION_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.CHOOSE_FACILITY_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_GAME_DATA_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ROUND_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.TURN_MODEL_MESSAGE;
@@ -48,46 +48,6 @@ public class GameMessageReceiver {
     }
 
     /**
-     * This method handles a RoundMessage
-     *
-     * @param roundModelMessage
-     */
-    private void handleRoundMessage(RoundModelMessage roundModelMessage) {
-        switch (roundModelMessage.getPhase()) {
-            case 0:
-                //stage Commit
-                toBecommittedRound = roundModelMessage;
-                break;
-            case 1:
-                //do commit
-                doCommit(roundModelMessage);
-                break;
-            case -1:
-                //rollback
-                toBecommittedRound = null;
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * Executes a commit
-     *
-     * @param roundModelMessage
-     */
-    private void doCommit(RoundModelMessage roundModelMessage) {
-        //in theory, a bug can still occur where we receive a commit message with a different content.
-        if (toBecommittedRound != null) {
-            for (IConnectorObserver observer : gameMessageObservers) {
-                if (observer instanceof IRoundModelObserver) {
-                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
-                }
-            }
-        }
-    }
-
-    /**
      * Checks if an incoming GameMessage is unique and then checks what kind of message the GameMessage is. Depending on the type of message, a method is called to further handle the GameMessage.
      *
      * @param gameMessage The GameMessage that has to be handled
@@ -100,16 +60,15 @@ public class GameMessageReceiver {
                     TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
                     return handleTurnMessage(turnModelMessage);
                 case ROUND_MESSAGE:
-                    RoundModelMessage roundModelMessage = (RoundModelMessage) gameMessage;
-                    handleRoundMessage(roundModelMessage);
-                    break;
+                    TransactionMessage roundModelMessage = (TransactionMessage) gameMessage;
+                    return handleTransactionMessage(roundModelMessage);
                 case ELECTION_MESSAGE:
                     ElectionMessage electionMessage = (ElectionMessage) gameMessage;
                     return new ResponseMessage(handleElectionMessage(electionMessage));
                 case WHO_IS_THE_LEADER_MESSAGE:
                     WhoIsTheLeaderMessage whoIsTheLeaderMessage = (WhoIsTheLeaderMessage) gameMessage;
                     return handleWhoIsTheLeaderMessage(whoIsTheLeaderMessage);
-                case FACILITY_MESSAGE:
+                case CHOOSE_FACILITY_MESSAGE:
                     ChooseFacilityMessage chooseFacilityMessage = (ChooseFacilityMessage) gameMessage;
                     return handleFacilityMessage(chooseFacilityMessage);
                 case GAME_START_MESSAGE:
@@ -158,7 +117,7 @@ public class GameMessageReceiver {
         return messageProcessor.whoIsTheLeaderMessageReceived(whoIsTheLeaderMessage);
     }
 
-    private ChooseFacilityMessage handleFacilityMessage(ChooseFacilityMessage chooseFacilityMessage){
+    private ChooseFacilityMessage handleFacilityMessage(ChooseFacilityMessage chooseFacilityMessage) {
         try {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IFacilityMessageObserver) {
@@ -166,18 +125,19 @@ public class GameMessageReceiver {
                     return chooseFacilityMessage.createResponseMessage();
                 }
             }
-        }catch(Exception e){
+
+        } catch (FacilityNotAvailableException e) {
             return chooseFacilityMessage.createResponseMessage(e);
         }
         return null;
     }
 
-    private RequestGameDataMessage handleRequestGameData(String playerIp){
+    private RequestGameDataMessage handleRequestGameData(String playerIp) {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
-                    RequestGameDataMessage requestGameDataMessageResponse = new RequestGameDataMessage();
-                    requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
-                    return requestGameDataMessageResponse;
+                RequestGameDataMessage requestGameDataMessageResponse = new RequestGameDataMessage();
+                requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
+                return requestGameDataMessageResponse;
             }
         }
         return null;

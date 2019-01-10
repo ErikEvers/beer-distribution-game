@@ -14,15 +14,11 @@ public class PlayGameRetailerController extends PlayGame {
     @FXML
     private ComboBox<Facility> comboBox;
 
-
-
     /**
      * First code being executed.
      */
     public void initialize() {
         superInitialize();
-
-        roundNumber = 0;
     }
 
     /**
@@ -32,8 +28,8 @@ public class PlayGameRetailerController extends PlayGame {
         super.handleSendOrderButtonClick();
     }
 
-    public void submitTurnButonClicked(MouseEvent mouseEvent) {
-        super.submitTurnButonClicked();
+    public void submitTurnButtonClicked(MouseEvent mouseEvent) {
+        super.submitTurnButtonClicked();
     }
 
     /**
@@ -45,8 +41,8 @@ public class PlayGameRetailerController extends PlayGame {
     }
 
     @Override
-    public void refreshInterfaceWithCurrentStatus(BeerGame beerGame) {
-			super.refreshInterfaceWithCurrentStatus(beerGame);
+    public void refreshInterfaceWithCurrentStatus(int roundId) {
+			super.refreshInterfaceWithCurrentStatus(roundId);
 			fillComboBox();
     }
 }

@@ -91,9 +91,9 @@ public class ParticipantsPool {
         }
     }
 
-    public void excecuteRound(BeerGame beerGame) {
+    public void excecuteRound() {
         for (IParticipant participant : participants) {
-            participant.executeTurn(beerGame);
+            participant.executeTurn();
         }
     }
 }

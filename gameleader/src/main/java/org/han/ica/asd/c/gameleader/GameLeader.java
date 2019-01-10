@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.UUID.randomUUID;
 
@@ -41,6 +44,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     @Inject private IPersistence persistence;
     @Inject private TurnHandler turnHandler;
 		@Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
+    @Inject private static Logger logger; //NOSONAR
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
@@ -251,11 +255,17 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData);
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
-        connectorForLeader.sendRoundDataToAllPlayers(currentRoundData);
+
+        try {
+            connectorForLeader.sendRoundDataToAllPlayers(currentRoundData);
+        } catch (TransactionException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
         startNextRound();
     }
 
-    public void startGame() throws BeerGameException {
+    public void startGame() throws BeerGameException, TransactionException {
 			//persistence.saveGameLog(game);
 			for(Player player: game.getPlayers()) {
 				if(player.getFacility() == null) {

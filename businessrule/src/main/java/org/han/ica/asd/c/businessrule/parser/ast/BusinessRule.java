@@ -1,19 +1,43 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
+
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
+import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.gamevalue.GameValue;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class BusinessRule extends ASTNode {
-    private static final String PREFIX = "BR(";
     private Condition condition;
     private Action action;
+    private static final String PREFIX = "BR(";
+    private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
+
+    private NodeConverter nodeConverter;
+    private Provider<NodeConverter> nodeConverterProvider;
+
+    public BusinessRule() {
+    }
+
+    @Inject
+    public BusinessRule(Provider<NodeConverter> nodeConverterProvider) {
+        this.nodeConverterProvider = nodeConverterProvider;
+        nodeConverter = nodeConverterProvider.get();
+    }
 
     /**
      * Gets the action of the BusinessRule
@@ -74,7 +98,7 @@ public class BusinessRule extends ASTNode {
     }
 
     /**
-     * Transforms an {@link ASTNode} based on his type
+     * Transforms an {@link ASTNode} based on his type. Will calculate values with percentages to it's result
      *
      * @param node The node to transform
      */
@@ -87,6 +111,11 @@ public class BusinessRule extends ASTNode {
                 comparisonValue.setOperationValue(operation.resolveOperation());
             }
         }
+        if(node instanceof Value) {
+            Value value = ((Value)node);
+            Integer integerValue = value.getIntegerValue();
+            value.resetValues().addValue(String.valueOf(integerValue));
+        }
 
         node.getChildren().forEach(this::transformChild);
     }
@@ -98,7 +127,7 @@ public class BusinessRule extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**
@@ -111,6 +140,17 @@ public class BusinessRule extends ASTNode {
         List<ASTNode> list = new ArrayList<>();
         Collections.addAll(list, condition, action);
         return list;
+    }
+
+
+    @Override
+    public ASTNode getLeftChild() {
+        return condition;
+    }
+
+    @Override
+    public ASTNode getRightChild() {
+        return action;
     }
 
     /**
@@ -140,6 +180,223 @@ public class BusinessRule extends ASTNode {
     @Override
     public int hashCode() {
         return Objects.hash(condition, action);
+    }
+
+    /***
+     * Replaces the variables of the business rule with data using dept first
+     *
+     * When its a leaf (a Value) it replaces the value with the game data(gameData)
+     * @param beerGame data of a gameData
+     * @param facilityId identifier of the facility
+     */
+    public void substituteTheVariablesOfBusinessruleWithGameData(BeerGame beerGame, int facilityId) {
+        findLeafAndReplace(condition, beerGame, facilityId);
+        findLeafAndReplace(action, beerGame, facilityId);
+    }
+
+    /***
+     * Finds the leaf of the astnode and replaces the value
+     *
+     * @param astNode the node of the ast
+     * @param beerGame the game data, used to replace data in function replace(Value value, int facilityId)
+     * @param facilityId the id of the facility
+     */
+    private void findLeafAndReplace(ASTNode astNode, BeerGame beerGame, int facilityId) {
+        if (astNode instanceof Value) {
+            replace((Value) astNode, beerGame, facilityId);
+        }
+        if (astNode != null) {
+            findLeafAndReplace(astNode.getLeftChild(), beerGame, facilityId);
+            if (hasMultipleChildren(astNode)) {
+                findLeafAndReplace(astNode.getRightChild(), beerGame, facilityId);
+
+                if (astNode instanceof Action && ((Action) astNode).hasComparisonStatement()){
+                    findLeafAndReplace(((Action) astNode).getComparisonStatement(), beerGame, facilityId);
+                }
+            }
+        }
+    }
+
+    /***
+     * Checks if the node has more than one child
+     * @param astNode a node of the tree
+     * @return true if the node has more than one child
+     */
+    private boolean hasMultipleChildren(ASTNode astNode) {
+        return astNode.getChildren().size() > 1;
+    }
+
+    /***
+     * Gets one part of the value replaces it with game data
+     *
+     * @param value the value
+     * @param beerGame the previous round
+     * @param facilityId the id of the facility
+     */
+    private void replace(Value value, BeerGame beerGame, int facilityId) {
+        String replacementValue;
+        if (value.getValue().size() > 1) {
+            String secondVariable = value.getSecondPartVariable();
+            if (GameValue.checkIfFacility(secondVariable) || Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
+                replaceOnVariable(value, beerGame, facilityId, secondVariable);
+            }
+        }
+        replacementValue = value.getFirstPartVariable();
+        if (Pattern.matches(HAS_CHARACTERS, value.getFirstPartVariable())) {
+            replaceOnVariable(value, beerGame, facilityId, replacementValue);
+        }
+    }
+
+    /***
+     * Replaces exactly one part of the variable
+     *
+     * @param value the value
+     * @param beerGame the previous round
+     * @param facilityId the id of the facility
+     * @param variable one part of value
+     */
+    private void replaceOnVariable(Value value, BeerGame beerGame, int facilityId, String variable) {
+        GameValue gameValue = getGameValue(variable);
+        String newReplacementValue;
+        if (GameValue.checkIfFacility(variable)) {
+            newReplacementValue = String.valueOf(nodeConverter.getFacilityId(variable));
+            value.replaceValueWithValue(newReplacementValue);
+        } else if (gameValue != null) {
+            newReplacementValue = getReplacementValue(gameValue, beerGame, facilityId);
+            value.replaceValueWithValue(newReplacementValue);
+        }
+    }
+
+    /***
+     * If the variable is a variable then it returns the corresponding game value
+     *
+     * @param variable one part of the value
+     * @return the corresponding game value
+     */
+    private GameValue getGameValue(String variable) {
+        for (GameValue gameValue : GameValue.values()) {
+            if (gameValue.contains(variable)) {
+                return gameValue;
+            }
+        }
+        return null;
+    }
+
+    /***
+     * Gets the replacementValue from the previous round
+     *
+     * @param gameValue the type of game value
+     * @param beerGame from the previous round
+     * @param facilityId the id of the facility
+     * @return the replacement Value
+     */
+    private String getReplacementValue(GameValue gameValue, BeerGame beerGame, int facilityId) {
+        switch (gameValue) {
+            case ORDERED:
+                return getOrder(beerGame, facilityId);
+            case STOCK:
+                return getStock(beerGame, facilityId);
+            case BUDGET:
+                return getBudget(beerGame, facilityId);
+            case BACKLOG:
+                return getBacklog(beerGame, facilityId);
+            case INCOMINGORDER:
+                return getIncomingOrder(beerGame, facilityId);
+            case OUTGOINGGOODS:
+                return getOutgoingGoods(beerGame, facilityId);
+            default:
+                return "";
+        }
+    }
+
+    /***
+     * Gets the number of orders of an facility
+     * @param beerGame the given round
+     * @param facilityId the id of the given facility
+     * @return the order amount
+     */
+    private String getOrder(BeerGame beerGame, int facilityId) {
+        for (FacilityTurnOrder facilityTurnOrder : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityOrders()) {
+            if (facilityTurnOrder.getFacilityId() == facilityId) {
+                return String.valueOf(facilityTurnOrder.getOrderAmount());
+            }
+        }
+        return "";
+    }
+
+    /***
+     * Gets the stock of an facility
+     * @param beerGame the given round
+     * @param facilityId the id of the given facility
+     * @return stock
+     */
+    private String getStock(BeerGame beerGame, int facilityId) {
+        for (FacilityTurn facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurns()) {
+            if (facilityTurn.getFacilityId() == facilityId) {
+                return String.valueOf(facilityTurn.getStock());
+            }
+        }
+        return "";
+    }
+
+    /***
+     * Gets the remaining budget of an facility
+     * @param beerGame the given round
+     * @param facilityId the id of the given facility
+     * @return budget
+     */
+    private String getBudget(BeerGame beerGame, int facilityId) {
+        for (FacilityTurn facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurns()) {
+            if (facilityTurn.getFacilityId() == facilityId) {
+                return String.valueOf(facilityTurn.getRemainingBudget());
+            }
+        }
+        return "";
+    }
+
+    /***
+     * Gets the number of open orders of an facility
+     * @param beerGame the given round
+     * @param facilityId the id of the given facility
+     * @return budget
+     */
+    private String getBacklog(BeerGame beerGame, int facilityId) {
+        for (FacilityTurn facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurns()) {
+            if (facilityTurn.getFacilityId() == facilityId) {
+                return String.valueOf(facilityTurn.getBackorders());
+            }
+        }
+        return "";
+    }
+
+    /***
+     * Gets the incoming order of an facility
+     * @param beerGame the given round
+     * @param facilityId the id of the given facility
+     * @return incoming order amount
+     */
+    private String getIncomingOrder(BeerGame beerGame, int facilityId) {
+        for (FacilityTurnOrder facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityOrders()) {
+            if (facilityTurn.getFacilityIdOrderTo() == facilityId) {
+                return String.valueOf(facilityTurn.getOrderAmount());
+            }
+        }
+        return "";
+    }
+
+    /***
+     * Gets the outgoing order of an facility
+     * @param beerGame the given round
+     * @param facilityId the id of the given facility
+     * @return outgoing goods amount
+     */
+    private String getOutgoingGoods(BeerGame beerGame, int facilityId) {
+        for (FacilityTurnDeliver facilityTurnDeliver : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurnDelivers()) {
+            if (facilityTurnDeliver.getFacilityId() == facilityId) {
+                return String.valueOf(facilityTurnDeliver.getDeliverAmount());
+            }
+        }
+        return "";
     }
 
     /**

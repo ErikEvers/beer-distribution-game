@@ -4,7 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
@@ -87,13 +87,13 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     }
 
     @Override
-    public BeerGame seeOtherFacilities() {
-        return gameLogic.seeOtherFacilities();
+    public BeerGame getBeerGame() {
+        return gameLogic.getBeerGame();
     }
 
     public void startNewTurn() {
         round = roundProvider.get();
-        round.setRoundId(gameLogic.getRound());
+        round.setRoundId(gameLogic.getRoundId());
     }
     
     @Override
@@ -106,7 +106,6 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
             facilityTurnOrder.setFacilityIdOrderTo(facility.getFacilityId());
             facilityTurnOrder.setOrderAmount(amount);
             round.getFacilityOrders().add(facilityTurnOrder);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnOrderOptional.get().setOrderAmount(facilityTurnOrderOptional.get().getOrderAmount() + amount);
         }
@@ -121,7 +120,6 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
             facilityTurnDeliver.setFacilityIdDeliverTo(facility.getFacilityId());
             facilityTurnDeliver.setDeliverAmount(amount);
             round.getFacilityTurnDelivers().add(facilityTurnDeliver);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnDeliverOptional.get().setDeliverAmount(facilityTurnDeliverOptional.get().getDeliverAmount() + amount);
         }
@@ -154,8 +152,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 	public void clearPlayer() {
 		player = null;
 	}
-
-	@Override
+    @Override
     public Player getPlayer() {
         return player;
     }
@@ -181,12 +178,11 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     /**
      * doOrder will notify the  participant to make an order.
      *
-     * @param beerGame
      * @return The current beergame status.
      */
     @Override
-    public GameRoundAction executeTurn(BeerGame beerGame) {
-        ui.refreshInterfaceWithCurrentStatus(beerGame);
+    public GameRoundAction executeTurn() {
+        ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId());
         return null;
     }
 

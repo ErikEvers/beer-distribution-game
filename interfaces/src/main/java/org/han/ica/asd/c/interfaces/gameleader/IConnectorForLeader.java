@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.gameleader;
 
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
@@ -21,9 +22,9 @@ public interface IConnectorForLeader {
      * The data of a specific round gets sent to the participants of said game.
      * @param allData, the game data of a specific round.
      */
-    void sendRoundDataToAllPlayers(Round allData);
+    void sendRoundDataToAllPlayers(Round allData) throws TransactionException;
 
-    void sendGameStart(BeerGame beerGame);
+    void sendGameStart(BeerGame beerGame) throws TransactionException;
 
     void startRoom(RoomModel roomModel);
 }

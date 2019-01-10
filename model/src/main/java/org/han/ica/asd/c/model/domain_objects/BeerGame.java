@@ -93,6 +93,10 @@ public class BeerGame implements IDomainModel, Serializable {
         return rounds;
     }
 
+    public Round getRoundById(int roundId) {
+        return rounds.stream().filter(round -> round.getRoundId() == roundId).findFirst().get();
+    }
+
     public void setRounds(List<Round> rounds) {
         this.rounds = rounds;
     }

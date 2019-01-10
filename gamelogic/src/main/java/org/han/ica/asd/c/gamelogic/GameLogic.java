@@ -2,7 +2,7 @@ package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -34,7 +34,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     private int round;
     private BeerGame beerGame;
-    private static IParticipant player;
+    private IParticipant player;
 
     @Inject
     public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
@@ -66,7 +66,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @return The current state of the game.
      */
     @Override
-    public BeerGame seeOtherFacilities() {
+    public BeerGame getBeerGame() {
         return beerGame;
     }
 
@@ -75,8 +75,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param agent Agent that will replace the player.
      */
     @Override
-    public void letAgentTakeOverPlayer(Agent agent) {
-        participantsPool.replacePlayerWithAgent(agent);
+    public void letAgentTakeOverPlayer(IParticipant agent) {
+        participantsPool.replacePlayerWithAgent((Agent)agent);
     }
 
     /**
@@ -132,7 +132,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         return new ArrayList<>();
     }
 
-    public int getRound() {
+    public int getRoundId() {
         return round;
     }
 
@@ -150,8 +150,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         persistence.saveRoundData(currentRound);
         beerGame.getRounds().add(currentRound);
 				persistence.saveGameLog(beerGame);
-        participantsPool.excecuteRound(this.beerGame);
-        round++;
+        participantsPool.excecuteRound();
+        round = currentRound.getRoundId()+1;
     }
 
     @Override
@@ -159,6 +159,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame);
         player.startGame();
-				participantsPool.excecuteRound(this.beerGame);
+				participantsPool.excecuteRound();
     }
 }

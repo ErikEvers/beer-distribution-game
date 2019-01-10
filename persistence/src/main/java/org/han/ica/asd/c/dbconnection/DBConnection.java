@@ -16,8 +16,9 @@ import java.util.logging.Logger;
 @Singleton
 public class DBConnection implements IDatabaseConnection {
 	private static final Path currentDir = Paths.get("");
-	private static final String CONNECTIONSTRING = "jdbc:sqlite:"+currentDir.toAbsolutePath().toString()+File.separator+"persistence"+ File.separator+"src"+ File.separator+"main"+File.separator+"resources"+File.separator;
 	private static final String DATABASENAME = "BeerGameDB.db";
+	private static final String PATH = currentDir.toAbsolutePath().toString()+File.separator+"persistence"+ File.separator+"src"+ File.separator+"main"+File.separator+"resources"+File.separator;
+	private static final String CONNECTIONSTRING = "jdbc:sqlite:" + PATH;
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
 
 	public DBConnection() {
@@ -25,9 +26,10 @@ public class DBConnection implements IDatabaseConnection {
 	}
 
 	public void createNewDatabase() {
-		File file = new File(CONNECTIONSTRING+DATABASENAME);
+		File file = new File(PATH + DATABASENAME);
 		if(!file.exists()) {
 			runSQLScript("ddl.sql");
+			runSQLScript("dml.sql");
 		}
 	}
 

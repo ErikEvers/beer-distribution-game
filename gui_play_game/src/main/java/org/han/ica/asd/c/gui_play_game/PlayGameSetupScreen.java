@@ -5,7 +5,6 @@ import com.google.inject.name.Named;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import java.util.ResourceBundle;
 
