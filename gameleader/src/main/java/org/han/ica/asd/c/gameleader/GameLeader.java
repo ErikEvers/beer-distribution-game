@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -166,7 +167,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     }
 
     @Override
-    public void chooseFacility(Facility facility) throws Exception {
+    public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
         throw new NotImplementedException();
     }
 
