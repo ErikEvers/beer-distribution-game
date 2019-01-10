@@ -66,9 +66,11 @@ public class GameRoomController {
 			}
 		}
 
-    public void setGameData(RoomModel roomModel, BeerGame beerGame) {
+    public void setGameData(RoomModel roomModel, BeerGame beerGame, String playerId) {
         this.roomModel = roomModel;
 				this.beerGame = beerGame;
+
+				playerComponent.setPlayer(beerGame.getPlayerById(playerId));
         gameRoom.setText(roomModel.getRoomName());
 
 				DaoConfig.setCurrentGameId(beerGame.getGameId());
