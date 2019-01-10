@@ -46,21 +46,23 @@ public class GameAgentService implements IGameAgentService {
     return new GameAgent(programmedAgent.getProgrammedAgentName(), facility, gameBusinessRules);
   }
 
-  public List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map) {
-//
-//    List<GameAgent> gameAgents = new ArrayList<>();
-//    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
-//      gameAgents.add(createGameAgentFromProgrammedAgent()));
-//    }
-//    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
-//      for(GameAgent agent: gameAgents) {
-//        if(!set.getKey().equals(agent.getFacility())) {
-//          gameAgents.add(new );
-//        }
-//      }
-//    }
-    return null;
+  public BeerGame fillEmptyFacilitiesWithDefaultAgents(BeerGame beerGame) {
+    List<Facility> facilitiesNotTaken = beerGame.getConfiguration().getFacilities();
+    for (int i = 0; i < beerGame.getConfiguration().getFacilities().size(); i++) {
+      for (int j = 0; j < beerGame.getAgents().size(); j++) {
+        if (beerGame.getConfiguration().getFacilities().get(i).getFacilityId() == beerGame.getAgents().get(j).getFacility().getFacilityId()) {
+          break;
+        }
+      }
+      //facilitiesNotTaken.set(i, null);
+    }
 
+    for (Facility f : facilitiesNotTaken) {
+      if (f != null) {
+        beerGame.getAgents().add(createGameAgentFromProgrammedAgent(f, defaultAgent));
+      }
+    }
+    return beerGame;
   }
 
 }

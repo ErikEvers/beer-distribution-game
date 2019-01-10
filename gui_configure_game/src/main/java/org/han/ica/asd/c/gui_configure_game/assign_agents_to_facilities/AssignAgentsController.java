@@ -5,13 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
-import javafx.scene.paint.Color;
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
-import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
@@ -19,10 +14,6 @@ import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class AssignAgentsController {
 
@@ -112,6 +103,12 @@ public class AssignAgentsController {
     public void handleManagePlayersButtonClick() {
         managePlayers.setData(new Object[] { beerGame });
         managePlayers.setupScreen();
+    }
+
+    @FXML
+    public void handleStartGameButtonClick() {
+        this.beerGame = gameAgentService.fillEmptyFacilitiesWithDefaultAgents(beerGame);
+        initTree();
     }
 
     private void addEventHandlerToFacilityRectangle(FacilityRectangle rectangle) {

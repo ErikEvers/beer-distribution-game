@@ -91,7 +91,7 @@
                <GridPane.margin>
                   <Insets right="165.0" />
                </GridPane.margin></Button>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%start_game" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleStartGameButtonClick" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%start_game" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Button>

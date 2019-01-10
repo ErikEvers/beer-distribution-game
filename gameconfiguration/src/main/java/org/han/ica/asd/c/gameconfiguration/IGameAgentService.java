@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gameconfiguration;
 
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
@@ -12,8 +13,7 @@ public interface IGameAgentService {
 
   List<ProgrammedAgent> getAgentsForUI() throws NoProgrammedAgentsFoundException;
 
-  List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map);
-
   GameAgent createGameAgentFromProgrammedAgent(Facility facility, ProgrammedAgent programmedAgent);
 
+  BeerGame fillEmptyFacilitiesWithDefaultAgents(BeerGame beerGame);
 }

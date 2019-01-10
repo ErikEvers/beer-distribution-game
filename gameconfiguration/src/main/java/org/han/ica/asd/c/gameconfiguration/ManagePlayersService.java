@@ -9,14 +9,6 @@ import java.util.Arrays;
 public class ManagePlayersService {
 
 	/**
-	 * Fetch the currently connected players.
-	 * @return
-	 */
-//	public Player[] getPlayers() {
-//		return players;
-//	}
-
-	/**
 	 * Remove a player from the game.
 	 * @param toRemove the player to remove
 	 */
