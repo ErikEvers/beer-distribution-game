@@ -1,21 +1,36 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.GameAgent;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver {
+import static java.util.UUID.randomUUID;
+
+public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
@@ -23,27 +38,86 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
+    private final Provider<Player> playerProvider;
 
     private BeerGame game;
     
     private Round currentRoundData;
 
+    private int highestPlayerId = 0;
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
     private int roundId = 1;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider) {
+    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider) {
         this.beerGameProvider = beerGameProvider;
         this.roundProvider = roundProvider;
+        this.playerProvider = playerProvider;
     }
 
     /**
      * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
      */
-    public void init() {
+    public void init(String leaderIp, String gameName) {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
+
+        Configuration configuration = new Configuration();
+
+        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,0,0,0,0, 0), 0);
+        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,0,0,0,0, 0), 1);
+        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,0,0,0,0, 0), 2);
+        Facility factory = new Facility(new FacilityType("Factory", 0, 0,0,0,0,0, 0), 3);
+
+        List<Facility> facilityList = new ArrayList<>();
+        facilityList.add(retailer);
+        facilityList.add(wholesale);
+        facilityList.add(warehouse);
+        facilityList.add(factory);
+
+        configuration.setFacilities(facilityList);
+
+        Map<Facility, List<Facility>> links = new HashMap<>();
+        List<Facility> list = new ArrayList<>();
+        list.add(wholesale);
+        links.put(retailer, list);
+
+        list = new ArrayList<>();
+        list.add(warehouse);
+        links.put(wholesale, list);
+
+        list = new ArrayList<>();
+        list.add(factory);
+        links.put(warehouse, list);
+
+        configuration.setFacilitiesLinkedTo(links);
+
+        configuration.setAmountOfWarehouses(1);
+        configuration.setAmountOfFactories(1);
+        configuration.setAmountOfWholesalers(1);
+        configuration.setAmountOfRetailers(1);
+
+        configuration.setAmountOfRounds(20);
+
+        configuration.setContinuePlayingWhenBankrupt(false);
+
+        configuration.setInsightFacilities(true);
+
+        configuration.setMaximumOrderRetail(99);
+        configuration.setMinimalOrderRetail(5);
+
+
+        this.game.setConfiguration(configuration);
+        this.game.setGameId(randomUUID().toString());
+        this.game.setGameName(gameName);
+        this.game.setGameDate("2019-01-01 0:00:00");
+        Player henk = new Player("1", leaderIp, retailer, "Yarno", true);
+        this.game.getPlayers().add(henk);
+        this.game.setLeader(new Leader(henk));
+
+        this.persistence.saveGameLog(game);
+
         this.currentRoundData = roundProvider.get();
         this.currentRoundData.setRoundId(roundId);
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
@@ -89,6 +163,29 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public BeerGame notifyPlayerReconnected(String playerId) {
         gameLogic.removeAgentByPlayerId(playerId);
         return this.game;
+    }
+
+    @Override
+    public void chooseFacility(Facility facility) throws Exception {
+        throw new NotImplementedException();
+    }
+
+    public GamePlayerId getGameData(String playerIp) {
+        Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getIpAddress().equals(playerIp)).findFirst();
+        Player actualPlayer;
+        if(!connectingPlayerO.isPresent()) {
+            actualPlayer = playerProvider.get();
+            actualPlayer.setPlayerId(Integer.toString(highestPlayerId + 1));
+            actualPlayer.setIpAddress(playerIp);
+            if(highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
+                highestPlayerId = Integer.parseInt(actualPlayer.getPlayerId());
+            }
+        } else {
+            actualPlayer = connectingPlayerO.get();
+        }
+        game.getPlayers().add(actualPlayer);
+
+        return new GamePlayerId(game, actualPlayer.getPlayerId());
     }
 
     /**

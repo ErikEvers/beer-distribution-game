@@ -1,10 +1,16 @@
 package org.han.ica.asd.c.gameleader.testutil;
 
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public class PersistenceStub implements IPersistence {
+
+	@Override
+	public void saveGameLog(BeerGame beerGame) {
+
+	}
 
 	@Override
 	public void saveFacilityTurn(Round data) {
@@ -12,7 +18,7 @@ public class PersistenceStub implements IPersistence {
 	}
 
 	@Override
-	public Round fetchFacilityTurn(int roundId, int facilityId) {
+	public Round fetchFacilityTurn(int roundId) {
 		return null;
 	}
 
