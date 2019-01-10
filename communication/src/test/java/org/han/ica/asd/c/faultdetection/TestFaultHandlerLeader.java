@@ -55,12 +55,12 @@ public class TestFaultHandlerLeader {
 		assertTrue(faultHandlerLeader.isLeaderAlive());
 	}
 
-	@Test
-	void TestIsPeerAlive() {
-
-		faultHandlerLeader.isPeerAlive("");
-		verify(nodeInfoList).getStatusOfOneNode("");
-	}
+//	@Test
+//	void TestIsPeerAlive() {
+//
+//		faultHandlerLeader.isPeerAlive("");
+//		verify(nodeInfoList).getStatusOfOneNode("");
+//	}
 
 	@Test
 	void TestReset() {
