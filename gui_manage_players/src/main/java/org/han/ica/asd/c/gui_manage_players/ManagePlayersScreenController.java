@@ -8,12 +8,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gameconfiguration.ManagePlayersService;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class ManagePlayersScreenController {
+public class ManagePlayersScreenController  {
 
 	@Inject
 	ManagePlayersService gameConfiguration;
@@ -27,6 +28,8 @@ public class ManagePlayersScreenController {
 	@FXML private TableColumn<Player, String> playerIdColumn;
 	@FXML private TableColumn<Player, String> nameColumn;
 	@FXML private TableColumn<Player, String> ipColumn;
+
+	private BeerGame beerGame;
 
 	/**
 	 * Initialize the controller by setting cell value factories for the player table columns,
@@ -51,6 +54,7 @@ public class ManagePlayersScreenController {
 	 * Return to the game room
 	 */
 	public void handleReturnToGameRoomButtonClick() {
+		assignAgents.setData(new Object[] { beerGame });
 		assignAgents.setupScreen();
 	}
 
@@ -77,5 +81,9 @@ public class ManagePlayersScreenController {
 		Player toRemove = playerTable.getItems().get(playerTable.getSelectionModel().getFocusedIndex());
 		gameConfiguration.removePlayer(toRemove);
 		populateTable();
+	}
+
+	public void setBeerGame(BeerGame beerGame) {
+		this.beerGame = beerGame;
 	}
 }

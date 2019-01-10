@@ -18,6 +18,6 @@ public class AssignAgents implements IGUIHandler {
     @Override
     public void setupScreen() {
         AssignAgentsController controller = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesAssignAgents"), getClass().getResource("/fxml/AssignAgentsToFacilities.fxml"));
-        //controller.setBeerGame(this.beerGame);
+        controller.setBeerGame(beerGame);
     }
 }

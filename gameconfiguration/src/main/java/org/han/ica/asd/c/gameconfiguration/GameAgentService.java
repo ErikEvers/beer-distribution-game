@@ -32,6 +32,11 @@ public class GameAgentService implements IGameAgentService {
     return programmedAgents;
   }
 
+  /**
+   * Creates a new GameAgent instance based on the supplied ProgrammedAgent and the Facility to which the GameAgent will be assigned.
+   * @param facility the facility which the GameAgent will control
+   * @param programmedAgent the Agent configuration that will control the facility
+   */
   public GameAgent createGameAgentFromProgrammedAgent(Facility facility, ProgrammedAgent programmedAgent) {
     List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
     for (ProgrammedBusinessRules businessRule : programmedAgent.getProgrammedBusinessRules()) {
@@ -42,15 +47,15 @@ public class GameAgentService implements IGameAgentService {
   }
 
   public List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map) {
-
+//
 //    List<GameAgent> gameAgents = new ArrayList<>();
 //    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
-//      gameAgents.add(new GameAgent(set.getValue().getProgrammedAgentName(), set.getValue().getProgrammedBusinessRules(), set.getKey()));
+//      gameAgents.add(createGameAgentFromProgrammedAgent()));
 //    }
 //    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
 //      for(GameAgent agent: gameAgents) {
 //        if(!set.getKey().equals(agent.getFacility())) {
-//          gameAgents.add(new GameAgent(defaultAgent.getProgrammedAgentName(), defaultAgent.getProgrammedBusinessRules(), set.getKey()));
+//          gameAgents.add(new );
 //        }
 //      }
 //    }
