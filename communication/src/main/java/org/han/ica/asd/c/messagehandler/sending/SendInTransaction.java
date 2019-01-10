@@ -55,7 +55,6 @@ public class SendInTransaction {
             transactionMessage.setPhaseToRollback();
             socketClient.sendToAll(ips, transactionMessage);
 
-            transactionMessage.setPhaseToStage();
             throw new TransactionException("Something went wrong with transactional sending data");
         }
     }
