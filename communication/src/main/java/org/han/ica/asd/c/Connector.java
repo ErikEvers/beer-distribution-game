@@ -27,6 +27,7 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
