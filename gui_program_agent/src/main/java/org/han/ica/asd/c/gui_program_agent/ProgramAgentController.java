@@ -150,7 +150,13 @@ public class ProgramAgentController {
         StringBuilder errors = new StringBuilder();
         List<Text> textFlow = new ArrayList<>();
         for (UserInputBusinessRule businessRule : result) {
-            Text text = new Text(businessRule.getBusinessRule() + "\n");
+            Text text = new Text();
+            if(businessRule.getBusinessRule().equals("")){
+                text.setText("Line can not be empty"+ "\n");
+                text.setFill(Color.RED);
+            }else {
+                text.setText(businessRule.getBusinessRule() + "\n");
+            }
             if (!businessRule.getErrorWord().isEmpty()) {
                 Integer key = businessRule.getErrorWord().keySet().iterator().next();
                 int value = businessRule.getErrorWord().get(key) + 1;

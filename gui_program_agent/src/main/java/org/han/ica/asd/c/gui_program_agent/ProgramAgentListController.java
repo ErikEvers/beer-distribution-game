@@ -75,7 +75,7 @@ public class ProgramAgentListController {
 
     @FXML
     public void editButtonAction() {
-        programAgent.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
+        programAgent.setData(new Object[]{list.getSelectionModel().getSelectedItem(),null});
         programAgent.setupScreen();
     }
 
