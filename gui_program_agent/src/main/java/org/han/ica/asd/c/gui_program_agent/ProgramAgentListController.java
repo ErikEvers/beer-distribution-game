@@ -66,10 +66,7 @@ public class ProgramAgentListController {
     public void handleMouseClickOnList() {
         Object selectedItem = list.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            if ("Default".equals(selectedItem.toString())){
-                delete.setDisable(true);
-            }
-
+            delete.setDisable("Default".equals(selectedItem.toString()));
             delete.setVisible(true);
             edit.setVisible(true);
         }

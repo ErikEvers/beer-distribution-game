@@ -59,9 +59,8 @@ public class ProgramAgentController {
 
     public void setAgentName(String name) {
         if(name != null) {
-            if ("Default".equals(name)){
-                save.setDisable(true);
-            }
+            save.setDisable("Default".equals(name));
+
             agentNameInput.setText(name);
             List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
             for (String rule: rules) {
