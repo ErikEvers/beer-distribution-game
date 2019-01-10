@@ -92,7 +92,7 @@ public class ParserPipeline {
      */
     private boolean setSyntaxError() {
         boolean hasErrors = false;
-        int lineOffset = 1;
+        final int lineOffset = 1;
 
         for (int i = 0; i < businessRulesInput.size(); i++) {
             String businessRule = businessRulesInput.get(i).getBusinessRule();
