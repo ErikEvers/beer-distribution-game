@@ -232,10 +232,15 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
     }
 
-    public void startFaultDetector(){
+    public void initNodeInfoList(){
         List<Player> playerList = persistence.getGameLog().getPlayers();
         Leader leader =  persistence.getGameLog().getLeader();
         nodeInfoList.init(playerList,leader);
+    }
+
+    public void startFaultDetector(){
+        Leader leader =  persistence.getGameLog().getLeader();
+        nodeInfoList.setMyIp(externalIP);
 
         if(externalIP.equals(leader.getPlayer().getIpAddress())){
             faultDetector.startFaultDetectorLeader(nodeInfoList);

@@ -53,7 +53,7 @@ public class FaultDetector {
 
     public void startFaultDetectorPlayer(NodeInfoList nodeInfoList) {
         faultResponder = makeFaultResponder();
-        faultDetectorPlayer = makeFaultDetectorPlayer(nodeInfoList);
+        faultDetectorPlayer = makeFaultDetectorPlayer(nodeInfoList, observers);
         faultDetectorPlayer.start();
     }
 
@@ -88,7 +88,8 @@ public class FaultDetector {
         return faultDetectorLeader;
     }
 
-    public FaultDetectorPlayer makeFaultDetectorPlayer(NodeInfoList nodeInfoList) {
+    public FaultDetectorPlayer makeFaultDetectorPlayer(NodeInfoList nodeInfoList, List<IConnectorObserver> observers) {
+        faultDetectorPlayer.setObservers(observers);
         faultDetectorPlayer.setNodeInfoList(nodeInfoList);
         return faultDetectorPlayer;
     }

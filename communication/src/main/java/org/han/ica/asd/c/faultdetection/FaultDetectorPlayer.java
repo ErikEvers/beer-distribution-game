@@ -5,6 +5,8 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private NodeInfoList nodeInfoList;
 
     private Timer timer;
+    private List<IConnectorObserver> observers;
 
     boolean getLeaderIsPinging() {
         return leaderIsPinging;
@@ -63,7 +66,7 @@ public class FaultDetectorPlayer extends TimerTask {
             leaderIsPinging = false;
             faultHandlerPlayer.reset();
             askOtherPlayers();
-            faultHandlerPlayer.whoIsDead();
+            faultHandlerPlayer.whoIsDead(nodeInfoList);
         }
     }
 
@@ -85,8 +88,11 @@ public class FaultDetectorPlayer extends TimerTask {
     private void askOtherPlayers() {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
+        HashMap<String,Long> filter = new HashMap<>(playersWhoAlreadyCouldntReachLeader);
+
         // filter out ips from ips that already send a message within the past 5 minutes
-        ips.removeIf(ip -> playersWhoAlreadyCouldntReachLeader.containsKey(ip) && timestampIsRecentlyReceived(playersWhoAlreadyCouldntReachLeader.get(ip)));
+        ips.removeIf(ip -> filter.containsKey(ip) && timestampIsRecentlyReceived(filter.get(ip)));
+        faultHandlerPlayer.setFilteredAmount(filter.size());
         Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll(ips.toArray(new String[0]), new CanYouReachLeaderMessage());
 
         for (Object responseMessage : response.values()) {
@@ -111,13 +117,18 @@ public class FaultDetectorPlayer extends TimerTask {
         // put senderIp in local list with currentTime
         playersWhoAlreadyCouldntReachLeader.put(senderIp, System.currentTimeMillis());
 
+        String leaderIp = nodeInfoList.getLeaderIp();
+
         if (leaderIsNotPinging()) {
             leaderIsAlive = false;
         } else {
             try {
-                // TODO Leaderip get (integratie)
-                faultDetectionClient.makeConnection("0.0.0.0");
-                leaderIsAlive = true;
+                if (leaderIp == null) {
+                    leaderIsAlive = false;
+                }else {
+                    faultDetectionClient.makeConnection(leaderIp);
+                    leaderIsAlive = true;
+                }
             } catch (NodeCantBeReachedException e) {
                 leaderIsAlive = false;
             }
@@ -189,4 +200,8 @@ public class FaultDetectorPlayer extends TimerTask {
     public void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> playersWhoAlreadyCouldntReachLeader) {
         this.playersWhoAlreadyCouldntReachLeader = playersWhoAlreadyCouldntReachLeader;
     }
+    public void setObservers(List<IConnectorObserver> observers) {
+        this.observers = observers;
+    }
+
 }

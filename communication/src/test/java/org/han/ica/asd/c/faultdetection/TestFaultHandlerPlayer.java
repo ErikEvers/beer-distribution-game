@@ -1,18 +1,34 @@
 package org.han.ica.asd.c.faultdetection;
 
+import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultHandlerPlayer {
 	FaultHandlerPlayer faultHandlerPlayer;
+	private NodeInfoList nodeInfoList = mock(NodeInfoList.class);
+
+	@Mock
+	ArrayList<IConnectorObserver> observers;
 
 	@BeforeEach
-	void setUp(){
+	void setUp()
+	{
+		initMocks(this);
+
 		faultHandlerPlayer = spy(FaultHandlerPlayer.class);
+		faultHandlerPlayer.setObservers(new ArrayList<>());
+
 	}
 
 	@Test
@@ -54,21 +70,21 @@ public class TestFaultHandlerPlayer {
 
 	@Test
 	void TestShouldReturnThatImDead() {
-
+		faultHandlerPlayer.setFilteredAmount(0);
 		faultHandlerPlayer.resetAmountOfConnectionsWithLeader();
 		faultHandlerPlayer.setAmountOfActiveIps(5);
 		faultHandlerPlayer.setAmountOfFailingIps(5);
 
-		assertEquals("imDead",faultHandlerPlayer.whoIsDead());
+		assertEquals("imDead",faultHandlerPlayer.whoIsDead(nodeInfoList));
 	}
 	@Test
 	void TestShouldReturnThatLeaderIsDead() {
-
+		faultHandlerPlayer.setFilteredAmount(0);
 		faultHandlerPlayer.resetAmountOfConnectionsWithLeader();
 		faultHandlerPlayer.setAmountOfActiveIps(5);
 		faultHandlerPlayer.resetAmountOfFailingIps();
 
-		assertEquals("leaderIsDead",faultHandlerPlayer.whoIsDead());
+		assertEquals("leaderIsDead",faultHandlerPlayer.whoIsDead(nodeInfoList));
 
 	}
 	@Test

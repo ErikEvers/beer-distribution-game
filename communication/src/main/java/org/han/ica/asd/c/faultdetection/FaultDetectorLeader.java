@@ -93,7 +93,6 @@ public class FaultDetectorLeader extends TimerTask {
         //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
-        faultHandlerLeader.setObservers(observers);
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.faultdetection.nodeinfolist;
 
 
+import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
@@ -25,6 +26,7 @@ public class NodeInfoList extends ArrayList<Player> {
 
     private List<Player> playerList;
     private Leader leader;
+    private String myIp;
 
     public NodeInfoList() {
     //inject
@@ -211,5 +213,22 @@ public class NodeInfoList extends ArrayList<Player> {
 
     public Leader getLeader(){
         return leader;
+    }
+
+    public Player[] getPlayersWithoutLeader() {
+        Player leader = this.leader.getPlayer();
+
+        List<Player> playerListCopy = new ArrayList<>(playerList);
+        playerListCopy.removeIf(p-> p != leader);
+
+        return playerListCopy.toArray(new Player[0]);
+    }
+
+    public String getMyIp() {
+        return myIp;
+    }
+
+    public void setMyIp(String myIp) {
+        this.myIp = myIp;
     }
 }

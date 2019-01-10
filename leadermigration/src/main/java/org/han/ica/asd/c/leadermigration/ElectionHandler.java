@@ -34,8 +34,8 @@ public class ElectionHandler {
    * Setup the algorithm in de electionModel.
    * @param players -> All connected players to send a message.
    */
-  public Player setupAlgorithm(Player[] players) throws PlayerNotFoundException {
-    electionModel.setCurrentPlayer(getPlayerByIp(players));
+  public Player setupAlgorithm(Player[] players, String ip) {
+    electionModel.setCurrentPlayer(getPlayerByIp(players, ip));
 		receivedPlayers = new ArrayList<>();
     return electionModel.getCurrentPlayer();
   }
@@ -111,22 +111,12 @@ public class ElectionHandler {
    * @param players -> All players in an array
    * @return the current player
    */
-  private Player getPlayerByIp(Player[] players) throws PlayerNotFoundException{
-		String localIp;
-		try {
-  		localIp = ipHandler.getLocalIp();
-		} catch (UnknownHostException e) {
-			logger.log(Level.SEVERE, "The local IP could not be retrieved", e);
-			throw new PlayerNotFoundException("The local IP could not be retrieved");
-		}
-		if (localIp == null || localIp.isEmpty()) {
-			throw new PlayerNotFoundException("The retrieved local IP is not usable");
-		}
+  private Player getPlayerByIp(Player[] players, String localIp){
 		for(Player player: players) {
 			if(player.getIpAddress().equals(localIp)) {
 				return player;
 			}
 		}
-    throw new PlayerNotFoundException("Something went wrong while finding the local player");
+		return null;
   }
 }

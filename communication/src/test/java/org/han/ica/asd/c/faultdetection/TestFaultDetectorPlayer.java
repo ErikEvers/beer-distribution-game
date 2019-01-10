@@ -47,7 +47,7 @@ class TestFaultDetectorPlayer {
         faultDetectorPlayer.run();
 
         verify(faultHandlerPlayer).reset();
-        verify(faultHandlerPlayer).whoIsDead();
+        verify(faultHandlerPlayer).whoIsDead(nodeInfoList);
 
         assertFalse(faultDetectorPlayer.getLeaderIsPinging());
     }
