@@ -64,7 +64,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public BeerGame seeOtherFacilities() {
-        return persistence.getGameLog();
+        return beerGame;
     }
 
     /**
@@ -147,5 +147,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void gameStartReceived(BeerGame beerGame) {
         this.beerGame = beerGame;
+        persistence.saveGameLog(beerGame);
     }
 }
