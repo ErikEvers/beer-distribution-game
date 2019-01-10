@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gui_program_agent;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -52,6 +53,8 @@ public class ProgramAgentController {
     @Inject
     @Named("BusinessruleStore")
     IBusinessRuleStore iBusinessRuleStore;
+
+    private ObservableList<String> items;
 
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
@@ -108,15 +111,26 @@ public class ProgramAgentController {
     private void saveButtonAction() {
         clearOldScreenValues();
         String agentName = agentNameInput.getText();
+
         String businessRulesUserInput = businessRuleInput.getText();
         if (checkIfStringEmpty(agentName)) {
             setProgramAgentPopup(resourceBundle.getString("agent_name_error_header"), resourceBundle.getString("agent_name_error_body"), Color.RED);
         } else if (checkIfStringEmpty(businessRulesUserInput)) {
             setProgramAgentPopup(resourceBundle.getString("business_rule_error_header"), resourceBundle.getString("business_rule_error_body"), Color.RED);
+        } else if (!isUniqueAgentName(agentName)) {
+            setProgramAgentPopup(resourceBundle.getString("unique_agent_name_error_header"), resourceBundle.getString("unique_agent_name_error_body"), Color.RED);
         } else {
             List<UserInputBusinessRule> result = iBusinessRules.programAgent(agentName, businessRulesUserInput);
             setScreenValuesBasedOnResult(result);
         }
+    }
+
+    private boolean isUniqueAgentName(String agentName) {
+        if (items != null){
+            return !items.contains(agentName);
+        }
+
+        return true;
     }
 
     /***
@@ -189,5 +203,9 @@ public class ProgramAgentController {
 
     private boolean checkIfStringEmpty(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    public void setItems(ObservableList<String> items) {
+        this.items = items;
     }
 }

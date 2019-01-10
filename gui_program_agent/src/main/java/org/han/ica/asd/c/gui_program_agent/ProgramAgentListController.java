@@ -59,6 +59,7 @@ public class ProgramAgentListController {
 
     @FXML
     private void programAgentButtonAction() {
+        programAgent.setData(new Object[]{null, items});
         programAgent.setupScreen();
     }
 
@@ -81,12 +82,17 @@ public class ProgramAgentListController {
     @FXML
     public void deleteButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_agent") + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.YES) {
-            items.remove(selectedAgent);
-            iBusinessRuleStore.deleteProgrammedAgent(selectedAgent.toString());
+        if ("Default".equalsIgnoreCase(selectedAgent.toString())){
+            Alert alert = new Alert(Alert.AlertType.ERROR, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_default_agent"), ButtonType.CLOSE);
+            alert.show();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_agent") + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.YES) {
+                items.remove(selectedAgent);
+                iBusinessRuleStore.deleteProgrammedAgent(selectedAgent.toString());
+            }
         }
     }
 }
