@@ -84,4 +84,18 @@ public enum GameValue {
                 gameValue == GameValue.REGIONALWAREHOUSE ||
                 gameValue == GameValue.RETAILER;
     }
+
+    public static boolean isDisplayAttribute(String variable){
+
+        for (GameValue gameValue : GameValue.values()) {
+            if(isFacility(gameValue) || gameValue == GameValue.INCOMINGORDER || gameValue == GameValue.HIGHEST || gameValue == GameValue.LOWEST){
+                continue;
+            }
+            if(gameValue.contains(variable)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

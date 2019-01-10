@@ -121,7 +121,7 @@ public class ReplayGameScreenController {
 
         for(GameValue gameValue:GameValue.values()){
             for(String synonym:gameValue.getValue()) {
-                if (!GameValue.checkIfFacility(synonym)){
+                if (GameValue.isDisplayAttribute(synonym)){
                     attributes.add(gameValue);
                     break;
                 }
