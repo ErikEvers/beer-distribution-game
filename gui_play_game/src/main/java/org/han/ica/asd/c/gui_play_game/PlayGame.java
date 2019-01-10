@@ -200,6 +200,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(BeerGame beerGame) {
+        this.beerGame = beerGame;
         // status.getFacilityTurnDelivers().stream().filter(facilityTurn -> facilityTurn.getFacilityIdDeliverTo() == playerComponent.getPlayer().getFacility().getFacilityId());
         // inventory.setText(Integer.toString(status.getStock()));
     }

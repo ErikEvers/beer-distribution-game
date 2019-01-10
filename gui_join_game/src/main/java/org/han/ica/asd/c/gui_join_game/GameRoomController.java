@@ -48,6 +48,8 @@ public class GameRoomController {
 
     public void handleBackToJoinGameButtonClick() {
     	iConnectorForSetup.removeYourselfFromRoom(roomModel);
+			DaoConfig.clearCurrentGameId();
+    	playerComponent.clearPlayer();
     	joinGame.setupScreen();
     }
 

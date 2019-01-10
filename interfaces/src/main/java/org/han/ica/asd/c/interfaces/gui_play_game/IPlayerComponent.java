@@ -25,5 +25,7 @@ public interface IPlayerComponent {
     void startNewTurn();
     Player getPlayer();
     void setPlayer(Player player);
+    void clearPlayer();
     void setUi(IPlayGame game);
+    void clearUi();
 }

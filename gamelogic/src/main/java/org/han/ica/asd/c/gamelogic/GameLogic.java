@@ -148,9 +148,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void roundModelReceived(Round currentRound) {
         persistence.saveRoundData(currentRound);
-        this.beerGame.getRounds().add(currentRound);
-        participantsPool.excecuteRound(this.beerGame);
         beerGame.getRounds().add(currentRound);
+				persistence.saveGameLog(beerGame);
+        participantsPool.excecuteRound(this.beerGame);
         round++;
     }
 

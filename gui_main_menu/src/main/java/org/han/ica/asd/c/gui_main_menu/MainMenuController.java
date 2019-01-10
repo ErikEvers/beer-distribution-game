@@ -55,7 +55,7 @@ public class MainMenuController {
 
     public void handleCreateGameButtonClick() {
 			connector.start();
-			connector.createRoom("Beergame ASD-B", "");
+			connector.createRoom("Beergame ASD-C", "");
 			gameRoomGameLeader.setupScreen();
 		}
 

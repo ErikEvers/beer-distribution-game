@@ -150,7 +150,12 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
         PlayerComponent.player = player;
     }
 
-    @Override
+	@Override
+	public void clearPlayer() {
+		player = null;
+	}
+
+	@Override
     public Player getPlayer() {
         return player;
     }
@@ -160,7 +165,12 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
         ui = game;
     }
 
-    public Facility getFacility() {
+	@Override
+	public void clearUi() {
+		ui = null;
+	}
+
+	public Facility getFacility() {
         return player.getFacility();
     }
 

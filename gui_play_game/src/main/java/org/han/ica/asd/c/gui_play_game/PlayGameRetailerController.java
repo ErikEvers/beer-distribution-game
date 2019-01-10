@@ -46,6 +46,7 @@ public class PlayGameRetailerController extends PlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(BeerGame beerGame) {
-
+			super.refreshInterfaceWithCurrentStatus(beerGame);
+			fillComboBox();
     }
 }
