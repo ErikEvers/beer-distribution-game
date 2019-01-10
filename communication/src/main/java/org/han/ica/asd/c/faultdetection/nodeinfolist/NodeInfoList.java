@@ -86,7 +86,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * @author Tarik
      * @see NodeInfoList
      */
-    public List<String>  getIpsFromPlayerList(Condition condition){
+    public List<String> getIpsFromPlayerList(Condition condition){
         ArrayList<String> list = new ArrayList<>();
         Player leader = this.leader.getPlayer();
         playerList.forEach((node)-> {
@@ -212,4 +212,15 @@ public class NodeInfoList extends ArrayList<Player> {
     public Leader getLeader(){
         return leader;
     }
+
+
+    /**
+     * Gets playerList.
+     *
+     * @return Value of playerList.
+     */
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
 }
