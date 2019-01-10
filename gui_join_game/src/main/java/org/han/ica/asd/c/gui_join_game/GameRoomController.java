@@ -35,9 +35,6 @@ public class GameRoomController {
 	private IGUIHandler playGame;
 
 	@Inject
-	private IGameStore persistence;
-
-	@Inject
 	@Named("Connector")
 	private IConnectorForSetup iConnectorForSetup;
 
@@ -46,10 +43,6 @@ public class GameRoomController {
 	private IPlayerComponent playerComponent;
 
     public void initialize() {
-			DaoConfig.setCurrentGameId(beerGame.getGameId());
-			persistence.saveGameLog(beerGame);
-
-			new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
 		}
 
     public void handleBackToJoinGameButtonClick() {
@@ -68,5 +61,8 @@ public class GameRoomController {
         this.roomModel = roomModel;
 				this.beerGame = beerGame;
         gameRoom.setText(roomModel.getRoomName());
+
+				DaoConfig.setCurrentGameId(beerGame.getGameId());
+				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
     }
 }
