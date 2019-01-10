@@ -26,11 +26,13 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     private IPlayerGameLogic gameLogic;
 
     @Inject
-	public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider) {
-		this.roundProvider = roundProvider;
-		this.facilityTurnOrderProvider = facilityTurnOrderProvider;
-		this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
-		gameLogic.setPlayerParticipant(this);
+    public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
+        this.roundProvider = roundProvider;
+        this.facilityTurnOrderProvider = facilityTurnOrderProvider;
+        this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+        this.gameLogic = gameLogic;
+        gameLogic.setPlayerParticipant(this);
+
     }
 
 	@Override
