@@ -177,6 +177,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 				actualPlayer = connectingPlayerO.get();
 				Optional<Player> facilityTaken = game.getPlayers().stream().filter(player -> player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
 				if(!facilityTaken.isPresent()) {
+					game.removePlayerById(actualPlayer.getPlayerId());
 					actualPlayer.setFacility(facility);
 					game.getPlayers().add(actualPlayer);
 					return;
