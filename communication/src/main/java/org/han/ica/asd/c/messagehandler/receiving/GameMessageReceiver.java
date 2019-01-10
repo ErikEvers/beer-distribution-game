@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -124,7 +125,8 @@ public class GameMessageReceiver {
                     return chooseFacilityMessage.createResponseMessage();
                 }
             }
-        } catch (Exception e) {
+
+        } catch (FacilityNotAvailableException e) {
             return chooseFacilityMessage.createResponseMessage(e);
         }
         return null;
