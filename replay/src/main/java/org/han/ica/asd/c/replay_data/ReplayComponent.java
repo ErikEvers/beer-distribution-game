@@ -39,19 +39,6 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
 
-//        for (int i = 0; i < 10; i++) {
-//            averageRounds.add(new AverageRound(i, GameValue.FACTORY, 1, 2, 3, 4, 5));
-//        }
-//        for (int i = 0; i < 10; i++) {
-//            averageRounds.add(new AverageRound(i, GameValue.WHOLESALER, 6, 7, 8, 9, 10));
-//        }
-//        for (int i = 0; i < 10; i++) {
-//            averageRounds.add(new AverageRound(i, GameValue.RETAILER, 11, 12, 13, 14, 15));
-//        }
-//        for (int i = 0; i < 10; i++) {
-//            averageRounds.add(new AverageRound(i, GameValue.REGIONALWAREHOUSE, 16, 17, 18, 19, 26));
-//        }
-
         initializeAverageRounds();
 
         totalRounds = 9;
@@ -188,12 +175,6 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         calculateAverageRounds(wholesalerIds, GameValue.WHOLESALER);
         calculateAverageRounds(retailerIds, GameValue.RETAILER);
         calculateAverageRounds(warehouseIds, GameValue.REGIONALWAREHOUSE);
-
-//        float total = 0;
-//        List<FacilityTurn> a = rounds.forEach(round ->
-//                round.getFacilityTurns().stream().filter(facilityTurn ->
-//                        factoryIds.contains(facilityTurn.getFacilityId())));
-
     }
 
     private void calculateAverageRounds(List<Integer> ids, GameValue gameValue){

@@ -5,13 +5,10 @@ import org.han.ica.asd.c.gamevalue.GameValue;
 public class AverageRound implements IDomainModel {
     private int roundId;
     private GameValue facilityType;
-
     private double budget;
     private double stock;
     private double backorders;
-
     private double orderAmount;
-
     private double deliverAmount;
 
     public AverageRound(int roundId, GameValue facilityType, double budget, double stock, double backorders, double orderAmount, double deliverAmount) {
