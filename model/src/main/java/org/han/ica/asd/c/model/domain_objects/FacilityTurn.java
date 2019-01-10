@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class FacilityTurn {
+import java.io.Serializable;
+
+public class FacilityTurn implements Serializable {
 	private int facilityId;
 	private int roundId;
 	private int stock;

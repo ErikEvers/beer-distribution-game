@@ -3,19 +3,14 @@ package org.han.ica.asd.c.player;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
-import org.han.ica.asd.c.Connector;
-import org.han.ica.asd.c.MessageDirector;
-import org.han.ica.asd.c.discovery.IFinder;
-import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,9 +30,8 @@ public class PlayerComponentTest {
             protected void configure() {
                 bind(IPlayerGameLogic.class).toInstance(logicMock);
                 bind(IGameStore.class).to(PersistenceStub.class);
-                bind(IConnectedForPlayer.class).to(Connector.class);
-                bind(IFinder.class).to(RoomFinder.class);
-                bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
+                bind(IConnectedForPlayer.class).to(CommunicationStub.class);
+                bind(IFinder.class).to(RoomFinderStub.class);
             }
         });
         playerComponent = injector.getInstance(PlayerComponent.class);

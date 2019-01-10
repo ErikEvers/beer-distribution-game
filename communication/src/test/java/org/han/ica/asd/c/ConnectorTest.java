@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.IResourceManager;
 import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomFinder;
@@ -67,24 +67,24 @@ public class ConnectorTest {
     public void setUp() {
         initMocks(this);
 
-        Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                //CommunicationBinds
-                bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
-                bind(IFinder.class).to(RoomFinder.class);
-
-                //communication
-                requestStaticInjection(SocketClient.class);
-                requestStaticInjection(SocketServer.class);
-
-                //FaultDetector
-                requestStaticInjection(FailLog.class);
-                requestStaticInjection(FaultDetectorLeader.class);
-                requestStaticInjection(Connector.class);
-                requestStaticInjection(FaultDetectionClient.class);
-            }
-        });
+//        Injector injector = Guice.createInjector(new AbstractModule() {
+//            @Override
+//            protected void configure() {
+//                //CommunicationBinds
+//                bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
+//                bind(IFinder.class).to(RoomFinder.class);
+//
+//                //communication
+//                requestStaticInjection(SocketClient.class);
+//                requestStaticInjection(SocketServer.class);
+//
+//                //FaultDetector
+//                requestStaticInjection(FailLog.class);
+//                requestStaticInjection(FaultDetectorLeader.class);
+//                requestStaticInjection(Connector.class);
+//                requestStaticInjection(FaultDetectionClient.class);
+//            }
+//        });
 
         connector = new Connector(faultDetector, gameMessageClient, finder, socketServer);
         connector.setNodeInfoList(nodeInfoList);
