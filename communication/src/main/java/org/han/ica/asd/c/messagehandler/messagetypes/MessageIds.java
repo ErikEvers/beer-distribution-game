@@ -7,5 +7,5 @@ public class MessageIds {
     public static final int WHO_IS_THE_LEADER_MESSAGE = 4;
     public static final int FACILITY_MESSAGE = 5;
     public static final int REQUEST_GAME_DATA_MESSAGE = 6;
-    public static final int CONFIGURATION_MESSAGE = 7;
+    public static final int GAME_START_MESSAGE = 7;
 }

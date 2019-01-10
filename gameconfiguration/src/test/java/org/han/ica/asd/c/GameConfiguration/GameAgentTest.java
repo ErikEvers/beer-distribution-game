@@ -7,6 +7,7 @@ import com.google.inject.name.Names;
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.gameconfiguration.GameAgentController;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.gameconfiguration.IGameAgentController;
 import org.han.ica.asd.c.gameconfiguration.IGameConfigurationUserInterface;

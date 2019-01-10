@@ -4,7 +4,9 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class ParticipantsPool {
     private List<IParticipant> participants;
     private PlayerParticipant player;
 
+    @Inject
     public ParticipantsPool(PlayerParticipant playerParticipant) {
         participants = new LinkedList<>();
         participants.add(playerParticipant);
@@ -82,6 +85,12 @@ public class ParticipantsPool {
                 participants.remove(participant);
                 return;
             }
+        }
+    }
+
+    public void excecuteRound(Round round) {
+        for (IParticipant participant : participants) {
+            participant.executeTurn(round);
         }
     }
 }

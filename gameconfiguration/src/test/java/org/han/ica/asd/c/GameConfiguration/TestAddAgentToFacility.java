@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+import org.han.ica.asd.c.gameconfiguration.GameAgentController;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.gameconfiguration.IGameConfigurationUserInterface;
 import org.junit.jupiter.api.Assertions;

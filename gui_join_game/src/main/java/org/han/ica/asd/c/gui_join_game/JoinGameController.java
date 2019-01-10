@@ -10,11 +10,16 @@ import javafx.scene.control.ListView;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
+import org.han.ica.asd.c.player.PlayerComponent;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 
 public class JoinGameController {
     @FXML
@@ -47,10 +52,12 @@ public class JoinGameController {
         //TODO Join room on IConnectorForSetup. If logged in succesful then set Room
         try {
             RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),  "");
-            gameRoom.setData(new Object[]{result,iConnectorForSetup});
+            GamePlayerId gameData = iConnectorForSetup.getGameData();
+						PlayerComponent.setPlayer(gameData.getBeerGame().getPlayerById(gameData.getPlayerId()));
+            gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
             gameRoom.setupScreen();
-        } catch (RoomException | DiscoveryException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR,e.getMessage(), ButtonType.CLOSE);
+        } catch (RoomException | DiscoveryException | ClassNotFoundException | IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
             alert.showAndWait();
         }
     }

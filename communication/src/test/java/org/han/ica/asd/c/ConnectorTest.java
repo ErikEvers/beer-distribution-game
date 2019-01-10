@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.discovery.IFinder;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.IResourceManager;
 import org.han.ica.asd.c.discovery.Room;
 import org.han.ica.asd.c.discovery.RoomFinder;
@@ -17,7 +17,7 @@ import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
@@ -67,24 +67,24 @@ public class ConnectorTest {
     public void setUp() {
         initMocks(this);
 
-        Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                //CommunicationBinds
-                bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
-                bind(IFinder.class).to(RoomFinder.class);
-
-                //communication
-                requestStaticInjection(SocketClient.class);
-                requestStaticInjection(SocketServer.class);
-
-                //FaultDetector
-                requestStaticInjection(FailLog.class);
-                requestStaticInjection(FaultDetectorLeader.class);
-                requestStaticInjection(Connector.class);
-                requestStaticInjection(FaultDetectionClient.class);
-            }
-        });
+//        Injector injector = Guice.createInjector(new AbstractModule() {
+//            @Override
+//            protected void configure() {
+//                //CommunicationBinds
+//                bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
+//                bind(IFinder.class).to(RoomFinder.class);
+//
+//                //communication
+//                requestStaticInjection(SocketClient.class);
+//                requestStaticInjection(SocketServer.class);
+//
+//                //FaultDetector
+//                requestStaticInjection(FailLog.class);
+//                requestStaticInjection(FaultDetectorLeader.class);
+//                requestStaticInjection(Connector.class);
+//                requestStaticInjection(FaultDetectionClient.class);
+//            }
+//        });
 
         connector = new Connector(faultDetector, gameMessageClient, finder, socketServer);
         connector.setNodeInfoList(nodeInfoList);
@@ -146,13 +146,13 @@ public class ConnectorTest {
 
     public void sendRoundToAllTest() {
         doNothing().when(gameMessageClient).sendRoundToAllPlayers(any(), any());
-        connector.updateAllPeers(new Round());
+        connector.sendRoundDataToAllPlayers(new Round());
         verify(gameMessageClient).sendRoundToAllPlayers(any(String[].class), any(Round.class));
     }
 
     @Test
     public void sendConfigucationToAllTest() {
-        connector.sendConfiguration(new Configuration());
-        verify(gameMessageClient).sendConfigurationToAllPlayers(any(String[].class), any(Configuration.class));
+        connector.sendGameStart(new BeerGame());
+        verify(gameMessageClient).sendStartGameToAllPlayers(any(String[].class), any(BeerGame.class));
     }
 }
