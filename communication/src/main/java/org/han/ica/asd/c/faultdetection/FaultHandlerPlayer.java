@@ -61,12 +61,10 @@ public class FaultHandlerPlayer {
 
     public String whoIsDead(NodeInfoList nodeInfoList) {
         if (amountOfFailingIps == (amountOfActiveIps-filteredAmount)) {
-            System.out.println("I AM DEAD");
             //TODO This should trigger Rejoin GUI and/or Request
             return "imDead";
         } else {
             if(amountOfConnectionsWithLeader == 0) {
-                System.out.println("LEADER IS DEAD");
                 notifyObserversLeaderDied(nodeInfoList);
                 return "leaderIsDead";
             }else{

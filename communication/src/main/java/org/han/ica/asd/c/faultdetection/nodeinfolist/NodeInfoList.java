@@ -109,6 +109,22 @@ public class NodeInfoList extends ArrayList<Player> {
     }
 
     /**
+     * Returns the player array without the leader.
+     *
+     * @return A (filtered) Player Array.
+     * @author Tarik
+     * @see NodeInfoList
+     */
+    public Player[] getPlayersWithoutLeader() {
+        Player leader = this.leader.getPlayer();
+
+        List<Player> playerListCopy = new ArrayList<>(playerList);
+        playerListCopy.removeIf(p-> p != leader);
+
+        return playerListCopy.toArray(new Player[0]);
+    }
+
+    /**
      * Retreives the ip of the leader when there is one. If there isnt one it returns null.
      * Used by the 'MessageProcessor'
      *
@@ -213,15 +229,6 @@ public class NodeInfoList extends ArrayList<Player> {
 
     public Leader getLeader(){
         return leader;
-    }
-
-    public Player[] getPlayersWithoutLeader() {
-        Player leader = this.leader.getPlayer();
-
-        List<Player> playerListCopy = new ArrayList<>(playerList);
-        playerListCopy.removeIf(p-> p != leader);
-
-        return playerListCopy.toArray(new Player[0]);
     }
 
     public String getMyIp() {

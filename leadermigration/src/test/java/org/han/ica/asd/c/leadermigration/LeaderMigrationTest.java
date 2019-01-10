@@ -43,5 +43,4 @@ public class LeaderMigrationTest {
     leaderMigration.initialize();
     Mockito.verify(connector).addObserver(any(LeaderMigration.class));
   }
-
 }

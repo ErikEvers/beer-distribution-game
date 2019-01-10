@@ -77,6 +77,7 @@ public class TestFaultHandlerPlayer {
 
 		assertEquals("imDead",faultHandlerPlayer.whoIsDead(nodeInfoList));
 	}
+
 	@Test
 	void TestShouldReturnThatLeaderIsDead() {
 		faultHandlerPlayer.setFilteredAmount(0);
@@ -85,8 +86,8 @@ public class TestFaultHandlerPlayer {
 		faultHandlerPlayer.resetAmountOfFailingIps();
 
 		assertEquals("leaderIsDead",faultHandlerPlayer.whoIsDead(nodeInfoList));
-
 	}
+
 	@Test
 	void TestSetAmountOfActiveIps() {
 		faultHandlerPlayer.setAmountOfActiveIps(10);
