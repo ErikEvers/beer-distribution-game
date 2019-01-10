@@ -162,6 +162,9 @@ public class FacilityDAO {
      * @return The retrieved facility from the database.
      */
     public Facility readSpecificFacility(int facilityId) {
+    	if(facilityId == 0) {
+    		return null;
+		}
         Connection conn = databaseConnection.connect();
         Facility facilityFromDb = null;
 				if (conn != null) {
