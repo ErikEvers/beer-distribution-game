@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
@@ -148,5 +149,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void gameStartReceived(BeerGame beerGame) {
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame);
+				participantsPool.excecuteRound(this.beerGame.getRounds().get(0));
     }
 }

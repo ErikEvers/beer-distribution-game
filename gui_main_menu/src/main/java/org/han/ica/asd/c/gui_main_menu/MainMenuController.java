@@ -31,6 +31,10 @@ public class MainMenuController {
     private IGUIHandler joinGame;
 
 		@Inject
+		@Named("GameRoomGameLeader")
+		private IGUIHandler gameRoomGameLeader;
+
+		@Inject
 		private IConnectorForSetup connector;
 
     public void initialize() {
@@ -54,7 +58,8 @@ public class MainMenuController {
 
     public void handleCreateGameButtonClick() {
 			connector.start();
-			connector.createRoom("12345", "");
+			connector.createRoom("Beergame ASD-C", "");
+			gameRoomGameLeader.setupScreen();
 		}
 
     public void handleJoinGameButtonClick(){

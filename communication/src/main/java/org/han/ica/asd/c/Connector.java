@@ -193,8 +193,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     @Override
-    public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
-        gameMessageClient.sendChooseFacilityMessage(leaderIp, facility);
+    public void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException {
+        gameMessageClient.sendChooseFacilityMessage(leaderIp, facility, playerId);
     }
 
     @Override

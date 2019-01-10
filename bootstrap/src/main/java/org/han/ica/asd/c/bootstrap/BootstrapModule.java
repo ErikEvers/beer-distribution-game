@@ -1,10 +1,13 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.gui_configure_game.GameRoomGameLeader;
 import org.han.ica.asd.c.gui_play_game.PlayGameSetupScreen;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
@@ -65,6 +68,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoomGameLeader")).to(GameRoomGameLeader.class);
 
 		bind(IConnectedForPlayer.class).to(Connector.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
@@ -73,6 +77,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IPersistence.class).to(Persistence.class);
 		bind(IPlayerGameLogic.class).to(GameLogic.class);
 		bind(ILeaderGameLogic.class).to(GameLogic.class);
+		bind(IGameLeader.class).annotatedWith(Names.named("GameLeader")).to(GameLeader.class);
 
 		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
 

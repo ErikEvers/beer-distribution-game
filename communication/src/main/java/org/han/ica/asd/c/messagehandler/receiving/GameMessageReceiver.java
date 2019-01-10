@@ -162,7 +162,7 @@ public class GameMessageReceiver {
         try {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IFacilityMessageObserver) {
-                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
+                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility(), chooseFacilityMessage.getPlayerId());
                     return chooseFacilityMessage.createResponseMessage();
                 }
             }

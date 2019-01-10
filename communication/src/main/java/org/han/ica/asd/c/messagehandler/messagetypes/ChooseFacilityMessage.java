@@ -9,25 +9,25 @@ import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_
 
 public class ChooseFacilityMessage extends GameMessage{
     private Facility facility;
-    private List<Facility> availableFacilities;
+    private String playerId;
 
     public ChooseFacilityMessage(Facility facility) {
         super(FACILITY_MESSAGE);
         this.facility = facility;
     }
 
-    public ChooseFacilityMessage(Facility facility, List<Facility> availableFacilities) {
+    public ChooseFacilityMessage(Facility facility, String playerId) {
         super(FACILITY_MESSAGE);
         this.facility = facility;
-        this.availableFacilities = availableFacilities;
+        this.playerId = playerId;
     }
 
     public Facility getFacility() {
         return facility;
     }
 
-    public List<Facility> getAvailableFacilities() {
-        return availableFacilities;
+    public String getPlayerId() {
+        return playerId;
     }
 
     public ChooseFacilityMessage createResponseMessage(Exception exception){

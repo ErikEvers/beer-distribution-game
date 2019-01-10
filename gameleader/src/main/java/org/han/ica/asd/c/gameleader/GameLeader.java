@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gameleader;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
@@ -30,7 +31,7 @@ import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
 
-public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
+public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
@@ -40,7 +41,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     private final Provider<Round> roundProvider;
     private final Provider<Player> playerProvider;
 
-    private BeerGame game;
+    private static BeerGame game;
     
     private Round currentRoundData;
 
@@ -61,7 +62,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     public void init(String leaderIp, String gameName) {
         connectorForLeader.addObserver(this);
-        this.game = beerGameProvider.get();
+        game = beerGameProvider.get();
 
         Configuration configuration = new Configuration();
 
@@ -108,13 +109,13 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         configuration.setMinimalOrderRetail(5);
 
 
-        this.game.setConfiguration(configuration);
-        this.game.setGameId(randomUUID().toString());
-        this.game.setGameName(gameName);
-        this.game.setGameDate("2019-01-01 0:00:00");
+        game.setConfiguration(configuration);
+        game.setGameId(randomUUID().toString());
+        game.setGameName(gameName);
+        game.setGameDate("2019-01-01 0:00:00");
         Player henk = new Player("1", leaderIp, retailer, "Yarno", true);
-        this.game.getPlayers().add(henk);
-        this.game.setLeader(new Leader(henk));
+        game.getPlayers().add(henk);
+        game.setLeader(new Leader(henk));
 
         this.persistence.saveGameLog(game);
 
@@ -162,12 +163,21 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
      */
     public BeerGame notifyPlayerReconnected(String playerId) {
         gameLogic.removeAgentByPlayerId(playerId);
-        return this.game;
+        return game;
     }
 
     @Override
-    public void chooseFacility(Facility facility) throws Exception {
-        throw new NotImplementedException();
+    public void chooseFacility(Facility facility, String playerId) throws Exception {
+			Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst();
+			Player actualPlayer;
+			if(!connectingPlayerO.isPresent()) {
+				actualPlayer = playerProvider.get();
+				Optional<Player> facilityTaken = game.getPlayers().stream().filter(player -> player.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
+				if(!facilityTaken.isPresent()) {
+					actualPlayer.setFacility(facility);
+				}
+			}
+			throw new NotImplementedException();
     }
 
     public GamePlayerId getGameData(String playerIp) {
@@ -262,4 +272,8 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     }
 
 
+	@Override
+	public BeerGame getBeerGame() {
+		return game;
+	}
 }

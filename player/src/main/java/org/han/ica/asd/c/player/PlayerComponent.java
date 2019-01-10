@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.player;
 
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -21,6 +23,9 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Inject
     private IPlayerGameLogic gameLogic;
+
+    @Inject
+    private IConnectorForSetup communication;
 
     @Inject
 	public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider) {
@@ -112,7 +117,11 @@ public class PlayerComponent implements IPlayerComponent {
 
     @Override
     public void chooseFacility(Facility facility) {
-        //comm.chooseFacility(facility, player.getPlayerId());
+        try {
+            communication.chooseFacility(facility, player.getPlayerId());
+        } catch (FacilityNotAvailableException e) {
+
+        }
     }
 
     @Override
