@@ -29,7 +29,7 @@ public class RoundCalculator {
             }
         }
 
-        updateRemainingBudget(currentRound);
+        updateRemainingBudget(currentRound, facilityLinks);
         return currentRound;
     }
 
@@ -91,22 +91,23 @@ public class RoundCalculator {
      * The remaining budget for the facility Deliver gets calculated on basis of the backOrders it has.
      * @param round
      */
-    private void updateRemainingBudget(Round round) {
-        for (FacilityLinkedTo f : facilitityLinks) {
-            Facility facilityOrder = f.getFacilityOrder();
-            Facility facilityDeliver = f.getFacilityDeliver();
-            if (round.isRemainingBudgetExisting(facilityOrder)) {
-                //The budget is calculated for the FacilityOrder variable
-                round.updateRemainingBudget(
-                        calculateStockCost(round, facilityOrder),
-                        facilityOrder);
+    private void updateRemainingBudget(Round round, Map<Facility, List<Facility>> facilityLinks) {
+        for(Map.Entry<Facility, List<Facility>> entry : facilityLinks.entrySet()) {
+            Facility facilityOrder = entry.getKey();
 
-                //The budget is calculated for the FacilityDeliver variable
-                round.updateRemainingBudget(
-                        calculateBackLogCost(round, facilityOrder, facilityDeliver),
-                        facilityDeliver);
+            for (Facility facilityDeliver : entry.getValue()) {
+                if (round.isRemainingBudgetExisting(facilityOrder)) {
+                    //The budget is calculated for the FacilityOrder variable
+                    round.updateRemainingBudget(calculateStockCost(round, facilityOrder), facilityOrder);
+
+                    //The budget is calculated for the FacilityDeliver variable
+                    round.updateRemainingBudget(calculateBackLogCost(round, facilityOrder, facilityDeliver), facilityDeliver);
+                }
             }
         }
+
+
+
     }
 
     /**
