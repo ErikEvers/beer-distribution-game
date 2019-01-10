@@ -3,6 +3,8 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 import com.google.inject.Inject;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NodeConverter {
@@ -21,7 +23,7 @@ public class NodeConverter {
      * @return the identifier
      */
     public int getFacilityId(String facility) {
-        List<List<String>> facilities = businessRuleStore.getAllFacilities();
+        List<List<String>> facilities = sortFacilities(businessRuleStore.getAllFacilities());
 
         String facilityId;
 
@@ -36,6 +38,15 @@ public class NodeConverter {
         }
 
         return Integer.parseInt(facilityId);
+    }
+
+    public List<List<String>> sortFacilities(List<List<String>> facilities){
+        List<List<String>> returnList = new ArrayList<>();
+        for (List<String> facility : facilities) {
+            Collections.sort(facility);
+            returnList.add(facility);
+        }
+        return returnList;
     }
 
     /***
