@@ -141,7 +141,7 @@ public class ParserPipeline {
         return builder.toString();
     }
     private String findWordInBusinessRule(String businessRule, int beginChar, int endChar){
-        return businessRule.substring(beginChar,endChar+1);
+        return businessRule.substring(beginChar,endChar + 1);
     }
 
     private int findEndError(String businessRule, int charPosition){
@@ -150,7 +150,7 @@ public class ParserPipeline {
         }
 
         if(" ".equals(String.valueOf(businessRule.charAt(charPosition)))){
-            return charPosition-1;
+            return charPosition - 1;
         }
 
         return findEndError(businessRule,charPosition+1);
