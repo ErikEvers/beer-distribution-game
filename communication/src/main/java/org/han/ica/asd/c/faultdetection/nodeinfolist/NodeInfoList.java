@@ -2,6 +2,8 @@ package org.han.ica.asd.c.faultdetection.nodeinfolist;
 
 
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
@@ -21,9 +23,7 @@ import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.UNFILTERED
  * @author Oscar, Tarik
  * @see Player
  */
-
 public class NodeInfoList extends ArrayList<Player> {
-
     private List<Player> playerList;
     private Leader leader;
     private String myIp;
@@ -37,6 +37,16 @@ public class NodeInfoList extends ArrayList<Player> {
         this.playerList = playerList;
     }
 
+    /**
+     * Initializes the nodeInfoList with the references to the Player list
+     * and the leader from the persistence component
+     *
+     * @param playerList  The list with the 'Player' objects from the persistence layer.
+     * @param leader      The Leader object from the persistence layer.
+     * @author Oscar, Tarik
+     * @see NodeInfoList
+     * @see IGameStore
+     */
     public void init(List<Player> playerList, Leader leader){
         this.playerList = playerList;
         this.leader = leader;
@@ -84,8 +94,10 @@ public class NodeInfoList extends ArrayList<Player> {
     /**
      * Returns a list with ips after filtering with predefined conditions.
      *
+     * @param condition The enum with the requested condition
      * @return A (filtered) List.
      * @author Tarik
+     * @see Condition
      * @see NodeInfoList
      */
     public List<String>  getIpsFromPlayerList(Condition condition){
@@ -130,7 +142,7 @@ public class NodeInfoList extends ArrayList<Player> {
      *
      * @return String of the ip of the leader, or null when there isnt a leader active.
      * @author Oscar
-     * @see org.han.ica.asd.c.messagehandler.MessageProcessor
+     * @see MessageProcessor
      */
     public String getLeaderIp() {
         Player leader = this.leader.getPlayer();

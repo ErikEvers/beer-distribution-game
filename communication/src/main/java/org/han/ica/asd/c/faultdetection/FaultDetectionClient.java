@@ -26,14 +26,10 @@ import java.util.logging.Logger;
  * @see FaultResponder
  */
 public class FaultDetectionClient {
-    @Inject
-    private static Logger logger;
-
-    @Inject
-    private ObjectOutputStream outputStream;
+    @Inject private static Logger logger;
+    @Inject private ObjectOutputStream outputStream;
 
     private boolean isConnected = false;
-
     private SocketClient socketClient;
 
     public FaultDetectionClient() {

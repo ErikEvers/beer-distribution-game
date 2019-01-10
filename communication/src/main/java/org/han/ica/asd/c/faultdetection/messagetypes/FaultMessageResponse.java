@@ -1,16 +1,20 @@
 package org.han.ica.asd.c.faultdetection.messagetypes;
 
+import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 
 /**
- * <h2> Is used for asking a different node if they have received a ping from the Leader within a certain interval.</h2>
- * <p>It inherits the messageId from the super class 'FaultDetectionMessage'. <br>
- * This 'messageId' is then used at the 'FaultDetectionMessageReceiver' to determine which type of message was received.</p>
+ * This message is send by the player to respond to the FaultMessage.
+ * This message is used to respond with a boolean stating whether the connection
+ * was successful or not and a String with the ip of the subject.
  *
  * @author Tarik
- * @see org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage
+ *
+ * @see FaultDetectionClient
+ * @see FaultDetectionMessage
  * @see FaultDetectionMessageReceiver
  */
+
 public class FaultMessageResponse extends FaultDetectionMessage {
 
     private Boolean isAlive;
