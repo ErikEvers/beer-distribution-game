@@ -143,12 +143,12 @@ public class GameSetupStartController {
 
     void setConfigurationInScreen(Configuration configuration) {
         if (configuration == null) {
+            assert configuration != null;
             roundNumber.setText(String.valueOf(configuration.getAmountOfRounds()));
             minOrder.setText(String.valueOf(configuration.getMinimalOrderRetail()));
             maxOrder.setText(String.valueOf(configuration.getMaximumOrderRetail()));
             bankrupt.setSelected(configuration.isContinuePlayingWhenBankrupt());
             seeDetail.setSelected(configuration.isInsightFacilities());
-
         }
 
     }

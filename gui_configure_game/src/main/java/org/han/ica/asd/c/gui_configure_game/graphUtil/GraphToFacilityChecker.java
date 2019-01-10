@@ -18,7 +18,6 @@ public class GraphToFacilityChecker {
      */
     public Boolean graphChecker(List<GraphFacility> graphFacilityList) {
         for (GraphFacility currentFacility : graphFacilityList) {
-            System.out.println("currentfacility = " + currentFacility.toString());
             if (currentFacility instanceof RegionalWarehouse || currentFacility instanceof Wholesale) {
                 if (!isConnectedBuyer(currentFacility) || !isConnectedSupplier(currentFacility)) {
                     return false;

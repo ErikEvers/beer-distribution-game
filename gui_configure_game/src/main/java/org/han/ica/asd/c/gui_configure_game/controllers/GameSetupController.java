@@ -115,7 +115,6 @@ public class GameSetupController implements Initializable {
      */
     @FXML
     public void handleAddFacilityButtonClick() {
-        System.out.println(gameName + "+" + onlineGame + "+" + configuration.getMaximumOrderRetail());
 
         graphConverterToDomain.setGraph(graph);
         int[] countAll = graphConverterToDomain.countAll();

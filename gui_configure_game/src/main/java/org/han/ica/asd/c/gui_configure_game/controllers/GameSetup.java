@@ -13,6 +13,7 @@ public class GameSetup implements IGUIHandler {
     private String onlinegame;
 
     public void setData(Object[] data) {
+        if(data[0] != null)
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
         this.onlinegame = (String) data[2];
@@ -22,7 +23,6 @@ public class GameSetup implements IGUIHandler {
     @Override
     public void setupScreen() {
         GameSetupController gameSetupController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/GameSetup.fxml"));
-
         gameSetupController.setConfiguration(configuration);
         gameSetupController.setGameName(gamename);
         gameSetupController.setOnlineGame(onlinegame);
