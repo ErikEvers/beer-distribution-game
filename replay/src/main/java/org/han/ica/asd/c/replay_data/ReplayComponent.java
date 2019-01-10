@@ -6,7 +6,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
-import org.han.ica.asd.c.replay_data.fakes.AverageRoundFake;
+import org.han.ica.asd.c.replay_data.fakes.AverageRound;
 import org.han.ica.asd.c.replay_data.fakes.RoundFake;
 import org.han.ica.asd.c.replay_data.fakes.RoundsFake;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 public class ReplayComponent implements IVisualisedPlayedGameData {
     private static final int LOWEST_ROUND_POSSIBLE = 0;
     private static final int FIRST_ROUND_TO_DISPLAY = 1;
-    private List<RoundFake> rounds;
     private List<Facility> displayedFacilities;
     private int currentRound;
     private int totalRounds;
     private GameValue attribute;
     private List<GameValue> displayedAverages;
-    private List<AverageRoundFake> averageRounds;
+    private List<AverageRound> averageRounds;
+    //Not used in current version, only average is supported
+    private List<RoundFake> rounds;
 
     public ReplayComponent() {
         displayedFacilities = new ArrayList<>();
@@ -43,16 +44,16 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         currentRound = FIRST_ROUND_TO_DISPLAY;
 
         for (int i = 0; i < 10; i++) {
-            averageRounds.add(new AverageRoundFake(i, GameValue.FACTORY, 1, 2, 3, 4, 5));
+            averageRounds.add(new AverageRound(i, GameValue.FACTORY, 1, 2, 3, 4, 5));
         }
         for (int i = 0; i < 10; i++) {
-            averageRounds.add(new AverageRoundFake(i, GameValue.WHOLESALER, 6, 7, 8, 9, 10));
+            averageRounds.add(new AverageRound(i, GameValue.WHOLESALER, 6, 7, 8, 9, 10));
         }
         for (int i = 0; i < 10; i++) {
-            averageRounds.add(new AverageRoundFake(i, GameValue.RETAILER, 11, 12, 13, 14, 15));
+            averageRounds.add(new AverageRound(i, GameValue.RETAILER, 11, 12, 13, 14, 15));
         }
         for (int i = 0; i < 10; i++) {
-            averageRounds.add(new AverageRoundFake(i, GameValue.REGIONALWAREHOUSE, 16, 17, 18, 19, 26));
+            averageRounds.add(new AverageRound(i, GameValue.REGIONALWAREHOUSE, 16, 17, 18, 19, 26));
         }
 
         totalRounds = 9;
@@ -129,23 +130,23 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     }
 
     private void createData(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries) {
-        List<AverageRoundFake> roundsToShow =  averageRounds.stream().filter(averageRoundFake ->
-                displayedAverages.contains(averageRoundFake.getFacilityType())&&averageRoundFake.getRoundId()<=currentRound).collect(Collectors.toList());
-        roundsToShow.forEach(averageRoundFake -> {
-            insertDataIntoSerie(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries, averageRoundFake);
+        List<AverageRound> roundsToShow =  averageRounds.stream().filter(averageRound ->
+                displayedAverages.contains(averageRound.getFacilityType())&& averageRound.getRoundId()<=currentRound).collect(Collectors.toList());
+        roundsToShow.forEach(averageRound -> {
+            insertDataIntoSerie(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries, averageRound);
         });
     }
 
-    private void insertDataIntoSerie(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries, AverageRoundFake averageRoundFake) {
-        switch (averageRoundFake.getFacilityType()){
+    private void insertDataIntoSerie(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries, AverageRound averageRound) {
+        switch (averageRound.getFacilityType()){
             case FACTORY:
-                factorySeries.getData().add(new XYChart.Data<>((double) averageRoundFake.getRoundId(), averageRoundFake.getAttribute(attribute)));break;
+                factorySeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));break;
             case WHOLESALER:
-                wholesalerSeries.getData().add(new XYChart.Data<>((double) averageRoundFake.getRoundId(), averageRoundFake.getAttribute(attribute)));break;
+                wholesalerSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));break;
             case RETAILER:
-                retailerSeries.getData().add(new XYChart.Data<>((double) averageRoundFake.getRoundId(), averageRoundFake.getAttribute(attribute)));break;
+                retailerSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));break;
             case REGIONALWAREHOUSE:
-                warehouseSeries.getData().add(new XYChart.Data<>((double) averageRoundFake.getRoundId(), averageRoundFake.getAttribute(attribute)));break;
+                warehouseSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));break;
             default:
                 break;
         }
@@ -175,5 +176,22 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
     public void setAttribute(GameValue value) {
         this.attribute = value;
+    }
+
+    public double getAttribute(AverageRound round, GameValue wantedValue) {
+        switch (wantedValue) {
+            case BUDGET:
+                return round.getBudget();
+            case STOCK:
+                return round.getStock();
+            case BACKLOG:
+                return round.getBackorders();
+            case ORDERED:
+                return round.getOrderAmount();
+            case OUTGOINGGOODS:
+                return round.getDeliverAmount();
+            default:
+                return 0;
+        }
     }
 }
