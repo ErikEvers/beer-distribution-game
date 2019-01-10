@@ -60,12 +60,6 @@ public class GameLogicTest {
     }
 
     @Test
-    public void seeOtherFacilitiesCallsPersistence() {
-        gameLogic.seeOtherFacilities();
-        verify(persistence, times(1)).getGameLog();
-    }
-
-    @Test
     public void letAgentTakeOverPlayerReplacesPlayer() {
         gameLogic.letAgentTakeOverPlayer(mock(Agent.class));
         verify(participantsPool, times(1)).replacePlayerWithAgent(any());
