@@ -1,11 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.gamelogic.public_interfaces.*;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
-import org.han.ica.asd.c.gamelogic.participants.IParticipant;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
@@ -20,6 +16,7 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +32,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private ParticipantsPool participantsPool;
     private int round;
 
-    private ArrayList<FacilityLinkedTo> facilitityLinks;
+    private Map<Facility, List<Facility>> facilityLinks;
     private final BeerGame beerGame;
 
     public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool, BeerGame beerGame) {
@@ -43,12 +40,22 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         this.persistence = persistence;
         this.participantsPool = participantsPool;
         this.round = 0;
-        facilitityLinks = new ArrayList<FacilityLinkedTo>();
+        facilityLinks = new HashMap<>();
         this.beerGame = beerGame;
     }
 
-    public void addfacilities(FacilityLinkedTo facilityLink) {
-        facilitityLinks.add(facilityLink);
+    public void addFacilities(Facility facilityOrder, Facility facilityDeliver) {
+        List<Facility> delivers;
+        if(facilityLinks.containsKey(facilityOrder)) {
+            delivers = facilityLinks.get(facilityOrder);
+            if(!delivers.contains(facilityDeliver)) {
+                delivers.add(facilityDeliver);
+            }
+        } else {
+            delivers = new ArrayList<>();
+            delivers.add(facilityDeliver);
+            facilityLinks.put(facilityOrder, delivers);
+        }
     }
 
     /**
@@ -129,7 +136,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         Round previousRound = beerGame.getRounds().get(round.getRoundId() - 1);
         RoundCalculator roundCalculator = new RoundCalculator();
 
-        return  roundCalculator.calculateRound(previousRound, round, facilitityLinks);
+        return  roundCalculator.calculateRound(previousRound, round, facilityLinks);
     }
 
     public BeerGame getBeerGame() {
