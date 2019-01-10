@@ -65,10 +65,6 @@ public class Round implements IDomainModel{
         return 0; //TODO erorr handling
     }
 
-//    public int updateTurnBacklogByFacility(Facility facilityFrom, Facility facilityTo, int newValue) {
-//        return turnBackOrder.get(facilityFrom).replace(facilityTo, newValue);
-//    }
-
 //    //stock
 //    public void addFacilityStock(Integer stockNumber, Facility facility) {
 //        turnStock.put(facility, stockNumber);
@@ -103,12 +99,17 @@ public class Round implements IDomainModel{
             }
         }
     }
-//
-//    //Remaining budget
-//    public void addFacilityRemainingBudget(Integer remainingBudgetNumber, Facility facility) {
-//        remainingBudget.put(facility, remainingBudgetNumber);
-//    }
-//
+
+    //Remaining budget
+    public void addFacilityRemainingBudget(Integer remainingBudget, Facility order, Facility deliver) {
+        //For testing purposes
+        for(FacilityTurn facilityTurn : facilityTurns) {
+            if (facilityTurn.getFacilityId() == order.getFacilityId()) {
+                facilityTurn.setRemainingBudget(remainingBudget);
+            }
+        }
+    }
+
     public int getRemainingBudgetByFacility(Facility facility) {
         for(FacilityTurn facilityTurn : facilityTurns) {
             if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
