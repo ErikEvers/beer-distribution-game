@@ -8,6 +8,7 @@ import com.google.inject.name.Names;
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.han.ica.asd.c.socketrpc.SocketServer;

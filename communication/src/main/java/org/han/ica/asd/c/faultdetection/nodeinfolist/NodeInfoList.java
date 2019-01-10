@@ -20,7 +20,6 @@ import java.util.Objects;
 public class NodeInfoList extends ArrayList<Player> {
 
     private List<Player> playerList;
-
     private Leader leader;
 
     public NodeInfoList() {
@@ -36,6 +35,7 @@ public class NodeInfoList extends ArrayList<Player> {
         this.playerList = playerList;
         this.leader = leader;
     }
+
     /**
      * Retrieves all the ip's from the 'Player' objects in the 'PlayerList'.
      *
@@ -71,7 +71,6 @@ public class NodeInfoList extends ArrayList<Player> {
      * @author Oscar, Tarik
      * @see NodeInfoList
      */
-
     public List<String> getActiveIpsWithoutLeader() {
         return getIpsFromPlayerList("GetConnectedWithoutLeader");
     }

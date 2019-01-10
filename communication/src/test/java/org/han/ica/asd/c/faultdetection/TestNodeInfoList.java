@@ -27,22 +27,19 @@ public class TestNodeInfoList {
     private String testIp1;
     private String testIp2;
 
-
     @BeforeEach
     void setUp() {
-
         testIp1 = "TestIp1";
         testIp2 = "TestIp2";
         Player leaderPlayer = mock(Player.class);
         Leader leader = new Leader(leaderPlayer);
         List<Player> playerList = spy(new ArrayList<>());
-        nodeInfoList = new NodeInfoList(leader,playerList);
+        nodeInfoList = new NodeInfoList(leader, playerList);
     }
 
     @Test
     @DisplayName("Test if getAllIps returns the right ips")
     void TestGetAllIps() {
-
         Player player1 = new Player();
         player1.setIpAddress(testIp1);
         nodeInfoList.add(player1);
@@ -60,7 +57,6 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if getActiveIps returns the right ips")
     void TestGetAllActiveIps() {
-
         Player player1 = new Player();
         player1.setIpAddress(testIp1);
         player1.setConnected(true);
@@ -88,7 +84,6 @@ public class TestNodeInfoList {
         Player player2 = new Player();
         player2.setIpAddress(testIp2);
         player2.setConnected(true);
-
 
         nodeInfoList.add(player1);
         nodeInfoList.add(player2);

@@ -90,6 +90,7 @@ public class ConnectorTest {
 //                requestStaticInjection(FaultDetectionClient.class);
 //            }
 //        });
+//
 
         connector = new Connector(faultDetector, gameMessageClient, finder, socketServer);
         connector.setNodeInfoList(nodeInfoList);
