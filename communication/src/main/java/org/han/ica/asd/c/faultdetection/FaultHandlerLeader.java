@@ -23,10 +23,6 @@ public class FaultHandlerLeader {
     private boolean iAmDisconnected;
     private List<IConnectorObserver> observers;
 
-    HashMap<String, Integer> getAmountOfFailsPerIp() {
-        return amountOfFailsPerIp;
-    }
-
     FaultHandlerLeader() {
         amountOfFailsPerIp = new HashMap<>();
         iAmDisconnected = false;
@@ -64,18 +60,6 @@ public class FaultHandlerLeader {
     public boolean isLeaderAlive() {
         return iAmDisconnected;
     }
-
-//    /**
-//     * Retrieves the value of isConnected of a specific ipAddress
-//     *
-//     * @param ip The ip of which the status is requested.
-//     * @return The value of isConnected for the specified ipAddress.
-//     * @author Oscar, Tarik
-//     */
-//    public boolean isPeerAlive(String ip) {
-//        //TODO probably remove this method entirely
-//        return nodeInfoList.getStatusOfOneNode(ip);
-//    }
 
     /**
      * Resets the amount of failures for a specific node, given the ip of said node.
@@ -171,5 +155,23 @@ public class FaultHandlerLeader {
 
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
+    }
+
+    /**
+     * Sets new amountOfFailsPerIp.
+     *
+     * @param amountOfFailsPerIp New value of amountOfFailsPerIp.
+     */
+    public void setAmountOfFailsPerIp(HashMap<String, Integer> amountOfFailsPerIp) {
+        this.amountOfFailsPerIp = amountOfFailsPerIp;
+    }
+
+    /**
+     * Gets amountOfFailsPerIp.
+     *
+     * @return Value of amountOfFailsPerIp.
+     */
+    public HashMap<String, Integer> getAmountOfFailsPerIp() {
+        return amountOfFailsPerIp;
     }
 }
