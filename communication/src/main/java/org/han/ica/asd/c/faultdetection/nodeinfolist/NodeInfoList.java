@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
+import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTED;
+import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTEDWITHOUTLEADER;
+import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.UNFILTERED;
+
 /**
  * This list class is used to keep all the details of all the nodes in.
  * This list has a couple of methods to make looping through the list easier.
@@ -45,7 +49,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * @see NodeInfoList
      */
     public List<String> getAllIps() {
-        return getIpsFromPlayerList("GetUnfiltered");
+        return getIpsFromPlayerList(UNFILTERED);
     }
 
     /**
@@ -58,7 +62,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * @see NodeInfoList
      */
     public List<String> getActiveIps() {
-        return getIpsFromPlayerList("GetConnected");
+        return getIpsFromPlayerList(CONNECTED);
     }
 
     /**
@@ -72,7 +76,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * @see NodeInfoList
      */
     public List<String> getActiveIpsWithoutLeader() {
-        return getIpsFromPlayerList("GetConnectedWithoutLeader");
+        return getIpsFromPlayerList(CONNECTEDWITHOUTLEADER);
     }
 
     /**
@@ -82,18 +86,18 @@ public class NodeInfoList extends ArrayList<Player> {
      * @author Tarik
      * @see NodeInfoList
      */
-    public List<String>  getIpsFromPlayerList(String condition){
+    public List<String>  getIpsFromPlayerList(Condition condition){
         ArrayList<String> list = new ArrayList<>();
         Player leader = this.leader.getPlayer();
         playerList.forEach((node)-> {
             switch (condition) {
-                case "GetUnfiltered":
+                case UNFILTERED:
                     list.add(node.getIpAddress());
                     break;
-                case "GetConnected":
+                case CONNECTED:
                     if(node.isConnected()) list.add(node.getIpAddress());
                     break;
-                case "GetConnectedWithoutLeader":
+                case CONNECTEDWITHOUTLEADER:
                     if(node.isConnected() && node != leader) list.add(node.getIpAddress());
                     break;
                     default: break;

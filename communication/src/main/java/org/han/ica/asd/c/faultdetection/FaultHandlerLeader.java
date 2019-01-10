@@ -48,9 +48,7 @@ public class FaultHandlerLeader {
             // Dit is om niet meer te pingen tot er een rejoin request gedaan word.
             // Dan moet het dus weer op true gezet worden
             nodeInfoList.updateIsConnected(ip, false);
-
             notifyObserversPlayerDied(ip);
-
             return ip;
         } else {
             //TODO Call Relay system here when implemented.

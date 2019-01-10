@@ -177,7 +177,6 @@ public class FaultDetectorLeader extends TimerTask {
             faultDetectionClient.makeConnection(ip);
             failLog.reset(ip);
             faultHandlerLeader.reset(ip);
-            // nodeInfoList.updateIsConnected(ip, true); overbodig want dit wordt alleen uitgevoerd als het true is
         } catch (NodeCantBeReachedException e) {
             if (!failLog.checkIfIpIsFailed(ip)) {
                 failLog.increment(ip);
