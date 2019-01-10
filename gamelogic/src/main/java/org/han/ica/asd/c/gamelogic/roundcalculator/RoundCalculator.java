@@ -4,6 +4,9 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
+import java.util.List;
+import java.util.Map;
+
 public class RoundCalculator {
     private int currentTurnBackOrders;
 
@@ -11,19 +14,19 @@ public class RoundCalculator {
         currentTurnBackOrders = 0; //Zero unless a backorder is calculated in calculateNewFacilityStockDeliver.
     }
 
-    public Round calculateRound(Round previousRound, Round currentRound, List<FacilityLinkedTo> facilitityLinks) {
-        for (FacilityLinkedTo f : facilitityLinks) {
-            Facility facilityOrder = f.getFacilityOrder();
-            Facility facilityDeliver = f.getFacilityDeliver();
+    public Round calculateRound(Round previousRound, Round currentRound, Map<Facility, List<Facility>> facilityLinks) {
+        for(Map.Entry<Facility, List<Facility>> entry : facilityLinks.entrySet()) {
+            Facility order = entry.getKey();
 
-            //get the round of the previous turn.
-            int ordered = previousRound.getTurnOrderByFacility(facilityOrder, facilityDeliver);
+            for(Facility deliver: entry.getValue()) {
+                int ordered = previousRound.getTurnOrderByFacility(order, deliver);
 
-            ordered = dealWithBackOrders(ordered, previousRound, facilityOrder, facilityDeliver);
+                ordered = dealWithBackOrders(ordered, previousRound, order, deliver);
 
-            ordered = calculateNewFacilityStockDeliver(currentRound, ordered, facilityDeliver, facilityOrder);
+                ordered = calculateNewFacilityStockDeliver(currentRound, ordered, order, deliver);
 
-            updateStock(currentRound, ordered, facilityOrder, facilityDeliver);
+                updateStock(currentRound, ordered, order, deliver);
+            }
         }
 
         updateRemainingBudget(currentRound);
