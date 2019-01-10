@@ -8,6 +8,7 @@ import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.Assert;
@@ -34,6 +35,7 @@ public class BeerGameDAOIntegrationTest {
 		beerGame.getPlayers().add(new Player("1","127.0.01",new Facility(),"Carsten Flokstra",true));
 		beerGame.getRounds().add(new Round());
 		beerGame.setConfiguration(new Configuration(40,1,1,1,1,1,99,false,false));
+		beerGame.setLeader(new Leader(new Player()));
 		DBConnectionTest.getInstance().cleanup();
 		DBConnectionTest.getInstance().createNewDatabase();
 		Injector injector = Guice.createInjector(new AbstractModule() {

@@ -1,8 +1,9 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Leader implements IDomainModel{
+public class Leader implements IDomainModel, Serializable {
     private Player player;
     private LocalDateTime timestamp;
 
@@ -21,5 +22,9 @@ public class Leader implements IDomainModel{
 
     public LocalDateTime getTimestamp() {
         return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp){
+        this.timestamp = timestamp;
     }
 }

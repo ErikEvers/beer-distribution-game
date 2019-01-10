@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class GameAgent implements IDomainModel{
+public class GameAgent implements IDomainModel, Serializable {
     private String gameAgentName;
     private Facility facility;
     private List<GameBusinessRules> gameBusinessRulesList;

@@ -30,4 +30,9 @@ public class Facility implements IDomainModel, Serializable {
     public void setFacilityId(int facilityId) {
         this.facilityId = facilityId;
     }
+
+    @Override
+    public String toString() {
+        return facilityType.getFacilityName();
+    }
 }

@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 
-import org.han.ica.asd.c.interfaces.communication.IGameConfigurationObserver;
+import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
@@ -9,7 +9,7 @@ import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
@@ -23,7 +23,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.CONFIGURATION_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.GAME_START_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ELECTION_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.FACILITY_MESSAGE;
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_GAME_DATA_MESSAGE;
@@ -39,7 +39,7 @@ public class GameMessageReceiver {
     @Inject
     private MessageProcessor messageProcessor;
 
-    private ArrayList<IConnectorObserver> gameMessageObservers;
+    private static ArrayList<IConnectorObserver> gameMessageObservers;
 
     private TransactionMessage toBecommittedRound;
 
@@ -112,11 +112,11 @@ public class GameMessageReceiver {
                 case FACILITY_MESSAGE:
                     ChooseFacilityMessage chooseFacilityMessage = (ChooseFacilityMessage) gameMessage;
                     return handleFacilityMessage(chooseFacilityMessage);
+                case GAME_START_MESSAGE:
+                    TransactionMessage gameStartMessage = (TransactionMessage) gameMessage;
+                    return handleTransactionMessage(gameStartMessage);
                 case REQUEST_GAME_DATA_MESSAGE:
                     return handleRequestGameData(senderIp);
-                case CONFIGURATION_MESSAGE:
-                    ConfigurationMessage configurationMessage = (ConfigurationMessage) gameMessage;
-                    return handleTransactionMessage(configurationMessage);
                 default:
                     break;
             }
@@ -175,9 +175,9 @@ public class GameMessageReceiver {
     private RequestGameDataMessage handleRequestGameData(String playerIp){
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
-                    RequestGameDataMessage requestAllFacilitiesMessageResponse = new RequestGameDataMessage();
-                    requestAllFacilitiesMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
-                    return requestAllFacilitiesMessageResponse;
+                    RequestGameDataMessage requestGameDataMessageResponse = new RequestGameDataMessage();
+                    requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
+                    return requestGameDataMessageResponse;
             }
         }
         return null;
@@ -234,20 +234,20 @@ public class GameMessageReceiver {
                     ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
-                } else if (observer instanceof IGameConfigurationObserver && transactionMessage.getMessageType() == 7) {
+                } else if (observer instanceof IGameStartObserver && transactionMessage.getMessageType() == 7) {
                     //noinspection ConstantConditions
-                    ConfigurationMessage configurationMessage = (ConfigurationMessage) transactionMessage;
-                    ((IGameConfigurationObserver) observer).gameConfigurationReceived(configurationMessage.getConfiguration());
-                    configurationMessage.createResponseMessage();
-                    return configurationMessage;
+                    GameStartMessage gameStartMessage = (GameStartMessage) transactionMessage;
+                    ((IGameStartObserver) observer).gameStartReceived(gameStartMessage.getBeerGame());
+                    gameStartMessage.createResponseMessage();
+                    return gameStartMessage;
                 }
             }
         }
         return null;
     }
 
-    public void setObservers(ArrayList<IConnectorObserver> observers) {
-        this.gameMessageObservers = observers;
+    public static void setObservers(ArrayList<IConnectorObserver> observers) {
+        gameMessageObservers = observers;
     }
 
     public void setGameMessageFilterer(GameMessageFilterer gameMessageFilterer) {
