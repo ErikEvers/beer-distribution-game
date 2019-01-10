@@ -45,16 +45,12 @@ public class GameRoomController {
 	@Named("PlayerComponent")
 	private IPlayerComponent playerComponent;
 
-	@Inject
-	private IGameStore persistence;
-
     public void initialize() {
 		}
 
     public void handleBackToJoinGameButtonClick() {
     	iConnectorForSetup.removeYourselfFromRoom(roomModel);
-        joinGame.setupScreen();
-
+    	joinGame.setupScreen();
     }
 
     public void handleReadyButtonClick() {

@@ -49,7 +49,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     private static Connector instance = null;
     private static String leaderIp = null;
 
-    private ArrayList<IConnectorObserver> observers;
+    private static ArrayList<IConnectorObserver> observers;
 
     @Inject
     private NodeInfoList nodeInfoList;
@@ -86,7 +86,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     public Connector(Provider<GameLeader> gameLeaderProvider) {
         this.gameLeaderProvider = gameLeaderProvider;
-				observers = new ArrayList<>();
     }
 
     public void start() {
