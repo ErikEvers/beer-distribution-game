@@ -35,7 +35,7 @@ public class RoundCalculator {
 
     /**
      * Calculate and update the new stock of the facility that ordered.
-     * Also add the delivered goods to the TurnReceived and TurnDeliver maps.
+     * Also add the delivered goods to the TurnDeliver list.
      * @param round
      * @param facilityOrder
      * @param facilityDeliver
@@ -46,7 +46,6 @@ public class RoundCalculator {
         calculateIncomingGoodsCosts(ordered, round, facilityOrder);
 
         round.updateStock(facilityOrder, newFacilityStockOrder);
-        round.addTurnReceived(facilityOrder, facilityDeliver, ordered);
         round.addTurnDeliver(facilityOrder, facilityDeliver, ordered, currentTurnBackOrders);
     }
 

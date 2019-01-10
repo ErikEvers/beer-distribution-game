@@ -2,11 +2,9 @@ package org.han.ica.asd.c.gamelogic.roundcalculator;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RoundCalculatorTest {
     private Facility manufacturer;
@@ -175,59 +171,6 @@ class RoundCalculatorTest {
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility(30, demand, retailer);
     }
 
-    private void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacility(int expectedNumber, Facility facilityOrder, Facility facilityDeliver) {
-        Round previousRound = setupPreviousRoundObjectWithoutBacklog();
-
-        gameLogic.getBeerGame().addRound(previousRound);
-
-        Round calculatedRound = setupCalculatedRoundObject();
-
-        calculatedRound = gameLogic.calculateRound(calculatedRound);
-
-        Assert.assertEquals(expectedNumber, calculatedRound.getTurnReceivedByFacility(facilityOrder, facilityDeliver));
-    }
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacilityForManufacturer() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacility(25, manufacturer, manufacturer);
-    }
-
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacilityForRegionalWarehouse() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacility(0, regionalWarehouse, manufacturer);
-    }
-
-
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacilityForWholesale() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacility(30, wholesale, regionalWarehouse);
-    }
-
-
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacilityForRetailer() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacility(15, retailer, wholesale);
-    }
-
-
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacilityForDemand() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnReceivedByFacility(30, demand, retailer);
-    }
 
     private void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacility(Facility facility) {
         Round previousRound = setupPreviousRoundObjectWithoutBacklog();
@@ -371,52 +314,6 @@ class RoundCalculatorTest {
         
 
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacility(30, demand, retailer);
-    }
-
-    private void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacility(int expectedNumber, Facility facilityOrder, Facility facilityDeliver) {
-        Round previousRound = setupPreviousRoundObjectWithBacklog();
-        gameLogic.getBeerGame().addRound(previousRound);
-
-        Round calculatedRound = setupCalculatedRoundObject();
-
-        calculatedRound = gameLogic.calculateRound(calculatedRound);
-
-        Assert.assertEquals(expectedNumber, calculatedRound.getTurnReceivedByFacility(facilityOrder, facilityDeliver));
-    }
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacilityForManufacturer() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacility(25, manufacturer, manufacturer);
-    }
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacilityForRegionalWarehouse() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacility(0, regionalWarehouse, manufacturer);
-    }
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacilityForWholesale() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacility(40, wholesale, regionalWarehouse);
-    }
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacilityForRetailer() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacility(15, retailer, wholesale);
-    }
-
-    @Test
-    void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacilityForDemand() {
-        
-
-        testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnReceivedByFacility(30, demand, retailer);
     }
 
     private void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacility(Facility testFacility) {

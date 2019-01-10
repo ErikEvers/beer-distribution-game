@@ -2,8 +2,6 @@ package org.han.ica.asd.c.model.domain_objects;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import java.util.HashMap;
 import java.util.Map;
 
 public class Round implements IDomainModel{
@@ -33,7 +31,12 @@ public class Round implements IDomainModel{
     }
 
     public int getTurnOrderByFacility(Facility facilityFrom, Facility facilityTo) {
-        return turnOrder.get(facilityFrom).get(facilityTo);
+        for(FacilityTurnOrder o : facilityOrders) {
+            if(o.getFacilityId() == facilityFrom.getFacilityId() && o.getFacilityIdOrderTo() == facilityTo.getFacilityId()) {
+                return o.getOrderAmount();
+            }
+        }
+        return -1; //TODO
     }
 
     //Deliver
@@ -43,30 +46,21 @@ public class Round implements IDomainModel{
     }
 
     public int getTurnDeliverByFacility(Facility facilityFrom, Facility facilityTo) {
-        return turnDeliver.get(facilityFrom).get(facilityTo);
-    }
-
-    //Received
-    public void addTurnReceived(Facility facilityFrom, Facility facilityTo, Integer orderAmount) {
-        if (turnReceived.containsKey(facilityTo)) {
-            turnReceived.get(facilityTo).put(facilityFrom, orderAmount);
-        } else {
-            Map<Facility, Integer> orderTo = new HashMap();
-            orderTo.put(facilityFrom, orderAmount);
-            turnReceived.put(facilityTo, orderTo);
+        for(FacilityTurnDeliver o : facilityTurnDelivers) {
+            if(o.getFacilityId() == facilityFrom.getFacilityId() && o.getFacilityIdDeliverTo() == facilityTo.getFacilityId()) {
+                return o.getDeliverAmount();
+            }
         }
+
+        return -1; //TODO
     }
 
-    public int getTurnReceivedByFacility(Facility facilityFrom, Facility facilityTo) {
-        return turnReceived.get(facilityTo).get(facilityFrom);
-    }
-
-    //Backlog
-    public void addTurnBackOrder(Facility facilityFrom, Facility facilityTo, Integer orderAmount) {
-        Map<Facility, Integer> orderTo = new HashMap();
-        orderTo.put(facilityTo, orderAmount);
-        turnBackOrder.put(facilityFrom, orderTo);
-    }
+//    //Backlog
+//    public void addTurnBackOrder(Facility facilityFrom, Facility facilityTo, Integer orderAmount) {
+//        Map<Facility, Integer> orderTo = new HashMap();
+//        orderTo.put(facilityTo, orderAmount);
+//        turnBackOrder.put(facilityFrom, orderTo);
+//    }
 
     public int getTurnBacklogByFacility(Facility facilityFrom, Facility facilityTo) {
         return turnBackOrder.get(facilityFrom).get(facilityTo);
