@@ -21,7 +21,7 @@ class RoundCalculatorTest {
     private Facility demand;
 
     private GameLogic gameLogic;
-    private RoundCalculator roundCalculator;
+    private RoundCalculator roundCalculator; //TODO gamelogic en round methodes mocken
 
     private Map<Facility, List<Facility>> facilityLinksTo;
 
