@@ -1,22 +1,26 @@
 package org.han.ica.asd.c.gameleader;
 
+import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.GameAgent;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Optional;
 
-public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver {
+public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
@@ -24,21 +28,27 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
+    private final Provider<Player> playerProvider;
 
     private BeerGame game;
-
+    
     private Round currentRoundData;
 
+    private int highestPlayerId = 0;
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound;
     private int roundId = 1;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider) {
+    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider) {
         this.beerGameProvider = beerGameProvider;
         this.roundProvider = roundProvider;
+        this.playerProvider = playerProvider;
     }
 
+    /**
+     * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
+     */
     public void init() {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
@@ -69,10 +79,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public void playerIsDisconnected(String playerId) {
         for (int i = 0; i <= game.getPlayers().size(); i++) {
             if (game.getPlayers().get(i).getPlayerId().equals(playerId)) {
-                GameAgent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
+                Agent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
                 if (agent != null) {
-                    IParticipant participant = new AgentParticipant(agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
-                    gameLogic.addLocalParticipant(participant);
+                    gameLogic.addLocalParticipant(agent);
                     return;
                 }
             }
@@ -88,6 +97,29 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     public BeerGame notifyPlayerReconnected(String playerId) {
         gameLogic.removeAgentByPlayerId(playerId);
         return this.game;
+    }
+
+    @Override
+    public void chooseFacility(Facility facility) throws Exception {
+        throw new NotImplementedException();
+    }
+
+    public GamePlayerId getGameData(String playerIp) {
+        Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getIpAddress().equals(playerIp)).findFirst();
+        Player actualPlayer;
+        if(!connectingPlayerO.isPresent()) {
+            actualPlayer = playerProvider.get();
+            actualPlayer.setPlayerId(Integer.toString(highestPlayerId + 1));
+            actualPlayer.setIpAddress(playerIp);
+            if(highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
+                highestPlayerId = Integer.parseInt(actualPlayer.getPlayerId());
+            }
+        } else {
+            actualPlayer = connectingPlayerO.get();
+        }
+        game.getPlayers().add(actualPlayer);
+
+        return new GamePlayerId(game, actualPlayer.getPlayerId());
     }
 
     /**
@@ -141,14 +173,23 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
         return game.getLeader().getPlayer().getPlayerId().equals(p.getPlayerId());
     }
 
+    /**
+     *
+     * @return the amount of turns received from players in the current round. Since each player can send one turn, this also indicates the amount of players who have sent their turn to the game leader.
+     */
     public int getTurnsReceivedInCurrentRound() {
         return turnsReceivedInCurrentRound;
     }
 
-    GameAgent getAgentByFacility (int facilityId) {
+    /**
+     * Retrieves the agent which belongs to the supplied FacilityId.
+     * @param facilityId the id of the facility that will be used to find the correct Facility instance.
+     * @return Agent object belonging to the facility.
+     */
+    Agent getAgentByFacility (int facilityId) {
         for (GameAgent agent : game.getAgents()) {
             if (agent.getFacility().getFacilityId() == facilityId) {
-                return agent;
+                return new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
             }
         }
         return null;

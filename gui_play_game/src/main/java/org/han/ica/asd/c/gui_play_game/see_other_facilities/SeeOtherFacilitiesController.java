@@ -3,7 +3,7 @@ package org.han.ica.asd.c.gui_play_game.see_other_facilities;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.player.PlayerComponent;
 
 /**
@@ -19,7 +19,7 @@ public class SeeOtherFacilitiesController {
 
     private PlayerComponent playerComponent;
 
-    private Configuration configuration;
+    private BeerGame beerGame;
 
     /**
      * Initialises the facility overview screen by calling the loadFacilityView() method.
@@ -28,9 +28,9 @@ public class SeeOtherFacilitiesController {
         playerComponent = new PlayerComponent();
     }
 
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-        playerComponent.setConfiguration(configuration);
-        TreeBuilder.loadFacilityView(configuration.getFacilitiesLinkedTo(), facilitiesContainer, true);
+    public void setBeerGame(BeerGame beerGame) {
+        this.beerGame = beerGame;
+        playerComponent.setConfiguration(beerGame.getConfiguration());
+        new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, true);
     }
 }

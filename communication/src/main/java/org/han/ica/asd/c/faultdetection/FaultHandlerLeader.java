@@ -5,8 +5,10 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class will call methods on external interfaces when needed. Example: a node is disconnected from the game, this
@@ -14,19 +16,19 @@ import java.util.HashMap;
  * It also keeps track of the amount of nodes that are able to reach nodes that this machine can't reach.
  */
 public class FaultHandlerLeader {
-    private HashMap<String, Integer> amountOfFailsPerIp;
+    @Inject
     private NodeInfoList nodeInfoList;
+
+    private HashMap<String, Integer> amountOfFailsPerIp;
     private boolean iAmDisconnected;
-    private ArrayList<IConnectorObserver> observers;
+    private List<IConnectorObserver> observers;
 
     HashMap<String, Integer> getAmountOfFailsPerIp() {
         return amountOfFailsPerIp;
     }
 
-    FaultHandlerLeader(NodeInfoList nodeInfoList, ArrayList<IConnectorObserver> observers) {
-        this.observers = observers;
+    FaultHandlerLeader() {
         amountOfFailsPerIp = new HashMap<>();
-        this.nodeInfoList = nodeInfoList;
         iAmDisconnected = false;
     }
 
@@ -41,15 +43,17 @@ public class FaultHandlerLeader {
     public String incrementFailure(String ip) {
         increment(ip);
 
-        if (amountOfFailsPerIp.get(ip).equals(nodeInfoList.size())) {
+        if (amountOfFailsPerIp.get(ip) > 0) {
 
             nodeInfoList.updateIsConnected(ip, false);
 
             notifyObserversPlayerDied(ip);
 
             return ip;
+        } else {
+            //TODO Call Relay system here when implemented.
+            return null;
         }
-        return null;
     }
 
     /**
@@ -90,9 +94,7 @@ public class FaultHandlerLeader {
      * @author Oscar
      */
     public void iAmDisconnected() {
-        //Can be called when the leader cant reach anyone but himself
         iAmDisconnected = true;
-
         notifyObserversIDied();
     }
 
@@ -111,9 +113,9 @@ public class FaultHandlerLeader {
         }
     }
 
-
     /**
      * Notifies every observer that a node can't be reached and is disconnected.
+     *
      * @param ip The ip that was not reached.
      * @author Tarik
      */
@@ -161,5 +163,13 @@ public class FaultHandlerLeader {
     private void add(String ip) {
         //Adds the ip to the list
         amountOfFailsPerIp.put(ip, 0);
+    }
+
+    public void setObservers(List<IConnectorObserver> observers) {
+        this.observers = observers;
+    }
+
+    public void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
     }
 }

@@ -1,22 +1,26 @@
-package org.han.ica.asd.c;
+package org.han.ica.asd.c.dao;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
-import org.han.ica.asd.c.model.dao_model.ProgrammedAgentDB;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedBusinessRules;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class ProgrammedAgentDAOIntegrationTest {
-    private static final ProgrammedAgentDB PROGRAMMED_AGENT = new ProgrammedAgentDB("Name1");
-    private static final ProgrammedAgentDB PROGRAMMED_AGENT_UPDATE = new ProgrammedAgentDB("Name1_Updated");
-    private static final ProgrammedAgentDB PROGRAMMED_AGENT2 = new ProgrammedAgentDB("Name2");
+    private static List<ProgrammedBusinessRules> programmedBusinessRules = new ArrayList<>();
+    private static final ProgrammedAgent PROGRAMMED_AGENT = new ProgrammedAgent("Name1", programmedBusinessRules);
+    private static final ProgrammedAgent PROGRAMMED_AGENT_UPDATE = new ProgrammedAgent("Name1_Updated", programmedBusinessRules);
+    private static final ProgrammedAgent PROGRAMMED_AGENT2 = new ProgrammedAgent("Name2", programmedBusinessRules);
 
     private ProgrammedAgentDAO programmedAgentDAO;
 
@@ -27,6 +31,7 @@ class ProgrammedAgentDAOIntegrationTest {
             @Override
             protected void configure() {
                 bind(IDatabaseConnection.class).to(DBConnectionTest.class);
+                bind(ProgrammedBusinessRulesDAO.class);
             }
         });
 
@@ -45,7 +50,7 @@ class ProgrammedAgentDAOIntegrationTest {
         programmedAgentDAO.createProgrammedAgent(PROGRAMMED_AGENT);
         Assert.assertEquals(1, programmedAgentDAO.readAllProgrammedAgents().size());
 
-        ProgrammedAgentDB programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
+        ProgrammedAgent programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
 
         Assert.assertEquals(PROGRAMMED_AGENT.getProgrammedAgentName(), programmedAgentDb.getProgrammedAgentName());
     }
@@ -58,7 +63,7 @@ class ProgrammedAgentDAOIntegrationTest {
         programmedAgentDAO.updateProgrammedAgent(PROGRAMMED_AGENT, PROGRAMMED_AGENT_UPDATE);
         Assert.assertEquals(1, programmedAgentDAO.readAllProgrammedAgents().size());
 
-        ProgrammedAgentDB programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
+        ProgrammedAgent programmedAgentDb = programmedAgentDAO.readAllProgrammedAgents().get(0);
 
         Assert.assertEquals(PROGRAMMED_AGENT_UPDATE.getProgrammedAgentName(), programmedAgentDb.getProgrammedAgentName());
     }
