@@ -90,37 +90,27 @@ class RoundCalculatorTest {
 
         //TODO: Make the rest of the tests like the one below. Replace the null value with the new FacilityLinksTo list.
         Round calculatedRound = roundCalculator.calculateRound(previousRound, setupCalculatedRoundObject(), facilityLinkedTo);
-
-
-
+        
         Assert.assertEquals(expectedNumber, calculatedRound.getStockByFacility(testFacility));
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacilityForManufacturer() {
-        
-
         TestIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacility(65, manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacilityForRegionalWarehouse() {
-        
-
         TestIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacility(10, regionalWarehouse);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacilityForWholesale() {
-        
-
         TestIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacility(55, wholesale);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacilityForRetailer() {
-        
-
         TestIfCalculatingInventoryGoesCorrectlyWithoutBacklogForStockByFacility(25, retailer);
     }
 
@@ -138,36 +128,26 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacilityForManufacturer() {
-
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility(25, manufacturer, manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacilityForRegionalWarehouse() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility(0, regionalWarehouse, manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacilityForWholesale() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility(30, wholesale, regionalWarehouse);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacilityForRetailer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility(15, retailer, wholesale);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacilityForDemand() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnDeliverByFacility(30, demand, retailer);
     }
 
@@ -186,36 +166,26 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacilityForManufacturer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacility(manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacilityForRegionalWarehouse() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacility(regionalWarehouse);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacilityForWholesale() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacility(wholesale);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacilityForRetailer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacility(retailer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacilityForDemand() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithoutBacklogForTurnBackLogByFacility(demand);
     }
 
@@ -244,29 +214,21 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacilityForManufacturer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacility(65, manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacilityForRegionalWarehouse() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacility(0, regionalWarehouse);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacilityForWholesale() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacility(65, wholesale);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacilityForRetailer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForStockByFacility(25, retailer);
     }
 
@@ -283,36 +245,26 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacilityForManufacturer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacility(25, manufacturer, manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacilityForRegionalWarehouse() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacility(0, regionalWarehouse, manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacilityForWholesale() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacility(40, wholesale, regionalWarehouse);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacilityForRetailer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacility(15, retailer, wholesale);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacilityForDemand() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnDeliverByFacility(30, demand, retailer);
     }
 
@@ -329,37 +281,26 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacilityForManufacturer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacility(manufacturer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacilityForRegionalWarehouse() {
-        
-
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacility(regionalWarehouse);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacilityForRetailer() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacility(retailer);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacilityForDemand() {
-        
-
         testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacility(demand);
     }
 
     @Test
     void testIfCalculatingInventoryGoesCorrectlyWithBacklogForTurnBacklogByFacilityForWholesale() {
-        
-
         Round previousRound = setupPreviousRoundObjectWithBacklog();
         gameLogic.getBeerGame().addRound(previousRound);
 
@@ -395,8 +336,6 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingRemainingBudgetGoesCorrectlyForManufacturer() {
-        
-
         //stockcost = 65 * 5 = 325; backlogcost = 0 * 25 = 0; OutgoingOrders = 25 * 3 = 75; Incoming orders = 0 * 3 = 0;
         //remaining budget = 500 - 325 - (75 - 0) = 100
         testIfCalculatingRemainingBudgetGoesCorrectly(100, manufacturer);
@@ -413,8 +352,6 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingRemainingBudgetGoesCorrectlyForWholesale() {
-        
-
         //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0; OutgoingOrders = 40 * 5 = 200; Incoming orders = 35 * 5 = 175;
         //remaining budget = (500 - 225) - (200 - 175) = 250
         testIfCalculatingRemainingBudgetGoesCorrectly(250, wholesale);
@@ -422,8 +359,6 @@ class RoundCalculatorTest {
 
     @Test
     void testIfCalculatingRemainingBudgetGoesCorrectlyForRetailer() {
-        
-
         //stockcost = 45 * 5 = 225; backlogcost = 0 * 25 = 0; OutgoingOrders = 35 * 6 = 210; Incoming orders = 30 * 6 = 180;
         //remaining budget = (500 - 225) - (210 - 180) - 0 = 245
         testIfCalculatingRemainingBudgetGoesCorrectly(245, retailer);
@@ -455,8 +390,6 @@ class RoundCalculatorTest {
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledForManufacturer() {
-        
-
         testIfPreviousOpenOrdersAreBeingHandled(55, manufacturer);
     }
 
@@ -464,15 +397,11 @@ class RoundCalculatorTest {
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledForRegionalWarehouse() {
-        
-
         testIfPreviousOpenOrdersAreBeingHandled(10, regionalWarehouse);
     }
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledForWholesale() {
-        
-
         Round previousRound = setupPreviousRoundObjectForBudgetCalculationAndHandlingPreviousOpenOrders();
         gameLogic.getBeerGame().addRound(previousRound);
 
@@ -500,8 +429,6 @@ class RoundCalculatorTest {
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledForRetailer() {
-        
-
         testIfPreviousOpenOrdersAreBeingHandled(30, retailer);
     }
 
@@ -531,22 +458,16 @@ class RoundCalculatorTest {
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrdersForManufacturer() {
-        
-
         testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrders(55, manufacturer);
     }
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrdersForRegionalWarehouse() {
-        
-
         testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrders(0, regionalWarehouse);
     }
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrdersForWholesale() {
-        
-
         Round previousRound = setupPreviousRoundObjectForBudgetCalculationAndHandlingPreviousOpenOrders();
         gameLogic.getBeerGame().addRound(previousRound);
 
@@ -574,8 +495,6 @@ class RoundCalculatorTest {
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrdersForRetailer() {
-        
-
         testIfPreviousOpenOrdersAreBeingHandledAndCreateNewOpenOrders(30, retailer);
     }
 }
