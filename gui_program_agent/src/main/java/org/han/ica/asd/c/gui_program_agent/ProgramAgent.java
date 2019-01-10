@@ -6,10 +6,12 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import java.util.ResourceBundle;
 
 public class ProgramAgent implements IGUIHandler {
+
     private String agentName;
 
     public void setData(Object[] data) {
         this.agentName = (String)data[0];
+
     }
 
     public void setupScreen() {

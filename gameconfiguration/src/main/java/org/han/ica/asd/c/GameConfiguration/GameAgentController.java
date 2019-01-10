@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.GameConfiguration;
+package org.han.ica.asd.c.gameconfiguration;
 
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
@@ -18,7 +18,7 @@ public class GameAgentController implements IGameAgentController {
 
   @Inject private IGameConfigurationUserInterface gameConfigurationUserInterface;
   @Inject private ProgrammedAgentDAO programmedAgentDAO;
-  @Inject private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.GameConfiguration.GameAgentController.class.getName());
+  @Inject private static final Logger LOGGER = Logger.getLogger(GameAgentController.class.getName());
 
   /**
    * Get all the ProgrammedAgents from the database. When the persistence layer returns no ProgrammedAgents, this

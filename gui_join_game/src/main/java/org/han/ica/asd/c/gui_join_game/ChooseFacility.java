@@ -5,15 +5,14 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 import java.util.ResourceBundle;
 
-public class AgentList implements IGUIHandler {
+public class ChooseFacility implements IGUIHandler {
     @Override
     public void setData(Object[] data) {
-        // implement interface
 
     }
 
     @Override
     public void setupScreen() {
-        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/AgentList.fxml"));
+        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/ChooseFacility.fxml"));
     }
 }

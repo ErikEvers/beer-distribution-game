@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="600" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_configure_game.controllers.GameSetupTypeController">
+    <children>
+        <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.0" minWidth="10.0" prefWidth="36.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="897.0" minWidth="10.0" prefWidth="869.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="80.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="194.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="703.0" minHeight="10.0" prefHeight="703.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="220.0" minHeight="61.0" prefHeight="61.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Button mnemonicParsing="false" onAction="#nextScreenButton" text="Next" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                    <GridPane.margin>
+                        <Insets right="15.0" />
+                    </GridPane.margin>
+                </Button>
+                <Button fx:id="back" mnemonicParsing="false" text="Back" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" vbarPolicy="NEVER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <content>
+                        <AnchorPane fx:id="facilitiesContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="789.0">
+                            <children>
+                                <Label layoutX="14.0" layoutY="14.0" text="Create game" textFill="#d78f48">
+                                    <font>
+                                        <Font name="Arial" size="43.0" />
+                                    </font>
+                                </Label>
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="22.0" layoutY="81.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Label layoutX="93.0" layoutY="90.0" text="Factory" />
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="22.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Label layoutX="93.0" layoutY="230.0" text="Wholesale" />
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Label fx:id="stockHoldingRegionalwarehouse" layoutX="92.0" layoutY="364.0" text="RegionalWharehouse" />
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="22.0" layoutY="483.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Label layoutX="92.0" layoutY="492.0" text="Retailer" />
+                        <Label layoutX="316.0" layoutY="26.0" text="Please insert a value. Leave blank for a standard ruleset">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="309.0" layoutY="90.0" text="Incoming goods" />
+                        <Label layoutX="513.0" layoutY="90.0" text="Outgoing goods" />
+                        <Label layoutX="308.0" layoutY="126.0" text="Stock holding cost" />
+                        <Label layoutX="515.0" layoutY="126.0" text="Starting budget" />
+                        <Label layoutX="308.0" layoutY="166.0" text="Starting order" />
+                        <TextField fx:id="startingOrderFactory" layoutX="424.0" layoutY="162.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <TextField fx:id="stockHoldingFactory" layoutX="424.0" layoutY="122.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="inGoodsFactory" layoutX="424.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <TextField fx:id="startingBudgetFactory" layoutX="627.0" layoutY="122.0" prefHeight="25.0" prefWidth="55.0" text="20" />
+                        <TextField fx:id="outGoodsFactory" layoutX="627.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="4" />
+                        <TextField fx:id="outGoodsWholesale" layoutX="627.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="10" />
+                        <TextField fx:id="startingBudgetWholesale" layoutX="627.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="45" />
+                        <TextField fx:id="inGoodsWholesale" layoutX="424.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="7" />
+                        <TextField fx:id="stockHoldingWholesale" layoutX="424.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderWholesale" layoutX="424.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <Label layoutX="308.0" layoutY="305.0" text="Starting order" />
+                        <Label layoutX="515.0" layoutY="265.0" text="Starting budget" />
+                        <Label layoutX="308.0" layoutY="265.0" text="Stock holding cost" />
+                        <Label layoutX="513.0" layoutY="229.0" text="Outgoing goods" />
+                        <Label layoutX="309.0" layoutY="229.0" text="Incoming goods" />
+                        <TextField fx:id="outGoodsRegionalWharehouse" layoutX="627.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="7" />
+                        <TextField fx:id="startingBudgetRegionalWharehouse" layoutX="627.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="30" />
+                        <TextField fx:id="inGoodsRegionalWharehouse" layoutX="424.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="4" />
+                        <TextField fx:id="stockHoldingRegionalWharehouse" layoutX="424.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderRegionalWharehouse" layoutX="424.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <Label layoutX="308.0" layoutY="440.0" text="Starting order" />
+                        <Label layoutX="515.0" layoutY="400.0" text="Starting budget" />
+                        <Label layoutX="308.0" layoutY="400.0" text="Stock holding cost" />
+                        <Label layoutX="513.0" layoutY="364.0" text="Outgoing goods" />
+                        <Label layoutX="309.0" layoutY="364.0" text="Incoming goods" />
+                        <TextField fx:id="outGoodsRetailer" layoutX="628.0" layoutY="488.0" prefHeight="25.0" prefWidth="55.0" text="13" />
+                        <TextField fx:id="startingBudgetRetailer" layoutX="628.0" layoutY="524.0" prefHeight="25.0" prefWidth="55.0" text="60" />
+                        <TextField fx:id="inGoodsRetailer" layoutX="425.0" layoutY="488.0" prefHeight="25.0" prefWidth="55.0" text="10" />
+                        <TextField fx:id="stockHoldingRetailer" layoutX="425.0" layoutY="524.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderRetailer" layoutX="425.0" layoutY="564.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <Label layoutX="309.0" layoutY="568.0" text="Starting order" />
+                        <Label layoutX="516.0" layoutY="528.0" text="Starting budget" />
+                        <Label layoutX="309.0" layoutY="528.0" text="Stock holding cost" />
+                        <Label layoutX="514.0" layoutY="492.0" text="Outgoing goods" />
+                        <Label layoutX="310.0" layoutY="492.0" text="Incoming goods" />
+                        <Line endX="800.0" layoutX="102.0" layoutY="199.0" startX="-140.0" stroke="#2a2ddd" />
+                        <Line endX="800.0" layoutX="112.0" layoutY="339.0" startX="-140.0" stroke="#ffbc1f" />
+                        <Line endX="800.0" layoutX="122.0" layoutY="471.0" startX="-140.0" stroke="#1fff34" />
+                        <Line endX="800.0" layoutX="132.0" layoutY="606.0" startX="-140.0" stroke="#ff2151" />
+                        <Line endX="800.0" layoutX="112.0" layoutY="68.0" startX="-140.0" stroke="#d78f48" />
+                        <TextField fx:id="startingStockFactory" layoutX="627.0" layoutY="162.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="openOrderCostFactory" layoutX="803.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <Label layoutX="516.0" layoutY="166.0" text="Starting stock" />
+                        <Label layoutX="692.0" layoutY="90.0" text="Open order cost" />
+                        <TextField fx:id="startingStockWholesale" layoutX="628.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="startingStockRegionalWharehouse" layoutX="627.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="startingStockRetailer" layoutX="627.0" layoutY="564.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="openOrderCostWholesale" layoutX="803.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <TextField fx:id="openOrderCostRegionalWarehouse" layoutX="803.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <TextField fx:id="openOrderCostRetailer" layoutX="803.0" layoutY="489.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <Label layoutX="692.0" layoutY="230.0" text="Open order cost" />
+                        <Label layoutX="692.0" layoutY="364.0" text="Open order cost" />
+                        <Label layoutX="692.0" layoutY="492.0" text="Open order cost" />
+                        <Label layoutX="513.0" layoutY="305.0" text="Starting stock" />
+                        <Label layoutX="513.0" layoutY="440.0" text="Starting stock" />
+                        <Label layoutX="516.0" layoutY="568.0" text="Starting stock" />
+                            </children></AnchorPane>
+                    </content>
+                </ScrollPane>
+            </children>
+        </GridPane>
+    </children>
+</AnchorPane>

@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.GameConfiguration;
+package org.han.ica.asd.c.gameconfiguration;
 
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
