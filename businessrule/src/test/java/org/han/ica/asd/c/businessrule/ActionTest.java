@@ -1,30 +1,69 @@
 package org.han.ica.asd.c.businessrule;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.powermock.reflect.Whitebox;
+import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+
+import javax.inject.Provider;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionTest {
-    private Action action = new Action();
+    private Action action;
+
+    private Provider<Action> actionProvider;
+    private Provider<Person> personProvider;
+    private Provider<ComparisonStatement> comparisonStatementProvider;
+    private Provider<ActionReference> actionReferenceProvider;
+    private Provider<Value> valueProvider;
 
     @BeforeEach
-    void before(){
-        action.addChild(new ActionReference());
-        action.addChild(new Value().addValue("1"));
+    public void setup() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+            }
+        });
+        actionProvider = injector.getProvider(Action.class);
+        personProvider = injector.getProvider(Person.class);
+        comparisonStatementProvider = injector.getProvider(ComparisonStatement.class);
+        actionReferenceProvider = injector.getProvider(ActionReference.class);
+        valueProvider = injector.getProvider(Value.class);
+
+        action = actionProvider.get();
+        action.addChild(actionReferenceProvider.get());
+        action.addChild(valueProvider.get().addValue("1"));
     }
 
     @Test
     void testAction_GetFacilityId_Factory(){
-        Action action = new Action();
-        action.addChild(new Person("factory 1"));
+        Action action = actionProvider.get();
+        action.addChild(personProvider.get().addValue("factory 1"));
+
+        int exp = 0;
+        int res = action.getFacilityId();
+
+        assertEquals(exp, res);
+    }
+
+    @Test
+    void testAction_GetFacilityId_Distributor(){
+        Action action = actionProvider.get();
+        action.addChild(personProvider.get().addValue("regional warehouse 1"));
 
         int exp = 1;
         int res = action.getFacilityId();
@@ -33,9 +72,20 @@ public class ActionTest {
     }
 
     @Test
-    void testAction_GetFacilityId_Distributor(){
-        Action action = new Action();
-        action.addChild(new Person("distributor 1"));
+    void testAction_GetFacilityId_Wholesaler(){
+        Action action = actionProvider.get();
+        action.addChild(personProvider.get().addValue("wholesaler 1"));
+
+        int exp = 2;
+        int res = action.getFacilityId();
+
+        assertEquals(exp, res);
+    }
+
+    @Test
+    void testAction_GetFacilityId_Retailer(){
+        Action action = actionProvider.get();
+        action.addChild(personProvider.get().addValue("retailer 1"));
 
         int exp = 3;
         int res = action.getFacilityId();
@@ -44,65 +94,9 @@ public class ActionTest {
     }
 
     @Test
-    void testAction_GetFacilityId_Wholesaler(){
-        Action action = new Action();
-        action.addChild(new Person("wholesaler 1"));
-
-        int exp = 5;
-        int res = action.getFacilityId();
-
-        assertEquals(exp, res);
-    }
-
-    @Test
-    void testAction_GetFacilityId_Retailer(){
-        Action action = new Action();
-        action.addChild(new Person("retailer 1"));
-
-        int exp = 6;
-        int res = action.getFacilityId();
-
-        assertEquals(exp, res);
-    }
-
-    @Test
-    void testAction_SeparateFacilityId_TwoElementString(){
-        Action action = new Action();
-        action.addChild(new Person("factory 1"));
-
-        int exp = 0;
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(action, "separateFacilityId");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(exp, res);
-    }
-
-    @Test
-    void testAction_SeparateFacilityId_OneElementString() {
-        Action action = new Action();
-        action.addChild(new Person("factory"));
-
-        int exp = 0;
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(action, "separateFacilityId");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(exp, res);
-    }
-
-    @Test
     void testAddChild_ComparisonStatement() {
-        Action action = new Action();
-        ComparisonStatement comparisonStatement = new ComparisonStatement();
+        Action action = actionProvider.get();
+        ComparisonStatement comparisonStatement = comparisonStatementProvider.get();
         action.addChild(comparisonStatement);
 
         ASTNode exp = comparisonStatement;
@@ -119,8 +113,8 @@ public class ActionTest {
 
     @Test
     void testAddChild_Person() {
-        Action action = new Action();
-        Person person = new Person("1");
+        Action action = actionProvider.get();
+        Person person = (Person) personProvider.get().addValue("1");
         action.addChild(person);
 
         ASTNode exp = person;
@@ -137,17 +131,17 @@ public class ActionTest {
 
     @Test
     void testActionReference_hashCode_True() {
-        Action testAction1 = new Action();
-        Action testAction2 = new Action();
+        Action testAction1 = actionProvider.get();
+        Action testAction2 = actionProvider.get();
 
         assertEquals(testAction1.hashCode(), testAction2.hashCode());
     }
 
     @Test
     void testActionReference_Equal_True() {
-        Action actionTest = new Action();
-        actionTest.addChild(new ActionReference());
-        actionTest.addChild(new Value().addValue("1"));
+        Action actionTest = actionProvider.get();
+        actionTest.addChild(actionReferenceProvider.get());
+        actionTest.addChild(valueProvider.get().addValue("1"));
         boolean match = action.equals(actionTest);
         assertTrue(match);
     }
@@ -160,9 +154,9 @@ public class ActionTest {
 
     @Test
     void testActionReference_Equal_False() {
-        Action actionTest = new Action();
-        actionTest.addChild(new ActionReference());
-        actionTest.addChild(new Value().addValue("2"));
+        Action actionTest = actionProvider.get();
+        actionTest.addChild(actionReferenceProvider.get());
+        actionTest.addChild(valueProvider.get().addValue("2"));
         boolean match = action.equals(actionTest);
         assertFalse(match);
     }
