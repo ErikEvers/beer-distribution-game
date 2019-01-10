@@ -10,12 +10,12 @@ public class GameSetup implements IGUIHandler {
 
     private Configuration configuration;
     private String gamename;
-    private String onlingame;
+    private String onlinegame;
 
     public void setData(Object[] data) {
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
-        this.onlingame = (String) data[2];
+        this.onlinegame = (String) data[2];
     }
 
 
@@ -25,6 +25,6 @@ public class GameSetup implements IGUIHandler {
 
         gameSetupController.setConfiguration(configuration);
         gameSetupController.setGameName(gamename);
-        gameSetupController.setOnlineGame(onlingame);
+        gameSetupController.setOnlineGame(onlinegame);
     }
 }

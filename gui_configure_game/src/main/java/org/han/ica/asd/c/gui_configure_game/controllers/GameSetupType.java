@@ -11,13 +11,13 @@ public class GameSetupType implements IGUIHandler {
 
     private Configuration configuration;
     private String gamename;
-    private String onlingame;
+    private String onlinegame;
 
     @Override
     public void setData(Object[] data) {
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
-        this.onlingame = (String) data[2];
+        this.onlinegame = (String) data[2];
     }
 
     @Override
@@ -25,6 +25,6 @@ public class GameSetupType implements IGUIHandler {
         GameSetupTypeController gameSetupTypeController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/GameSetupType.fxml"));
         gameSetupTypeController.setConfiguration(configuration);
         gameSetupTypeController.setGameName(gamename);
-        gameSetupTypeController.isOnlineGame(onlingame);
+        gameSetupTypeController.isOnlineGame(onlinegame);
     }
 }
