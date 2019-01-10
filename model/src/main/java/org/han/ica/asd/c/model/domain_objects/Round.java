@@ -56,59 +56,80 @@ public class Round implements IDomainModel{
     }
 
 //    //Backlog
-
     public int getTurnBacklogByFacility(Facility facilityFrom, Facility facilityTo) {
-        return turnBackOrder.get(facilityFrom).get(facilityTo);
+        for(FacilityTurnDeliver o : facilityTurnDelivers) {
+            if(o.getFacilityId() == facilityFrom.getFacilityId() && o.getFacilityIdDeliverTo() == facilityTo.getFacilityId()) {
+                return o.getOpenOrderAmount();
+            }
+        }
+        return 0; //TODO erorr handling
     }
 
-    public int updateTurnBacklogByFacility(Facility facilityFrom, Facility facilityTo, int newValue) {
-        return turnBackOrder.get(facilityFrom).replace(facilityTo, newValue);
-    }
+//    public int updateTurnBacklogByFacility(Facility facilityFrom, Facility facilityTo, int newValue) {
+//        return turnBackOrder.get(facilityFrom).replace(facilityTo, newValue);
+//    }
 
-    public boolean isTurnBackLogFilledByFacility(Facility facilityFrom) {
-        return turnBackOrder.containsKey(facilityFrom);
-    }
-
-    //stock
-    public void addFacilityStock(Integer stockNumber, Facility facility) {
-        turnStock.put(facility, stockNumber);
-    }
-
+//    //stock
+//    public void addFacilityStock(Integer stockNumber, Facility facility) {
+//        turnStock.put(facility, stockNumber);
+//    }
+//
     public int getStockByFacility(Facility facility) {
-        return turnStock.get(facility);
-    }
+        for(FacilityTurn facilityTurn : facilityTurns) {
+            if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
+                return facilityTurn.getStock();
+            }
+        }
 
-    public void setStock(Map<Facility, Integer> stock) {
-        this.turnStock = stock;
+        return -1; //TODO error handling
     }
-
-    public Map<Facility, Integer> getStock() {
-        return turnStock;
-    }
-
-    public boolean isStockExisting(Facility facility) {
-        return turnStock.containsKey(facility);
-    }
-
-    public void updateStock(Facility facility, Integer newStock) {
-        turnStock.replace(facility, newStock);
-    }
-
-    //Remaining budget
-    public void addFacilityRemainingBudget(Integer remainingBudgetNumber, Facility facility) {
-        remainingBudget.put(facility, remainingBudgetNumber);
-    }
-
+//
+//    public void setStock(Map<Facility, Integer> stock) {
+//        this.turnStock = stock;
+//    }
+//
+//    public Map<Facility, Integer> getStock() {
+//        return turnStock;
+//    }
+//
+//    public boolean isStockExisting(Facility facility) {
+//        return turnStock.containsKey(facility);
+//    }
+//
+//    public void updateStock(Facility facility, Integer newStock) {
+//        turnStock.replace(facility, newStock);
+//    }
+//
+//    //Remaining budget
+//    public void addFacilityRemainingBudget(Integer remainingBudgetNumber, Facility facility) {
+//        remainingBudget.put(facility, remainingBudgetNumber);
+//    }
+//
     public int getRemainingBudgetByFacility(Facility facility) {
-        return remainingBudget.get(facility);
+        for(FacilityTurn facilityTurn : facilityTurns) {
+            if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
+                return facilityTurn.getRemainingBudget();
+            }
+        }
+
+        return -1; //TODO error handling
     }
 
     public void updateRemainingBudget(Integer remainingBudgetNumber, Facility facility) {
-        remainingBudget.replace(facility, remainingBudgetNumber);
+        for(FacilityTurn facilityTurn : facilityTurns) {
+            if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
+                facilityTurn.setRemainingBudget(remainingBudgetNumber);
+            }
+        }
     }
 
     public boolean isRemainingBudgetExisting(Facility facility) {
-        return remainingBudget.containsKey(facility);
+        for(FacilityTurn facilityTurn : facilityTurns) {
+            if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
+                return facilityTurn.getRemainingBudget() <= 0;
+            }
+        }
+        return false; //TODO error handling
     }
 
 
