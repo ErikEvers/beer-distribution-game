@@ -84,6 +84,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     public Connector(Provider<GameLeader> gameLeaderProvider) {
         this.gameLeaderProvider = gameLeaderProvider;
+				observers = new ArrayList<>();
     }
 
     public void start() {
@@ -101,7 +102,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         internalIP = getInternalIP();
 
         faultDetector.setObservers(observers);
-        gameMessageReceiver.setObservers(observers);
+				GameMessageReceiver.setObservers(observers);
 
         messageDirector.setGameMessageReceiver(gameMessageReceiver);
         messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
@@ -111,7 +112,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer) {
-        observers = new ArrayList<>();
         nodeInfoList = new NodeInfoList();
         this.finder = finder;
         this.gameMessageClient = gameMessageClient;
@@ -120,7 +120,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         faultDetector.setObservers(observers);
 
         GameMessageReceiver gameMessageReceiver1 = new GameMessageReceiver();
-        gameMessageReceiver1.setObservers(observers);
+				GameMessageReceiver.setObservers(observers);
 
         MessageDirector messageDirector1 = new MessageDirector();
         messageDirector1.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
@@ -144,7 +144,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
-            leader.init(externalIP);
+            leader.init(externalIP, roomName);
             nodeInfoList.add(new NodeInfo(externalIP, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -219,6 +219,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     public void addObserver(IConnectorObserver observer) {
         observers.add(observer);
+        faultDetector.setObservers(observers);
+        GameMessageReceiver.setObservers(observers);
     }
 
     /**

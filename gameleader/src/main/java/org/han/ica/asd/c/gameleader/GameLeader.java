@@ -22,10 +22,13 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.util.UUID.randomUUID;
 
 public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
@@ -56,7 +59,7 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
     /**
      * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
      */
-    public void init(String leaderIp) {
+    public void init(String leaderIp, String gameName) {
         connectorForLeader.addObserver(this);
         this.game = beerGameProvider.get();
 
@@ -106,6 +109,9 @@ public class GameLeader implements ITurnModelObserver, IPlayerDisconnectedObserv
 
 
         this.game.setConfiguration(configuration);
+        this.game.setGameId(randomUUID().toString());
+        this.game.setGameName(gameName);
+        this.game.setGameDate("2019-01-01 0:00:00");
         Player henk = new Player("1", leaderIp, retailer, "Yarno", true);
         this.game.getPlayers().add(henk);
         this.game.setLeader(new Leader(henk));

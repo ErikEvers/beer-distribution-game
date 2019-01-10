@@ -39,7 +39,7 @@ public class GameMessageReceiver {
     @Inject
     private MessageProcessor messageProcessor;
 
-    private ArrayList<IConnectorObserver> gameMessageObservers;
+    private static ArrayList<IConnectorObserver> gameMessageObservers;
 
     private TransactionMessage toBecommittedRound;
 
@@ -175,9 +175,9 @@ public class GameMessageReceiver {
     private RequestGameDataMessage handleRequestGameData(String playerIp){
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
-                    RequestGameDataMessage requestAllFacilitiesMessageResponse = new RequestGameDataMessage();
-                    requestAllFacilitiesMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
-                    return requestAllFacilitiesMessageResponse;
+                    RequestGameDataMessage requestGameDataMessageResponse = new RequestGameDataMessage();
+                    requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
+                    return requestGameDataMessageResponse;
             }
         }
         return null;
@@ -246,8 +246,8 @@ public class GameMessageReceiver {
         return null;
     }
 
-    public void setObservers(ArrayList<IConnectorObserver> observers) {
-        this.gameMessageObservers = observers;
+    public static void setObservers(ArrayList<IConnectorObserver> observers) {
+        gameMessageObservers = observers;
     }
 
     public void setGameMessageFilterer(GameMessageFilterer gameMessageFilterer) {

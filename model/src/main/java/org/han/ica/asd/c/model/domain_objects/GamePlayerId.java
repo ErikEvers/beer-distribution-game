@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class GamePlayerId {
+import java.io.Serializable;
+
+public class GamePlayerId implements Serializable {
     private String playerId;
     private BeerGame beerGame;
 

@@ -1,12 +1,13 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Configuration implements IDomainModel{
+public class Configuration implements IDomainModel, Serializable {
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesalers;

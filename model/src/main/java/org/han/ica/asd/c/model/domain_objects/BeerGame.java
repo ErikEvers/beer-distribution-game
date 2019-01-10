@@ -1,9 +1,10 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BeerGame implements IDomainModel{
+public class BeerGame implements IDomainModel, Serializable {
 
     private Leader leader;
     private List<Player> players;
