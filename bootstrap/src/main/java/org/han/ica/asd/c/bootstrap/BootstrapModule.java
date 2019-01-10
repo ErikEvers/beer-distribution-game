@@ -55,18 +55,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGameStore.class).to(Persistence.class);
 		bind(IFinder.class).to(RoomFinder.class);
 
-
-		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGameList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("JoinGame")).to(JoinGame.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
-
 		bind(IConnectedForPlayer.class).to(Connector.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
@@ -76,9 +64,9 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(ILeaderGameLogic.class).to(GameLogic.class);
 
 		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
-
 		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 
+		guiBinds();
 		staticRequests();
 	}
 
@@ -92,5 +80,20 @@ public class BootstrapModule extends AbstractModuleExtension {
 		requestStaticInjection(FaultResponder.class);
 		requestStaticInjection(Connector.class);
 		requestStaticInjection(GameMessageClient.class);
+	}
+
+	private void guiBinds(){
+		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGameList.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("JoinGame")).to(JoinGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+
+
 	}
 }
