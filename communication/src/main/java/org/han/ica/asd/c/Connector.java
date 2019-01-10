@@ -10,6 +10,7 @@ import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
@@ -227,7 +228,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param allData
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round allData) {
+    public void sendRoundDataToAllPlayers(Round allData) throws TransactionException {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
     }
@@ -260,7 +261,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     @Override
-    public void sendGameStart(BeerGame beerGame) {
+    public void sendGameStart(BeerGame beerGame) throws TransactionException {
         List<String> ips = nodeInfoList.getAllIps();
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }

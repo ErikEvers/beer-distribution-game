@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.gui_play_game.PlayGameSetupScreen;
@@ -80,6 +81,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		requestStaticInjection(FaultResponder.class);
 		requestStaticInjection(Connector.class);
 		requestStaticInjection(GameMessageClient.class);
+		requestStaticInjection(GameLeader.class);
 	}
 
 	private void guiBinds(){
