@@ -1,17 +1,14 @@
 package org.han.ica.asd.c.gamelogic.roundcalculator;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityLinkedTo;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
-
-import java.util.List;
 
 public class RoundCalculator {
     private int currentTurnBackOrders;
 
     public RoundCalculator() {
-        currentTurnBackOrders = 0;
+        currentTurnBackOrders = 0; //Zero unless a backorder is calculated in calculateNewFacilityStockDeliver.
     }
 
     public Round calculateRound(Round previousRound, Round currentRound, List<FacilityLinkedTo> facilitityLinks) {
@@ -60,7 +57,7 @@ public class RoundCalculator {
      */
     private int calculateNewFacilityStockDeliver(Round round, int ordered, Facility facilityDeliver, Facility facilityOrder) {
         int delivered = ordered;
-        int currentTurnBackOrders = 0;
+        currentTurnBackOrders = 0;
 
         if (!facilityOrder.equals(facilityDeliver)) {
             int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
