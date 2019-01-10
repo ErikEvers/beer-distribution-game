@@ -7,6 +7,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import javax.inject.Inject;
@@ -54,7 +55,7 @@ public class GameRoomGameLeaderController {
 	}
 
 	public void handleStartButtonClick() {
-		iConnectorForSetup.startRoom(gameLeader.getRoomModel());
+		gameLeader.startGame();
 		playGame.setData(new Object[]{gameLeader.getBeerGame()});
 		playGame.setupScreen();
 	}

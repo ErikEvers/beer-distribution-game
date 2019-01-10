@@ -21,13 +21,11 @@ import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,9 +121,6 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         game.getPlayers().add(henk);
         game.setLeader(new Leader(henk));
 				playerComponent.setPlayer(henk);
-
-
-        this.persistence.saveGameLog(game);
 
         this.currentRoundData = roundProvider.get();
         this.currentRoundData.setRoundId(roundId);
@@ -237,6 +232,12 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         connectorForLeader.sendRoundDataToAllPlayers(currentRoundData);
         startNextRound();
     }
+
+    public void startGame() {
+			persistence.saveGameLog(game);
+			connectorForLeader.startRoom(roomModel);
+			connectorForLeader.sendGameStart(game);
+		}
 
     /**
      * Starts a new round of the beer game.

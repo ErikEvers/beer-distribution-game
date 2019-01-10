@@ -7,4 +7,5 @@ public interface IGameLeader {
 
 	BeerGame getBeerGame();
 	RoomModel getRoomModel();
+	void startGame();
 }

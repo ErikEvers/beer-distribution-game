@@ -9,6 +9,7 @@ import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
@@ -41,6 +42,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
@@ -173,15 +175,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     public void startRoom(RoomModel room) {
-        try {
-            for (String hostIP : room.getHosts()) {
-                nodeInfoList.add(new NodeInfo(hostIP, true, false));
-            }
-            finder.startGameRoom(room.getRoomName());
-            setLeader();
-        } catch (DiscoveryException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
+			try {
+				finder.startGameRoom(room.getRoomName());
+			} catch (DiscoveryException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
     }
 
     public void removeHostFromRoom(RoomModel room, String hostIP) {
@@ -268,11 +266,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return gameMessageClient.sendTurnModel(persistence.getGameLog().getLeader().getPlayer().getIpAddress(), turn);
     }
 
-    @Override
-    public void sendGameStart(BeerGame beerGame) {
-        List<String> ips = nodeInfoList.getAllIps();
-        gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
-    }
+		@Override
+		public void sendGameStart(BeerGame beerGame) {
+			List<String> playerIps = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+			gameMessageClient.sendStartGameToAllPlayers(playerIps.toArray(new String[0]), beerGame);
+		}
 
     public void addIP(String text) {
         nodeInfoList.addIp(text);

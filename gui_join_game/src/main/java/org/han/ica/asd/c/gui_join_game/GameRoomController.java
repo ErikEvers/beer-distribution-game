@@ -64,7 +64,6 @@ public class GameRoomController {
     public void handleRefreshButtonClick() {
     	try {
 				beerGame = iConnectorForSetup.getGameData().getBeerGame();
-				persistence.saveGameLog(beerGame);
 				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
 
 			} catch (IOException | ClassNotFoundException e) {
