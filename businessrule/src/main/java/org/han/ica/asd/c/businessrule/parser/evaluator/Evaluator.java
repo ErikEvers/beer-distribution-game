@@ -21,7 +21,7 @@ import java.util.Queue;
 public class Evaluator {
     private boolean hasErrors = false;
     private static final String INT_VALUE = "\\d+";
-    private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+.";
+    private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!\\t]+.";
     private boolean defaultOrderBool = false;
     private boolean defaultDeliverBool = false;
     private boolean personBool;

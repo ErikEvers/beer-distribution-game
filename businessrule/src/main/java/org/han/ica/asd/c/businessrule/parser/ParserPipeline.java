@@ -29,7 +29,7 @@ public class ParserPipeline {
     private Map<String, String> businessRulesMap = new HashMap<>();
     private static final String DELETE_EMPTY_LINES = "(?m)^[ \t]*\r?\n";
     private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
-    private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!]+.";
+    private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!\\t]+.";
 
     private Provider<Counter> counterProvider;
     private Provider<Evaluator> evaluatorProvider;
