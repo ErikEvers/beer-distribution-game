@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
@@ -167,7 +168,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
     @Override
-    public void chooseFacility(Facility facility, String playerId) throws Exception {
+    public void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException {
 			Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst();
 			Player actualPlayer;
 			if(!connectingPlayerO.isPresent()) {
@@ -177,7 +178,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 					actualPlayer.setFacility(facility);
 				}
 			}
-			throw new NotImplementedException();
+			throw new FacilityNotAvailableException();
     }
 
     public GamePlayerId getGameData(String playerIp) {

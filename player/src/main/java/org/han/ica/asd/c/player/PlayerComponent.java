@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.player;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
@@ -120,7 +122,8 @@ public class PlayerComponent implements IPlayerComponent {
         try {
             communication.chooseFacility(facility, player.getPlayerId());
         } catch (FacilityNotAvailableException e) {
-
+					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular room, try another one :)", ButtonType.CLOSE);
+					alert.showAndWait();
         }
     }
 

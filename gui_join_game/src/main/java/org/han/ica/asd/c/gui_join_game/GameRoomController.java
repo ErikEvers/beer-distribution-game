@@ -53,8 +53,6 @@ public class GameRoomController {
 
     public void handleReadyButtonClick() {
     	playerComponent.chooseFacility(TreeBuilder.getLastClickedFacility());
-        playGame.setData(new Object[]{beerGame});
-        playGame.setupScreen();
     }
 
     public void setGameData(RoomModel roomModel, BeerGame beerGame) {
