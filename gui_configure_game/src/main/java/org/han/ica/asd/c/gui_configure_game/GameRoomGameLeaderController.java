@@ -1,8 +1,11 @@
 package org.han.ica.asd.c.gui_configure_game;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
@@ -51,7 +54,12 @@ public class GameRoomGameLeaderController {
 	}
 
 	public void handleStartButtonClick() {
-		gameLeader.startGame();
+		try {
+			gameLeader.startGame();
+		} catch (BeerGameException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR, "Can't start a game unless every player controls a facility", ButtonType.CLOSE);
+			alert.showAndWait();
+		}
 	}
 
 	public void setRoomModel(RoomModel roomModel) {

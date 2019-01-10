@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
@@ -254,8 +255,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         startNextRound();
     }
 
-    public void startGame() {
+    public void startGame() throws BeerGameException {
 			//persistence.saveGameLog(game);
+			for(Player player: game.getPlayers()) {
+				if(player.getFacility() == null) {
+					throw new BeerGameException("Every player needs to control a facility");
+				}
+			}
 			connectorForLeader.startRoom(roomModel);
 			connectorForLeader.sendGameStart(game);
 		}
