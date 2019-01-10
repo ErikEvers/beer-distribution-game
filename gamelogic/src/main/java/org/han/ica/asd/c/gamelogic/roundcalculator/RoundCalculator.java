@@ -177,12 +177,6 @@ public class RoundCalculator {
      * @return
      */
     private int dealWithBackOrders(int ordered, Round round, Facility facilityOrder, Facility facilityDeliver) {
-        if (round.isTurnBackLogFilledByFacility(facilityOrder)) {
-            int backOrderAmount = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
-            round.updateTurnBacklogByFacility(facilityOrder, facilityDeliver, 0);
-            return ordered + backOrderAmount;
-        }
-
-        return ordered;
+        return ordered + round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
     }
 }
