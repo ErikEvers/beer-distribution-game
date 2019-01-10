@@ -39,15 +39,13 @@ public class ManagePlayersScreenController  {
 		playerIdColumn.setCellValueFactory(new PropertyValueFactory<>("playerId"));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		ipColumn.setCellValueFactory(new PropertyValueFactory<>("ipAddress"));
-
-		populateTable();
 	}
 
 	/**
 	 * Fill the player table with player records.
 	 */
 	private void populateTable() {
-		playerTable.setItems(FXCollections.observableArrayList(gameConfiguration.getPlayers()));
+		playerTable.setItems(FXCollections.observableArrayList(beerGame.getPlayers()));
 	}
 
 	/**
@@ -79,11 +77,12 @@ public class ManagePlayersScreenController  {
 	 */
 	public void handleKickPlayerButtonClick() {
 		Player toRemove = playerTable.getItems().get(playerTable.getSelectionModel().getFocusedIndex());
-		gameConfiguration.removePlayer(toRemove);
+		beerGame = gameConfiguration.removePlayer(beerGame, toRemove);
 		populateTable();
 	}
 
 	public void setBeerGame(BeerGame beerGame) {
 		this.beerGame = beerGame;
+		populateTable();
 	}
 }
