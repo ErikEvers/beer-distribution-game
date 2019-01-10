@@ -24,7 +24,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
     private static Player player;
     private Round round;
-    private IPlayGame ui;
+    private static IPlayGame ui;
 
     private IPlayerGameLogic gameLogic;
 
@@ -157,8 +157,8 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     /**
      * doOrder will notify the  participant to make an order.
      *
-     * @param round
-     * @return A FacilityTurn with an order for the current round.
+     * @param beerGame
+     * @return The current beergame status.
      */
     @Override
     public GameRoundAction executeTurn(BeerGame beerGame) {

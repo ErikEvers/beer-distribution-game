@@ -42,5 +42,6 @@ public class PlayGameSetupScreen implements IGUIHandler {
         }
 
         playGame.fillComboBox();
+        playerComponent.setUi(playGame);
     }
 }

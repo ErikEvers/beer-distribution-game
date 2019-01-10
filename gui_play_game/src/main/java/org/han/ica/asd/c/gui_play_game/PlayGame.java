@@ -79,7 +79,6 @@ public abstract class PlayGame implements IPlayGame {
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
-        playerComponent.setUi(this);
         playerComponent.startNewTurn();
     }
 
@@ -198,7 +197,7 @@ public abstract class PlayGame implements IPlayGame {
     }
 
     @Override
-    public void refreshInterfaceWithCurrentStatus(Round status) {
+    public void refreshInterfaceWithCurrentStatus(BeerGame beergame) {
         // status.getFacilityTurnDelivers().stream().filter(facilityTurn -> facilityTurn.getFacilityIdDeliverTo() == playerComponent.getPlayer().getFacility().getFacilityId());
         // inventory.setText(Integer.toString(status.getStock()));
     }
