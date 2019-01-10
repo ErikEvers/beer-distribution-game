@@ -16,7 +16,10 @@ public class ParticipantsPool {
     private List<IParticipant> participants;
     private IParticipant player;
 
-    @Inject
+    public ParticipantsPool() {
+        participants = new LinkedList<>();
+    }
+
     public ParticipantsPool(IParticipant playerParticipant) {
         participants = new LinkedList<>();
         participants.add(playerParticipant);

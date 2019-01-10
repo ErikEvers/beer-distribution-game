@@ -1,11 +1,8 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
-import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -14,10 +11,10 @@ import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,15 +31,17 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Inject
     private IGameStore persistence;
 
-	private ParticipantsPool participantsPool;
+		private ParticipantsPool participantsPool;
 
     private int round;
     private BeerGame beerGame;
     private IParticipant player;
 
-    public GameLogic(){
+    @Inject
+    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider){
         this.round = 0;
-        communication.addObserver(this);
+        participantsPool = participantsPoolProvider.get();
+        //communication.addObserver(this);
     }
 
     public void setParticipantsPool(ParticipantsPool participantsPool) {
@@ -138,6 +137,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void setPlayerParticipant(IParticipant participant) {
         this.player = participant;
+				addLocalParticipant(participant);
     }
 
     /**

@@ -7,9 +7,6 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.ResourceBundle;
 
 public class PlayGameSetupScreen implements IGUIHandler {
@@ -22,9 +19,6 @@ public class PlayGameSetupScreen implements IGUIHandler {
     public void setData(Object[] data) {
         beerGame = (BeerGame) data[0];
     }
-
-    @Inject
-    @Named("PlayerComponent") protected IPlayerComponent playerComponent;
 
     @Override
     public void setupScreen() {
