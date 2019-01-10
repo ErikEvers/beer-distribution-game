@@ -193,12 +193,12 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     /**
-     * Sets new playersWhoAlreadyCouldntReachLeader.
+     * Sets new playersWhoAlreadyCouldNotReachLeader.
      *
-     * @param playersWhoAlreadyCouldntReachLeader New value of playersWhoAlreadyCouldntReachLeader.
+     * @param playersWhoAlreadyCouldNotReachLeader New value of playersWhoAlreadyCouldNotReachLeader.
      */
-    public void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> playersWhoAlreadyCouldntReachLeader) {
-        this.playersWhoAlreadyCouldntReachLeader = playersWhoAlreadyCouldntReachLeader;
+    public void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> playersWhoAlreadyCouldNotReachLeader) {
+        this.playersWhoAlreadyCouldntReachLeader = playersWhoAlreadyCouldNotReachLeader;
     }
     public void setObservers(List<IConnectorObserver> observers) {
         this.observers = observers;

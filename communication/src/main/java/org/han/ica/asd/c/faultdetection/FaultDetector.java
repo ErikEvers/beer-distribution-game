@@ -11,19 +11,15 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class FaultDetector {
-    @Inject
-    private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
-    @Inject
-    private FaultDetectorPlayer faultDetectorPlayer;
-    @Inject
-    private FaultDetectorLeader faultDetectorLeader;
-    @Inject
-    private FaultResponder faultResponder;
+    @Inject private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
+    @Inject private FaultDetectorPlayer faultDetectorPlayer;
+    @Inject private FaultDetectorLeader faultDetectorLeader;
+    @Inject private FaultResponder faultResponder;
 
     private List<IConnectorObserver> observers;
 
     public FaultDetector() {
-        //Inject purposes
+        //For inject purposes
     }
 
     /**

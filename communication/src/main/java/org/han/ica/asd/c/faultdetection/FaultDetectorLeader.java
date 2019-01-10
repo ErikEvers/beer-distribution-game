@@ -29,25 +29,14 @@ import java.util.logging.Logger;
  * @see FaultDetectorPlayer
  */
 public class FaultDetectorLeader extends TimerTask {
-    @Inject
-    private NodeInfoList nodeInfoList;
-
-    @Inject
-    private FaultDetectionClient faultDetectionClient;
-
-    @Inject
-    private FaultHandlerLeader faultHandlerLeader;
-
-    @Inject
-    private FailLog failLog;
-
-    @Inject
-    private static Logger logger;//NOSONAR
-
-    private List<String> ips;
+    @Inject private NodeInfoList nodeInfoList;
+    @Inject private FaultDetectionClient faultDetectionClient;
+    @Inject private FaultHandlerLeader faultHandlerLeader;
+    @Inject private FailLog failLog;
+    @Inject private static Logger logger;//NOSONAR
 
     private Timer timer;
-
+    private List<String> ips;
     private List<IConnectorObserver> observers;
 
     public FaultDetectorLeader() {
@@ -76,7 +65,6 @@ public class FaultDetectorLeader extends TimerTask {
 
         //Checks if node wasn't reached 3 times, it then sends a faultMessage to all peers that can be reached.
         sendFaultMessagesToActivePlayers(ips);
-
         checkIfThisMachineIsDisconnected();
     }
 
@@ -237,14 +225,29 @@ public class FaultDetectorLeader extends TimerTask {
         this.ips = ips;
     }
 
+    /**
+     * Sets new timer.
+     *
+     * @param t New value of timer.
+     */
     void setTimer(Timer t) {
         this.timer = t;
     }
 
+    /**
+     * Sets new observers.
+     *
+     * @param observers New value of observers.
+     */
     public void setObservers(List<IConnectorObserver> observers) {
         this.observers = observers;
     }
 
+    /**
+     * Sets new nodeInfoList.
+     *
+     * @param nodeInfoList New value of nodeInfoList.
+     */
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
         failLog.setNodeInfoList(nodeInfoList);

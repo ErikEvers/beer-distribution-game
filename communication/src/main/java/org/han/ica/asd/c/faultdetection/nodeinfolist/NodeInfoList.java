@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.faultdetection.nodeinfolist;
 
-
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;

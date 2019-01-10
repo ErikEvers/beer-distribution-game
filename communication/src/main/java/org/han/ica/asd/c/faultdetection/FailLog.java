@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.faultdetection;
 
-
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 
 import javax.inject.Inject;
