@@ -34,7 +34,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     private int round;
     private BeerGame beerGame;
-    private IParticipant player;
+    private static IParticipant player;
 
     @Inject
     public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
