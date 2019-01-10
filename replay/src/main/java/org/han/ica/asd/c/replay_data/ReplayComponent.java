@@ -18,18 +18,16 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private static final int LOWEST_ROUND_POSSIBLE = 0;
     private static final int FIRST_ROUND_TO_DISPLAY = 1;
     private List<Facility> displayedFacilities;
-    private int currentRound;
-    private int totalRounds;
-    private GameValue attribute;
     private List<GameValue> displayedAverages;
     private List<AverageRound> averageRounds;
     private List<Facility> facilities;
-    //Not used in current version, only average is supported
     private List<Round> rounds;
+    private int currentRound;
+    private int totalRounds;
+    private GameValue displayedAttribute;
 
     @Inject
     public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
-
         facilities = retrieveReplayData.getAllFacilities();
         rounds = retrieveReplayData.getAllRounds();
 
@@ -38,10 +36,9 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         displayedFacilities = new ArrayList<>();
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
+        totalRounds = rounds.size();
 
         initializeAverageRounds();
-
-        totalRounds = 9;
     }
 
     public String getTotalRoundsString() {
@@ -106,16 +103,16 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private void insertDataIntoSerie(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries, AverageRound averageRound) {
         switch (averageRound.getFacilityType()) {
             case FACTORY:
-                factorySeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));
+                factorySeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, displayedAttribute)));
                 break;
             case WHOLESALER:
-                wholesalerSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));
+                wholesalerSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, displayedAttribute)));
                 break;
             case RETAILER:
-                retailerSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));
+                retailerSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, displayedAttribute)));
                 break;
             case REGIONALWAREHOUSE:
-                warehouseSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, attribute)));
+                warehouseSeries.getData().add(new XYChart.Data<>((double) averageRound.getRoundId(), getAttribute(averageRound, displayedAttribute)));
                 break;
             default:
                 break;
@@ -144,8 +141,8 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         displayedFacilities.remove(facility);
     }
 
-    public void setAttribute(GameValue value) {
-        this.attribute = value;
+    public void setDisplayedAttribute(GameValue value) {
+        this.displayedAttribute = value;
     }
 
     public double getAttribute(AverageRound round, GameValue wantedValue) {
@@ -177,45 +174,72 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         calculateAverageRounds(warehouseIds, GameValue.REGIONALWAREHOUSE);
     }
 
-    private void calculateAverageRounds(List<Integer> ids, GameValue gameValue){
-        for(int i =0; i < rounds.size(); i++) {
+    private void calculateAverageRounds(List<Integer> ids, GameValue gameValue) {
+        rounds.forEach(round -> {
+            List<FacilityTurn> turns = round.getFacilityTurns().stream().filter(facilityTurn -> ids.contains(facilityTurn.getFacilityId())).collect(Collectors.toList());
+            List<FacilityTurnOrder> turnOrders = round.getFacilityOrders().stream().filter(facilityTurn -> ids.contains(facilityTurn.getFacilityId())).collect(Collectors.toList());
+            List<FacilityTurnDeliver> turnDelivers = round.getFacilityTurnDelivers().stream().filter(facilityTurn -> ids.contains(facilityTurn.getFacilityId())).collect(Collectors.toList());
+            int totalIds = ids.size();
 
-            List<FacilityTurn> turns = rounds.get(i).getFacilityTurns().stream().filter(facilityTurn -> ids.contains(facilityTurn.getFacilityId())).collect(Collectors.toList());
-            List<FacilityTurnOrder> turnOrders = rounds.get(i).getFacilityOrders().stream().filter(facilityTurn -> ids.contains(facilityTurn.getFacilityId())).collect(Collectors.toList());
-            List<FacilityTurnDeliver> turnDelivers = rounds.get(i).getFacilityTurnDelivers().stream().filter(facilityTurn -> ids.contains(facilityTurn.getFacilityId())).collect(Collectors.toList());
+            averageRounds.add(new AverageRound(round.getRoundId(),
+                    gameValue,
+                    calculateAverageBudget(totalIds, turns),
+                    calculateAverageStock(totalIds, turns),
+                    calculateAverageBackOrders(totalIds, turns),
+                    calculateAverageOrders(totalIds, turnOrders),
+                    calculateAverageDeliverAmount(totalIds, turnDelivers)));
+        });
+    }
 
-
-            float totalBudget = 0;
-            float totalStock = 0;
-            float totalBackOrders = 0;
-            for (FacilityTurn turn : turns) {
-                totalBudget += turn.getRemainingBudget();
-                totalStock += turn.getStock();
-                totalBackOrders += turn.getBackorders();
-            }
-            float averageBudget = totalBudget / ids.size();
-            float averageStock = totalStock / ids.size();
-            float averageBackOrders = totalBackOrders / ids.size();
-
-            float totalOrderAmount = 0;
-            for (FacilityTurnOrder turn : turnOrders) {
-                totalOrderAmount += turn.getOrderAmount();
-            }
-            float averageOrderAmount = totalOrderAmount / ids.size();
-
-            float totalDeliverAmount = 0;
-            for (FacilityTurnDeliver turn : turnDelivers) {
-                totalDeliverAmount += turn.getDeliverAmount();
-            }
-            float averageDeliverAmount = totalDeliverAmount / ids.size();
-
-            averageRounds.add(new AverageRound(i, gameValue, averageBudget, averageStock, averageBackOrders, averageOrderAmount, averageDeliverAmount));
+    private float calculateAverageOrders(int totalIds, List<FacilityTurnOrder> turns){
+        float totalOrderAmount = 0;
+        for (FacilityTurnOrder turn : turns) {
+            totalOrderAmount += turn.getOrderAmount();
         }
+
+        return totalOrderAmount/totalIds;
+    }
+
+    private float calculateAverageBudget(int totalIds, List<FacilityTurn> turns){
+        float totalBudget = 0;
+        for (FacilityTurn turn : turns) {
+            totalBudget += turn.getRemainingBudget();
+        }
+
+        return totalBudget/totalIds;
+    }
+
+    private float calculateAverageStock(int totalIds, List<FacilityTurn> turns){
+        float totalStock = 0;
+        for (FacilityTurn turn : turns) {
+            totalStock += turn.getStock();
+        }
+
+        return totalStock/totalIds;
+    }
+
+    private float calculateAverageBackOrders(int totalIds, List<FacilityTurn> turns){
+        float totalBackOrders = 0;
+        for (FacilityTurn turn : turns) {
+            totalBackOrders += turn.getBackorders();
+        }
+
+        return totalBackOrders/totalIds;
+    }
+
+    private float calculateAverageDeliverAmount(int totalIds, List<FacilityTurnDeliver> turns){
+        float totalDeliverAmount = 0;
+        for (FacilityTurnDeliver turn : turns) {
+            totalDeliverAmount += turn.getDeliverAmount();
+        }
+
+        return totalDeliverAmount/totalIds;
     }
 
     private List<Integer> getFacilityIds(GameValue gameValue) {
         List<Facility> wantedFacilities = facilities.stream().filter(facility ->
                 facility.getFacilityType().getFacilityName().equals(gameValue.getValue()[0])).collect(Collectors.toList());
+
         List<Integer> ids = new ArrayList<>();
 
         wantedFacilities.forEach(facility -> ids.add(facility.getFacilityId()));

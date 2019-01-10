@@ -30,5 +30,5 @@ public interface IVisualisedPlayedGameData {
 
     void removeDisplayedFacility(Facility facility);
 
-    void setAttribute(GameValue value);
+    void setDisplayedAttribute(GameValue value);
 }

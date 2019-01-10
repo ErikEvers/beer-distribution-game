@@ -151,7 +151,7 @@ public class ReplayGameScreenController {
     }
 
     private void attributeComboBoxUpdated(GameValue newVal) {
-        replayComponent.setAttribute(newVal);
+        replayComponent.setDisplayedAttribute(newVal);
         drawGraph();
     }
 
