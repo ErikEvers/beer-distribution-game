@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
 import javafx.util.converter.IntegerStringConverter;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
 public class PlayGameFacilitiesController extends PlayGame {
@@ -56,5 +57,10 @@ public class PlayGameFacilitiesController extends PlayGame {
 
     public void submitTurnButonClicked(MouseEvent mouseEvent) {
         super.submitTurnButonClicked();
+    }
+
+    @Override
+    public void refreshInterfaceWithCurrentStatus(BeerGame beerGame) {
+        
     }
 }

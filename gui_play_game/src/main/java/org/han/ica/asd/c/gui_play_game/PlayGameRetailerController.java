@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
 public class PlayGameRetailerController extends PlayGame {
@@ -41,5 +42,10 @@ public class PlayGameRetailerController extends PlayGame {
     @Override
     public void fillComboBox(){
         fillOutGoingOrderFacilityComboBox(comboBox);
+    }
+
+    @Override
+    public void refreshInterfaceWithCurrentStatus(BeerGame beerGame) {
+
     }
 }
