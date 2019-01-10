@@ -71,5 +71,5 @@ public class MainMenuController {
     private void setCreateGameButtonAction() {
         gameSetupStart.setupScreen();
     }
-    
+
 }
