@@ -110,6 +110,7 @@ public class BusinessRule extends ASTNode {
                 comparisonValue.setOperationValue(operation.resolveOperation());
             }
         }
+
         if(node instanceof Value) {
             Value value = ((Value)node);
             Integer integerValue = value.getIntegerValue();
