@@ -2,12 +2,10 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
-<<<<<<< HEAD
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
-=======
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
@@ -15,7 +13,6 @@ import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
->>>>>>> 5e5ee102b32ca0d5f37514178a3df10265dec2f3
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
@@ -84,9 +81,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     private String externalIP;
     private String internalIP;
-
-    @Inject
-    private IGameStore persistence;
 
     Provider<GameLeader> gameLeaderProvider;
 

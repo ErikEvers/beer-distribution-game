@@ -15,12 +15,9 @@ import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
-<<<<<<< HEAD
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
-=======
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
->>>>>>> 5e5ee102b32ca0d5f37514178a3df10265dec2f3
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
