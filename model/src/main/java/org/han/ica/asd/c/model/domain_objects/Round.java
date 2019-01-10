@@ -18,7 +18,8 @@ public class Round implements IDomainModel{
        facilityTurnDelivers = new ArrayList<>();
     }
 
-    public Round(int roundId, List<FacilityTurn> facilityTurns, List<FacilityTurnOrder> facilityOrders, List<FacilityTurnDeliver> facilityTurnDelivers) {
+    public Round(int roundId, List<FacilityTurn> facilityTurns, List<FacilityTurnOrder> facilityOrders,
+                 List<FacilityTurnDeliver> facilityTurnDelivers) {
         this.roundId = roundId;
         this.facilityTurns = facilityTurns;
         this.facilityOrders = facilityOrders;
@@ -26,10 +27,9 @@ public class Round implements IDomainModel{
     }
 
     //Order
-    public void addTurnOrder(Facility facilityFrom, Facility facilityTo, Integer orderAmount) {
-        Map<Facility, Integer> orderTo = new HashMap();
-        orderTo.put(facilityTo, orderAmount);
-        turnOrder.put(facilityFrom, orderTo);
+    public void addTurnOrder(Facility facilityFrom, Facility facilityTo, int orderAmount) {
+        facilityOrders.add(new FacilityTurnOrder(facilityFrom.getFacilityId(), facilityTo.getFacilityId(),
+                orderAmount));
     }
 
     public int getTurnOrderByFacility(Facility facilityFrom, Facility facilityTo) {
@@ -37,10 +37,9 @@ public class Round implements IDomainModel{
     }
 
     //Deliver
-    public void addTurnDeliver(Facility facilityFrom, Facility facilityTo, Integer orderAmount) {
-        Map<Facility, Integer> orderTo = new HashMap();
-        orderTo.put(facilityTo, orderAmount);
-        turnDeliver.put(facilityFrom, orderTo);
+    public void addTurnDeliver(Facility facilityFrom, Facility facilityTo, int orderAmount, int openOrderAmount) {
+        facilityTurnDelivers.add(new FacilityTurnDeliver(facilityFrom.getFacilityId(), facilityTo.getFacilityId(),
+                openOrderAmount, orderAmount));
     }
 
     public int getTurnDeliverByFacility(Facility facilityFrom, Facility facilityTo) {

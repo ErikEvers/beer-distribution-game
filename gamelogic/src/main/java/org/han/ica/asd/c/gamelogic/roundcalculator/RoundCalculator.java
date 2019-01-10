@@ -8,6 +8,12 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import java.util.List;
 
 public class RoundCalculator {
+    private int currentTurnBackOrders;
+
+    public RoundCalculator() {
+        currentTurnBackOrders = 0;
+    }
+
     public Round calculateRound(Round previousRound, Round currentRound, List<FacilityLinkedTo> facilitityLinks) {
         for (FacilityLinkedTo f : facilitityLinks) {
             Facility facilityOrder = f.getFacilityOrder();
@@ -41,7 +47,7 @@ public class RoundCalculator {
 
         round.updateStock(facilityOrder, newFacilityStockOrder);
         round.addTurnReceived(facilityOrder, facilityDeliver, ordered);
-        round.addTurnDeliver(facilityOrder, facilityDeliver, ordered);
+        round.addTurnDeliver(facilityOrder, facilityDeliver, ordered, currentTurnBackOrders);
     }
 
     /**
@@ -54,6 +60,9 @@ public class RoundCalculator {
      * @return
      */
     private int calculateNewFacilityStockDeliver(Round round, int ordered, Facility facilityDeliver, Facility facilityOrder) {
+        int delivered = ordered;
+        int currentTurnBackOrders = 0;
+
         if (!facilityOrder.equals(facilityDeliver)) {
             int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
             int newFacilityStockDeliver = facilityStockDeliver - ordered;
@@ -61,22 +70,20 @@ public class RoundCalculator {
             //if the newFacilityStockDeliver is below 0, it means the facility that needs to deliver beer doesn't have enough beer in stock to deliver all, meaning he gets back orders.
             if (newFacilityStockDeliver < 0) {
                 //determine how much beer can be delivered
-                ordered = newFacilityStockDeliver + ordered;
+                delivered = newFacilityStockDeliver + ordered;
 
                 //backOrders is added as a positive value.
-                int backOrders = -newFacilityStockDeliver;
+                currentTurnBackOrders = -newFacilityStockDeliver;
 
                 //stock is 0 if you delivered all your beer
                 newFacilityStockDeliver = 0;
-
-                round.addTurnBackOrder(facilityOrder, facilityDeliver, backOrders);
             }
 
-            calculateOutgoingGoodsEarnings(ordered, round, facilityDeliver);
+            calculateOutgoingGoodsEarnings(delivered, round, facilityDeliver);
             round.updateStock(facilityDeliver, newFacilityStockDeliver);
         }
 
-        return ordered;
+        return delivered;
     }
 
     /**
