@@ -5,7 +5,7 @@ import javafx.scene.chart.XYChart;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface IVisualisedPlayedGameData {
     String getTotalRoundsString();
@@ -18,7 +18,7 @@ public interface IVisualisedPlayedGameData {
 
     void updateCurrentRound(int round);
 
-    ArrayList<Facility> getAllFacilities();
+    List<Facility> getAllFacilities();
 
     ObservableList<XYChart.Series<Double, Double>> getChartData();
 

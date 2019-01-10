@@ -1,8 +1,8 @@
-package org.han.ica.asd.c.replay_data.fakes;
+package org.han.ica.asd.c.model.domain_objects;
 
 import org.han.ica.asd.c.gamevalue.GameValue;
 
-public class AverageRound {
+public class AverageRound implements IDomainModel {
     private int roundId;
     private GameValue facilityType;
     private double budget;

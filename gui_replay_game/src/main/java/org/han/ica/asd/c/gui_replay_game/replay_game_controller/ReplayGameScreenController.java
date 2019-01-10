@@ -1,15 +1,10 @@
 package org.han.ica.asd.c.gui_replay_game.replay_game_controller;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -17,8 +12,12 @@ import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
-import org.han.ica.asd.c.replay_data.ReplayComponent;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+
+import javax.inject.Inject;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class ReplayGameScreenController {
 
@@ -64,6 +63,7 @@ public class ReplayGameScreenController {
     @FXML
     private Button backButton;
 
+    @Inject
     private IVisualisedPlayedGameData replayComponent;
 
     @FXML
@@ -92,8 +92,6 @@ public class ReplayGameScreenController {
 
     @FXML
     void initialize() {
-        this.replayComponent = new ReplayComponent();
-
         currentRoundTextfield.setTextFormatter(NumericTextFormatter.getTextFormatter());
 
         totalRoundsTextfield.setText(replayComponent.getTotalRoundsString());

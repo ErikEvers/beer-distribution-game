@@ -1,27 +1,24 @@
 package org.han.ica.asd.c.interfaces.replay;
 
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
+
+import java.util.List;
 
 /**
  * Small interface to retrieve game and/or round data
  */
 public interface IRetrieveReplayData {
     /**
-     * @param gameId
-     * Primary identifier to retrieve a game
      * @return
-     * Returns a BeerGame object for a full replay capability
+     * Returns a list of all available facilities in a BeerGame with gameId
      */
-    BeerGame retrieveGameData(String gameId);
+    List<Facility> getAllFacilities();
 
     /**
-     * @param gameId
-     * Primary identifier to retrieve a game
-     * @param roundId
-     * Specify the round for which to retrieve the data
      * @return
-     * Returns a single round for in-game replays
+     * Returns a list of all available rounds in a BeerGame with gameId
      */
-    Round retrieveSingleRoundData(String gameId, int roundId);
+    List<Round> getAllRounds();
 }

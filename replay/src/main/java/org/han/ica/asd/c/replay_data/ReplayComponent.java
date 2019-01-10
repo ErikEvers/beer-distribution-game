@@ -6,12 +6,12 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
-import org.han.ica.asd.c.replay_data.fakes.AverageRound;
-import org.han.ica.asd.c.replay_data.fakes.RoundFake;
-import org.han.ica.asd.c.replay_data.fakes.RoundsFake;
+import org.han.ica.asd.c.interfaces.replay.IRetrieveReplayData;
+import org.han.ica.asd.c.model.domain_objects.AverageRound;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,21 +25,19 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private GameValue attribute;
     private List<GameValue> displayedAverages;
     private List<AverageRound> averageRounds;
+    private List<Facility> facilities;
     //Not used in current version, only average is supported
-    private List<RoundFake> rounds;
+    private List<Round> rounds;
 
-    public ReplayComponent() {
-        displayedFacilities = new ArrayList<>();
-        displayedFacilities.add(getAllFacilities().get(0));
-        displayedFacilities.add(getAllFacilities().get(1));
-        displayedFacilities.add(getAllFacilities().get(2));
-        displayedFacilities.add(getAllFacilities().get(3));
+    @Inject
+    public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
 
-        RoundsFake roundsFake = new RoundsFake();
-        rounds = roundsFake.getRounds();
+        facilities = retrieveReplayData.getAllFacilities();
+        rounds = retrieveReplayData.getAllRounds();
 
         displayedAverages = new ArrayList<>();
         averageRounds = new ArrayList<>();
+        displayedFacilities = new ArrayList<>();
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
 
@@ -89,30 +87,8 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         else currentRound = round;
     }
 
-    public ArrayList<Facility> getAllFacilities() {
-        //List<String> l = new ArrayList<String>(map.keySet());
-        //Wanneer de rounddata aanwezig is kan het bovenstaande gebruikt worden om alle keys
-        //dus de facilities op te halen
-        //Wat hier nu aanwezig is is test code om zo de controller werkend te krijgen
-
-        FacilityType factory = new FacilityType("Factory", 1, 1, 1, 1, 1, 1, 1);
-        FacilityType wholesaler = new FacilityType("Wholesaler", 1, 1, 1, 1, 1, 1, 1);
-        FacilityType retailer = new FacilityType("Retailer", 1, 1, 1, 1, 1, 1, 1);
-        FacilityType warehouse = new FacilityType("Warehouse", 1, 1, 1, 1, 1, 1, 1);
-
-        Facility facility1 = new Facility(factory, 1);
-        Facility facility2 = new Facility(wholesaler, 2);
-        Facility facility3 = new Facility(retailer, 3);
-        Facility facility4 = new Facility(warehouse, 4);
-
-        ArrayList<Facility> returnList = new ArrayList<>();
-
-        returnList.add(facility1);
-        returnList.add(facility2);
-        returnList.add(facility3);
-        returnList.add(facility4);
-
-        return returnList;
+    public List<Facility> getAllFacilities() {
+        return facilities;
     }
 
     public ObservableList<XYChart.Series<Double, Double>> getChartData() {
@@ -132,9 +108,8 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private void createData(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries) {
         List<AverageRound> roundsToShow =  averageRounds.stream().filter(averageRound ->
                 displayedAverages.contains(averageRound.getFacilityType())&& averageRound.getRoundId()<=currentRound).collect(Collectors.toList());
-        roundsToShow.forEach(averageRound -> {
-            insertDataIntoSerie(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries, averageRound);
-        });
+        roundsToShow.forEach(averageRound ->
+            insertDataIntoSerie(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries, averageRound));
     }
 
     private void insertDataIntoSerie(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries, AverageRound averageRound) {
