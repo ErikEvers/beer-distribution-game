@@ -17,34 +17,16 @@ import java.util.TimerTask;
 
 
 public class FaultDetectorPlayer extends TimerTask {
+    @Inject private FaultDetectionClient faultDetectionClient;
+    @Inject private FaultHandlerPlayer faultHandlerPlayer;
+    @Inject private NodeInfoList nodeInfoList;
 
     private static final long FIVE_MINUTES = 300000;
-
-    private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
-
     private long lastReceived;
-
     private boolean leaderIsPinging;
-
-    @Inject
-    private FaultDetectionClient faultDetectionClient;
-
-    @Inject
-    private FaultHandlerPlayer faultHandlerPlayer;
-
-    @Inject
-    private NodeInfoList nodeInfoList;
-
     private Timer timer;
     private List<IConnectorObserver> observers;
-
-    boolean getLeaderIsPinging() {
-        return leaderIsPinging;
-    }
-
-    long getLastReceived() {
-        return lastReceived;
-    }
+    private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
 
     FaultDetectorPlayer() {
         this.lastReceived = System.currentTimeMillis();
@@ -52,24 +34,51 @@ public class FaultDetectorPlayer extends TimerTask {
         playersWhoAlreadyCouldntReachLeader = new HashMap<>();
     }
 
-    public void start() {
-        timer = createTimer(true);
-        timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
-    }
-
-    public Timer createTimer(Boolean isDeamon) {
-        return new Timer(isDeamon);
-    }
-
+    /**
+     * Checks if leader didn't ping for a long time and asks other players whether they can connect with the leader.
+     * After the players respond or timeout it decides who died.
+     * It also checks if the leaderIsPinging variable is already set to false so it won't run it twice.
+     *
+     * @author Tarik
+     */
     public void run() {
         if (leaderIsPinging && leaderIsNotPinging()) {
             leaderIsPinging = false;
             faultHandlerPlayer.reset();
             askOtherPlayers();
-            faultHandlerPlayer.whoIsDead(nodeInfoList);
+            faultHandlerPlayer.whoIsDead();
         }
     }
 
+    /**
+     * Starts the Timertask that calls the run() method every set interval.
+     * It calls the createTimer method to create a timer. It then schedules the fixed rate at which the task needs
+     * to be run.
+     *
+     * @author Oscar, Tarik
+     */
+    public void start() {
+        timer = createTimer(true);
+        timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+    }
+
+    /**
+     * Creates the 'Timer' that calls the 'run' method every set interval.
+     *
+     * @param isDeamon The boolean value to set isDeamon to.
+     * @return The 'Timer' that is used in the 'start' method.
+     * @author Oscar
+     */
+    public Timer createTimer(Boolean isDeamon) {
+        return new Timer(isDeamon);
+    }
+
+    /**
+     * Checks if leader didn't ping for at least 3 times the FaultDetectionInterval
+     *
+     * @return true if leader didn't ping and false if he did.
+     * @author Tarik
+     */
     public boolean leaderIsNotPinging() {
         long current = System.currentTimeMillis();
         long timeDifference = current - lastReceived;
@@ -78,6 +87,13 @@ public class FaultDetectorPlayer extends TimerTask {
         return timeDifference > threeIntervals;
     }
 
+    /**
+     * This method checks whether a given timestamp is within five minutes of the current time.
+     *
+     * @param lastTime the timestamp in milliseconds
+     * @return true if timestamp is within five minutes and false if its not.
+     * @author Tarik
+     */
     private boolean timestampIsRecentlyReceived(long lastTime) {
         long current = System.currentTimeMillis();
         long timeDifference = current - lastTime;
@@ -85,6 +101,12 @@ public class FaultDetectorPlayer extends TimerTask {
         return timeDifference < FIVE_MINUTES;
     }
 
+    /**
+     * This method sends a 'CanYouReachLeaderMessage' to players from which i didn't already received the same message.
+     * It waits for the responses and increments/sets the values in the 'FaultHandlerPlayer' so it can decide who died.
+     *
+     * @author Tarik
+     */
     private void askOtherPlayers() {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
@@ -107,11 +129,16 @@ public class FaultDetectorPlayer extends TimerTask {
         }
     }
 
-    public void pingMessageReceived(PingMessage pingMessage) {
-        lastReceived = System.currentTimeMillis();
-        leaderIsPinging = true;
-    }
-
+    /**
+     * This method returns a response to the 'CanYouReachLeaderMessage' it received with the same message after setting
+     * the 'leaderState'.
+     * It also updates the list with the senderIp which needs to be used as a filter when 'askOtherPlayer()' is called.
+     *
+     * @param canYouReachLeaderMessage The message that need to be returned after setting data.
+     * @param senderIp This ip is used to identify the sender.
+     * @return
+     * @author Tarik
+     */
     public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
         boolean leaderIsAlive;
         // put senderIp in local list with currentTime
@@ -139,12 +166,14 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     /**
-     * Gets nodeInfoList.
+     * Sets the lastReceived timestamp in millisecond when a 'PingMessage' is received.
      *
-     * @return Value of nodeInfoList.
+     * @param pingMessage this message is not used but could be used in the future.
+     * @author Tarik
      */
-    public NodeInfoList getNodeInfoList() {
-        return nodeInfoList;
+    public void pingMessageReceived(PingMessage pingMessage) {
+        lastReceived = System.currentTimeMillis();
+        leaderIsPinging = true;
     }
 
     /**
@@ -200,8 +229,40 @@ public class FaultDetectorPlayer extends TimerTask {
     public void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> playersWhoAlreadyCouldNotReachLeader) {
         this.playersWhoAlreadyCouldntReachLeader = playersWhoAlreadyCouldNotReachLeader;
     }
+
+    /**
+     * Sets new observers.
+     *
+     * @param observers New value of observers.
+     */
     public void setObservers(List<IConnectorObserver> observers) {
         this.observers = observers;
     }
 
+    /**
+     * Gets nodeInfoList.
+     *
+     * @return Value of nodeInfoList.
+     */
+    public NodeInfoList getNodeInfoList() {
+        return nodeInfoList;
+    }
+
+    /**
+     * Gets leaderIsPinging.
+     *
+     * @return Value of leaderIsPinging.
+     */
+    boolean getLeaderIsPinging() {
+        return leaderIsPinging;
+    }
+
+    /**
+     * Gets lastReceived.
+     *
+     * @return Value of lastReceived.
+     */
+    long getLastReceived() {
+        return lastReceived;
+    }
 }
