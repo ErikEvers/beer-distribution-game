@@ -30,6 +30,7 @@ public class TestNodeInfoList {
 
     @BeforeEach
     void setUp() {
+
         testIp1 = "TestIp1";
         testIp2 = "TestIp2";
         Player leaderPlayer = mock(Player.class);
