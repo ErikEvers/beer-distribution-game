@@ -32,7 +32,9 @@ MIN: 'minus' | '-';
 MUL: 'times' | '*';
 DIV: 'divided' | '/';
 
-GARBAGE: [a-zA-Z'.]+ -> skip;
+GARBAGE_THAN: 'than' -> skip;
+GARBAGE_OF: 'of' -> skip;
+GARBAGE_TO: 'to' -> skip;
 WS: [ \t\r]+ -> skip;
 
 //--- PARSER: ---
