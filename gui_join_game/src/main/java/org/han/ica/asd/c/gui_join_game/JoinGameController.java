@@ -13,6 +13,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.player.PlayerComponent;
@@ -44,6 +45,9 @@ public class JoinGameController {
 		@Named("PlayerComponent")
 		private IPlayerComponent playerComponent;
 
+		@Inject
+		private IGameStore persistence;
+
     private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
@@ -58,6 +62,7 @@ public class JoinGameController {
             RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),  "");
             GamePlayerId gameData = iConnectorForSetup.getGameData();
 						playerComponent.setPlayer(gameData.getBeerGame().getPlayerById(gameData.getPlayerId()));
+						persistence.saveGameLog(gameData.getBeerGame());
             gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
             gameRoom.setupScreen();
         } catch (RoomException | DiscoveryException | ClassNotFoundException | IOException e) {

@@ -45,6 +45,9 @@ public class GameRoomController {
 	@Named("PlayerComponent")
 	private IPlayerComponent playerComponent;
 
+	@Inject
+	private IGameStore persistence;
+
     public void initialize() {
 		}
 
@@ -61,7 +64,9 @@ public class GameRoomController {
     public void handleRefreshButtonClick() {
     	try {
 				beerGame = iConnectorForSetup.getGameData().getBeerGame();
+				persistence.saveGameLog(beerGame);
 				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
+
 			} catch (IOException | ClassNotFoundException e) {
 				Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong with updating the room data", ButtonType.CLOSE);
 				alert.showAndWait();
