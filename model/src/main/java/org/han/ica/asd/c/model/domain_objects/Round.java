@@ -96,9 +96,13 @@ public class Round implements IDomainModel{
 //        return turnStock.containsKey(facility);
 //    }
 //
-//    public void updateStock(Facility facility, Integer newStock) {
-//        turnStock.replace(facility, newStock);
-//    }
+    public void updateStock(Facility facility, int newStock) {
+        for(FacilityTurn facilityTurn : facilityTurns) {
+            if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
+                facilityTurn.setStock(newStock);
+            }
+        }
+    }
 //
 //    //Remaining budget
 //    public void addFacilityRemainingBudget(Integer remainingBudgetNumber, Facility facility) {
