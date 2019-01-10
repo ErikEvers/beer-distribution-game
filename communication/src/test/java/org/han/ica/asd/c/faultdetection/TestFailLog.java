@@ -1,6 +1,9 @@
 package org.han.ica.asd.c.faultdetection;
 
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +33,14 @@ public class TestFailLog {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(FailLog.class);
+            }
+        });
 
-        failLog = new FailLog();
+        failLog = injector.getInstance(FailLog.class);
         failLog.setNodeInfoList(nodeInfoList);
         beginHashMap = failLog.getFailLogHashMap();
     }

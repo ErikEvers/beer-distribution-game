@@ -85,7 +85,7 @@ public class BootstrapModule extends AbstractModuleExtension {
         bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
 
         bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
-        
+
         staticRequests();
     }
 
