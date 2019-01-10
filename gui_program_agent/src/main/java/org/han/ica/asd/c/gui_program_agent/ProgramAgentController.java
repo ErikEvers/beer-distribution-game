@@ -146,7 +146,7 @@ public class ProgramAgentController {
                 errorWord.setFill(Color.RED);
                 textFlow.add(errorWord);
                 textFlow.add(new Text(businessRule.getBusinessRule().substring(value) + "\n"));
-                errors.append(businessRule.getErrorMessage());
+                errors.append(businessRule.getErrorMessage() + "\n");
             } else if (businessRule.hasError()) {
                 errors.append("User input error on line ").append(businessRule.getLineNumber()).append(": ").append(businessRule.getErrorMessage()).append("\n");
                 text.setFill(Color.RED);
