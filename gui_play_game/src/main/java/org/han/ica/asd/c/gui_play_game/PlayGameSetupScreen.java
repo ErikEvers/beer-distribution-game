@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.gui_play_game;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
@@ -20,6 +22,9 @@ public class PlayGameSetupScreen implements IGUIHandler {
     public void setData(Object[] data) {
         beerGame = (BeerGame) data[0];
     }
+
+    @Inject
+    @Named("PlayerComponent") protected IPlayerComponent playerComponent;
 
     @Override
     public void setupScreen() {
