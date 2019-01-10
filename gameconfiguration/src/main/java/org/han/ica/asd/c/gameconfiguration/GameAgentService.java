@@ -42,6 +42,7 @@ public class GameAgentService implements IGameAgentService {
   }
 
   public List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map) {
+
 //    List<GameAgent> gameAgents = new ArrayList<>();
 //    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
 //      gameAgents.add(new GameAgent(set.getValue().getProgrammedAgentName(), set.getValue().getProgrammedBusinessRules(), set.getKey()));

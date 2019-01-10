@@ -110,7 +110,7 @@
             </children>
         </HBox>
       <Button alignment="CENTER" contentDisplay="CENTER" layoutX="836.0" layoutY="90.0" mnemonicParsing="false" onAction="#handleAddAgentsButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%add_agent" textAlignment="CENTER" textFill="WHITE" />
-      <Button layoutX="836.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleRemoveAgentsButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%remove_agent" textFill="WHITE" />
-      <ComboBox fx:id="agentComboBox" layoutX="675.0" layoutY="90.0" prefHeight="25.0" prefWidth="150.0" promptText="%choose_agent" />
+      <Button alignment="CENTER" layoutX="836.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleRemoveAgentsButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%remove_agent" textFill="WHITE" />
+      <ComboBox fx:id="agentComboBox" layoutX="625.0" layoutY="90.0" prefHeight="25.0" prefWidth="200.0" promptText="%choose_agent" />
     </children>
 </AnchorPane>

@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gui_configure_game.assign_agents_to_facilities;
 import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
@@ -91,9 +92,6 @@ public class AssignAgentsController {
         this.beerGame.setConfiguration(configuration);
         Player henk = new Player("1", "111", retailer, "Henk", true);
         this.beerGame.getPlayers().add(henk);
-//        this.beerGame.getAgents().add(new GameAgent("wholesaleAgent", wholesale, new ArrayList<>()));
-//        this.beerGame.getAgents().add(new GameAgent("warehouseAgent", warehouse, new ArrayList<>()));
-//        this.beerGame.getAgents().add(new GameAgent("factoryAgent", factory, new ArrayList<>()));
         this.beerGame.setLeader(new Leader(henk));
         this.beerGame.setGameId("123");
         this.beerGame.setGameName("Henks spel");
@@ -106,7 +104,7 @@ public class AssignAgentsController {
         try {
             agentComboBox.setItems(FXCollections.observableArrayList(gameAgentService.getAgentsForUI()));
         } catch (NoProgrammedAgentsFoundException e) {
-
+            agentComboBox.setPromptText("No local agents found.");
         }
     }
 
@@ -125,13 +123,35 @@ public class AssignAgentsController {
 
     @FXML
     public void handleAddAgentsButtonClick() {
-        beerGame.getAgents().add(gameAgentService.createGameAgentFromProgrammedAgent(lastClickedFacilityRectangle.getFacility(), agentComboBox.getValue()));
-        handleRemoveAgentsButtonClick();
+        if (agentComboBox.getValue() != null) {
+            for (int i = 0; i < beerGame.getAgents().size(); i++) {
+                if (agentComboBox.getValue().getProgrammedAgentName() == beerGame.getAgents().get(i).getGameAgentName()) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "This agent is already assigned to the selected facility.");
+                    alert.setHeaderText("Warning");
+                    alert.setTitle("Warning");
+                    alert.showAndWait();
+                }
+
+                if (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId()) {
+                    beerGame.getAgents().remove(i);
+                }
+            }
+            beerGame.getAgents().add(gameAgentService.createGameAgentFromProgrammedAgent(lastClickedFacilityRectangle.getFacility(), agentComboBox.getValue()));
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Choose an agent from the available agents.");
+            alert.setHeaderText("Warning");
+            alert.setTitle("Warning");
+            alert.showAndWait();
+        }
+        initTree();
     }
 
     @FXML
     public void handleRemoveAgentsButtonClick() {
-        for(int i = 0; i < beerGame.getAgents().size(); i++) {
+        for (int i = 0; i < beerGame.getAgents().size(); i++) {
+            if (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId()) {
+                beerGame.getAgents().remove(i);
+            }
         }
         initTree();
     }
