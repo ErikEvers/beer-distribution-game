@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic.public_interfaces;
 
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
@@ -40,4 +41,6 @@ public interface IPlayerGameLogic {
     List<Facility> getAllFacilities();
 
     int getRound();
+
+    void setPlayerParticipant(IParticipant participant);
 }

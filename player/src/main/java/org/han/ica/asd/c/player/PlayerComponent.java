@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.player;
 
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -11,22 +13,26 @@ import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
 
-public class PlayerComponent implements IPlayerComponent {
+public class PlayerComponent implements IPlayerComponent, IParticipant {
     private Provider<Round> roundProvider;
     private Provider<FacilityTurnOrder> facilityTurnOrderProvider;
     private Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
 
     private static Player player;
     private Round round;
+    private IPlayGame ui;
 
     @Inject
     private IPlayerGameLogic gameLogic;
 
     @Inject
-	public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider) {
-		this.roundProvider = roundProvider;
-		this.facilityTurnOrderProvider = facilityTurnOrderProvider;
-		this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+    public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
+        this.roundProvider = roundProvider;
+        this.facilityTurnOrderProvider = facilityTurnOrderProvider;
+        this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+        this.gameLogic = gameLogic;
+        gameLogic.setPlayerParticipant(this);
+
     }
 
 	@Override
@@ -85,7 +91,6 @@ public class PlayerComponent implements IPlayerComponent {
             facilityTurnOrder.setFacilityIdOrderTo(facility.getFacilityId());
             facilityTurnOrder.setOrderAmount(amount);
             round.getFacilityOrders().add(facilityTurnOrder);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnOrderOptional.get().setOrderAmount(facilityTurnOrderOptional.get().getOrderAmount() + amount);
         }
@@ -100,7 +105,6 @@ public class PlayerComponent implements IPlayerComponent {
             facilityTurnDeliver.setFacilityIdDeliverTo(facility.getFacilityId());
             facilityTurnDeliver.setDeliverAmount(amount);
             round.getFacilityTurnDelivers().add(facilityTurnDeliver);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnDeliverOptional.get().setDeliverAmount(facilityTurnDeliverOptional.get().getDeliverAmount() + amount);
         }
@@ -124,11 +128,39 @@ public class PlayerComponent implements IPlayerComponent {
         PlayerComponent.player = player;
     }
 
-    public static Player getPlayer() {
+    @Override
+    public Player getPlayer() {
         return player;
+    }
+
+    @Override
+    public void setUi(IPlayGame game) {
+        this.ui = game;
     }
 
     public Facility getFacility() {
         return player.getFacility();
+    }
+
+    /**
+     * doOrder will notify the  participant to make an order.
+     *
+     * @param round
+     * @return A FacilityTurn with an order for the current round.
+     */
+    @Override
+    public GameRoundAction executeTurn(Round round) {
+        ui.refreshInterfaceWithCurrentStatus(gameLogic.getRound());
+        return null;
+    }
+
+    /**
+     * Returns the facility for the ParticipantPool to compare with other participants.
+     *
+     * @return The facility instance.
+     */
+    @Override
+    public Facility getParticipant() {
+        return null;
     }
 }
