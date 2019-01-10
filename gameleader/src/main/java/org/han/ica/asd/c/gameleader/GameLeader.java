@@ -197,10 +197,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
             if(highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
                 highestPlayerId = Integer.parseInt(actualPlayer.getPlayerId());
             }
+						game.getPlayers().add(actualPlayer);
         } else {
             actualPlayer = connectingPlayerO.get();
         }
-        game.getPlayers().add(actualPlayer);
 
         return new GamePlayerId(game, actualPlayer.getPlayerId());
     }

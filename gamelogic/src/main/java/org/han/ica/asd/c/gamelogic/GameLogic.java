@@ -25,7 +25,6 @@ import java.util.List;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
-    @Inject
     private IConnectedForPlayer communication;
 
     @Inject
@@ -38,10 +37,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private IParticipant player;
 
     @Inject
-    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider){
+    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
         this.round = 0;
         participantsPool = participantsPoolProvider.get();
-        //communication.addObserver(this);
+        this.communication = communication;
+        this.communication.addObserver(this);
     }
 
     public void setParticipantsPool(ParticipantsPool participantsPool) {
