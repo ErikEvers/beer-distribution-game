@@ -30,7 +30,7 @@ public class TestNodeInfoList {
         testIp2 = "TestIp2";
         Player leaderPlayer = mock(Player.class);
         Leader leader = new Leader(leaderPlayer);
-        List<Player> playerList = spy(new ArrayList<>());
+        List<Player> playerList = new ArrayList<>();
         nodeInfoList = new NodeInfoList(leader, playerList);
     }
 
