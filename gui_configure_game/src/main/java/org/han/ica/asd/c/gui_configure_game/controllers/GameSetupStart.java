@@ -10,13 +10,19 @@ import javax.inject.Inject;
 public class GameSetupStart implements IGUIHandler {
 
 
+    private String gamename;
+
+
     @Override
     public void setData(Object[] data) {
-        // Method from super
+        this.gamename = (String) data[0];
+
     }
 
     @Override
     public void setupScreen() {
-        FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/GameSetupStart.fxml"));
+        GameSetupStartController gameSetupStartController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/GameSetupStart.fxml"));
+        gameSetupStartController.setGameName(gamename);
+
     }
 }
