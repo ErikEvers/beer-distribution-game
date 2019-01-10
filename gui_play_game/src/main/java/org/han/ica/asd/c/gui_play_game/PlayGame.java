@@ -14,8 +14,6 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.player.PlayerComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +121,7 @@ public abstract class PlayGame {
 
         beerGame.getConfiguration().getFacilities().forEach(
                 t -> {
-                    Facility facilityPlayedByPlayer = PlayerComponent.getPlayer().getFacility();
+                    Facility facilityPlayedByPlayer = playerComponent.getPlayer().getFacility();
 
                     if (t != facilityPlayedByPlayer) {
                         List<Facility> facilitiesLinkedToFacilities = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(t);
@@ -143,7 +141,7 @@ public abstract class PlayGame {
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-        facilityListView.addAll(beerGame.getConfiguration().getFacilitiesLinkedToFacilities(PlayerComponent.getPlayer().getFacility()));
+        facilityListView.addAll(beerGame.getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility()));
         comboBox.setItems(facilityListView);
     }
 
