@@ -77,7 +77,6 @@ public class Evaluator {
         checkOnlyOneDefaultOrderAndOneDefaultDeliver(current, inputBusinessRule);
         checkDefaultWithoutDestination(current, inputBusinessRule);
         checkLowestHighestOnlyUsedAfterPerson(current, inputBusinessRule);
-        checkNegativeCalculationsNotPossible(current,inputBusinessRule);
     }
 
     /**
@@ -213,15 +212,6 @@ public class Evaluator {
                 && !personBool){
             this.hasErrors = true;
             inputBusinessRule.setErrorMessage("Lowest/Highest can only be used in a condition for another player");
-        }
-    }
-
-    private void checkNegativeCalculationsNotPossible(ASTNode current, UserInputBusinessRule inputBusinessRule){
-        if(current instanceof Operation){
-            Value result = (Value) ((Operation) current).resolveOperation();
-            if(Integer.parseInt(result.getFirstPartVariable()) < 0){
-                inputBusinessRule.setErrorMessage("The result of an operation can't be negative");
-            }
         }
     }
 
