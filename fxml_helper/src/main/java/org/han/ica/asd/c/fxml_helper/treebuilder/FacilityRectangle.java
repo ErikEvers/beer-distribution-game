@@ -81,5 +81,5 @@ public class FacilityRectangle extends StackPane {
 	public Facility getFacility() {
         return facility;
     }
-	
+
 }

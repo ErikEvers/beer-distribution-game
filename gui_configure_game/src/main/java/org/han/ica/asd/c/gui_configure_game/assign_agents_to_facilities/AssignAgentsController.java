@@ -5,7 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.paint.Color;
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.dao.DaoConfig;
@@ -125,7 +128,7 @@ public class AssignAgentsController {
     public void handleAddAgentsButtonClick() {
         if (agentComboBox.getValue() != null) {
             for (int i = 0; i < beerGame.getAgents().size(); i++) {
-                if (agentComboBox.getValue().getProgrammedAgentName() == beerGame.getAgents().get(i).getGameAgentName()) {
+                if (agentComboBox.getValue().getProgrammedAgentName().equals(beerGame.getAgents().get(i).getGameAgentName()) && (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "This agent is already assigned to the selected facility.");
                     alert.setHeaderText("Warning");
                     alert.setTitle("Warning");
