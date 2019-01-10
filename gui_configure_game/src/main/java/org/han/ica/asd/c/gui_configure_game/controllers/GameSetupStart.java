@@ -9,13 +9,15 @@ import javax.inject.Inject;
 
 public class GameSetupStart implements IGUIHandler {
 
-
-    private String gamename;
-
+    private String gamename = "";
+    private String onlineGame = "TRUE";
+    private Configuration configuration;
 
     @Override
     public void setData(Object[] data) {
-        this.gamename = (String) data[0];
+        this.configuration = (Configuration) data[0];
+        this.gamename = (String) data[1];
+        this.onlineGame = (String) data[2];
 
     }
 
@@ -23,6 +25,8 @@ public class GameSetupStart implements IGUIHandler {
     public void setupScreen() {
         GameSetupStartController gameSetupStartController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/GameSetupStart.fxml"));
         gameSetupStartController.setGameName(gamename);
+        gameSetupStartController.setOnlineGame(onlineGame);
+        gameSetupStartController.setConfigurationInScreen(configuration);
 
     }
 }

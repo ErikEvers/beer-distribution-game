@@ -429,7 +429,9 @@ public class GameSetupController implements Initializable {
     @FXML
     private void setBackButtonAction() {
         Object[] data = new Object[3];
-        data[0] = gameName;
+        data[0] = configuration;
+        data[1] = gameName;
+        data[2] = onlineGame;
         gameSetupStart.setData(data);
         gameSetupStart.setupScreen();
     }

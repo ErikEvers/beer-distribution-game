@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
@@ -43,7 +44,6 @@ public class GameSetupStartController {
 
     @Inject
     private Configuration configuration;
-    private String gameNamef = "";
     private String onlineGame = "TRUE";
 
     @FXML
@@ -71,9 +71,6 @@ public class GameSetupStartController {
     private AnchorPane mainContainer;
 
     @FXML
-    private Button nextScreenButton;
-
-    @FXML
     private Button back;
 
 
@@ -82,32 +79,28 @@ public class GameSetupStartController {
      */
     public void initialize() {
         mainContainer.getChildren().addAll();
-        nextScreen();
         backButton();
-        this.gameName.setText(gameNamef);
     }
 
     /**
      * Button function to proceed to the next screen it will parse the configuration to the next screen.
      */
     @FXML
-    public void nextScreen() {
-        nextScreenButton.setOnAction(event -> {
-            Object[] data = new Object[3];
-            fillConfiguration();
-            data[0] = configuration;
-            data[1] = gameNamef;
-            if (offlineGame.isSelected()) {
-                data[2] = "FALSE";
-            } else data[2] = onlineGame;
-            gameSetup.setData(data);
-            gameSetup.setupScreen();
-        });
+    public void nextScreenButton() {
+
+        Object[] data = new Object[3];
+        fillConfiguration();
+        data[0] = configuration;
+        if (gameName.getText() != null && roundNumber.getText().isEmpty()) {
+            data[1] = gameName.getText();
+        }
+        if (offlineGame.isSelected()) {
+            data[2] = "FALSE";
+        } else data[2] = onlineGame;
+        gameSetup.setData(data);
+        gameSetup.setupScreen();
     }
 
-    public void ifSet() {
-
-    }
 
     /**
      * Button function to return to the previous screen
@@ -122,9 +115,7 @@ public class GameSetupStartController {
      * Fill the injected configuration based on the values given in GUI
      */
     private void fillConfiguration() {
-        if (gameName.getText() != null && !roundNumber.getText().isEmpty()) {
-            gameNamef = gameName.getText();
-        }
+
         if (roundNumber.getText() != null && !roundNumber.getText().isEmpty()) {
             configuration.setAmountOfRounds(Integer.parseInt(roundNumber.getText()));
         } else {
@@ -147,8 +138,24 @@ public class GameSetupStartController {
 
 
     void setGameName(String gamename) {
-        this.gameNamef = gamename;
+        gameName.setText(gamename);
     }
 
+    void setConfigurationInScreen(Configuration configuration) {
+        if (configuration == null) {
+            roundNumber.setText(String.valueOf(configuration.getAmountOfRounds()));
+            minOrder.setText(String.valueOf(configuration.getMinimalOrderRetail()));
+            maxOrder.setText(String.valueOf(configuration.getMaximumOrderRetail()));
+            bankrupt.setSelected(configuration.isContinuePlayingWhenBankrupt());
+            seeDetail.setSelected(configuration.isInsightFacilities());
 
+        }
+
+    }
+
+    void setOnlineGame(String onlineGame) {
+        if (onlineGame.equals("FALSE")) {
+            offlineGame.setSelected(true);
+        }
+    }
 }
