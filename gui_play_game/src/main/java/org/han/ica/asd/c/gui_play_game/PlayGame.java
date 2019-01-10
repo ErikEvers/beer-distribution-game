@@ -5,7 +5,10 @@ import com.google.inject.name.Named;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
@@ -14,7 +17,6 @@ import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,7 +199,7 @@ public abstract class PlayGame implements IPlayGame {
     }
 
     @Override
-    public void refreshInterfaceWithCurrentStatus(BeerGame beergame) {
+    public void refreshInterfaceWithCurrentStatus(BeerGame beerGame) {
         // status.getFacilityTurnDelivers().stream().filter(facilityTurn -> facilityTurn.getFacilityIdDeliverTo() == playerComponent.getPlayer().getFacility().getFacilityId());
         // inventory.setText(Integer.toString(status.getStock()));
     }

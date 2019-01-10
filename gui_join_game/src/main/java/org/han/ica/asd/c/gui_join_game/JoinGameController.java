@@ -10,13 +10,9 @@ import javafx.scene.control.ListView;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
-import org.han.ica.asd.c.player.PlayerComponent;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,12 +37,7 @@ public class JoinGameController {
     @Named("Connector")
     private IConnectorForSetup iConnectorForSetup;
 
-		@Inject
-		@Named("PlayerComponent")
-		private IPlayerComponent playerComponent;
 
-		@Inject
-		private IGameStore persistence;
 
     private ObservableList<String> items = FXCollections.observableArrayList();
 
@@ -61,8 +52,6 @@ public class JoinGameController {
         try {
             RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),  "");
             GamePlayerId gameData = iConnectorForSetup.getGameData();
-						playerComponent.setPlayer(gameData.getBeerGame().getPlayerById(gameData.getPlayerId()));
-						persistence.saveGameLog(gameData.getBeerGame());
             gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
             gameRoom.setupScreen();
         } catch (RoomException | DiscoveryException | ClassNotFoundException | IOException e) {
