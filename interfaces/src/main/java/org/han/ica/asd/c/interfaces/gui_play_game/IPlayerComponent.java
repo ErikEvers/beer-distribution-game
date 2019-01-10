@@ -23,4 +23,5 @@ public interface IPlayerComponent {
     String getFacilityName();
     void startNewTurn();
     Player getPlayer();
+    void setPlayer(Player player);
 }

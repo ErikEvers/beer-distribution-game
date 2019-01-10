@@ -53,7 +53,8 @@ public class GameRoomGameLeaderController {
 
 	}
 
-	public void handleReadyButtonClick() {
+	public void handleStartButtonClick() {
+		iConnectorForSetup.startRoom(gameLeader.getRoomModel());
 		playGame.setData(new Object[]{gameLeader.getBeerGame()});
 		playGame.setupScreen();
 	}

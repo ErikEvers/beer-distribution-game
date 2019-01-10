@@ -40,6 +40,10 @@ public class JoinGameController {
     @Named("Connector")
     private IConnectorForSetup iConnectorForSetup;
 
+		@Inject
+		@Named("PlayerComponent")
+		private IPlayerComponent playerComponent;
+
     private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
@@ -53,7 +57,7 @@ public class JoinGameController {
         try {
             RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),  "");
             GamePlayerId gameData = iConnectorForSetup.getGameData();
-						PlayerComponent.setPlayer(gameData.getBeerGame().getPlayerById(gameData.getPlayerId()));
+						playerComponent.setPlayer(gameData.getBeerGame().getPlayerById(gameData.getPlayerId()));
             gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
             gameRoom.setupScreen();
         } catch (RoomException | DiscoveryException | ClassNotFoundException | IOException e) {

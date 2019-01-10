@@ -42,6 +42,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     public GameLogic(){
         this.round = 0;
+        communication.addObserver(this);
     }
 
     public void setParticipantsPool(ParticipantsPool participantsPool) {

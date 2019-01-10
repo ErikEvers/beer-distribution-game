@@ -132,7 +132,7 @@ public class PlayerComponent implements IPlayerComponent {
         return player.getFacility().getFacilityType().getFacilityName();
     }
 
-    public static void setPlayer(Player player) {
+    public void setPlayer(Player player) {
         PlayerComponent.player = player;
     }
 

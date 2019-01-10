@@ -10,6 +10,7 @@ import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -18,10 +19,12 @@ import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,11 +40,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
     @Inject private TurnHandler turnHandler;
+		@Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
     private final Provider<Player> playerProvider;
 
+    private static RoomModel roomModel;
     private static BeerGame game;
     
     private Round currentRoundData;
@@ -61,7 +66,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     /**
      * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
      */
-    public void init(String leaderIp, String gameName) {
+    public void init(String leaderIp, RoomModel roomModel) {
         connectorForLeader.addObserver(this);
         game = beerGameProvider.get();
 
@@ -109,14 +114,16 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         configuration.setMaximumOrderRetail(99);
         configuration.setMinimalOrderRetail(5);
 
-
+				GameLeader.roomModel = roomModel;
         game.setConfiguration(configuration);
         game.setGameId(randomUUID().toString());
-        game.setGameName(gameName);
+        game.setGameName(roomModel.getRoomName());
         game.setGameDate("2019-01-01 0:00:00");
         Player henk = new Player("0", leaderIp, retailer, "Yarno", true);
         game.getPlayers().add(henk);
         game.setLeader(new Leader(henk));
+				playerComponent.setPlayer(henk);
+
 
         this.persistence.saveGameLog(game);
 
@@ -279,5 +286,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 	@Override
 	public BeerGame getBeerGame() {
 		return game;
+	}
+
+	@Override
+	public RoomModel getRoomModel() {
+		return roomModel;
 	}
 }

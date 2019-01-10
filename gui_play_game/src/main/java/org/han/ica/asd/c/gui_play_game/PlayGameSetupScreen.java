@@ -7,12 +7,13 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ResourceBundle;
 
 public class PlayGameSetupScreen implements IGUIHandler {
     BeerGame beerGame;
 
-    @Inject
+    @Inject @Named("PlayerComponent")
     IPlayerComponent playerComponent;
 
     @Override

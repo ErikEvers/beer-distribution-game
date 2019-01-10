@@ -24,7 +24,7 @@
         <RowConstraints maxHeight="220.0" minHeight="92.0" prefHeight="107.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
-        <Button mnemonicParsing="false" onMouseClicked="#handleReadyButtonClick" text="Ready" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <Button mnemonicParsing="false" onMouseClicked="#handleReadyButtonClick" text="Ready" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
           <GridPane.margin>
             <Insets right="15.0" />
           </GridPane.margin>

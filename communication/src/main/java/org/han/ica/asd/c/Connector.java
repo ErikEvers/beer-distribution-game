@@ -144,7 +144,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
-            leader.init(externalIP, roomName);
+            leader.init(externalIP, createdRoom);
             nodeInfoList.add(new NodeInfo(externalIP, true, true));
             return createdRoom;
         } catch (DiscoveryException e) {
