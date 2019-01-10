@@ -21,9 +21,6 @@ import static org.mockito.Mockito.spy;
 public class TestNodeInfoList {
 
     NodeInfoList nodeInfoList;
-    Player leaderPlayer;
-    Leader leader;
-
     private String testIp1;
     private String testIp2;
 
