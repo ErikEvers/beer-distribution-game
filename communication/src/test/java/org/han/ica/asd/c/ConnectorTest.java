@@ -15,6 +15,8 @@ import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -30,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +66,7 @@ public class ConnectorTest {
     @Mock
     IResourceManager service;
 
+
     @BeforeEach
     public void setUp() {
         initMocks(this);
@@ -79,12 +83,14 @@ public class ConnectorTest {
 //                requestStaticInjection(SocketServer.class);
 //
 //                //FaultDetector
+
 //                requestStaticInjection(FailLog.class);
 //                requestStaticInjection(FaultDetectorLeader.class);
 //                requestStaticInjection(Connector.class);
 //                requestStaticInjection(FaultDetectionClient.class);
 //            }
 //        });
+
 
         connector = new Connector(faultDetector, gameMessageClient, finder, socketServer);
         connector.setNodeInfoList(nodeInfoList);

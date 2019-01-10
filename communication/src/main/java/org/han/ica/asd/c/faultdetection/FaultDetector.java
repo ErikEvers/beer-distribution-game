@@ -46,12 +46,12 @@ public class FaultDetector {
         //Inject purposes
     }
 
-    public void setLeader(NodeInfoList nodeInfoList) {
+    public void startFaultDetectorLeader(NodeInfoList nodeInfoList) {
         faultDetectorLeader = makeFaultDetectorLeader(nodeInfoList, observers);
         faultDetectorLeader.start();
     }
 
-    public void setPlayer(NodeInfoList nodeInfoList) {
+    public void startFaultDetectorPlayer(NodeInfoList nodeInfoList) {
         faultResponder = makeFaultResponder();
         faultDetectorPlayer = makeFaultDetectorPlayer(nodeInfoList);
         faultDetectorPlayer.start();

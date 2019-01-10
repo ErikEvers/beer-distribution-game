@@ -1,7 +1,17 @@
 package org.han.ica.asd.c.faultdetection;
 
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import org.han.ica.asd.c.Connector;
+import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.socketrpc.IServerObserver;
+import org.han.ica.asd.c.socketrpc.SocketClient;
+import org.han.ica.asd.c.socketrpc.SocketServer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +41,14 @@ public class TestFailLog {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        failLog = new FailLog();
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(FailLog.class);
+            }
+        });
+
+        failLog = injector.getInstance(FailLog.class);
         failLog.setNodeInfoList(nodeInfoList);
         beginHashMap = failLog.getFailLogHashMap();
     }

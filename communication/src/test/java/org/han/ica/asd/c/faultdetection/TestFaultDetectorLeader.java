@@ -129,9 +129,7 @@ public class TestFaultDetectorLeader {
         verify(failLog, times(1)).reset(testIp2);
         verify(faultHandlerLeader, times(1)).reset(testIp1);
         verify(faultHandlerLeader, times(1)).reset(testIp2);
-        verify(nodeInfoList, times(1)).updateIsConnected(testIp1, true);
-        verify(nodeInfoList, times(1)).updateIsConnected(testIp2, true);
-    }
+      }
 
     @Test
     @DisplayName("Test if makeConnection handles the peerCantReachedException")
