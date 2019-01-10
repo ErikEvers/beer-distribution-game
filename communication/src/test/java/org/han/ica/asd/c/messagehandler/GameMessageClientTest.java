@@ -1,11 +1,14 @@
 package org.han.ica.asd.c.messagehandler;
 
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +26,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -73,7 +77,6 @@ public class GameMessageClientTest {
     void shouldReturnResponseMessageWithClassNotFoundException() throws IOException, ClassNotFoundException {
         when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
         boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
-
         assertFalse(responseMessage);
     }
 
@@ -85,6 +88,18 @@ public class GameMessageClientTest {
         boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
 
         assertTrue(responseMessage);
+    }
+
+    @Test
+    public void shouldReturnChooseFacilityMessageWithoutError() throws Exception {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
+        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility);
+
+        assertNull(response.getException());
     }
 
 // Still unsure on how to test this cause of threading
@@ -109,10 +124,9 @@ public class GameMessageClientTest {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        WhoIsTheLeaderMessage result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
+        String result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
 
-        assertEquals(whoIsTheLeaderMessage, result);
-        assertEquals("test", result.getResponse());
+        assertEquals("test", result);
     }
 
     @Test
@@ -125,9 +139,9 @@ public class GameMessageClientTest {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        WhoIsTheLeaderMessage result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
+        String result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
 
-        assertNotEquals(whoIsTheLeaderMessage, result);
+        assertNotEquals(whoIsTheLeaderMessage.getResponse(), result);
     }
 
 }

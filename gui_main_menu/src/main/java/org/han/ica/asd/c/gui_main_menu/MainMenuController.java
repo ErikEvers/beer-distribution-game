@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.Button;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gameleader.GameLeader;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,9 +34,13 @@ public class MainMenuController {
     @Named("AssignAgents")
     private IGUIHandler assignAgents;
 
+    @Inject
+    private IConnectorForSetup connector;
+
     public void initialize() {
 
     }
+
     @FXML
     private void closeButtonAction() {
         Stage stage = (Stage) close.getScene().getWindow();
@@ -48,15 +54,23 @@ public class MainMenuController {
 
     @FXML
     private void replayButtonAction() {
-         replayGameList.setupScreen();
+        replayGameList.setupScreen();
     }
 
-    public void handleJoinGameButtonClick(){
+    public void handleCreateGameButtonClick() {
+        assignAgents.setupScreen();
+        //connector.start();
+        //connector.createRoom("12345", "");
+    }
+
+    public void handleJoinGameButtonClick() {
         joinGame.setupScreen();
     }
 
     @FXML
-    public void handleAssignAgentsButtonClick() { assignAgents.setupScreen(); }
+    public void handleAssignAgentsButtonClick() {
+        assignAgents.setupScreen();
+    }
 
 
 }

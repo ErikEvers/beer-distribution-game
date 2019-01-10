@@ -14,4 +14,6 @@ public interface IGameAgentService {
 
   List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map);
 
+  GameAgent createGameAgentFromProgrammedAgent(Facility facility, ProgrammedAgent programmedAgent);
+
 }

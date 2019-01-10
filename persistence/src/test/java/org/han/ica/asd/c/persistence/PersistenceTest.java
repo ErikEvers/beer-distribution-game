@@ -113,7 +113,7 @@ class PersistenceTest {
 
 	@Test
 	void fetchRoundDataTest() {
-		persistence.fetchRoundData(1);
+		persistence.fetchFacilityTurn(1);
 		verify((roundDAOMock), times(1)).getRound(anyInt());
 	}
 
@@ -134,7 +134,7 @@ class PersistenceTest {
 
 	@Test
 	void saveTurnDataTest() {
-		persistence.saveTurnData(round);
+		persistence.saveFacilityTurn(round);
 		verify((roundDAOMock), times(1)).createRound(anyInt());
 		verify((roundDAOMock),times(1)).createFacilityOrder(anyInt(),any(FacilityTurnOrder.class));
 		verify((roundDAOMock),times(1)).createFacilityDeliver(anyInt(),any(FacilityTurnDeliver.class));
@@ -145,5 +145,11 @@ class PersistenceTest {
 	void getPlayerByIdTest(){
 		persistence.getPlayerById("Henk");
 		verify((playerDAOMock),times(1)).getPlayer(anyString());
+	}
+
+	@Test
+	public void saveGameLogTest(){
+		persistence.saveGameLog(beerGame);
+		verify((beerGameDAOMock),times(1)).createBeergame(beerGame);
 	}
 }

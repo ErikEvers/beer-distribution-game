@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class FacilityType implements IDomainModel{
+import java.io.Serializable;
+
+public class FacilityType implements IDomainModel, Serializable {
     private String facilityName;
     private int valueIncomingGoods;
     private int valueOutgoingGoods;

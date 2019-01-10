@@ -32,19 +32,28 @@ public class GameAgentService implements IGameAgentService {
     return programmedAgents;
   }
 
+  public GameAgent createGameAgentFromProgrammedAgent(Facility facility, ProgrammedAgent programmedAgent) {
+    List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
+    for (ProgrammedBusinessRules businessRule : programmedAgent.getProgrammedBusinessRules()) {
+      gameBusinessRules.add(new GameBusinessRules(businessRule.getProgrammedBusinessRule(), businessRule.getProgrammedAST()));
+    }
+
+    return new GameAgent(programmedAgent.getProgrammedAgentName(), facility, gameBusinessRules);
+  }
+
   public List<GameAgent> setAgentsInFacilities(Map<Facility, ProgrammedAgent> map) {
-    List<GameAgent> gameAgents = new ArrayList<>();
-    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
-      gameAgents.add(new GameAgent(set.getValue().getProgrammedAgentName(), set.getValue().getProgrammedBusinessRules(), set.getKey()));
-    }
-    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
-      for(GameAgent agent: gameAgents) {
-        if(!set.getKey().equals(agent.getFacility())) {
-          gameAgents.add(new GameAgent(defaultAgent.getProgrammedAgentName(), defaultAgent.getProgrammedBusinessRules(), set.getKey()));
-        }
-      }
-    }
-    return gameAgents;
+//    List<GameAgent> gameAgents = new ArrayList<>();
+//    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
+//      gameAgents.add(new GameAgent(set.getValue().getProgrammedAgentName(), set.getValue().getProgrammedBusinessRules(), set.getKey()));
+//    }
+//    for(Map.Entry<Facility, ProgrammedAgent> set: map.entrySet()) {
+//      for(GameAgent agent: gameAgents) {
+//        if(!set.getKey().equals(agent.getFacility())) {
+//          gameAgents.add(new GameAgent(defaultAgent.getProgrammedAgentName(), defaultAgent.getProgrammedBusinessRules(), set.getKey()));
+//        }
+//      }
+//    }
+    return null;
 
   }
 

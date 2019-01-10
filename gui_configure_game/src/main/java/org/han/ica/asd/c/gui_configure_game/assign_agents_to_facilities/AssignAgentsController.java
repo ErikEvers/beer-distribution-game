@@ -91,9 +91,9 @@ public class AssignAgentsController {
         this.beerGame.setConfiguration(configuration);
         Player henk = new Player("1", "111", retailer, "Henk", true);
         this.beerGame.getPlayers().add(henk);
-        this.beerGame.getAgents().add(new GameAgent("wholesaleAgent", wholesale, new ArrayList<>()));
-        this.beerGame.getAgents().add(new GameAgent("warehouseAgent", warehouse, new ArrayList<>()));
-        this.beerGame.getAgents().add(new GameAgent("factoryAgent", factory, new ArrayList<>()));
+//        this.beerGame.getAgents().add(new GameAgent("wholesaleAgent", wholesale, new ArrayList<>()));
+//        this.beerGame.getAgents().add(new GameAgent("warehouseAgent", warehouse, new ArrayList<>()));
+//        this.beerGame.getAgents().add(new GameAgent("factoryAgent", factory, new ArrayList<>()));
         this.beerGame.setLeader(new Leader(henk));
         this.beerGame.setGameId("123");
         this.beerGame.setGameName("Henks spel");
@@ -125,12 +125,13 @@ public class AssignAgentsController {
 
     @FXML
     public void handleAddAgentsButtonClick() {
-        for (int i = 0; i < beerGame.getAgents().size(); i++) {
-            if (beerGame.getAgents().get(i).getGameAgentName().equals(agentComboBox.getValue().getProgrammedAgentName())) {
-                System.out.println(beerGame.getAgents().get(i).getFacility());
-                beerGame.getAgents().get(i).setFacility(lastClickedFacilityRectangle.getFacility());
-                System.out.println(beerGame.getAgents().get(i).getFacility());
-            }
+        beerGame.getAgents().add(gameAgentService.createGameAgentFromProgrammedAgent(lastClickedFacilityRectangle.getFacility(), agentComboBox.getValue()));
+        handleRemoveAgentsButtonClick();
+    }
+
+    @FXML
+    public void handleRemoveAgentsButtonClick() {
+        for(int i = 0; i < beerGame.getAgents().size(); i++) {
         }
         initTree();
     }
