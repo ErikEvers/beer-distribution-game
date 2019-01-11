@@ -2,7 +2,9 @@ package org.han.ica.asd.c.businessrule.parser.walker;
 
 import org.han.ica.asd.c.businessrule.BusinessRuleBaseListener;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
-import org.han.ica.asd.c.businessrule.parser.ast.*;
+import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
+import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Default;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
@@ -21,12 +23,51 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ASTListener extends BusinessRuleBaseListener {
-    private final Provider<BusinessRule> bussinessRuleProvider;
-    private final Provider<Default> defaultProvider;
-    private final Provider<Comparison> comparisonProvider;
-    private final Provider<ComparisonStatement> comparisonStatementProvider;
-    private final Provider<ComparisonValue> comparisonValueProvider;
-    private final Provider<Value> valueProvider;
+    @Inject
+    private Provider<BusinessRule> businessRuleProvider;
+
+    @Inject
+    private Provider<Default> defaultProvider;
+
+    @Inject
+    private Provider<Comparison> comparisonProvider;
+
+    @Inject
+    private Provider<ComparisonStatement> comparisonStatementProvider;
+
+    @Inject
+    private Provider<ComparisonValue> comparisonValueProvider;
+
+    @Inject
+    private Provider<Value> valueProvider;
+
+    @Inject
+    private Provider<BooleanOperator> booleanOperatorProvider;
+
+    @Inject
+    private Provider<ComparisonOperator> comparisonOperatorProvider;
+
+    @Inject
+    private Provider<MultiplyOperation> multiplyOperationProvider;
+
+    @Inject
+    private Provider<DivideOperation> divideOperationProvider;
+
+    @Inject
+    private Provider<SubtractOperation> subtractOperationProvider;
+
+    @Inject
+    private Provider<AddOperation> addOperationProvider;
+
+    @Inject
+    private Provider<Action> actionProvider;
+
+    @Inject
+    private Provider<ActionReference> actionReferenceProvider;
+
+    @Inject
+    private Provider<Person> personProvider;
+
     private List<BusinessRule> businessRules;
     private Deque<ASTNode> currentContainer;
 
@@ -34,18 +75,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      * Constructor
      */
     @Inject
-    public ASTListener(Provider<BusinessRule> bussinessRuleProvider,
-                       Provider<Default> defaultProvider,
-                       Provider<Comparison> comparisonProvider,
-                       Provider<ComparisonStatement> comparisonStatementProvider,
-                       Provider<ComparisonValue> comparisonValueProvider,
-                       Provider<Value> valueProvider) {
-        this.bussinessRuleProvider = bussinessRuleProvider;
-        this.defaultProvider = defaultProvider;
-        this.comparisonProvider = comparisonProvider;
-        this.comparisonStatementProvider = comparisonStatementProvider;
-        this.comparisonValueProvider = comparisonValueProvider;
-        this.valueProvider = valueProvider;
+    public ASTListener() {
         businessRules  = new ArrayList<>();
         currentContainer = new LinkedList<>();
     }
@@ -66,7 +96,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterDefaultRule(BusinessRuleParser.DefaultRuleContext ctx) {
-        BusinessRule businessRule = bussinessRuleProvider.get();
+        BusinessRule businessRule = businessRuleProvider.get();
         businessRules.add(businessRule);
         businessRule.addChild(defaultProvider.get());
         currentContainer.push(businessRule);
@@ -89,7 +119,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterIfRule(BusinessRuleParser.IfRuleContext ctx) {
-        BusinessRule businessRule = new BusinessRule();
+        BusinessRule businessRule = businessRuleProvider.get();
         businessRules.add(businessRule);
         currentContainer.push(businessRule);
     }
@@ -117,7 +147,7 @@ public class ASTListener extends BusinessRuleBaseListener {
             parent.addChild(comparisonStatement);
         }
         if (ctx.getChildCount() > 1) {
-            comparisonStatement.addChild(new BooleanOperator(ctx.getChild(1).toString()));
+            comparisonStatement.addChild(booleanOperatorProvider.get().addValue(ctx.getChild(1).toString()));
         }
         currentContainer.push(comparisonStatement);
     }
@@ -192,7 +222,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterComparison_operator(BusinessRuleParser.Comparison_operatorContext ctx) {
-        ComparisonOperator comparisonOperator = new ComparisonOperator(ctx.getChild(0).toString());
+        ComparisonOperator comparisonOperator = comparisonOperatorProvider.get().addValue(ctx.getChild(0).toString());
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
             parent.addChild(comparisonOperator);
@@ -245,12 +275,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterMulOperation(BusinessRuleParser.MulOperationContext ctx) {
-        Operation operation = new MultiplyOperation();
-        ASTNode parent = currentContainer.peek();
-        if (parent != null) {
-            parent.addChild(operation);
-        }
-        currentContainer.push(operation);
+        addOperationToAST(multiplyOperationProvider);
     }
 
     /**
@@ -270,12 +295,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterDivOperation(BusinessRuleParser.DivOperationContext ctx) {
-        Operation operation = new DivideOperation();
-        ASTNode parent = currentContainer.peek();
-        if (parent != null) {
-            parent.addChild(operation);
-        }
-        currentContainer.push(operation);
+        addOperationToAST(divideOperationProvider);
     }
 
     /**
@@ -295,12 +315,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterMinOperation(BusinessRuleParser.MinOperationContext ctx) {
-        Operation operation = new SubtractOperation();
-        ASTNode parent = currentContainer.peek();
-        if (parent != null) {
-            parent.addChild(operation);
-        }
-        currentContainer.push(operation);
+        addOperationToAST(subtractOperationProvider);
     }
 
     /**
@@ -320,12 +335,7 @@ public class ASTListener extends BusinessRuleBaseListener {
      */
     @Override
     public void enterPlusOperation(BusinessRuleParser.PlusOperationContext ctx) {
-        Operation operation = new AddOperation();
-        ASTNode parent = currentContainer.peek();
-        if (parent != null) {
-            parent.addChild(operation);
-        }
-        currentContainer.push(operation);
+        addOperationToAST(addOperationProvider);
     }
 
     /**
@@ -339,18 +349,33 @@ public class ASTListener extends BusinessRuleBaseListener {
     }
 
     /**
+     * Adds an operation to the AST tree
+     *
+     * @param operationProvider Provider of the operation type
+     * @param <T> Operation type
+     */
+    private <T extends Operation> void addOperationToAST(Provider<T> operationProvider){
+        Operation operation = operationProvider.get();
+        ASTNode parent = currentContainer.peek();
+        if (parent != null) {
+            parent.addChild(operation);
+        }
+        currentContainer.push(operation);
+    }
+
+    /**
      * Called when walker enters Action. Adds action to the AST
      *
      * @param ctx Context
      */
     @Override
     public void enterAction(BusinessRuleParser.ActionContext ctx) {
-        Action action = new Action();
+        Action action = actionProvider.get();
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
             parent.addChild(action);
         }
-        action.addChild(new ActionReference(ctx.getChild(0).toString()));
+        action.addChild(actionReferenceProvider.get().addValue(ctx.getChild(0).toString()));
         currentContainer.push(action);
     }
 
@@ -366,7 +391,7 @@ public class ASTListener extends BusinessRuleBaseListener {
 
     @Override
     public void enterPerson(BusinessRuleParser.PersonContext ctx) {
-        Person person = new Person(ctx.getChild(1).toString());
+        Person person = personProvider.get().addValue(ctx.getChild(1).toString());
         ASTNode parent = currentContainer.peek();
         if (parent != null) {
             parent.addChild(person);

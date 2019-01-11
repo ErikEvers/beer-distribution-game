@@ -1,11 +1,11 @@
-package org.han.ica.asd.c.businessrule.parser.ast.action;
+package org.han.ica.asd.c.businessrule.parser.ast;
 
 import java.util.AbstractMap;
 import java.util.Map;
 
 public enum FacilityType {
     FACTORY("factory", 0),
-    DISTRIBUTOR("distributor", 1),
+    REGIONALWAREHOUSE("regional warehouse", 1),
     WHOLESALER("wholesaler", 2),
     RETAILER("retailer", 3);
 

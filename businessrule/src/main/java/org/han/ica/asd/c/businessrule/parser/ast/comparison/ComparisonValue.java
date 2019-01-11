@@ -60,7 +60,7 @@ public class ComparisonValue extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**
@@ -101,5 +101,10 @@ public class ComparisonValue extends ASTNode {
     @Override
     public int hashCode() {
         return Objects.hash(operationValue);
+    }
+
+    @Override
+    public ASTNode getLeftChild() {
+        return operationValue;
     }
 }
