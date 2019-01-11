@@ -1,9 +1,11 @@
 package org.han.ica.asd.c.gui_program_agent;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -38,6 +40,9 @@ public class ProgramAgentController {
     @FXML
     TextFlow businessRuleTexFlow;
 
+    @FXML
+    Button save;
+
     @Inject
     private IBusinessRules iBusinessRules;
 
@@ -49,16 +54,20 @@ public class ProgramAgentController {
     @Named("BusinessruleStore")
     IBusinessRuleStore iBusinessRuleStore;
 
+    private ObservableList<String> items;
+
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
     private ResourceBundle resourceBundle;
 
     public void setAgentName(String name) {
         if(name != null) {
+            save.setDisable("Default".equals(name));
+
             agentNameInput.setText(name);
             List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
             for (String rule: rules) {
-                businessRuleInput.setText(rule + "\n");
+                businessRuleInput.appendText(rule + "\n");
             }
             agentNameInput.setDisable(true);
         }
@@ -102,15 +111,26 @@ public class ProgramAgentController {
     private void saveButtonAction() {
         clearOldScreenValues();
         String agentName = agentNameInput.getText();
+
         String businessRulesUserInput = businessRuleInput.getText();
         if (checkIfStringEmpty(agentName)) {
             setProgramAgentPopup(resourceBundle.getString("agent_name_error_header"), resourceBundle.getString("agent_name_error_body"), Color.RED);
         } else if (checkIfStringEmpty(businessRulesUserInput)) {
             setProgramAgentPopup(resourceBundle.getString("business_rule_error_header"), resourceBundle.getString("business_rule_error_body"), Color.RED);
+        } else if (!isUniqueAgentName(agentName)) {
+            setProgramAgentPopup(resourceBundle.getString("unique_agent_name_error_header"), resourceBundle.getString("unique_agent_name_error_body"), Color.RED);
         } else {
             List<UserInputBusinessRule> result = iBusinessRules.programAgent(agentName, businessRulesUserInput);
             setScreenValuesBasedOnResult(result);
         }
+    }
+
+    private boolean isUniqueAgentName(String agentName) {
+        if (items != null){
+            return !items.contains(agentName);
+        }
+
+        return true;
     }
 
     /***
@@ -130,7 +150,13 @@ public class ProgramAgentController {
         StringBuilder errors = new StringBuilder();
         List<Text> textFlow = new ArrayList<>();
         for (UserInputBusinessRule businessRule : result) {
-            Text text = new Text(businessRule.getBusinessRule() + "\n");
+            Text text = new Text();
+            if(businessRule.getBusinessRule().equals("")){
+                text.setText("Line can not be empty"+ "\n");
+                text.setFill(Color.RED);
+            }else {
+                text.setText(businessRule.getBusinessRule() + "\n");
+            }
             if (!businessRule.getErrorWord().isEmpty()) {
                 Integer key = businessRule.getErrorWord().keySet().iterator().next();
                 int value = businessRule.getErrorWord().get(key) + 1;
@@ -139,7 +165,7 @@ public class ProgramAgentController {
                 errorWord.setFill(Color.RED);
                 textFlow.add(errorWord);
                 textFlow.add(new Text(businessRule.getBusinessRule().substring(value) + "\n"));
-                errors.append(businessRule.getErrorMessage());
+                errors.append(businessRule.getErrorMessage() + "\n");
             } else if (businessRule.hasError()) {
                 errors.append("User input error on line ").append(businessRule.getLineNumber()).append(": ").append(businessRule.getErrorMessage()).append("\n");
                 text.setFill(Color.RED);
@@ -183,5 +209,9 @@ public class ProgramAgentController {
 
     private boolean checkIfStringEmpty(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    public void setItems(ObservableList<String> items) {
+        this.items = items;
     }
 }

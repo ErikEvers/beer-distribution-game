@@ -7,6 +7,8 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,6 +20,16 @@ public class Comparison extends Expression {
     private ComparisonOperator comparisonOperator;
     private ComparisonValue right;
 
+    private Provider<BooleanLiteral> booleanLiteralProvider;
+
+    public Comparison() {
+    }
+
+    @Inject
+    public Comparison(Provider<BooleanLiteral> booleanLiteralProvider) {
+        this.booleanLiteralProvider = booleanLiteralProvider;
+    }
+
     /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
      *
@@ -25,7 +37,7 @@ public class Comparison extends Expression {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX);
     }
 
     /**
@@ -113,19 +125,29 @@ public class Comparison extends Expression {
 
         switch (this.comparisonOperator.getValue()) {
             case NOT:
-                return new BooleanLiteral(valueLeft != valueRight);
+                return booleanLiteralProvider.get().setValue(valueLeft != valueRight);
             case LESS:
-                return new BooleanLiteral(valueLeft < valueRight);
+                return booleanLiteralProvider.get().setValue(valueLeft < valueRight);
             case EQUAL:
-                return new BooleanLiteral(valueLeft == valueRight);
+                return booleanLiteralProvider.get().setValue(valueLeft == valueRight);
             case GREATER:
-                return new BooleanLiteral(valueLeft > valueRight);
+                return booleanLiteralProvider.get().setValue(valueLeft > valueRight);
             case GREATER_EQUAL:
-                return new BooleanLiteral(valueLeft >= valueRight);
+                return booleanLiteralProvider.get().setValue(valueLeft >= valueRight);
             case LESS_EQUAL:
-                return new BooleanLiteral(valueLeft <= valueRight);
+                return booleanLiteralProvider.get().setValue(valueLeft <= valueRight);
             default:
-                return new BooleanLiteral(false);
+                return booleanLiteralProvider.get().setValue(false);
         }
+    }
+
+    @Override
+    public ASTNode getLeftChild() {
+        return left;
+    }
+
+    @Override
+    public ASTNode getRightChild() {
+        return right;
     }
 }
