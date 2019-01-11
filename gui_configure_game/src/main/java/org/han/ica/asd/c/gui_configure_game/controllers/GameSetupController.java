@@ -1,31 +1,31 @@
 package org.han.ica.asd.c.gui_configure_game.controllers;
 
-import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.gui_configure_game.graph.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gui_configure_game.graph.EdgeLine;
+import org.han.ica.asd.c.gui_configure_game.graph.FacilityRectangle;
+import org.han.ica.asd.c.gui_configure_game.graph.Factory;
+import org.han.ica.asd.c.gui_configure_game.graph.Graph;
+import org.han.ica.asd.c.gui_configure_game.graph.GraphException;
+import org.han.ica.asd.c.gui_configure_game.graph.GraphFacility;
+import org.han.ica.asd.c.gui_configure_game.graph.RegionalWarehouse;
+import org.han.ica.asd.c.gui_configure_game.graph.Retailer;
+import org.han.ica.asd.c.gui_configure_game.graph.Wholesale;
 import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphConverterToDomain;
 import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphToFacilityChecker;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
-
 import javax.inject.Inject;
 import javax.inject.Named;
-
-
-import java.lang.reflect.Array;
 import java.net.URL;
-
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
