@@ -9,7 +9,6 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
-import org.han.ica.asd.c.messagehandler.sending.GameMessageSender;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
