@@ -1,13 +1,16 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
-import org.han.ica.asd.c.discovery.Room;
-import org.han.ica.asd.c.messagehandler.exceptions.SendGameMessageException;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
 
 public class GameMessageSender {
 
@@ -15,6 +18,9 @@ public class GameMessageSender {
 
     private SocketClient socketClient;
 
+    public GameMessageSender(){
+        //inject
+    }
     public GameMessageSender(SocketClient socketClient) {
         this.socketClient = socketClient;
     }
@@ -51,5 +57,32 @@ public class GameMessageSender {
             result = (T) response;
         }
         return result;
+    }
+
+    public Map<String, Object> sendToAll(String[] ips, TransactionMessage transactionMessage) {
+        CountDownLatch cdl = new CountDownLatch(ips.length);
+        Map<String, Object> map = new HashMap<>();
+
+        for (String ip : ips) {
+            Thread t = new Thread(() -> {
+                try {
+                    Object response = SendGameMessage(ip, transactionMessage);
+                    map.put(ip, response);
+                } catch (SendGameMessageException e) {
+                    map.put(ip, e);
+                }
+                cdl.countDown();
+            });
+            t.setDaemon(false);
+            t.start();
+        }
+
+        try {
+            cdl.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return map;
+
     }
 }

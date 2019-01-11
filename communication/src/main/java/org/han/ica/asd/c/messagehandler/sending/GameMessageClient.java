@@ -2,6 +2,7 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
@@ -32,7 +33,6 @@ public class GameMessageClient {
     private static Logger logger;
 
     public GameMessageClient() {
-        gameMessageSender = new GameMessageSender(socketClient);
     }
 
     /**
@@ -42,12 +42,14 @@ public class GameMessageClient {
      * @param turn The turn object to be send.
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
-    public boolean sendTurnModel(String ip, Round turn) {
+    public void sendTurnModel(String ip, Round turn) throws SendGameMessageException {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
-        gameMessageSender.SendGameMessageGeneric()
-        TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
-
-        return false;
+        TurnModelMessage response = gameMessageSender.SendGameMessageGeneric(ip, turnModelMessage);
+        if (response.getException() != null) {
+            SendGameMessageException sgme = new SendGameMessageException("Message was arrived, but the receiver encountered an error");
+            sgme.addException(response.getException());
+            throw sgme;
+        }
     }
 
     /**
@@ -69,18 +71,13 @@ public class GameMessageClient {
         return whoIsTheLeaderMessageReturn.getResponse();
     }
 
-    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException {
-        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
-        try {
-            ChooseFacilityMessage response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
-            if (response.getException() != null) {
-                throw (FacilityNotAvailableException) response.getException();
-            }
-            return response;
-        } catch (IOException | ClassNotFoundException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException, SendGameMessageException {
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+        ChooseFacilityMessage response = gameMessageSender.SendGameMessageGeneric(ip, chooseFacilityMessage);
+        if (response.getException() != null) {
+            throw (FacilityNotAvailableException) response.getException();
         }
-        return chooseFacilityMessageReturn;
+        return response;
     }
 
     public GamePlayerId sendGameDataRequestMessage(String ip) throws IOException, ClassNotFoundException {
@@ -100,7 +97,7 @@ public class GameMessageClient {
      */
     public void sendRoundToAllPlayers(String[] ips, Round roundModel) throws TransactionException {
         RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
-        new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
+        new SendInTransaction(ips, roundModelMessage, gameMessageSender).sendToAllPlayers();
     }
 
     /**
@@ -111,7 +108,7 @@ public class GameMessageClient {
      */
     public void sendStartGameToAllPlayers(String[] ips, BeerGame beerGame) throws TransactionException {
         GameStartMessage gameStartMessage = new GameStartMessage(beerGame);
-        new SendInTransaction(ips, gameStartMessage, socketClient).sendToAllPlayers();
+        new SendInTransaction(ips, gameStartMessage, new GameMessageSender(socketClient)).sendToAllPlayers();
     }
 
     /**
@@ -121,5 +118,6 @@ public class GameMessageClient {
      */
     public void setSocketClient(SocketClient socketClient) {
         this.socketClient = socketClient;
+        this.gameMessageSender = new GameMessageSender(socketClient);
     }
 }

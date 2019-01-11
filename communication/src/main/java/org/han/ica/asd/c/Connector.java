@@ -3,16 +3,15 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
@@ -31,7 +30,6 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,6 +44,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
@@ -193,7 +192,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     @Override
-    public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
+    public void chooseFacility(Facility facility) throws FacilityNotAvailableException, SendGameMessageException {
         gameMessageClient.sendChooseFacilityMessage(leaderIp, facility);
     }
 
@@ -210,10 +209,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
-    }
-
-    public void sendTurnData(Round turn) {
-        //stub
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -255,14 +250,14 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return false;
     }
 
-    public boolean sendTurn(Round turn) {
+    public void sendTurn(Round turn) throws SendGameMessageException {
         Leader leader =  persistence.getGameLog().getLeader();
-        return gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
+        gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
     }
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-        List<String> ips = nodeInfoList.getAllIps();
+        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 

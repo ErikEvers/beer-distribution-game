@@ -8,7 +8,6 @@ import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.TURN_MODE
 
 public class TurnModelMessage extends GameMessage implements Serializable {
     private Round turnModel;
-    private boolean isSuccess;
 
     public TurnModelMessage(Round roundData) {
         super(TURN_MODEL_MESSAGE);
@@ -22,7 +21,6 @@ public class TurnModelMessage extends GameMessage implements Serializable {
      * @author Rogier
      */
     public void createResponseMessage(){
-        this.isSuccess = true;
         turnModel = null;
     }
 
@@ -40,9 +38,5 @@ public class TurnModelMessage extends GameMessage implements Serializable {
 
     public Round getTurnModel() {
         return turnModel;
-    }
-
-    public boolean isSuccess(){
-        return isSuccess;
     }
 }

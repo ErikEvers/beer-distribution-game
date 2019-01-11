@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.messagehandler.exceptions;
+package org.han.ica.asd.c.exceptions.communication;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,7 @@ public class SendGameMessageException extends Exception {
 
     public SendGameMessageException(String message){
         super(message);
+        exceptions = new ArrayList<>();
     }
 
     public ArrayList<Exception> getExceptions() {
