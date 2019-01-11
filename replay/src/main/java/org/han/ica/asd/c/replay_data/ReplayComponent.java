@@ -36,7 +36,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         displayedFacilities = new ArrayList<>();
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
-        totalRounds = rounds.size();
+        totalRounds = rounds.size()-1;
 
         initializeAverageRounds();
     }
