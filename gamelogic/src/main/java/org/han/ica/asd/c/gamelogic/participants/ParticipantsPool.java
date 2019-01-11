@@ -79,6 +79,7 @@ public class ParticipantsPool {
         for (IParticipant participant : participants) {
             participant.executeTurn();
         }
+        player.roundStarted();
     }
 
     public void setPlayer(IPlayerRoundListener iPlayer) {
