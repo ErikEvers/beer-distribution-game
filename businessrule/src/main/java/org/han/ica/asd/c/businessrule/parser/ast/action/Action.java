@@ -163,22 +163,37 @@ public class Action extends ASTNode {
         return operation;
     }
 
+    /***
+     * checks if action has an comparison statement.
+     * @return true if action has an comparison statement
+     */
     public boolean hasComparisonStatement(){
         return this.comparisonStatement != null;
     }
 
+    /***
+     * gets the comparison statement
+     * @return returns the comparison statement
+     */
     public ASTNode getComparisonStatement(){
         return this.comparisonStatement;
     }
 
-
+    /***
+     * checks if the person variable is set
+     * @return true if the variable is set
+     */
     public boolean hasPerson() {
         return person!=null;
     }
 
-    public void replacePerson(int person) {
+    /***
+     * replaces the person with facilityId
+     * @param facilityId
+     */
+    public void replacePerson(int facilityId) {
         this.comparisonStatement = null;
-        this.person.addValue(String.valueOf(person));
+        this.person.addValue(String.valueOf(facilityId));
     }
 
     public Person getPerson() {

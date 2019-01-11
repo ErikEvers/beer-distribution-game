@@ -273,7 +273,7 @@ public class BusinessRule extends ASTNode {
 
     public GameValue getHighestOrLowest(Person person) {
         if (containsFacilityFromList(person.getPerson(), GameValue.HIGHEST.getValue())) {
-            return GameValue.HIGHEST
+            return GameValue.HIGHEST;
         } else if (containsFacilityFromList(person.getPerson(), GameValue.LOWEST.getValue())) {
             return GameValue.LOWEST;
         }
