@@ -7,8 +7,6 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
 
 import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTED;
 import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTEDWITHOUTLEADER;
@@ -130,7 +128,7 @@ public class NodeInfoList extends ArrayList<Player> {
         Player leaderPlayer = this.leader.getPlayer();
 
         List<Player> playerListCopy = new ArrayList<>(playerList);
-        playerListCopy.removeIf(p -> p != leaderPlayer);
+        playerListCopy.removeIf(p -> p == leaderPlayer);
 
         return playerListCopy.toArray(new Player[0]);
     }
@@ -226,20 +224,13 @@ public class NodeInfoList extends ArrayList<Player> {
      */
     @Override
     public boolean equals(Object o) {
-        if (o == this)
+        if (o == this) {
             return true;
-        if (!(o instanceof List))
-            return false;
-
-        ListIterator<Player> e1 = listIterator();
-        ListIterator<?> e2 = ((List<?>) o).listIterator();
-        while (e1.hasNext() && e2.hasNext()) {
-            Player o1 = e1.next();
-            Object o2 = e2.next();
-            if (!(Objects.equals(o1, o2)))
-                return false;
         }
-        return !(e1.hasNext() || e2.hasNext());
+        if (!(o instanceof List)) {
+            return false;
+        }
+        return false;
     }
 
     /**
