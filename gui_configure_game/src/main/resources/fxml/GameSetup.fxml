@@ -46,12 +46,12 @@
                </GridPane.margin>
             </Button>
             <Button mnemonicParsing="false" onAction="#setBackButtonAction" prefHeight="25.0" prefWidth="85.0" text="%back_button" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="5.0" top="15.0" />
                </GridPane.margin>
             </Rectangle>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="25.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="25.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="15.0" left="5.0" />
                </GridPane.margin>
@@ -81,7 +81,7 @@
                   <Insets right="20.0" top="20.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Distributor" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Label text="Regional&#10;Warehouse" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="20.0" />
                </GridPane.margin>

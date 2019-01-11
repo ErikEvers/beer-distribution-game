@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.gui_configure_game.graph;
 
 public class Factory extends GraphFacility {
-    private static final String COLOR = "DODGERBLUE";
+    private static final String COLOR = "1fff34";
 
 
      void addBuyer(RegionalWarehouse buyer) {

@@ -17,6 +17,8 @@ import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Named;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -112,7 +114,7 @@ public class AssignAgentsController {
 
     @FXML
     public void handleManagePlayersButtonClick() {
-        managePlayers.setData(new Object[] { beerGame });
+        managePlayers.setData(new Object[]{beerGame});
         managePlayers.setupScreen();
     }
 
