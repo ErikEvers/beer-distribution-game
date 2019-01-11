@@ -2,9 +2,13 @@ package org.han.ica.asd.c.gui_play_game;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -22,6 +26,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 
@@ -43,6 +48,9 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected TextField incomingOrdersTextField;
 
+    @FXML
+		protected Button submitTurnButton;
+
     @Inject
     @Named("SeeOtherFacilities")
     IGUIHandler seeOtherFacilities;
@@ -52,6 +60,12 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected Label backOrders;
+
+		@FXML
+		protected Label stockHoldingCost;
+
+		@FXML
+		protected Label openOrderCost;
 
     @Inject
     @Named("PlayerComponent") protected IPlayerComponent playerComponent;
@@ -67,6 +81,8 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected TextField txtOutgoingDelivery;
+
+    protected static Alert currentAlert;
 
     /**
      * superInitialization of the two controller subclasses. Has code needed for both initializations.
@@ -123,13 +139,13 @@ public abstract class PlayGame implements IPlayGame {
 
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
         facilityListView.addAll(facilities);
-        comboBox.setItems(facilityListView);
+				comboBox.setItems(facilityListView);
     }
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-        facilityListView.addAll(beerGame.getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility()));
-        comboBox.setItems(facilityListView);
+				facilityListView.addAll(beerGame.getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility()));
+				comboBox.setItems(facilityListView);
     }
 
     /**
@@ -152,26 +168,53 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected void submitTurnButtonClicked() {
-        playerComponent.submitTurn();
+				submitTurnButton.setDisable(true);
+        if(playerComponent.submitTurn()) {
+					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
+					currentAlert.show();
+				} else {
+					currentAlert = new Alert(Alert.AlertType.ERROR, "Something went wrong while submitting your turn, please try again", ButtonType.OK, ButtonType.CLOSE);
+					Optional<ButtonType> result = currentAlert.showAndWait();
+					if (result.get() == ButtonType.OK) {
+						currentAlert.close();
+						submitTurnButtonClicked();
+					}
+					submitTurnButton.setDisable(false);
+				}
     }
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
         beerGame = playerComponent.getBeerGame();
+        Facility facility = playerComponent.getPlayer().getFacility();
+        int budget = 0;
         List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
         for (FacilityTurn f: facilityTurns) {
-            if(f.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()){
-                inventory.setText(Integer.toString(f.getStock()));
-                backOrders.setText(Integer.toString(f.getBackorders()));
+            if(f.getFacilityId() == facility.getFacilityId()){
+								inventory.setText(Integer.toString(f.getStock()));
+								backOrders.setText(Integer.toString(f.getBackorders()));
+
+								stockHoldingCost.setText("€" + Integer.toString(facility.getFacilityType().getStockHoldingCosts()) + "/pc/week");
+								openOrderCost.setText("€" + Integer.toString(facility.getFacilityType().getOpenOrderCosts()) + "/pc/week");
+
+								budget = f.getRemainingBudget();
             }
         }
         int incomingOrders = 0;
-        List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRounds().get(roundId).getFacilityOrders();
+        List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
         for (FacilityTurnOrder f: facilityTurnOrders) {
-            if(f.getFacilityIdOrderTo() == playerComponent.getPlayer().getFacility().getFacilityId()){
+            if(f.getFacilityIdOrderTo() == facility.getFacilityId()){
                 incomingOrders += f.getOrderAmount();
             }
         }
-        incomingOrdersTextField.setText(Integer.toString(incomingOrders));
+        final int incomingOrdersDisplay = incomingOrders;
+				incomingOrdersTextField.setText(Integer.toString(incomingOrdersDisplay));
+				outgoingOrderTextField.setText(Integer.toString(0));
+				if(currentAlert != null && currentAlert.isShowing()) {
+					currentAlert.close();
+				}
+				currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
+				currentAlert.show();
+				submitTurnButton.setDisable(false);
     }
 }

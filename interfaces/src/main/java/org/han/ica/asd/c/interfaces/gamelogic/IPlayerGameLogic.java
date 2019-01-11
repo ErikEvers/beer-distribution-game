@@ -10,7 +10,7 @@ public interface IPlayerGameLogic {
      * Sends and saves an turn of the player / agent.
      * @param turn
      */
-    void submitTurn(Round turn);
+    boolean submitTurn(Round turn);
 
     /**
      * Returns the current state of the game.

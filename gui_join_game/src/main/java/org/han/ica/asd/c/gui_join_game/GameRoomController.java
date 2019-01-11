@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.gui_join_game;
 
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;

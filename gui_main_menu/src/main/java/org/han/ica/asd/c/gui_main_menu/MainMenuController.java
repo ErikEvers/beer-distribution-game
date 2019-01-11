@@ -56,6 +56,7 @@ public class MainMenuController {
     public void handleCreateGameButtonClick() {
 			connector.start();
 			connector.createRoom("Beergame", "");
+
 			gameRoomGameLeader.setupScreen();
 		}
 

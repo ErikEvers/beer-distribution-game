@@ -14,7 +14,7 @@ public interface IPlayerComponent {
     BeerGame getBeerGame();
     void placeOrder(Facility facility, int amount);
     void sendDelivery(Facility facility, int amount);
-    void submitTurn();
+    boolean submitTurn();
     void requestFacilityUsage(Facility facility);
     void selectAgent();
     List<String> getAllGames();

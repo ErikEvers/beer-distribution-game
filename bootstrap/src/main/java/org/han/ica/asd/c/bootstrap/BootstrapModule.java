@@ -73,7 +73,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IConnectedForPlayer.class).to(Connector.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
-		bind(IGameStore.class).to(Persistence.class);
 		bind(IPersistence.class).to(Persistence.class);
 		bind(IPlayerGameLogic.class).to(GameLogic.class);
 		bind(ILeaderGameLogic.class).to(GameLogic.class);

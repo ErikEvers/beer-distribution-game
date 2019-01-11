@@ -125,8 +125,8 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
         }
     }
 
-    public void submitTurn() {
-        gameLogic.submitTurn(round);
+    public boolean submitTurn() {
+        return gameLogic.submitTurn(round);
     }
 
     @Override

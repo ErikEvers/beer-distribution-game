@@ -76,10 +76,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
         Configuration configuration = new Configuration();
 
-        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,0,0,0,0, 0), 0);
-        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,0,0,0,0, 0), 1);
-        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,0,0,0,0, 0), 2);
-        Facility factory = new Facility(new FacilityType("Factory", 0, 0,0,0,0,0, 0), 3);
+        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,5,25,50,20, 20), 0);
+        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,5,25,50,0, 20), 1);
+        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,5,25,50,0, 20), 2);
+        Facility factory = new Facility(new FacilityType("Factory", 0, 0,5,25,50,0, 25), 3);
 
         List<Facility> facilityList = new ArrayList<>();
         facilityList.add(retailer);
@@ -252,15 +252,9 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Then it starts a new round.
      */
     private void allTurnDataReceived() {
-        this.currentRoundData = gameLogic.calculateRound(this.currentRoundData);
-        persistence.saveRoundData(this.currentRoundData);
+        this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
+        //persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
-
-        try {
-            connectorForLeader.sendRoundDataToAllPlayers(currentRoundData);
-        } catch (TransactionException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
 
         startNextRound();
     }
@@ -282,11 +276,19 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() {
+    		Round oldRound = currentRoundData;
         currentRoundData = roundProvider.get();
+        currentRoundData.getFacilityTurns().addAll(oldRound.getFacilityTurns());
         //TODO: check if game is done? (round count exceeds config max)
         roundId++;
         currentRoundData.setRoundId(roundId);
         turnsReceivedInCurrentRound = 0;
+
+				try {
+					connectorForLeader.sendRoundDataToAllPlayers(currentRoundData, game);
+				} catch (TransactionException e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
     }
 
     /**

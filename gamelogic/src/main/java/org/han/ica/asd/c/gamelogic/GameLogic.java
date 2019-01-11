@@ -11,6 +11,9 @@ import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
@@ -32,13 +35,12 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
 		private static ParticipantsPool participantsPool;
 
-    private int round;
-    private BeerGame beerGame;
-    private IParticipant player;
+    private static int curRoundId;
+    private static BeerGame beerGame;
+    private static IParticipant player;
 
     @Inject
     public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
-        this.round = 0;
         if(participantsPool == null) {
 					participantsPool = participantsPoolProvider.get();
 				}
@@ -55,10 +57,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param turn
      */
     @Override
-    public void submitTurn(Round turn) {
-        communication.sendTurnData(turn);
-        persistence.saveRoundData(turn);
-        System.out.println("=============== TURN AFGEROND =====================");
+    public boolean submitTurn(Round turn) {
+				//persistence.saveRoundData(turn);
+        return communication.sendTurnData(turn);
     }
 
     /**
@@ -98,8 +99,49 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         //Yet to be implemented
     }
 
-    public Round calculateRound(Round round) {
-        return null;
+    public Round calculateRound(Round round, BeerGame game) {
+    		Round outcome = new Round();
+
+				outcome.getFacilityOrders().addAll(round.getFacilityOrders());
+				outcome.getFacilityTurnDelivers().addAll(round.getFacilityTurnDelivers());
+				outcome.setRoundId(round.getRoundId());
+
+				for(Facility facility : game.getConfiguration().getFacilities()) {
+					FacilityTurn curFacility = round.getFacilityTurns().stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facility.getFacilityId()).findFirst().get();
+
+					int stock = curFacility.getStock();
+					for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
+						if(facilityTurnDeliver.getFacilityIdDeliverTo() == facility.getFacilityId()) {
+							stock += facilityTurnDeliver.getDeliverAmount();
+						}
+					}
+
+					int backorders = curFacility.getBackorders();
+					for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
+						if(facilityTurnDeliver.getFacilityId() == facility.getFacilityId()) {
+							backorders -= facilityTurnDeliver.getDeliverAmount();
+						}
+					}
+					for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
+						if(facilityTurnOrder.getFacilityIdOrderTo() == facility.getFacilityId()) {
+							backorders += facilityTurnOrder.getOrderAmount();
+						}
+					}
+
+					int remainingBudget = curFacility.getRemainingBudget() + 3;
+
+					boolean bankrupt = remainingBudget > 0;
+
+					outcome.getFacilityTurns().add(new FacilityTurn(
+							facility.getFacilityId(),
+							round.getRoundId() +1,
+							stock,
+							backorders,
+							remainingBudget,
+							bankrupt
+					));
+				}
+        return outcome;
     }
 
     /**
@@ -133,12 +175,12 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     public int getRoundId() {
-        return round;
+        return curRoundId;
     }
 
     @Override
     public void setPlayerParticipant(IParticipant participant) {
-        this.player = participant;
+        player = participant;
 				addLocalParticipant(participant);
     }
 
@@ -147,18 +189,19 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void roundModelReceived(Round currentRound) {
-        persistence.saveRoundData(currentRound);
+    		beerGame.getRounds().removeIf(round -> round.getRoundId() == currentRound.getRoundId());
         beerGame.getRounds().add(currentRound);
-				persistence.saveGameLog(beerGame);
+				//persistence.saveGameLog(beerGame);
+				curRoundId = currentRound.getRoundId();
         participantsPool.excecuteRound();
-        round = currentRound.getRoundId()+1;
     }
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        this.beerGame = beerGame;
-        persistence.saveGameLog(beerGame);
+        GameLogic.beerGame = beerGame;
+        //persistence.saveGameLog(beerGame);
         player.startGame();
+				curRoundId = 1;
 				participantsPool.excecuteRound();
     }
 }

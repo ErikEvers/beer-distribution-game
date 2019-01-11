@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gui_play_game;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -42,7 +43,9 @@ public class PlayGameRetailerController extends PlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
-			super.refreshInterfaceWithCurrentStatus(roundId);
-			fillComboBox();
+			Platform.runLater(() -> {
+				super.refreshInterfaceWithCurrentStatus(roundId);
+				fillComboBox();
+			});
     }
 }

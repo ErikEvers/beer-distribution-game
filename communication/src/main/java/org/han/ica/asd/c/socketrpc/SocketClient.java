@@ -124,12 +124,10 @@ public class SocketClient {
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
-        	if(ip.equals("25.0.21.80")) {
-        		SocketServer.serverObserver.serverObjectReceived(object, ip);
-        		cdl.countDown();
-
+					if(ip.equals("25.0.21.80")) {
+						SocketServer.serverObserver.serverObjectReceived(object, ip);
+						cdl.countDown();
 					} else {
-
 						Thread t = new Thread(() -> {
 							try {
 								Object response = sendObjectWithResponse(ip, object);
