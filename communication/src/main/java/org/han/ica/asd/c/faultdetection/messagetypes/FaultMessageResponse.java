@@ -14,9 +14,7 @@ import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
  * @see FaultDetectionMessage
  * @see FaultDetectionMessageReceiver
  */
-
 public class FaultMessageResponse extends FaultDetectionMessage {
-
     private Boolean isAlive;
     private String ipOfSubject;
 
@@ -26,16 +24,10 @@ public class FaultMessageResponse extends FaultDetectionMessage {
         this.ipOfSubject = ipOfSubject;
     }
 
-    /**
-     * @return
-     */
     public Boolean getAlive() {
         return isAlive;
     }
 
-    /**
-     * @return
-     */
     public String getIpOfSubject() {
         return ipOfSubject;
     }
