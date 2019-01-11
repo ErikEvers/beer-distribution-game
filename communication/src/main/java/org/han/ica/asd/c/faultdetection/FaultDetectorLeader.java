@@ -43,6 +43,7 @@ public class FaultDetectorLeader extends TimerTask {
     private Timer timer;
     private List<String> ips;
     private List<IConnectorObserver> observers;
+    private boolean active = false;
 
     public FaultDetectorLeader() {
         //for inject purposes
@@ -59,8 +60,6 @@ public class FaultDetectorLeader extends TimerTask {
      */
     @Override
     public void run() {
-        //TODO remove the printlns.
-        //Tries to make the connection once every set interval.
         ips = nodeInfoList.getActiveIpsWithoutLeader();
         for (String ip : ips) {
             logger.log(Level.INFO, "Sending Ping to : {0} : {1}", new Object[]{ip, new Date()});
@@ -83,10 +82,32 @@ public class FaultDetectorLeader extends TimerTask {
      * @see Timer
      */
     public void start() {
+        this.active = true;
         //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
         faultHandlerLeader.setObservers(observers);
+    }
+
+    /**
+     * Stops the Timertask and sets the fault detector to false so the messages wont be handled.
+     *
+     * @author Tarik
+     * @see TimerTask
+     * @see Timer
+     */
+    public void stop(){
+        timer.cancel();
+        this.active = false;
+    }
+
+    /**
+     * Returns the 'FaultDetectorLeader' state.
+     *
+     * @return isActive
+     */
+    public boolean isActive() {
+        return active;
     }
 
     /**

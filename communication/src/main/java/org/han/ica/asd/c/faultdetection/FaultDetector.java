@@ -33,27 +33,72 @@ public class FaultDetector {
 
     /**
      * This method starts the fault detection for the leader.
+     * If there already is an active faultdetector it stops it before starting a new one.
      * This should be started by the leader.
      *
      * @param nodeInfoList List with connected nodes to perform fault detection.
      * @author Tarik, Oscar
      */
     public void startFaultDetectorLeader(NodeInfoList nodeInfoList) {
+        stopAllFaultDetectors();
+
         faultDetectorLeader = makeFaultDetectorLeader(nodeInfoList, observers);
         faultDetectorLeader.start();
     }
 
     /**
+     * This method stops the fault detection for the for the leader.
+     * This should be used when a player becomes a leader after leader migration.
+     *
+     * @author Tarik
+     */
+    public void stopFaultDetectorLeader() {
+        faultDetectorLeader.stop();
+    }
+
+    /**
      * This method starts the fault detection for the (non leader)player.
+     * If there already is an active faultdetector it stops it before starting a new one.
      * This should NOT be started by the leader.
      *
      * @param nodeInfoList List with connected nodes to perform fault detection.
      * @author Tarik, Oscar
      */
     public void startFaultDetectorPlayer(NodeInfoList nodeInfoList) {
+        stopAllFaultDetectors();
+
         faultResponder = makeFaultResponder();
         faultDetectorPlayer = makeFaultDetectorPlayer(nodeInfoList, observers);
         faultDetectorPlayer.start();
+        faultResponder.start();
+    }
+
+    /**
+     * This methods stops all active faultdetectors.
+     *
+     * @authos Tarik
+     */
+    private void stopAllFaultDetectors(){
+        if(faultDetectorLeader != null && faultDetectorLeader.isActive()){
+            faultDetectorLeader.stop();
+        }
+
+        if(faultResponder != null && faultResponder.isActive()){
+            faultResponder.stop();
+        }
+        if(faultDetectorPlayer != null && faultDetectorPlayer.isActive()){
+            faultDetectorPlayer.stop();
+        }
+    }
+    /**
+     * This method stops the fault detection for the (non leader)player.
+     * This should be used when a player becomes a leader after leader migration.
+     *
+     * @author Tarik
+     */
+    public void stopFaultDetectorPlayer() {
+        faultDetectorPlayer.stop();
+        faultResponder.stop();
     }
 
     /**
@@ -65,7 +110,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public void faultMessageReceived(FaultMessage faultMessage, String senderIp) {
-        if (faultResponder != null) {
+        if (faultResponder.isActive()) {
             faultResponder.faultMessageReceived(faultMessage, senderIp);
         }
     }
@@ -78,7 +123,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public void faultMessageResponseReceived(FaultMessageResponse faultMessageResponse) {
-        if (faultDetectorLeader != null) {
+        if (faultDetectorLeader.isActive()) {
             faultDetectorLeader.faultMessageResponseReceived(faultMessageResponse);
         }
     }
@@ -91,7 +136,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public void pingMessageReceived(PingMessage pingMessage) {
-        if (faultDetectorPlayer != null) {
+        if (faultDetectorPlayer.isActive()) {
             faultDetectorPlayer.pingMessageReceived(pingMessage);
         }
     }
@@ -105,7 +150,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
-        if (faultDetectorPlayer != null) {
+        if (faultDetectorPlayer.isActive()) {
             return faultDetectorPlayer.canYouReachLeaderMessageReceived(canYouReachLeaderMessage, senderIp);
         }
         return null;
@@ -167,33 +212,6 @@ public class FaultDetector {
      */
     public void setFaultDetectorLeader(FaultDetectorLeader faultDetectorLeader) {
         this.faultDetectorLeader = faultDetectorLeader;
-    }
-
-    /**
-     * Gets faultDetectorPlayer.
-     *
-     * @return Value of faultDetectorPlayer.
-     */
-    FaultDetectorPlayer getFaultDetectorPlayer() {
-        return faultDetectorPlayer;
-    }
-
-    /**
-     * Gets faultDetectorLeader.
-     *
-     * @return Value of faultDetectorLeader.
-     */
-    FaultDetectorLeader getFaultDetectorLeader() {
-        return faultDetectorLeader;
-    }
-
-    /**
-     * Gets faultResponder.
-     *
-     * @return Value of faultResponder.
-     */
-    FaultResponder getFaultResponder() {
-        return faultResponder;
     }
 
     /**
