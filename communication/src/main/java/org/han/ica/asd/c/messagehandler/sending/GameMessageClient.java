@@ -3,6 +3,7 @@ package org.han.ica.asd.c.messagehandler.sending;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
+import org.han.ica.asd.c.exceptions.communication.LeaderNotPresentException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
@@ -32,7 +33,9 @@ public class GameMessageClient {
     @Inject
     private static Logger logger;
 
+    @Inject
     public GameMessageClient() {
+        //inject
     }
 
     /**
@@ -61,14 +64,13 @@ public class GameMessageClient {
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-    public String sendWhoIsTheLeaderMessage(String ip) {
-        WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
-        try {
-            whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
-        } catch (IOException | ClassNotFoundException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+    public String sendWhoIsTheLeaderMessage(String ip) throws SendGameMessageException, LeaderNotPresentException {
+        WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
+        WhoIsTheLeaderMessage response = gameMessageSender.SendGameMessageGeneric(ip, whoIsTheLeaderMessage);
+        if (response.getException() != null){
+            throw (LeaderNotPresentException) response.getException();
         }
-        return whoIsTheLeaderMessageReturn.getResponse();
+        return response.getResponse();
     }
 
     public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException, SendGameMessageException {
@@ -108,16 +110,15 @@ public class GameMessageClient {
      */
     public void sendStartGameToAllPlayers(String[] ips, BeerGame beerGame) throws TransactionException {
         GameStartMessage gameStartMessage = new GameStartMessage(beerGame);
-        new SendInTransaction(ips, gameStartMessage, new GameMessageSender(socketClient)).sendToAllPlayers();
+        new SendInTransaction(ips, gameStartMessage, gameMessageSender).sendToAllPlayers();
     }
 
     /**
-     * Sets new socketClient.
+     * Used for testing so set the mocked SocketClient
      *
      * @param socketClient New value of socketClient.
      */
-    public void setSocketClient(SocketClient socketClient) {
-        this.socketClient = socketClient;
-        this.gameMessageSender = new GameMessageSender(socketClient);
+    public void linkGameMessageSenderToSocketClient(SocketClient socketClient) {
+        gameMessageSender = new GameMessageSender(socketClient);
     }
 }

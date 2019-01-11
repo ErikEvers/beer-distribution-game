@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.messagehandler;
 
+import org.han.ica.asd.c.exceptions.communication.LeaderNotPresentException;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
-import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -45,13 +44,13 @@ public class GameMessageClientTest {
     private GameMessageClient gameMessageClient;
 
     @Mock
-    private SocketClient socketClient = new SocketClient();
+    private SocketClient socketClient;
 
     @BeforeEach
     void setUp() {
         initMocks(this);
         roundDataClient = new GameMessageClient();
-        roundDataClient.setSocketClient(socketClient);
+        roundDataClient.linkGameMessageSenderToSocketClient(socketClient);
         data = new Round();
 
         Injector injector = Guice.createInjector(new AbstractModule() {
@@ -62,12 +61,12 @@ public class GameMessageClientTest {
         });
 
         gameMessageClient = injector.getInstance(GameMessageClient.class);
-        gameMessageClient.setSocketClient(socketClient);
+        gameMessageClient.linkGameMessageSenderToSocketClient(socketClient);
 
     }
 
     @Test
-    void shouldReturnResponseMessageWithIOException() throws SendGameMessageException, IOException, ClassNotFoundException {
+    void shouldReturnResponseMessageWithIOException() throws IOException, ClassNotFoundException {
         when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
         assertThrows(SendGameMessageException.class, () -> gameMessageClient.sendTurnModel(wrongIp, data));
     }
@@ -106,14 +105,11 @@ public class GameMessageClientTest {
 
     @Test
     @DisplayName("Test If the sendWhoIsTheLeaderMessage calls the socketclient")
-    void TestSendWhoIsTheLeaderMessageHappyFlow() {
+    void TestSendWhoIsTheLeaderMessageHappyFlow() throws SendGameMessageException, LeaderNotPresentException, IOException, ClassNotFoundException {
         WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
         whoIsTheLeaderMessage.setResponse("test");
-        try {
-            when(socketClient.sendObjectWithResponseGeneric(any(), any())).thenReturn(whoIsTheLeaderMessage);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        when(socketClient.sendObjectWithResponse(any(), any())).thenReturn(whoIsTheLeaderMessage);
+
         String result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
 
         assertEquals("test", result);
@@ -121,17 +117,14 @@ public class GameMessageClientTest {
 
     @Test
     @DisplayName("Test If the sendWhoIsTheLeaderMessage throws catches exception")
-    void TestSendWhoIsTheLeaderMessageUnHappyFlow() {
+    void TestSendWhoIsTheLeaderMessageUnHappyFlow() throws SendGameMessageException, LeaderNotPresentException {
         WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
         whoIsTheLeaderMessage.setResponse("test");
         try {
-            when(socketClient.sendObjectWithResponseGeneric(any(), any())).thenThrow(new IOException("Error"));
+            when(socketClient.sendObjectWithResponse(any(), any())).thenThrow(new IOException("Error"));
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        String result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
-
-        assertNotEquals(whoIsTheLeaderMessage.getResponse(), result);
+        assertThrows(SendGameMessageException.class, () -> gameMessageClient.sendWhoIsTheLeaderMessage("TestIp"));
     }
-
 }

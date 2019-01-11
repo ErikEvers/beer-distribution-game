@@ -5,6 +5,7 @@ import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
@@ -16,38 +17,20 @@ public class GameMessageSender {
 
     private final int AMOUNT_OF_TRIES = 3;
 
+    @Inject
     private SocketClient socketClient;
 
+    @Inject
     public GameMessageSender(){
         //inject
     }
-    public GameMessageSender(SocketClient socketClient) {
+
+    /**
+     * constultor for SendInTransaction tests
+     * @param socketClient
+     */
+    public GameMessageSender(SocketClient socketClient){
         this.socketClient = socketClient;
-    }
-
-    private Object SendGameMessage(String ip, GameMessage gameMessage) throws SendGameMessageException {
-        return SendGameMessage(ip, gameMessage, 0);
-    }
-
-    private Object SendGameMessage(String ip, GameMessage gameMessage, int tryCount) throws SendGameMessageException {
-        if (tryCount >= AMOUNT_OF_TRIES) {
-            throw new SendGameMessageException("Errors occurred during gamemessage sending");
-        }
-
-        try {
-            return socketClient.sendObjectWithResponse(ip, gameMessage);
-        } catch (SocketTimeoutException e) {
-            SendGameMessageException sgme = new SendGameMessageException("Connection failed");
-            sgme.addException(e);
-            throw sgme;
-        } catch (IOException | ClassNotFoundException e) {
-            try {
-                return SendGameMessage(ip, gameMessage, tryCount + 1);
-            } catch (SendGameMessageException sgme) {
-                sgme.addException(e);
-                throw sgme;
-            }
-        }
     }
 
     public <T extends GameMessage> T SendGameMessageGeneric(String ip, T gameMessage) throws SendGameMessageException {
@@ -84,5 +67,30 @@ public class GameMessageSender {
         }
         return map;
 
+    }
+
+    private Object SendGameMessage(String ip, GameMessage gameMessage) throws SendGameMessageException {
+        return SendGameMessage(ip, gameMessage, 0);
+    }
+
+    private Object SendGameMessage(String ip, GameMessage gameMessage, int tryCount) throws SendGameMessageException {
+        if (tryCount >= AMOUNT_OF_TRIES) {
+            throw new SendGameMessageException("Errors occurred during gamemessage sending");
+        }
+
+        try {
+            return socketClient.sendObjectWithResponse(ip, gameMessage);
+        } catch (SocketTimeoutException e) {
+            SendGameMessageException sgme = new SendGameMessageException("Connection failed");
+            sgme.addException(e);
+            throw sgme;
+        } catch (IOException | ClassNotFoundException e) {
+            try {
+                return SendGameMessage(ip, gameMessage, tryCount + 1);
+            } catch (SendGameMessageException sgme) {
+                sgme.addException(e);
+                throw sgme;
+            }
+        }
     }
 }
