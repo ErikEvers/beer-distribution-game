@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
@@ -28,6 +27,10 @@ public class MainMenuController {
 
     @FXML
     private Button close;
+
+    @Inject
+    @Named("GameSetupStart")
+    private IGUIHandler gameSetupStart;
 
     @Inject
     @Named("ProgramAgentList")
@@ -125,6 +128,7 @@ public class MainMenuController {
         replayGameList.setupScreen();
     }
 
+    @FXML
     public void handleCreateGameButtonClick() {
         assignAgents.setData(new Object[] { beerGame });
         assignAgents.setupScreen();
@@ -132,14 +136,15 @@ public class MainMenuController {
         //connector.createRoom("12345", "");
     }
 
+    @FXML
     public void handleJoinGameButtonClick() {
         joinGame.setupScreen();
     }
 
     @FXML
     public void handleAssignAgentsButtonClick() {
+        assignAgents.setData(new Object[] { beerGame });
         assignAgents.setupScreen();
     }
-
 
 }
