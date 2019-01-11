@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NodeConverterTest {
     private Provider<NodeConverter> nodeConverterProvider;
+    private Provider<ActionReference> actionReferenceProvider;
 
 
     @BeforeEach
@@ -41,10 +42,11 @@ public class NodeConverterTest {
             }
         });
         nodeConverterProvider = injector.getProvider(NodeConverter.class);
+        actionReferenceProvider = injector.getProvider(ActionReference.class);
     }
 
     @Test
-    void testAction_SeparateFacilityId_TwoElementString() {
+    void testNodeConverter_SeparateFacilityId_TwoElementString() {
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
         int exp = 0;
@@ -60,7 +62,7 @@ public class NodeConverterTest {
     }
 
     @Test
-    void testAction_SeparateFacilityId_OneElementString() {
+    void testNodeConverter_SeparateFacilityId_OneElementString() {
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
         int exp = 0;
@@ -73,5 +75,85 @@ public class NodeConverterTest {
         }
 
         assertEquals(exp, res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_FactoryOrder(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = -1;
+        int res = nodeConverter.getFacilityIdByAction(0,actionReferenceProvider.get().addValue("order"));
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_FactoryDeliver(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = 1;
+        int res = nodeConverter.getFacilityIdByAction(0,actionReferenceProvider.get().addValue("deliver"));
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_RegionalWarehouseOrder(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = 0;
+        int res = nodeConverter.getFacilityIdByAction(1,actionReferenceProvider.get().addValue("order"));
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_RegionalWarehouseDeliver(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = 2;
+        int res = nodeConverter.getFacilityIdByAction(1,actionReferenceProvider.get().addValue("deliver"));
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_WholesalerOrder(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = 1;
+        int res = nodeConverter.getFacilityIdByAction(2,actionReferenceProvider.get().addValue("order"));
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_WholesalerDeliver(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = 3;
+        int res = nodeConverter.getFacilityIdByAction(2,actionReferenceProvider.get().addValue("deliver"));
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_RetailerOrder(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = 2;
+        int res = nodeConverter.getFacilityIdByAction(3,actionReferenceProvider.get().addValue("order"));
+
+        assertEquals(exp,res);
+    }
+
+    @Test
+    void testNodeConverter_getFacilityIdByAction_RetailerDeliver(){
+        NodeConverter nodeConverter = nodeConverterProvider.get();
+
+        int exp = -1;
+        int res = nodeConverter.getFacilityIdByAction(3,actionReferenceProvider.get().addValue("deliver"));
+
+        assertEquals(exp,res);
     }
 }

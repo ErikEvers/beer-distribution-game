@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
 import com.google.inject.Inject;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -60,5 +61,34 @@ public class NodeConverter {
             return Integer.parseInt(stringSplit[stringSplit.length-1]) - 1;
         }
         return 0;
+    }
+
+    public Integer getFacilityIdByAction(int ownFacilityId, ActionReference actionName) {
+        List<List<String>> facilities = sortFacilities(businessRuleStore.getAllFacilities());
+
+        for (int i = 0; i < facilities.size(); i++) {
+            if(facilities.get(i).contains(String.valueOf(ownFacilityId))){
+                return getFacilityIdByAction(actionName,facilities,i);
+            }
+        }
+        return null;
+    }
+
+    private int getFacilityIdByAction(ActionReference actionName, List<List<String>> facilities, int facility) {
+        if("order".equals(actionName.getAction())){
+            if(facility == FacilityType.FACTORY.getIndex()){
+                // TODO: FacilityId that needs to be given back when a Factory orders something. (His own Id or -1 in order to catch it later on?)
+                return -1;
+            } else {
+                return Integer.parseInt(facilities.get(facility - 1).get(0));
+            }
+        } else {
+            if(facility == FacilityType.RETAILER.getIndex()){
+                // TODO: FacilityId that needs to be given back when a Retailer delivers something. (His own Id or -1 in order to catch it later on?)
+                return -1;
+            } else {
+                return Integer.parseInt(facilities.get(facility + 1).get(0));
+            }
+        }
     }
 }
