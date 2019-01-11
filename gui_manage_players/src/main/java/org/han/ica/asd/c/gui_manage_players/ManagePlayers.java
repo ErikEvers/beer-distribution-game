@@ -5,6 +5,7 @@ import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
+import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ManagePlayers implements IGUIHandler {
@@ -17,6 +18,7 @@ public class ManagePlayers implements IGUIHandler {
 	}
 
 	public void setupScreen() {
+		URL test = getClass().getResource("/fxml/ManagePlayersScreen.fxml");
 		ManagePlayersScreenController controller = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesManagePlayers"), getClass().getResource("/fxml/ManagePlayersScreen.fxml"));
 		controller.setBeerGame(beerGame);
 	}
