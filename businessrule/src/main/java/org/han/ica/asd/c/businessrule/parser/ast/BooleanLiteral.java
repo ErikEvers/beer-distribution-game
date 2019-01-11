@@ -7,6 +7,9 @@ import java.util.Objects;
 public class BooleanLiteral extends Expression {
     private boolean value;
 
+    public BooleanLiteral() {
+    }
+
     public BooleanLiteral(boolean b) {
         this.value = b;
     }
@@ -18,6 +21,11 @@ public class BooleanLiteral extends Expression {
      */
     public boolean getValue() {
         return this.value;
+    }
+
+    public BooleanLiteral setValue(boolean value){
+        this.value = value;
+        return this;
     }
 
     /**

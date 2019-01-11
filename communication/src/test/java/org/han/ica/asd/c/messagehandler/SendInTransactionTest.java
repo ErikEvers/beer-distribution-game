@@ -43,7 +43,7 @@ public class SendInTransactionTest {
     @Test
     @DisplayName("Test sendToAllPlayers calls the correct method on the socketclient and checks if the phase gets " +
             "updated according to the value of IsSucces with isSucces set to true")
-    void TestSendToAllPlayers1() {
+    void TestSendToAllPlayers1() throws Exception {
 
         responseMessage = new ResponseMessage(true);
         try {

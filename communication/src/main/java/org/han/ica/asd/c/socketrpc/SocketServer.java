@@ -3,6 +3,7 @@ package org.han.ica.asd.c.socketrpc;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -10,39 +11,61 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Singleton
 public class SocketServer {
 
     @Inject
     @Named("MessageDirector")
-    private IServerObserver serverObserver;
+    private static IServerObserver serverObserver;
 
     @Inject
     private static Logger logger;
 
-    private boolean isRunning = true;
+    private static ServerSocket serverSocket;
+    private boolean isRunning = false;
 
     public SocketServer() {
         //inject purposes
     }
 
     public void startThread() {
-        Thread serverThread = new Thread(this::start);
-        serverThread.setDaemon(true);
-        serverThread.start();
+        if (serverSocket == null) {
+            Thread serverThread = new Thread(this::start);
+            serverThread.setDaemon(true);
+            serverThread.start();
+        }
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 
     private void start() {
-        try (ServerSocket serverSocket = new ServerSocket(4445)) {
+        isRunning = true;
+        try {
+            serverSocket = new ServerSocket(4445);
             logger.log(Level.INFO, "SocketServer started");
+
             while (isRunning) {
-                startServer(serverSocket);
+                startListening(serverSocket);
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "A server could not be started " + e);
         }
     }
 
-    private void startServer(ServerSocket serverSocket) {
+    public void StopThread() {
+        isRunning = false;
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+    }
+
+    private void startListening(ServerSocket serverSocket) {
         try {
             Socket socket = serverSocket.accept();
 
