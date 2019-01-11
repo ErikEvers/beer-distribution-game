@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_replay_game;
+package org.han.ica.asd.c.gui_replay_game.replay_game_controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
