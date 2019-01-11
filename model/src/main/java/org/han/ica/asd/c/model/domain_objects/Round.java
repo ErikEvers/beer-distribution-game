@@ -65,11 +65,6 @@ public class Round implements IDomainModel{
         return 0; //TODO erorr handling
     }
 
-//    //stock
-//    public void addFacilityStock(Integer stockNumber, Facility facility) {
-//        turnStock.put(facility, stockNumber);
-//    }
-//
     public int getStockByFacility(Facility facility) {
         for(FacilityTurn facilityTurn : facilityTurns) {
             if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
@@ -79,19 +74,7 @@ public class Round implements IDomainModel{
 
         return -1; //TODO error handling
     }
-//
-//    public void setStock(Map<Facility, Integer> stock) {
-//        this.turnStock = stock;
-//    }
-//
-//    public Map<Facility, Integer> getStock() {
-//        return turnStock;
-//    }
-//
-//    public boolean isStockExisting(Facility facility) {
-//        return turnStock.containsKey(facility);
-//    }
-//
+
     public void updateStock(Facility facility, int newStock) {
         for(FacilityTurn facilityTurn : facilityTurns) {
             if(facilityTurn.getFacilityId() == facility.getFacilityId()) {
@@ -101,7 +84,7 @@ public class Round implements IDomainModel{
     }
 
     //Remaining budget
-    public void addFacilityRemainingBudget(Integer remainingBudget, Facility order, Facility deliver) {
+    public void addFacilityRemainingBudget(Integer remainingBudget, Facility order) {
         //For testing purposes
         for(FacilityTurn facilityTurn : facilityTurns) {
             if (facilityTurn.getFacilityId() == order.getFacilityId()) {
