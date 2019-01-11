@@ -30,8 +30,8 @@ public class MainMenuController {
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
-		@Inject
-		private IConnectorForSetup connector;
+    @Inject
+    private IConnectorForSetup connector;
 
     public void initialize() {
 
