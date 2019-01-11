@@ -15,6 +15,7 @@ public class RoundCalculator {
     }
 
     public Round calculateRound(Round previousRound, Round currentRound, Map<Facility, List<Facility>> facilityLinks) {
+        //TODO Afvangen wanneer fabriek bij zichzelf (null) bestelt
         currentRound.setFacilityTurns(previousRound.getFacilityTurns());
 
         for(Map.Entry<Facility, List<Facility>> entry : facilityLinks.entrySet()) {
