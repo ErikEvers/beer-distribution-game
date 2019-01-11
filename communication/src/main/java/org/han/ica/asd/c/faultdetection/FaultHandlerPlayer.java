@@ -30,7 +30,7 @@ public class FaultHandlerPlayer {
     }
 
     /**
-     * This method decides whether the leader died or i died.
+     * This method decides whether the leader died or the machine running this application died.
      * It also knows if there is a different problem where both didn't die but still can't connect.
      *
      * @return who died for tests
@@ -176,5 +176,4 @@ public class FaultHandlerPlayer {
     int getAmountOfConnectionsWithLeader() {
         return amountOfConnectionsWithLeader;
     }
-
 }

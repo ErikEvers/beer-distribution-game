@@ -85,7 +85,7 @@ public class FaultDetectorLeader extends TimerTask {
         this.active = true;
         //running timer task as daemon thread
         timer = createTimer(true);
-        timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerLeader.setObservers(observers);
     }
 

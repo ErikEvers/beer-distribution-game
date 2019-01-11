@@ -24,10 +24,6 @@ public class FaultHandlerLeader {
     private boolean iAmDisconnected;
     private List<IConnectorObserver> observers;
 
-    HashMap<String, Integer> getAmountOfFailsPerIp() {
-        return amountOfFailsPerIp;
-    }
-
     FaultHandlerLeader() {
         amountOfFailsPerIp = new HashMap<>();
         iAmDisconnected = false;
@@ -160,5 +156,23 @@ public class FaultHandlerLeader {
 
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
+    }
+
+    /**
+     * Sets new amountOfFailsPerIp.
+     *
+     * @param amountOfFailsPerIp New value of amountOfFailsPerIp.
+     */
+    public void setAmountOfFailsPerIp(HashMap<String, Integer> amountOfFailsPerIp) {
+        this.amountOfFailsPerIp = amountOfFailsPerIp;
+    }
+
+    /**
+     * Gets amountOfFailsPerIp.
+     *
+     * @return Value of amountOfFailsPerIp.
+     */
+    public HashMap<String, Integer> getAmountOfFailsPerIp() {
+        return amountOfFailsPerIp;
     }
 }

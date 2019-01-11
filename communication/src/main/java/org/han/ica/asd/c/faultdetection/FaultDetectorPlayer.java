@@ -71,7 +71,7 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     public void start() {
         timer = createTimer(true);
-        timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerPlayer.setObservers(observers);
         this.active = true;
     }
@@ -117,7 +117,7 @@ public class FaultDetectorPlayer extends TimerTask {
     public boolean leaderIsNotPinging() {
         long current = System.currentTimeMillis();
         long timeDifference = current - lastReceived;
-        long threeIntervals = Global.FaultDetectionInterval * 3;
+        long threeIntervals = Global.FAULT_DETECTION_INTERVAL * 3;
 
         return timeDifference > threeIntervals;
     }
@@ -299,5 +299,14 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     long getLastReceived() {
         return lastReceived;
+    }
+
+    /**
+     * Gets timer.
+     *
+     * @return Value of timer.
+     */
+    public Timer getTimer() {
+        return timer;
     }
 }

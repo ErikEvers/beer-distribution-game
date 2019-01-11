@@ -31,6 +31,19 @@ public class TestFaultHandlerPlayer {
 	}
 
 	@Test
+	void TestWhoIsDead(){
+		faultHandlerPlayer.setAmountOfFailingIps(10);
+		faultHandlerPlayer.setAmountOfActiveIps(4);
+		faultHandlerPlayer.setFilteredAmount(2);
+
+		faultHandlerPlayer.incrementAmountOfConnectionsWithLeader();
+
+		String result = faultHandlerPlayer.whoIsDead();
+
+		assertEquals("leaderIsNotCompletelyDead", result);
+	}
+
+	@Test
 	void TestReset(){
 		faultHandlerPlayer.reset();
 		verify(faultHandlerPlayer).resetAmountOfFailingIps();

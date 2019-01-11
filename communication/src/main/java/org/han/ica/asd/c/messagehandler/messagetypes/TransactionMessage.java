@@ -39,4 +39,13 @@ public abstract class TransactionMessage extends GameMessage {
     public void createResponseMessage() {
         isSuccess = true;
     }
+
+    /**
+     * Gets isSuccess.
+     *
+     * @return Value of isSuccess.
+     */
+    public boolean getIsSuccess() {
+        return isSuccess;
+    }
 }
