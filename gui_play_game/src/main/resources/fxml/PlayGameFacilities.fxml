@@ -137,7 +137,7 @@
                             </font>
                         </Label>
 
-                        <Label fx:id="openOrderCost" text="€25/pc/week" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <Label fx:id="openOrderCost" text="€25/pc/week" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets top="40.0" />
                             </GridPane.margin>

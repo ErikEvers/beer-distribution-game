@@ -78,7 +78,9 @@ public class SocketServer {
             if (response != null) {
                 new SocketClient().sendObject(socket, response);
             }
-            socket.close();
+            else {
+                socket.close();
+            }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Something went wrong with the connection " + e);
         } catch (ClassNotFoundException e) {

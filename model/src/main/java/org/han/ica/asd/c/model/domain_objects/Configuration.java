@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Configuration implements IDomainModel, Serializable {
     private int amountOfRounds;
@@ -145,6 +146,14 @@ public class Configuration implements IDomainModel, Serializable {
 
     public void setFacilitiesLinkedTo(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
+    }
+
+    public List<Facility> getFacilitiesLinkedToFacilitiesByFacilityId(int facilityId) {
+		Optional<Facility> optional = facilitiesLinkedTo.keySet().stream().filter(facility -> facility.getFacilityId() == facilityId).findFirst();
+		if(optional.isPresent()) {
+        	return facilitiesLinkedTo.get(optional.get());
+		}
+		return null;
     }
 
     public List<Facility> getFacilitiesLinkedToFacilities(Facility facility) {

@@ -134,7 +134,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         try {
             communication.chooseFacility(facility, player.getPlayerId());
             player.setFacility(facility);
-						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for tha game to start", ButtonType.CLOSE);
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
 						alert.showAndWait();
         } catch (FacilityNotAvailableException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
@@ -186,7 +186,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     @Override
     public void roundStarted() {
     	Platform.runLater(() ->
-        ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
+            ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
     }
 
     /**

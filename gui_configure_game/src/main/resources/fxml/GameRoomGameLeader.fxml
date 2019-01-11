@@ -65,12 +65,12 @@
             <Insets bottom="20.0" left="80.0" />
           </GridPane.margin>
         </Label>
-        <Label text="Factory" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+        <Label text="Warehouse" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
           <GridPane.margin>
             <Insets right="20.0" top="20.0" />
           </GridPane.margin>
         </Label>
-        <Label text="Warehouse" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+        <Label text="Factory" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
           <GridPane.margin>
             <Insets bottom="20.0" />
           </GridPane.margin>
