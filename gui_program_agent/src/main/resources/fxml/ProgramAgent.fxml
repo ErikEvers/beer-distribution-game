@@ -96,7 +96,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                   <Button onAction="#saveButtonAction" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
+                   <Button fx:id="save" onAction="#saveButtonAction" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0"
                            style="-fx-background-color: ff8000;" text="%save_button" textFill="WHITE" wrapText="true"
                            GridPane.columnIndex="3"/>
                    <Button onAction="#backButtonAction" mnemonicParsing="false" prefHeight="25.0" prefWidth="170.0"

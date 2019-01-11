@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -56,7 +55,7 @@ public class TestFaultDetector {
                 .when(faultDetector)
                 .makeFaultDetectorLeader(nodeInfoList, observers);
 
-        faultDetector.setLeader(nodeInfoList);
+        faultDetector.startFaultDetectorLeader(nodeInfoList);
         assertNotNull(faultDetector.getFaultDetectorLeader());
         verify(faultDetectorLeader).start();
     }
@@ -71,7 +70,7 @@ public class TestFaultDetector {
                 .when(faultDetector)
                 .makeFaultDetectorPlayer(nodeInfoList);
 
-        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.startFaultDetectorPlayer(nodeInfoList);
         assertNotNull(faultDetector.getFaultResponder());
         assertNotNull(faultDetector.getFaultDetectorPlayer());
     }
@@ -86,7 +85,7 @@ public class TestFaultDetector {
                 .when(faultDetector)
                 .makeFaultDetectorPlayer(nodeInfoList);
 
-        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.faultMessageReceived(any(), any());
         assertNotNull(faultDetector.getFaultResponder());
         verify(faultResponder).faultMessageReceived(any(), any());
@@ -98,7 +97,7 @@ public class TestFaultDetector {
                 .when(faultDetector)
                 .makeFaultDetectorLeader(nodeInfoList, observers);
 
-        faultDetector.setLeader(nodeInfoList);
+        faultDetector.startFaultDetectorLeader(nodeInfoList);
         faultDetector.faultMessageResponseReceived(any());
         assertNotNull(faultDetector.getFaultDetectorLeader());
         verify(faultDetectorLeader).faultMessageResponseReceived(any());
@@ -110,7 +109,7 @@ public class TestFaultDetector {
                 .when(faultDetector)
                 .makeFaultDetectorPlayer(nodeInfoList);
 
-        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.pingMessageReceived(any());
         assertNotNull(faultDetector.getFaultDetectorPlayer());
         verify(faultDetectorPlayer).pingMessageReceived(any());
@@ -122,7 +121,7 @@ public class TestFaultDetector {
                 .when(faultDetector)
                 .makeFaultDetectorPlayer(nodeInfoList);
 
-        faultDetector.setPlayer(nodeInfoList);
+        faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.canYouReachLeaderMessageReceived(any(), any());
         assertNotNull(faultDetector.getFaultDetectorPlayer());
         verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), any());

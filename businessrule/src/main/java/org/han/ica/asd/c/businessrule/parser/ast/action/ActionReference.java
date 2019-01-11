@@ -37,7 +37,7 @@ public class ActionReference extends ASTNode {
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), PREFIX + action, SUFFIX);
+        super.encode(stringBuilder, getChildren(), PREFIX + action);
     }
 
     /**
