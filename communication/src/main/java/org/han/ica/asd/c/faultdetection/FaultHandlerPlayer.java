@@ -8,8 +8,16 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import javax.inject.Inject;
 import java.util.List;
 
+/**
+ * This class will call methods on external interfaces when needed. Example: The leader is disconnected from the game, this
+ * class will then call the 'LeaderMigration' to make sure the leader wil be replaced with a new leader.
+ * It also keeps track whether the other nodes are able to reach the leader or not. And whether im able to reach other nodes.
+ *
+ * @author Tarik
+ */
 public class FaultHandlerPlayer {
-    @Inject private NodeInfoList nodeInfoList;
+    @Inject
+    private NodeInfoList nodeInfoList;
 
     private List<IConnectorObserver> observers;
     private int amountOfConnectionsWithLeader;
@@ -29,14 +37,14 @@ public class FaultHandlerPlayer {
      * @author Tarik
      */
     public String whoIsDead() {
-        if (amountOfFailingIps == (amountOfActiveIps-filteredAmount)) {
+        if (amountOfFailingIps == (amountOfActiveIps - filteredAmount)) {
             //TODO This should trigger Rejoin GUI and/or Request
             return "imDead";
         } else {
-            if(amountOfConnectionsWithLeader == 0) {
+            if (amountOfConnectionsWithLeader == 0) {
                 notifyObserversLeaderDied();
                 return "leaderIsDead";
-            }else{
+            } else {
                 //TODO This should start a relay
                 return "leaderIsNotCompletelyDead";
             }
@@ -84,7 +92,9 @@ public class FaultHandlerPlayer {
      *
      * @author Tarik
      */
-    public void resetAmountOfConnectionsWithLeader() { amountOfConnectionsWithLeader = 0; }
+    public void resetAmountOfConnectionsWithLeader() {
+        amountOfConnectionsWithLeader = 0;
+    }
 
     /**
      * Increments the amountOfConnectionsWithLeader

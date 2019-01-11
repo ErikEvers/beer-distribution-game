@@ -26,8 +26,10 @@ import java.util.logging.Logger;
  * @see FaultResponder
  */
 public class FaultDetectionClient {
-    @Inject private static Logger logger;
-    @Inject private ObjectOutputStream outputStream;
+    @Inject
+    private static Logger logger;
+    @Inject
+    private ObjectOutputStream outputStream;
 
     private boolean isConnected = false;
     private SocketClient socketClient;
@@ -103,7 +105,8 @@ public class FaultDetectionClient {
      * the exception to the class that calls the method.
      *
      * @param canYouReachLeaderMessage The 'CanYouReachLeaderMessage' that is sent to the specified ipAddress.
-     * @param ips All ips to send the 'CanYouReachLeaderMessage' to.
+     * @param ips                      All ips to send the 'CanYouReachLeaderMessage' to.
+     * @return the responses in a Map.
      * @author Tarik
      * @see CanYouReachLeaderMessage
      * @see FaultDetectorPlayer

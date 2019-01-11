@@ -15,8 +15,10 @@ import java.util.logging.Logger;
  * @see FaultDetectorLeader
  */
 public class FailLog {
-    @Inject private static Logger logger;
-    @Inject NodeInfoList nodeInfoList;
+    @Inject
+    private static Logger logger;
+    @Inject
+    NodeInfoList nodeInfoList;
 
     private HashMap<String, Integer> failLogHashMap = new HashMap<>();
     private int successSize = 0;
@@ -52,6 +54,7 @@ public class FailLog {
      * Checks if the amount of fails for an Ip equals 3.
      *
      * @param ip The Ip that need to be checked.
+     * @return boolean indicating whether ip has failed three times.
      * @author Oscar
      */
     boolean checkIfIpIsFailed(String ip) {
@@ -60,10 +63,11 @@ public class FailLog {
     }
 
     /**
-     *Checks if the Ip is already in the failLog. It returns true when it isn't.
-     *If the Ip is already in the failLog it checks if the amount of fails equals 0.
+     * Checks if the Ip is already in the failLog. It returns true when it isn't.
+     * If the Ip is already in the failLog it checks if the amount of fails equals 0.
      *
      * @param ip The Ip that needs to be checked.
+     * @return boolean indicating whether ip is reachable
      * @author Oscar
      */
     boolean isAlive(String ip) {
@@ -75,6 +79,7 @@ public class FailLog {
     /**
      * Returns the amount of successfully reached nodes.
      *
+     * @return amount of reachable nodes.
      * @author Oscar
      */
     int getSuccessSize() {

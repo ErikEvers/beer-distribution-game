@@ -29,11 +29,16 @@ import java.util.logging.Logger;
  * @see FaultDetectorPlayer
  */
 public class FaultDetectorLeader extends TimerTask {
-    @Inject private NodeInfoList nodeInfoList;
-    @Inject private FaultDetectionClient faultDetectionClient;
-    @Inject private FaultHandlerLeader faultHandlerLeader;
-    @Inject private FailLog failLog;
-    @Inject private static Logger logger;//NOSONAR
+    @Inject
+    private NodeInfoList nodeInfoList;
+    @Inject
+    private FaultDetectionClient faultDetectionClient;
+    @Inject
+    private FaultHandlerLeader faultHandlerLeader;
+    @Inject
+    private FailLog failLog;
+    @Inject
+    private static Logger logger;//NOSONAR
 
     private Timer timer;
     private List<String> ips;
@@ -81,6 +86,7 @@ public class FaultDetectorLeader extends TimerTask {
         //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        faultHandlerLeader.setObservers(observers);
     }
 
     /**

@@ -15,7 +15,8 @@ import javax.inject.Inject;
  * @author Oscar, Tarik
  */
 public class FaultDetectionMessageReceiver {
-    @Inject private FaultDetector faultDetector;
+    @Inject
+    private FaultDetector faultDetector;
 
     public FaultDetectionMessageReceiver() {
         //For inject purposes
@@ -26,8 +27,9 @@ public class FaultDetectionMessageReceiver {
      * to determine which message is received.
      * This method is called by the SocketServer. And calls methods at the 'FaultDetector'.
      *
-     * @param faultDetectionMessage   is the message object that is received.
-     * @param senderIp This is the ipAddress of the node that sent the message.
+     * @param faultDetectionMessage is the message object that is received.
+     * @param senderIp              This is the ipAddress of the node that sent the message.
+     * @return the message if it waits for a response.
      * @author Oscar Tarik
      * @see org.han.ica.asd.c.socketrpc.SocketServer
      * @see FaultDetector

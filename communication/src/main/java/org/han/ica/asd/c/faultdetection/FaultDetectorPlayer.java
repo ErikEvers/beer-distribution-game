@@ -17,14 +17,20 @@ import java.util.TimerTask;
 
 /**
  * This class is used by a player that's not a leader. It detect a failing connection and figuring out the failing node.
- * And calls the correct interfaces.
+ * This class is responsible for making for checking if all the nodes are still connected to the game.
+ * It receives a 'PingMessage' from the leader. It also keeps track of the last received message time. And checks every
+ * interval whether the leader did send a message recently or not. If that time difference exceeds a certain limit the
+ * fault is recognized and the handling starts.
  *
  * @author Oscar, Tarik
  */
 public class FaultDetectorPlayer extends TimerTask {
-    @Inject private FaultDetectionClient faultDetectionClient;
-    @Inject private FaultHandlerPlayer faultHandlerPlayer;
-    @Inject private NodeInfoList nodeInfoList;
+    @Inject
+    private FaultDetectionClient faultDetectionClient;
+    @Inject
+    private FaultHandlerPlayer faultHandlerPlayer;
+    @Inject
+    private NodeInfoList nodeInfoList;
 
     private static final long FIVE_MINUTES = 300000;
     private long lastReceived;
@@ -65,6 +71,7 @@ public class FaultDetectorPlayer extends TimerTask {
     public void start() {
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        faultHandlerPlayer.setObservers(observers);
     }
 
     /**
@@ -115,7 +122,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private void askOtherPlayers() {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size());
-        HashMap<String,Long> filter = new HashMap<>(playersWhoAlreadyCouldntReachLeader);
+        HashMap<String, Long> filter = new HashMap<>(playersWhoAlreadyCouldntReachLeader);
 
         // filter out ips from ips that already send a message within the past 5 minutes
         ips.removeIf(ip -> filter.containsKey(ip) && timestampIsRecentlyReceived(filter.get(ip)));
@@ -140,8 +147,8 @@ public class FaultDetectorPlayer extends TimerTask {
      * It also updates the list with the senderIp which needs to be used as a filter when 'askOtherPlayer()' is called.
      *
      * @param canYouReachLeaderMessage The message that need to be returned after setting data.
-     * @param senderIp This ip is used to identify the sender.
-     * @return
+     * @param senderIp                 This ip is used to identify the sender.
+     * @return the object after being filled as response.
      * @author Tarik
      */
     public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
@@ -157,7 +164,7 @@ public class FaultDetectorPlayer extends TimerTask {
             try {
                 if (leaderIp == null) {
                     leaderIsAlive = false;
-                }else {
+                } else {
                     faultDetectionClient.makeConnection(leaderIp);
                     leaderIsAlive = true;
                 }
