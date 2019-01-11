@@ -33,18 +33,14 @@ public class FaultDetector {
 
     /**
      * This method starts the fault detection for the leader.
+     * If there already is an active faultdetector it stops it before starting a new one.
      * This should be started by the leader.
      *
      * @param nodeInfoList List with connected nodes to perform fault detection.
      * @author Tarik, Oscar
      */
     public void startFaultDetectorLeader(NodeInfoList nodeInfoList) {
-        if(faultResponder != null && faultResponder.isActive()){
-            faultResponder.stop();
-        }
-        if(faultDetectorPlayer != null && faultDetectorPlayer.isActive()){
-            faultDetectorPlayer.stop();
-        }
+        stopAllFaultDetectors();
 
         faultDetectorLeader = makeFaultDetectorLeader(nodeInfoList, observers);
         faultDetectorLeader.start();
@@ -62,15 +58,14 @@ public class FaultDetector {
 
     /**
      * This method starts the fault detection for the (non leader)player.
+     * If there already is an active faultdetector it stops it before starting a new one.
      * This should NOT be started by the leader.
      *
      * @param nodeInfoList List with connected nodes to perform fault detection.
      * @author Tarik, Oscar
      */
     public void startFaultDetectorPlayer(NodeInfoList nodeInfoList) {
-        if(faultDetectorLeader != null && faultDetectorLeader.isActive()){
-            faultDetectorLeader.stop();
-        }
+        stopAllFaultDetectors();
 
         faultResponder = makeFaultResponder();
         faultDetectorPlayer = makeFaultDetectorPlayer(nodeInfoList, observers);
@@ -78,6 +73,23 @@ public class FaultDetector {
         faultResponder.start();
     }
 
+    /**
+     * This methods stops all active faultdetectors.
+     *
+     * @authos Tarik
+     */
+    private void stopAllFaultDetectors(){
+        if(faultDetectorLeader != null && faultDetectorLeader.isActive()){
+            faultDetectorLeader.stop();
+        }
+
+        if(faultResponder != null && faultResponder.isActive()){
+            faultResponder.stop();
+        }
+        if(faultDetectorPlayer != null && faultDetectorPlayer.isActive()){
+            faultDetectorPlayer.stop();
+        }
+    }
     /**
      * This method stops the fault detection for the (non leader)player.
      * This should be used when a player becomes a leader after leader migration.
