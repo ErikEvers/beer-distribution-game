@@ -89,7 +89,7 @@ public class NodeInfoList extends ArrayList<Player> {
     public List<String>  getIpsFromPlayerList(Condition condition){
         ArrayList<String> list = new ArrayList<>();
         Player leaderPlayer = this.leader.getPlayer();
-        playerList.forEach((node)-> {
+        playerList.forEach((node) -> {
             switch (condition) {
                 case UNFILTERED:
                     list.add(node.getIpAddress());
@@ -98,9 +98,8 @@ public class NodeInfoList extends ArrayList<Player> {
                     if(node.isConnected()) list.add(node.getIpAddress());
                     break;
                 case CONNECTEDWITHOUTLEADER:
-                    if(node.isConnected() && node != leaderPlayer) list.add(node.getIpAddress());
+                    if (node.isConnected() && node != leaderPlayer) list.add(node.getIpAddress());
                     break;
-                    default: break;
             }
         });
         return list;
