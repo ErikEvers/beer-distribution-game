@@ -330,8 +330,6 @@ public class GameSetupController implements Initializable {
      * @throws GraphException when a facility is missing from the list
      */
     private void connect(FacilityRectangle r1, FacilityRectangle r2, double x, double y, EdgeLine line) throws GraphException {
-        System.out.println(r1.getGraphFacility().toString());
-        System.out.println(r2.getGraphFacility().toString());
         line.drawLine(r1, r2, x, y);
         line.setSupplier(r1);
         line.setBuyer(r2);

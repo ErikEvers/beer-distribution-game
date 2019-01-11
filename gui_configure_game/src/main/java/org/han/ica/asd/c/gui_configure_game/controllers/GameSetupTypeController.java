@@ -161,22 +161,8 @@ public class GameSetupTypeController implements Initializable {
     }
 
     public void nextScreenButton() throws Exception {
-        System.out.println("BEFORE SETTING GAMETYPE -------");
-        for (Map.Entry<Facility, List<Facility>> entry : configuration.getFacilitiesLinkedTo().entrySet()) {
-            System.out.println("Parent: " + entry.getKey().getFacilityType().getFacilityName() + " id: " + entry.getKey().getFacilityId());
-            for (Facility f : entry.getValue()) {
-                System.out.println("-------Child: " + f.getFacilityType().getFacilityName() + " id: " + f.getFacilityId());
-            }
-        }
         fillConfigurationList();
         fillConfigurationGraph();
-        System.out.println("AFTER SETTING GAMETYPE -------");
-        for (Map.Entry<Facility, List<Facility>> entry : configuration.getFacilitiesLinkedTo().entrySet()) {
-            System.out.println("Parent: " + entry.getKey().getFacilityType().getFacilityName() + " id: " + entry.getKey().getFacilityId());
-            for (Facility f : entry.getValue()) {
-                System.out.println("-------Child: " + f.getFacilityType().getFacilityName() + " id: " + f.getFacilityId());
-            }
-        }
 
         beerGame.setConfiguration(this.configuration);
         beerGame.setGameName(this.gameName);
@@ -314,7 +300,6 @@ public class GameSetupTypeController implements Initializable {
         if ((openOrderCost.getText() != null && !openOrderCost.getText().isEmpty())) {
             facility.setOpenOrderCosts(Integer.parseInt(openOrderCost.getText()));
         }
-        System.out.println(facility.getFacilityName());
         return facility;
     }
 
