@@ -12,12 +12,13 @@ import org.han.ica.asd.c.model.domain_objects.*;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class ReplayComponent implements IVisualisedPlayedGameData {
     private static final int LOWEST_ROUND_POSSIBLE = 0;
     private static final int FIRST_ROUND_TO_DISPLAY = 1;
-    private List<Facility> displayedFacilities;
+    private Facility displayedFacility;
     private List<GameValue> displayedAverages;
     private List<AverageRound> averageRounds;
     private List<Facility> facilities;
@@ -33,7 +34,6 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
         displayedAverages = new ArrayList<>();
         averageRounds = new ArrayList<>();
-        displayedFacilities = new ArrayList<>();
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
         totalRounds = rounds.size()-1;
@@ -105,7 +105,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     @Override
     public ObservableList<XYChart.Series<Double, Double>> getChartData() {
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
-        if(displayedAverages.isEmpty()){
+        if(displayedAverages.isEmpty() && displayedFacility != null){
             getSpecificData(lineChartData);
         }
         else {
@@ -116,7 +116,10 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     }
 
     private void getSpecificData(ObservableList<XYChart.Series<Double, Double>> lineChartData){
-        
+        LineChart.Series<Double, Double> facilitySeries = new LineChart.Series<>();
+        facilitySeries.setName(displayedFacility.getFacilityType().getFacilityName());
+        createDataForSpecificFacility(facilitySeries);
+        addSeriesToChart(lineChartData, facilitySeries);
     }
 
     private void getAverageData(ObservableList<XYChart.Series<Double, Double>> lineChartData){
@@ -151,6 +154,17 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
                 displayedAverages.contains(averageRound.getFacilityType()) && averageRound.getRoundId() <= currentRound).collect(Collectors.toList());
         roundsToShow.forEach(averageRound ->
                 insertDataIntoSeries(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries, averageRound));
+    }
+
+    private void createDataForSpecificFacility(XYChart.Series<Double, Double> facilitySeries) {
+        List<Round> roundsToShow = rounds.stream().filter(round ->
+            round.getRoundId() <= currentRound).collect(Collectors.toList());
+        roundsToShow.forEach(round -> {
+                round.setFacilityTurns(round.getFacilityTurns().stream().filter(facilityTurn -> facilityTurn.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
+                round.setFacilityOrders(round.getFacilityOrders().stream().filter(facilityTurnOrder -> facilityTurnOrder.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
+                round.setFacilityTurnDelivers(round.getFacilityTurnDelivers().stream().filter(facilityTurnDeliver -> facilityTurnDeliver.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
+            });
+        roundsToShow.forEach(round -> facilitySeries.getData().add(new XYChart.Data<>((double) round.getRoundId(), getAttributeForFacility(round, displayedAttribute))));
     }
 
     /***
@@ -219,7 +233,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
      */
     @Override
     public void addDisplayedFacility(Facility facility) {
-        displayedFacilities.add(facility);
+        displayedFacility = facility;
     }
 
     /***
@@ -227,7 +241,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
      */
     @Override
     public void removeDisplayedFacility(Facility facility) {
-        displayedFacilities.remove(facility);
+        displayedFacility = null;
     }
 
     /***
@@ -258,6 +272,23 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
                 return round.getOrderAmount();
             case OUTGOINGGOODS:
                 return round.getDeliverAmount();
+            default:
+                return 0;
+        }
+    }
+
+    private double getAttributeForFacility(Round round, GameValue value) {
+        switch(value) {
+            case BUDGET:
+                return round.getFacilityTurns().get(0).getRemainingBudget();
+            case STOCK:
+                return round.getFacilityTurns().get(0).getStock();
+            case BACKLOG:
+                return round.getFacilityTurns().get(0).getBackorders();
+            case ORDERED:
+                return round.getFacilityOrders().get(0).getOrderAmount();
+            case OUTGOINGGOODS:
+                return round.getFacilityTurnDelivers().get(0).getDeliverAmount();
             default:
                 return 0;
         }
