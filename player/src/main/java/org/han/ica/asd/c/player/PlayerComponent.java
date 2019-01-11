@@ -7,14 +7,13 @@ import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -24,7 +23,7 @@ import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
 
-public class PlayerComponent implements IPlayerComponent, IParticipant {
+public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private Provider<Round> roundProvider;
     private Provider<FacilityTurnOrder> facilityTurnOrderProvider;
     private Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
@@ -48,7 +47,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 				this.facilityTurnOrderProvider = facilityTurnOrderProvider;
 				this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
 				this.gameLogic = gameLogic;
-				gameLogic.setPlayerParticipant(this);
+				gameLogic.setPlayer(this);
     }
 
 	@Override
@@ -185,10 +184,9 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
      * @return The current beergame status.
      */
     @Override
-    public GameRoundAction executeTurn() {
+    public void roundStarted() {
     	Platform.runLater(() ->
         ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
-        return null;
     }
 
     /**
@@ -197,7 +195,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
      * @return The facility instance.
      */
     @Override
-    public Facility getParticipant() {
-        return null;
+    public int getFacilityId() {
+        return player.getFacility().getFacilityId();
     }
 }

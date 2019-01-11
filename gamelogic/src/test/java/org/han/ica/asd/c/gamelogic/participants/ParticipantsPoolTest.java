@@ -1,9 +1,9 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
-import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,35 +13,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ParticipantsPoolTest {
     private ParticipantsPool participantsPool;
-    private IParticipant fakePlayer;
+    private IPlayerRoundListener fakePlayer;
 
     @BeforeEach
     public void setup() {
-        fakePlayer = mock(IParticipant.class);
-        participantsPool = new ParticipantsPool(fakePlayer);
+        fakePlayer = mock(PlayerFake.class);
+        participantsPool = new ParticipantsPool();
+        participantsPool.setPlayer(fakePlayer);
     }
-
-    @Test
-    public void replacePlayerWithAgentRemovesPlayer() {
-        participantsPool.replacePlayerWithAgent(mock(Agent.class));
-         assertFalse(participantsPool.getParticipants().contains(fakePlayer));
-    }
-
-    @Test
-    public void replacePlayerWithAgentAddsAgent() {
-        Agent agent = mock(Agent.class);
-        participantsPool.replacePlayerWithAgent(agent);
-        assertTrue(participantsPool.getParticipants().contains(agent));
-    }
-
-    @Test
-    public void replaceAgentWithPlayerAddsPlayer() {
-        Agent agent = mock(Agent.class);
-        when(agent.getParticipant()).thenReturn(fakePlayer.getParticipant());
-        participantsPool.replaceAgentWithPlayer();
-        assertTrue(participantsPool.getParticipants().contains(fakePlayer));
-    }
-
     @Test
     public void replaceAgentWithPlayerRemovesAgent() {
         Agent agent = mock(Agent.class);
@@ -67,7 +46,7 @@ class ParticipantsPoolTest {
         Agent agentMock = mock(Agent.class);
         participantsPool.addParticipant(playerMock);
         participantsPool.addParticipant(agentMock);
-        participantsPool.excecuteRound();
+        participantsPool.executeRound();
         verify(playerMock, times(1)).executeTurn();
         verify(agentMock, times(1)).executeTurn();
     }

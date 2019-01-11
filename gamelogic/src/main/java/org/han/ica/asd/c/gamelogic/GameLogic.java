@@ -9,6 +9,7 @@ import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
@@ -37,7 +38,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     private static int curRoundId;
     private static BeerGame beerGame;
-    private static IParticipant player;
+    private static IPlayerRoundListener player;
 
     @Inject
     public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
@@ -77,7 +78,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void letAgentTakeOverPlayer(IParticipant agent) {
-        participantsPool.replacePlayerWithAgent((Agent)agent);
+        participantsPool.addParticipant(agent);
     }
 
     /**
@@ -160,7 +161,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void removeAgentByPlayerId(String playerId) {
         //TODO: please remove this. Quick fix for now.
-        participantsPool.replaceAgentWithPlayer(player);
+        participantsPool.replaceAgentWithPlayer();
     }
 
     @Override
@@ -179,9 +180,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     @Override
-    public void setPlayerParticipant(IParticipant participant) {
-        player = participant;
-				addLocalParticipant(participant);
+    public void setPlayer(IPlayerRoundListener player) {
+        this.player = player;
+        participantsPool.setPlayer(this.player);
     }
 
     /**
@@ -193,7 +194,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         beerGame.getRounds().add(currentRound);
 				//persistence.saveGameLog(beerGame);
 				curRoundId = currentRound.getRoundId();
-        participantsPool.excecuteRound();
+        participantsPool.executeRound();
     }
 
     @Override
@@ -202,6 +203,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         //persistence.saveGameLog(beerGame);
         player.startGame();
 				curRoundId = 1;
-				participantsPool.excecuteRound();
+				participantsPool.executeRound();
     }
 }

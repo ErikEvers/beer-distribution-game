@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
@@ -39,5 +40,5 @@ public interface IPlayerGameLogic {
 
     int getRoundId();
 
-    void setPlayerParticipant(IParticipant participant);
+    void setPlayer(IPlayerRoundListener player);
 }
