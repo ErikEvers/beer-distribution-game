@@ -20,6 +20,7 @@ public class FaultResponder {
     private static Logger logger;
     @Inject
     private FaultDetectionClient faultDetectionClient;
+    private boolean active;
 
     public FaultResponder() {
         //For inject purposes
@@ -77,5 +78,17 @@ public class FaultResponder {
      */
     void setFaultDetectionClient(FaultDetectionClient faultDetectionClient) {
         this.faultDetectionClient = faultDetectionClient;
+    }
+
+    public void start() {
+        this.active = true;
+    }
+
+    public void stop() {
+        this.active = false;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

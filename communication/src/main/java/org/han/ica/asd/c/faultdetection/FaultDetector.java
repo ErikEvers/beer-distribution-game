@@ -39,8 +39,19 @@ public class FaultDetector {
      * @author Tarik, Oscar
      */
     public void startFaultDetectorLeader(NodeInfoList nodeInfoList) {
+        if(faultResponder != null && faultResponder.isActive()){
+            faultResponder.stop();
+        }
+        if(faultDetectorPlayer != null && faultDetectorPlayer.isActive()){
+            faultDetectorPlayer.stop();
+        }
+
         faultDetectorLeader = makeFaultDetectorLeader(nodeInfoList, observers);
         faultDetectorLeader.start();
+    }
+
+    public void stopFaultDetectorLeader() {
+        faultDetectorLeader.stop();
     }
 
     /**
@@ -51,9 +62,19 @@ public class FaultDetector {
      * @author Tarik, Oscar
      */
     public void startFaultDetectorPlayer(NodeInfoList nodeInfoList) {
+        if(faultDetectorLeader != null && faultDetectorLeader.isActive()){
+            faultDetectorLeader.stop();
+        }
+
         faultResponder = makeFaultResponder();
         faultDetectorPlayer = makeFaultDetectorPlayer(nodeInfoList, observers);
         faultDetectorPlayer.start();
+        faultResponder.start();
+    }
+
+    public void stopFaultDetectorPlayer() {
+        faultDetectorPlayer.stop();
+        faultResponder.stop();
     }
 
     /**
@@ -65,7 +86,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public void faultMessageReceived(FaultMessage faultMessage, String senderIp) {
-        if (faultResponder != null) {
+        if (faultResponder.isActive()) {
             faultResponder.faultMessageReceived(faultMessage, senderIp);
         }
     }
@@ -78,7 +99,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public void faultMessageResponseReceived(FaultMessageResponse faultMessageResponse) {
-        if (faultDetectorLeader != null) {
+        if (faultDetectorLeader.isActive()) {
             faultDetectorLeader.faultMessageResponseReceived(faultMessageResponse);
         }
     }
@@ -91,7 +112,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public void pingMessageReceived(PingMessage pingMessage) {
-        if (faultDetectorPlayer != null) {
+        if (faultDetectorPlayer.isActive()) {
             faultDetectorPlayer.pingMessageReceived(pingMessage);
         }
     }
@@ -105,7 +126,7 @@ public class FaultDetector {
      * @see FaultDetectionMessageReceiver
      */
     public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
-        if (faultDetectorPlayer != null) {
+        if (faultDetectorPlayer.isActive()) {
             return faultDetectorPlayer.canYouReachLeaderMessageReceived(canYouReachLeaderMessage, senderIp);
         }
         return null;

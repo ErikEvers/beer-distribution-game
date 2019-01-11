@@ -38,6 +38,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private Timer timer;
     private List<IConnectorObserver> observers;
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
+    private boolean active;
 
     FaultDetectorPlayer() {
         this.lastReceived = System.currentTimeMillis();
@@ -72,6 +73,17 @@ public class FaultDetectorPlayer extends TimerTask {
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
         faultHandlerPlayer.setObservers(observers);
+        this.active = true;
+    }
+
+    public void stop(){
+        timer.cancel();
+        this.active = false;
+    }
+
+
+    public boolean isActive() {
+        return active;
     }
 
     /**
