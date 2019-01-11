@@ -1,14 +1,13 @@
 package org.han.ica.asd.c.gui_play_game;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
 import javafx.util.converter.IntegerStringConverter;
-import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
 public class PlayGameFacilitiesController extends PlayGame {
     @FXML
@@ -20,8 +19,6 @@ public class PlayGameFacilitiesController extends PlayGame {
      */
     public void initialize() {
         superInitialize();
-
-        roundNumber = 0;
 
         txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
     }
@@ -54,7 +51,13 @@ public class PlayGameFacilitiesController extends PlayGame {
     }
 
 
-    public void submitTurnButonClicked(MouseEvent mouseEvent) {
-        super.submitTurnButonClicked();
+    public void submitTurnButtonClicked(MouseEvent mouseEvent) {
+        super.submitTurnButtonClicked();
+    }
+
+    @Override
+    public void refreshInterfaceWithCurrentStatus(int roundId) {
+        super.refreshInterfaceWithCurrentStatus(roundId);
+        fillComboBox();
     }
 }

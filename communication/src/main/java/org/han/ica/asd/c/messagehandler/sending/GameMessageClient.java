@@ -84,8 +84,8 @@ public class GameMessageClient {
         return whoIsTheLeaderMessageReturn.getResponse();
     }
 
-    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException {
-        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility, String playerId) throws FacilityNotAvailableException {
+        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility, playerId);
         try {
             ChooseFacilityMessage response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
             if (response.getException() != null) {

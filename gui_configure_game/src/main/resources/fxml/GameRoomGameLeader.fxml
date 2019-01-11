@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="600" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_join_game.GameRoomController">
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400" minWidth="600" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_configure_game.GameRoomGameLeaderController">
   <children>
     <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <columnConstraints>
@@ -21,10 +21,10 @@
       <rowConstraints>
         <RowConstraints maxHeight="194.0" minHeight="0.0" prefHeight="78.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="620.0" minHeight="10.0" prefHeight="579.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="220.0" minHeight="92.0" prefHeight="107.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="220.0" minHeight="80.0" prefHeight="107.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
-        <Button fx:id="chooseFacilityButton" disable="true" mnemonicParsing="false" onMouseClicked="#handleChooseFacilityButtonClick" text="Choose facility" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <Button mnemonicParsing="false" onMouseClicked="#handleStartButtonClick" text="Start" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
           <GridPane.margin>
             <Insets right="15.0" />
           </GridPane.margin>

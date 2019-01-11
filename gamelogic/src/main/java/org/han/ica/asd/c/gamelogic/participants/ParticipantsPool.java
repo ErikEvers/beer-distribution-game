@@ -1,10 +1,9 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
@@ -16,10 +15,13 @@ import java.util.List;
  */
 public class ParticipantsPool {
     private List<IParticipant> participants;
-    private PlayerParticipant player;
+    private IParticipant player;
 
-    @Inject
-    public ParticipantsPool(PlayerParticipant playerParticipant) {
+    public ParticipantsPool() {
+        participants = new LinkedList<>();
+    }
+
+    public ParticipantsPool(IParticipant playerParticipant) {
         participants = new LinkedList<>();
         participants.add(playerParticipant);
         player = playerParticipant;
@@ -57,7 +59,7 @@ public class ParticipantsPool {
         replaceParticipantWithPlayer(player);
     }
 
-    public void replaceAgentWithPlayer(PlayerParticipant playerParticipant) {
+    public void replaceAgentWithPlayer(IParticipant playerParticipant) {
         replaceParticipantWithPlayer(playerParticipant);
     }
 
@@ -66,7 +68,7 @@ public class ParticipantsPool {
      * This method is used when a player gets back in to the game.
      * @param playerParticipant The player that got back into the game.
      */
-    private void replaceParticipantWithPlayer(PlayerParticipant playerParticipant) {
+    private void replaceParticipantWithPlayer(IParticipant playerParticipant) {
         for (IParticipant participant : participants) {
             if (participant.getParticipant() == playerParticipant.getParticipant()) {
                 participants.remove(participant);
@@ -89,11 +91,9 @@ public class ParticipantsPool {
         }
     }
 
-    public void excecuteRound(Round round) {
-        //Start round for players
+    public void excecuteRound() {
         for (IParticipant participant : participants) {
-            participant.executeTurn(round);
+            participant.executeTurn();
         }
     }
-
 }

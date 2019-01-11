@@ -32,7 +32,7 @@ public class TreeBuilder {
 	private AnchorPane container;
 	private BeerGame beerGame;
 
-	private static Facility lastClickedFacility;
+	private static int lastClickedFacility;
 
 	/**
 	 * Method that loads facilities with its relevant edges.
@@ -84,7 +84,8 @@ public class TreeBuilder {
 
 			EventHandler<MouseEvent> eventHandler =
 					e -> {
-						lastClickedFacility = rectangleDeliver.getFacility();
+						lastClickedFacility = rectangleDeliver.getFacility().getFacilityId();
+						container.fireEvent(new FacilitySelectedEvent(rectangleDeliver));
 					};
 			rectangleDeliver.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
 
@@ -100,7 +101,8 @@ public class TreeBuilder {
 
 			EventHandler<MouseEvent> eventHandler =
 					e -> {
-						lastClickedFacility = rectangleOrder.getFacility();
+						lastClickedFacility = rectangleOrder.getFacility().getFacilityId();
+						container.fireEvent(new FacilitySelectedEvent(rectangleOrder));
 					};
 			rectangleOrder.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
 
@@ -188,6 +190,9 @@ public class TreeBuilder {
 		if(tooltipRequired) {
 			installTooltip(facility, rectangle);
 		}
+		if(facility.getFacilityId() == lastClickedFacility) {
+			rectangle.addShadow();
+		}
 		return rectangle;
 	}
 
@@ -213,19 +218,15 @@ public class TreeBuilder {
 	 */
 	private String getPlayerName(List<Player> players, List<GameAgent> agents, Facility facility) {
 		for(Player player: players) {
-			if(player.getFacility() == facility) {
+			if(player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return player.getName();
 			}
 		}
 		for(GameAgent agent: agents) {
-			if(agent.getFacility() == facility) {
+			if(agent.getFacility() != null && agent.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return agent.getGameAgentName();
 			}
 		}
 		return "";
-	}
-
-	public static Facility getLastClickedFacility() {
-		return lastClickedFacility;
 	}
 }

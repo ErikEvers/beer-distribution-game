@@ -121,7 +121,7 @@ public class GameMessageReceiver {
         try {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IFacilityMessageObserver) {
-                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
+                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility(), chooseFacilityMessage.getPlayerId());
                     return chooseFacilityMessage.createResponseMessage();
                 }
             }
@@ -167,7 +167,8 @@ public class GameMessageReceiver {
         switch (transactionMessage.getPhase()) {
             case 0:
                 toBecommittedRound = transactionMessage;
-                break;
+                transactionMessage.createResponseMessage();
+                return transactionMessage;
             case 1:
                 return doCommit(transactionMessage);
             case -1:

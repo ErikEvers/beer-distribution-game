@@ -1,10 +1,10 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerParticipantFake;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ParticipantsPoolTest {
     private ParticipantsPool participantsPool;
-    private PlayerParticipantFake fakePlayer;
+    private IParticipant fakePlayer;
 
     @BeforeEach
     public void setup() {
-        fakePlayer = new PlayerParticipantFake();
+        fakePlayer = mock(IParticipant.class);
         participantsPool = new ParticipantsPool(fakePlayer);
     }
 
@@ -63,12 +63,12 @@ class ParticipantsPoolTest {
 
     @Test
     public void excecuteRoundCallsParticipantsToAction() {
-        PlayerParticipant playerMock = mock(PlayerParticipant.class);
+        IParticipant playerMock = mock(IParticipant.class);
         Agent agentMock = mock(Agent.class);
         participantsPool.addParticipant(playerMock);
         participantsPool.addParticipant(agentMock);
-        participantsPool.excecuteRound(any(Round.class));
-        verify(playerMock, times(1)).executeTurn(any());
-        verify(agentMock, times(1)).executeTurn(any());
+        participantsPool.excecuteRound();
+        verify(playerMock, times(1)).executeTurn();
+        verify(agentMock, times(1)).executeTurn();
     }
 }

@@ -89,7 +89,7 @@
                                 <Font size="21.0" />
                             </font>
                         </Label>
-                        <Label text="0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <Label fx:id="backOrders" text="0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                             <font>
                                 <Font size="21.0" />
                             </font>
@@ -97,7 +97,7 @@
                                 <Insets right="30.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label text="€5/pc/week" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <Label fx:id="stockHoldingCost" text="€5/pc/week" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets top="40.0" />
                             </GridPane.margin>
@@ -105,7 +105,7 @@
                                 <Font size="13.0" />
                             </font>
                         </Label>
-                        <Label text="€25/pc/week" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <Label fx:id="openOrderCost" text="€25/pc/week" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets top="40.0" />
                             </GridPane.margin>
@@ -125,7 +125,7 @@
                   <Insets left="30.0" top="60.0" />
                </GridPane.margin>
             </Label>
-                <TextField fx:id="outgoingGoodsNextRound" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                <TextField fx:id="incomingOrdersTextField" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="30.0" top="85.0" />
                     </GridPane.margin></TextField>
@@ -145,7 +145,7 @@
                     <GridPane.margin>
                         <Insets left="300.0" top="20.0" />
                     </GridPane.margin></Button>
-                <Button mnemonicParsing="false" onMouseClicked="#submitTurnButonClicked" style="-fx-background-color: #ff8000;" text="Submit turn" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="submitTurnButton" mnemonicParsing="false" onMouseClicked="#submitTurnButtonClicked" style="-fx-background-color: #ff8000;" text="Submit turn" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="0.0" top="20.0" />
                     </GridPane.margin></Button>

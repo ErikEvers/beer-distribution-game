@@ -62,6 +62,13 @@ public class BeerGame implements IDomainModel, Serializable {
         return players.stream().filter(player -> player.getPlayerId() == playerId).findFirst().get();
     }
 
+    public void removePlayerById(String playerId) {
+        Player found = getPlayerById(playerId);
+        if(found != null) {
+            players.remove(found);
+        }
+    }
+
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
@@ -84,6 +91,10 @@ public class BeerGame implements IDomainModel, Serializable {
 
     public List<Round> getRounds() {
         return rounds;
+    }
+
+    public Round getRoundById(int roundId) {
+        return rounds.stream().filter(round -> round.getRoundId() == roundId).findFirst().get();
     }
 
     public void setRounds(List<Round> rounds) {

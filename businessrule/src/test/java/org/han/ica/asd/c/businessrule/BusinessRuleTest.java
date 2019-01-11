@@ -22,7 +22,6 @@ import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.Timeout;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
@@ -40,6 +39,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 class BusinessRuleTest {
     private BusinessRule businessRule = new BusinessRule();
+    private BeerGame beerGame;
     private Round round;
     private Facility facility;
     private FacilityTurn facilityTurn;
@@ -81,6 +81,7 @@ class BusinessRuleTest {
         List<FacilityTurn> facilityTurns = new ArrayList<>();
         List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();
         List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
+        beerGame = new BeerGame();
         round = Mockito.mock(Round.class);
         facilityTurn = Mockito.mock(FacilityTurn.class);
         facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
@@ -103,6 +104,7 @@ class BusinessRuleTest {
 
         when(facilityTurnDeliver.getFacilityId()).thenReturn(facilityId);
         when(facilityTurnDeliver.getDeliverAmount()).thenReturn(facilityId);
+        beerGame.getRounds().add(round);
     }
 
     @Test
@@ -197,7 +199,7 @@ class BusinessRuleTest {
 
         String expected = "BR(CS(CS(C(CV(V(15))ComO(==)CV(V(28))))BoolO(||)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
 
-        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(beerGame, facilityId);
 
         String result = businessRule.encode();
         assertEquals(expected, result);
