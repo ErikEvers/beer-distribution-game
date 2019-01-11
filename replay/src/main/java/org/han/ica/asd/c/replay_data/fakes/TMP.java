@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.replay_data.fakes;
 
 import org.han.ica.asd.c.interfaces.replay.IRetrieveReplayData;
-import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /***
  * Filler class for Guice. Will be replaced with actual implementation in the Persistance Layer

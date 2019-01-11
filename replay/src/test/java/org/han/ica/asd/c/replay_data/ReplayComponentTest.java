@@ -106,18 +106,18 @@ public class ReplayComponentTest {
 
     @Test
     public void incrementCurrentRound() {
-        Assert.assertEquals(true, replayComponent.incrementCurrentRound());
+        Assert.assertTrue(replayComponent.incrementCurrentRound());
         Assert.assertEquals("2", replayComponent.getCurrentRoundString());
 
         replayComponent.updateCurrentRound(10);
-        Assert.assertEquals(false, replayComponent.incrementCurrentRound());
+        Assert.assertFalse(replayComponent.incrementCurrentRound());
     }
 
     @Test
     public void decrementCurrentRound() {
-        Assert.assertEquals(true, replayComponent.decrementCurrentRound());
+        Assert.assertTrue(replayComponent.decrementCurrentRound());
         Assert.assertEquals("0", replayComponent.getCurrentRoundString());
 
-        Assert.assertEquals(false, replayComponent.decrementCurrentRound());
+        Assert.assertFalse(replayComponent.decrementCurrentRound());
     }
 }
