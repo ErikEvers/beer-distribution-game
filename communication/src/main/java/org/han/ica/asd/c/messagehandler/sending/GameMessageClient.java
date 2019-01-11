@@ -26,10 +26,13 @@ public class GameMessageClient {
     private SocketClient socketClient;
 
     @Inject
+    private GameMessageSender gameMessageSender;
+
+    @Inject
     private static Logger logger;
 
     public GameMessageClient() {
-        //inject purposes
+        gameMessageSender = new GameMessageSender(socketClient);
     }
 
     /**
@@ -41,27 +44,9 @@ public class GameMessageClient {
      */
     public boolean sendTurnModel(String ip, Round turn) {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
-        int nFailedAttempts = 0;
+        gameMessageSender.SendGameMessageGeneric()
+        TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
 
-        while (nFailedAttempts < 3) {
-            try {
-                TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
-                if (response.getException() != null) {
-                    logger.log(Level.INFO, response.getException().getMessage(), response.getException());
-                }
-                return response.isSuccess();
-            } catch (IOException e) {
-                nFailedAttempts++;
-                if (nFailedAttempts == 3) {
-                    logger.log(Level.SEVERE, "Something went wrong when trying to connect");
-                }
-            } catch (ClassNotFoundException e) {
-                nFailedAttempts++;
-                if (nFailedAttempts == 3) {
-                    logger.log(Level.SEVERE, "Something went wrong when reading the object");
-                }
-            }
-        }
         return false;
     }
 
