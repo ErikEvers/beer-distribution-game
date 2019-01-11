@@ -15,6 +15,8 @@ public class RoundCalculator {
     }
 
     public Round calculateRound(Round previousRound, Round currentRound, Map<Facility, List<Facility>> facilityLinks) {
+        currentRound.setFacilityTurns(previousRound.getFacilityTurns());
+
         for(Map.Entry<Facility, List<Facility>> entry : facilityLinks.entrySet()) {
             Facility order = entry.getKey();
 
@@ -30,6 +32,7 @@ public class RoundCalculator {
         }
 
         updateRemainingBudget(currentRound, facilityLinks);
+
         return currentRound;
     }
 
