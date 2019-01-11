@@ -36,8 +36,10 @@
         <module>fxml_helper</module>
         <module>interfaces</module>
         <module>gui_join_game</module>
-			  <module>exceptions</module>
-		</modules>
+        <module>exceptions</module>
+        <module>persistence</module>
+    </modules>
+
 
     <dependencies>
         <dependency>

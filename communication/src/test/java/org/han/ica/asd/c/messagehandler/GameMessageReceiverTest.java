@@ -6,6 +6,9 @@
 //import com.google.inject.name.Names;
 //import org.han.ica.asd.c.Connector;
 //import org.han.ica.asd.c.MessageDirector;
+//import org.han.ica.asd.c.dbconnection.DBConnection;
+//import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
+//import org.han.ica.asd.c.gamelogic.GameLogic;
 //import org.han.ica.asd.c.interfaces.communication.IFinder;
 //import org.han.ica.asd.c.discovery.RoomFinder;
 //import org.han.ica.asd.c.faultdetection.FailLog;
@@ -18,6 +21,11 @@
 //import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 //import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 //import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
+//import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+//import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
+//import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+//import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+//import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 //import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 //import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 //import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
@@ -31,6 +39,7 @@
 //import org.han.ica.asd.c.model.domain_objects.Facility;
 //import org.han.ica.asd.c.model.domain_objects.Round;
 //import org.han.ica.asd.c.model.interface_models.ElectionModel;
+//import org.han.ica.asd.c.persistence.Persistence;
 //import org.han.ica.asd.c.socketrpc.IServerObserver;
 //import org.han.ica.asd.c.socketrpc.SocketClient;
 //import org.han.ica.asd.c.socketrpc.SocketServer;
@@ -93,6 +102,13 @@
 //                requestStaticInjection(GameMessageClient.class);
 //                bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 //                bind(IFinder.class).to(RoomFinder.class);
+//                bind(IConnectorForLeader.class).to(Connector.class);
+//                bind(IPersistence.class).to(Persistence.class);
+//                bind(IDatabaseConnection.class).to(DBConnection.class);
+//                //bind(IDatabaseConnection.class).toInstance(DBConnectionTest.getInstance());
+//                bind(ILeaderGameLogic.class).to(GameLogic.class);
+//                bind(IGameStore.class).to(Persistence.class);
+//                bind(IConnectedForPlayer.class).to(Connector.class);
 //            }
 //        });
 //        gameMessageReceiver = inject.getInstance(GameMessageReceiver.class);

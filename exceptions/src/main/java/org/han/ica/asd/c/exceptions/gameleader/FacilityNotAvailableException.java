@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.exceptions.gameleader;
 
 public class FacilityNotAvailableException extends Exception {
-    FacilityNotAvailableException() {
+    public FacilityNotAvailableException() {
         super();
     }
 
