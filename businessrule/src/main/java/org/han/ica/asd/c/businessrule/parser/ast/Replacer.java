@@ -245,7 +245,14 @@ public class Replacer {
             case BACKLOG:
                 break;
             case INCOMINGORDER:
-                break;
+                facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
+                facilityTurnOrder = round.getFacilityOrders().stream().filter(i ->
+                        facilityTypeList.contains(String.valueOf(i.getFacilityId()))).min(facilityTurnOrderComparator)
+                        .orElse(null);
+
+                if(facilityTurnOrder!=null) {
+                    return facilityTurnOrder.getFacilityId();
+                }
             case OUTGOINGGOODS:
                 break;
             default:
