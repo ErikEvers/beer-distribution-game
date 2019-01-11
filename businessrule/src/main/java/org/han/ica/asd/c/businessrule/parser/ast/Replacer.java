@@ -290,12 +290,12 @@ public class Replacer {
                 }
                 throw new NotFoundException(notFound);
             case INCOMINGORDER:
-                //TODO Incoming en  outgoing implementeren
                 facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
 
                 Stream<FacilityTurnOrder> stream = round.getFacilityOrders().stream().filter(i ->
                         facilityTypeList.contains(String.valueOf(i.getFacilityId())));
-                if(1==1){
+
+                if(highestOrLowest.equals(GameValue.HIGHEST)){
                     stream.min(facilityTurnOrderComparator).orElse(null);
                 }else{
                     stream.max(facilityTurnOrderComparator).orElse(null);
