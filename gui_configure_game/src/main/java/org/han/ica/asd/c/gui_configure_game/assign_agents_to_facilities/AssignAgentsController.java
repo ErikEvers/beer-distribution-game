@@ -43,7 +43,7 @@ public class AssignAgentsController {
     private ResourceBundle resourceBundle;
 
     public void initialize() {
-        resourceBundle = ResourceBundle.getBundle("languageResourcesAssignAgents");
+        this.resourceBundle = ResourceBundle.getBundle("languageResourcesAssignAgents");
         try {
             agentComboBox.setItems(FXCollections.observableArrayList(gameAgentService.getAgentsForUI()));
         } catch (NoProgrammedAgentsFoundException e) {
