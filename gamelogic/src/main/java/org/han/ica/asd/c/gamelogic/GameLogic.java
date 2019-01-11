@@ -54,7 +54,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         List<IParticipant> agents = agentsPool.getAllAgents();
 
         for(IParticipant participant: agents){
-            GameRoundAction action = participant.executeTurn();
+            GameRoundAction action = participant.executeTurn(new Round());
             //Action to Round
             this.submitTurn(new Round());
         }
