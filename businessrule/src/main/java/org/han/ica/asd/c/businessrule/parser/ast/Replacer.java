@@ -233,9 +233,9 @@ public class Replacer {
                 }
                 break;
             case STOCK:
-                Comparator<FacilityTurn> comparatorStock = Comparator.comparing( FacilityTurn::getStock );
+                facilityTurnComparator = Comparator.comparing( FacilityTurn::getStock );
                 facilityTurn = round.getFacilityTurns().stream().filter(i ->
-                facilityTypeList.contains(String.valueOf(i.getFacilityId()))).max(comparatorStock).orElse(null);
+                facilityTypeList.contains(String.valueOf(i.getFacilityId()))).max(facilityTurnComparator).orElse(null);
                 if(facilityTurn!=null) {
                     return facilityTurn.getFacilityId();
                 }
