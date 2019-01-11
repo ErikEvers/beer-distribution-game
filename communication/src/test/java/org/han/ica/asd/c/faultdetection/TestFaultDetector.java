@@ -14,11 +14,8 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -47,8 +44,6 @@ public class TestFaultDetector {
         faultDetector = spy(new FaultDetector());
         faultDetector.setObservers(observers);
     }
-
-    //TODO Setactive: isActive ipv notnull before calling en test when not active
 
     @Test
     @DisplayName("Test if the start and stop methods are called correctly on FaultDetectorLeader")

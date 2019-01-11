@@ -87,7 +87,6 @@ public class FaultDetectorLeader extends TimerTask {
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
         faultHandlerLeader.setObservers(observers);
-
     }
 
     /**

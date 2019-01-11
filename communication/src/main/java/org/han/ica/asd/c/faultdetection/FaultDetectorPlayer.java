@@ -88,7 +88,6 @@ public class FaultDetectorPlayer extends TimerTask {
         this.active = false;
     }
 
-
     /**
      * Returns the 'FaultDetectorPlayer' state.
      *
