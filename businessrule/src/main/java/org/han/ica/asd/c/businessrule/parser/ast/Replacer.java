@@ -214,16 +214,23 @@ public class Replacer {
     private int getHighest(GameValue attribute, GameValue facility, Round round) throws NotFoundException {
         List<String> facilityTypeList = getDesiredFacilities(facility);
         Comparator<FacilityTurn> facilityTurnComparator = null;
-        Comparator<FacilityTurnOrder> facilityTurnOrderComparator = null;
+        Comparator<FacilityTurnOrder> facilityTurnOrderComparator;
         Comparator<FacilityTurnDeliver> facilityTurnDeliverComparator = null;
 
         FacilityTurn facilityTurn = null;
-        FacilityTurnOrder facilityTurnOrder = null;
+        FacilityTurnOrder facilityTurnOrder;
         FacilityTurnDeliver facilityTurnDeliver = null;
         String notFound = "the identifier is not found";
         switch (attribute) {
             case ORDERED:
-                //select id van factory met de hoogste ordered.
+                facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
+                facilityTurnOrder = round.getFacilityOrders().stream().filter(i ->
+                        facilityTypeList.contains(String.valueOf(i.getFacilityId()))).max(facilityTurnOrderComparator)
+                        .orElse(null);
+
+                if(facilityTurnOrder!=null) {
+                    return facilityTurnOrder.getFacilityId();
+                }
                 break;
             case STOCK:
                 Comparator<FacilityTurn> comparatorStock = Comparator.comparing( FacilityTurn::getStock );
