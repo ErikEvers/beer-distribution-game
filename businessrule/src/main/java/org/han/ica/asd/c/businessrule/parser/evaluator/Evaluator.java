@@ -8,6 +8,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ public class Evaluator {
         checkOnlyOneDefaultOrderAndOneDefaultDeliver(current, inputBusinessRule);
         checkDefaultWithoutDestination(current, inputBusinessRule);
         checkLowestHighestOnlyUsedAfterPerson(current, inputBusinessRule);
+        checkLowestNotComparedToHighest(current, inputBusinessRule);
     }
 
     /**
@@ -117,7 +119,7 @@ public class Evaluator {
         q.add(current.getChildren().get(side));
         while (!q.isEmpty()) {
             ASTNode qVal = q.remove();
-            if (qVal instanceof Value && !((Value) qVal).getValue().get(0).matches(INT_VALUE)) {
+            if (qVal instanceof Value && !((Value) qVal).getFirstPartVariable().matches(INT_VALUE)) {
                 this.hasErrors = true;
                 inputBusinessRule.setErrorMessage("Round can only be compared to a number");
             }
@@ -216,6 +218,34 @@ public class Evaluator {
                 && !personBool){
             this.hasErrors = true;
             inputBusinessRule.setErrorMessage("Lowest/Highest can only be used in a condition for another player");
+        }
+    }
+
+    private void checkLowestNotComparedToHighest(ASTNode current, UserInputBusinessRule inputBusinessRule){
+        List<ASTNode> children = current.getChildren();
+        String lowest = GameValue.LOWEST.getValue()[0];
+        String highest = GameValue.HIGHEST.getValue()[0];
+
+        if (current instanceof Comparison
+                && children.get(ComparisonSide.LEFT.get()) != null
+                && children.get(ComparisonSide.RIGHT.get()) != null) {
+            if (getAllValues(children.get(ComparisonSide.LEFT.get()),new ArrayList<>()).contains(lowest) || getAllValues(children.get(ComparisonSide.RIGHT.get()),new ArrayList<>()).contains(lowest) ) {
+                checkLowestNotComparedToHighest(current, inputBusinessRule, highest);
+            } else if (getAllValues(children.get(ComparisonSide.LEFT.get()),new ArrayList<>()).contains(highest) || getAllValues(children.get(ComparisonSide.RIGHT.get()),new ArrayList<>()).contains(highest)) {
+                checkLowestNotComparedToHighest(current, inputBusinessRule, lowest);
+            }
+        }
+    }
+
+    private void checkLowestNotComparedToHighest(ASTNode current, UserInputBusinessRule inputBusinessRule, String opposite) {
+        Queue<ASTNode> q = new LinkedList<>(current.getChildren());
+        while (!q.isEmpty()) {
+            ASTNode qVal = q.remove();
+            if (qVal instanceof Value && ((Value) qVal).getFirstPartVariable().equals(opposite)) {
+                this.hasErrors = true;
+                inputBusinessRule.setErrorMessage("Lowest and highest can't be compared to each other");
+            }
+            q.addAll(qVal.getChildren());
         }
     }
 
