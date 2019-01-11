@@ -81,8 +81,8 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_FactoryOrder(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = null;
-        int res = nodeConverter.getFacilityIdByAction(0,actionReferenceProvider.get().addValue("order"));
+        Integer exp = null;
+        Integer res = nodeConverter.getFacilityIdByAction(0,actionReferenceProvider.get().addValue("order"));
 
         assertEquals(exp,res);
     }
@@ -151,8 +151,8 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_RetailerDeliver(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = null;
-        int res = nodeConverter.getFacilityIdByAction(3,actionReferenceProvider.get().addValue("deliver"));
+        Integer exp = null;
+        Integer res = nodeConverter.getFacilityIdByAction(3,actionReferenceProvider.get().addValue("deliver"));
 
         assertEquals(exp,res);
     }
