@@ -57,9 +57,7 @@ public class PlayGameFacilitiesController extends PlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
-        Platform.runLater(() -> {
-            super.refreshInterfaceWithCurrentStatus(roundId);
-            fillComboBox();
-        });
+        super.refreshInterfaceWithCurrentStatus(roundId);
+        fillComboBox();
     }
 }

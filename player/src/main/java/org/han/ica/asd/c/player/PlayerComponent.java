@@ -186,7 +186,8 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
      */
     @Override
     public GameRoundAction executeTurn() {
-        ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId());
+    	Platform.runLater(() ->
+        ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
         return null;
     }
 
