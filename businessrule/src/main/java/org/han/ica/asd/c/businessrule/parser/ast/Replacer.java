@@ -293,7 +293,7 @@ public class Replacer {
                 //TODO Incoming en  outgoing implementeren
                 facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
                 facilityTurnOrder = round.getFacilityOrders().stream().filter(i ->
-                        facilityTypeList.contains(String.valueOf(i.getFacilityId()))).min(facilityTurnOrderComparator)
+                        facilityTypeList.contains(String.valueOf(i.getFacilityId()))).max(facilityTurnOrderComparator)
                         .orElse(null);
 
                 if(facilityTurnOrder!=null) {
