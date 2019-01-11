@@ -28,7 +28,6 @@ public class TestFaultHandlerPlayer {
 
 		faultHandlerPlayer = spy(FaultHandlerPlayer.class);
 		faultHandlerPlayer.setObservers(new ArrayList<>());
-
 	}
 
 	@Test
@@ -75,7 +74,7 @@ public class TestFaultHandlerPlayer {
 		faultHandlerPlayer.setAmountOfActiveIps(5);
 		faultHandlerPlayer.setAmountOfFailingIps(5);
 
-		assertEquals("imDead",faultHandlerPlayer.whoIsDead(nodeInfoList));
+		assertEquals("imDead",faultHandlerPlayer.whoIsDead());
 	}
 
 	@Test
@@ -85,7 +84,7 @@ public class TestFaultHandlerPlayer {
 		faultHandlerPlayer.setAmountOfActiveIps(5);
 		faultHandlerPlayer.resetAmountOfFailingIps();
 
-		assertEquals("leaderIsDead",faultHandlerPlayer.whoIsDead(nodeInfoList));
+		assertEquals("leaderIsDead",faultHandlerPlayer.whoIsDead());
 	}
 
 	@Test
