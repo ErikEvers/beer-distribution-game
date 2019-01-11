@@ -165,7 +165,7 @@ public class NodeInfoList extends ArrayList<Player> {
     }
 
     /**
-     * Iterates through the list on a recursive way, and updates the value of isConnected of a specific player.
+     * Retrieves the specific Player from the list recursively, and updates the value of isConnected of a specific player.
      *
      * @author Oscar
      * @param n which index in the list to check.
