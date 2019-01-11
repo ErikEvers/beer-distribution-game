@@ -14,6 +14,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -92,18 +93,29 @@ public class TestNodeInfoList {
         assertEquals(result.get(0), testIp1);
     }
 
-
     @Test
-    @DisplayName("Test if the UpdateIsConnected updates the value of a node")
-    void TestUpdateIsConnected() {
-        Player player = new Player();
-        player.setIpAddress(testIp1);
-        player.setConnected(false);
+    void TestRecursion(){
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(false);
 
-        nodeInfoList.add(player);
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        player2.setConnected(true);
+
+        String testIp3 = "testIp3";
+        Player player3 = new Player();
+        player3.setIpAddress(testIp3);
+        player3.setConnected(false);
+
+        nodeInfoList.add(player1);
+        nodeInfoList.add(player2);
+        nodeInfoList.add(player3);
+
+        assertEquals(3, nodeInfoList.size());
+
         nodeInfoList.updateIsConnected(testIp1, true);
 
-        assertTrue(nodeInfoList.get(0).isConnected());
     }
 
     @Test

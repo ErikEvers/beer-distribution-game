@@ -27,7 +27,7 @@ public class NodeInfoList extends ArrayList<Player> {
     private Leader leader;
 
     public NodeInfoList() {
-    //inject
+        //inject
     }
 
     public NodeInfoList(Leader leader, List<Player> playerList) {
@@ -35,7 +35,7 @@ public class NodeInfoList extends ArrayList<Player> {
         this.playerList = playerList;
     }
 
-    public void init(List<Player> playerList, Leader leader){
+    public void init(List<Player> playerList, Leader leader) {
         this.playerList = playerList;
         this.leader = leader;
     }
@@ -86,21 +86,22 @@ public class NodeInfoList extends ArrayList<Player> {
      * @author Tarik
      * @see NodeInfoList
      */
-    public List<String>  getIpsFromPlayerList(Condition condition){
+    public List<String> getIpsFromPlayerList(Condition condition) {
         ArrayList<String> list = new ArrayList<>();
-        Player leader = this.leader.getPlayer();
-        playerList.forEach((node)-> {
+        Player leaderPlayer = this.leader.getPlayer();
+        playerList.forEach((node) -> {
             switch (condition) {
                 case UNFILTERED:
                     list.add(node.getIpAddress());
                     break;
                 case CONNECTED:
-                    if(node.isConnected()) list.add(node.getIpAddress());
+                    if (node.isConnected()) list.add(node.getIpAddress());
                     break;
                 case CONNECTEDWITHOUTLEADER:
-                    if(node.isConnected() && node != leader) list.add(node.getIpAddress());
+                    if (node.isConnected() && node != leaderPlayer) list.add(node.getIpAddress());
                     break;
-                    default: break;
+                default:
+                    break;
             }
         });
         return list;
@@ -115,15 +116,15 @@ public class NodeInfoList extends ArrayList<Player> {
      * @see org.han.ica.asd.c.messagehandler.MessageProcessor
      */
     public String getLeaderIp() {
-        Player leader = this.leader.getPlayer();
-        if (leader.isConnected()) {
-                return leader.getIpAddress();
-            }
+        Player leaderPlayer = this.leader.getPlayer();
+        if (leaderPlayer.isConnected()) {
+            return leaderPlayer.getIpAddress();
+        }
         return null;
     }
 
     /**
-     * Updates the isConnected attribute of a specific node.
+     * Updates the isConnected attribute of a specific player using a recursive function.
      * This node is identified by the ip address parameter.
      *
      * @param ip          The ip of the node that has to be updated.
@@ -131,11 +132,24 @@ public class NodeInfoList extends ArrayList<Player> {
      * @author Oscar
      * @see Player
      */
-    public void updateIsConnected(String ip, Boolean isConnected) {
-        for (Player player : playerList) {
-            if (player.getIpAddress().equals(ip)) {
-                player.setConnected(isConnected);
-            }
+    public void updateIsConnected(String ip, boolean isConnected) {
+        updatePlayerIsConnectedRecursion(playerList.size() - 1, ip, isConnected);
+    }
+
+    /**
+     * Iterates through the list on a recursive way, and updates the value of isConnected of a specific player.
+     *
+     * @author Oscar
+     * @param n which index in the list to check.
+     * @param ip the identifier used to identify which player needs to be updated.
+     * @param isConnected the value with which the isConnected value needs to be updated.
+     */
+    private void updatePlayerIsConnectedRecursion(int n, String ip, boolean isConnected) {
+        if (playerList.get(n).getIpAddress().equals(ip)) {
+            Player playerToUpdate = playerList.get(n);
+            playerToUpdate.setConnected(isConnected);
+        } else if (n > 0 && !playerList.get(n).getIpAddress().equals(ip)) {
+            updatePlayerIsConnectedRecursion(n - 1, ip, isConnected);
         }
     }
 
@@ -146,7 +160,9 @@ public class NodeInfoList extends ArrayList<Player> {
      * @return The requested 'Player' object.
      */
     @Override
-    public Player get(int index) { return playerList.get(index);}
+    public Player get(int index) {
+        return playerList.get(index);
+    }
 
     /**
      * Adds a 'Player' object to the PlayerList, it then returns true after it did its job.
@@ -209,7 +225,7 @@ public class NodeInfoList extends ArrayList<Player> {
         return super.hashCode();
     }
 
-    public Leader getLeader(){
+    public Leader getLeader() {
         return leader;
     }
 }
