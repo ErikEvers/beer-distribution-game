@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -83,23 +84,32 @@
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleBackToMenuButtonClick" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%back_to_menu" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets right="5.0" />
-               </GridPane.margin></Button>
+               </GridPane.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleManagePlayersButtonClick" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%manage_players" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <GridPane.margin>
                   <Insets right="165.0" />
-               </GridPane.margin></Button>
+               </GridPane.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleStartGameButtonClick" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%start_game" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
-               </GridPane.margin></Button>
+               </GridPane.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
             </children>
         </GridPane>
         <HBox layoutX="14.0" layoutY="14.0" prefHeight="90.0" prefWidth="1000.0" AnchorPane.bottomAnchor="710.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Label text="Andere Faciliteiten">
+                <Label text="%configure_facilities">
                     <font>
                         <Font size="50.0" />
                     </font>
@@ -109,8 +119,17 @@
                 </Label>
             </children>
         </HBox>
-      <Button alignment="CENTER" contentDisplay="CENTER" layoutX="836.0" layoutY="90.0" mnemonicParsing="false" onAction="#handleAddAgentsButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%add_agent" textAlignment="CENTER" textFill="WHITE" />
-      <Button alignment="CENTER" layoutX="836.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleRemoveAgentsButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%remove_agent" textFill="WHITE" />
+      <Button alignment="CENTER" contentDisplay="CENTER" layoutX="836.0" layoutY="90.0" mnemonicParsing="false" onAction="#handleAddAgentsButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%add_agent" textAlignment="CENTER" textFill="WHITE">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <Button alignment="CENTER" layoutX="836.0" layoutY="135.0" mnemonicParsing="false" onAction="#handleRemoveAgentsButtonClick" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: ff8000;" text="%remove_agent" textFill="WHITE">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></Button>
       <ComboBox fx:id="agentComboBox" layoutX="625.0" layoutY="90.0" prefHeight="25.0" prefWidth="200.0" promptText="%choose_agent" />
     </children>
 </AnchorPane>

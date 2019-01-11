@@ -106,7 +106,6 @@ public class MainMenuController {
 
         DaoConfig.setCurrentGameId("123");
 
-        System.out.println(this.beerGame);
 
     }
 
@@ -127,7 +126,6 @@ public class MainMenuController {
     }
 
     public void handleCreateGameButtonClick() {
-        System.out.println(beerGame);
         assignAgents.setData(new Object[] { beerGame });
         assignAgents.setupScreen();
         //connector.start();
