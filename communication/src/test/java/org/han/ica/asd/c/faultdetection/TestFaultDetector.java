@@ -50,7 +50,7 @@ public class TestFaultDetector {
     }
 
     @Test
-    public void TestSetLeader() {
+    public void TestStartAndStopFaultDetectorLeader() {
         doReturn(faultDetectorLeader)
                 .when(faultDetector)
                 .makeFaultDetectorLeader(nodeInfoList, observers);
@@ -58,10 +58,12 @@ public class TestFaultDetector {
         faultDetector.startFaultDetectorLeader(nodeInfoList);
         assertNotNull(faultDetector.getFaultDetectorLeader());
         verify(faultDetectorLeader).start();
+        faultDetector.stopFaultDetectorLeader();
+        verify(faultDetectorLeader).stop();
     }
 
     @Test
-    public void TestSetPlayer() {
+    public void TestStartAndStopFaultDetectorPlayer() {
         doReturn(faultResponder)
                 .when(faultDetector)
                 .makeFaultResponder();
@@ -73,6 +75,9 @@ public class TestFaultDetector {
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         assertNotNull(faultDetector.getFaultResponder());
         assertNotNull(faultDetector.getFaultDetectorPlayer());
+        verify(faultDetectorPlayer).start();
+        faultDetector.stopFaultDetectorPlayer();
+        verify(faultDetectorPlayer).stop();
     }
 
     @Test
