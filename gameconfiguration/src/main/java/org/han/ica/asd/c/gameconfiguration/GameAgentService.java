@@ -56,24 +56,14 @@ public class GameAgentService implements IGameAgentService {
     }
 
     public BeerGame fillEmptyFacilitiesWithDefaultAgents(BeerGame beerGame) {
-        if (defaultAgent == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "There is no local default agent!");
-            alert.setHeaderText("Warning!");
-            alert.show();
-            return beerGame;
-        }
+        if (throwAlertIfNoDefaultAgentAvailable(beerGame)) return beerGame;
 
         List<Facility> facilitiesNotTaken = new ArrayList<>(beerGame.getConfiguration().getFacilities());
         for (int i = 0; i < beerGame.getConfiguration().getFacilities().size(); i++) {
             for (int j = 0; j < beerGame.getAgents().size(); j++) {
-                System.out.println(beerGame.getAgents().toString());
-                System.out.println(beerGame.getConfiguration().getFacilities().get(i).getFacilityId());
-                System.out.println(beerGame.getAgents().get(j).getFacility().getFacilityId());
                 if (beerGame.getConfiguration().getFacilities().get(i).getFacilityId() == beerGame.getAgents().get(j).getFacility().getFacilityId()) {
-                    break;
-                } else {
-                    facilitiesNotTaken.set(i, null);
-                    break;
+                 facilitiesNotTaken.set(i, null);
+                 break;
                 }
             }
         }
@@ -81,12 +71,18 @@ public class GameAgentService implements IGameAgentService {
         for (Facility f : facilitiesNotTaken) {
             if (f != null) {
                 beerGame.getAgents().add(createGameAgentFromProgrammedAgent(f, defaultAgent));
-            } else {
-
-                break;
             }
         }
         return beerGame;
     }
 
+    private boolean throwAlertIfNoDefaultAgentAvailable(BeerGame beerGame) {
+        if (defaultAgent == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "There is no local default agent!");
+            alert.setHeaderText("Warning!");
+            alert.show();
+            return true;
+        }
+        return false;
+    }
 }
