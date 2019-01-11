@@ -1,17 +1,18 @@
 package org.han.ica.asd.c.exceptions.communication;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SendGameMessageException extends Exception {
 
-    ArrayList<Exception> exceptions;
+    private final List<Exception> exceptions;
 
     public SendGameMessageException(String message){
         super(message);
         exceptions = new ArrayList<>();
     }
 
-    public ArrayList<Exception> getExceptions() {
+    public List<Exception> getExceptions() {
         return exceptions;
     }
 

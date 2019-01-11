@@ -18,7 +18,6 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +46,7 @@ public class GameMessageClient {
      */
     public void sendTurnModel(String ip, Round turn) throws SendGameMessageException {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
-        TurnModelMessage response = gameMessageSender.SendGameMessageGeneric(ip, turnModelMessage);
+        TurnModelMessage response = gameMessageSender.sendGameMessageGeneric(ip, turnModelMessage);
         if (response.getException() != null) {
             SendGameMessageException sgme = new SendGameMessageException("Message was arrived, but the receiver encountered an error");
             sgme.addException(response.getException());
@@ -66,7 +65,7 @@ public class GameMessageClient {
      */
     public String sendWhoIsTheLeaderMessage(String ip) throws SendGameMessageException, LeaderNotPresentException {
         WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
-        WhoIsTheLeaderMessage response = gameMessageSender.SendGameMessageGeneric(ip, whoIsTheLeaderMessage);
+        WhoIsTheLeaderMessage response = gameMessageSender.sendGameMessageGeneric(ip, whoIsTheLeaderMessage);
         if (response.getException() != null){
             throw (LeaderNotPresentException) response.getException();
         }
@@ -75,7 +74,7 @@ public class GameMessageClient {
 
     public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException, SendGameMessageException {
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
-        ChooseFacilityMessage response = gameMessageSender.SendGameMessageGeneric(ip, chooseFacilityMessage);
+        ChooseFacilityMessage response = gameMessageSender.sendGameMessageGeneric(ip, chooseFacilityMessage);
         if (response.getException() != null) {
             throw (FacilityNotAvailableException) response.getException();
         }
@@ -84,7 +83,7 @@ public class GameMessageClient {
 
     public GamePlayerId sendGameDataRequestMessage(String ip) throws SendGameMessageException {
         RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
-        RequestGameDataMessage response = gameMessageSender.SendGameMessageGeneric(ip, requestAllFacilitiesMessage);
+        RequestGameDataMessage response = gameMessageSender.sendGameMessageGeneric(ip, requestAllFacilitiesMessage);
         if (response.getException() != null) {
             //Implement is specific error en throw that, if that is need by the Setup Component.
             //If Implemented, remember to set RequestDataMessage.setException in GameMessageReceiver.

@@ -11,11 +11,8 @@ import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
 
 public class GameMessageSender {
-
-    private final int AMOUNT_OF_TRIES = 3;
 
     @Inject
     private SocketClient socketClient;
@@ -26,15 +23,16 @@ public class GameMessageSender {
     }
 
     /**
+     * Used for testing
      * constultor for SendInTransaction tests
-     * @param socketClient
+     * @param socketClient the socket client mock
      */
     public GameMessageSender(SocketClient socketClient){
         this.socketClient = socketClient;
     }
 
-    public <T extends GameMessage> T SendGameMessageGeneric(String ip, T gameMessage) throws SendGameMessageException {
-        Object response = SendGameMessage(ip, gameMessage);
+    <T extends GameMessage> T sendGameMessageGeneric(String ip, T gameMessage) throws SendGameMessageException {
+        Object response = sendGameMessage(ip, gameMessage);
         T result = null;
         if (response != null) {
             result = (T) response;
@@ -42,14 +40,14 @@ public class GameMessageSender {
         return result;
     }
 
-    public Map<String, Object> sendToAll(String[] ips, TransactionMessage transactionMessage) {
+    Map<String, Object> sendToAll(String[] ips, TransactionMessage transactionMessage) {
         CountDownLatch cdl = new CountDownLatch(ips.length);
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
             Thread t = new Thread(() -> {
                 try {
-                    Object response = SendGameMessage(ip, transactionMessage);
+                    Object response = sendGameMessage(ip, transactionMessage);
                     map.put(ip, response);
                 } catch (SendGameMessageException e) {
                     map.put(ip, e);
@@ -69,12 +67,13 @@ public class GameMessageSender {
 
     }
 
-    private Object SendGameMessage(String ip, GameMessage gameMessage) throws SendGameMessageException {
-        return SendGameMessage(ip, gameMessage, 0);
+    private Object sendGameMessage(String ip, GameMessage gameMessage) throws SendGameMessageException {
+        return sendGameMessage(ip, gameMessage, 0);
     }
 
-    private Object SendGameMessage(String ip, GameMessage gameMessage, int tryCount) throws SendGameMessageException {
-        if (tryCount >= AMOUNT_OF_TRIES) {
+    private Object sendGameMessage(String ip, GameMessage gameMessage, int tryCount) throws SendGameMessageException {
+        int amountOfTries = 3;
+        if (tryCount >= amountOfTries) {
             throw new SendGameMessageException("Errors occurred during gamemessage sending");
         }
 
@@ -86,7 +85,7 @@ public class GameMessageSender {
             throw sgme;
         } catch (IOException | ClassNotFoundException e) {
             try {
-                return SendGameMessage(ip, gameMessage, tryCount + 1);
+                return sendGameMessage(ip, gameMessage, tryCount + 1);
             } catch (SendGameMessageException sgme) {
                 sgme.addException(e);
                 throw sgme;
