@@ -249,6 +249,12 @@ public class Replacer {
                 }
                 throw new NotFoundException(notFound);
             case BACKLOG:
+                facilityTurnComparator = Comparator.comparing(FacilityTurn::getBackorders);
+                facilityTurn = round.getFacilityTurns().stream().filter( f ->
+                        facilityTypeList.contains(String.valueOf(f.getFacilityId()))).max(facilityTurnComparator).orElse(null);
+                if (facility!=null){
+                    return facilityTurn.getFacilityId();
+                }
                 break;
             case INCOMINGORDER:
                 break;

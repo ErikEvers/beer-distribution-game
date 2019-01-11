@@ -212,7 +212,7 @@ public class BusinessRule extends ASTNode {
         }
         if(astNode.hasPerson()){
             GameValue facilityType = getType();
-            GameValue attribute = GameValue.STOCK;
+            GameValue attribute = GameValue.BACKLOG;
             GameValue highestOrLowest = getHighestOrLowest();
             if(attribute!=null){
                 replacer.replacePerson(astNode,round,facilityType,attribute,highestOrLowest);
