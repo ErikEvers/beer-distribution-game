@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.player;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
@@ -175,7 +176,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     }
 
     public void startGame() {
-    	playGame.setupScreen();
+			Platform.runLater(() -> playGame.setupScreen());
 		}
 
     /**
