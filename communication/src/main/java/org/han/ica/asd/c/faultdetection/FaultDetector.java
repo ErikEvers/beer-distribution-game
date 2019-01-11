@@ -50,6 +50,12 @@ public class FaultDetector {
         faultDetectorLeader.start();
     }
 
+    /**
+     * This method stops the fault detection for the for the leader.
+     * This should be used when a player becomes a leader after leader migration.
+     *
+     * @author Tarik
+     */
     public void stopFaultDetectorLeader() {
         faultDetectorLeader.stop();
     }
@@ -72,6 +78,12 @@ public class FaultDetector {
         faultResponder.start();
     }
 
+    /**
+     * This method stops the fault detection for the (non leader)player.
+     * This should be used when a player becomes a leader after leader migration.
+     *
+     * @author Tarik
+     */
     public void stopFaultDetectorPlayer() {
         faultDetectorPlayer.stop();
         faultResponder.stop();
@@ -188,33 +200,6 @@ public class FaultDetector {
      */
     public void setFaultDetectorLeader(FaultDetectorLeader faultDetectorLeader) {
         this.faultDetectorLeader = faultDetectorLeader;
-    }
-
-    /**
-     * Gets faultDetectorPlayer.
-     *
-     * @return Value of faultDetectorPlayer.
-     */
-    FaultDetectorPlayer getFaultDetectorPlayer() {
-        return faultDetectorPlayer;
-    }
-
-    /**
-     * Gets faultDetectorLeader.
-     *
-     * @return Value of faultDetectorLeader.
-     */
-    FaultDetectorLeader getFaultDetectorLeader() {
-        return faultDetectorLeader;
-    }
-
-    /**
-     * Gets faultResponder.
-     *
-     * @return Value of faultResponder.
-     */
-    FaultResponder getFaultResponder() {
-        return faultResponder;
     }
 
     /**

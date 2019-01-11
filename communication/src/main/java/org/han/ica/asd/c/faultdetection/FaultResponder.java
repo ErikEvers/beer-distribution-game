@@ -80,14 +80,29 @@ public class FaultResponder {
         this.faultDetectionClient = faultDetectionClient;
     }
 
+    /**
+     * Sets the 'FaultResponder' to active.
+     *
+     * @author Tarik
+     */
     public void start() {
         this.active = true;
     }
 
+    /**
+     * Sets the 'FaultResponder' to inactive.
+     *
+     * @author Tarik
+     */
     public void stop() {
         this.active = false;
     }
 
+    /**
+     * Returns the 'FaultDetectorLeader' state.
+     *
+     * @return isActive
+     */
     public boolean isActive() {
         return active;
     }

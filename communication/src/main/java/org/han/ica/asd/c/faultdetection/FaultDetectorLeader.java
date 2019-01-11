@@ -90,11 +90,23 @@ public class FaultDetectorLeader extends TimerTask {
 
     }
 
+    /**
+     * Stops the Timertask and sets the fault detector to false so the messages wont be handled.
+     *
+     * @author Tarik
+     * @see TimerTask
+     * @see Timer
+     */
     public void stop(){
         timer.cancel();
         this.active = false;
     }
 
+    /**
+     * Returns the 'FaultDetectorLeader' state.
+     *
+     * @return isActive
+     */
     public boolean isActive() {
         return active;
     }
