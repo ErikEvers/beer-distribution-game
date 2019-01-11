@@ -42,11 +42,11 @@
                                         <Font name="Arial" size="43.0" />
                                     </font>
                                 </Label>
-                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="22.0" layoutY="81.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="22.0" layoutY="81.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="93.0" layoutY="90.0" text="Factory" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="22.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="93.0" layoutY="230.0" text="Wholesale" />
-                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="92.0" layoutY="364.0" text="RegionalWharehouse" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="22.0" layoutY="483.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="92.0" layoutY="492.0" text="Retailer" />
