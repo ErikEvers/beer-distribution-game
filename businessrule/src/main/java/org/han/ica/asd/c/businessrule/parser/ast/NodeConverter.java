@@ -13,6 +13,8 @@ public class NodeConverter {
     @Named("BusinessruleStore")
     private IBusinessRuleStore businessRuleStore;
 
+    private static final int FACILITYNOTFOUND = -1;
+
     public NodeConverter() {
         //Empty constructor for Guice
     }
@@ -71,21 +73,20 @@ public class NodeConverter {
                 return getFacilityIdByAction(actionName,facilities,i);
             }
         }
-        return null;
+        
+        return FACILITYNOTFOUND;
     }
 
-    private int getFacilityIdByAction(ActionReference actionName, List<List<String>> facilities, int facility) {
+    private Integer getFacilityIdByAction(ActionReference actionName, List<List<String>> facilities, int facility) {
         if("order".equals(actionName.getAction())){
             if(facility == FacilityType.FACTORY.getIndex()){
-                // TODO: FacilityId that needs to be given back when a Factory orders something. (His own Id or -1 in order to catch it later on?)
-                return -1;
+                return null;
             } else {
                 return Integer.parseInt(facilities.get(facility - 1).get(0));
             }
         } else {
             if(facility == FacilityType.RETAILER.getIndex()){
-                // TODO: FacilityId that needs to be given back when a Retailer delivers something. (His own Id or -1 in order to catch it later on?)
-                return -1;
+                return null;
             } else {
                 return Integer.parseInt(facilities.get(facility + 1).get(0));
             }
