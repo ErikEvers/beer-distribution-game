@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
@@ -46,7 +47,7 @@ public abstract class PlayGame implements IPlayGame {
     protected TextField incomingOrdersTextField;
 
     @FXML
-		protected Button submitTurnButton;
+    protected Button submitTurnButton;
 
 	@FXML
 	protected Button seeOtherFacilitiesButton;
@@ -82,6 +83,14 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected TextField txtOutgoingDelivery;
 
+    @FXML
+    protected ListView<String> deliverList;
+    @FXML
+    protected ListView<String> orderList;
+
+    protected ObservableList<String> orderFacilities;
+    protected ObservableList<String> deliverFacilities;
+
     protected static Alert currentAlert;
 
     /**
@@ -100,6 +109,8 @@ public abstract class PlayGame implements IPlayGame {
 		}
         playerComponent.setUi(this);
         playerComponent.startNewTurn();
+        orderFacilities = FXCollections.observableArrayList();
+        deliverFacilities = FXCollections.observableArrayList();
     }
 
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
@@ -151,16 +162,28 @@ public abstract class PlayGame implements IPlayGame {
         if (!outgoingOrderTextField.getText().isEmpty()) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
             Facility facility = comboBox.getValue();
+            String facilityAndOrderAmount = concatFacilityAndIdAndOrder(facility.getFacilityType().getFacilityName(), facility.getFacilityId(), order);
             playerComponent.placeOrder(facility, order);
+            orderFacilities.add(facilityAndOrderAmount);
         }
     }
 
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
+            Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
             int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
-            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), delivery);
+            String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(chosenFacility.getFacilityType().getFacilityName(), chosenFacility.getFacilityId(), delivery);
+
+            playerComponent.sendDelivery(chosenFacility, delivery);
+
+            deliverFacilities.add(facilityAndDeliverAmount);
         }
     }
+
+    private String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
+        return facilityName.concat(" id: " + Integer.toString(facilityid)).concat(" Amount: " + Integer.toString(amount));
+    }
+
 
     @FXML
     protected void submitTurnButtonClicked() {
@@ -168,6 +191,8 @@ public abstract class PlayGame implements IPlayGame {
         if(playerComponent.submitTurn()) {
 					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
 					currentAlert.show();
+					orderFacilities.clear();
+					deliverFacilities.clear();
 				} else {
 					currentAlert = new Alert(Alert.AlertType.ERROR, "Something went wrong while submitting your turn, please try again", ButtonType.OK, ButtonType.CLOSE);
 					Optional<ButtonType> result = currentAlert.showAndWait();

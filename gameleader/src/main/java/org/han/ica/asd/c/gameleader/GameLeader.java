@@ -76,10 +76,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
         Configuration configuration = new Configuration();
 
-        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,5,25,50,20, 20), 0);
-        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,5,25,50,0, 20), 1);
-        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,5,25,50,0, 20), 2);
-        Facility factory = new Facility(new FacilityType("Factory", 0, 0,5,25,50,0, 25), 3);
+        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,5,25,50,20, 20), 1);
+        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,5,25,50,0, 20), 2);
+        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,5,25,50,0, 20), 3);
+        Facility factory = new Facility(new FacilityType("Factory", 0, 0,5,25,50,0, 25), 4);
 
         List<Facility> facilityList = new ArrayList<>();
         facilityList.add(retailer);
