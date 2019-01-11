@@ -163,6 +163,7 @@ public abstract class PlayGame implements IPlayGame {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
             Facility facility = comboBox.getValue();
             String facilityAndOrderAmount = concatFacilityAndIdAndOrder(facility.getFacilityType().getFacilityName(), facility.getFacilityId(), order);
+            outgoingOrderTextField.clear();
             playerComponent.placeOrder(facility, order);
             orderFacilities.add(facilityAndOrderAmount);
         }
@@ -173,7 +174,7 @@ public abstract class PlayGame implements IPlayGame {
             Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
             int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
             String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(chosenFacility.getFacilityType().getFacilityName(), chosenFacility.getFacilityId(), delivery);
-
+            txtOutgoingDelivery.clear();
             playerComponent.sendDelivery(chosenFacility, delivery);
 
             deliverFacilities.add(facilityAndDeliverAmount);
