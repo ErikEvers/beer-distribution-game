@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -66,6 +67,7 @@ public class ProgramAgentController {
 
             agentNameInput.setText(name);
             List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
+            Collections.reverse(rules);
             for (String rule: rules) {
                 businessRuleInput.appendText(rule + "\n");
             }
