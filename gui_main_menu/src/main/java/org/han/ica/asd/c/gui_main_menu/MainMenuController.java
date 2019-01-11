@@ -3,10 +3,7 @@ package org.han.ica.asd.c.gui_main_menu;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
-import javafx.scene.control.Button;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 
 import javax.inject.Inject;

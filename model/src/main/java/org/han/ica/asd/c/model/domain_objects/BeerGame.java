@@ -1,8 +1,11 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import jdk.nashorn.internal.runtime.regexp.joni.encoding.ObjPtr;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BeerGame implements IDomainModel, Serializable {
 
@@ -59,7 +62,8 @@ public class BeerGame implements IDomainModel, Serializable {
     }
 
     public Player getPlayerById(String playerId) {
-        return players.stream().filter(player -> player.getPlayerId() == playerId).findFirst().get();
+        Optional<Player> value = players.stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst();
+        return value.orElse(null);
     }
 
     public void setPlayers(List<Player> players) {
