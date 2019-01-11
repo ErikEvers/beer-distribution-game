@@ -105,6 +105,21 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     @Override
     public ObservableList<XYChart.Series<Double, Double>> getChartData() {
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
+        if(displayedAverages.isEmpty()){
+            getSpecificData(lineChartData);
+        }
+        else {
+            getAverageData(lineChartData);
+        }
+
+        return lineChartData;
+    }
+
+    private void getSpecificData(ObservableList<XYChart.Series<Double, Double>> lineChartData){
+        
+    }
+
+    private void getAverageData(ObservableList<XYChart.Series<Double, Double>> lineChartData){
         LineChart.Series<Double, Double> factorySeries = new LineChart.Series<>();
         factorySeries.setName(GameValue.FACTORY.getValue()[0]);
         LineChart.Series<Double, Double> warehouseSeries = new LineChart.Series<>();
@@ -118,7 +133,6 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         addSeriesToChart(lineChartData, warehouseSeries);
         addSeriesToChart(lineChartData, wholesalerSeries);
         addSeriesToChart(lineChartData, retailerSeries);
-        return lineChartData;
     }
 
     /***
