@@ -100,9 +100,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleStartButtonClick" style="-fx-background-color: ff8000;" text="Start" textFill="WHITE" GridPane.columnIndex="0" />
+              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleStartButtonClick" style="-fx-background-color: ff8000;" text="Start" textFill="WHITE" GridPane.columnIndex="4" />
               <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleRefreshButtonClick" style="-fx-background-color: ff8000;" text="Refresh" textFill="WHITE" GridPane.columnIndex="2" />
-              <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleBackToJoinGameButtonClick" style="-fx-background-color: ff8000;" text="Leave game" textFill="WHITE" GridPane.columnIndex="4" />
+              <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleBackToJoinGameButtonClick" style="-fx-background-color: ff8000;" text="Leave game" textFill="WHITE" GridPane.columnIndex="0" />
                </children>
             </GridPane>
       </children>
