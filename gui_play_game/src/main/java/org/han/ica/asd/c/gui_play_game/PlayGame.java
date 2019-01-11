@@ -31,8 +31,6 @@ import java.util.function.UnaryOperator;
 
 
 public abstract class PlayGame implements IPlayGame {
-    protected BeerGame beerGame;
-
     @FXML
     private GridPane playGridPane;
 
@@ -113,21 +111,17 @@ public abstract class PlayGame implements IPlayGame {
         seeOtherFacilities.setupScreen();
     }
 
-    public void setBeerGame(BeerGame beerGame) {
-        this.beerGame = beerGame;
-    }
-
     public abstract void fillComboBox();
 
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
         ArrayList<Facility> facilities = new ArrayList<>();
 
-        beerGame.getConfiguration().getFacilities().forEach(
+				playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(
                 t -> {
                     Facility facilityPlayedByPlayer = playerComponent.getPlayer().getFacility();
 
                     if (t != facilityPlayedByPlayer) {
-                        List<Facility> facilitiesLinkedToFacilities = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(t);
+                        List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilities(t);
                         if (facilitiesLinkedToFacilities != null) {
                             if (facilitiesLinkedToFacilities.contains(facilityPlayedByPlayer)) {
                                 facilities.add(t);
@@ -144,7 +138,7 @@ public abstract class PlayGame implements IPlayGame {
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-				facilityListView.addAll(beerGame.getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility()));
+				facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility()));
 				comboBox.setItems(facilityListView);
     }
 
@@ -185,7 +179,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
-        beerGame = playerComponent.getBeerGame();
+    		BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
         int budget = 0;
         List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
