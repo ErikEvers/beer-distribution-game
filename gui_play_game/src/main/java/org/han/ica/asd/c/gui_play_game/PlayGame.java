@@ -122,7 +122,7 @@ public abstract class PlayGame implements IPlayGame {
                     Facility facilityPlayedByPlayer = playerComponent.getPlayer().getFacility();
 
                     if (t != facilityPlayedByPlayer) {
-                        List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilities(t);
+                        List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(t.getFacilityId());
                         if (facilitiesLinkedToFacilities != null) {
                             if (facilitiesLinkedToFacilities.contains(facilityPlayedByPlayer)) {
                                 facilities.add(t);
@@ -139,9 +139,7 @@ public abstract class PlayGame implements IPlayGame {
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-        BeerGame beerGame = playerComponent.getBeerGame();
-				Player player = playerComponent.getPlayer();
-				List<Facility> list = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(player.getFacility());
+				List<Facility> list = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId());
 				facilityListView.addAll(list);
 				comboBox.setItems(facilityListView);
     }
