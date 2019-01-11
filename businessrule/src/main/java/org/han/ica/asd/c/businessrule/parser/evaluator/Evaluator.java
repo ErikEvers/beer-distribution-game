@@ -94,13 +94,14 @@ public class Evaluator {
      */
     private void checkRoundIsComparedToInt(ASTNode current, UserInputBusinessRule inputBusinessRule) {
         List<ASTNode> children = current.getChildren();
+        String round = GameValue.ROUND.getValue()[0];
 
         if (current instanceof Comparison
                 && children.get(ComparisonSide.LEFT.get()) != null
                 && children.get(ComparisonSide.RIGHT.get()) != null) {
-            if (getAllValues(children.get(ComparisonSide.LEFT.get()),new ArrayList<>()).contains("round")) {
+            if (getAllValues(children.get(ComparisonSide.LEFT.get()),new ArrayList<>()).contains(round)) {
                 checkRoundIsComparedToInt(current, inputBusinessRule, ComparisonSide.RIGHT.get());
-            } else if (getAllValues(children.get(ComparisonSide.RIGHT.get()),new ArrayList<>()).contains("round")) {
+            } else if (getAllValues(children.get(ComparisonSide.RIGHT.get()),new ArrayList<>()).contains(round)) {
                 checkRoundIsComparedToInt(current, inputBusinessRule, ComparisonSide.LEFT.get());
             }
         }
@@ -214,7 +215,7 @@ public class Evaluator {
         }
 
         if(current instanceof Value
-                && (((Value) current).getValue().contains("lowest") || ((Value) current).getValue().contains("highest"))
+                && (((Value) current).getValue().contains(GameValue.LOWEST.getValue()[0]) || ((Value) current).getValue().contains(GameValue.HIGHEST.getValue()[0]))
                 && !personBool){
             this.hasErrors = true;
             inputBusinessRule.setErrorMessage("Lowest/Highest can only be used in a condition for another player");
