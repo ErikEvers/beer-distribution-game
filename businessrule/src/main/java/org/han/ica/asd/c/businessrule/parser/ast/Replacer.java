@@ -212,6 +212,54 @@ public class Replacer {
     }
 
     private int getHighest(GameValue attribute, GameValue facility, Round round) throws NotFoundException {
+        //facility ids factory
+        List<String> facilityTypeList = getDesiredFacilities(facility);
+
+        Comparator<FacilityTurn> facilityTurnComparator = null;
+        Comparator<FacilityTurnOrder> facilityTurnOrderComparator = null;
+        Comparator<FacilityTurnDeliver> facilityTurnDeliverComparator = null;
+
+        FacilityTurn facilityTurn = null;
+        FacilityTurnOrder facilityTurnOrder = null;
+        FacilityTurnDeliver facilityTurnDeliver = null;
+        String notFound = "the identifier is not found";
+        switch (attribute) {
+            case ORDERED:
+                //select id van factory met de hoogste ordered.
+                break;
+            case STOCK:
+
+            case BUDGET:
+                facilityTurnComparator = Comparator.comparing( FacilityTurn::getRemainingBudget );
+                facilityTurn = round.getFacilityTurns().stream().filter(i ->
+                        facilityTypeList.contains(String.valueOf(i.getFacilityId()))).max(facilityTurnComparator).orElse(null);
+
+                Stream<FacilityTurn> stream = round.getFacilityTurns().stream().filter(i ->
+                        facilityTypeList.contains(String.valueOf(i.getFacilityId())));
+                if("highest") {
+                    facilityTurn = stream.max(facilityTurnComparator).orElse(null);
+                }else{
+                    facilityTurn = stream.min(facilityTurnComparator).orElse(null);
+                }
+                if(facilityTurn!=null) {
+                    return facilityTurn.getFacilityId();
+                }
+                throw new NotFoundException(notFound);
+            case BACKLOG:
+
+                break;
+            case INCOMINGORDER:
+
+                break;
+            case OUTGOINGGOODS:
+                break;
+            default:
+                throw new NotFoundException(notFound);
+        }
+        return 0;
+    }
+
+    private int getLowest(GameValue attribute, GameValue facility, Round round) throws NotFoundException {
         List<String> facilityTypeList = getDesiredFacilities(facility);
         Comparator<FacilityTurn> facilityTurnComparator = null;
         Comparator<FacilityTurnOrder> facilityTurnOrderComparator = null;
@@ -275,8 +323,11 @@ public class Replacer {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
             }
         } else if (LOWEST.equals(highestOrLowest)) {
-
-            return;
+            try {
+                action.replacePerson(getLowest(attribute,facilityType,round));
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

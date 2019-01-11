@@ -180,4 +180,8 @@ public class Action extends ASTNode {
         this.comparisonStatement = null;
         this.person.addValue(String.valueOf(person));
     }
+
+    public Person getPerson() {
+        return person;
+    }
 }
