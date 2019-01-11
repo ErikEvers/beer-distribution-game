@@ -29,7 +29,6 @@ public class Agent extends GameAgent implements IParticipant {
 	@Named("persistence")
 	private IPersistence persistence;
 
-
     /**
      * Constructor with default agent name and facility
      *
@@ -62,7 +61,12 @@ public class Agent extends GameAgent implements IParticipant {
 			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round, getFacility().getFacilityId());
 			if (actionModel != null) {
 				if (canAddToOrderMap.apply(actionModel.isOrderType())) {
-					this.updateTargetMap(this.resolveLowerFacilityId(actionModel.facilityId), actionModel.amount, targetOrderMap, triggeredBusinessRules, gameBusinessRules);
+					if (actionModel.facilityId == ActionModel.NO_FACILITY && "factory".equals(getFacility().getFacilityType().getFacilityName().split(" ")[0])) {
+						targetOrderMap.put(null, actionModel.amount);
+						triggeredBusinessRules.add(gameBusinessRules);
+					} else {
+						this.updateTargetMap(this.resolveLowerFacilityId(actionModel.facilityId), actionModel.amount, targetOrderMap, triggeredBusinessRules, gameBusinessRules);
+					}
 				} else if (canAddToDeliverMap.apply(actionModel.isDeliverType())) {
 					this.updateTargetMap(this.resolveHigherFacilityId(actionModel.facilityId), actionModel.amount, targetDeliverMap, triggeredBusinessRules, gameBusinessRules);
 				}
