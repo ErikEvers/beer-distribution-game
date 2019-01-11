@@ -99,5 +99,8 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("GameSetupStart")).to(GameSetupStart.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("GameSetupType")).to(GameSetupType.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("GameSetup")).to(GameSetup.class);
 	}
 }
