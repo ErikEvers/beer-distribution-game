@@ -18,7 +18,6 @@ public class ManagePlayers implements IGUIHandler {
 	}
 
 	public void setupScreen() {
-		URL test = getClass().getResource("/fxml/ManagePlayersScreen.fxml");
 		ManagePlayersScreenController controller = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesManagePlayers"), getClass().getResource("/fxml/ManagePlayersScreen.fxml"));
 		controller.setBeerGame(beerGame);
 	}
