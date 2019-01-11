@@ -45,6 +45,7 @@ public class BusinessRuleHandler implements IBusinessRules {
             return parserPipeline.getBusinessRulesInput();
         }
         iBusinessRuleStore.synchronizeBusinessRules(agentName,parserPipeline.getBusinessRulesMap());
+        parserPipeline.getBusinessRulesMap().clear();
         return parserPipeline.getBusinessRulesInput();
     }
 
