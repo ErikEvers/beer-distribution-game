@@ -82,10 +82,12 @@ public class GameMessageClient {
         return response;
     }
 
-    public GamePlayerId sendGameDataRequestMessage(String ip) throws IOException, ClassNotFoundException {
+    public GamePlayerId sendGameDataRequestMessage(String ip) throws SendGameMessageException {
         RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
-        RequestGameDataMessage response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
+        RequestGameDataMessage response = gameMessageSender.SendGameMessageGeneric(ip, requestAllFacilitiesMessage);
         if (response.getException() != null) {
+            //Implement is specific error en throw that, if that is need by the Setup Component.
+            //If Implemented, remember to set RequestDataMessage.setException in GameMessageReceiver.
             logger.log(Level.INFO, response.getException().getMessage(), response.getException());
         }
         return response.getGameData();

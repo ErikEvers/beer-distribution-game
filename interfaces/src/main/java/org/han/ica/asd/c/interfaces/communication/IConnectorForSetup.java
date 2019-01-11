@@ -23,5 +23,5 @@ public interface IConnectorForSetup {
     void startRoom(RoomModel room);
     void addObserver(IConnectorObserver connectorObserver);
     void chooseFacility(Facility facility) throws FacilityNotAvailableException, SendGameMessageException;
-    GamePlayerId getGameData() throws IOException, ClassNotFoundException;
+    GamePlayerId getGameData() throws IOException, ClassNotFoundException, SendGameMessageException;
 }
