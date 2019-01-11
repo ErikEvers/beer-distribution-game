@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.ArrayList;
 
-public class ReplayGameScreenController {
+public class ReplayGameController {
 
     @FXML
     private LineChart<Double, Double> replayGraph;
