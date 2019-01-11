@@ -233,7 +233,13 @@ public class Replacer {
                 }
                 break;
             case STOCK:
-
+                facilityTurnComparator = Comparator.comparing( FacilityTurn::getStock );
+                facilityTurn = round.getFacilityTurns().stream().filter(i ->
+                facilityTypeList.contains(String.valueOf(i.getFacilityId()))).max(facilityTurnComparator).orElse(null);
+                if(facilityTurn!=null) {
+                    return facilityTurn.getFacilityId();
+                }
+                throw new NotFoundException(notFound);
             case BUDGET:
                 Comparator<FacilityTurn> comparator = Comparator.comparing( FacilityTurn::getRemainingBudget );
                 facilityTurn = round.getFacilityTurns().stream().filter(i ->
@@ -243,6 +249,12 @@ public class Replacer {
                 }
                 throw new NotFoundException(notFound);
             case BACKLOG:
+                facilityTurnComparator = Comparator.comparing(FacilityTurn::getBackorders);
+                facilityTurn = round.getFacilityTurns().stream().filter( f ->
+                        facilityTypeList.contains(String.valueOf(f.getFacilityId()))).max(facilityTurnComparator).orElse(null);
+                if (facility!=null){
+                    return facilityTurn.getFacilityId();
+                }
                 break;
             case INCOMINGORDER:
                 facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
