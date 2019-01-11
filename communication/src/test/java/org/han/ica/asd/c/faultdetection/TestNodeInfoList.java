@@ -1,12 +1,14 @@
 package org.han.ica.asd.c.faultdetection;
 
 import junit.framework.TestCase;
+import org.han.ica.asd.c.faultdetection.nodeinfolist.Condition;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 public class TestNodeInfoList {
 
@@ -186,5 +188,22 @@ public class TestNodeInfoList {
         nodeInfoList.add(player);
 
         assertNull(nodeInfoList.getLeaderIp());
+    }
+
+    @Test
+    @DisplayName("Test if the init methods sets the values correctly")
+    void TestInit(){
+        List<Player> listMock = new ArrayList<>();
+        Player playerMock = mock(Player.class);
+        Player getPlayerMock = mock(Player.class);
+        Leader leaderMock = mock(Leader.class);
+        listMock.add(playerMock);
+
+        when(leaderMock.getPlayer()).thenReturn(getPlayerMock);
+
+        nodeInfoList.init(listMock, leaderMock);
+
+        assertEquals(leaderMock, nodeInfoList.getLeader());
+        assertEquals(listMock, nodeInfoList.getPlayerList());
     }
 }

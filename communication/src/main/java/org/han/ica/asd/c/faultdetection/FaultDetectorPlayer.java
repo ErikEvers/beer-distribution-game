@@ -51,7 +51,7 @@ public class FaultDetectorPlayer extends TimerTask {
 
     public void start() {
         timer = createTimer(true);
-        timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
     }
 
     public Timer createTimer(Boolean isDeamon) {
@@ -70,7 +70,7 @@ public class FaultDetectorPlayer extends TimerTask {
     public boolean leaderIsNotPinging() {
         long current = System.currentTimeMillis();
         long timeDifference = current - lastReceived;
-        long threeIntervals = Global.FaultDetectionInterval * 3;
+        long threeIntervals = Global.FAULT_DETECTION_INTERVAL * 3;
 
         return timeDifference > threeIntervals;
     }
@@ -188,5 +188,14 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     public void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> playersWhoAlreadyCouldntReachLeader) {
         this.playersWhoAlreadyCouldntReachLeader = playersWhoAlreadyCouldntReachLeader;
+    }
+
+    /**
+     * Gets timer.
+     *
+     * @return Value of timer.
+     */
+    public Timer getTimer() {
+        return timer;
     }
 }
