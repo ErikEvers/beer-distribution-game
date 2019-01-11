@@ -48,6 +48,9 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
 		protected Button submitTurnButton;
 
+	@FXML
+	protected Button seeOtherFacilitiesButton;
+
     @Inject
     @Named("SeeOtherFacilities")
     IGUIHandler seeOtherFacilities;
@@ -92,6 +95,9 @@ public abstract class PlayGame implements IPlayGame {
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
+        if(playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
+			seeOtherFacilitiesButton.setDisable(false);
+		}
         playerComponent.setUi(this);
         playerComponent.startNewTurn();
     }

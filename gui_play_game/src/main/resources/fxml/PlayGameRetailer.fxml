@@ -141,7 +141,7 @@
                     <GridPane.margin>
                         <Insets left="150.0" top="20.0" />
                     </GridPane.margin></Button>
-                <Button mnemonicParsing="false" onMouseClicked="#seeOtherFacilitiesButtonClicked" style="-fx-background-color: #ff8000;" text="See other facilities" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="seeOtherFacilitiesButton" disable="true" mnemonicParsing="false" onMouseClicked="#seeOtherFacilitiesButtonClicked" style="-fx-background-color: #ff8000;" text="See other facilities" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="300.0" top="20.0" />
                     </GridPane.margin></Button>
