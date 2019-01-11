@@ -170,4 +170,14 @@ public class Action extends ASTNode {
     public ASTNode getComparisonStatement(){
         return this.comparisonStatement;
     }
+
+
+    public boolean hasPerson() {
+        return person!=null;
+    }
+
+    public void replacePerson(int person) {
+        this.comparisonStatement = null;
+        this.person.addValue(String.valueOf(person));
+    }
 }

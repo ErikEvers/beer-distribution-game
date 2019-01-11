@@ -4,6 +4,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
@@ -16,6 +21,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
@@ -33,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -42,10 +49,8 @@ class BusinessRuleTest {
     private BusinessRule businessRule = new BusinessRule();
     private Round round;
     private Facility facility;
-    private FacilityTurn facilityTurn;
-    private FacilityTurnDeliver facilityTurnDeliver;
-    private FacilityTurnOrder facilityTurnOrder;
-    private int facilityId = 10;
+
+    private int facilityId = 0;
 
     private Provider<BusinessRule> businessRuleProvider;
     private Provider<Comparison> comparisonProvider;
@@ -57,6 +62,10 @@ class BusinessRuleTest {
     private Provider<DivideOperation> divideOperationProvider;
     private Provider<Action> actionProvider;
     private Provider<ActionReference> actionReferenceProvider;
+    private Provider<BusinessRuleDecoder> businessRuleDecoderProvider;
+
+    private com.google.inject.Provider<ASTListener> astListenerProvider;
+    private com.google.inject.Provider<Fixtures> fixturesProvider;
 
     @BeforeEach
     void setup() {
@@ -77,32 +86,49 @@ class BusinessRuleTest {
         booleanOperatorProvider = injector.getProvider(BooleanOperator.class);
         comparisonOperatorProvider = injector.getProvider(ComparisonOperator.class);
         divideOperationProvider = injector.getProvider(DivideOperation.class);
+        businessRuleDecoderProvider = injector.getProvider(BusinessRuleDecoder.class);
+        tmp = injector.getProvider(Fixtures.class);
+        astListenerProvider = injector.getProvider(ASTListener.class);
+        fixturesProvider = injector.getProvider(Fixtures.class);
 
         List<FacilityTurn> facilityTurns = new ArrayList<>();
         List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();
         List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
         round = Mockito.mock(Round.class);
-        facilityTurn = Mockito.mock(FacilityTurn.class);
-        facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
-        facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
-        facilityTurns.add(facilityTurn);
-        facilityTurnOrders.add(facilityTurnOrder);
-        facilityTurnDelivers.add(facilityTurnDeliver);
+
+        for(int i = 0 ;i<10;i++){
+            createTurnDeliver(i, facilityTurnDelivers);
+            createTurnOrder(i, facilityTurnOrders);
+            createTurn(i,facilityTurns);
+        }
         when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
         when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
         when(round.getFacilityTurns()).thenReturn(facilityTurns);
+    }
 
-        when(facilityTurn.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurn.getStock()).thenReturn(facilityId);
-        when(facilityTurn.getRemainingBudget()).thenReturn(21);
-        when(facilityTurn.getBackorders()).thenReturn(28);
+    void createTurnDeliver(int id, List<FacilityTurnDeliver> facilityTurnDelivers){
+        FacilityTurnDeliver  facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
+        when(facilityTurnDeliver.getFacilityId()).thenReturn(id);
+        when(facilityTurnDeliver.getDeliverAmount()).thenReturn(id);
+        facilityTurnDelivers.add(facilityTurnDeliver);
+    }
 
-        when(facilityTurnOrder.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurnOrder.getOrderAmount()).thenReturn(15);
-        when(facilityTurnOrder.getFacilityIdOrderTo()).thenReturn(facilityId);
+    void createTurnOrder(int id, List<FacilityTurnOrder> facilityTurnOrders){
+        FacilityTurnOrder facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
+        when(facilityTurnOrder.getFacilityId()).thenReturn(id);
+        when(facilityTurnOrder.getOrderAmount()).thenReturn(id);
+        when(facilityTurnOrder.getFacilityIdOrderTo()).thenReturn(id);
+        facilityTurnOrders.add(facilityTurnOrder);
+    }
 
-        when(facilityTurnDeliver.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurnDeliver.getDeliverAmount()).thenReturn(facilityId);
+    void createTurn(int id, List<FacilityTurn> facilityTurns){
+        FacilityTurn  facilityTurn = Mockito.mock(FacilityTurn.class);
+
+        when(facilityTurn.getFacilityId()).thenReturn(id);
+        when(facilityTurn.getStock()).thenReturn(id);
+        when(facilityTurn.getRemainingBudget()).thenReturn(id);
+        when(facilityTurn.getBackorders()).thenReturn(id);
+        facilityTurns.add(facilityTurn);
     }
 
     @Test
@@ -202,7 +228,52 @@ class BusinessRuleTest {
         String result = businessRule.encode();
         assertEquals(expected, result);
     }
+    Provider<Fixtures> tmp;
+    @Test
+    void replacePerson(){
+        String expected = "if inventory is 20 then order 20 from factory where inventory is highest";
+        BusinessRule businessRule = parseString(expected);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round,facilityId);
 
+        //BusinessRule businessRuleParsed = businessRuleDecoderProvider.get().decodeBusinessRule(expected);
+
+    }
+
+    BusinessRule parseString(String input) {
+        CharStream inputStream = CharStreams.fromString(input);
+        BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        BusinessRuleParser parser = new BusinessRuleParser(tokens);
+        parser.setErrorHandler(new BailErrorStrategy());
+
+        //Setup collection of the parse error messages
+        BaseErrorListener errorListener = new BaseErrorListener() {
+            private String message;
+
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                message = msg;
+            }
+
+            public String toString() {
+                return message;
+            }
+        };
+        parser.removeErrorListeners();
+        parser.addErrorListener(errorListener);
+
+        //Parse & extract AST
+        ASTListener listener = astListenerProvider.get();
+        try {
+            ParseTree parseTree = parser.businessrule();
+            ParseTreeWalker walker = new ParseTreeWalker();
+            walker.walk(listener, parseTree);
+        } catch (ParseCancellationException e) {
+            fail(errorListener.toString());
+        }
+
+        return listener.getBusinessRules().get(0);
+    }
     @Test
     void testGameValueORDEREDContainsOrdered() {
         assertTrue(GameValue.ORDERED.contains("ordered"));

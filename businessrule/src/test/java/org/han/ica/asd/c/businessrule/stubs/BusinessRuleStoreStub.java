@@ -20,10 +20,10 @@ public class BusinessRuleStoreStub implements IBusinessRuleStore {
     @Override
     public List<List<String>> getAllFacilities() {
         return Lists.newArrayList(
-                Lists.newArrayList("0"),
-                Lists.newArrayList("1"),
-                Lists.newArrayList("2"),
-                Lists.newArrayList("3")
+                Lists.newArrayList("0","4","5"),
+                Lists.newArrayList("1","6","7"),
+                Lists.newArrayList("2","8","9"),
+                Lists.newArrayList("3","10","11")
         );
     }
 
