@@ -133,7 +133,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public Round calculateRound(Round round) {
-        Round previousRound = beerGame.getRounds().get(round.getRoundId() - 1);
+        Round previousRound = beerGame.getRounds().get(round.getRoundId()- 1);
         RoundCalculator roundCalculator = new RoundCalculator();
 
         return  roundCalculator.calculateRound(previousRound, round, facilityLinks);
