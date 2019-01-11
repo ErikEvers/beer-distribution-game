@@ -71,7 +71,7 @@ public class GameSetupController implements Initializable {
     private Graph graph;
 
     /**
-     * Configuration variables that sould be passed down to the next screen
+     * Configuration variables that should be passed down to the next screen
      */
     private Configuration configuration;
     private String gameName = "";

@@ -7,9 +7,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_configure_game.graph.FacilityRectangle;
 import org.han.ica.asd.c.gui_configure_game.graph.Graph;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
@@ -101,12 +103,18 @@ public class GameSetupTypeController implements Initializable {
     @Named("MainMenu")
     private IGUIHandler mainMenu;
 
+    @Inject
+    @Named("AssignAgents")
+    private IGUIHandler assignAgents;
+
     @FXML
     private AnchorPane mainContainer;
 
     /**
-     * Configuration variables that sould be passed down to the next screen
+     * Configuration variables that should be passed down to the next screen
      */
+    @Inject
+    private BeerGame beerGame;
     private Configuration configuration;
     private String gameName = "";
     private String onlineGame = "TRUE";
@@ -153,21 +161,13 @@ public class GameSetupTypeController implements Initializable {
     }
 
     public void nextScreenButton() throws Exception {
-        for (Facility fac : configuration.getFacilities()) {
-
-            System.out.println(fac.getFacilityType().getFacilityName() + " : " + fac.getFacilityId());
-        }
-        try {
             fillConfigurationList();
             fillConfigurationGraph();
-            for (Facility fac : configuration.getFacilities()) {
-                System.out.println(fac.getFacilityType().getFacilityName());
-                System.out.println(fac.getFacilityType().getStartingBudget());
-                System.out.println("----------");
-            }
-        } finally {
-            throw new Exception("Linken aan volgend scherm");
-        }
+            beerGame.setConfiguration(this.configuration);
+            beerGame.setGameName(this.gameName);
+            beerGame.setGameId(DaoConfig.getCurrentGameId());
+            assignAgents.setData(new Object[] { beerGame });
+            assignAgents.setupScreen();
     }
 
 

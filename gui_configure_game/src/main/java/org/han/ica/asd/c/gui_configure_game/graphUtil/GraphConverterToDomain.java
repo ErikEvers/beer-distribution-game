@@ -53,7 +53,7 @@ public class GraphConverterToDomain {
             facilityType.setFacilityName("Wholesaler");
         }
         if (graphFacility instanceof RegionalWarehouse) {
-            facilityType.setFacilityName("Regional warehouse");
+            facilityType.setFacilityName("Regional Warehouse");
         }
         if (graphFacility instanceof Retailer) {
             facilityType.setFacilityName("Retailer");
