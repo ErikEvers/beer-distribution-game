@@ -23,6 +23,7 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,10 @@ public abstract class PlayGame implements IPlayGame {
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-				facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility()));
+        BeerGame beerGame = playerComponent.getBeerGame();
+				Player player = playerComponent.getPlayer();
+				List<Facility> list = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(player.getFacility());
+				facilityListView.addAll(list);
 				comboBox.setItems(facilityListView);
     }
 

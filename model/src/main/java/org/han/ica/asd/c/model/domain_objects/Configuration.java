@@ -147,6 +147,10 @@ public class Configuration implements IDomainModel, Serializable {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
     }
 
+    public List<Facility> getFacilitiesLinkedToFacilitiesByFacilityId(int facilityId) {
+        return facilitiesLinkedTo.get(facilitiesLinkedTo.keySet().stream().filter(facility -> facility.getFacilityId() == facilityId).findFirst().get());
+    }
+
     public List<Facility> getFacilitiesLinkedToFacilities(Facility facility) {
         return facilitiesLinkedTo.get(facility);
     }
