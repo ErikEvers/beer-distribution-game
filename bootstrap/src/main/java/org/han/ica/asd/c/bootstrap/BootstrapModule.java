@@ -25,6 +25,7 @@ import org.han.ica.asd.c.gui_program_agent.ProgramAgent;
 import org.han.ica.asd.c.gui_program_agent.ProgramAgentList;
 import org.han.ica.asd.c.gui_replay_game.ReplayGame;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
+import org.han.ica.asd.c.gui_replay_game.ReplayGameRound;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
@@ -51,6 +52,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 
 		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameRound")).to(ReplayGameRound.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGameList.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);

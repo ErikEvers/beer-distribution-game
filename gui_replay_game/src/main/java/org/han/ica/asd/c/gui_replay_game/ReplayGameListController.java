@@ -23,8 +23,8 @@ public class ReplayGameListController {
     ListView list;
 
     @Inject
-    @Named("ReplayGame")
-    IGUIHandler replayGame;
+    @Named("ReplayGameRound")
+    IGUIHandler replayGameRound;
 
     @Inject
     @Named("MainMenu")
@@ -45,8 +45,8 @@ public class ReplayGameListController {
 
     @FXML
     private void replayButtonAction() {
-        replayGame.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
-        replayGame.setupScreen();
+        replayGameRound.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
+        replayGameRound.setupScreen();
     }
 
     @FXML

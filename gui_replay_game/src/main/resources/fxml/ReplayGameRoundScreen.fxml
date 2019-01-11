@@ -15,9 +15,9 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.han.ica.asd.c.gui_replay_game.ReplayGameRoundScreenController">
+            prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/"
+            xmlns:fx="http://javafx.com/fxml/"
+            fx:controller="org.han.ica.asd.c.gui_replay_game.ReplayGameRoundController">
     <GridPane layoutX="-11.0" layoutY="127.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
               minWidth="-Infinity" prefHeight="672.0" prefWidth="991.0" AnchorPane.bottomAnchor="1.0"
               AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="127.0">

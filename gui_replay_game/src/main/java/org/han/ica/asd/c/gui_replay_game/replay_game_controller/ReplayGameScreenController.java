@@ -5,27 +5,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import javax.inject.Inject;
-import java.net.URL;
+import javax.inject.Named;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 public class ReplayGameScreenController {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private LineChart<Double, Double> replayGraph;
@@ -49,22 +42,17 @@ public class ReplayGameScreenController {
     private ComboBox<GameValue> attributeComboBox;
 
     @FXML
-    private Button prevRoundButton;
-
-    @FXML
-    private Button nextRoundButton;
-
-    @FXML
     private TextField currentRoundTextfield;
 
     @FXML
     private TextField totalRoundsTextfield;
 
-    @FXML
-    private Button backButton;
-
     @Inject
     private IVisualisedPlayedGameData replayComponent;
+
+    @Inject
+    @Named("ReplayGameRound")
+    IGUIHandler replayGameRound;
 
     @FXML
     public void currentRoundEntered(ActionEvent event) {
@@ -243,8 +231,9 @@ public class ReplayGameScreenController {
         replayGraph.setData(replayComponent.getChartData());
     }
 
-    public void setGameId(String gameId){
-        //TODO GET GAME VALUES.
+    @FXML
+    void backButtonClicked(ActionEvent event) {
+        replayGameRound.setupScreen();
     }
 }
 
