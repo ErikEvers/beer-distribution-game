@@ -52,6 +52,7 @@ public class MainMenuController {
     private IConnectorForSetup connector;
 
     public void initialize() {
+
     }
 
     @FXML

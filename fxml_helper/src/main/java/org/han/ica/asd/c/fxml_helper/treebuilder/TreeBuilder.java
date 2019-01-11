@@ -75,7 +75,7 @@ public class TreeBuilder {
 	 */
 	private void drawLine(Facility parent, Facility child) {
 		EdgeLine line = new EdgeLine();
-		Optional<FacilityRectangle> exisitingDeliver = drawnFacilities.stream().filter(facility -> facility.getFacility() == parent).findFirst();
+		Optional<FacilityRectangle> exisitingDeliver = drawnFacilities.stream().filter(facility -> facility.getFacility().getFacilityId() == parent.getFacilityId()).findFirst();
 		FacilityRectangle rectangleDeliver;
 		if (exisitingDeliver.isPresent()) {
 			rectangleDeliver = exisitingDeliver.get();
@@ -91,7 +91,7 @@ public class TreeBuilder {
 			drawnFacilities.add(rectangleDeliver);
 		}
 
-		Optional<FacilityRectangle> exisitingOrder = drawnFacilities.stream().filter(facility -> facility.getFacility() == child).findFirst();
+		Optional<FacilityRectangle> exisitingOrder = drawnFacilities.stream().filter(facility -> facility.getFacility().getFacilityId() == child.getFacilityId()).findFirst();
 		FacilityRectangle rectangleOrder;
 		if (exisitingOrder.isPresent()) {
 			rectangleOrder = exisitingOrder.get();

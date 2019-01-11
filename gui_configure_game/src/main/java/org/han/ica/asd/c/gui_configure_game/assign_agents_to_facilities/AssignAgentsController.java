@@ -59,7 +59,6 @@ public class AssignAgentsController {
         for (FacilityRectangle rectangle : treeBuilder.getDrawnFacilities()) {
             addEventHandlerToFacilityRectangle(rectangle);
         }
-        beerGame.toString();
     }
 
     public void setBeerGame(BeerGame beerGame) {
