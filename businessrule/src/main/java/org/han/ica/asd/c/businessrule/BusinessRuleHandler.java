@@ -59,7 +59,7 @@ public class BusinessRuleHandler implements IBusinessRules {
             return new ActionModel(
                     action.getType(),
                     action.getAmount(),
-                    action.getFacilityId());
+                    action.getFacilityId(facilityId));
         }
         return null;
     }
