@@ -35,6 +35,10 @@ public class Round implements IDomainModel, Serializable {
         return facilityTurns;
     }
 
+    public FacilityTurn getFacilityTurnByFacilityId(int facilityId) {
+        return facilityTurns.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityId).findFirst().get();
+    }
+
     public void setFacilityTurns(List<FacilityTurn> facilityTurns) {
         this.facilityTurns = facilityTurns;
     }

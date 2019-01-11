@@ -7,8 +7,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,9 +204,21 @@ public class TreeBuilder {
 	 * @author Yarno Boelens
 	 */
 	private void installTooltip(Facility facility, FacilityRectangle rectangle) {
-		String tooltipString = facility.getFacilityType().getFacilityName() + " - " + facility.getFacilityId() +
-				" overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
-		Tooltip tooltip = new Tooltip(tooltipString);
+		Round round = beerGame.getRounds().get(beerGame.getRounds().size()-1);
+		FacilityTurn facilityTurn = round.getFacilityTurnByFacilityId(facility.getFacilityId());
+		StringBuilder builder = new StringBuilder();
+		builder.append(facility.getFacilityType().getFacilityName());
+		builder.append(" - ");
+		builder.append(facility.getFacilityId());
+		builder.append(" overview turn ");
+		builder.append(round.getRoundId());
+		builder.append("\nInventory: ");
+		builder.append(facilityTurn.getStock());
+		builder.append("\nBacklog: ");
+		builder.append(facilityTurn.getBackorders());
+		builder.append("\nCurrent budget: ");
+		builder.append(facilityTurn.getRemainingBudget());
+		Tooltip tooltip = new Tooltip(builder.toString());
 		Tooltip.install(rectangle, tooltip);
 	}
 
