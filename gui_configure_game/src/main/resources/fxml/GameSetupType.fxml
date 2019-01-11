@@ -47,7 +47,7 @@
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="22.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="93.0" layoutY="230.0" text="Wholesale" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label fx:id="stockHoldingRegionalwarehouse" layoutX="92.0" layoutY="364.0" text="RegionalWharehouse" />
+                            <Label layoutX="92.0" layoutY="364.0" text="RegionalWharehouse" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="22.0" layoutY="483.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="92.0" layoutY="492.0" text="Retailer" />
                         <Label layoutX="316.0" layoutY="26.0" text="%main_text_setuptype">

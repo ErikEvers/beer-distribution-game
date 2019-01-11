@@ -78,21 +78,24 @@ public class GraphConverterToDomain {
     /**
      * converts the GUI graph to  a Graph with the datastrucutre of the domain
      *
-     * @return Map<Facility                                                                                                                               ,                                                               List                                                               <                                                               Facility>
+     * @return Map<Facility                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                               List                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                               Facility>
      */
     public Map<Facility, List<Facility>> convertToDomeinGraph() {
 
         Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
 
         for (GraphFacility graphFacility : graph.getFacilities()) {
-            List<Facility> childs = new ArrayList<>();
-            Facility parent = facilityToDomain(graphFacility);
-            if (!isEmpty(graphFacility.getSuppliers())) {
-                for (Object currentChild : graphFacility.getSuppliers()) {
-                    childs.add(facilityToDomain((GraphFacility) currentChild));
+            if (!graphFacility.toString().equals("Factory")) {
+                List<Facility> childs = new ArrayList<>();
+                Facility parent = facilityToDomain(graphFacility);
+                if (!isEmpty(graphFacility.getSuppliers())) {
+                    for (Object currentChild : graphFacility.getSuppliers()) {
+                        childs.add(facilityToDomain((GraphFacility) currentChild));
+                    }
                 }
+
+                facilitiesLinkedTo.put(parent, childs);
             }
-            facilitiesLinkedTo.put(parent, childs);
         }
         return facilitiesLinkedTo;
     }
