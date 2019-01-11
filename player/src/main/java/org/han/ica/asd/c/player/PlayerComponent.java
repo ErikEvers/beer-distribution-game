@@ -133,6 +133,9 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     public void chooseFacility(Facility facility) {
         try {
             communication.chooseFacility(facility, player.getPlayerId());
+            player.setFacility(facility);
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for tha game to start", ButtonType.CLOSE);
+						alert.showAndWait();
         } catch (FacilityNotAvailableException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
 					alert.showAndWait();
