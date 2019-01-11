@@ -44,10 +44,10 @@
                                 </Label>
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="22.0" layoutY="81.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="93.0" layoutY="90.0" text="Factory" />
-                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="22.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label layoutX="93.0" layoutY="230.0" text="Wholesale" />
-                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label layoutX="92.0" layoutY="364.0" text="RegionalWharehouse" />
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Label layoutX="93.0" layoutY="364.0" text="Wholesale" />
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="22.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
+                            <Label layoutX="103.0" layoutY="230.0" text="RegionalWharehouse" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="22.0" layoutY="483.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
                             <Label layoutX="92.0" layoutY="492.0" text="Retailer" />
                         <Label layoutX="316.0" layoutY="26.0" text="%main_text_setuptype">
@@ -65,21 +65,21 @@
                         <TextField fx:id="inGoodsFactory" layoutX="424.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="1" />
                         <TextField fx:id="startingBudgetFactory" layoutX="627.0" layoutY="122.0" prefHeight="25.0" prefWidth="55.0" text="20" />
                         <TextField fx:id="outGoodsFactory" layoutX="627.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="4" />
-                        <TextField fx:id="outGoodsWholesale" layoutX="627.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="10" />
-                        <TextField fx:id="startingBudgetWholesale" layoutX="627.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="45" />
-                        <TextField fx:id="inGoodsWholesale" layoutX="424.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="7" />
-                        <TextField fx:id="stockHoldingWholesale" layoutX="424.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="2" />
-                        <TextField fx:id="startingOrderWholesale" layoutX="424.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <TextField fx:id="outGoodsWholesale" layoutX="627.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="10" />
+                        <TextField fx:id="startingBudgetWholesale" layoutX="627.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="45" />
+                        <TextField fx:id="inGoodsWholesale" layoutX="424.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="7" />
+                        <TextField fx:id="stockHoldingWholesale" layoutX="424.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderWholesale" layoutX="424.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="1" />
                         <Label layoutX="308.0" layoutY="305.0" text="%starting_order" />
                         <Label layoutX="515.0" layoutY="265.0" text="%starting_budget" />
                         <Label layoutX="308.0" layoutY="265.0" text="%stock_holding" />
                         <Label layoutX="513.0" layoutY="229.0" text="%out_goods" />
                         <Label layoutX="309.0" layoutY="229.0" text="%in_goods" />
-                        <TextField fx:id="outGoodsRegionalWharehouse" layoutX="627.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="7" />
-                        <TextField fx:id="startingBudgetRegionalWharehouse" layoutX="627.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="30" />
-                        <TextField fx:id="inGoodsRegionalWharehouse" layoutX="424.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="4" />
-                        <TextField fx:id="stockHoldingRegionalWharehouse" layoutX="424.0" layoutY="396.0" prefHeight="25.0" prefWidth="55.0" text="2" />
-                        <TextField fx:id="startingOrderRegionalWharehouse" layoutX="424.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="1" />
+                        <TextField fx:id="outGoodsRegionalWharehouse" layoutX="627.0" layoutY="226.0" prefHeight="25.0" prefWidth="55.0" text="7" />
+                        <TextField fx:id="startingBudgetRegionalWharehouse" layoutX="628.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="30" />
+                        <TextField fx:id="inGoodsRegionalWharehouse" layoutX="425.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="4" />
+                        <TextField fx:id="stockHoldingRegionalWharehouse" layoutX="425.0" layoutY="261.0" prefHeight="25.0" prefWidth="55.0" text="2" />
+                        <TextField fx:id="startingOrderRegionalWharehouse" layoutX="425.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="1" />
                         <Label layoutX="308.0" layoutY="440.0" text="%starting_order" />
                         <Label layoutX="515.0" layoutY="400.0" text="%starting_budget" />
                         <Label layoutX="308.0" layoutY="400.0" text="%stock_holding" />
@@ -104,11 +104,11 @@
                         <TextField fx:id="openOrderCostFactory" layoutX="803.0" layoutY="86.0" prefHeight="25.0" prefWidth="55.0" text="3" />
                         <Label layoutX="516.0" layoutY="166.0" text="%starting_stock" />
                         <Label layoutX="692.0" layoutY="90.0" text="%open_order" />
-                        <TextField fx:id="startingStockWholesale" layoutX="628.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="12" />
-                        <TextField fx:id="startingStockRegionalWharehouse" layoutX="627.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="startingStockWholesale" layoutX="627.0" layoutY="436.0" prefHeight="25.0" prefWidth="55.0" text="12" />
+                        <TextField fx:id="startingStockRegionalWharehouse" layoutX="627.0" layoutY="301.0" prefHeight="25.0" prefWidth="55.0" text="12" />
                         <TextField fx:id="startingStockRetailer" layoutX="627.0" layoutY="564.0" prefHeight="25.0" prefWidth="55.0" text="12" />
-                        <TextField fx:id="openOrderCostWholesale" layoutX="803.0" layoutY="225.0" prefHeight="25.0" prefWidth="55.0" text="3" />
-                        <TextField fx:id="openOrderCostRegionalWarehouse" layoutX="803.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <TextField fx:id="openOrderCostWholesale" layoutX="803.0" layoutY="360.0" prefHeight="25.0" prefWidth="55.0" text="3" />
+                        <TextField fx:id="openOrderCostRegionalWarehouse" layoutX="803.0" layoutY="226.0" prefHeight="25.0" prefWidth="55.0" text="3" />
                         <TextField fx:id="openOrderCostRetailer" layoutX="803.0" layoutY="489.0" prefHeight="25.0" prefWidth="55.0" text="3" />
                         <Label layoutX="692.0" layoutY="230.0" text="%open_order" />
                         <Label layoutX="692.0" layoutY="364.0" text="%open_order" />
