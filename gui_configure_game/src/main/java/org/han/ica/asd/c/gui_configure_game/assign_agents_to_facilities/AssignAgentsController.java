@@ -67,7 +67,7 @@ public class AssignAgentsController {
 
     @FXML
     public void handleAddAgentsButtonClick() {
-        if (agentComboBox.getValue() != null) {
+        if (agentComboBox.getValue() != null && lastClickedFacilityRectangle != null) {
             for (int i = 0; i < beerGame.getAgents().size(); i++) {
                 if (agentComboBox.getValue().getProgrammedAgentName().equals(beerGame.getAgents().get(i).getGameAgentName()) && (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, resourceBundle.getString("agent_assigned_warning"));
