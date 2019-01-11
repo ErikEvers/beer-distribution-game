@@ -94,7 +94,7 @@ public class MessageTypeTest {
 
         gameMessage = new ChooseFacilityMessage(facilityMock);
 
-        assertEquals(gameMessage.getMessageType(), MessageIds.FACILITY_MESSAGE);
+        assertEquals(gameMessage.getMessageType(), MessageIds.CHOOSE_FACILITY_MESSAGE);
         assertEquals(facilityMock, ((ChooseFacilityMessage) gameMessage).getFacility());
 
         Exception exceptionMock = mock(TransactionException.class);
@@ -111,11 +111,9 @@ public class MessageTypeTest {
     void TestChooseFacilityMessageWithSecondConstructor() {
         Facility facilityMock = mock(Facility.class);
 
-        List<Facility> listMock = new ArrayList<>();
 
-        gameMessage = new ChooseFacilityMessage(facilityMock, listMock);
+        gameMessage = new ChooseFacilityMessage(facilityMock);
 
-        assertEquals(listMock, ((ChooseFacilityMessage) gameMessage).getAvailableFacilities());
         assertEquals(facilityMock, ((ChooseFacilityMessage) gameMessage).getFacility());
     }
 

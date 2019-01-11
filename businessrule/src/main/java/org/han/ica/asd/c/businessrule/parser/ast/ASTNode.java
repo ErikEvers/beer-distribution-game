@@ -41,16 +41,15 @@ public abstract class ASTNode {
      * @param stringBuilder Stringbuilder that is used to encode the tree
      * @param children      Children that it needs to encode into the string as well
      * @param prefix        Prefix to encode before the children.
-     * @param suffix        Suffix to encode after the children.
      */
-    public void encode(StringBuilder stringBuilder, List<ASTNode> children, String prefix, String suffix) {
+    public void encode(StringBuilder stringBuilder, List<ASTNode> children, String prefix) {
         stringBuilder.append(prefix);
         for (ASTNode child : children) {
             if (child != null) {
                 child.encode(stringBuilder);
             }
         }
-        stringBuilder.append(suffix);
+        stringBuilder.append(SUFFIX);
     }
 
     /**
@@ -90,5 +89,14 @@ public abstract class ASTNode {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+
+    public ASTNode getLeftChild(){
+        return null;
+    }
+
+    public ASTNode getRightChild(){
+        return null;
     }
 }

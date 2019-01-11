@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.faultdetection;
 
-
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
@@ -14,6 +13,8 @@ import java.util.List;
  * This class will call methods on external interfaces when needed. Example: a node is disconnected from the game, this
  * class will then call the 'AgentComponent' to make sure an agent is started instead of the disconnected node.
  * It also keeps track of the amount of nodes that are able to reach nodes that this machine can't reach.
+ *
+ * @author Oscar, Tarik
  */
 public class FaultHandlerLeader {
     @Inject
@@ -34,7 +35,7 @@ public class FaultHandlerLeader {
      *
      * @param ip The ip of the node that can/can't be reached.
      * @return The ip when its incremented, else it returns null
-     * @author Oscar, Tarik
+     * @author Oscar
      */
     public String incrementFailure(String ip) {
         increment(ip);

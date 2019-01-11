@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.faultdetection;
 
-
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
@@ -13,10 +12,9 @@ import javax.inject.Inject;
  * This class is used to determine which 'FaultDetectionMessage' is received and then which method is supposed to be
  * called with said message. This class is used by the 'SocketServer' and then
  *
- * @author Oscar Tarik
+ * @author Oscar, Tarik
  */
 public class FaultDetectionMessageReceiver {
-
     @Inject
     private FaultDetector faultDetector;
 
@@ -29,8 +27,9 @@ public class FaultDetectionMessageReceiver {
      * to determine which message is received.
      * This method is called by the SocketServer. And calls methods at the 'FaultDetector'.
      *
-     * @param faultDetectionMessage   is the message object that is received.
-     * @param senderIp This is the ipAddress of the node that sent the message.
+     * @param faultDetectionMessage is the message object that is received.
+     * @param senderIp              This is the ipAddress of the node that sent the message.
+     * @return the message if it waits for a response.
      * @author Oscar Tarik
      * @see org.han.ica.asd.c.socketrpc.SocketServer
      * @see FaultDetector
