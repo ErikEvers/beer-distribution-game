@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -104,6 +107,15 @@ public class RoomFinderTest {
     public void shouldThrowErrorIfCreatingRoomThatExists() throws IOException, DiscoveryException {
         String hostIP = "192.168.1.100";
 
+        when(service.checkIfFolderNotExists(roomName)).thenThrow(IOException.class);
+
+        roomFinder.createGameRoomModel(roomName, hostIP, password);
+    }
+
+    @Test(expected = DiscoveryException.class)
+    public void shouldThrowErrorIfCreatingRoomWithGoodConnection() throws IOException, DiscoveryException {
+        String hostIP = "192.168.1.100";
+
         when(service.checkIfFolderNotExists(roomName)).thenReturn(false);
 
         roomFinder.createGameRoomModel(roomName, hostIP, password);
@@ -113,8 +125,7 @@ public class RoomFinderTest {
     public void shouldThrowErrorIfCreatingRoomWithNoConnection() throws IOException, DiscoveryException {
         String hostIP = "192.168.1.100";
 
-        when(service.checkIfFolderNotExists(roomName)).thenReturn(true);
-        when(service.createFolder(roomName)).thenThrow(IOException.class);
+        when(service.checkIfFolderNotExists(roomName)).thenThrow(IOException.class);
 
         roomFinder.createGameRoomModel(roomName, hostIP, password);
     }
@@ -135,7 +146,19 @@ public class RoomFinderTest {
         when(service.getPasswordFromFolder(roomID)).thenReturn(password);
 
         roomFinder.createGameRoomModel(roomName, leaderIP, password);
+        roomFinder.startGameRoom(roomName);
+    }
 
+    @Test (expected = DiscoveryException.class)
+    public void shouldThrowErrorWhenStartGame() throws IOException, DiscoveryException {
+        when(service.checkIfFolderNotExists(roomName)).thenReturn(true);
+        when(service.getFolderID(roomName)).thenReturn(roomID);
+        when(service.getLeaderFromFolder(roomID)).thenReturn(leaderIP);
+        when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
+        when(service.getPasswordFromFolder(roomID)).thenReturn(password);
+        doThrow(IOException.class).when(service).deleteFolderByID(roomID);
+
+        roomFinder.createGameRoomModel(roomName, leaderIP, password);
         roomFinder.startGameRoom(roomName);
     }
 
@@ -152,5 +175,37 @@ public class RoomFinderTest {
         RoomModel updatedRoomModel = roomFinder.getRoom(roomModel);
         assertEquals(updatedRoomModel.getLeaderIP(), leaderIP);
         assertEquals(updatedRoomModel.getPassword(), password);
+    }
+
+    @Test (expected = DiscoveryException.class)
+    public void shouldthrowErrorWhenRemovingHost() throws IOException, DiscoveryException {
+        RoomModel roomModel = new RoomModel();
+        roomModel.setRoomName(roomName);
+
+        when(service.checkIfFolderNotExists(roomName)).thenReturn(true);
+        when(service.getFolderID(roomName)).thenReturn(roomID);
+        when(service.getLeaderFromFolder(roomID)).thenReturn(leaderIP);
+        when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
+        when(service.getPasswordFromFolder(roomID)).thenReturn(password);
+
+        doThrow(IOException.class).when(service).deleteFileByNameInFolder(anyString(), anyString());
+
+        roomFinder.removeHostFromRoom(roomModel, "192.168.2.1");
+    }
+
+    @Test
+    public void shouldRunRemoveHostWhenCalled() throws DiscoveryException {
+        RoomModel roomModel = new RoomModel();
+        roomModel.setRoomName(roomName);
+
+        roomFinder.removeHostFromRoom(roomModel, "192.168.2.1");
+    }
+
+    @Test (expected = DiscoveryException.class)
+    public void shouldThrowErrorWhenCreatingRoomWithNoConnection() throws IOException, DiscoveryException {
+        RoomModel roomModel = new RoomModel();
+        roomModel.setRoomName(roomName);
+        when(service.getFolderID(roomName)).thenThrow(IOException.class);
+        roomFinder.getRoom(roomModel);
     }
 }

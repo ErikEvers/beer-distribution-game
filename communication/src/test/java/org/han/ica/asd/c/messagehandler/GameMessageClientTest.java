@@ -6,10 +6,13 @@ import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +28,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -89,6 +93,50 @@ public class GameMessageClientTest {
         ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility);
 
         assertNull(response.getException());
+    }
+
+    @Test
+    public void shouldThrowErrorWhenChooseFacillity() throws IOException, ClassNotFoundException, FacilityNotAvailableException {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+        chooseFacilityMessage.setException(new FacilityNotAvailableException());
+
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
+
+        assertThrows(FacilityNotAvailableException.class,()-> gameMessageClient.sendChooseFacilityMessage(correctIp, facility));
+    }
+
+    @Test
+    public void shouldReturnSameChooseFacilityMessage() throws IOException, ClassNotFoundException, FacilityNotAvailableException {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+
+        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(ChooseFacilityMessage.class))).thenThrow(IOException.class);
+        assertEquals(chooseFacilityMessage.getClass(), gameMessageClient.sendChooseFacilityMessage(correctIp, facility).getClass());
+    }
+
+    @Test
+    public void shouldReturnGamePlayerIDWithoutError() throws Exception {
+        RequestGameDataMessage response = new RequestGameDataMessage();
+        response.setGameData(new GamePlayerId(new BeerGame(), "1"));
+
+        when(socketClient.sendObjectWithResponseGeneric(anyString(), any(RequestGameDataMessage.class))).thenReturn(response);
+        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp);
+
+        assertNotNull(responseRequest);
+    }
+
+    @Test
+    public void shouldReturnGamePlayerIDWithError() throws Exception {
+        RequestGameDataMessage response = new RequestGameDataMessage();
+        response.setException(new Exception());
+
+        when(socketClient.sendObjectWithResponseGeneric(anyString(), any(RequestGameDataMessage.class))).thenReturn(response);
+        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp);
+
+        assertNotNull(response.getException());
     }
 
 // Still unsure on how to test this cause of threading

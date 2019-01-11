@@ -18,6 +18,9 @@ import static org.mockito.Mockito.*;
 public class RoomTest {
     @Mock
     IResourceManager service;
+    String roomName = "Beergame 1";
+    String password = "P@SSw0rd";
+    String roomID = "12345";
 
     @Test(expected = RoomException.class)
     public void shouldThrowErrorWhenRoomIDCouldntBeRetrieved() throws IOException, RoomException {
@@ -27,10 +30,8 @@ public class RoomTest {
     }
     @Test(expected = RoomException.class)
     public void shouldThrowErrorWhenIPisNotValid() throws RoomException, IOException {
-        String roomName = "Beergame 1";
         String wrongIP = "265.22.33.55";
-        String password = "P@SSw0rd";
-        String roomID = "12345";
+
         when(service.getFolderID(any(String.class))).thenReturn(roomID);
         when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
         when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
@@ -43,11 +44,9 @@ public class RoomTest {
 
     @Test(expected = RoomException.class)
     public void shouldThrowErrorWhenPasswordIsNotCorrect() throws RoomException, IOException {
-        String roomName = "Beergame 1";
-        String wrongIP = "265.22.33.55";
-        String password = "P@SSw0rd";
         String wrongPassword = "Error";
-        String roomID = "12345";
+        String wrongIP = "265.22.33.55";
+
         when(service.getFolderID(any(String.class))).thenReturn(roomID);
         when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
         when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
@@ -60,10 +59,8 @@ public class RoomTest {
 
     @Test(expected = RoomException.class)
     public void shouldThrowErrorWhenAddingHostWithNoConnection() throws RoomException, IOException {
-        String roomName = "Beergame 1";
         String ip = "192.22.33.55";
-        String password = "P@SSw0rd";
-        String roomID = "12345";
+
         when(service.getFolderID(any(String.class))).thenReturn(roomID);
         when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
         when(service.getAllhostsFromFolder(roomID)).thenReturn(new ArrayList<String>());
@@ -80,7 +77,7 @@ public class RoomTest {
     @Test(expected = RoomException.class)
     public void shouldThrowErrorWhenCreatingRoomThatExists() throws IOException, RoomException {
         when(service.getFolderID(any(String.class))).thenThrow(new IOException());
-        String roomName = "Beergame 1";
+
         new Room(roomName, service);
     }
 
@@ -144,10 +141,7 @@ public class RoomTest {
 
     @Test (expected = RoomException.class)
     public void shouldThrowErrorWhenRemovingHostWithNoConnection() throws IOException, RoomException {
-        String roomName = "Beergame";
         String newIP = "192.168.100.1";
-        String password = "";
-        String roomID = "12345";
 
         when(service.getFolderID(any(String.class))).thenReturn(roomID);
         when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
@@ -162,9 +156,6 @@ public class RoomTest {
 
     @Test
     public void shouldReturnTrueWhenRoomOpen() throws RoomException, IOException {
-        String roomID = "12345";
-        String roomName = "Beergame";
-        String password = "P@SSw0rd";
         String leader = "192.168.1.1";
 
         when(service.createFolder(roomName)).thenReturn(roomID);
@@ -177,9 +168,6 @@ public class RoomTest {
 
     @Test
     public void shouldReturnFalseWhenRoomClosed() throws RoomException, IOException {
-        String roomID = "12345";
-        String roomName = "Beergame";
-        String password = "P@SSw0rd";
         String leader = "192.168.1.1";
 
         when(service.createFolder(roomName)).thenReturn(roomID);
@@ -191,9 +179,6 @@ public class RoomTest {
     }
     @Test
     public void shouldThrowErrorWithNoConnection() throws RoomException, IOException {
-        String roomID = "12345";
-        String roomName = "Beergame";
-        String password = "P@SSw0rd";
         String leader = "192.168.1.1";
 
         when(service.createFolder(roomName)).thenReturn(roomID);
@@ -206,10 +191,8 @@ public class RoomTest {
 
     @Test
     public void shouldJoinRoomWithGivenValuesWithoutError() throws RoomException, IOException {
-        String roomName = "Beergame";
         String newIP = "192.168.100.1";
         String password = "";
-        String roomID = "12345";
 
         when(service.getFolderID(any(String.class))).thenReturn(roomID);
         when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
@@ -224,10 +207,7 @@ public class RoomTest {
 
     @Test(expected = RoomException.class)
     public void shouldThrowErrorWhenJoiningRoomWithInvalidIP() throws IOException, RoomException {
-        String roomName = "Beergame";
-        String newInvladidIP = "400.23.12.3";
-        String password = "P@SSw0rd";
-        String roomID = "12345";
+        String newInvalidIP = "400.23.12.3";
 
         when(service.getFolderID(any(String.class))).thenReturn(roomID);
         when(service.getLeaderFromFolder(roomID)).thenReturn("192.168.1.1");
@@ -235,16 +215,14 @@ public class RoomTest {
         when(service.getPasswordFromFolder(roomID)).thenReturn(password);
 
         Room room = new Room(roomName, service);
-        room.addHost(newInvladidIP, password);
+        room.addHost(newInvalidIP, password);
     }
 
     @Test
     public void shouldReturnUpdatedHostsWhenUpdating() throws RoomException, IOException {
-        String roomName = "Beergame";
         String leader = "192.168.1.1";
         String host = "192.168.2.1";
-        String password = "P@SSw0rd";
-        String roomID = "12345";
+
         ArrayList<String> updatedHosts = new ArrayList<>();
         updatedHosts.add(host);
 
@@ -260,11 +238,9 @@ public class RoomTest {
     }
     @Test(expected = RoomException.class)
     public void shouldThrowErrorWhenupdatingHostWithNoConnection() throws IOException, RoomException {
-        String roomName = "Beergame";
         String leader = "192.168.1.1";
         String host = "192.168.2.1";
-        String password = "P@SSw0rd";
-        String roomID = "12345";
+
         ArrayList<String> updatedHosts = new ArrayList<>();
         updatedHosts.add(host);
 
@@ -281,9 +257,6 @@ public class RoomTest {
 
     @Test
     public void closeGameAndStartGameShouldReturnTrue() throws RoomException {
-        String roomID = "12345";
-        String roomName = "Beergame";
-        String password = "P@SSw0rd";
         String leader = "192.168.1.1";
 
         Room room = new Room(roomName, leader, password, service);
@@ -294,9 +267,6 @@ public class RoomTest {
 
     @Test(expected = RoomException.class)
     public void closeGameAndStartGameWithNoConnectionShouldThrowError() throws IOException, RoomException {
-        String roomID = "12345";
-        String roomName = "Beergame";
-        String password = "P@SSw0rd";
         String leader = "192.168.1.1";
 
         when(service.getFolderID(any(String.class))).thenReturn(roomID);

@@ -3,7 +3,6 @@ package org.han.ica.asd.c.gamelogic;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
@@ -39,6 +38,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     private int round;
     private BeerGame beerGame;
+    private IParticipant player;
 
     public GameLogic(){
         this.round = 0;
@@ -119,8 +119,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void removeAgentByPlayerId(String playerId) {
-        Player player = persistence.getPlayerById(playerId);
-        participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
+        //TODO: please remove this. Quick fix for now.
+        participantsPool.replaceAgentWithPlayer(player);
     }
 
     @Override
@@ -136,6 +136,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     public int getRound() {
         return round;
+    }
+
+    @Override
+    public void setPlayerParticipant(IParticipant participant) {
+        this.player = participant;
     }
 
     /**

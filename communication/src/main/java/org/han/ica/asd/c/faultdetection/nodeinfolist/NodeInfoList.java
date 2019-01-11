@@ -1,13 +1,12 @@
 package org.han.ica.asd.c.faultdetection.nodeinfolist;
 
-
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
 
 import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTED;
 import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTEDWITHOUTLEADER;
@@ -20,11 +19,10 @@ import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.UNFILTERED
  * @author Oscar, Tarik
  * @see Player
  */
-
 public class NodeInfoList extends ArrayList<Player> {
-
     private List<Player> playerList;
     private Leader leader;
+    private String myIp;
 
     public NodeInfoList() {
         //inject
@@ -35,6 +33,16 @@ public class NodeInfoList extends ArrayList<Player> {
         this.playerList = playerList;
     }
 
+    /**
+     * Initializes the nodeInfoList with the references to the Player list
+     * and the leader from the persistence component
+     *
+     * @param playerList The list with the 'Player' objects from the persistence layer.
+     * @param leader     The Leader object from the persistence layer.
+     * @author Oscar, Tarik
+     * @see NodeInfoList
+     * @see IGameStore
+     */
     public void init(List<Player> playerList, Leader leader) {
         this.playerList = playerList;
         this.leader = leader;
@@ -82,8 +90,10 @@ public class NodeInfoList extends ArrayList<Player> {
     /**
      * Returns a list with ips after filtering with predefined conditions.
      *
+     * @param condition The enum with the requested condition
      * @return A (filtered) List.
      * @author Tarik
+     * @see Condition
      * @see NodeInfoList
      */
     public List<String> getIpsFromPlayerList(Condition condition) {
@@ -108,12 +118,28 @@ public class NodeInfoList extends ArrayList<Player> {
     }
 
     /**
+     * Returns the player array without the leader.
+     *
+     * @return A (filtered) Player Array.
+     * @author Tarik
+     * @see NodeInfoList
+     */
+    public Player[] getPlayersWithoutLeader() {
+        Player leaderPlayer = this.leader.getPlayer();
+
+        List<Player> playerListCopy = new ArrayList<>(playerList);
+        playerListCopy.removeIf(p -> p == leaderPlayer);
+
+        return playerListCopy.toArray(new Player[0]);
+    }
+
+    /**
      * Retreives the ip of the leader when there is one. If there isnt one it returns null.
      * Used by the 'MessageProcessor'
      *
      * @return String of the ip of the leader, or null when there isnt a leader active.
      * @author Oscar
-     * @see org.han.ica.asd.c.messagehandler.MessageProcessor
+     * @see MessageProcessor
      */
     public String getLeaderIp() {
         Player leaderPlayer = this.leader.getPlayer();
@@ -124,7 +150,7 @@ public class NodeInfoList extends ArrayList<Player> {
     }
 
     /**
-     * Updates the isConnected attribute of a specific node.
+     * Updates the isConnected attribute of a specific player using a recursive function.
      * This node is identified by the ip address parameter.
      *
      * @param ip          The ip of the node that has to be updated.
@@ -132,11 +158,24 @@ public class NodeInfoList extends ArrayList<Player> {
      * @author Oscar
      * @see Player
      */
-    public void updateIsConnected(String ip, Boolean isConnected) {
-        for (Player player : playerList) {
-            if (player.getIpAddress().equals(ip)) {
-                player.setConnected(isConnected);
-            }
+    public void updateIsConnected(String ip, boolean isConnected) {
+        updatePlayerIsConnectedRecursion(playerList.size() - 1, ip, isConnected);
+    }
+
+    /**
+     * Retrieves the specific Player from the list recursively, and updates the value of isConnected of a specific player.
+     *
+     * @param n           which index in the list to check.
+     * @param ip          the identifier used to identify which player needs to be updated.
+     * @param isConnected the value with which the isConnected value needs to be updated.
+     * @author Oscar
+     */
+    private void updatePlayerIsConnectedRecursion(int n, String ip, boolean isConnected) {
+        Player player = playerList.get(n);
+        if (player.getIpAddress().equals(ip)) {
+            player.setConnected(isConnected);
+        } else if (n > 0) {
+            updatePlayerIsConnectedRecursion(n - 1, ip, isConnected);
         }
     }
 
@@ -159,7 +198,7 @@ public class NodeInfoList extends ArrayList<Player> {
      */
     @Override
     public boolean add(Player p) {
-        playerList.add(playerList.size(), p);
+        playerList.add(p);
         return true;
     }
 
@@ -184,20 +223,13 @@ public class NodeInfoList extends ArrayList<Player> {
      */
     @Override
     public boolean equals(Object o) {
-        if (o == this)
+        if (o == this) {
             return true;
-        if (!(o instanceof List))
-            return false;
-
-        ListIterator<Player> e1 = listIterator();
-        ListIterator<?> e2 = ((List<?>) o).listIterator();
-        while (e1.hasNext() && e2.hasNext()) {
-            Player o1 = e1.next();
-            Object o2 = e2.next();
-            if (!(Objects.equals(o1, o2)))
-                return false;
         }
-        return !(e1.hasNext() || e2.hasNext());
+        if (!(o instanceof List)) {
+            return false;
+        }
+        return false;
     }
 
     /**
@@ -211,8 +243,40 @@ public class NodeInfoList extends ArrayList<Player> {
     public int hashCode() {
         return super.hashCode();
     }
-
+    
+    /**
+     * Gets leader.
+     *
+     * @return Value of leader.
+     */
     public Leader getLeader() {
         return leader;
+    }
+
+    /**
+     * Gets playerList.
+     *
+     * @return Value of playerList.
+     */
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    /**
+     * Gets myIp.
+     *
+     * @return Value of myIp.
+     */
+    public String getMyIp() {
+        return myIp;
+    }
+
+    /**
+     * Sets new myIp.
+     *
+     * @param myIp New value of myIp.
+     */
+    public void setMyIp(String myIp) {
+        this.myIp = myIp;
     }
 }

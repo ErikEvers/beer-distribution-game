@@ -12,6 +12,8 @@ import org.junit.rules.ExpectedException;
 
 import java.net.SocketTimeoutException;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -40,6 +42,16 @@ public class TestFaultResponder {
         faultResponder = spy(FaultResponder.class);
     }
 
+    @Test
+    void TestStartAndStopFaultResponder(){
+        faultResponder.start();
+        verify(faultResponder).start();
+        assertTrue(faultResponder.isActive());
+
+        faultResponder.stop();
+        verify(faultResponder).stop();
+        assertFalse(faultResponder.isActive());
+    }
 
     @Test
     void TestSendResponseToPingableIp() {
@@ -74,11 +86,11 @@ public class TestFaultResponder {
 
         Thread t = mock(Thread.class);
 
-        when(faultResponder.createThread(faultMessage, test)).thenReturn(t);
+        when(faultResponder.sendResponseInAThread(faultMessage, test)).thenReturn(t);
 
         faultResponder.faultMessageReceived(faultMessage, test);
 
-        verify(faultResponder , times(1)).createThread(faultMessage,test);
+        verify(faultResponder , times(1)).sendResponseInAThread(faultMessage,test);
         verify(t).start();
     }
 
