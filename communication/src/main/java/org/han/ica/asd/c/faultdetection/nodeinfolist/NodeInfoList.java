@@ -171,10 +171,10 @@ public class NodeInfoList extends ArrayList<Player> {
      * @author Oscar
      */
     private void updatePlayerIsConnectedRecursion(int n, String ip, boolean isConnected) {
-        if (playerList.get(n).getIpAddress().equals(ip)) {
-            Player playerToUpdate = playerList.get(n);
-            playerToUpdate.setConnected(isConnected);
-        } else if (n > 0 && !playerList.get(n).getIpAddress().equals(ip)) {
+        Player player = playerList.get(n);
+        if (player.getIpAddress().equals(ip)) {
+            player.setConnected(isConnected);
+        } else if (n > 0) {
             updatePlayerIsConnectedRecursion(n - 1, ip, isConnected);
         }
     }
