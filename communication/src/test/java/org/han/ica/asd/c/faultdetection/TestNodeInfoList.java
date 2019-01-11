@@ -95,6 +95,41 @@ public class TestNodeInfoList {
     }
 
     @Test
+    @DisplayName("Test if getActiveIpsWithoutLeader only returns the ips when is it permitted. ")
+    void TestGetAllActiveIpsThatAreNotLeaderUnHappyFlow() {
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(false);
+
+        nodeInfoList.add(player1);
+        nodeInfoList.getLeader().setPlayer(player1);
+
+        List<String> result = nodeInfoList.getActiveIpsWithoutLeader();
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    @DisplayName("Test if getActiveIpsWithoutLeader only returns the ips when is it permitted. ")
+    void TestGetAllActiveIpsThatAreNotLeaderUnHappyFlow2() {
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(true);
+
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        player2.setConnected(true);
+
+        nodeInfoList.add(player1);
+        nodeInfoList.getLeader().setPlayer(player2);
+
+        List<String> result = nodeInfoList.getActiveIpsWithoutLeader();
+
+        assertEquals(1, result.size());
+        assertEquals(player1, nodeInfoList.get(0));
+    }
+
+    @Test
     @DisplayName("Test if the updateIsConnected updates the right player")
     void TestUpdatePlayerIsConnectedRecursion(){
         Player player1 = new Player();

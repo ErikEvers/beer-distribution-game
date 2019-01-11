@@ -127,10 +127,10 @@ public class NodeInfoList extends ArrayList<Player> {
      * @see NodeInfoList
      */
     public Player[] getPlayersWithoutLeader() {
-        Player leader = this.leader.getPlayer();
+        Player leaderPlayer = this.leader.getPlayer();
 
         List<Player> playerListCopy = new ArrayList<>(playerList);
-        playerListCopy.removeIf(p -> p != leader);
+        playerListCopy.removeIf(p -> p != leaderPlayer);
 
         return playerListCopy.toArray(new Player[0]);
     }
