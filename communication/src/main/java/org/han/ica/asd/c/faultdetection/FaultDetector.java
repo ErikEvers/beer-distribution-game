@@ -10,6 +10,11 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import javax.inject.Inject;
 import java.util.List;
 
+/**
+ * This class is used initialize the FaultDetectors and delegates the received messaged to the correct class.
+ *
+ * @author Oscar, Tarik
+ */
 public class FaultDetector {
     @Inject private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
     @Inject private FaultDetectorPlayer faultDetectorPlayer;
@@ -27,7 +32,7 @@ public class FaultDetector {
      * This should be started by the leader.
      *
      * @param nodeInfoList List with connected nodes to perform fault detection.
-     * @author Tarik
+     * @author Tarik, Oscar
      */
     public void startFaultDetectorLeader(NodeInfoList nodeInfoList) {
         faultDetectorLeader = makeFaultDetectorLeader(nodeInfoList, observers);
@@ -39,7 +44,7 @@ public class FaultDetector {
      * This should NOT be started by the leader.
      *
      * @param nodeInfoList List with connected nodes to perform fault detection.
-     * @author Tarik
+     * @author Tarik, Oscar
      */
     public void startFaultDetectorPlayer(NodeInfoList nodeInfoList) {
         faultResponder = makeFaultResponder();
@@ -108,7 +113,7 @@ public class FaultDetector {
      * @param nodeInfoList List with connected nodes to perform fault detection.
      * @param observers    The list with the message observers.
      * @return 'FaultDetectorLeader' for testing purposes
-     * @author Tarik
+     * @author Tarik, Oscar
      */
     public FaultDetectorLeader makeFaultDetectorLeader(NodeInfoList nodeInfoList, List<IConnectorObserver> observers) {
         faultDetectorLeader.setObservers(observers);
@@ -122,7 +127,7 @@ public class FaultDetector {
      * @param nodeInfoList List with connected nodes to perform fault detection.
      * @param observers    The list with the message observers.
      * @return 'FaultDetectorPlayer' for testing purposes
-     * @author Tarik
+     * @author Tarik, Oscar
      */
     public FaultDetectorPlayer makeFaultDetectorPlayer(NodeInfoList nodeInfoList, List<IConnectorObserver> observers) {
         faultDetectorPlayer.setObservers(observers);
@@ -136,7 +141,7 @@ public class FaultDetector {
      * It was initially made to create a new instance.
      *
      * @return 'FaultResponder' for testing purposes
-     * @author Tarik
+     * @author Tarik, Oscar
      */
     public FaultResponder makeFaultResponder() {
         return faultResponder;

@@ -12,7 +12,7 @@ import javax.inject.Inject;
  * This class is used to determine which 'FaultDetectionMessage' is received and then which method is supposed to be
  * called with said message. This class is used by the 'SocketServer' and then
  *
- * @author Oscar Tarik
+ * @author Oscar, Tarik
  */
 public class FaultDetectionMessageReceiver {
     @Inject private FaultDetector faultDetector;

@@ -15,7 +15,12 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
+/**
+ * This class is used by a player that's not a leader. It detect a failing connection and figuring out the failing node.
+ * And calls the correct interfaces.
+ *
+ * @author Oscar, Tarik
+ */
 public class FaultDetectorPlayer extends TimerTask {
     @Inject private FaultDetectionClient faultDetectionClient;
     @Inject private FaultHandlerPlayer faultHandlerPlayer;
