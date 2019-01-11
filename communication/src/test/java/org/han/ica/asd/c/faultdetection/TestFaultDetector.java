@@ -68,7 +68,7 @@ public class TestFaultDetector {
 
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         assertNotNull(faultDetector.getFaultResponder());
@@ -83,7 +83,7 @@ public class TestFaultDetector {
 
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.faultMessageReceived(any(), any());
@@ -107,7 +107,7 @@ public class TestFaultDetector {
     void TestPingMessageReceived() {
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.pingMessageReceived(any());
@@ -119,7 +119,7 @@ public class TestFaultDetector {
     void TestCanYouReachLeaderMessageReceived() {
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.canYouReachLeaderMessageReceived(any(), any());
@@ -165,7 +165,7 @@ public class TestFaultDetector {
         faultDetector = injector.getInstance(FaultDetector.class);
         faultDetectorPlayer = injector.getInstance(FaultDetectorPlayer.class);
 
-        FaultDetectorPlayer result = faultDetector.makeFaultDetectorPlayer(nodeInfoList);
+        FaultDetectorPlayer result = faultDetector.makeFaultDetectorPlayer(nodeInfoList, observers);
 
         assertEquals(nodeInfoList, result.getNodeInfoList());
     }

@@ -74,11 +74,11 @@ public class TestFaultResponder {
 
         Thread t = mock(Thread.class);
 
-        when(faultResponder.createThread(faultMessage, test)).thenReturn(t);
+        when(faultResponder.sendResponseInAThread(faultMessage, test)).thenReturn(t);
 
         faultResponder.faultMessageReceived(faultMessage, test);
 
-        verify(faultResponder , times(1)).createThread(faultMessage,test);
+        verify(faultResponder , times(1)).sendResponseInAThread(faultMessage,test);
         verify(t).start();
     }
 

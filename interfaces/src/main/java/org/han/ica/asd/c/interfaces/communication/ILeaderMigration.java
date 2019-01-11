@@ -6,7 +6,7 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 
 public interface ILeaderMigration {
 
-  Player startMigration(Player[] players) throws PlayerNotFoundException;
+  Player startMigration(Player[] players, String ip);
 
   ElectionModel receiveElectionMessage(ElectionModel electionModel);
 

@@ -1,9 +1,10 @@
 package org.han.ica.asd.c.faultdetection.messagetypes;
 
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
+import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 
 /**
- * <h2>This message is send by the leader to all the nodes it can reach.</h2>
+ * This message is send by the leader to all the nodes it can reach.
  * This message is used to send the ip address of a specific node that the leader was unable to reach.<br>
  * The leader sends this message to check whether the node has completely failed or whether only the leader can
  * not reach the specific node.<br>
@@ -12,6 +13,8 @@ import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
  *
  * @author Tarik
  * @see FaultDetectionClient
+ * @see FaultDetectionMessage
+ * @see FaultDetectionMessageReceiver
  */
 
 public class FaultMessage extends FaultDetectionMessage {
