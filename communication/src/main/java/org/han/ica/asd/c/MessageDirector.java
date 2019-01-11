@@ -34,7 +34,7 @@ public class MessageDirector implements IServerObserver {
 
         if (receivedObject instanceof GameMessage) {
             GameMessage gameMessage = (GameMessage) receivedObject;
-            return gameMessageReceiver.gameMessageReceived(gameMessage);
+            return gameMessageReceiver.gameMessageReceived(gameMessage, senderIp);
 
         } else if (receivedObject instanceof FaultDetectionMessage) {
             FaultDetectionMessage faultDetectionMessage = (FaultDetectionMessage) receivedObject;
