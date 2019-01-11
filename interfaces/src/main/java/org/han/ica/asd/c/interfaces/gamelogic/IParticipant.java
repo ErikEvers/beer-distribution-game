@@ -20,6 +20,4 @@ public interface IParticipant {
      * @return The facility instance.
      */
     Facility getParticipant();
-
-    void startGame();
 }

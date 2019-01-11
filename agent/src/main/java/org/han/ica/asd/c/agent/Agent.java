@@ -135,9 +135,4 @@ public class Agent extends GameAgent implements IParticipant {
     public Facility getParticipant() {
         return getFacility();
     }
-
-	@Override
-	public void startGame() {
-
-	}
 }
