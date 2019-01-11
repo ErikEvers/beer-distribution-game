@@ -10,17 +10,13 @@ import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
@@ -190,11 +186,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void roundModelReceived(Round currentRound) {
-    		beerGame.getRounds().removeIf(round -> round.getRoundId() == currentRound.getRoundId());
+        beerGame.getRounds().removeIf(round -> round.getRoundId() == currentRound.getRoundId());
         beerGame.getRounds().add(currentRound);
-				//persistence.saveGameLog(beerGame);
-				curRoundId = currentRound.getRoundId();
-        participantsPool.executeRound();
+        sendRoundActionFromAgents();
     }
 
     @Override
@@ -202,7 +196,22 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         GameLogic.beerGame = beerGame;
         //persistence.saveGameLog(beerGame);
         player.startGame();
-				curRoundId = 1;
-				participantsPool.executeRound();
+        sendRoundActionFromAgents();
+    }
+
+    private void sendRoundActionFromAgents() {
+        for (IParticipant participant : participantsPool.getParticipants()) {
+            Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
+            communication.sendTurnData(round);
+        }
+        player.roundStarted();
+    }
+
+    private Round makeRoundFromGameRoundAction(GameRoundAction action, int facilityId) {
+        return new Round(curRoundId,
+                null,
+                action.targetOrderMap.entrySet().stream().map(e -> new FacilityTurnOrder(facilityId, e.getKey().getFacilityId(), e.getValue())).collect(Collectors.toList()),
+                action.targetDeliverMap.entrySet().stream().map(e -> new FacilityTurnDeliver(facilityId, e.getKey().getFacilityId(), 0, e.getValue())).collect(Collectors.toList())
+        );
     }
 }
