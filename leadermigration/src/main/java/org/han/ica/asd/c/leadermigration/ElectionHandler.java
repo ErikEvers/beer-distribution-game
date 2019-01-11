@@ -33,6 +33,7 @@ public class ElectionHandler {
   /**
    * Setup the algorithm in de electionModel.
    * @param players -> All connected players to send a message.
+   * @param ip -> the local ip address.
    */
   public Player setupAlgorithm(Player[] players, String ip) {
     electionModel.setCurrentPlayer(getPlayerByIp(players, ip));
