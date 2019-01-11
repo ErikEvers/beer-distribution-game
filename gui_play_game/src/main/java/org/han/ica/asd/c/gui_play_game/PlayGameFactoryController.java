@@ -41,6 +41,10 @@ public class PlayGameFactoryController extends PlayGame {
         playerComponent.placeOrder(null, order);
     }
 
+    public void handleSeeActivityLogButtonClicked() {
+        super.handleSeeActivityLogButtonClicked();
+    }
+
     @Override
     public void fillComboBox() {
         fillOutGoingDeliveryFacilityComboBox(cmbChooseOutgoingDelivery);

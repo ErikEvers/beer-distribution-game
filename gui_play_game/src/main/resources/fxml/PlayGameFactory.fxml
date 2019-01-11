@@ -144,7 +144,7 @@
                <GridPane.margin>
                   <Insets left="30.0" top="85.0" />
                </GridPane.margin></TextField>
-            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="See graph" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" onMouseClicked="#handleSeeActivityLogButtonClicked" text="See activity log" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="20.0" />
                </GridPane.margin></Button>

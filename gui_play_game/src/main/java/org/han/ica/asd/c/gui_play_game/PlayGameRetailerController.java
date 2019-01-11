@@ -34,6 +34,10 @@ public class PlayGameRetailerController extends PlayGame {
         super.handleSendOrderButtonClick();
     }
 
+		public void handleSeeActivityLogButtonClicked() {
+			super.handleSeeActivityLogButtonClicked();
+		}
+
     public void submitTurnButtonClicked(MouseEvent mouseEvent) {
         super.submitTurnButtonClicked();
     }

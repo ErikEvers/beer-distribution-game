@@ -35,6 +35,10 @@ public class PlayGameFacilitiesController extends PlayGame {
         super.handleSendOrderButtonClick();
     }
 
+    public void handleSeeActivityLogButtonClicked() {
+        super.handleSeeActivityLogButtonClicked();
+    }
+
     /**
      * Fills up the comboBox with facilities where the current facility can order.
      */
