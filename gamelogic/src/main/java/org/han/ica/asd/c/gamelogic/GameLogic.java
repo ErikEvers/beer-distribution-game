@@ -181,7 +181,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void setPlayerParticipant(IParticipant participant) {
         player = participant;
-				addLocalParticipant(participant);
     }
 
     /**
@@ -193,6 +192,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         beerGame.getRounds().add(currentRound);
 				//persistence.saveGameLog(beerGame);
 				curRoundId = currentRound.getRoundId();
+		player.executeTurn();
         participantsPool.excecuteRound();
     }
 
@@ -202,6 +202,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         //persistence.saveGameLog(beerGame);
         player.startGame();
 				curRoundId = 1;
+				player.executeTurn();
 				participantsPool.excecuteRound();
     }
 }

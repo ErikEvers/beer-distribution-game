@@ -2,7 +2,6 @@ package org.han.ica.asd.c.gui_play_game;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +22,6 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,33 +113,29 @@ public abstract class PlayGame implements IPlayGame {
     public abstract void fillComboBox();
 
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
-        ArrayList<Facility> facilities = new ArrayList<>();
+        List<Facility> facilities = new ArrayList<>();
 
-				playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(
-                t -> {
-                    Facility facilityPlayedByPlayer = playerComponent.getPlayer().getFacility();
-
-                    if (t != facilityPlayedByPlayer) {
-                        List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(t.getFacilityId());
-                        if (facilitiesLinkedToFacilities != null) {
-                            if (facilitiesLinkedToFacilities.contains(facilityPlayedByPlayer)) {
-                                facilities.add(t);
-                            }
-                        }
-                    }
-                }
-        );
+		int facilityPlayedByPlayerId = playerComponent.getPlayer().getFacility().getFacilityId();
+		playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(f -> {
+			if (f.getFacilityId() != facilityPlayedByPlayerId) {
+				List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(f.getFacilityId());
+				if (facilitiesLinkedToFacilities != null) {
+					if (facilitiesLinkedToFacilities.stream().filter(facility -> facility.getFacilityId() == facilityPlayedByPlayerId).findFirst().isPresent()) {
+						facilities.add(f);
+					}
+				}
+			}
+		});
 
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
         facilityListView.addAll(facilities);
-				comboBox.setItems(facilityListView);
+		comboBox.setItems(facilityListView);
     }
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-				List<Facility> list = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId());
-				facilityListView.addAll(list);
-				comboBox.setItems(facilityListView);
+		facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
+		comboBox.setItems(facilityListView);
     }
 
     /**
