@@ -1,9 +1,7 @@
 package org.han.ica.asd.c.gamelogic.roundcalculator;
 
 import org.han.ica.asd.c.gamelogic.GameLogic;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +25,7 @@ class RoundCalculatorTest {
 
     @BeforeEach
     public void setup() {
-        gameLogic = new GameLogic(null,null, null, null);
+        gameLogic = new GameLogic(null,null, null, new BeerGame());
 
         //TODO: Use the new Map implementation for FacilityLinkedTo
         FacilityType facilityType = new FacilityType("Manufacturer", 3, 3,5, 25, 500, 10, 40);
@@ -44,21 +42,27 @@ class RoundCalculatorTest {
 
         facilityLinksTo = new HashMap<>();
 
-        ArrayList<Facility> belowManufacturer = new ArrayList<>();
-        belowManufacturer.add(regionalWarehouse);
-        facilityLinksTo.put(manufacturer, belowManufacturer);
-
-        ArrayList<Facility> belowRegionalWarehouse = new ArrayList<>();
-        belowRegionalWarehouse.add(wholesale);
-        facilityLinksTo.put(regionalWarehouse, belowRegionalWarehouse);
-
-        ArrayList<Facility> belowWholesale = new ArrayList<>();
-        belowWholesale.add(retailer);
-        facilityLinksTo.put(wholesale, belowWholesale);
-
-        ArrayList<Facility> belowRetailer = new ArrayList<>();
-        belowRetailer.add(demand);
-        facilityLinksTo.put(retailer, belowRetailer);
+//        ArrayList<Facility> belowManufacturer = new ArrayList<>();
+//        belowManufacturer.add(regionalWarehouse);
+//        facilityLinksTo.put(manufacturer, belowManufacturer);
+//
+//        ArrayList<Facility> belowRegionalWarehouse = new ArrayList<>();
+//        belowRegionalWarehouse.add(wholesale);
+//        facilityLinksTo.put(regionalWarehouse, belowRegionalWarehouse);
+//
+//        ArrayList<Facility> belowWholesale = new ArrayList<>();
+//        belowWholesale.add(retailer);
+//        facilityLinksTo.put(wholesale, belowWholesale);
+//
+//        ArrayList<Facility> belowRetailer = new ArrayList<>();
+//        belowRetailer.add(demand);
+//        facilityLinksTo.put(retailer, belowRetailer);
+//
+        gameLogic.addFacilities(manufacturer, regionalWarehouse);
+        gameLogic.addFacilities(regionalWarehouse, wholesale);
+        gameLogic.addFacilities(wholesale, retailer);
+        gameLogic.addFacilities(retailer, demand);
+        gameLogic.addFacilities(demand, demand);
     }
 
     private Round setupPreviousRoundObjectWithoutBacklog() {
@@ -70,17 +74,26 @@ class RoundCalculatorTest {
         round.addTurnOrder(retailer, wholesale, 15);
         round.addTurnOrder(demand, retailer, 30);
 
+        List<FacilityTurn> turns = new ArrayList<>();
+
+        turns.add(new FacilityTurn(0, 0, 200, 0, 200, false));
+        turns.add(new FacilityTurn(1, 0, 200, 0, 200, false));
+        turns.add(new FacilityTurn(2, 0, 200, 0, 200, false));
+        turns.add(new FacilityTurn(3, 0, 200, 0, 200, false));
+        turns.add(new FacilityTurn(4, 0, 200, 0, 200, false));
+
+        round.setFacilityTurns(turns);
         return round;
     }
 
     private Round setupCalculatedRoundObject() {
         Round calculatedRound = new Round();
-
-        calculatedRound.addFacilityRemainingBudget(500, manufacturer, regionalWarehouse);
-        calculatedRound.addFacilityRemainingBudget(500, regionalWarehouse, wholesale);
-        calculatedRound.addFacilityRemainingBudget(500, wholesale, retailer);
-        calculatedRound.addFacilityRemainingBudget(500, retailer, demand);
-        calculatedRound.addFacilityRemainingBudget(500, demand, demand);
+        calculatedRound.setRoundId(1);
+        calculatedRound.addFacilityRemainingBudget(500, manufacturer);
+        calculatedRound.addFacilityRemainingBudget(500, regionalWarehouse);
+        calculatedRound.addFacilityRemainingBudget(500, wholesale);
+        calculatedRound.addFacilityRemainingBudget(500, retailer);
+        calculatedRound.addFacilityRemainingBudget(500, demand);
 
         return calculatedRound;
     }
@@ -310,6 +323,16 @@ class RoundCalculatorTest {
         round.addTurnOrder(retailer, wholesale, 35);
         round.addTurnOrder(demand, retailer, 30);
 
+        List<FacilityTurn> turns = new ArrayList<>();
+
+        turns.add(new FacilityTurn(0, 0, 65, 0, 500, false));
+        turns.add(new FacilityTurn(1, 0, 0, 0, 500, false));
+        turns.add(new FacilityTurn(2, 0, 45, 0, 500, false)); //TODO
+        turns.add(new FacilityTurn(3, 0, 45, 0, 500, false));
+        turns.add(new FacilityTurn(4, 0, 200, 0, 500, false));
+
+        round.setFacilityTurns(turns);
+
         return round;
     }
 
@@ -321,7 +344,7 @@ class RoundCalculatorTest {
 
         calculatedRound = gameLogic.calculateRound(calculatedRound);
 
-        Assert.assertEquals(100, calculatedRound.getRemainingBudgetByFacility(manufacturer));
+        Assert.assertEquals(expectedNumber, calculatedRound.getRemainingBudgetByFacility(facility));
     }
 
     @Test
@@ -380,8 +403,6 @@ class RoundCalculatorTest {
     void testIfPreviousOpenOrdersAreBeingHandledForManufacturer() {
         testIfPreviousOpenOrdersAreBeingHandled(55, manufacturer);
     }
-
-
 
     @Test
     void testIfPreviousOpenOrdersAreBeingHandledForRegionalWarehouse() {
