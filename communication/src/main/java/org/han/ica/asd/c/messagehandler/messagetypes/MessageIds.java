@@ -1,8 +1,9 @@
 package org.han.ica.asd.c.messagehandler.messagetypes;
 
 public class MessageIds {
-    private MessageIds(){
+    private MessageIds() {
     }
+
     public static final int TURN_MODEL_MESSAGE = 1;
     public static final int ROUND_MESSAGE = 2;
     public static final int ELECTION_MESSAGE = 3;

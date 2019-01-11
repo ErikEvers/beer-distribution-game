@@ -127,7 +127,6 @@ public class RoomFinderTest {
 
         when(service.checkIfFolderNotExists(roomName)).thenThrow(IOException.class);
 
-
         roomFinder.createGameRoomModel(roomName, hostIP, password);
     }
 
@@ -147,7 +146,6 @@ public class RoomFinderTest {
         when(service.getPasswordFromFolder(roomID)).thenReturn(password);
 
         roomFinder.createGameRoomModel(roomName, leaderIP, password);
-
         roomFinder.startGameRoom(roomName);
     }
 
@@ -161,7 +159,6 @@ public class RoomFinderTest {
         doThrow(IOException.class).when(service).deleteFolderByID(roomID);
 
         roomFinder.createGameRoomModel(roomName, leaderIP, password);
-
         roomFinder.startGameRoom(roomName);
     }
 

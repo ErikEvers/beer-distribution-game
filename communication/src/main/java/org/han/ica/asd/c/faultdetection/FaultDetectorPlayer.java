@@ -38,6 +38,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private Timer timer;
     private List<IConnectorObserver> observers;
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
+    private boolean active;
 
     FaultDetectorPlayer() {
         this.lastReceived = System.currentTimeMillis();
@@ -72,6 +73,28 @@ public class FaultDetectorPlayer extends TimerTask {
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerPlayer.setObservers(observers);
+        this.active = true;
+    }
+
+    /**
+     * Stops the Timertask and sets the fault detector to false so the messages wont be handled.
+     *
+     * @author Tarik
+     * @see TimerTask
+     * @see Timer
+     */
+    public void stop(){
+        timer.cancel();
+        this.active = false;
+    }
+
+    /**
+     * Returns the 'FaultDetectorPlayer' state.
+     *
+     * @return isActive
+     */
+    public boolean isActive() {
+        return active;
     }
 
     /**

@@ -15,18 +15,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultHandlerLeader {
     FaultHandlerLeader faultHandlerLeader;
 
-
     @Mock
     NodeInfoList nodeInfoList;
 
-    ArrayList<IConnectorObserver> observers = spy(ArrayList.class);
+    ArrayList<IConnectorObserver> observers = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -74,5 +72,4 @@ public class TestFaultHandlerLeader {
         int actual = faultHandlerLeader.getAmountOfFailsPerIp().get("1234");
         assertEquals(0, actual);
     }
-
 }
