@@ -1,9 +1,7 @@
 package org.han.ica.asd.c.messagehandler.messagetypes;
 
 public class MessageIds {
-
     private MessageIds(){
-        //hiding public constructor
     }
 
     public static final int TURN_MODEL_MESSAGE = 1;
