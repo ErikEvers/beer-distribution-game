@@ -1,8 +1,10 @@
 package org.han.ica.asd.c.gui_play_game;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -20,7 +22,7 @@ public class ActivityLogPopupController {
 	Button close;
 
 	@FXML
-	Label logTextArea;
+	ListView logTextArea;
 
 	/**
 	 *  Function for initialising the current ProgramAgentInfo FXML. It also sets the actions of the button to close current window on click.
@@ -39,7 +41,8 @@ public class ActivityLogPopupController {
 	 * @param facilityId The id of the facility for which the logs should be shown.
 	 */
 		void setLogContent(BeerGame beerGame, int facilityId) {
-			StringBuilder builder = new StringBuilder(1000);
+			StringBuilder builder = new StringBuilder(200);
+			ObservableList<String> items = FXCollections.observableArrayList();
 			for(Round round : beerGame.getRounds()) {
 				for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders().stream().filter(order -> order.getFacilityIdOrderTo() == facilityId).collect(Collectors.toList())) {
 					builder.append("Round ");
@@ -49,7 +52,9 @@ public class ActivityLogPopupController {
 					builder.append(facilityTurnOrder.getFacilityId());
 					builder.append(" ordered ");
 					builder.append(facilityTurnOrder.getOrderAmount());
-					builder.append(" pc from you\n");
+					builder.append(" pc from you");
+					items.add(builder.toString());
+					builder = new StringBuilder();
 				}
 
 				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers().stream().filter(order -> order.getFacilityIdDeliverTo() == facilityId).collect(Collectors.toList())) {
@@ -60,7 +65,9 @@ public class ActivityLogPopupController {
 					builder.append(facilityTurnDeliver.getFacilityId());
 					builder.append(" delivered ");
 					builder.append(facilityTurnDeliver.getDeliverAmount());
-					builder.append(" pc to you\n");
+					builder.append(" pc to you");
+					items.add(builder.toString());
+					builder = new StringBuilder();
 				}
 
 				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers().stream().filter(order -> order.getFacilityId() == facilityId).collect(Collectors.toList())) {
@@ -71,7 +78,8 @@ public class ActivityLogPopupController {
 					builder.append(facilityTurnDeliver.getDeliverAmount());
 					builder.append(" pc to facility ");
 					builder.append(facilityTurnDeliver.getFacilityId());
-					builder.append("\n");
+					items.add(builder.toString());
+					builder = new StringBuilder();
 				}
 
 				for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders().stream().filter(order -> order.getFacilityId() == facilityId).collect(Collectors.toList())) {
@@ -82,10 +90,11 @@ public class ActivityLogPopupController {
 					builder.append(facilityTurnOrder.getOrderAmount());
 					builder.append(" pc from facility ");
 					builder.append(facilityTurnOrder.getFacilityId());
-					builder.append("\n");
+					items.add(builder.toString());
+					builder = new StringBuilder();
 				}
 			}
-			logTextArea.setText(builder.toString());
+			logTextArea.setItems(items);
 		}
 
 }
