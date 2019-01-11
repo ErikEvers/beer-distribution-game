@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -49,7 +50,10 @@ public class TestFaultDetector {
         faultDetector.setObservers(observers);
     }
 
+    //TODO Setactive: isActive ipv notnull before calling en test when not active
+
     @Test
+    @DisplayName("Test if the start and stop methods are called correctly on FaultDetectorLeader")
     public void TestStartAndStopFaultDetectorLeader() {
         doReturn(faultDetectorLeader)
                 .when(faultDetector)
@@ -63,6 +67,7 @@ public class TestFaultDetector {
     }
 
     @Test
+    @DisplayName("Test if the start and stop methods are called correctly on FaultDetectorPlayer")
     public void TestStartAndStopFaultDetectorPlayer() {
         doReturn(faultResponder)
                 .when(faultDetector)
@@ -81,6 +86,7 @@ public class TestFaultDetector {
     }
 
     @Test
+    @DisplayName("Test if the start and stop methods are called correctly on FaultDetectorLeader")
     void TestFaultMessageReceived() {
         doReturn(faultResponder)
                 .when(faultDetector)
