@@ -1,12 +1,9 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.gamelogic.participants.AgentsPool;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
-import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -50,10 +47,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     private void executeAgents(){
-        AgentsPool agentsPool = new AgentsPool();
-        List<IParticipant> agents = agentsPool.getAllAgents();
-
-        for(IParticipant participant: agents){
+        for(IParticipant participant: participantsPool.getParticipants()){
             GameRoundAction action = participant.executeTurn(new Round());
             //Action to Round
             this.submitTurn(new Round());
