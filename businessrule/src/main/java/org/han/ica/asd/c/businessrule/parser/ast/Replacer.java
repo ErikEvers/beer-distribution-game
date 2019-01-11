@@ -226,7 +226,13 @@ public class Replacer {
                 //select id van factory met de hoogste ordered.
                 break;
             case STOCK:
-
+                Comparator<FacilityTurn> comparatorStock = Comparator.comparing( FacilityTurn::getStock );
+                facilityTurn = round.getFacilityTurns().stream().filter(i ->
+                facilityTypeList.contains(String.valueOf(i.getFacilityId()))).max(comparatorStock).orElse(null);
+                if(facilityTurn!=null) {
+                    return facilityTurn.getFacilityId();
+                }
+                throw new NotFoundException(notFound);
             case BUDGET:
                 Comparator<FacilityTurn> comparator = Comparator.comparing( FacilityTurn::getRemainingBudget );
                 facilityTurn = round.getFacilityTurns().stream().filter(i ->
