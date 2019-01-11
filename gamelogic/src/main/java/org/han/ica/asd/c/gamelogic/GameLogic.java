@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.gamelogic.participants.AgentsPool;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
@@ -14,6 +15,7 @@ import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -47,6 +49,16 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         this.participantsPool = participantsPool;
     }
 
+    private void executeAgents(){
+        AgentsPool agentsPool = new AgentsPool();
+        List<IParticipant> agents = agentsPool.getAllAgents();
+
+        for(IParticipant participant: agents){
+            GameRoundAction action = participant.executeTurn();
+            //Action to Round
+            this.submitTurn(new Round());
+        }
+    }
     /**
      * Sends and saves an order of the player / agent.
      * @param turn
