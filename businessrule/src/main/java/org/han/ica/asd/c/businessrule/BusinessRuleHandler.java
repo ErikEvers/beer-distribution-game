@@ -12,12 +12,27 @@ import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
+    private Provider<ParserPipeline> parserPipelineProvider;
+    private Provider<BusinessRuleDecoder> businessRuleDecoderProvider;
+
+    private ParserPipeline parserPipeline;
+    private BusinessRuleDecoder businessRuleDecoder;
+
     @Inject
     @Named("BusinessruleStore")
-    IBusinessRuleStore iBusinessRuleStore;
+    public IBusinessRuleStore iBusinessRuleStore;
+
+    @Inject
+    public BusinessRuleHandler(Provider<ParserPipeline> parserPipelineProvider, Provider<BusinessRuleDecoder> businessRuleDecoderProvider) {
+        this.parserPipelineProvider = parserPipelineProvider;
+        this.businessRuleDecoderProvider = businessRuleDecoderProvider;
+        parserPipeline = this.parserPipelineProvider.get();
+        businessRuleDecoder = this.businessRuleDecoderProvider.get();
+    }
 
     /**
      * Parses the business rules and sends it to the persistence component
@@ -26,7 +41,6 @@ public class BusinessRuleHandler implements IBusinessRules {
      * @param businessRules Business rules for the agent
      */
     public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
-        ParserPipeline parserPipeline = new ParserPipeline();
         if (!parserPipeline.parseString(businessRules)) {
             return parserPipeline.getBusinessRulesInput();
         }
@@ -34,16 +48,15 @@ public class BusinessRuleHandler implements IBusinessRules {
         return parserPipeline.getBusinessRulesInput();
     }
 
-    public ActionModel evaluateBusinessRule(String businessRule, Round roundData) {
-        BusinessRule businessRuleAST = new BusinessRuleDecoder().decodeBusinessRule(businessRule);
+    public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+        BusinessRule businessRuleAST = businessRuleDecoder.decodeBusinessRule(businessRule);
 
-        //TODO: 12/7/2018 Substitute variables in BusinessRule(tree)
-
+        businessRuleAST.substituteTheVariablesOfBusinessruleWithGameData(roundData, facilityId);
         businessRuleAST.evaluateBusinessRule();
 
-        if (businessRuleAST.isTriggered()){
+        if (businessRuleAST.isTriggered()) {
             Action action = businessRuleAST.getAction();
-        	return new ActionModel(
+            return new ActionModel(
                     action.getType(),
                     action.getAmount(),
                     action.getFacilityId());
