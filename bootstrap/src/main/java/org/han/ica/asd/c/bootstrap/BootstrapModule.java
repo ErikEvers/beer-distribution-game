@@ -28,8 +28,12 @@ import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
+import org.han.ica.asd.c.interfaces.replay.IRetrieveReplayData;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.persistence.BusinessRuleStore;
+import org.han.ica.asd.c.replay_data.ReplayComponent;
+import org.han.ica.asd.c.replay_data.fakes.TMP;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.han.ica.asd.c.socketrpc.SocketServer;
@@ -55,6 +59,9 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+        //todo: TMP vervangen met daadwerkelijke implementatie
+		bind(IRetrieveReplayData.class).to(TMP.class);
+		bind(IVisualisedPlayedGameData.class).to(ReplayComponent.class);
 
 		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 
