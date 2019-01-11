@@ -43,7 +43,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGame.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
         bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
-        //todo
+        //todo: TMP vervangen met daadwerkelijke implementatie
 		bind(IRetrieveReplayData.class).to(TMP.class);
 		bind(IVisualisedPlayedGameData.class).to(ReplayComponent.class);
 
