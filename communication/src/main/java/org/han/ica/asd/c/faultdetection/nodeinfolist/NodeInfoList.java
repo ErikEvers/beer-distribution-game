@@ -200,7 +200,8 @@ public class NodeInfoList extends ArrayList<Player> {
      */
     @Override
     public boolean add(Player p) {
-        playerList.add(playerList.size(), p);
+        playerList.add(p);
+       // playerList.add(playerList.size(), p);
         return true;
     }
 
