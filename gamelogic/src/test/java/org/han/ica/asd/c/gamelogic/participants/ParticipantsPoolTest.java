@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerParticipantFake;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,20 +21,20 @@ class ParticipantsPoolTest {
 
     @Test
     public void replacePlayerWithAgentRemovesPlayer() {
-        participantsPool.replacePlayerWithAgent(mock(AgentParticipant.class));
+        participantsPool.replacePlayerWithAgent(mock(Agent.class));
          assertFalse(participantsPool.getParticipants().contains(fakePlayer));
     }
 
     @Test
     public void replacePlayerWithAgentAddsAgent() {
-        AgentParticipant agent = mock(AgentParticipant.class);
+        Agent agent = mock(Agent.class);
         participantsPool.replacePlayerWithAgent(agent);
         assertTrue(participantsPool.getParticipants().contains(agent));
     }
 
     @Test
     public void replaceAgentWithPlayerAddsPlayer() {
-        AgentParticipant agent = mock(AgentParticipant.class);
+        Agent agent = mock(Agent.class);
         when(agent.getParticipant()).thenReturn(fakePlayer.getParticipant());
         participantsPool.replaceAgentWithPlayer();
         assertTrue(participantsPool.getParticipants().contains(fakePlayer));
@@ -42,7 +42,7 @@ class ParticipantsPoolTest {
 
     @Test
     public void replaceAgentWithPlayerRemovesAgent() {
-        AgentParticipant agent = mock(AgentParticipant.class);
+        Agent agent = mock(Agent.class);
         when(agent.getParticipant()).thenReturn(new Facility());
         participantsPool.replaceAgentWithPlayer();
         assertFalse(participantsPool.getParticipants().contains(agent));
@@ -50,7 +50,7 @@ class ParticipantsPoolTest {
 
     @Test
     public void removeParticipantRemovesParticipantFromList() {
-        AgentParticipant localAgent = mock(AgentParticipant.class);
+        Agent localAgent = mock(Agent.class);
         Facility facility = new Facility();
         when(localAgent.getParticipant()).thenReturn(facility);
         participantsPool.addParticipant(localAgent);

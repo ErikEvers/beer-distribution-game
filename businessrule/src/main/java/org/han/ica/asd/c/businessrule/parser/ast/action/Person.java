@@ -5,8 +5,14 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import java.util.Objects;
 
 public class Person extends ASTNode {
-    private static final String prefix = "P(";
+    private static final String PREFIX = "P(";
     private String personNode;
+
+    /**
+     * Constructor
+     */
+    public Person() {
+    }
 
     /**
      * Constructor
@@ -18,13 +24,25 @@ public class Person extends ASTNode {
     }
 
     /**
+     * Adds a value to the personNode string
+     *
+     * @param value The value that will define the personNode string
+     * @return Returns itself so that it can be used immediately
+     */
+    @Override
+    public Person addValue(String value) {
+        this.personNode = value;
+        return this;
+    }
+
+    /**
      * Encodes the parsed tree in a single string so that it can be stored in the database
      *
      * @param stringBuilder Stringbuilder that is used to encode the tree
      */
     @Override
     public void encode(StringBuilder stringBuilder) {
-        super.encode(stringBuilder, getChildren(), prefix + personNode, suffix);
+        super.encode(stringBuilder, getChildren(), PREFIX + personNode, SUFFIX);
     }
 
     /**

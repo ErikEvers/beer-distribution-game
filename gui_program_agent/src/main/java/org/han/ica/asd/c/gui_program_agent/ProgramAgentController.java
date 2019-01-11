@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
@@ -44,6 +45,10 @@ public class ProgramAgentController {
     @Named("ProgramAgentList")
     IGUIHandler programAgentList;
 
+    @Inject
+    @Named("BusinessruleStore")
+    IBusinessRuleStore iBusinessRuleStore;
+
     private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
 
     private ResourceBundle resourceBundle;
@@ -51,8 +56,10 @@ public class ProgramAgentController {
     public void setAgentName(String name) {
         if(name != null) {
             agentNameInput.setText(name);
-            //TODO Get data from BusinessRules store
-            businessRuleInput.setText("default order 34 \nif round is 10 then order 34");
+            List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
+            for (String rule: rules) {
+                businessRuleInput.setText(rule + "\n");
+            }
             agentNameInput.setDisable(true);
         }
     }
@@ -136,6 +143,8 @@ public class ProgramAgentController {
             } else if (businessRule.hasError()) {
                 errors.append("User input error on line ").append(businessRule.getLineNumber()).append(": ").append(businessRule.getErrorMessage()).append("\n");
                 text.setFill(Color.RED);
+                textFlow.add(text);
+            }else{
                 textFlow.add(text);
             }
         }

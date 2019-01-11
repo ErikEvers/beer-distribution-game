@@ -32,6 +32,8 @@ public class RoundDAO {
 	private static final String DELETE_ORDERS = "DELETE FROM FacilityTurnOrder WHERE GameId = ? AND RoundId = ?;";
 	private static final String DELETE_DELIVERS = "DELETE FROM FacilityTurnDeliver WHERE GameId = ? AND RoundId = ?;";
 	private static final String DELETE_FACILITIES = "DELETE FROM FacilityTurn WHERE GameId = ? AND RoundId = ?;";
+	public static final String ROUND_ID = "RoundId";
+	public static final String FACILITY_ID = "FacilityId";
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
@@ -49,6 +51,39 @@ public class RoundDAO {
 	public void createRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		executePreparedStatement(roundId, conn, CREATE_ROUND);
+	}
+
+	/**
+	 * A method which inserts multiple rounds into the database
+	 * @param rounds
+	 */
+	public void insertRounds(List<Round> rounds) {
+		for (Round round: rounds) {
+			createRound(round.getRoundId());
+			for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
+				createFacilityTurn(round.getRoundId(),facilityTurn);
+			}
+
+			for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
+				createFacilityOrder(round.getRoundId(),facilityTurnOrder);
+			}
+
+			for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
+				createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+			}
+			createRound(round.getRoundId());
+			for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
+				createFacilityTurn(round.getRoundId(),facilityTurn);
+			}
+
+			for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
+				createFacilityOrder(round.getRoundId(),facilityTurnOrder);
+			}
+
+			for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
+				createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+			}
+		}
 	}
 
 	/**
@@ -84,11 +119,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					round = new Round();
-					round.setRoundId(rs.getInt("RoundId"));
-					round.setFacilityOrders(getFacilityOrdersInRound(roundId));
-					round.setFacilityTurnDelivers(getFacilityDeliversInRound(roundId));
-					round.setFacilityTurns(getFacilitiesInRound(roundId));
+					round = createRoundModel(rs);
 				}
 
 				conn.commit();
@@ -114,7 +145,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					orders.add(new FacilityTurnOrder(rs.getInt("FacilityId"), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
+					orders.add(new FacilityTurnOrder(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
 
 				}
 
@@ -140,7 +171,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					delivers.add(new FacilityTurnDeliver(rs.getInt("FacilityId"), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
+					delivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
 
 				}
 
@@ -166,7 +197,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					facilities.add(new FacilityTurn(rs.getInt("FacilityId"), rs.getInt("RoundId"),rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
+					facilities.add(new FacilityTurn(rs.getInt(FACILITY_ID), rs.getInt(ROUND_ID),rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
 
 				}
 
@@ -259,11 +290,7 @@ public class RoundDAO {
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
 					if(!rs.isClosed()) {
-						round = new Round();
-						round.setRoundId(rs.getInt("RoundId"));
-						round.setFacilityOrders(getFacilityOrdersInRound(round.getRoundId()));
-						round.setFacilityTurnDelivers(getFacilityDeliversInRound(round.getRoundId()));
-						round.setFacilityTurns(getFacilitiesInRound(round.getRoundId()));
+						round = createRoundModel(rs);
 						rounds.add(round);
 					}
 				}
@@ -276,6 +303,15 @@ public class RoundDAO {
 		}
 
 		return rounds;
+	}
+
+	private Round createRoundModel(ResultSet rs) throws SQLException {
+		Round round = new Round();
+		round.setRoundId(rs.getInt(ROUND_ID));
+		round.setFacilityOrders(getFacilityOrdersInRound(round.getRoundId()));
+		round.setFacilityTurnDelivers(getFacilityDeliversInRound(round.getRoundId()));
+		round.setFacilityTurns(getFacilitiesInRound(round.getRoundId()));
+		return round;
 	}
 
 	public void deleteFacilityOrders(int roundId) {

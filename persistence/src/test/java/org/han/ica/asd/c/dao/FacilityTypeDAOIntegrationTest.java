@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 class FacilityTypeDAOIntegrationTest {
 	private static final FacilityType FACILITY_TYPE = new FacilityType("Factory",50,50,50,50,50,50,50);
-	private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesale",50,50,50,50,50,50,50);
-	private static final FacilityType FACILITY_TYPE2_UPDATE = new FacilityType("Wholesale",50,50,999,999,999,999,999);
+	private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesaler",50,50,50,50,50,50,50);
+	private static final FacilityType FACILITY_TYPE2_UPDATE = new FacilityType("Wholesaler",50,50,999,999,999,999,999);
 
 	private FacilityTypeDAO facilityTypeDAO;
 	private BeergameDAO beergameDAO;
@@ -62,7 +62,7 @@ class FacilityTypeDAOIntegrationTest {
 		facilityTypeDAO.updateFacilityType(FACILITY_TYPE2_UPDATE);
 		Assert.assertEquals(1,facilityTypeDAO.readAllFacilityTypes().size());
 
-		FacilityType facilityType = facilityTypeDAO.readSpecificFacilityType("Wholesale");
+		FacilityType facilityType = facilityTypeDAO.readSpecificFacilityType("Wholesaler");
 
 		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getFacilityName(),facilityType.getFacilityName());
 		Assert.assertEquals(FACILITY_TYPE2_UPDATE.getOpenOrderCosts(),facilityType.getOpenOrderCosts());

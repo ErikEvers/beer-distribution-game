@@ -3,10 +3,14 @@ package org.han.ica.asd.c.gui_join_game;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
+import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.interfaces.gui_join_game.IConnecterForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import javax.inject.Inject;
@@ -29,21 +33,25 @@ public class JoinGameController {
 
     @Inject
     @Named("Connector")
-    private IConnecterForSetup iConnectorForSetup;
+    private IConnectorForSetup iConnectorForSetup;
 
     private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
+        iConnectorForSetup.start();
         items.addAll(iConnectorForSetup.getAvailableRooms());
         list.setItems(items);
     }
 
     public void handleJoinGameButtonClick() {
         //TODO Join room on IConnectorForSetup. If logged in succesful then set Room
-        RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),"145.74.199.201","");
-        if (result != null) {
-            gameRoom.setData(new Object[]{result});
+        try {
+            RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(),  "");
+            gameRoom.setData(new Object[]{result,iConnectorForSetup});
             gameRoom.setupScreen();
+        } catch (RoomException | DiscoveryException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,e.getMessage(), ButtonType.CLOSE);
+            alert.showAndWait();
         }
     }
 

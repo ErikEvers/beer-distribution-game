@@ -21,7 +21,7 @@ import java.util.List;
 class GameAgentDAOIntegrationTest {
     private static final List<GameBusinessRules> GAME_BUSINESS_RULES = new ArrayList<>();
     private static final FacilityType FACILITY_TYPE = new FacilityType("Factory", 1, 1, 1, 1, 1, 1, 1);
-    private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesale", 1, 1, 1, 1, 1, 1, 1);
+    private static final FacilityType FACILITY_TYPE2 = new FacilityType("Wholesaler", 1, 1, 1, 1, 1, 1, 1);
     private static final Facility FACILITY = new Facility(FACILITY_TYPE, 1);
     private static final Facility FACILITY2 = new Facility(FACILITY_TYPE2, 2);
     private static final GameAgent GAMEAGENT = new GameAgent("Agent1", FACILITY, GAME_BUSINESS_RULES);
