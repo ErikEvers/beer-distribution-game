@@ -81,13 +81,13 @@ public class NodeConverter {
     private Integer getFacilityIdByAction(ActionReference actionName, int facility) {
         if("order".equals(actionName.getAction())){
             if(facility == FacilityType.FACTORY.getIndex()){
-                return null;
+                return 0;
             } else {
                 return FIRSTFACILITYABOVEBELOW;
             }
         } else {
             if(facility == FacilityType.RETAILER.getIndex()){
-                return null;
+                return 0;
             } else {
                 return FIRSTFACILITYABOVEBELOW;
             }
