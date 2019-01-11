@@ -87,8 +87,8 @@ public class GraphConverterToDomain {
         for (GraphFacility graphFacility : graph.getFacilities()) {
             List<Facility> childs = new ArrayList<>();
             Facility parent = facilityToDomain(graphFacility);
-            if (!isEmpty(graphFacility.getBuyers())) {
-                for (Object currentChild : graphFacility.getBuyers()) {
+            if (!isEmpty(graphFacility.getSuppliers())) {
+                for (Object currentChild : graphFacility.getSuppliers()) {
                     childs.add(facilityToDomain((GraphFacility) currentChild));
                 }
             }

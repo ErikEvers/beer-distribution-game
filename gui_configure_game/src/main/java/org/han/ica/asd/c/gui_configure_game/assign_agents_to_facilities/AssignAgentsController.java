@@ -4,14 +4,15 @@ import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
+
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
+
 import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.model.domain_objects.*;
 

@@ -3,14 +3,14 @@ package org.han.ica.asd.c.gui_configure_game.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+
 import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.gui_configure_game.graph.FacilityRectangle;
-import org.han.ica.asd.c.gui_configure_game.graph.Graph;
+
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -161,6 +161,12 @@ public class GameSetupTypeController implements Initializable {
     }
 
     public void nextScreenButton() throws Exception {
+        for (Map.Entry<Facility, List<Facility>> entry : configuration.getFacilitiesLinkedTo().entrySet()) {
+            System.out.println("Parent: " + entry.getKey().getFacilityType().getFacilityName() + " id: " + entry.getKey().getFacilityId());
+            for (Facility f : entry.getValue()) {
+                System.out.println("-------Child: " + f.getFacilityType().getFacilityName() + " id: " + f.getFacilityId());
+            }
+
             fillConfigurationList();
             fillConfigurationGraph();
             beerGame.setConfiguration(this.configuration);
@@ -168,137 +174,139 @@ public class GameSetupTypeController implements Initializable {
             beerGame.setGameId(DaoConfig.getCurrentGameId());
             assignAgents.setData(new Object[] { beerGame });
             assignAgents.setupScreen();
-    }
-
-
-    /**
-     * Fills the list of the configuration with the parameters from the textfield in the GUI
-     */
-    private void fillConfigurationList() {
-        for (Facility current : configuration.getFacilities()) {
-
-            if (current.getFacilityType().getFacilityName().equals(facString)) {
-                current.setFacilityType(setFactoryType(current.getFacilityType()));
-            }
-            if (current.getFacilityType().getFacilityName().equals(wholeString)) {
-                current.setFacilityType(setWholsaleType(current.getFacilityType()));
-            }
-            if (current.getFacilityType().getFacilityName().equals(regWarehouseString)) {
-                current.setFacilityType(setRegionalWarehouseType(current.getFacilityType()));
-            }
-            if (current.getFacilityType().getFacilityName().equals(retailString)) {
-                current.setFacilityType(setRetailerType(current.getFacilityType()));
-            }
         }
     }
 
-    /**
-     * Fills the Graph of the configuration with the parameters from the textfield in the GUI
-     */
-    private void fillConfigurationGraph() {
+        /**
+         * Fills the list of the configuration with the parameters from the textfield in the GUI
+         */
+        private void fillConfigurationList () {
+            for (Facility current : configuration.getFacilities()) {
 
-        for (Map.Entry<Facility, List<Facility>> entry : configuration.getFacilitiesLinkedTo().entrySet()) {
-            if (entry.getKey().getFacilityType().getFacilityName().equals(facString)) {
-                entry.getKey().setFacilityType(setFactoryType(entry.getKey().getFacilityType()));
-            }
-            if (entry.getKey().getFacilityType().getFacilityName().equals(wholeString)) {
-                entry.getKey().setFacilityType(setWholsaleType(entry.getKey().getFacilityType()));
-            }
-            if (entry.getKey().getFacilityType().getFacilityName().equals(regWarehouseString)) {
-                entry.getKey().setFacilityType(setRegionalWarehouseType(entry.getKey().getFacilityType()));
-            }
-            if (entry.getKey().getFacilityType().getFacilityName().equals(retailString)) {
-                entry.getKey().setFacilityType(setRetailerType(entry.getKey().getFacilityType()));
-            }
-            for (Facility current : entry.getValue()) {
                 if (current.getFacilityType().getFacilityName().equals(facString)) {
-                    current.setFacilityType(setFactoryType(entry.getKey().getFacilityType()));
+                    current.setFacilityType(setFactoryType(current.getFacilityType()));
                 }
                 if (current.getFacilityType().getFacilityName().equals(wholeString)) {
-                    current.setFacilityType(setWholsaleType(entry.getKey().getFacilityType()));
+                    current.setFacilityType(setWholsaleType(current.getFacilityType()));
                 }
                 if (current.getFacilityType().getFacilityName().equals(regWarehouseString)) {
-                    current.setFacilityType(setRegionalWarehouseType(entry.getKey().getFacilityType()));
+                    current.setFacilityType(setRegionalWarehouseType(current.getFacilityType()));
                 }
                 if (current.getFacilityType().getFacilityName().equals(retailString)) {
-                    current.setFacilityType(setRetailerType(entry.getKey().getFacilityType()));
+                    current.setFacilityType(setRetailerType(current.getFacilityType()));
                 }
-
             }
         }
 
-    }
+        /**
+         * Fills the Graph of the configuration with the parameters from the textfield in the GUI
+         */
+        private void fillConfigurationGraph () {
 
-    /**
-     * fills the factory with the types
-     *
-     * @param facility facility instance
-     * @return facilitytype
-     */
-    private FacilityType setFactoryType(FacilityType facility) {
-        return getFacilityType(facility, inGoodsFactory, outGoodsFactory, stockHoldingFactory, startingBudgetFactory, startingOrderFactory, startingStockFactory, openOrderCostFactory);
-    }
+            for (Map.Entry<Facility, List<Facility>> entry : configuration.getFacilitiesLinkedTo().entrySet()) {
+                if (entry.getKey().getFacilityType().getFacilityName().equals(facString)) {
+                    entry.getKey().setFacilityType(setFactoryType(entry.getKey().getFacilityType()));
+                }
+                if (entry.getKey().getFacilityType().getFacilityName().equals(wholeString)) {
+                    entry.getKey().setFacilityType(setWholsaleType(entry.getKey().getFacilityType()));
+                }
+                if (entry.getKey().getFacilityType().getFacilityName().equals(regWarehouseString)) {
+                    entry.getKey().setFacilityType(setRegionalWarehouseType(entry.getKey().getFacilityType()));
+                }
+                if (entry.getKey().getFacilityType().getFacilityName().equals(retailString)) {
+                    entry.getKey().setFacilityType(setRetailerType(entry.getKey().getFacilityType()));
+                }
+                for (Facility current : entry.getValue()) {
+                    if (current.getFacilityType().getFacilityName().equals(facString)) {
+                        current.setFacilityType(setFactoryType(entry.getKey().getFacilityType()));
+                    }
+                    if (current.getFacilityType().getFacilityName().equals(wholeString)) {
+                        current.setFacilityType(setWholsaleType(entry.getKey().getFacilityType()));
+                    }
+                    if (current.getFacilityType().getFacilityName().equals(regWarehouseString)) {
+                        current.setFacilityType(setRegionalWarehouseType(entry.getKey().getFacilityType()));
+                    }
+                    if (current.getFacilityType().getFacilityName().equals(retailString)) {
+                        current.setFacilityType(setRetailerType(entry.getKey().getFacilityType()));
+                    }
 
-    /**
-     * fills the wholesale with the types
-     *
-     * @param facility facility instance
-     * @return facilitytype
-     */
-    private FacilityType setWholsaleType(FacilityType facility) {
-        return getFacilityType(facility, inGoodsWholesale, outGoodsWholesale, stockHoldingWholesale, startingBudgetWholesale, startingOrderWholesale, startingStockWholesale, openOrderCostWholesale);
-    }
+                }
+            }
 
-    /**
-     * fills the Regional warehouse with the types
-     *
-     * @param facility facility instance
-     * @return facilitytype
-     */
-    private FacilityType setRegionalWarehouseType(FacilityType facility) {
-        return getFacilityType(facility, inGoodsRegionalWharehouse, outGoodsRegionalWharehouse, stockHoldingRegionalWharehouse, startingBudgetRegionalWharehouse, startingOrderRegionalWharehouse, startingStockRegionalWharehouse, openOrderCostRegionalWarehouse);
-    }
+        }
 
-    /**
-     * fills the retailer with the types
-     *
-     * @param facility facility instance
-     * @return facilitytype
-     */
-    private FacilityType setRetailerType(FacilityType facility) {
-        return getFacilityType(facility, inGoodsRetailer, outGoodsRetailer, stockHoldingRetailer, startingBudgetRetailer, startingOrderRetailer, startingStockRetailer, openOrderCostRetailer);
-    }
+        /**
+         * fills the factory with the types
+         *
+         * @param facility facility instance
+         * @return facilitytype
+         */
+        private FacilityType setFactoryType (FacilityType facility){
+            return getFacilityType(facility, inGoodsFactory, outGoodsFactory, stockHoldingFactory, startingBudgetFactory, startingOrderFactory, startingStockFactory, openOrderCostFactory);
+        }
 
-    /**
-     * fills a facility with the types
-     *
-     * @param facility facility instance
-     * @return facilitytype
-     */
-    private FacilityType getFacilityType(FacilityType facility, TextField inGoods, TextField outGoods, TextField stockHolding, TextField startingBudget, TextField startingOrder, TextField startingStock, TextField openOrderCost) {
-        if ((inGoods.getText() != null && !inGoods.getText().isEmpty())) {
-            facility.setValueIncomingGoods(Integer.parseInt(inGoods.getText()));
+        /**
+         * fills the wholesale with the types
+         *
+         * @param facility facility instance
+         * @return facilitytype
+         */
+        private FacilityType setWholsaleType (FacilityType facility){
+            return getFacilityType(facility, inGoodsWholesale, outGoodsWholesale, stockHoldingWholesale, startingBudgetWholesale, startingOrderWholesale, startingStockWholesale, openOrderCostWholesale);
         }
-        if ((outGoods.getText() != null && !outGoods.getText().isEmpty())) {
-            facility.setValueOutgoingGoods(Integer.parseInt(outGoods.getText()));
-        }
-        if ((stockHolding.getText() != null && !stockHolding.getText().isEmpty())) {
-            facility.setStockHoldingCosts(Integer.parseInt(stockHolding.getText()));
-        }
-        if ((startingBudget.getText() != null && !startingBudget.getText().isEmpty())) {
-            facility.setStartingBudget(Integer.parseInt(startingBudget.getText()));
-        }
-        if ((startingOrder.getText() != null && !startingOrder.getText().isEmpty())) {
-            facility.setStartingOrder(Integer.parseInt(startingOrder.getText()));
-        }
-        if ((startingStock.getText() != null && !startingStock.getText().isEmpty())) {
-            facility.setStartingStock(Integer.parseInt(startingStock.getText()));
-        }
-        if ((openOrderCost.getText() != null && !openOrderCost.getText().isEmpty())) {
-            facility.setOpenOrderCosts(Integer.parseInt(openOrderCost.getText()));
-        }
-        return facility;
-    }
 
-}
+        /**
+         * fills the Regional warehouse with the types
+         *
+         * @param facility facility instance
+         * @return facilitytype
+         */
+        private FacilityType setRegionalWarehouseType (FacilityType facility){
+            return getFacilityType(facility, inGoodsRegionalWharehouse, outGoodsRegionalWharehouse, stockHoldingRegionalWharehouse, startingBudgetRegionalWharehouse, startingOrderRegionalWharehouse, startingStockRegionalWharehouse, openOrderCostRegionalWarehouse);
+        }
+
+        /**
+         * fills the retailer with the types
+         *
+         * @param facility facility instance
+         * @return facilitytype
+         */
+        private FacilityType setRetailerType (FacilityType facility){
+            return getFacilityType(facility, inGoodsRetailer, outGoodsRetailer, stockHoldingRetailer, startingBudgetRetailer, startingOrderRetailer, startingStockRetailer, openOrderCostRetailer);
+        }
+
+        /**
+         * fills a facility with the types
+         *
+         * @param facility facility instance
+         * @return facilitytype
+         */
+        private FacilityType getFacilityType (FacilityType facility, TextField inGoods, TextField outGoods, TextField
+        stockHolding, TextField startingBudget, TextField startingOrder, TextField startingStock, TextField
+        openOrderCost){
+            if ((inGoods.getText() != null && !inGoods.getText().isEmpty())) {
+                facility.setValueIncomingGoods(Integer.parseInt(inGoods.getText()));
+            }
+            if ((outGoods.getText() != null && !outGoods.getText().isEmpty())) {
+                facility.setValueOutgoingGoods(Integer.parseInt(outGoods.getText()));
+            }
+            if ((stockHolding.getText() != null && !stockHolding.getText().isEmpty())) {
+                facility.setStockHoldingCosts(Integer.parseInt(stockHolding.getText()));
+            }
+            if ((startingBudget.getText() != null && !startingBudget.getText().isEmpty())) {
+                facility.setStartingBudget(Integer.parseInt(startingBudget.getText()));
+            }
+            if ((startingOrder.getText() != null && !startingOrder.getText().isEmpty())) {
+                facility.setStartingOrder(Integer.parseInt(startingOrder.getText()));
+            }
+            if ((startingStock.getText() != null && !startingStock.getText().isEmpty())) {
+                facility.setStartingStock(Integer.parseInt(startingStock.getText()));
+            }
+            if ((openOrderCost.getText() != null && !openOrderCost.getText().isEmpty())) {
+                facility.setOpenOrderCosts(Integer.parseInt(openOrderCost.getText()));
+            }
+            return facility;
+        }
+
+    }
 
