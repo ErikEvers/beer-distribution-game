@@ -1,4 +1,4 @@
-package org.han.asd.c.bootstrap.Intergration.ProgramAgent;
+package org.han.asd.c.bootstrap.Intergration.ProgrammedAgent;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ProgramAgentIntegrationTest {
+class ProgrammedAgentIntegrationTest {
     private IBusinessRules iBusinessRules;
 
     private IBusinessRuleStore iBusinessRuleStore;
@@ -38,7 +38,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testCreateDefaultProgramedAgent() {
+    void testCreateDefaultProgrammedAgent() {
         iBusinessRules.programAgent("Jeroen","default deliver 34 \ndefault order 34");
 
         List<String> agents = iBusinessRuleStore.getAllProgrammedAgents();
@@ -50,7 +50,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testCreateProgramedAgentWithMultipleRules() {
+    void testCreateProgrammedAgentWithMultipleRules() {
         iBusinessRules.programAgent("Jeroen","default deliver 34 \ndefault order 34 \nif inventory is 34 then order 34");
 
         List<String> agents = iBusinessRuleStore.getAllProgrammedAgents();
@@ -62,7 +62,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testCreateMultipleProgramedAgentsSavedBusinessRule() {
+    void testCreateMultipleProgrammedAgentsSavedBusinessRule() {
         iBusinessRules.programAgent("Jeroen","default deliver 34 \ndefault order 34 \n");
         iBusinessRules.programAgent("Klaas","default deliver 34 \ndefault order 34 \n");
 
@@ -72,7 +72,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testCreateMultipleProgramedAgentsDifferentRules() {
+    void testCreateMultipleProgrammedAgentsDifferentRules() {
         iBusinessRules.programAgent("Klaas","default deliver 34 \ndefault order 35 \n");
         iBusinessRules.programAgent("Jeroen","default deliver 60 \ndefault order 70 \nif inventory is 34 then order 65");
 
@@ -87,7 +87,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testCreateProgramedAgentNotInserted() {
+    void testCreateProgrammedAgentNotInserted() {
         iBusinessRules.programAgent("Klaas","default deadsasliver 34");
 
         List<String> agents = iBusinessRuleStore.getAllProgrammedAgents();
@@ -96,7 +96,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testCreateTwoProgramedAgentsOneInserted() {
+    void testCreateTwoProgrammedAgentsOneInserted() {
         iBusinessRules.programAgent("Klaas","default deadsasliver 34");
         iBusinessRules.programAgent("Jeroen","default deliver 34 \ndefault order 35 \n");
 
@@ -109,7 +109,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testDeleteProgramedAgent() {
+    void testDeleteProgrammedAgent() {
         iBusinessRules.programAgent("Jeroen","default deliver 34 \ndefault order 35 \n");
 
         List<String> agentsBefore = iBusinessRuleStore.getAllProgrammedAgents();
@@ -123,7 +123,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testDeleteProgramedAgentAndBusinessRules() {
+    void testDeleteProgrammedAgentAndBusinessRules() {
         iBusinessRules.programAgent("Jeroen","default deliver 34 \ndefault order 35 \n");
 
         List<String> agentsBefore = iBusinessRuleStore.getAllProgrammedAgents();
@@ -140,7 +140,7 @@ class ProgramAgentIntegrationTest {
     }
 
     @Test
-    void testEditProgramedAgent() {
+    void testEditProgrammedAgent() {
         iBusinessRules.programAgent("Jeroen","default deliver 34 \ndefault order 35 \n");
 
         List<String> agentsBefore = iBusinessRuleStore.getAllProgrammedAgents();
