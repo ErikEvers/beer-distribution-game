@@ -20,17 +20,26 @@ import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
 import javax.inject.Provider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NodeConverterTest {
     private Provider<NodeConverter> nodeConverterProvider;
     private Provider<ActionReference> actionReferenceProvider;
+    private Configuration configuration;
 
 
     @BeforeEach
@@ -91,7 +100,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_FactoryDeliver(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = 1;
+        int exp = -1;
         int res = nodeConverter.getFacilityIdByAction(0,actionReferenceProvider.get().addValue("deliver"));
 
         assertEquals(exp,res);
@@ -101,7 +110,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_RegionalWarehouseOrder(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = 0;
+        int exp = -1;
         int res = nodeConverter.getFacilityIdByAction(1,actionReferenceProvider.get().addValue("order"));
 
         assertEquals(exp,res);
@@ -111,7 +120,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_RegionalWarehouseDeliver(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = 2;
+        int exp = -1;
         int res = nodeConverter.getFacilityIdByAction(1,actionReferenceProvider.get().addValue("deliver"));
 
         assertEquals(exp,res);
@@ -121,7 +130,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_WholesalerOrder(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = 1;
+        int exp = -1;
         int res = nodeConverter.getFacilityIdByAction(2,actionReferenceProvider.get().addValue("order"));
 
         assertEquals(exp,res);
@@ -131,7 +140,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_WholesalerDeliver(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = 3;
+        int exp = -1;
         int res = nodeConverter.getFacilityIdByAction(2,actionReferenceProvider.get().addValue("deliver"));
 
         assertEquals(exp,res);
@@ -141,7 +150,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_RetailerOrder(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        int exp = 2;
+        int exp = -1;
         int res = nodeConverter.getFacilityIdByAction(3,actionReferenceProvider.get().addValue("order"));
 
         assertEquals(exp,res);

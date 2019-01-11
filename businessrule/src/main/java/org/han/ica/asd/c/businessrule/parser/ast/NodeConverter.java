@@ -13,7 +13,8 @@ public class NodeConverter {
     @Named("BusinessruleStore")
     private IBusinessRuleStore businessRuleStore;
 
-    private static final int FACILITYNOTFOUND = -1;
+    public static final int FIRSTFACILITYABOVEBELOW = -1;
+    private static final int FACILITYNOTFOUND = -404;
 
     public NodeConverter() {
         //Empty constructor for Guice
@@ -70,25 +71,25 @@ public class NodeConverter {
 
         for (int i = 0; i < facilities.size(); i++) {
             if(facilities.get(i).contains(String.valueOf(ownFacilityId))){
-                return getFacilityIdByAction(actionName,facilities,i);
+                return getFacilityIdByAction(actionName,i);
             }
         }
 
         return FACILITYNOTFOUND;
     }
 
-    private Integer getFacilityIdByAction(ActionReference actionName, List<List<String>> facilities, int facility) {
+    private Integer getFacilityIdByAction(ActionReference actionName, int facility) {
         if("order".equals(actionName.getAction())){
             if(facility == FacilityType.FACTORY.getIndex()){
                 return null;
             } else {
-                return Integer.parseInt(facilities.get(facility - 1).get(0));
+                return FIRSTFACILITYABOVEBELOW;
             }
         } else {
             if(facility == FacilityType.RETAILER.getIndex()){
                 return null;
             } else {
-                return Integer.parseInt(facilities.get(facility + 1).get(0));
+                return FIRSTFACILITYABOVEBELOW;
             }
         }
     }
