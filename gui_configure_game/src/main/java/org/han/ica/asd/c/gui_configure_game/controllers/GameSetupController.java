@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gui_configure_game.controllers;
 
 import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_configure_game.graph.*;
 import javafx.collections.FXCollections;
@@ -19,10 +20,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 
+import java.lang.reflect.Array;
 import java.net.URL;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,11 +87,6 @@ public class GameSetupController implements Initializable {
     private AnchorPane facilitiesContainer;
 
 
-    private int factoryindex = 1;
-    private int regionalWharehouseindex = 1;
-    private int wholsaleindex = 1;
-    private int retailerindex = 1;
-
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
      */
@@ -119,10 +117,10 @@ public class GameSetupController implements Initializable {
         graphConverterToDomain.setGraph(graph);
         int[] countAll = graphConverterToDomain.countAll();
 
-        int factoryindexIn = factoryindex + countAll[0];
-        int regionalWharehouseindexIn = regionalWharehouseindex + countAll[0] + countAll[1];
-        int wholsaleindexIn = wholsaleindex + countAll[0] + countAll[1] + countAll[2];
-        int retailerindexIn = retailerindex + countAll[0] + countAll[1] + countAll[2] + countAll[3];
+        int factoryindexIn = 1 + countAll[0];
+        int regionalWharehouseindexIn = 1 + countAll[0] + countAll[1];
+        int wholsaleindexIn = 1 + countAll[0] + countAll[1] + countAll[2];
+        int retailerindexIn = 1 + countAll[0] + countAll[1] + countAll[2] + countAll[3];
 
         GraphFacility graphFacility = comboBox.getSelectionModel().getSelectedItem();
 
@@ -332,7 +330,8 @@ public class GameSetupController implements Initializable {
      * @throws GraphException when a facility is missing from the list
      */
     private void connect(FacilityRectangle r1, FacilityRectangle r2, double x, double y, EdgeLine line) throws GraphException {
-
+        System.out.println(r1.getGraphFacility().toString());
+        System.out.println(r2.getGraphFacility().toString());
         line.drawLine(r1, r2, x, y);
         line.setSupplier(r1);
         line.setBuyer(r2);
@@ -435,7 +434,7 @@ public class GameSetupController implements Initializable {
         gameSetupStart.setupScreen();
     }
 
-    public void popUpError() {
+    private void popUpError() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "The graph is either incomplete or does not have a complete line of facilities");
         alert.setHeaderText("Warning");
         alert.setTitle("Warning");
@@ -460,6 +459,7 @@ public class GameSetupController implements Initializable {
         }
 
     }
+
 
     private void updateId() {
 

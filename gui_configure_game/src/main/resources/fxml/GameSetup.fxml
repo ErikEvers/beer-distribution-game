@@ -26,13 +26,13 @@
             <RowConstraints maxHeight="220.0" minHeight="92.0" prefHeight="107.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="addFacilityButton" mnemonicParsing="false" onAction="#handleAddFacilityButtonClick" text="Add facility" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+            <Button fx:id="addFacilityButton" mnemonicParsing="false" onAction="#handleAddFacilityButtonClick" prefHeight="25.0" prefWidth="104.0" text="%add_fac_button" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets right="15.0" />
                </GridPane.margin>
             </Button>
             <ComboBox fx:id="comboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
-            <Label prefHeight="30.0" prefWidth="410.0" text="Add facilities and configure your game!" GridPane.columnIndex="1">
+            <Label prefHeight="30.0" prefWidth="410.0" text="%main_text_setup" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="15.0" />
                </GridPane.margin>
@@ -40,12 +40,12 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#setNextScreen" prefHeight="25.0" prefWidth="89.0" text="Next" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button mnemonicParsing="false" onAction="#setNextScreen" prefHeight="25.0" prefWidth="89.0" text="%next_button" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets right="15.0" />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#setBackButtonAction" prefHeight="25.0" prefWidth="85.0" text="Back" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#setBackButtonAction" prefHeight="25.0" prefWidth="85.0" text="%back_button" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="5.0" top="15.0" />

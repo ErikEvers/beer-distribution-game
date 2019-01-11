@@ -91,7 +91,7 @@ public class GameSetupStartController {
         Object[] data = new Object[3];
         fillConfiguration();
         data[0] = configuration;
-        if (gameName.getText() != null && roundNumber.getText().isEmpty()) {
+        if (gameName.getText() != null && !gameName.getText().isEmpty()) {
             data[1] = gameName.getText();
         }
         if (offlineGame.isSelected()) {
@@ -142,16 +142,13 @@ public class GameSetupStartController {
     }
 
     void setConfigurationInScreen(Configuration configuration) {
-        if (configuration == null) {
-            assert configuration != null;
-            roundNumber.setText(String.valueOf(configuration.getAmountOfRounds()));
-            minOrder.setText(String.valueOf(configuration.getMinimalOrderRetail()));
-            maxOrder.setText(String.valueOf(configuration.getMaximumOrderRetail()));
-            bankrupt.setSelected(configuration.isContinuePlayingWhenBankrupt());
-            seeDetail.setSelected(configuration.isInsightFacilities());
-        }
-
+        roundNumber.setText(String.valueOf(configuration.getAmountOfRounds()));
+        minOrder.setText(String.valueOf(configuration.getMinimalOrderRetail()));
+        maxOrder.setText(String.valueOf(configuration.getMaximumOrderRetail()));
+        bankrupt.setSelected(configuration.isContinuePlayingWhenBankrupt());
+        seeDetail.setSelected(configuration.isInsightFacilities());
     }
+
 
     void setOnlineGame(String onlineGame) {
         if (onlineGame.equals("FALSE")) {
