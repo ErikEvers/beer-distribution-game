@@ -149,11 +149,11 @@ public class Configuration implements IDomainModel, Serializable {
     }
 
     public List<Facility> getFacilitiesLinkedToFacilitiesByFacilityId(int facilityId) {
-		Optional<Facility> optional = facilitiesLinkedTo.keySet().stream().filter(facility -> facility.getFacilityId() == facilityId).findFirst();
-		if(optional.isPresent()) {
-        	return facilitiesLinkedTo.get(optional.get());
-		}
-		return null;
+        Optional<Facility> optional = facilitiesLinkedTo.keySet().stream().filter(facility -> facility.getFacilityId() == facilityId).findFirst();
+        if(optional.isPresent()) {
+              return facilitiesLinkedTo.get(optional.get());
+        }
+        return new ArrayList<>();
     }
 
     public List<Facility> getFacilitiesLinkedToFacilities(Facility facility) {

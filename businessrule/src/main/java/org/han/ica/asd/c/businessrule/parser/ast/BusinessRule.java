@@ -7,7 +7,6 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.gamevalue.GameValue;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
@@ -186,32 +185,32 @@ public class BusinessRule extends ASTNode {
      * Replaces the variables of the business rule with data using dept first
      *
      * When its a leaf (a Value) it replaces the value with the game data(gameData)
-     * @param beerGame data of a gameData
+     * @param round data of a gameData
      * @param facilityId identifier of the facility
      */
-    public void substituteTheVariablesOfBusinessruleWithGameData(BeerGame beerGame, int facilityId) {
-        findLeafAndReplace(condition, beerGame, facilityId);
-        findLeafAndReplace(action, beerGame, facilityId);
+    public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId) {
+        findLeafAndReplace(condition, round, facilityId);
+        findLeafAndReplace(action, round, facilityId);
     }
 
     /***
      * Finds the leaf of the astnode and replaces the value
      *
      * @param astNode the node of the ast
-     * @param beerGame the game data, used to replace data in function replace(Value value, int facilityId)
+     * @param round the game data, used to replace data in function replace(Value value, int facilityId)
      * @param facilityId the id of the facility
      */
-    private void findLeafAndReplace(ASTNode astNode, BeerGame beerGame, int facilityId) {
+    private void findLeafAndReplace(ASTNode astNode, Round round, int facilityId) {
         if (astNode instanceof Value) {
-            replace((Value) astNode, beerGame, facilityId);
+            replace((Value) astNode, round, facilityId);
         }
         if (astNode != null) {
-            findLeafAndReplace(astNode.getLeftChild(), beerGame, facilityId);
+            findLeafAndReplace(astNode.getLeftChild(), round, facilityId);
             if (hasMultipleChildren(astNode)) {
-                findLeafAndReplace(astNode.getRightChild(), beerGame, facilityId);
+                findLeafAndReplace(astNode.getRightChild(), round, facilityId);
 
                 if (astNode instanceof Action && ((Action) astNode).hasComparisonStatement()){
-                    findLeafAndReplace(((Action) astNode).getComparisonStatement(), beerGame, facilityId);
+                    findLeafAndReplace(((Action) astNode).getComparisonStatement(), round, facilityId);
                 }
             }
         }
@@ -230,20 +229,20 @@ public class BusinessRule extends ASTNode {
      * Gets one part of the value replaces it with game data
      *
      * @param value the value
-     * @param beerGame the previous round
+     * @param round the previous round
      * @param facilityId the id of the facility
      */
-    private void replace(Value value, BeerGame beerGame, int facilityId) {
+    private void replace(Value value, Round round, int facilityId) {
         String replacementValue;
         if (value.getValue().size() > 1) {
             String secondVariable = value.getSecondPartVariable();
             if (GameValue.checkIfFacility(secondVariable) || Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
-                replaceOnVariable(value, beerGame, facilityId, secondVariable);
+                replaceOnVariable(value, round, facilityId, secondVariable);
             }
         }
         replacementValue = value.getFirstPartVariable();
         if (Pattern.matches(HAS_CHARACTERS, value.getFirstPartVariable())) {
-            replaceOnVariable(value, beerGame, facilityId, replacementValue);
+            replaceOnVariable(value, round, facilityId, replacementValue);
         }
     }
 
@@ -251,18 +250,18 @@ public class BusinessRule extends ASTNode {
      * Replaces exactly one part of the variable
      *
      * @param value the value
-     * @param beerGame the previous round
+     * @param round the previous round
      * @param facilityId the id of the facility
      * @param variable one part of value
      */
-    private void replaceOnVariable(Value value, BeerGame beerGame, int facilityId, String variable) {
+    private void replaceOnVariable(Value value, Round round, int facilityId, String variable) {
         GameValue gameValue = getGameValue(variable);
         String newReplacementValue;
         if (GameValue.checkIfFacility(variable)) {
             newReplacementValue = String.valueOf(nodeConverter.getFacilityId(variable));
             value.replaceValueWithValue(newReplacementValue);
         } else if (gameValue != null) {
-            newReplacementValue = getReplacementValue(gameValue, beerGame, facilityId);
+            newReplacementValue = getReplacementValue(gameValue, round, facilityId);
             value.replaceValueWithValue(newReplacementValue);
         }
     }
@@ -286,24 +285,24 @@ public class BusinessRule extends ASTNode {
      * Gets the replacementValue from the previous round
      *
      * @param gameValue the type of game value
-     * @param beerGame from the previous round
+     * @param round from the previous round
      * @param facilityId the id of the facility
      * @return the replacement Value
      */
-    private String getReplacementValue(GameValue gameValue, BeerGame beerGame, int facilityId) {
+    private String getReplacementValue(GameValue gameValue, Round round, int facilityId) {
         switch (gameValue) {
             case ORDERED:
-                return getOrder(beerGame, facilityId);
+                return getOrder(round, facilityId);
             case STOCK:
-                return getStock(beerGame, facilityId);
+                return getStock(round, facilityId);
             case BUDGET:
-                return getBudget(beerGame, facilityId);
+                return getBudget(round, facilityId);
             case BACKLOG:
-                return getBacklog(beerGame, facilityId);
+                return getBacklog(round, facilityId);
             case INCOMINGORDER:
-                return getIncomingOrder(beerGame, facilityId);
+                return getIncomingOrder(round, facilityId);
             case OUTGOINGGOODS:
-                return getOutgoingGoods(beerGame, facilityId);
+                return getOutgoingGoods(round, facilityId);
             default:
                 return "";
         }
@@ -311,12 +310,12 @@ public class BusinessRule extends ASTNode {
 
     /***
      * Gets the number of orders of an facility
-     * @param beerGame the given round
+     * @param round the given round
      * @param facilityId the id of the given facility
      * @return the order amount
      */
-    private String getOrder(BeerGame beerGame, int facilityId) {
-        for (FacilityTurnOrder facilityTurnOrder : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityOrders()) {
+    private String getOrder(Round round, int facilityId) {
+        for (FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
             if (facilityTurnOrder.getFacilityId() == facilityId) {
                 return String.valueOf(facilityTurnOrder.getOrderAmount());
             }
@@ -326,12 +325,12 @@ public class BusinessRule extends ASTNode {
 
     /***
      * Gets the stock of an facility
-     * @param beerGame the given round
+     * @param round the given round
      * @param facilityId the id of the given facility
      * @return stock
      */
-    private String getStock(BeerGame beerGame, int facilityId) {
-        for (FacilityTurn facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurns()) {
+    private String getStock(Round round, int facilityId) {
+        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
             if (facilityTurn.getFacilityId() == facilityId) {
                 return String.valueOf(facilityTurn.getStock());
             }
@@ -341,12 +340,12 @@ public class BusinessRule extends ASTNode {
 
     /***
      * Gets the remaining budget of an facility
-     * @param beerGame the given round
+     * @param round the given round
      * @param facilityId the id of the given facility
      * @return budget
      */
-    private String getBudget(BeerGame beerGame, int facilityId) {
-        for (FacilityTurn facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurns()) {
+    private String getBudget(Round round, int facilityId) {
+        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
             if (facilityTurn.getFacilityId() == facilityId) {
                 return String.valueOf(facilityTurn.getRemainingBudget());
             }
@@ -356,12 +355,12 @@ public class BusinessRule extends ASTNode {
 
     /***
      * Gets the number of open orders of an facility
-     * @param beerGame the given round
+     * @param round the given round
      * @param facilityId the id of the given facility
      * @return budget
      */
-    private String getBacklog(BeerGame beerGame, int facilityId) {
-        for (FacilityTurn facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurns()) {
+    private String getBacklog(Round round, int facilityId) {
+        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
             if (facilityTurn.getFacilityId() == facilityId) {
                 return String.valueOf(facilityTurn.getBackorders());
             }
@@ -371,12 +370,12 @@ public class BusinessRule extends ASTNode {
 
     /***
      * Gets the incoming order of an facility
-     * @param beerGame the given round
+     * @param round the given round
      * @param facilityId the id of the given facility
      * @return incoming order amount
      */
-    private String getIncomingOrder(BeerGame beerGame, int facilityId) {
-        for (FacilityTurnOrder facilityTurn : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityOrders()) {
+    private String getIncomingOrder(Round round, int facilityId) {
+        for (FacilityTurnOrder facilityTurn : round.getFacilityOrders()) {
             if (facilityTurn.getFacilityIdOrderTo() == facilityId) {
                 return String.valueOf(facilityTurn.getOrderAmount());
             }
@@ -386,12 +385,12 @@ public class BusinessRule extends ASTNode {
 
     /***
      * Gets the outgoing order of an facility
-     * @param beerGame the given round
+     * @param round the given round
      * @param facilityId the id of the given facility
      * @return outgoing goods amount
      */
-    private String getOutgoingGoods(BeerGame beerGame, int facilityId) {
-        for (FacilityTurnDeliver facilityTurnDeliver : beerGame.getRounds().get(beerGame.getRounds().size()-1).getFacilityTurnDelivers()) {
+    private String getOutgoingGoods(Round round, int facilityId) {
+        for (FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
             if (facilityTurnDeliver.getFacilityId() == facilityId) {
                 return String.valueOf(facilityTurnDeliver.getDeliverAmount());
             }

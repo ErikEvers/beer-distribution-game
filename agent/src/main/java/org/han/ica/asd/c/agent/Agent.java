@@ -65,7 +65,7 @@ public class Agent extends GameAgent implements IParticipant {
 
 		while (shouldIterate.getAsBoolean()) {
 			GameBusinessRules gameBusinessRules = gameBusinessRulesIterator.next();
-			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), beerGame, getFacility().getFacilityId());
+			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round, getFacility().getFacilityId());
 			if (actionModel != null) {
 				if (canAddToOrderMap.apply(actionModel.isOrderType())) {
 					this.updateTargetMap(this.resolveLowerFacilityId(actionModel.facilityId), actionModel.amount, targetOrderMap, triggeredBusinessRules, gameBusinessRules);

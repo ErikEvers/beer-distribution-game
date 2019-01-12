@@ -2,18 +2,24 @@ package org.han.ica.asd.c.gui_play_game;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
@@ -23,6 +29,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +53,10 @@ public abstract class PlayGame implements IPlayGame {
     protected TextField incomingOrdersTextField;
 
     @FXML
-		protected Button submitTurnButton;
+    protected Button submitTurnButton;
+
+	@FXML
+	protected Button seeOtherFacilitiesButton;
 
     @Inject
     @Named("SeeOtherFacilities")
@@ -79,6 +89,14 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected TextField txtOutgoingDelivery;
 
+    @FXML
+    protected ListView<String> deliverList;
+    @FXML
+    protected ListView<String> orderList;
+
+    protected ObservableList<String> orderFacilities;
+    protected ObservableList<String> deliverFacilities;
+
     protected static Alert currentAlert;
 
     /**
@@ -92,8 +110,13 @@ public abstract class PlayGame implements IPlayGame {
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
+        if(playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
+			seeOtherFacilitiesButton.setDisable(false);
+		}
         playerComponent.setUi(this);
         playerComponent.startNewTurn();
+        orderFacilities = FXCollections.observableArrayList();
+        deliverFacilities = FXCollections.observableArrayList();
     }
 
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
@@ -109,6 +132,23 @@ public abstract class PlayGame implements IPlayGame {
     public void seeOtherFacilitiesButtonClicked() {
         seeOtherFacilities.setupScreen();
     }
+
+
+		public void handleSeeActivityLogButtonClicked() {
+    	Parent parent;
+    	try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ActivityLogPopup.fxml"));
+				parent = loader.load();
+				ActivityLogPopupController activityLogPopupController = loader.getController();
+				activityLogPopupController.setLogContent(playerComponent.getBeerGame(), playerComponent.getPlayer().getFacility().getFacilityId());
+				Stage stage = new Stage();
+				stage.setScene(new Scene(parent));
+				stage.show();
+			} catch (IOException e) {
+				currentAlert = new Alert(Alert.AlertType.ERROR, "Can't display activity log", ButtonType.CLOSE);
+				currentAlert.show();
+			}
+		}
 
     public abstract void fillComboBox();
 
@@ -145,16 +185,29 @@ public abstract class PlayGame implements IPlayGame {
         if (!outgoingOrderTextField.getText().isEmpty()) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
             Facility facility = comboBox.getValue();
+            String facilityAndOrderAmount = concatFacilityAndIdAndOrder(facility.getFacilityType().getFacilityName(), facility.getFacilityId(), order);
+            outgoingOrderTextField.clear();
             playerComponent.placeOrder(facility, order);
+            orderFacilities.add(facilityAndOrderAmount);
         }
     }
 
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
+            Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
             int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
-            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), delivery);
+            String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(chosenFacility.getFacilityType().getFacilityName(), chosenFacility.getFacilityId(), delivery);
+            txtOutgoingDelivery.clear();
+            playerComponent.sendDelivery(chosenFacility, delivery);
+
+            deliverFacilities.add(facilityAndDeliverAmount);
         }
     }
+
+    private String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
+        return facilityName.concat(" id: " + Integer.toString(facilityid)).concat(" Amount: " + Integer.toString(amount));
+    }
+
 
     @FXML
     protected void submitTurnButtonClicked() {
@@ -162,6 +215,8 @@ public abstract class PlayGame implements IPlayGame {
         if(playerComponent.submitTurn()) {
 					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
 					currentAlert.show();
+					orderFacilities.clear();
+					deliverFacilities.clear();
 				} else {
 					currentAlert = new Alert(Alert.AlertType.ERROR, "Something went wrong while submitting your turn, please try again", ButtonType.OK, ButtonType.CLOSE);
 					Optional<ButtonType> result = currentAlert.showAndWait();

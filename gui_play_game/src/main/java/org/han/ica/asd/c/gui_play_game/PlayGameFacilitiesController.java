@@ -1,15 +1,18 @@
 package org.han.ica.asd.c.gui_play_game;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
 import javafx.util.converter.IntegerStringConverter;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
 public class PlayGameFacilitiesController extends PlayGame {
+    @FXML
+    public ListView<String> deliverList;
+    @FXML
+    public ListView<String> orderList;
     @FXML
     private Label lblFacilities;
 
@@ -21,6 +24,8 @@ public class PlayGameFacilitiesController extends PlayGame {
         superInitialize();
 
         txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
+        deliverList.setItems(deliverFacilities);
+        orderList.setItems(orderFacilities);
     }
 
     /**
@@ -28,6 +33,10 @@ public class PlayGameFacilitiesController extends PlayGame {
      */
     public void handleSendOrderButtonClick() {
         super.handleSendOrderButtonClick();
+    }
+
+    public void handleSeeActivityLogButtonClicked() {
+        super.handleSeeActivityLogButtonClicked();
     }
 
     /**

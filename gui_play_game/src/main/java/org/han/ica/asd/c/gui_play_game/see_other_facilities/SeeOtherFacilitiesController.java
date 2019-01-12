@@ -2,7 +2,9 @@ package org.han.ica.asd.c.gui_play_game.see_other_facilities;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 
 import javax.inject.Inject;
@@ -19,6 +21,9 @@ public class SeeOtherFacilitiesController {
     @FXML
     private AnchorPane facilitiesContainer;
 
+    @Inject @Named("PlayGame")
+    private IGUIHandler playGame;
+
     @Inject @Named("PlayerComponent")
     private IPlayerComponent playerComponent;
 
@@ -27,5 +32,10 @@ public class SeeOtherFacilitiesController {
      */
     public void initialize() {
         new TreeBuilder().loadFacilityView(playerComponent.getBeerGame(), facilitiesContainer, true);
+    }
+
+    public void handleBackToGameButtonClicked(){
+        ((IParticipant)playerComponent).startGame();
+        ((IParticipant)playerComponent).executeTurn();
     }
 }

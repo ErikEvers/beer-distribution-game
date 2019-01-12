@@ -17,6 +17,7 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
@@ -76,10 +77,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
         Configuration configuration = new Configuration();
 
-        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,5,25,50,20, 20), 0);
-        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,5,25,50,0, 20), 1);
-        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,5,25,50,0, 20), 2);
-        Facility factory = new Facility(new FacilityType("Factory", 0, 0,5,25,50,0, 25), 3);
+        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,5,25,50,20, 20), 1);
+        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,5,25,50,0, 20), 2);
+        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,5,25,50,0, 20), 3);
+        Facility factory = new Facility(new FacilityType("Factory", 0, 0,5,25,50,0, 25), 4);
 
         List<Facility> facilityList = new ArrayList<>();
         facilityList.add(retailer);

@@ -117,6 +117,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 					for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
 						if(facilityTurnDeliver.getFacilityId() == facility.getFacilityId()) {
 							backorders -= facilityTurnDeliver.getDeliverAmount();
+							stock -= facilityTurnDeliver.getDeliverAmount();
 						}
 					}
 					for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
