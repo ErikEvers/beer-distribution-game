@@ -9,19 +9,20 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
-import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-
 public abstract class PlayGame implements IPlayGame {
+    private List<Facility> facilitiesDeliverySubmited;
+    private List<Facility> faciltiesOrderSubmitted;
     protected BeerGame beerGame;
 
     @FXML
@@ -41,7 +42,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @Inject
     @Named("SeeOtherFacilities")
-    IGUIHandler seeOtherFacilities;
+    private IGUIHandler seeOtherFacilities;
 
     @FXML
     protected Label inventory;
@@ -50,7 +51,8 @@ public abstract class PlayGame implements IPlayGame {
     protected Label backOrders;
 
     @Inject
-    @Named("PlayerComponent") protected IPlayerComponent playerComponent;
+    @Named("PlayerComponent")
+    protected IPlayerComponent playerComponent;
 
     @FXML
     protected TextField incomingGoodsNextRound;
@@ -77,6 +79,8 @@ public abstract class PlayGame implements IPlayGame {
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
         playerComponent.setUi(this);
         playerComponent.startNewTurn();
+        faciltiesOrderSubmitted = new ArrayList<>();
+        facilitiesDeliverySubmited = new ArrayList<>();
     }
 
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
@@ -100,31 +104,28 @@ public abstract class PlayGame implements IPlayGame {
     public abstract void fillComboBox();
 
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
-        ArrayList<Facility> facilities = new ArrayList<>();
-
+        List<Facility> facilitiesToDeliverTo = new ArrayList<>();
+        Facility facilityPlayedByPlayer = playerComponent.getPlayer().getFacility();
         beerGame.getConfiguration().getFacilities().forEach(
-                t -> {
-                    Facility facilityPlayedByPlayer = playerComponent.getPlayer().getFacility();
-
-                    if (t != facilityPlayedByPlayer) {
-                        List<Facility> facilitiesLinkedToFacilities = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(t);
-                        if (facilitiesLinkedToFacilities != null) {
-                            if (facilitiesLinkedToFacilities.contains(facilityPlayedByPlayer)) {
-                                facilities.add(t);
-                            }
-                        }
+            t -> {
+                if (t != facilityPlayedByPlayer) {
+                    List<Facility> facilitiesLinkedToFacilities = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(t);
+                    if (facilitiesLinkedToFacilities != null && facilitiesLinkedToFacilities.contains(facilityPlayedByPlayer)) {
+                        facilitiesToDeliverTo.add(t);
                     }
                 }
+            }
         );
 
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-        facilityListView.addAll(facilities);
+        facilityListView.addAll(facilitiesToDeliverTo);
         comboBox.setItems(facilityListView);
     }
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
+        List<Facility> facilitiesToOrderTo = beerGame.getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility());
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-        facilityListView.addAll(beerGame.getConfiguration().getFacilitiesLinkedToFacilities(playerComponent.getPlayer().getFacility()));
+        facilityListView.addAll(facilitiesToOrderTo);
         comboBox.setItems(facilityListView);
     }
 
@@ -132,9 +133,13 @@ public abstract class PlayGame implements IPlayGame {
      * Button event handling the order sending.
      */
     protected void handleSendOrderButtonClick() {
-        if (!outgoingOrderTextField.getText().isEmpty()) {
+        if (!outgoingOrderTextField.getText().isEmpty() && comboBox.getValue() != null) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
             Facility facility = comboBox.getValue();
+            if (!faciltiesOrderSubmitted.contains(facility)) {
+                faciltiesOrderSubmitted.add(facility);
+            }
+
             playerComponent.placeOrder(facility, order);
         }
     }
@@ -142,13 +147,51 @@ public abstract class PlayGame implements IPlayGame {
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
             int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
+            Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
+            if (!facilitiesDeliverySubmited.contains(chosenFacility)) {
+                facilitiesDeliverySubmited.add(chosenFacility);
+            }
             playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), delivery);
         }
     }
 
     @FXML
     protected void submitTurnButtonClicked() {
-        playerComponent.submitTurn();
+        final boolean cmbChooseOutgoingDeliveryExisting = (cmbChooseOutgoingDelivery != null);
+        final boolean comboboxExisting = (comboBox != null);
+
+        if (cmbChooseOutgoingDelivery.getItems().size() != facilitiesDeliverySubmited.size() || comboBox.getItems().size() != faciltiesOrderSubmitted.size()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setContentText("You haven't set an order or delivery to every facility, do you want to order or deliver 0 to these facilities?");
+            ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+            ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+            alert.getButtonTypes().setAll(okButton, noButton);
+            alert.showAndWait().ifPresent(type -> {
+                if (type.getButtonData() == ButtonBar.ButtonData.YES) {
+                    if (cmbChooseOutgoingDeliveryExisting) autoFillDelivery();
+                    if (comboboxExisting) autoFillOrdering();
+
+                    playerComponent.submitTurn();
+                }
+            });
+        }
+    }
+
+    private void autoFillDelivery() {
+        cmbChooseOutgoingDelivery.getItems().forEach( t -> {
+            if(!facilitiesDeliverySubmited.contains(t)) {
+                playerComponent.sendDelivery(t, 0);
+            }
+        });
+    }
+
+    private void autoFillOrdering() {
+        comboBox.getItems().forEach(t -> {
+            if (!faciltiesOrderSubmitted.contains(t)) {
+                playerComponent.placeOrder(t, 0);
+            }
+        });
     }
 
     @Override
