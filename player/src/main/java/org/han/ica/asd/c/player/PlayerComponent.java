@@ -29,7 +29,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
 
     private static Player player;
-    private Round round;
+    private static Round round;
     private static IPlayGame ui;
 
     private IPlayerGameLogic gameLogic;
@@ -91,10 +91,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         return gameLogic.getBeerGame();
     }
 
-    public void startNewTurn() {
-        round = roundProvider.get();
-        round.setRoundId(gameLogic.getRoundId());
-    }
+    public Round getRound() {
+    	return round;
+		}
     
     @Override
     public void placeOrder(Facility facility, int amount) {
@@ -185,6 +184,10 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
      */
     @Override
     public void roundStarted() {
+    	if(round == null || round.getRoundId() != gameLogic.getRoundId()) {
+				round = roundProvider.get();
+				round.setRoundId(gameLogic.getRoundId());
+			}
     	Platform.runLater(() ->
             ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
     }

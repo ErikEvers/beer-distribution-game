@@ -70,6 +70,10 @@ public class BeerGame implements IDomainModel, Serializable {
         }
     }
 
+    public Facility getFacilityById(int facilityId) {
+        return configuration.getFacilities().stream().filter(facility -> facility.getFacilityId() == facilityId).findFirst().orElse(null);
+    }
+
     public void setPlayers(List<Player> players) {
         this.players = players;
     }

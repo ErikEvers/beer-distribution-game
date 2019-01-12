@@ -27,7 +27,9 @@ import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -111,10 +113,9 @@ public abstract class PlayGame implements IPlayGame {
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
         if(playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
-			seeOtherFacilitiesButton.setDisable(false);
-		}
+					seeOtherFacilitiesButton.setDisable(false);
+				}
         playerComponent.setUi(this);
-        playerComponent.startNewTurn();
         orderFacilities = FXCollections.observableArrayList();
         deliverFacilities = FXCollections.observableArrayList();
     }
@@ -155,27 +156,27 @@ public abstract class PlayGame implements IPlayGame {
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
         List<Facility> facilities = new ArrayList<>();
 
-		int facilityPlayedByPlayerId = playerComponent.getPlayer().getFacility().getFacilityId();
-		playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(f -> {
-			if (f.getFacilityId() != facilityPlayedByPlayerId) {
-				List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(f.getFacilityId());
-				if (facilitiesLinkedToFacilities != null) {
-					if (facilitiesLinkedToFacilities.stream().filter(facility -> facility.getFacilityId() == facilityPlayedByPlayerId).findFirst().isPresent()) {
-						facilities.add(f);
+				int facilityPlayedByPlayerId = playerComponent.getPlayer().getFacility().getFacilityId();
+				playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(f -> {
+					if (f.getFacilityId() != facilityPlayedByPlayerId) {
+						List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(f.getFacilityId());
+						if (facilitiesLinkedToFacilities != null) {
+							if (facilitiesLinkedToFacilities.stream().filter(facility -> facility.getFacilityId() == facilityPlayedByPlayerId).findFirst().isPresent()) {
+								facilities.add(f);
+							}
+						}
 					}
-				}
-			}
-		});
+				});
 
-        ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-        facilityListView.addAll(facilities);
-		comboBox.setItems(facilityListView);
+				ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
+				facilityListView.addAll(facilities);
+				comboBox.setItems(facilityListView);
     }
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-		facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
-		comboBox.setItems(facilityListView);
+				facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
+				comboBox.setItems(facilityListView);
     }
 
     /**
@@ -232,6 +233,7 @@ public abstract class PlayGame implements IPlayGame {
     public void refreshInterfaceWithCurrentStatus(int roundId) {
     		BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
+        Round round = playerComponent.getRound();
         int budget = 0;
         List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
         for (FacilityTurn f: facilityTurns) {
@@ -245,6 +247,21 @@ public abstract class PlayGame implements IPlayGame {
 								budget = f.getRemainingBudget();
             }
         }
+
+        for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
+        	if(facilityTurnOrder.getFacilityId() == facility.getFacilityId()) {
+						String facilityAndOrderAmount = concatFacilityAndIdAndOrder(beerGame.getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
+						orderFacilities.add(facilityAndOrderAmount);
+					}
+				}
+
+				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
+					if(facilityTurnDeliver.getFacilityId() == facility.getFacilityId()) {
+						String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(beerGame.getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
+						deliverFacilities.add(facilityAndDeliverAmount);
+					}
+				}
+
         int incomingOrders = 0;
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
         for (FacilityTurnOrder f: facilityTurnOrders) {
