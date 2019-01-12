@@ -6,6 +6,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,9 +22,6 @@ public class SeeOtherFacilitiesController {
     @FXML
     private AnchorPane facilitiesContainer;
 
-    @Inject @Named("PlayGame")
-    private IGUIHandler playGame;
-
     @Inject @Named("PlayerComponent")
     private IPlayerComponent playerComponent;
 
@@ -35,7 +33,7 @@ public class SeeOtherFacilitiesController {
     }
 
     public void handleBackToGameButtonClicked(){
-        ((IParticipant)playerComponent).startGame();
-        ((IParticipant)playerComponent).executeTurn();
+        ((IPlayerRoundListener)playerComponent).startGame();
+        ((IPlayerRoundListener)playerComponent).roundStarted();
     }
 }

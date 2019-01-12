@@ -7,6 +7,9 @@ import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,13 +44,12 @@ class ParticipantsPoolTest {
     }
 
     @Test
-    public void excecuteRoundCallsParticipantsToAction() {
+    public void getParticipantsReturnsParticipants() {
         IParticipant playerMock = mock(IParticipant.class);
         Agent agentMock = mock(Agent.class);
         participantsPool.addParticipant(playerMock);
         participantsPool.addParticipant(agentMock);
-        participantsPool.executeRound();
-        verify(playerMock, times(1)).executeTurn();
-        verify(agentMock, times(1)).executeTurn();
+        List<IParticipant> list = participantsPool.getParticipants();
+        assertEquals(2, list.size());
     }
 }

@@ -108,6 +108,6 @@ public class GameLogicTest {
     @Test
     public void roundModelReceivedCallsLocalParticipants() {
         gameLogic.roundModelReceived(mock(Round.class));
-        verify(participantsPool, times(1)).executeRound();
+        verify(participantsPool, times(1)).getParticipants();
     }
 }

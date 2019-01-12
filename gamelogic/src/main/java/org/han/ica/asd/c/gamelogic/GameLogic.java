@@ -178,8 +178,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void setPlayer(IPlayerRoundListener player) {
-        this.player = player;
-        participantsPool.setPlayer(this.player);
+        GameLogic.player = player;
+        participantsPool.setPlayer(player);
     }
 
     /**
@@ -189,6 +189,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void roundModelReceived(Round currentRound) {
         beerGame.getRounds().removeIf(round -> round.getRoundId() == currentRound.getRoundId());
         beerGame.getRounds().add(currentRound);
+        curRoundId = currentRound.getRoundId();
         sendRoundActionFromAgents();
     }
 
@@ -197,6 +198,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         GameLogic.beerGame = beerGame;
         //persistence.saveGameLog(beerGame);
         player.startGame();
+        curRoundId = 1;
         sendRoundActionFromAgents();
     }
 

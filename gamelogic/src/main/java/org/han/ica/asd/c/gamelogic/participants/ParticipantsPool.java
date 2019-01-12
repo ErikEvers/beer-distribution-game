@@ -75,13 +75,6 @@ public class ParticipantsPool {
         }
     }
 
-    public void executeRound() {
-        for (IParticipant participant : participants) {
-            participant.executeTurn();
-        }
-        player.roundStarted();
-    }
-
     public void setPlayer(IPlayerRoundListener iPlayer) {
         player = iPlayer;
     }
