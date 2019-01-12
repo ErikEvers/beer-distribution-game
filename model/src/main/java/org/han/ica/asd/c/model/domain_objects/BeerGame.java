@@ -3,6 +3,7 @@ package org.han.ica.asd.c.model.domain_objects;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BeerGame implements IDomainModel, Serializable {
 
@@ -94,7 +95,8 @@ public class BeerGame implements IDomainModel, Serializable {
     }
 
     public Round getRoundById(int roundId) {
-        return rounds.stream().filter(round -> round.getRoundId() == roundId).findFirst().get();
+        Optional<Round> r = rounds.stream().filter(round -> round.getRoundId() == roundId).findFirst();
+        return r.orElse(null);
     }
 
     public void setRounds(List<Round> rounds) {

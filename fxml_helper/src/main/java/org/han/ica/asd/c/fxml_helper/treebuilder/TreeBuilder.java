@@ -77,44 +77,40 @@ public class TreeBuilder {
 	 */
 	private void drawLine(Facility parent, Facility child) {
 		EdgeLine line = new EdgeLine();
-		Optional<FacilityRectangle> exisitingDeliver = drawnFacilities.stream().filter(facility -> facility.getFacility() == parent).findFirst();
-		FacilityRectangle rectangleDeliver;
-		if (exisitingDeliver.isPresent()) {
-			rectangleDeliver = exisitingDeliver.get();
-		} else {
-			rectangleDeliver = drawFacility(parent);
 
-			EventHandler<MouseEvent> eventHandler =
-					e -> {
-						lastClickedFacility = rectangleDeliver.getFacility().getFacilityId();
-						container.fireEvent(new FacilitySelectedEvent(rectangleDeliver));
-					};
-			rectangleDeliver.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
-
-			drawnFacilities.add(rectangleDeliver);
-		}
-
-		Optional<FacilityRectangle> exisitingOrder = drawnFacilities.stream().filter(facility -> facility.getFacility() == child).findFirst();
-		FacilityRectangle rectangleOrder;
-		if (exisitingOrder.isPresent()) {
-			rectangleOrder = exisitingOrder.get();
-		} else {
-			rectangleOrder = drawFacility(child);
-
-			EventHandler<MouseEvent> eventHandler =
-					e -> {
-						lastClickedFacility = rectangleOrder.getFacility().getFacilityId();
-						container.fireEvent(new FacilitySelectedEvent(rectangleOrder));
-					};
-			rectangleOrder.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
-
-			drawnFacilities.add(rectangleOrder);
-		}
+		FacilityRectangle rectangleDeliver = gatherFacility(parent);
+		FacilityRectangle rectangleOrder = gatherFacility(child);
 
 		line.drawLine(rectangleOrder, rectangleDeliver, rectangleOrder.getTranslateX(), rectangleOrder.getTranslateY());
 		setLineStroke(parent, child, line);
 
 		container.getChildren().add(line);
+	}
+
+	/**
+	 * Get rectangle from drawn list, or if not present create it.
+	 * @param facility facility of which the rectangle needs to be created.
+	 * @return the rectangle.
+	 * @author Yarno Boelens
+	 */
+	private FacilityRectangle gatherFacility(Facility facility) {
+		Optional<FacilityRectangle> existingRectangle = drawnFacilities.stream().filter(f -> f.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
+		FacilityRectangle rectangle;
+		if (existingRectangle.isPresent()) {
+			rectangle = existingRectangle.get();
+		} else {
+			rectangle = drawFacility(facility);
+
+			EventHandler<MouseEvent> eventHandler =
+					e -> {
+						lastClickedFacility = rectangle.getFacility().getFacilityId();
+						container.fireEvent(new FacilitySelectedEvent(rectangle));
+					};
+			rectangle.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
+
+			drawnFacilities.add(rectangle);
+		}
+		return rectangle;
 	}
 
 	/**
@@ -214,7 +210,7 @@ public class TreeBuilder {
 		builder.append(round.getRoundId());
 		builder.append("\nInventory: ");
 		builder.append(facilityTurn.getStock());
-		builder.append("\nBacklog: ");
+		builder.append("\nBackorders: ");
 		builder.append(facilityTurn.getBackorders());
 		builder.append("\nCurrent budget: ");
 		builder.append(facilityTurn.getRemainingBudget());
