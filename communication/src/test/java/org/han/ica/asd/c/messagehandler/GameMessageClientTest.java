@@ -2,6 +2,7 @@ package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.exceptions.communication.LeaderNotPresentException;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -96,24 +97,24 @@ public class GameMessageClientTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenChooseFacillity() throws IOException, ClassNotFoundException, FacilityNotAvailableException {
+    public void shouldThrowErrorWhenChooseFacillity() throws IOException, ClassNotFoundException {
         Facility facility = new Facility();
         facility.setFacilityId(123);
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
         chooseFacilityMessage.setException(new FacilityNotAvailableException());
 
-        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
+        when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
 
         assertThrows(FacilityNotAvailableException.class,()-> gameMessageClient.sendChooseFacilityMessage(correctIp, facility));
     }
 
     @Test
-    public void shouldReturnSameChooseFacilityMessage() throws IOException, ClassNotFoundException, FacilityNotAvailableException {
+    public void shouldReturnSameChooseFacilityMessage() throws IOException, ClassNotFoundException, FacilityNotAvailableException, SendGameMessageException {
         Facility facility = new Facility();
         facility.setFacilityId(123);
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
 
-        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(ChooseFacilityMessage.class))).thenThrow(IOException.class);
+        when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
         assertEquals(chooseFacilityMessage.getClass(), gameMessageClient.sendChooseFacilityMessage(correctIp, facility).getClass());
     }
 
@@ -122,18 +123,18 @@ public class GameMessageClientTest {
         RequestGameDataMessage response = new RequestGameDataMessage();
         response.setGameData(new GamePlayerId(new BeerGame(), "1"));
 
-        when(socketClient.sendObjectWithResponseGeneric(anyString(), any(RequestGameDataMessage.class))).thenReturn(response);
+        when(socketClient.sendObjectWithResponse(any(), any(RequestGameDataMessage.class))).thenReturn(response);
         GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp);
 
         assertNotNull(responseRequest);
     }
 
     @Test
-    public void shouldReturnGamePlayerIDWithError() throws Exception {
+    public void shouldReturnGamePlayerIDWithError() throws SendGameMessageException, IOException, ClassNotFoundException {
         RequestGameDataMessage response = new RequestGameDataMessage();
         response.setException(new Exception());
 
-        when(socketClient.sendObjectWithResponseGeneric(anyString(), any(RequestGameDataMessage.class))).thenReturn(response);
+        when(socketClient.sendObjectWithResponse(any(), any(RequestGameDataMessage.class))).thenReturn(response);
         GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp);
 
         assertNotNull(response.getException());

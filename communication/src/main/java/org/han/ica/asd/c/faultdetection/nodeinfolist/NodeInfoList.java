@@ -243,7 +243,7 @@ public class NodeInfoList extends ArrayList<Player> {
     public int hashCode() {
         return super.hashCode();
     }
-    
+
     /**
      * Gets leader.
      *
