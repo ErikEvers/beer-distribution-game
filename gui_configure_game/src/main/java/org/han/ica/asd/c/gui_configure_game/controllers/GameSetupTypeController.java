@@ -28,6 +28,7 @@ public class GameSetupTypeController implements Initializable {
     private String wholeString = "Wholesaler";
     private String retailString = "Retailer";
 
+    private static final String WARNING = "Warning";
 
     /**
      * Factory for FXML
@@ -139,8 +140,8 @@ public class GameSetupTypeController implements Initializable {
 
     public void popUpError() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Back to main menu. All settings will be lost");
-        alert.setHeaderText("Warning");
-        alert.setTitle("Warning");
+        alert.setHeaderText(WARNING);
+        alert.setTitle(WARNING);
         Optional<ButtonType> clicked = alert.showAndWait();
 
         if (clicked.get() == ButtonType.OK) {
@@ -160,17 +161,20 @@ public class GameSetupTypeController implements Initializable {
         this.onlineGame = onlineGame;
     }
 
-    public void nextScreenButton() throws Exception {
-        fillConfigurationList();
-        fillConfigurationGraph();
+    public void nextScreenButton() {
+        if (!emptyFields()) {
+            popUpNotAssigned();
+        } else {
+            fillConfigurationList();
+            fillConfigurationGraph();
 
-        beerGame.setConfiguration(this.configuration);
-        beerGame.setGameName(this.gameName);
-        beerGame.setGameId(DaoConfig.getCurrentGameId());
-        assignAgents.setData(new Object[]{beerGame});
-        assignAgents.setupScreen();
+            beerGame.setConfiguration(this.configuration);
+            beerGame.setGameName(this.gameName);
+            beerGame.setGameId(DaoConfig.getCurrentGameId());
+            assignAgents.setData(new Object[]{beerGame});
+            assignAgents.setupScreen();
+        }
     }
-
 
     /**
      * Fills the list of the configuration with the parameters from the textfield in the GUI
@@ -212,22 +216,34 @@ public class GameSetupTypeController implements Initializable {
                 entry.getKey().setFacilityType(setRetailerType(entry.getKey().getFacilityType()));
             }
             for (Facility current : entry.getValue()) {
-                if (current.getFacilityType().getFacilityName().equals(facString)) {
-                    current.setFacilityType(setFactoryType(current.getFacilityType()));
-                }
-                if (current.getFacilityType().getFacilityName().equals(wholeString)) {
-                    current.setFacilityType(setWholsaleType(current.getFacilityType()));
-                }
-                if (current.getFacilityType().getFacilityName().equals(regWarehouseString)) {
-                    current.setFacilityType(setRegionalWarehouseType(current.getFacilityType()));
-                }
-                if (current.getFacilityType().getFacilityName().equals(retailString)) {
-                    current.setFacilityType(setRetailerType(current.getFacilityType()));
-                }
+                current.setFacilityType(setChildType(current));
+
 
             }
         }
 
+    }
+
+    /**
+     * Sets the facilityType for the child of a node
+     *
+     * @param facility to set
+     * @return facility type
+     */
+    private FacilityType setChildType(Facility facility) {
+        if (facility.getFacilityType().getFacilityName().equals(facString)) {
+            return setFactoryType(facility.getFacilityType());
+        }
+        if (facility.getFacilityType().getFacilityName().equals(wholeString)) {
+            return (setWholsaleType(facility.getFacilityType()));
+        }
+        if (facility.getFacilityType().getFacilityName().equals(regWarehouseString)) {
+            return setRegionalWarehouseType(facility.getFacilityType());
+        }
+        if (facility.getFacilityType().getFacilityName().equals(retailString)) {
+            return setRetailerType(facility.getFacilityType());
+        }
+        return null;
     }
 
     /**
@@ -279,29 +295,167 @@ public class GameSetupTypeController implements Initializable {
     private FacilityType getFacilityType(FacilityType facility, TextField inGoods, TextField outGoods, TextField
             stockHolding, TextField startingBudget, TextField startingOrder, TextField startingStock, TextField
                                                  openOrderCost) {
-        if ((inGoods.getText() != null && !inGoods.getText().isEmpty())) {
-            facility.setValueIncomingGoods(Integer.parseInt(inGoods.getText()));
-        }
-        if ((outGoods.getText() != null && !outGoods.getText().isEmpty())) {
-            facility.setValueOutgoingGoods(Integer.parseInt(outGoods.getText()));
-        }
-        if ((stockHolding.getText() != null && !stockHolding.getText().isEmpty())) {
-            facility.setStockHoldingCosts(Integer.parseInt(stockHolding.getText()));
-        }
-        if ((startingBudget.getText() != null && !startingBudget.getText().isEmpty())) {
-            facility.setStartingBudget(Integer.parseInt(startingBudget.getText()));
-        }
-        if ((startingOrder.getText() != null && !startingOrder.getText().isEmpty())) {
-            facility.setStartingOrder(Integer.parseInt(startingOrder.getText()));
-        }
-        if ((startingStock.getText() != null && !startingStock.getText().isEmpty())) {
-            facility.setStartingStock(Integer.parseInt(startingStock.getText()));
-        }
-        if ((openOrderCost.getText() != null && !openOrderCost.getText().isEmpty())) {
-            facility.setOpenOrderCosts(Integer.parseInt(openOrderCost.getText()));
-        }
+        facility.setValueIncomingGoods(Integer.parseInt(inGoods.getText()));
+        facility.setValueOutgoingGoods(Integer.parseInt(outGoods.getText()));
+        facility.setStockHoldingCosts(Integer.parseInt(stockHolding.getText()));
+        facility.setStartingBudget(Integer.parseInt(startingBudget.getText()));
+        facility.setStartingOrder(Integer.parseInt(startingOrder.getText()));
+        facility.setStartingStock(Integer.parseInt(startingStock.getText()));
+        facility.setOpenOrderCosts(Integer.parseInt(openOrderCost.getText()));
+
         return facility;
     }
 
+    /**
+     * checks for empty textfield
+     *
+     * @param textField to be checked
+     * @return true if not empty
+     */
+    private boolean notEmptyTextfield(TextField textField) {
+        return textField.getText() != null && !textField.getText().isEmpty();
+    }
+
+    private boolean checkEmptyFieldsRetailer() {
+        return notEmptyTextfield(getInGoodsRetailer()) && notEmptyTextfield(getOutGoodsRetailer()) && notEmptyTextfield(getStartingBudgetRetailer()) && notEmptyTextfield(getStartingOrderRetailer()) && notEmptyTextfield(getStockHoldingRetailer()) && notEmptyTextfield(getOpenOrderCostRetailer()) && notEmptyTextfield(getStartingStockRetailer());
+    }
+
+    private boolean checkEmptyFieldsRegionalWarehouse() {
+        return notEmptyTextfield(getInGoodsRegionalWharehouse()) && notEmptyTextfield(getOutGoodsRegionalWharehouse()) && notEmptyTextfield(getStartingBudgetRegionalWharehouse()) && notEmptyTextfield(getStartingOrderRegionalWharehouse()) && notEmptyTextfield(getStockHoldingRegionalWharehouse()) && notEmptyTextfield(getOpenOrderCostRegionalWarehouse()) && notEmptyTextfield(getStartingStockRegionalWharehouse());
+
+    }
+
+    private boolean checkEmptyFieldsWolesaler() {
+        return notEmptyTextfield(getInGoodsWholesale()) && notEmptyTextfield(getOutGoodsWholesale()) && notEmptyTextfield(getStartingBudgetWholesale()) && notEmptyTextfield(getStartingOrderWholesale()) && notEmptyTextfield(getStockHoldingWholesale()) && notEmptyTextfield(getOpenOrderCostWholesale()) && notEmptyTextfield(getStartingStockWholesale());
+
+    }
+
+    private boolean checkEmptyFieldsFactory() {
+        return notEmptyTextfield(getInGoodsFactory()) && notEmptyTextfield(getOutGoodsFactory()) && notEmptyTextfield(getStartingBudgetFactory()) && notEmptyTextfield(getStartingOrderFactory()) && notEmptyTextfield(getStockHoldingFactory()) && notEmptyTextfield(getOpenOrderCostFactory()) && notEmptyTextfield(getStartingStockFactory());
+
+    }
+
+    private boolean emptyFields() {
+        return checkEmptyFieldsFactory() && checkEmptyFieldsRegionalWarehouse() && checkEmptyFieldsRetailer() && checkEmptyFieldsWolesaler();
+    }
+
+    private void popUpNotAssigned() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "One or more fields do not have a value");
+        alert.setHeaderText(WARNING);
+        alert.setTitle(WARNING);
+        alert.showAndWait();
+    }
+
+    private TextField getInGoodsFactory() {
+        return inGoodsFactory;
+    }
+
+    private TextField getOutGoodsFactory() {
+        return outGoodsFactory;
+    }
+
+    private TextField getStockHoldingFactory() {
+        return stockHoldingFactory;
+    }
+
+    private TextField getStartingBudgetFactory() {
+        return startingBudgetFactory;
+    }
+
+    private TextField getStartingOrderFactory() {
+        return startingOrderFactory;
+    }
+
+    private TextField getStartingStockFactory() {
+        return startingStockFactory;
+    }
+
+    private TextField getOpenOrderCostFactory() {
+        return openOrderCostFactory;
+    }
+
+    private TextField getInGoodsWholesale() {
+        return inGoodsWholesale;
+    }
+
+    private TextField getOutGoodsWholesale() {
+        return outGoodsWholesale;
+    }
+
+    private TextField getStockHoldingWholesale() {
+        return stockHoldingWholesale;
+    }
+
+    private TextField getStartingBudgetWholesale() {
+        return startingBudgetWholesale;
+    }
+
+    private TextField getStartingOrderWholesale() {
+        return startingOrderWholesale;
+    }
+
+    private TextField getStartingStockWholesale() {
+        return startingStockWholesale;
+    }
+
+    private TextField getOpenOrderCostWholesale() {
+        return openOrderCostWholesale;
+    }
+
+    private TextField getInGoodsRegionalWharehouse() {
+        return inGoodsRegionalWharehouse;
+    }
+
+    private TextField getOutGoodsRegionalWharehouse() {
+        return outGoodsRegionalWharehouse;
+    }
+
+    private TextField getStockHoldingRegionalWharehouse() {
+        return stockHoldingRegionalWharehouse;
+    }
+
+    private TextField getStartingBudgetRegionalWharehouse() {
+        return startingBudgetRegionalWharehouse;
+    }
+
+    private TextField getStartingOrderRegionalWharehouse() {
+        return startingOrderRegionalWharehouse;
+    }
+
+    private TextField getStartingStockRegionalWharehouse() {
+        return startingStockRegionalWharehouse;
+    }
+
+    private TextField getOpenOrderCostRegionalWarehouse() {
+        return openOrderCostRegionalWarehouse;
+    }
+
+    private TextField getInGoodsRetailer() {
+        return inGoodsRetailer;
+    }
+
+    private TextField getOutGoodsRetailer() {
+        return outGoodsRetailer;
+    }
+
+    private TextField getStockHoldingRetailer() {
+        return stockHoldingRetailer;
+    }
+
+    private TextField getStartingBudgetRetailer() {
+        return startingBudgetRetailer;
+    }
+
+    private TextField getStartingOrderRetailer() {
+        return startingOrderRetailer;
+    }
+
+    private TextField getStartingStockRetailer() {
+        return startingStockRetailer;
+    }
+
+    private TextField getOpenOrderCostRetailer() {
+        return openOrderCostRetailer;
+    }
 }
 

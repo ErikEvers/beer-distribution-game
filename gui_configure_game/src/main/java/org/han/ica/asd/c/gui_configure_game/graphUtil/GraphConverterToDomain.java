@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_configure_game.graphUtil;
+package org.han.ica.asd.c.gui_configure_game.graphutil;
 
 import org.han.ica.asd.c.gui_configure_game.graph.*;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -18,7 +18,6 @@ import static com.google.common.collect.Iterables.isEmpty;
 public class GraphConverterToDomain {
 
     private Graph graph;
-    private List<Facility> facilities = new ArrayList<>();
 
     private Provider<Facility> facilityProvider;
     private Provider<FacilityType> facilityTypeProvider;
@@ -31,7 +30,6 @@ public class GraphConverterToDomain {
 
     public void setGraph(Graph graph) {
         this.graph = graph;
-        this.facilities = allToList();
     }
 
     /**
@@ -78,14 +76,14 @@ public class GraphConverterToDomain {
     /**
      * converts the GUI graph to  a Graph with the datastrucutre of the domain
      *
-     * @return Map<Facility                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                               List                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                               Facility>
+     * @return Map<Facility                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               List                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Facility>
      */
     public Map<Facility, List<Facility>> convertToDomeinGraph() {
 
         Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
 
         for (GraphFacility graphFacility : graph.getFacilities()) {
-            if (!graphFacility.toString().equals("Factory")) {
+            if (!"Factory".equals(graphFacility.toString())) {
                 List<Facility> childs = new ArrayList<>();
                 Facility parent = facilityToDomain(graphFacility);
                 if (!isEmpty(graphFacility.getSuppliers())) {
