@@ -36,6 +36,7 @@ public class PlayGameFactoryController extends PlayGame {
         fillOutGoingDeliveryFacilityComboBox(cmbChooseOutgoingDelivery);
     }
 
+    @Override
     public void submitTurnButtonClicked() {
         int step2Value = 0;
 

@@ -58,9 +58,9 @@ public class TreeBuilder {
 
 		Map<Facility, List<Facility>> links = beerGame.getConfiguration().getFacilitiesLinkedTo();
 
-		for (Facility facility : links.keySet()) {
-			for (Facility child : links.get(facility)) {
-				drawLine(facility, child);
+		for (Map.Entry<Facility, List<Facility>> entry : links.entrySet()) {
+			for(Facility child: entry.getValue()){
+				drawLine(entry.getKey(), child);
 			}
 		}
 	}

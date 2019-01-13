@@ -34,9 +34,6 @@ public class MainMenuController {
 		@Inject
 		private IConnectorForSetup connector;
 
-    public void initialize() {
-
-    }
     @FXML
     private void closeButtonAction() {
         Stage stage = (Stage) close.getScene().getWindow();

@@ -1,9 +1,7 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
-import org.han.ica.asd.c.model.domain_objects.Round;
 
 /**
  * This interface is implemented by local players of the game.

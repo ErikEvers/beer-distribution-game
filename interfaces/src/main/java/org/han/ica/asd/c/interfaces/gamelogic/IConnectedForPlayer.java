@@ -1,7 +1,5 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
-import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 

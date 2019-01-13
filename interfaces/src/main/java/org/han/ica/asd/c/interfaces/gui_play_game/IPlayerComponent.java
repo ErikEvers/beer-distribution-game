@@ -7,7 +7,6 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IPlayerComponent {
     void activatePlayer();

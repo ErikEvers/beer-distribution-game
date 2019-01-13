@@ -104,7 +104,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 				outcome.setRoundId(round.getRoundId());
 
 				for(Facility facility : game.getConfiguration().getFacilities()) {
-					FacilityTurn curFacility = round.getFacilityTurns().stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facility.getFacilityId()).findFirst().get();
+					FacilityTurn curFacility = round.getFacilityTurns().stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facility.getFacilityId()).findFirst().orElse(null);
 
 					int stock = curFacility.getStock();
 					for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {

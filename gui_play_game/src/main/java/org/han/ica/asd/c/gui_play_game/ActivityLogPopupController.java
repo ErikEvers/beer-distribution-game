@@ -14,6 +14,8 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import java.util.stream.Collectors;
 
 public class ActivityLogPopupController {
+	
+	private static final String ROUND_LITERAL = "Round ";
 
 	@FXML
 	AnchorPane mainContainer;
@@ -45,7 +47,7 @@ public class ActivityLogPopupController {
 			ObservableList<String> items = FXCollections.observableArrayList();
 			for(Round round : beerGame.getRounds()) {
 				for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders().stream().filter(order -> order.getFacilityIdOrderTo() == facilityId).collect(Collectors.toList())) {
-					builder.append("Round ");
+					builder.append(ROUND_LITERAL);
 					builder.append(round.getRoundId());
 					builder.append(": ");
 					builder.append("Facility ");
@@ -58,7 +60,7 @@ public class ActivityLogPopupController {
 				}
 
 				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers().stream().filter(order -> order.getFacilityIdDeliverTo() == facilityId).collect(Collectors.toList())) {
-					builder.append("Round ");
+					builder.append(ROUND_LITERAL);
 					builder.append(round.getRoundId());
 					builder.append(": ");
 					builder.append("Facility ");
@@ -71,7 +73,7 @@ public class ActivityLogPopupController {
 				}
 
 				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers().stream().filter(order -> order.getFacilityId() == facilityId).collect(Collectors.toList())) {
-					builder.append("Round ");
+					builder.append(ROUND_LITERAL);
 					builder.append(round.getRoundId());
 					builder.append(": ");
 					builder.append("You delivered ");
@@ -83,7 +85,7 @@ public class ActivityLogPopupController {
 				}
 
 				for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders().stream().filter(order -> order.getFacilityId() == facilityId).collect(Collectors.toList())) {
-					builder.append("Round ");
+					builder.append(ROUND_LITERAL);
 					builder.append(round.getRoundId());
 					builder.append(": ");
 					builder.append("You ordered ");

@@ -2,9 +2,7 @@ package org.han.ica.asd.c.gui_play_game.see_other_facilities;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
-import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 

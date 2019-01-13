@@ -2,11 +2,13 @@ package org.han.ica.asd.c.model.interface_models;
 
 import org.han.ica.asd.c.model.domain_objects.Player;
 
+import java.io.Serializable;
+
 /**
  * Object that gets exchanged between players during leader election
  * 	to indicate if a player wants to participate in the election.
  */
-public class ElectionModel {
+public class ElectionModel implements Serializable {
 
   private boolean alive;
   private Player currentPlayer;
