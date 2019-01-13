@@ -58,18 +58,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGameStore.class).to(Persistence.class);
 		bind(IFinder.class).to(RoomFinder.class);
 
-		bind(IGUIHandler.class).annotatedWith(Names.named("MainMenu")).to(MainMenu.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGameList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgent")).to(ProgramAgent.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("ProgramAgentList")).to(ProgramAgentList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("JoinGame")).to(JoinGame.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("AgentList")).to(AgentList.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
-		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoomGameLeader")).to(GameRoomGameLeader.class);
-
 		bind(IConnectedForPlayer.class).to(Connector.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
@@ -109,5 +97,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("PlayGame")).to(PlayGameSetupScreen.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).to(SeeOtherFacilities.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoom")).to(GameRoom.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("GameRoomGameLeader")).to(GameRoomGameLeader.class);
 	}
 }
