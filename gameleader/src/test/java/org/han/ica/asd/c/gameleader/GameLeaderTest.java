@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gameleader;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
@@ -10,12 +11,15 @@ import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.Mockito.*;
@@ -54,6 +58,8 @@ public class GameLeaderTest {
 
     private GameLeader gameLeader;
 
+    private IPlayerComponent iPlayerComponent;
+
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -88,6 +94,7 @@ public class GameLeaderTest {
         gameLogic = spy(GameLogicStub.class);
         iPersistence = spy(PersistenceStub.class);
         turnHandlerMock = spy(TurnHandler.class);
+        iPlayerComponent = spy(IPlayerComponent.class);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -96,6 +103,7 @@ public class GameLeaderTest {
                 bind(ILeaderGameLogic.class).toInstance(gameLogic);
                 bind(IPersistence.class).toInstance(iPersistence);
                 bind(TurnHandler.class).toInstance(turnHandlerMock);
+                bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).toInstance(iPlayerComponent);
 
                 bind(BeerGame.class).toProvider(() -> gameTest);
             }
