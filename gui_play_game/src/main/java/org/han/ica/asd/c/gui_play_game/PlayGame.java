@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
-
 public abstract class PlayGame implements IPlayGame {
     @FXML
     private GridPane playGridPane;
@@ -61,7 +60,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @Inject
     @Named("SeeOtherFacilities")
-    IGUIHandler seeOtherFacilities;
+    private IGUIHandler seeOtherFacilities;
 
     @FXML
     protected Label inventory;
@@ -76,7 +75,8 @@ public abstract class PlayGame implements IPlayGame {
 		protected Label openOrderCost;
 
     @Inject
-    @Named("PlayerComponent") protected IPlayerComponent playerComponent;
+    @Named("PlayerComponent")
+    protected IPlayerComponent playerComponent;
 
     @FXML
     protected TextField incomingGoodsNextRound;
@@ -159,10 +159,8 @@ public abstract class PlayGame implements IPlayGame {
 				playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(f -> {
 					if (f.getFacilityId() != facilityPlayedByPlayerId) {
 						List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(f.getFacilityId());
-						if (facilitiesLinkedToFacilities != null) {
-							if (facilitiesLinkedToFacilities.stream().anyMatch(facility -> facility.getFacilityId() == facilityPlayedByPlayerId)) {
-								facilities.add(f);
-							}
+						if (facilitiesLinkedToFacilities != null && facilitiesLinkedToFacilities.stream().anyMatch(facility -> facility.getFacilityId() == facilityPlayedByPlayerId)) {
+							facilities.add(f);
 						}
 					}
 				});
@@ -182,7 +180,7 @@ public abstract class PlayGame implements IPlayGame {
      * Button event handling the order sending.
      */
     protected void handleSendOrderButtonClick() {
-        if (!outgoingOrderTextField.getText().isEmpty()) {
+        if (!outgoingOrderTextField.getText().isEmpty() && comboBox.getValue() != null) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
             Facility facility = comboBox.getValue();
             String facilityAndOrderAmount = concatFacilityAndIdAndOrder(facility.getFacilityType().getFacilityName(), facility.getFacilityId(), order);
@@ -199,8 +197,8 @@ public abstract class PlayGame implements IPlayGame {
             String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(chosenFacility.getFacilityType().getFacilityName(), chosenFacility.getFacilityId(), delivery);
             txtOutgoingDelivery.clear();
             playerComponent.sendDelivery(chosenFacility, delivery);
-
             deliverFacilities.add(facilityAndDeliverAmount);
+            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), delivery);
         }
     }
 
@@ -211,8 +209,11 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected void submitTurnButtonClicked() {
+        final boolean cmbChooseOutgoingDeliveryExisting = (cmbChooseOutgoingDelivery != null);
+        final boolean comboboxExisting = (comboBox != null);
+
 				submitTurnButton.setDisable(true);
-        if(playerComponent.submitTurn()) {
+				if(playerComponent.submitTurn()) {
 					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
 					currentAlert.show();
 					orderFacilities.clear();
