@@ -56,13 +56,11 @@ class TurnHandlerTest {
 				List<FacilityTurnOrder> orderList = new ArrayList<>();
 				orderList.add(new FacilityTurnOrder(mainFacility.getFacilityId(), facility.getFacilityId(), 1));
 				round1.setFacilityOrders(orderList);
-				expectedRoundModel.setFacilityOrders(orderList);
 
 				// Add turns for the first facility
 				List<FacilityTurn> facilityList = new ArrayList<>();
 				facilityList.add(new FacilityTurn(mainFacility.getFacilityId(), 1, 10, 0, 10, false));
 				round1.setFacilityTurns(facilityList);
-				expectedRoundModel.setFacilityTurns(facilityList);
 
 				// Add orders for the second facility
 				orderList = new ArrayList<>();
@@ -74,7 +72,6 @@ class TurnHandlerTest {
 				facilityList = new ArrayList<>();
 				facilityList.add(new FacilityTurn(facility.getFacilityId(), 1, 10, 0, 10, false));
 				round2.setFacilityTurns(facilityList);
-				expectedRoundModel.setFacilityTurns(facilityList);
 
 				// Perform processing
 				Round actualRoundModel = new Round();
@@ -83,8 +80,6 @@ class TurnHandlerTest {
 
 				// compare
 				assertEquals(2, actualRoundModel.getFacilityOrders().size());
-				assertEquals(2, actualRoundModel.getFacilityTurns().size());
 				assertEquals(expectedRoundModel.getFacilityOrders(), actualRoundModel.getFacilityOrders());
-				assertEquals(expectedRoundModel.getFacilityTurns(), actualRoundModel.getFacilityTurns());
     }
 }

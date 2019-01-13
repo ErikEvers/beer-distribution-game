@@ -172,7 +172,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * @param playerId the Id of the player that disconnected.
      */
     public void playerIsDisconnected(String playerId) {
-        for (int i = 0; i <= game.getPlayers().size(); i++) {
+        for (int i = 0; i < game.getPlayers().size(); i++) {
             if (game.getPlayers().get(i).getPlayerId().equals(playerId)) {
                 Agent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
                 if (agent != null) {

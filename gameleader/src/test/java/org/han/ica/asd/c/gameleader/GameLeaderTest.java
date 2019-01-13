@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.Mockito.*;
@@ -84,6 +83,7 @@ public class GameLeaderTest {
         when(con.getFacilities()).thenReturn(facilities);
         when(leader.getPlayer()).thenReturn(player);
         when(player.getPlayerId()).thenReturn("1");
+        when(player.getFacility()).thenReturn(facil);
 
         gameTest.setRounds(rounds);
         leader.setPlayer(player);
