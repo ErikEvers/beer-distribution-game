@@ -138,7 +138,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return null;
     }
 
-    public RoomModel joinRoom(String roomName,  String password) throws RoomException, DiscoveryException {
+    public RoomModel joinRoom(String roomName, String password) throws RoomException, DiscoveryException {
         RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
         if (makeConnection(joinedRoom.getLeaderIP())) {
             Connector.leaderIp = joinedRoom.getLeaderIP();

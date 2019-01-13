@@ -2,7 +2,6 @@ package org.han.ica.asd.c.gui_play_game;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -161,7 +160,7 @@ public abstract class PlayGame implements IPlayGame {
 					if (f.getFacilityId() != facilityPlayedByPlayerId) {
 						List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(f.getFacilityId());
 						if (facilitiesLinkedToFacilities != null) {
-							if (facilitiesLinkedToFacilities.stream().filter(facility -> facility.getFacilityId() == facilityPlayedByPlayerId).findFirst().isPresent()) {
+							if (facilitiesLinkedToFacilities.stream().anyMatch(facility -> facility.getFacilityId() == facilityPlayedByPlayerId)) {
 								facilities.add(f);
 							}
 						}

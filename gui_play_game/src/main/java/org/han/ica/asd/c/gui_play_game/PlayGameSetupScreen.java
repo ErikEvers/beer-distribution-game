@@ -11,12 +11,14 @@ import java.util.ResourceBundle;
 
 public class PlayGameSetupScreen implements IGUIHandler {
 
+    private static final String RESOURCE_BUNDLE = "languageResources";
+
     @Inject @Named("PlayerComponent")
     IPlayerComponent playerComponent;
 
     @Override
     public void setData(Object[] data) {
-
+        // not used in this handler
     }
 
     @Override
@@ -29,11 +31,11 @@ public class PlayGameSetupScreen implements IGUIHandler {
 
         String facilityNamePlayedByPlayer = player.getFacility().getFacilityType().getFacilityName();
         if (facilityNamePlayedByPlayer.equals(factoryName)) {
-            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/PlayGameFactory.fxml"));
+            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameFactory.fxml"));
         } else if (facilityNamePlayedByPlayer.equals(retailerName)) {
-            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/PlayGameRetailer.fxml"));
+            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameRetailer.fxml"));
         } else {
-            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
+            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
             ((PlayGameFacilitiesController)playGame).setLblFacilitiesText(facilityNamePlayedByPlayer);
         }
 
