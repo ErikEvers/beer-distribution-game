@@ -13,12 +13,14 @@ import org.han.ica.asd.c.model.domain_objects.ProgrammedBusinessRules;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class GameAgentService implements IGameAgentService {
 
     @Inject
     private ProgrammedAgentDAO programmedAgentDAO;
     private ProgrammedAgent defaultAgent;
+    private ResourceBundle resourceBundle;
 
     /**
      * Get all the ProgrammedAgents from the database. When the persistence layer returns no ProgrammedAgents, this
@@ -78,7 +80,7 @@ public class GameAgentService implements IGameAgentService {
 
     private boolean throwAlertIfNoDefaultAgentAvailable(BeerGame beerGame) {
         if (defaultAgent == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "There is no local default agent!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, resourceBundle.getString("no_default_agent"));
             alert.setHeaderText("Warning!");
             alert.show();
             return true;
