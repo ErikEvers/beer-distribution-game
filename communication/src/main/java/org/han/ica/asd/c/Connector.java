@@ -179,8 +179,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     @Override
-    public GamePlayerId getGameData() throws ClassNotFoundException, IOException {
-        return gameMessageClient.sendGameDataRequestMessage(leaderIp);
+    public GamePlayerId getGameData(String userName) throws ClassNotFoundException, IOException {
+        return gameMessageClient.sendGameDataRequestMessage(leaderIp, userName);
     }
 
     @Override

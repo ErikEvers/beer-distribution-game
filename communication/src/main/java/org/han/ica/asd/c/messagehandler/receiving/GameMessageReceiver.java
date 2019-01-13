@@ -75,7 +75,7 @@ public class GameMessageReceiver {
                     TransactionMessage gameStartMessage = (TransactionMessage) gameMessage;
                     return handleTransactionMessage(gameStartMessage);
                 case REQUEST_GAME_DATA_MESSAGE:
-                    return handleRequestGameData(senderIp);
+                    return handleRequestGameData(senderIp, ((RequestGameDataMessage)gameMessage).getUserName());
                 default:
                     break;
             }
@@ -132,11 +132,11 @@ public class GameMessageReceiver {
         return null;
     }
 
-    private RequestGameDataMessage handleRequestGameData(String playerIp) {
+    private RequestGameDataMessage handleRequestGameData(String playerIp, String userName) {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
                 RequestGameDataMessage requestGameDataMessageResponse = new RequestGameDataMessage();
-                requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
+                requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp, userName));
                 return requestGameDataMessageResponse;
             }
         }

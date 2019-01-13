@@ -212,14 +212,14 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 			throw new FacilityNotAvailableException();
     }
 
-    public GamePlayerId getGameData(String playerIp) {
+    public GamePlayerId getGameData(String playerIp, String userName) {
         Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getIpAddress().equals(playerIp)).findFirst();
         Player actualPlayer;
         if(!connectingPlayerO.isPresent()) {
             actualPlayer = playerProvider.get();
             actualPlayer.setPlayerId(Integer.toString(highestPlayerId + 1));
             actualPlayer.setIpAddress(playerIp);
-            actualPlayer.setName("Piet paaltjes");
+            actualPlayer.setName(userName);
             if(highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
                 highestPlayerId = Integer.parseInt(actualPlayer.getPlayerId());
             }
