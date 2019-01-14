@@ -259,7 +259,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         this.nodeInfoList = nodeInfoList;
     }
 
-    /**
+    /**n
      * Gets the external IP of your router.
      *
      * @return The IP.
