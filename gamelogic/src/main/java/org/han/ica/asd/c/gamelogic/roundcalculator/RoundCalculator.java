@@ -26,7 +26,7 @@ public class RoundCalculator {
 
                 ordered = dealWithBackOrders(ordered, previousRound, order, deliver);
 
-                ordered = calculateNewFacilityStockDeliver(currentRound, ordered, order, deliver);
+                ordered = calculateNewFacilityStockDeliver(currentRound, ordered, deliver, order);
 
                 updateStock(currentRound, ordered, order, deliver);
             }
@@ -68,7 +68,7 @@ public class RoundCalculator {
 
         if (!facilityOrder.equals(facilityDeliver)) {
             int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
-            int newFacilityStockDeliver = facilityStockDeliver - ordered;
+            int newFacilityStockDeliver = (facilityStockDeliver - ordered);
 
             //if the newFacilityStockDeliver is below 0, it means the facility that needs to deliver beer doesn't have enough beer in stock to deliver all, meaning he gets back orders.
             if (newFacilityStockDeliver < 0) {
@@ -100,7 +100,7 @@ public class RoundCalculator {
             Facility facilityOrder = entry.getKey();
 
             for (Facility facilityDeliver : entry.getValue()) {
-                if (round.isRemainingBudgetExisting(facilityOrder)) {
+                if (!round.isRemainingBudgetExisting(facilityOrder)) {
                     //The budget is calculated for the FacilityOrder variable
                     round.updateRemainingBudget(calculateStockCost(round, facilityOrder), facilityOrder);
 

@@ -44,6 +44,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         this.beerGame = beerGame;
     }
 
+    public Map<Facility, List<Facility>> getFacilityLinks() {
+        return facilityLinks;
+    }
+
     public void addFacilities(Facility facilityOrder, Facility facilityDeliver) {
         List<Facility> delivers;
         if(facilityLinks.containsKey(facilityOrder)) {
