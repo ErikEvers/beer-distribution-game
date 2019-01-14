@@ -75,7 +75,7 @@ class PersistenceTest {
 
 
 		roundDAOMock = mock(RoundDAO.class);
-		Mockito.doNothing().when(roundDAOMock).createRound(any(Round.class));
+		//Mockito.doNothing().when(roundDAOMock).executePreparedStatement(anyInt(),any(Connection.class),anyString());
 		when((roundDAOMock).getRound(anyInt())).thenReturn(round);
 
 		beerGameDAOMock = mock(BeergameDAO.class);
@@ -145,9 +145,6 @@ class PersistenceTest {
 	void saveTurnDataTest() {
 		persistence.saveFacilityTurn(round);
 		verify((roundDAOMock), times(1)).createRound(any(Round.class));
-		verify((roundDAOMock),times(1)).createFacilityOrder(anyInt(),any(FacilityTurnOrder.class));
-		verify((roundDAOMock),times(1)).createFacilityDeliver(anyInt(),any(FacilityTurnDeliver.class));
-		verify((roundDAOMock),times(1)).createFacilityTurn(anyInt(),any(FacilityTurn.class));
 	}
 
 	@Test

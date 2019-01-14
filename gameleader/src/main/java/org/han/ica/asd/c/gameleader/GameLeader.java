@@ -168,7 +168,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
-        if (turnsReceivedInCurrentRound == 1)
+        if (turnsReceivedInCurrentRound == turnsExpectedPerRound)
             allTurnDataReceived();
     }
 
