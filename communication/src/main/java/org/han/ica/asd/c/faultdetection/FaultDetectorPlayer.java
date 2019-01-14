@@ -80,6 +80,7 @@ public class FaultDetectorPlayer extends TimerTask {
     public void start() {
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
+        active = true;
     }
 
     /**

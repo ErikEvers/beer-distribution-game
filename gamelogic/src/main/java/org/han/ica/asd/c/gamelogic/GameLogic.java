@@ -61,12 +61,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param turn
      */
     @Override
-    public void submitTurn(Round turn) {
-        try {
-            communication.sendTurn(turn);
-        } catch (SendGameMessageException e) {
-            //TODO sending the turn failed, check SendGameMessageException for the reason and show an error message
-        }
+    public void submitTurn(Round turn) throws SendGameMessageException {
+        communication.sendTurn(turn);
         persistence.saveRoundData(turn);
         System.out.println("=============== TURN AFGEROND =====================");
     }

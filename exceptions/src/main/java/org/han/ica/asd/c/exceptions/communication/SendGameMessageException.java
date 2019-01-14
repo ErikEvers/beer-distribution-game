@@ -19,4 +19,16 @@ public class SendGameMessageException extends Exception {
     public void addException(Exception exception){
         exceptions.add(exception);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder errorMessage = new StringBuilder();
+        errorMessage.append(this.getMessage());
+        errorMessage.append("\n");
+        errorMessage.append("Errors:\n");
+        for (Exception innerException : this.getExceptions()) {
+            errorMessage.append(innerException.getMessage());
+        }
+        return errorMessage.toString();
+    }
 }

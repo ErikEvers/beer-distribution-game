@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.gamelogic;
 
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -11,7 +12,7 @@ public interface IPlayerGameLogic {
      * Sends and saves an turn of the player / agent.
      * @param turn
      */
-    void submitTurn(Round turn);
+    void submitTurn(Round turn) throws SendGameMessageException;
 
     /**
      * Returns the current state of the game.

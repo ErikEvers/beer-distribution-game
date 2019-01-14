@@ -169,9 +169,9 @@ public class MessageTypeTest {
     @Test
     void TestRoundModelMessage() {
         Round roundMock = mock(Round.class);
-        gameMessage = new RoundModelMessage(roundMock);
+        gameMessage = new RoundModelMessage(null ,roundMock);
         assertEquals(MessageIds.ROUND_MESSAGE, gameMessage.getMessageType());
-        assertEquals(roundMock, ((RoundModelMessage) gameMessage).getRoundModel());
+        assertEquals(roundMock, ((RoundModelMessage) gameMessage).getNewRound());
     }
 
     @Test
