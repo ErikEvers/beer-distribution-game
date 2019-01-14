@@ -57,7 +57,7 @@ public enum GameValue {
      * @return the corresponding game value
      */
     public static boolean checkIfFacility(String variable) {
-        int endOfFirstPart = variable.indexOf(" ");
+        int endOfFirstPart = variable.indexOf(' ');
         int notFound = -1;
         if(endOfFirstPart==notFound){
             endOfFirstPart = variable.length();
