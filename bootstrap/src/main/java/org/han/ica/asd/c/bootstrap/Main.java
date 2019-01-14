@@ -10,7 +10,7 @@ import org.han.ica.asd.c.gui_main_menu.MainMenu;
 public class Main extends Application {
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		final Injector injector = Guice.createInjector(new BootstrapModule());
 		FXMLLoaderOnSteroids.setPrimaryStage(primaryStage);
 		injector.getInstance(MainMenu.class).setupScreen();

@@ -1,10 +1,16 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class FacilityTurnDeliver {
+import java.io.Serializable;
+
+public class FacilityTurnDeliver implements Serializable {
 	private int facilityId;
 	private int facilityIdDeliverTo;
 	private int openOrderAmount;
 	private int deliverAmount;
+
+	public FacilityTurnDeliver() {
+
+	}
 
 	public FacilityTurnDeliver(int facilityId, int facilityIdDeliverTo, int openOrderAmount, int deliverAmount) {
 		this.facilityId = facilityId;

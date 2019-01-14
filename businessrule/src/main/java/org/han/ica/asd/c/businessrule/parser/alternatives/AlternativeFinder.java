@@ -26,7 +26,7 @@ public class AlternativeFinder {
     }
 
     private void setupSuffixTree(){
-        String[] possibleBusinessRuleValues = {"then", "default", "order", "deliver", "round", "from", "where", "factory", "warehouse", "wholesaler", "retailer", "inventory", "stock", "backlog", "incoming order", "back orders", "lowest", "smallest", "highest", "biggest", "equal", "greater", "higher", "than", "less", "lower", "plus", "minus", "times", "divided"};
+        String[] possibleBusinessRuleValues = {"then", "default", "order", "deliver", "round", "from", "where", "factory", "regional warehouse", "wholesaler", "retailer", "inventory", "stock", "backlog", "incoming order", "back orders", "lowest", "smallest", "highest", "biggest", "equal", "greater", "higher", "than", "less", "lower", "plus", "minus", "times", "divided"};
 
         int index = 0;
         for (String businessRuleValue: possibleBusinessRuleValues) {
