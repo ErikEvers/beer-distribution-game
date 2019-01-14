@@ -21,6 +21,7 @@ import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
 import org.han.ica.asd.c.socketrpc.SocketServer;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -205,7 +206,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     public void sendTurnData(Round turn) {
-        //stub
+        throw new NotImplementedException();
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -216,29 +217,27 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public List<String> getAllGames() {
-        //Yet to be implemented
-        return Collections.emptyList();
+        throw new NotImplementedException();
     }
 
     @Override
     public void connectToGame(String game) {
-        //Yet to be implemented
+        throw new NotImplementedException();
     }
 
     @Override
     public void requestFacilityUsage(Facility facility) {
-        //Yet to be implemented
+        throw new NotImplementedException();
     }
 
     @Override
     public List<Facility> getAllFacilities() {
-        //Yet to be implemented
-        return Collections.emptyList();
+        throw new NotImplementedException();
     }
 
     @Override
     public void sendSelectedAgent(ProgrammedAgent programmedAgent) {
-        //Yet to be implemented
+        throw new NotImplementedException();
     }
 
     /**

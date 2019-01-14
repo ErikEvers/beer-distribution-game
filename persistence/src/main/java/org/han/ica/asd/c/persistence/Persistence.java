@@ -11,6 +11,7 @@ import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 
@@ -96,7 +97,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 
 	@Override
 	public void saveSelectedAgent(ProgrammedAgent agent) {
-		//Yet to be implemented.
+		throw new NotImplementedException();
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
@@ -37,12 +39,12 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
 	@Override
 	public void activatePlayer() {
-		//stub for now
+		throw new NotImplementedException();
 	}
 
     @Override
     public void activateAgent() {
-        //Yet to be implemented.
+        throw new NotImplementedException();
     }
 
     @Override
