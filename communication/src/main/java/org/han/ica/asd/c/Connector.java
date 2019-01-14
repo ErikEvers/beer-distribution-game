@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -21,6 +20,7 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;

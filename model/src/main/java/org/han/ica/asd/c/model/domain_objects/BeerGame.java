@@ -60,7 +60,7 @@ public class BeerGame implements IDomainModel, Serializable {
     }
 
     public Player getPlayerById(String playerId) {
-        return players.stream().filter(player -> player.getPlayerId() == playerId).findFirst().orElse(null);
+        return players.stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst().orElse(null);
     }
 
     public void removePlayerById(String playerId) {

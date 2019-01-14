@@ -54,7 +54,7 @@ public class SocketServer {
         }
     }
 
-    public void StopThread() {
+    public void stopThread() {
         isRunning = false;
         if (serverSocket != null && !serverSocket.isClosed()) {
             try {
