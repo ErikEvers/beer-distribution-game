@@ -14,10 +14,7 @@ import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Leader;
@@ -28,15 +25,9 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static java.util.UUID.randomUUID;
 
 public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
@@ -57,7 +48,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
     private int highestPlayerId = 0;
     private int turnsExpectedPerRound;
-    private int turnsReceivedInCurrentRound;
+    private int turnsReceivedInCurrentRound = 0;
     private int roundId = 1;
 
     @Inject
@@ -70,84 +61,18 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     /**
      * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
      */
-    public void init(String leaderIp, RoomModel roomModel) {
+    public void init(String leaderIp, RoomModel roomModel, BeerGame beerGame) {
         connectorForLeader.addObserver(this);
-        game = beerGameProvider.get();
 
-        Configuration configuration = new Configuration();
-
-        Facility retailer = new Facility(new FacilityType("Retailer", 0, 0,5,25,50,20, 20), 1);
-        Facility wholesale = new Facility(new FacilityType("Wholesaler", 0, 0,5,25,50,0, 20), 2);
-        Facility warehouse = new Facility(new FacilityType("Regional Warehouse", 0, 0,5,25,50,0, 20), 3);
-        Facility factory = new Facility(new FacilityType("Factory", 0, 0,5,25,50,0, 25), 4);
-
-        List<Facility> facilityList = new ArrayList<>();
-        facilityList.add(retailer);
-        facilityList.add(wholesale);
-        facilityList.add(warehouse);
-        facilityList.add(factory);
-
-        configuration.setFacilities(facilityList);
-
-        Map<Facility, List<Facility>> links = new HashMap<>();
-        List<Facility> list = new ArrayList<>();
-        list.add(wholesale);
-        links.put(retailer, list);
-
-        list = new ArrayList<>();
-        list.add(warehouse);
-        links.put(wholesale, list);
-
-        list = new ArrayList<>();
-        list.add(factory);
-        links.put(warehouse, list);
-
-        configuration.setFacilitiesLinkedTo(links);
-
-        configuration.setAmountOfWarehouses(1);
-        configuration.setAmountOfFactories(1);
-        configuration.setAmountOfWholesalers(1);
-        configuration.setAmountOfRetailers(1);
-
-        configuration.setAmountOfRounds(20);
-
-        configuration.setContinuePlayingWhenBankrupt(false);
-
-        configuration.setInsightFacilities(true);
-
-        configuration.setMaximumOrderRetail(99);
-        configuration.setMinimalOrderRetail(5);
-
+        game = beerGame;
 				GameLeader.roomModel = roomModel;
-        game.setConfiguration(configuration);
-        game.setGameId(randomUUID().toString());
-        game.setGameName(roomModel.getRoomName());
-        game.setGameDate("2019-01-01 0:00:00");
-        Player henk = new Player("0", leaderIp, retailer, "Yarno", true);
-        game.getPlayers().add(henk);
-        game.setLeader(new Leader(henk));
 
-        Round firstRound = roundProvider.get();
-        firstRound.setRoundId(roundId);
+				Player player = new Player("0", leaderIp, null, "Yarno", true);
+				game.getPlayers().add(player);
+				game.setLeader(new Leader(player));
+				playerComponent.setPlayer(player);
 
-        List<FacilityTurn> turns = new ArrayList<>();
-				for(Facility facility: game.getConfiguration().getFacilities()) {
-					turns.add(
-							new FacilityTurn(
-								facility.getFacilityId(),
-								roundId,
-								facility.getFacilityType().getStartingStock(),
-								0,
-								facility.getFacilityType().getStartingBudget(),
-								false));
-				}
-
-        firstRound.setFacilityTurns(turns);
-        game.getRounds().add(firstRound);
-
-				playerComponent.setPlayer(henk);
-
-        this.currentRoundData = firstRound;
+        this.currentRoundData = game.getRounds().get(0);
         this.currentRoundData.setRoundId(roundId);
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
@@ -242,7 +167,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
-        if (turnsReceivedInCurrentRound == turnsExpectedPerRound)
+        if (turnsReceivedInCurrentRound == game.getConfiguration().getFacilities().size())
             allTurnDataReceived();
     }
 
@@ -285,7 +210,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         turnsReceivedInCurrentRound = 0;
 
 				try {
-					connectorForLeader.sendRoundDataToAllPlayers(currentRoundData, game);
+					connectorForLeader.sendRoundDataToAllPlayers(oldRound, currentRoundData, game);
 				} catch (TransactionException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}

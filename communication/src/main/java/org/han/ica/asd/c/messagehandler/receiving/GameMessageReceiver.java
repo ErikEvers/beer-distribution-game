@@ -187,7 +187,7 @@ public class GameMessageReceiver {
                 if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == 2) {
                     //noinspection ConstantConditions
                     RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
-                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
+                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getPreviousRound(), roundModelMessage.getNewRound());
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
                 } else if (observer instanceof IGameStartObserver && transactionMessage.getMessageType() == 7) {
