@@ -213,10 +213,9 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
-    private String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
+    protected String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
         return facilityName.concat(" id: " + Integer.toString(facilityid)).concat(" Amount: " + Integer.toString(amount));
     }
-
 
     @FXML
     protected void submitTurnButtonClicked() {
@@ -256,19 +255,7 @@ public abstract class PlayGame implements IPlayGame {
             }
         }
 
-        for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
-        	if(facilityTurnOrder.getFacilityId() == facility.getFacilityId()) {
-						String facilityAndOrderAmount = concatFacilityAndIdAndOrder(beerGame.getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
-						orderFacilities.add(facilityAndOrderAmount);
-					}
-				}
 
-				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
-					if(facilityTurnDeliver.getFacilityId() == facility.getFacilityId()) {
-						String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(beerGame.getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
-						deliverFacilities.add(facilityAndDeliverAmount);
-					}
-				}
 
         int incomingOrders = 0;
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
@@ -288,21 +275,37 @@ public abstract class PlayGame implements IPlayGame {
 				submitTurnButton.setDisable(false);
     }
 
+    private void initLijst() {
+        for(FacilityTurnOrder facilityTurnOrder : playerComponent.getRound().getFacilityOrders()) {
+            if(facilityTurnOrder.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
+                String facilityAndOrderAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
+                orderFacilities.add(facilityAndOrderAmount);
+            }
+        }
+
+        for(FacilityTurnDeliver facilityTurnDeliver : playerComponent.getRound().getFacilityTurnDelivers()) {
+            if(facilityTurnDeliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
+                String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
+                deliverFacilities.add(facilityAndDeliverAmount);
+            }
+        }
+    }
+
     @FXML
     public void deletePlacedOrder(ActionEvent actionEvent) {
         int index = orderList.getItems().indexOf(orderList.getSelectionModel().getSelectedItem());
-        if (index != -1) {
+        if (index >= 0) {
             playerComponent.getRound().getFacilityOrders().remove(index);
-            orderList.getItems().removeIf(order -> order.contains(orderList.getSelectionModel().getSelectedItem()));
+            orderList.getItems().remove(index);
         }
     }
 
     @FXML
     public void deletePlacedDelivery(ActionEvent actionEvent) {
         int index = deliverList.getItems().indexOf(deliverList.getSelectionModel().getSelectedItem());
-        if (index != -1) {
+        if (index >= 0) {
             playerComponent.getRound().getFacilityTurnDelivers().remove(index);
-            deliverList.getItems().removeIf(order -> order.contains(deliverList.getSelectionModel().getSelectedItem()));
+            deliverList.getItems().remove(index);
         }
     }
 }
