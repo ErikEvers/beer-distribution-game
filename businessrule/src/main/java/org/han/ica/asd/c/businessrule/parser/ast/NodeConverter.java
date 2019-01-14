@@ -44,7 +44,7 @@ public class NodeConverter {
         return Integer.parseInt(facilityId);
     }
 
-    public List<List<String>> sortFacilities(List<List<String>> facilities){
+    private List<List<String>> sortFacilities(List<List<String>> facilities){
         List<List<String>> returnList = new ArrayList<>();
         for (List<String> facility : facilities) {
             Collections.sort(facility);
