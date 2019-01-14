@@ -396,6 +396,32 @@ class EvaluateBusinessRuleTest {
     }
 
     @Test
+    void testResolvingOperationInAction() {
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("19")))
+                        .addChild(comparisonOperatorProvider.get().addValue("less than or equal to"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(subtractOperationProvider.get()
+                                .addChild(valueProvider.get().addValue("30"))
+                                .addChild(calculationOperatorProvider.get().addValue("-"))
+                                .addChild(valueProvider.get().addValue("10"))));
+
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("20")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
     void testResolvingLessEqualsComparisonEqual() {
         BusinessRule businessRuleBefore = businessRuleProvider.get();
         businessRuleBefore.addChild(comparisonStatementProvider.get()
