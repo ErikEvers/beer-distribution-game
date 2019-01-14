@@ -58,6 +58,7 @@ public class ReplayGameRoundController {
     void initialize() {
         roundId.setTextFormatter(NumericTextFormatter.getTextFormatter());
         maxRoundId.setText(replayComponent.getTotalRoundsString());
+        gameName.setText(replayComponent.getBeerGameName());
 
         TreeBuilder builder = new TreeBuilder();
         builder.loadFacilityView(replayComponent.getBeerGameForCurrentRound(), facilitiesContainer, true);

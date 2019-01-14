@@ -87,4 +87,6 @@ public interface IVisualisedPlayedGameData {
     void setDisplayedAttribute(GameValue value);
 
     BeerGame getBeerGameForCurrentRound();
+
+    String getBeerGameName();
 }

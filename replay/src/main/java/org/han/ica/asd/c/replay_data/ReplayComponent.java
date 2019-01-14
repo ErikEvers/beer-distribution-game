@@ -256,10 +256,9 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
     @Override
     public BeerGame getBeerGameForCurrentRound() {
-//        BeerGame returnGame = beerGame;
-//        returnGame.getRounds().stream().filter(round -> round.getRoundId() == currentRound);
-//        return returnGame;
-        return beerGame;
+        BeerGame returnGame = beerGame;
+        returnGame.setRounds(returnGame.getRounds().stream().filter(round -> round.getRoundId() == currentRound).collect(Collectors.toList()));
+        return returnGame;
     }
 
     /***
@@ -444,5 +443,9 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         wantedFacilities.forEach(facility -> ids.add(facility.getFacilityId()));
 
         return ids;
+    }
+
+    public String getBeerGameName(){
+        return beerGame.getGameName();
     }
 }

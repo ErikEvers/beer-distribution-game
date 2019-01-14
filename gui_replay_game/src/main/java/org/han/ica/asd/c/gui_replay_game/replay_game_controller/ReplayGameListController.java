@@ -39,8 +39,8 @@ public class ReplayGameListController {
     public void initialize() {
 //TODO INJECT PRESSICTENCE AND GET ALL GAMES.
         list.setItems(items);
-        items.add("hello");
-        items.add("lol");
+        items.add("Beergame 14 januari");
+        items.add("ASD Beergame");
     }
 
     @FXML
