@@ -10,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gameconfiguration.ManagePlayersService;
+import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
@@ -24,6 +25,9 @@ public class ManagePlayersScreenController  {
 	ManagePlayersService gameConfiguration;
 
 	@Inject
+	IGameLeader gameLeader;
+
+	@Inject
 	@Named("AssignAgents")
 	public IGUIHandler assignAgents;
 
@@ -34,7 +38,6 @@ public class ManagePlayersScreenController  {
 	@FXML private TableColumn<Player, String> nameColumn;
 	@FXML private TableColumn<Player, String> ipColumn;
 
-	private BeerGame beerGame;
 	private ResourceBundle resourceBundle;
 
 	/**
@@ -46,20 +49,20 @@ public class ManagePlayersScreenController  {
 		playerIdColumn.setCellValueFactory(new PropertyValueFactory<>("playerId"));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		ipColumn.setCellValueFactory(new PropertyValueFactory<>("ipAddress"));
+		populateTable();
 	}
 
 	/**
 	 * Fill the player table with player records.
 	 */
 	private void populateTable() {
-		playerTable.setItems(FXCollections.observableArrayList(beerGame.getPlayers()));
+		playerTable.setItems(FXCollections.observableArrayList(gameLeader.getBeerGame().getPlayers()));
 	}
 
 	/**
 	 * Return to the game room
 	 */
 	public void handleReturnToGameRoomButtonClick() {
-		assignAgents.setData(new Object[] { beerGame });
 		assignAgents.setupScreen();
 	}
 
@@ -82,14 +85,9 @@ public class ManagePlayersScreenController  {
 
 		if (clicked.get() == ButtonType.OK) {
 			Player toRemove = playerTable.getItems().get(playerTable.getSelectionModel().getFocusedIndex());
-			beerGame = gameConfiguration.removePlayer(beerGame, toRemove);
+			gameConfiguration.removePlayer(gameLeader.getBeerGame(), toRemove);
 			populateTable();
 		}
 
-	}
-
-	public void setBeerGame(BeerGame beerGame) {
-		this.beerGame = beerGame;
-		populateTable();
 	}
 }

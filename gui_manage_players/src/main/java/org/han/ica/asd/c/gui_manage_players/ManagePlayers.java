@@ -10,15 +10,12 @@ import java.util.ResourceBundle;
 
 public class ManagePlayers implements IGUIHandler {
 
-	private BeerGame beerGame;
-
 	@Override
 	public void setData(Object[] data) {
-		this.beerGame = (BeerGame) data[0];
+		// unused
 	}
 
 	public void setupScreen() {
-		ManagePlayersScreenController controller = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesManagePlayers"), getClass().getResource("/fxml/ManagePlayersScreen.fxml"));
-		controller.setBeerGame(beerGame);
+		FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesManagePlayers"), getClass().getResource("/fxml/ManagePlayersScreen.fxml"));
 	}
 }
