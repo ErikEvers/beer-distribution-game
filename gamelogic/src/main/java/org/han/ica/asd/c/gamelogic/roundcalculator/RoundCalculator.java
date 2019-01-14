@@ -1,151 +1,108 @@
 package org.han.ica.asd.c.gamelogic.roundcalculator;
 
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
-
 import java.util.List;
-import java.util.Map;
 
 public class RoundCalculator {
-    private int currentTurnBackOrders;
 
     public RoundCalculator() {
-        currentTurnBackOrders = 0; //Zero unless a backorder is calculated in calculateNewFacilityStockDeliver.
     }
 
     public Round calculateRound(Round round, BeerGame beerGame) {
         Round outcome = new Round();
 
-        //TODO Afvangen wanneer fabriek bij zichzelf (null) bestelt
-        outcome.setFacilityTurns(round.getFacilityTurns());
+        outcome.setRoundId(round.getRoundId() + 1);
 
-        for(Map.Entry<Facility, List<Facility>> entry : beerGame.getConfiguration().getFacilitiesLinkedTo().entrySet()) {
-            Facility order = entry.getKey();
+        List<FacilityTurn> outcomeList = round.getFacilityTurns();
 
-            for(Facility deliver: entry.getValue()) {
-                int ordered = round.getTurnOrderByFacility(order, deliver);
+        for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
+            FacilityTurn curDeliverer = outcomeList.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityTurnDeliver.getFacilityId()).findFirst().orElse(null);
+            FacilityTurn curDeliveree = outcomeList.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityTurnDeliver.getFacilityIdDeliverTo()).findFirst().orElse(null);
 
-                ordered = dealWithBackOrders(ordered, round, order, deliver);
 
-                ordered = calculateNewFacilityStockDeliver(round, ordered, deliver, order);
+            curDeliverer.setStock(curDeliverer.getStock() - facilityTurnDeliver.getDeliverAmount());
 
-                updateStock(round, ordered, order, deliver);
+            if (curDeliverer.getStock() < 0) {
+                int possibleDelivery = curDeliverer.getStock() + facilityTurnDeliver.getDeliverAmount();
+                facilityTurnDeliver.setDeliverAmount(possibleDelivery);
+                curDeliverer.setStock(0);
             }
+
+            curDeliverer.setBackorders(curDeliverer.getBackorders() - facilityTurnDeliver.getDeliverAmount());
+            curDeliverer.setRemainingBudget(calculateOutgoingGoodsEarnings(curDeliverer, beerGame.getFacilityById(curDeliverer.getFacilityId()).getFacilityType(), facilityTurnDeliver.getDeliverAmount()));
+
+            curDeliveree.setStock(curDeliveree.getStock() + facilityTurnDeliver.getDeliverAmount());
+            curDeliverer.setRemainingBudget(calculateIncomingGoodsCosts(curDeliveree, beerGame.getFacilityById(curDeliveree.getFacilityId()).getFacilityType(), facilityTurnDeliver.getDeliverAmount()));
         }
 
-        updateRemainingBudget(round, beerGame);
+        for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
+            FacilityTurn curFacility = outcomeList.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityTurnOrder.getFacilityIdOrderTo()).findFirst().orElse(null);
+            curFacility.setBackorders(curFacility.getBackorders() + facilityTurnOrder.getOrderAmount());
+        }
+
+
+        for(FacilityTurn facilityTurn : outcomeList) {
+
+            int remainingBudget = facilityTurn.getRemainingBudget() + 3;
+
+            boolean bankrupt = remainingBudget > 0;
+
+            updateRemainingBudget(facilityTurn, beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType());
+
+            outcome.getFacilityTurns().add(new FacilityTurn(
+                facilityTurn.getFacilityId(),
+                outcome.getRoundId(),
+                facilityTurn.getStock(),
+                facilityTurn.getBackorders(),
+                facilityTurn.getRemainingBudget(),
+                facilityTurn.isBankrupt()
+            ));
+        }
 
         return outcome;
-    }
-
-    /**
-     * Calculate and update the new stock of the facility that ordered.
-     * Also add the delivered goods to the TurnDeliver list.
-     * @param round
-     * @param facilityOrder
-     * @param facilityDeliver
-     * @param ordered
-     */
-    private void updateStock(Round round, int ordered, Facility facilityOrder, Facility facilityDeliver) {
-        int newFacilityStockOrder = round.getStockByFacility(facilityOrder) + ordered;
-        calculateIncomingGoodsCosts(ordered, round, facilityOrder);
-
-        round.updateStock(facilityOrder, newFacilityStockOrder);
-        round.addTurnDeliver(facilityOrder, facilityDeliver, ordered, currentTurnBackOrders);
-    }
-
-    /**
-     * calculates if a facility can deliver all the ordered goods. If not, the amount it can not deliver will be added as a backOrder and the amount it can deliver will be returned.
-     * The stock of the facility that delivers will also be updated.
-     * @param round
-     * @param ordered
-     * @param facilityDeliver
-     * @param facilityOrder
-     * @return
-     */
-    private int calculateNewFacilityStockDeliver(Round round, int ordered, Facility facilityDeliver, Facility facilityOrder) {
-        int delivered = ordered;
-        currentTurnBackOrders = 0;
-
-        if (!facilityOrder.equals(facilityDeliver)) {
-            int facilityStockDeliver = round.getStockByFacility(facilityDeliver);
-            int newFacilityStockDeliver = (facilityStockDeliver - ordered);
-
-            //if the newFacilityStockDeliver is below 0, it means the facility that needs to deliver beer doesn't have enough beer in stock to deliver all, meaning he gets back orders.
-            if (newFacilityStockDeliver < 0) {
-                //determine how much beer can be delivered
-                delivered = newFacilityStockDeliver + ordered;
-
-                //backOrders is added as a positive value.
-                currentTurnBackOrders = -newFacilityStockDeliver;
-
-                //stock is 0 if you delivered all your beer
-                newFacilityStockDeliver = 0;
-            }
-
-            calculateOutgoingGoodsEarnings(delivered, round, facilityDeliver);
-            round.updateStock(facilityDeliver, newFacilityStockDeliver);
-        }
-
-        return delivered;
     }
 
     /**
      * Calculates the new remaining budget.
      * The remaining budget for facility Order gets calculated on basis of the stock.
      * The remaining budget for the facility Deliver gets calculated on basis of the backOrders it has.
-     * @param round
+     * @param facilityTurn
      */
-    private void updateRemainingBudget(Round round, BeerGame beerGame) {
-        for(Map.Entry<Facility, List<Facility>> entry : beerGame.getConfiguration().getFacilitiesLinkedTo().entrySet()) {
-            Facility facilityOrder = entry.getKey();
-
-            for (Facility facilityDeliver : entry.getValue()) {
-                if (!round.isRemainingBudgetExisting(facilityOrder)) {
-                    //The budget is calculated for the FacilityOrder variable
-                    round.updateRemainingBudget(calculateStockCost(round, facilityOrder), facilityOrder);
-
-                    //The budget is calculated for the FacilityDeliver variable
-                    round.updateRemainingBudget(calculateBackLogCost(round, facilityOrder, facilityDeliver), facilityDeliver);
-                }
-            }
-        }
+    private void updateRemainingBudget(FacilityTurn facilityTurn, FacilityType facilityType) {
+        facilityTurn.setRemainingBudget(calculateStockCost(facilityTurn, facilityType));
+        facilityTurn.setRemainingBudget(calculateBackLogCost(facilityTurn, facilityType));
     }
 
     /**
      * Calculate the stock cost.
-     * @param round
-     * @param facilityOrder
+     * @param facilityTurn
+     * @param facilityType
      * @return
      */
-    private int calculateStockCost(Round round, Facility facilityOrder) {
-        int remainingBudget = round.getRemainingBudgetByFacility(facilityOrder);
-        int stock = round.getStockByFacility(facilityOrder);
-        FacilityType facilityType = facilityOrder.getFacilityType();
+    private int calculateStockCost(FacilityTurn facilityTurn, FacilityType facilityType) {
+        int remainingBudget = facilityTurn.getRemainingBudget();
+        int stock = facilityTurn.getStock();
         int stockCosts = stock * facilityType.getStockHoldingCosts();
         return (remainingBudget - stockCosts);
     }
 
     /**
      * Because of the structure of our maps it's not possible to calculate the stock and the backlog cost for the same facility in the same function.
-     * @param round
-     * @param facilityOrder
-     * @param facilityDeliver
+     * @param facilityTurn
+     * @param facilityType
      * @return
      */
-    private int calculateBackLogCost(Round round, Facility facilityOrder, Facility facilityDeliver) {
-        int remainingBudgetFacilityDeliver = round.getRemainingBudgetByFacility(facilityDeliver);
-        int backOrders = round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
+    private int calculateBackLogCost(FacilityTurn facilityTurn, FacilityType facilityType) {
+        int remainingBudgetFacilityDeliver = facilityTurn.getRemainingBudget();
+        int backOrders = facilityTurn.getBackorders();
 
         if (backOrders > 0) {
-            FacilityType facilityType = facilityDeliver.getFacilityType();
             int backlogCosts = backOrders * facilityType.getOpenOrderCosts();
-
             return (remainingBudgetFacilityDeliver - backlogCosts);
         }
 
@@ -154,39 +111,19 @@ public class RoundCalculator {
 
     /**
      * Calculate the outgoing going goods value which is being earned by the facility deliver.
-     * @param ordered
-     * @param round
-     * @param facilityDeliver
+     * @param facilityTurn
+     * @param facilityType
      */
-    private void calculateOutgoingGoodsEarnings(int ordered, Round round, Facility facilityDeliver) {
-        int budgetDeliver = round.getRemainingBudgetByFacility(facilityDeliver);
-        int orderCostDeliver = ordered * facilityDeliver.getFacilityType().getValueOutgoingGoods();
-
-        round.updateRemainingBudget(budgetDeliver + orderCostDeliver, facilityDeliver);
+    private int calculateOutgoingGoodsEarnings(FacilityTurn facilityTurn, FacilityType facilityType, int deliverAmount) {
+        return facilityTurn.getRemainingBudget() + (deliverAmount * facilityType.getValueOutgoingGoods());
     }
 
     /**
      * Calculate the costs the facility needs to pay for receiving goods.
-     * @param ordered
-     * @param round
-     * @param facilityOrder
+     * @param facilityTurn
+     * @param facilityType
      */
-    private void calculateIncomingGoodsCosts(int ordered, Round round, Facility facilityOrder) {
-        int budgetOrder = round.getRemainingBudgetByFacility(facilityOrder);
-        int orderCostOrder = ordered * facilityOrder.getFacilityType().getValueIncomingGoods();
-
-        round.updateRemainingBudget(budgetOrder - orderCostOrder, facilityOrder);
-    }
-
-    /**
-     * Get the back orders and count it on the amount ordered.
-     * @param ordered
-     * @param round
-     * @param facilityOrder
-     * @param facilityDeliver
-     * @return
-     */
-    private int dealWithBackOrders(int ordered, Round round, Facility facilityOrder, Facility facilityDeliver) {
-        return ordered; //round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
+    private int calculateIncomingGoodsCosts(FacilityTurn facilityTurn, FacilityType facilityType, int orderAmount) {
+        return facilityTurn.getRemainingBudget() - (orderAmount * facilityType.getValueIncomingGoods());
     }
 }
