@@ -220,7 +220,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         turnsReceivedInCurrentRound = 0;
 
 				try {
-					connectorForLeader.sendRoundDataToAllPlayers(currentRoundData, game);
+					connectorForLeader.sendRoundDataToAllPlayers(oldRound, currentRoundData, game);
 				} catch (TransactionException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
