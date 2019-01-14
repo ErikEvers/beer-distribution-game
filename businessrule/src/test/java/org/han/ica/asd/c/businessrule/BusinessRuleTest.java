@@ -28,7 +28,6 @@ import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.Timeout;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
@@ -50,7 +49,7 @@ class BusinessRuleTest {
     private Round round;
     private Facility facility;
 
-    private int facilityId = 0;
+    private int facilityIdReplace = 0;
 
     private Provider<BusinessRule> businessRuleProvider;
     private Provider<Comparison> comparisonProvider;
@@ -62,10 +61,8 @@ class BusinessRuleTest {
     private Provider<DivideOperation> divideOperationProvider;
     private Provider<Action> actionProvider;
     private Provider<ActionReference> actionReferenceProvider;
-    private Provider<BusinessRuleDecoder> businessRuleDecoderProvider;
 
     private com.google.inject.Provider<ASTListener> astListenerProvider;
-    private com.google.inject.Provider<Fixtures> fixturesProvider;
 
     @BeforeEach
     void setup() {
@@ -86,34 +83,32 @@ class BusinessRuleTest {
         booleanOperatorProvider = injector.getProvider(BooleanOperator.class);
         comparisonOperatorProvider = injector.getProvider(ComparisonOperator.class);
         divideOperationProvider = injector.getProvider(DivideOperation.class);
-        businessRuleDecoderProvider = injector.getProvider(BusinessRuleDecoder.class);
         tmp = injector.getProvider(Fixtures.class);
         astListenerProvider = injector.getProvider(ASTListener.class);
-        fixturesProvider = injector.getProvider(Fixtures.class);
 
         List<FacilityTurn> facilityTurns = new ArrayList<>();
         List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();
         List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
         round = Mockito.mock(Round.class);
 
-        for(int i = 0 ;i<10;i++){
+        for (int i = 0; i < 10; i++) {
             createTurnDeliver(i, facilityTurnDelivers);
             createTurnOrder(i, facilityTurnOrders);
-            createTurn(i,facilityTurns);
+            createTurn(i, facilityTurns);
         }
         when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
         when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
         when(round.getFacilityTurns()).thenReturn(facilityTurns);
     }
 
-    void createTurnDeliver(int id, List<FacilityTurnDeliver> facilityTurnDelivers){
-        FacilityTurnDeliver  facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
+    void createTurnDeliver(int id, List<FacilityTurnDeliver> facilityTurnDelivers) {
+        FacilityTurnDeliver facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
         when(facilityTurnDeliver.getFacilityId()).thenReturn(id);
         when(facilityTurnDeliver.getDeliverAmount()).thenReturn(id);
         facilityTurnDelivers.add(facilityTurnDeliver);
     }
 
-    void createTurnOrder(int id, List<FacilityTurnOrder> facilityTurnOrders){
+    void createTurnOrder(int id, List<FacilityTurnOrder> facilityTurnOrders) {
         FacilityTurnOrder facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
         when(facilityTurnOrder.getFacilityId()).thenReturn(id);
         when(facilityTurnOrder.getOrderAmount()).thenReturn(id);
@@ -121,8 +116,8 @@ class BusinessRuleTest {
         facilityTurnOrders.add(facilityTurnOrder);
     }
 
-    void createTurn(int id, List<FacilityTurn> facilityTurns){
-        FacilityTurn  facilityTurn = Mockito.mock(FacilityTurn.class);
+    void createTurn(int id, List<FacilityTurn> facilityTurns) {
+        FacilityTurn facilityTurn = Mockito.mock(FacilityTurn.class);
 
         when(facilityTurn.getFacilityId()).thenReturn(id);
         when(facilityTurn.getStock()).thenReturn(id);
@@ -221,22 +216,32 @@ class BusinessRuleTest {
                                 .addChild(valueProvider.get().addValue("40%").addValue("inventory"))
                                 .addChild(valueProvider.get().addValue("20%").addValue("outgoing goods"))));
 
-        String expected = "BR(CS(CS(C(CV(V(15))ComO(==)CV(V(28))))BoolO(||)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
+        String expected = "BR(CS(CS(C(CV(V(0))ComO(==)CV(V(0))))BoolO(||)CS(C(CV(V(0))ComO(!=)CV(V(0)))))A(AR(order)Div(V(40% inventory)CalO(/)V(20% outgoing goods))))";
 
-        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
 
         String result = businessRule.encode();
         assertEquals(expected, result);
     }
+
     Provider<Fixtures> tmp;
+
     @Test
-    void replacePerson(){
-        String expected = "if inventory is 20 then order 20 from factory where inventory is highest";
-        BusinessRule businessRule = parseString(expected);
-        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round,facilityId);
+    void replacePersonWithHighest() {
+        String input = "if inventory is 20 then order 20 from factory where inventory is highest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(5)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
 
-        //BusinessRule businessRuleParsed = businessRuleDecoderProvider.get().decodeBusinessRule(expected);
-
+    @Test
+    void replacePersonWithLowest() {
+        String input = "if inventory is 20 then order 20 from factory where inventory is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(0)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
     }
 
     BusinessRule parseString(String input) {
@@ -274,6 +279,7 @@ class BusinessRuleTest {
 
         return listener.getBusinessRules().get(0);
     }
+
     @Test
     void testGameValueORDEREDContainsOrdered() {
         assertTrue(GameValue.ORDERED.contains("ordered"));

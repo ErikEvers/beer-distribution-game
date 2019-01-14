@@ -19,7 +19,9 @@ public class BusinessRule extends ASTNode {
     private Condition condition;
     private Action action;
     private static final String PREFIX = "BR(";
-
+    private GameValue attribute;
+    private GameValue highestOrLowest;
+    private GameValue facilityType;
 
     public BusinessRule() {
     }
@@ -182,7 +184,17 @@ public class BusinessRule extends ASTNode {
      */
     public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId) {
         findLeafAndReplaceComparisonStatement(condition, round, facilityId);
-        findLeafAndReplaceAction(action, round, facilityId);
+        findLeafAndReplaceAction(action.getComparisonStatement());
+        replacePerson(round);
+    }
+
+    private void replacePerson(Round round) {
+        if (action.hasPerson()) {
+            facilityType = getFacilityType(action.getPerson());
+        }
+        if (this.attribute != null && this.highestOrLowest != null && this.facilityType != null) {
+            replacer.replacePerson(action, round, facilityType, attribute, highestOrLowest);
+        }
     }
 
     /***
@@ -204,32 +216,39 @@ public class BusinessRule extends ASTNode {
         }
     }
 
-    private void findLeafAndReplaceAction(Action astNode, Round round, int facilityId) {
-        if (astNode.hasComparisonStatement()) {
-            findLeafAndReplaceComparisonStatement(astNode.getComparisonStatement(), round, facilityId);
+
+
+    private void findLeafAndReplaceAction(ASTNode astNode) {
+        if (astNode instanceof Value) {
+            GameValue foundAttribute = getAttribute((Value) astNode);
+            GameValue foundHighestOrLowest = getHighestOrLowest((Value) astNode);
+            if (this.attribute == null) {
+                this.attribute = foundAttribute;
+            }
+            if (this.highestOrLowest == null) {
+                this.highestOrLowest = foundHighestOrLowest;
+            }
         }
-        if (astNode.hasPerson()) {
-            GameValue facilityType = getFacilityType(astNode.getPerson());
-            GameValue attribute = getAttribute(astNode.getPerson());
-            GameValue highestOrLowest = getHighestOrLowest(astNode.getPerson());
-            if (attribute != null) {
-                replacer.replacePerson(astNode, round, facilityType, attribute, highestOrLowest);
+        if (astNode != null) {
+            findLeafAndReplaceAction(astNode.getLeftChild());
+            if (hasMultipleChildren(astNode)) {
+                findLeafAndReplaceAction(astNode.getRightChild());
             }
         }
     }
 
-    private GameValue getAttribute(Person person) {
-        if (containsFacilityFromList(person.getPerson(), GameValue.STOCK.getValue())) {
+    private GameValue getAttribute(Value value) {
+        if (containsAttribute(value, GameValue.STOCK.getValue())) {
             return GameValue.STOCK;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.ORDERED.getValue())) {
+        } else if (containsAttribute(value, GameValue.ORDERED.getValue())) {
             return GameValue.ORDERED;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.OUTGOINGGOODS.getValue())) {
+        } else if (containsAttribute(value, GameValue.OUTGOINGGOODS.getValue())) {
             return GameValue.OUTGOINGGOODS;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.BACKLOG.getValue())) {
+        } else if (containsAttribute(value, GameValue.BACKLOG.getValue())) {
             return GameValue.BACKLOG;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.INCOMINGORDER.getValue())) {
+        } else if (containsAttribute(value, GameValue.INCOMINGORDER.getValue())) {
             return GameValue.INCOMINGORDER;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.BUDGET.getValue())) {
+        } else if (containsAttribute(value, GameValue.BUDGET.getValue())) {
             return GameValue.BUDGET;
         }
         return null;
@@ -254,27 +273,37 @@ public class BusinessRule extends ASTNode {
         return ((BooleanLiteral) this.condition).getValue();
     }
 
-    public GameValue getFacilityType(Person person) {
-        if (containsFacilityFromList(person.getPerson(), GameValue.FACTORY.getValue())) {
+    private GameValue getFacilityType(Person person) {
+        if (containsGameValue(person.getPerson(), GameValue.FACTORY.getValue())) {
             return GameValue.FACTORY;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.WHOLESALER.getValue())) {
+        } else if (containsGameValue(person.getPerson(), GameValue.WHOLESALER.getValue())) {
             return GameValue.WHOLESALER;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.REGIONALWAREHOUSE.getValue())) {
+        } else if (containsGameValue(person.getPerson(), GameValue.REGIONALWAREHOUSE.getValue())) {
             return GameValue.REGIONALWAREHOUSE;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.RETAILER.getValue())) {
+        } else if (containsGameValue(person.getPerson(), GameValue.RETAILER.getValue())) {
             return GameValue.RETAILER;
         }
         return null;
     }
 
-    public boolean containsFacilityFromList(String inputStr, String[] items) {
+    private boolean containsAttribute(Value value, String[] items) {
+
+        String part1 = value.getFirstPartVariable();
+        String part2 = "";
+        if(value.getValue().size()>1) {
+            part2 = value.getSecondPartVariable();
+        }
+        return containsGameValue(part1, items) || containsGameValue(part2, items);
+    }
+
+    private boolean containsGameValue(String inputStr, String[] items) {
         return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
     }
 
-    public GameValue getHighestOrLowest(Person person) {
-        if (containsFacilityFromList(person.getPerson(), GameValue.HIGHEST.getValue())) {
+    private GameValue getHighestOrLowest(Value value) {
+        if (containsAttribute(value, GameValue.HIGHEST.getValue())) {
             return GameValue.HIGHEST;
-        } else if (containsFacilityFromList(person.getPerson(), GameValue.LOWEST.getValue())) {
+        } else if (containsAttribute(value, GameValue.LOWEST.getValue())) {
             return GameValue.LOWEST;
         }
         return null;
