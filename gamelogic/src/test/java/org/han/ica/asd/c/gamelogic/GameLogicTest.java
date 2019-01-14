@@ -50,12 +50,12 @@ public class GameLogicTest {
     }
 
     @Test
-    public void submitTurnCallsPersistence() {
+    public void submitTurnCallsPersistence() throws SendGameMessageException {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
         //verify(persistence, times(1)).saveRoundData(turn);
-				verify(communication, times(1)).sendTurnData(turn);
+				verify(communication, times(1)).sendTurn(turn);
     }
 
     @Test
