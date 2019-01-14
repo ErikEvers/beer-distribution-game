@@ -27,6 +27,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private int currentRound;
     private int totalRounds;
     private GameValue displayedAttribute;
+    IRetrieveReplayData retrieveReplayData;
 
     @Inject
     public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
@@ -159,8 +160,9 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     }
 
     private void createDataForSpecificFacility(XYChart.Series<Double, Double> facilitySeries) {
-        List<Round> roundsToShow = rounds.stream().filter(round ->
-            round.getRoundId() <= currentRound).collect(Collectors.toList());
+        List<Round> roundsToShow = rounds.stream().
+                map(round -> new Round(round.getRoundId(), round.getFacilityTurns(), round.getFacilityOrders(), round.getFacilityTurnDelivers())).collect(Collectors.toList()).stream().
+                filter(round -> round.getRoundId() <= currentRound).collect(Collectors.toList());
         roundsToShow.forEach(round -> {
                 round.setFacilityTurns(round.getFacilityTurns().stream().filter(facilityTurn -> facilityTurn.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
                 round.setFacilityOrders(round.getFacilityOrders().stream().filter(facilityTurnOrder -> facilityTurnOrder.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
