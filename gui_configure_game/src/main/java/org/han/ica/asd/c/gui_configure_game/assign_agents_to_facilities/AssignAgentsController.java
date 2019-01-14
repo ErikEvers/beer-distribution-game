@@ -66,7 +66,6 @@ public class AssignAgentsController {
         initTree();
     }
 
-    @FXML
     public void handleAddAgentsButtonClick() {
         if (agentComboBox.getValue() != null && lastClickedFacilityRectangle != null) {
             for (int i = 0; i < beerGame.getAgents().size(); i++) {
@@ -89,7 +88,6 @@ public class AssignAgentsController {
         initTree();
     }
 
-    @FXML
     public void handleRemoveAgentsButtonClick() {
         for (int i = 0; i < beerGame.getAgents().size(); i++) {
             if (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId()) {
@@ -99,7 +97,6 @@ public class AssignAgentsController {
         initTree();
     }
 
-    @FXML
     public void handleBackToMenuButtonClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, resourceBundle.getString("assign_agents_menu_warning"));
         alert.setTitle(resourceBundle.getString("warning_title"));
@@ -110,13 +107,11 @@ public class AssignAgentsController {
         }
     }
 
-    @FXML
     public void handleManagePlayersButtonClick() {
         managePlayers.setData(new Object[]{beerGame});
         managePlayers.setupScreen();
     }
 
-    @FXML
     public void handleStartGameButtonClick() {
         this.beerGame = gameAgentService.fillEmptyFacilitiesWithDefaultAgents(beerGame);
         initTree();
