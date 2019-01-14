@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
@@ -196,6 +197,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 					throw new BeerGameException("Every player needs to control a facility");
 				}
 			}
+			DaoConfig.setCurrentGameId(game.getGameId());
             persistence.saveGameLog(game, false);
             List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
 			for(GameAgent agent : game.getAgents()) {

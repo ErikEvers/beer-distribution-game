@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
@@ -39,7 +40,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private static ParticipantsPool participantsPool;
 
     private static int curRoundId;
-    private static BeerGame beerGame;
+    private BeerGame beerGame;
     private static IPlayerRoundListener player;
 
     @Inject
@@ -61,7 +62,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public boolean submitTurn(Round turn) {
-				//persistence.saveRoundData(turn);
+        persistence.saveRoundData(turn);
         return communication.sendTurnData(turn);
     }
 
@@ -71,6 +72,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public BeerGame getBeerGame() {
+        this.beerGame = persistence.getGameLog();
         return beerGame;
     }
 
@@ -172,7 +174,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        GameLogic.beerGame = beerGame;
+        DaoConfig.setCurrentGameId(beerGame.getGameId());
+        this.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
         player.startGame();
         curRoundId = 1;
