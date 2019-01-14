@@ -86,8 +86,8 @@ public class Agent extends GameAgent implements IParticipant {
 			}
 		}
 
-		persistence.logUsedBusinessRuleToCreateOrder(
-				new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
+		//persistence.logUsedBusinessRuleToCreateOrder(
+				//new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
 		return new GameRoundAction(targetOrderMap, targetDeliverMap);
 	}
 
@@ -113,7 +113,7 @@ public class Agent extends GameAgent implements IParticipant {
 	 * @return  The facility below the current facility that needs to be resolved. NULL when facility is not found.
 	 */
 	private Facility resolveLowerFacilityId(int targetFacilityId) {
-		List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
+		List<Facility> links = configuration.getFacilitiesLinkedToFacilitiesByFacilityId(getFacility().getFacilityId());
 
 		if(targetFacilityId == NodeConverter.FIRSTFACILITYABOVEBELOW){
             Collections.sort(links);
