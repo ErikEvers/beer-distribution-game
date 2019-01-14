@@ -50,7 +50,7 @@ public class BusinessRuleHandler implements IBusinessRules {
     }
 
     public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
-        BusinessRule businessRuleAST = businessRuleDecoder.decodeBusinessRule(businessRule);//wordt wel geinject
+        BusinessRule businessRuleAST = businessRuleDecoder.decodeBusinessRule(businessRule);
 
         businessRuleAST.substituteTheVariablesOfBusinessruleWithGameData(roundData, facilityId);
         businessRuleAST.evaluateBusinessRule();

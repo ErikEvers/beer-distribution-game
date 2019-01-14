@@ -186,17 +186,19 @@ public class BusinessRule extends ASTNode {
     public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId) {
         findLeafAndReplaceComparisonStatement(condition, round, facilityId);
         if(action.hasPerson()) {
-            findLeafAndReplaceAction(action.getComparisonStatement());
+            facilityType = getFacilityType(action.getPerson());
+        }
+        findAttributes(action.getComparisonStatement());
+        if (action.hasPerson() && this.attribute != null && this.facilityType != null && this.highestOrLowest != null) {
             replacePerson(round);
-        }else{
-            findLeafAndReplaceComparisonStatement(action, round, facilityId);
+        } else {
+            findLeafAndReplaceComparisonStatement(action.getComparisonStatement(), round, facilityId);
+            findLeafAndReplaceComparisonStatement(action.getRightChild(), round, facilityId);
         }
     }
 
     private void replacePerson(Round round) {
-        if (action.hasPerson()) {
-            facilityType = getFacilityType(action.getPerson());
-        }
+
         if (this.attribute != null && this.highestOrLowest != null && this.facilityType != null) {
             replacer.replacePerson(action, round, facilityType, attribute, highestOrLowest);
         }
@@ -226,7 +228,7 @@ public class BusinessRule extends ASTNode {
      * finds the leaf and replaces the action
      * @param astNode a node of the tree
      */
-    private void findLeafAndReplaceAction(ASTNode astNode) {
+    private void findAttributes(ASTNode astNode) {
         if (astNode instanceof Value) {
             GameValue foundAttribute = getAttribute((Value) astNode);
             GameValue foundHighestOrLowest = getHighestOrLowest((Value) astNode);
@@ -238,9 +240,9 @@ public class BusinessRule extends ASTNode {
             }
         }
         if (astNode != null) {
-            findLeafAndReplaceAction(astNode.getLeftChild());
+            findAttributes(astNode.getLeftChild());
             if (hasMultipleChildren(astNode)) {
-                findLeafAndReplaceAction(astNode.getRightChild());
+                findAttributes(astNode.getRightChild());
             }
         }
     }
