@@ -13,6 +13,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
 import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,7 +64,7 @@ class BusinessRuleHandlerTest {
 					.addChild(valueProvider.get().addValue("1")));
 
 		Action expectedAction = (Action) businessRule.getChildren().get(1);
-		ActionModel actualAction = businessRuleHandlerProvider.get().evaluateBusinessRule(businessRule.encode(), new Round(),10);
+		ActionModel actualAction = businessRuleHandlerProvider.get().evaluateBusinessRule(businessRule.encode(), new Round(),1);
 
 		assertEquals(expectedAction.getType(), actualAction.type);
 		assertEquals(expectedAction.getAmount(), actualAction.amount);

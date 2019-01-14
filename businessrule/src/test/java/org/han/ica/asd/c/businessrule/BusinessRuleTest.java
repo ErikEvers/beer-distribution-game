@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.han.ica.asd.c.businessrule.engine.BusinessRuleDecoder;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
+import org.han.ica.asd.c.businessrule.parser.ast.Replacer;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
@@ -47,7 +48,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 class BusinessRuleTest {
     private BusinessRule businessRule = new BusinessRule();
     private Round round;
-    private Facility facility;
 
     private int facilityIdReplace = 0;
 
@@ -99,7 +99,11 @@ class BusinessRuleTest {
         when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
         when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
         when(round.getFacilityTurns()).thenReturn(facilityTurns);
+        when(round.getRoundId()).thenReturn(4);
     }
+
+
+
 
     void createTurnDeliver(int id, List<FacilityTurnDeliver> facilityTurnDelivers) {
         FacilityTurnDeliver facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
@@ -281,6 +285,27 @@ class BusinessRuleTest {
     }
 
     @Test
+    void testBusinessruleGetReplacementRound() {
+        BusinessRule businessRule = (BusinessRule) businessRuleProvider.get()
+                .addChild(comparisonStatementProvider.get()
+                        .addChild(comparisonStatementProvider.get()
+                                .addChild(comparisonProvider.get()
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("round")))
+                                        .addChild(comparisonOperatorProvider.get().addValue("equal"))
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("5"))))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("20")));
+
+        String expected = "BR(CS(CS(C(CV(V(5))ComO(==)CV(V(5)))))A(AR(order)V(20)))";
+
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+
+        String result = businessRule.encode();
+        assertEquals(expected, result);
+    }
+
+    @Test
     void testGameValueORDEREDContainsOrdered() {
         assertTrue(GameValue.ORDERED.contains("ordered"));
     }
@@ -294,60 +319,60 @@ class BusinessRuleTest {
 
     @Test
     void testBusinessRuleGetOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getOrderMethod = BusinessRule.class.getDeclaredMethod("getOrder", Round.class, int.class);
+        Method getOrderMethod = Replacer.class.getDeclaredMethod("getOrder", Round.class, int.class);
         getOrderMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String order = (String) getOrderMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String order = (String) getOrderMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(order.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetStockEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getStockMethod = BusinessRule.class.getDeclaredMethod("getStock", Round.class, int.class);
+        Method getStockMethod = Replacer.class.getDeclaredMethod("getStock", Round.class, int.class);
         getStockMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String stock = (String) getStockMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String stock = (String) getStockMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(stock.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetBudgetEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getBudgetMethod = BusinessRule.class.getDeclaredMethod("getBudget", Round.class, int.class);
+        Method getBudgetMethod = Replacer.class.getDeclaredMethod("getBudget", Round.class, int.class);
         getBudgetMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String budget = (String) getBudgetMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String budget = (String) getBudgetMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(budget.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetBacklogEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getBacklogMethod = BusinessRule.class.getDeclaredMethod("getBacklog", Round.class, int.class);
+        Method getBacklogMethod = Replacer.class.getDeclaredMethod("getBacklog", Round.class, int.class);
         getBacklogMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String backlog = (String) getBacklogMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String backlog = (String) getBacklogMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(backlog.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetIncomingOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getIncomingOrderMethod = BusinessRule.class.getDeclaredMethod("getIncomingOrder", Round.class, int.class);
+        Method getIncomingOrderMethod = Replacer.class.getDeclaredMethod("getIncomingOrder", Round.class, int.class);
         getIncomingOrderMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String incomingOrder = (String) getIncomingOrderMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String incomingOrder = (String) getIncomingOrderMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(incomingOrder.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetOutgoingOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getOutgoingGoodsMethod = BusinessRule.class.getDeclaredMethod("getOutgoingGoods", Round.class, int.class);
+        Method getOutgoingGoodsMethod = Replacer.class.getDeclaredMethod("getOutgoingGoods", Round.class, int.class);
         getOutgoingGoodsMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String outgoingOrder = (String) getOutgoingGoodsMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String outgoingOrder = (String) getOutgoingGoodsMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(outgoingOrder.isEmpty());
     }

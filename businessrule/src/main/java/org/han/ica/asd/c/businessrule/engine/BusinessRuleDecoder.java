@@ -4,6 +4,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -21,6 +22,8 @@ public class BusinessRuleDecoder {
 
     @Inject
     private BusinessRuleFactory businessRuleFactory;
+    @Inject
+    private Provider<BusinessRule> businessRuleProvider;
 
     /**
      * Decode an entire business rule script to a business rule tree with all the properties
@@ -28,7 +31,7 @@ public class BusinessRuleDecoder {
      * @return                      The business rule tree
      */
     public BusinessRule decodeBusinessRule(String businessRuleString) {
-        BusinessRule businessRule = new BusinessRule();
+        BusinessRule businessRule = businessRuleProvider.get();
         Deque<ASTNode> astNodeStack = new LinkedList<>();
         astNodeStack.push(businessRule);
 

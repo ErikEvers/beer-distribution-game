@@ -2,8 +2,6 @@ package org.han.ica.asd.c.gui_spelers_beheren;
 
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.ResourceBundle;
 

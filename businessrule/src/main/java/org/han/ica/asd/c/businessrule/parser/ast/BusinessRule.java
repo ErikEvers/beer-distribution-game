@@ -19,6 +19,7 @@ public class BusinessRule extends ASTNode {
     private Condition condition;
     private Action action;
     private static final String PREFIX = "BR(";
+
     private GameValue attribute;
     private GameValue highestOrLowest;
     private GameValue facilityType;
@@ -143,7 +144,7 @@ public class BusinessRule extends ASTNode {
 
     @Override
     public ASTNode getRightChild() {
-        return action;
+        return this.getAction();
     }
 
     /**
@@ -262,7 +263,6 @@ public class BusinessRule extends ASTNode {
     private boolean hasMultipleChildren(ASTNode astNode) {
         return astNode.getChildren().size() > 1;
     }
-
 
     /**
      * States if the business rule is triggered
