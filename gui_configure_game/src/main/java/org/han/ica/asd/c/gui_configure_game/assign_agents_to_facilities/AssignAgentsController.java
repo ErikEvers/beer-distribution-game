@@ -90,7 +90,7 @@ public class AssignAgentsController {
                 if (agentComboBox.getValue().getProgrammedAgentName().equals(beerGame.getAgents().get(i).getGameAgentName()) && (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, resourceBundle.getString("agent_assigned_warning"));
                     alert.setHeaderText(resourceBundle.getString("warning_title"));
-                    alert.showAndWait();
+                    alert.show();
                 }
 
                 if (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId()) {
@@ -101,7 +101,7 @@ public class AssignAgentsController {
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, resourceBundle.getString("choose_agent_alert"));
             alert.setHeaderText(resourceBundle.getString("warning_title"));
-            alert.showAndWait();
+            alert.show();
         }
         initTree();
     }
@@ -143,10 +143,10 @@ public class AssignAgentsController {
 					gameLeader.startGame();
 				} catch (BeerGameException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't start a game unless every player controls a facility", ButtonType.CLOSE);
-					alert.showAndWait();
+					alert.show();
 				} catch (TransactionException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
-					alert.showAndWait();
+					alert.show();
 				}
     }
 

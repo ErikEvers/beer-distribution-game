@@ -46,7 +46,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
     private static RoomModel roomModel;
     private static BeerGame game;
-    
+
+    private Round previousRoundData;
     private Round currentRoundData;
 
     private int highestPlayerId = 0;
@@ -171,7 +172,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
-        if (turnsReceivedInCurrentRound == game.getConfiguration().getFacilities().size())
+        if (turnsReceivedInCurrentRound == turnsExpectedPerRound)
             allTurnDataReceived();
     }
 
@@ -181,8 +182,9 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Then it starts a new round.
      */
     private void allTurnDataReceived() {
+				this.previousRoundData = this.currentRoundData;
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
-        //persistence.saveRoundData(this.currentRoundData);
+        persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
         startNextRound();
@@ -216,16 +218,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() {
-    		Round oldRound = currentRoundData;
-        currentRoundData = roundProvider.get();
-        currentRoundData.getFacilityTurns().addAll(oldRound.getFacilityTurns());
         //TODO: check if game is done? (round count exceeds config max)
         roundId++;
         currentRoundData.setRoundId(roundId);
         turnsReceivedInCurrentRound = 0;
 
 				try {
-					connectorForLeader.sendRoundDataToAllPlayers(oldRound, currentRoundData, game);
+					connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData, game);
 				} catch (TransactionException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
