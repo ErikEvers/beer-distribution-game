@@ -61,7 +61,7 @@ public class JoinGameController {
                 gameRoom.setupScreen();
             } catch (RoomException | DiscoveryException | ClassNotFoundException | IOException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
-                alert.showAndWait();
+                alert.show();
             }
         } else {
             handleJoinGameButtonClick();

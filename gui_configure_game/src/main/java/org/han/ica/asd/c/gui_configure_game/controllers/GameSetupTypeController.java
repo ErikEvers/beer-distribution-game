@@ -390,7 +390,7 @@ public class GameSetupTypeController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "One or more fields do not have a value");
         alert.setHeaderText(WARNING);
         alert.setTitle(WARNING);
-        alert.showAndWait();
+        alert.show();
     }
 
     private TextField getInGoodsFactory() {
