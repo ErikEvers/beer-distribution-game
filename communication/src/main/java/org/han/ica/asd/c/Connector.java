@@ -3,18 +3,13 @@ package org.han.ica.asd.c;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Leader;
-import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
-import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
@@ -26,7 +21,6 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
@@ -220,6 +214,31 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         observers.add(observer);
         faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
+    }
+
+    @Override
+    public List<String> getAllGames() {
+        return null;
+    }
+
+    @Override
+    public void connectToGame(String game) {
+
+    }
+
+    @Override
+    public void requestFacilityUsage(Facility facility) {
+
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        return null;
+    }
+
+    @Override
+    public void sendSelectedAgent(ProgrammedAgent programmedAgent) {
+
     }
 
     /**
