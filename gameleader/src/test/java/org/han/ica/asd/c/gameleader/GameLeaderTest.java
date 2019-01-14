@@ -114,7 +114,7 @@ public class GameLeaderTest {
 
     @Test
     public void facilitiesIs2AndTurnModelReceivedIsCalledTwice_TurnsReceived_IS_Zero() {
-        gameLeader.init("", new RoomModel());
+        gameLeader.init("", new RoomModel(), new BeerGame());
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
 
@@ -123,7 +123,7 @@ public class GameLeaderTest {
 
     @Test
     public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() {
-        gameLeader.init("", new RoomModel());
+        gameLeader.init("", new RoomModel(), new BeerGame());
         gameLeader.turnModelReceived(facilityTurnModel);
 
         Assertions.assertNotEquals(0, gameLeader.getTurnsReceivedInCurrentRound());
@@ -131,7 +131,7 @@ public class GameLeaderTest {
 
     @Test
     public void verifyThatMethodsAreCalled() {
-        gameLeader.init("", new RoomModel());
+        gameLeader.init("", new RoomModel(), new BeerGame());
 
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
@@ -145,7 +145,7 @@ public class GameLeaderTest {
 
     @Test
     public void notifyReconnected() {
-        gameLeader.init("", new RoomModel());
+        gameLeader.init("", new RoomModel(), new BeerGame());
         gameLeader.notifyPlayerReconnected(any(String.class));
 
         verify(gameLogic, times(1)).removeAgentByPlayerId(null);
@@ -159,7 +159,7 @@ public class GameLeaderTest {
 
         players.add(player);
         gameTest.setPlayers(players);
-        gameLeader.init("", new RoomModel());
+        gameLeader.init("", new RoomModel(), new BeerGame());
         gameLeader.iAmDisconnected();
 
         verify(gameLogic, times(0)).addLocalParticipant(any(Agent.class));
@@ -182,7 +182,7 @@ public class GameLeaderTest {
         doReturn(gameAgent).when(gameLeader).getAgentByFacility(anyInt());
         when(gameAgent.getGameAgentName()).thenReturn("test");
 
-        gameLeader.init("", new RoomModel());
+        gameLeader.init("", new RoomModel(), new BeerGame());
         gameLeader.playerIsDisconnected("b");
 
         //verify(gameLogic, times(1)).addLocalParticipant(any(Agent.class));

@@ -13,14 +13,14 @@ public class GameSetupType implements IGUIHandler {
 
     private Configuration configuration;
     private String gamename;
-    private String onlinegame;
+    private boolean onlinegame;
 
 
     @Override
     public void setData(Object[] data) {
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
-        this.onlinegame = (String) data[2];
+        this.onlinegame = (boolean) data[2];
 
     }
 

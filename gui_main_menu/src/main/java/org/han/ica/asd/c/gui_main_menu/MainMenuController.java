@@ -30,13 +30,6 @@ public class MainMenuController {
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
-		@Inject
-		@Named("GameRoomGameLeader")
-		private IGUIHandler gameRoomGameLeader;
-
-		@Inject
-		private IConnectorForSetup connector;
-
     @FXML
     private void closeButtonAction() {
         Stage stage = (Stage) close.getScene().getWindow();

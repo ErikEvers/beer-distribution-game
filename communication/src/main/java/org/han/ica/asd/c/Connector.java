@@ -125,11 +125,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
 
-    public RoomModel createRoom(String roomName, String password) {
+    public RoomModel createRoom(String roomName, String password, BeerGame beerGame) {
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
-            leader.init(externalIP, createdRoom);
+            leader.init(externalIP, createdRoom, beerGame);
 
             return createdRoom;
         } catch (DiscoveryException e) {
