@@ -90,7 +90,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_FactoryOrder(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        Integer exp = null;
+        Integer exp = 0;
         Integer res = nodeConverter.getFacilityIdByAction(0,actionReferenceProvider.get().addValue("order"));
 
         assertEquals(exp,res);
@@ -160,7 +160,7 @@ public class NodeConverterTest {
     void testNodeConverter_getFacilityIdByAction_RetailerDeliver(){
         NodeConverter nodeConverter = nodeConverterProvider.get();
 
-        Integer exp = null;
+        Integer exp = 0;
         Integer res = nodeConverter.getFacilityIdByAction(3,actionReferenceProvider.get().addValue("deliver"));
 
         assertEquals(exp,res);

@@ -1,11 +1,11 @@
 package org.han.ica.asd.c.interfaces.gui_play_game;
 
+
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IPlayerComponent {
     void activatePlayer();
@@ -22,4 +22,6 @@ public interface IPlayerComponent {
     void chooseFacility(Facility facility);
     String getFacilityName();
     void startNewTurn();
+    Player getPlayer();
+    void setUi(IPlayGame game);
 }

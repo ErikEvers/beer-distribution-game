@@ -184,10 +184,7 @@ public class ParserPipeline {
         if (!businessRulesParsed.isEmpty()) {
             for (int i = 0; i < businessRulesInput.size(); i++) {
                 if (businessRulesInput.get(i).getBusinessRule().isEmpty() || ParseErrorListener.INSTANCE.getExceptions().contains(i + 1) || !businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)) {
-                    if(!businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)){
-                        businessRulesInput.get(i).setErrorMessage("Only legitimate business rules are allowed. They start with 'default' or 'if'");
-                        hasErrors = true;
-                    }
+                    hasErrors = setErrorsBusinessrules(hasErrors, i);
                     newLineCounter.addOne();
                 } else {
                     map.put(businessRulesInput.get(i), businessRulesParsed.get(i - newLineCounter.getCountedValue()));
@@ -200,6 +197,14 @@ public class ParserPipeline {
             }
             return true;
         }
+    }
+
+    private boolean setErrorsBusinessrules(boolean hasErrors, int i) {
+        if(!businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)){
+            businessRulesInput.get(i).setErrorMessage("Only legitimate business rules are allowed");
+            hasErrors = true;
+        }
+        return hasErrors;
     }
 
     /***
