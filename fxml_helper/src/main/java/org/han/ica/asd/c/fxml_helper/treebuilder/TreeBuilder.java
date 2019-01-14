@@ -226,7 +226,6 @@ public class TreeBuilder {
 	 * @return name of the controlling entity.
 	 * @author Yarno Boelens
 	 */
-
 	private String getAgentName(List<GameAgent> agents, Facility facility) {
 		for(GameAgent agent: agents) {
 			if(agent.getFacility() == facility) {

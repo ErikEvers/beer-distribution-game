@@ -31,14 +31,13 @@ public class FacilityRectangle extends StackPane {
 
 				Text text = new Text("Player: " +assignedPlayer + "\n" + "Agent: " +assignedAgent);
 
-				double textSize = text.getFont().getSize();
-
 				Rectangle rectangle = new Rectangle(51, 36, Color.web(determineColor(facility.getFacilityType().getFacilityName())));
 				rectangle.setStroke(Color.BLACK);
 				rectangle.setStrokeType(StrokeType.INSIDE);
 				rectangle.setArcHeight(5);
 				rectangle.setArcWidth(5);
-				rectangle.setWidth((text.getText().length() * textSize) + 5);
+				rectangle.setWidth(text.getLayoutBounds().getWidth() + 10);
+				rectangle.setHeight(text.getLayoutBounds().getHeight() + 10);
 
 				this.getChildren().addAll(rectangle, text);
 
@@ -47,6 +46,13 @@ public class FacilityRectangle extends StackPane {
         this.setHeight(rectangle.getHeight());
         this.setWidth(rectangle.getWidth());
     }
+
+	private double getLongestTextLength(String assignedPlayer, String assignedAgent) {
+		if(assignedPlayer.length() > assignedAgent.length()) {
+			return assignedPlayer.length();
+		}
+		return assignedAgent.length();
+	}
 
 	/**
 	 * Returns a color based on the particular type of facility.
