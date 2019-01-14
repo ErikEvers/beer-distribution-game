@@ -5,15 +5,18 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
+
 import java.util.List;
 
 public interface IPlayerComponent {
     void activatePlayer();
     void activateAgent();
-    BeerGame seeOtherFacilities();
+    BeerGame getBeerGame();
+    Round getRound();
     void placeOrder(Facility facility, int amount);
     void sendDelivery(Facility facility, int amount);
-    void submitTurn();
+    boolean submitTurn();
     void requestFacilityUsage(Facility facility);
     void selectAgent(ProgrammedAgent agent);
     List<String> getAllGames();
@@ -21,7 +24,9 @@ public interface IPlayerComponent {
     List<Facility> getAllFacilities();
     void chooseFacility(Facility facility);
     String getFacilityName();
-    void startNewTurn();
     Player getPlayer();
+    void setPlayer(Player player);
+    void clearPlayer();
     void setUi(IPlayGame game);
+    void clearUi();
 }

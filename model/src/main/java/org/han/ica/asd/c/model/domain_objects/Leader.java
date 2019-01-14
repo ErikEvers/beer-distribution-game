@@ -1,15 +1,13 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 public class Leader implements IDomainModel, Serializable {
     private Player player;
-    private LocalDateTime timestamp;
+    private String timestamp;
 
     public Leader(Player player) {
         this.player = player;
-        timestamp = LocalDateTime.now();
     }
 
     public Player getPlayer() {
@@ -20,11 +18,11 @@ public class Leader implements IDomainModel, Serializable {
         this.player = player;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp){
+    public void setTimestamp(String timestamp){
         this.timestamp = timestamp;
     }
 }

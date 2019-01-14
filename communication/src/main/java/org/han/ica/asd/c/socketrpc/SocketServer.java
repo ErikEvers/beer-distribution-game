@@ -16,7 +16,7 @@ public class SocketServer {
 
     @Inject
     @Named("MessageDirector")
-    private static IServerObserver serverObserver;
+    public static IServerObserver serverObserver;
 
     @Inject
     private static Logger logger;
@@ -54,7 +54,7 @@ public class SocketServer {
         }
     }
 
-    public void StopThread() {
+    public void stopThread() {
         isRunning = false;
         if (serverSocket != null && !serverSocket.isClosed()) {
             try {
@@ -78,7 +78,9 @@ public class SocketServer {
             if (response != null) {
                 new SocketClient().sendObject(socket, response);
             }
-            socket.close();
+            else {
+                socket.close();
+            }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Something went wrong with the connection " + e);
         } catch (ClassNotFoundException e) {

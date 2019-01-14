@@ -10,8 +10,8 @@ import java.util.List;
 
 public class CommunicationStub implements IConnectedForPlayer {
 	@Override
-	public void sendTurnData(Round turn) {
-
+	public boolean sendTurnData(Round turn) {
+		return true;
 	}
 
 	@Override

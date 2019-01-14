@@ -13,7 +13,7 @@ public class PersistenceStub implements IGameStore {
     }
 
     @Override
-    public void saveGameLog(BeerGame beerGame) {
+    public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
     }
 

@@ -162,6 +162,9 @@ public class FacilityDAO {
      * @return The retrieved facility from the database.
      */
     public Facility readSpecificFacility(int facilityId) {
+    	if(facilityId == 0) {
+    		return null;
+		}
         Connection conn = databaseConnection.connect();
         Facility facilityFromDb = null;
 				if (conn != null) {
@@ -172,8 +175,10 @@ public class FacilityDAO {
 								DaoConfig.gameIdNotSetCheck(pstmt, 2);
 
 								try (ResultSet rs = pstmt.executeQuery()) {
-												facilityFromDb = new Facility(facilityTypeDAO.readSpecificFacilityType(rs.getString("FacilityName")),
-																rs.getInt("FacilityId"));
+									if(!rs.isClosed()) {
+										facilityFromDb = new Facility(facilityTypeDAO.readSpecificFacilityType(rs.getString("FacilityName")),
+												rs.getInt("FacilityId"));
+									}
 								}
 								conn.commit();
 						} catch (GameIdNotSetException | SQLException e) {

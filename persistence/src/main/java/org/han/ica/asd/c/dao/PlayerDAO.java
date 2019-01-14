@@ -19,6 +19,7 @@ public class PlayerDAO {
     private static final String GET_ALL = "SELECT * FROM Player WHERE GameId = ?";
     private static final String GET_SPECIFIC = "SELECT * FROM Player WHERE GameId = ? AND PlayerId = ?";
     private static final String CREATE_PLAYER = "INSERT INTO Player VALUES (?, ?, ?, ?, ?)";
+    private static final String CREATE_PLAYER_WITHOUT_FACILITY = "INSERT INTO Player (GameId, PlayerId, IpAddress, Name) VALUES (?, ?, ?, ?)";
     private static final String DELETE_PLAYER = "DELETE FROM Player WHERE GameId = ? AND PlayerId = ?";
     private static final String UPDATE_PLAYER = "UPDATE Player SET IpAddress = ?, Name = ? WHERE GameId = ? AND PlayerId = ?";
 
@@ -38,6 +39,10 @@ public class PlayerDAO {
      * @param player A domain object which contains the necessary data to create a player
      */
     public void createPlayer(Player player) {
+        if(player.getFacility() == null) {
+            createPlayerWithoutFacility(player);
+            return;
+        }
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(CREATE_PLAYER)) {
 
@@ -48,6 +53,25 @@ public class PlayerDAO {
             pstmt.setInt(3, player.getFacility().getFacilityId());
             pstmt.setString(4, player.getIpAddress());
             pstmt.setString(5, player.getName());
+
+            pstmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException | GameIdNotSetException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
+        }
+    }
+
+    public void createPlayerWithoutFacility (Player player) {
+        Connection conn = databaseConnection.connect();
+        try (PreparedStatement pstmt = conn.prepareStatement(CREATE_PLAYER_WITHOUT_FACILITY)) {
+
+            conn.setAutoCommit(false);
+
+            DaoConfig.gameIdNotSetCheck(pstmt, 1);
+            pstmt.setString(2, player.getPlayerId());
+            pstmt.setString(3, player.getIpAddress());
+            pstmt.setString(4, player.getName());
 
             pstmt.executeUpdate();
             conn.commit();
@@ -210,4 +234,9 @@ public class PlayerDAO {
         return player;
     }
 
+	public void updatePlayers(List<Player> players) {
+        for (Player player: players) {
+            updatePlayer(player);
+        }
+	}
 }

@@ -84,8 +84,8 @@ public class GameMessageClient {
         return whoIsTheLeaderMessageReturn.getResponse();
     }
 
-    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException {
-        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility, String playerId) throws FacilityNotAvailableException {
+        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility, playerId);
         try {
             ChooseFacilityMessage response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
             if (response.getException() != null) {
@@ -98,9 +98,9 @@ public class GameMessageClient {
         return chooseFacilityMessageReturn;
     }
 
-    public GamePlayerId sendGameDataRequestMessage(String ip) throws IOException, ClassNotFoundException {
-        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
-        RequestGameDataMessage response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
+    public GamePlayerId sendGameDataRequestMessage(String ip, String userName) throws IOException, ClassNotFoundException {
+        RequestGameDataMessage requestGameDataMessage = new RequestGameDataMessage(userName);
+        RequestGameDataMessage response = socketClient.sendObjectWithResponseGeneric(ip, requestGameDataMessage);
         if (response.getException() != null) {
             logger.log(Level.INFO, response.getException().getMessage(), response.getException());
         }
@@ -111,10 +111,11 @@ public class GameMessageClient {
      * This method sends the handled round data back to every peer.
      *
      * @param ips        The ips to send the round to.
-     * @param roundModel The round object.
+     * @oaram previousRound the object of the previous round.
+     * @param newRound The new round object.
      */
-    public void sendRoundToAllPlayers(String[] ips, Round roundModel) throws TransactionException {
-        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
+    public void sendRoundToAllPlayers(String[] ips, Round previousRound, Round newRound) throws TransactionException {
+        RoundModelMessage roundModelMessage = new RoundModelMessage(previousRound, newRound);
         new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 

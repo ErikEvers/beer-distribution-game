@@ -1,10 +1,10 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
 
-import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,13 +13,10 @@ import java.util.List;
  */
 public class ParticipantsPool {
     private List<IParticipant> participants;
-    private IParticipant player;
+    private static IPlayerRoundListener player;
 
-    @Inject
-    public ParticipantsPool(IParticipant playerParticipant) {
+    public ParticipantsPool() {
         participants = new LinkedList<>();
-        participants.add(playerParticipant);
-        player = playerParticipant;
     }
 
     /**
@@ -42,7 +39,7 @@ public class ParticipantsPool {
      * Replaces the local player with the given agent.
      * @param agent The agent to replace the local player with.
      */
-    public void replacePlayerWithAgent(IParticipant agent) {
+    public void replacePlayerWithAgent(Agent agent) {
         participants.remove(player);
         participants.add(agent);
     }
@@ -51,26 +48,19 @@ public class ParticipantsPool {
      * Replaces the agent of the local player with the local player.
      */
     public void replaceAgentWithPlayer() {
-        replaceParticipantWithPlayer(player);
+        IParticipant participantToRemove = getParticipantByFacilityId(player.getFacilityId());
+        if (participantToRemove != null) {
+            participants.remove(participantToRemove);
+        }
     }
 
-    public void replaceAgentWithPlayer(IParticipant playerParticipant) {
-        replaceParticipantWithPlayer(playerParticipant);
-    }
-
-    /**
-     * Replaces the agent that has the same facilityId as the given player.
-     * This method is used when a player gets back in to the game.
-     * @param playerParticipant The player that got back into the game.
-     */
-    private void replaceParticipantWithPlayer(IParticipant playerParticipant) {
+    private IParticipant getParticipantByFacilityId(int facilityId) {
         for (IParticipant participant : participants) {
-            if (participant.getParticipant() == playerParticipant.getParticipant()) {
-                participants.remove(participant);
-                participants.add(player);
-                return;
+            if (participant.getParticipant().getFacilityId() == facilityId) {
+                return participant;
             }
         }
+        return null;
     }
 
     /**
@@ -86,9 +76,7 @@ public class ParticipantsPool {
         }
     }
 
-    public void excecuteRound(Round round) {
-        for (IParticipant participant : participants) {
-            participant.executeTurn(round);
-        }
+    public void setPlayer(IPlayerRoundListener iPlayer) {
+        player = iPlayer;
     }
 }

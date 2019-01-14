@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
-import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTED;
-import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.CONNECTEDWITHOUTLEADER;
-import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.UNFILTERED;
+import static org.han.ica.asd.c.faultdetection.nodeinfolist.Condition.*;
 
 /**
  * This list class is used to keep all the details of all the nodes in.

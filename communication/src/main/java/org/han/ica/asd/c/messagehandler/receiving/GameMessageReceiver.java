@@ -2,17 +2,17 @@ package org.han.ica.asd.c.messagehandler.receiving;
 
 
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
-import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
-import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
+import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
+import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
-import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
+import org.han.ica.asd.c.messagehandler.MessageProcessor;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
@@ -22,14 +22,9 @@ import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.GAME_START_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ELECTION_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.CHOOSE_FACILITY_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.REQUEST_GAME_DATA_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ROUND_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.TURN_MODEL_MESSAGE;
-import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.WHO_IS_THE_LEADER_MESSAGE;
+import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.*;
 
 public class GameMessageReceiver {
 
@@ -75,7 +70,7 @@ public class GameMessageReceiver {
                     TransactionMessage gameStartMessage = (TransactionMessage) gameMessage;
                     return handleTransactionMessage(gameStartMessage);
                 case REQUEST_GAME_DATA_MESSAGE:
-                    return handleRequestGameData(senderIp);
+                    return handleRequestGameData(senderIp, ((RequestGameDataMessage)gameMessage).getUserName());
                 default:
                     break;
             }
@@ -121,7 +116,7 @@ public class GameMessageReceiver {
         try {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IFacilityMessageObserver) {
-                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
+                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility(), chooseFacilityMessage.getPlayerId());
                     return chooseFacilityMessage.createResponseMessage();
                 }
             }
@@ -132,11 +127,11 @@ public class GameMessageReceiver {
         return null;
     }
 
-    private RequestGameDataMessage handleRequestGameData(String playerIp) {
+    private RequestGameDataMessage handleRequestGameData(String playerIp, String userName) {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
                 RequestGameDataMessage requestGameDataMessageResponse = new RequestGameDataMessage();
-                requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
+                requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp, userName));
                 return requestGameDataMessageResponse;
             }
         }
@@ -167,7 +162,8 @@ public class GameMessageReceiver {
         switch (transactionMessage.getPhase()) {
             case 0:
                 toBecommittedRound = transactionMessage;
-                break;
+                transactionMessage.createResponseMessage();
+                return transactionMessage;
             case 1:
                 return doCommit(transactionMessage);
             case -1:
@@ -191,7 +187,7 @@ public class GameMessageReceiver {
                 if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == 2) {
                     //noinspection ConstantConditions
                     RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
-                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getRoundModel());
+                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getPreviousRound(), roundModelMessage.getNewRound());
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
                 } else if (observer instanceof IGameStartObserver && transactionMessage.getMessageType() == 7) {
@@ -206,8 +202,8 @@ public class GameMessageReceiver {
         return null;
     }
 
-    public static void setObservers(ArrayList<IConnectorObserver> observers) {
-        gameMessageObservers = observers;
+    public static void setObservers(List<IConnectorObserver> observers) {
+        gameMessageObservers = (ArrayList<IConnectorObserver>) observers;
     }
 
     public void setGameMessageFilterer(GameMessageFilterer gameMessageFilterer) {

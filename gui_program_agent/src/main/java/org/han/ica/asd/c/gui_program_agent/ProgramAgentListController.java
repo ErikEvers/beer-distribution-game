@@ -89,7 +89,7 @@ public class ProgramAgentListController {
         } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, ResourceBundle.getBundle("languageResourcesGuiProgramAgent").getString("delete_agent") + selectedAgent.toString() + "?", ButtonType.YES, ButtonType.NO);
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.YES) {
+            if (result.isPresent() && result.get() == ButtonType.YES) {
                 items.remove(selectedAgent);
                 iBusinessRuleStore.deleteProgrammedAgent(selectedAgent.toString());
             }

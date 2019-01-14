@@ -63,6 +63,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 	@AfterEach
 	void tearDown() {
 		DBConnectionTest.getInstance().cleanup();
+		DaoConfig.clearCurrentGameId();
 	}
 
 	@Test
