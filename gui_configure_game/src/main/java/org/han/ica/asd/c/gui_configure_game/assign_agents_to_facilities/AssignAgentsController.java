@@ -134,7 +134,7 @@ public class AssignAgentsController {
     }
 
     public void handleStartGameButtonClick() {
-        //gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame());
+        gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame());
         initTree();
 				try {
 					gameLeader.startGame();
