@@ -20,6 +20,8 @@ public class PlayGameFactoryController extends PlayGame {
         superInitialize();
 
         txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
+        deliverList.setItems(deliverFacilities);
+        orderList.setItems(orderFacilities);
     }
 
     /**
@@ -28,7 +30,13 @@ public class PlayGameFactoryController extends PlayGame {
     @Override
     public void handleSendOrderButtonClick() {
         int order = Integer.parseInt(outgoingOrderTextField.getText());
+        orderFacilities.add(addProduceOrderToList(order));
         playerComponent.placeOrder(playerComponent.getPlayer().getFacility(), order);
+    }
+
+
+    private String addProduceOrderToList(int amount) {
+        return " To produce: " + Integer.toString(amount);
     }
 
     @Override
