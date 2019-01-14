@@ -210,9 +210,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param newRound
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException {
+    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
 			//initNodeInfoList();
-			List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+			List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
 			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
@@ -248,7 +248,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
 				//initNodeInfoList();
 				//List<String> ips = nodeInfoList.getAllIps();
-				List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+				List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
