@@ -31,6 +31,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.IOException;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -179,6 +180,7 @@ public abstract class PlayGame implements IPlayGame {
     /**
      * Button event handling the order sending.
      */
+    @FXML
     protected void handleSendOrderButtonClick() {
         if (!outgoingOrderTextField.getText().isEmpty() && comboBox.getValue() != null) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
@@ -190,6 +192,7 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    @FXML
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
             Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
@@ -209,9 +212,6 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected void submitTurnButtonClicked() {
-        final boolean cmbChooseOutgoingDeliveryExisting = (cmbChooseOutgoingDelivery != null);
-        final boolean comboboxExisting = (comboBox != null);
-
 				submitTurnButton.setDisable(true);
 				if(playerComponent.submitTurn()) {
 					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);

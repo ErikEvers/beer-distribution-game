@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -21,6 +20,7 @@ import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -125,11 +125,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
 
-    public RoomModel createRoom(String roomName, String password) {
+    public RoomModel createRoom(String roomName, String password, BeerGame beerGame) {
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
-            leader.init(externalIP, createdRoom);
+            leader.init(externalIP, createdRoom, beerGame);
 
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -205,15 +205,15 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     /**
      * The data of a specific round gets sent to the participants of said game.
-     *
-     * @param allData
+     * @param previousRound
+     * @param newRound
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round allData, BeerGame beerGame) throws TransactionException {
+    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException {
 			//initNodeInfoList();
 			List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
-			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
+			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
 
     public void startFaultDetector(){

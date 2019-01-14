@@ -82,7 +82,7 @@ public class GameRoomController {
 				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
 			} catch (IOException | ClassNotFoundException e) {
 				Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong with updating the room data", ButtonType.CLOSE);
-				alert.showAndWait();
+				alert.show();
 			}
 		}
 

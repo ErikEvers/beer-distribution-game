@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
@@ -10,7 +9,13 @@ import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
-import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -183,13 +188,16 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     /**
-     * @param currentRound The current round to save.
+		 * @param previousRound The previous round to save.
+     * @param newRound The current round to save.
      */
     @Override
-    public void roundModelReceived(Round currentRound) {
-        beerGame.getRounds().removeIf(round -> round.getRoundId() == currentRound.getRoundId());
-        beerGame.getRounds().add(currentRound);
-        curRoundId = currentRound.getRoundId();
+    public void roundModelReceived(Round previousRound, Round newRound) {
+				beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
+				beerGame.getRounds().add(previousRound);
+        beerGame.getRounds().removeIf(round -> round.getRoundId() == newRound.getRoundId());
+        beerGame.getRounds().add(newRound);
+        curRoundId = newRound.getRoundId();
         sendRoundActionFromAgents();
     }
 

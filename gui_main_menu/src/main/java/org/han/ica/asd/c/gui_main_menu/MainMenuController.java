@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -14,6 +13,10 @@ public class MainMenuController {
 
     @FXML
     private Button close;
+
+    @Inject
+    @Named("GameSetupStart")
+    private IGUIHandler gameSetupStart;
 
     @Inject
     @Named("ProgramAgentList")
@@ -26,13 +29,6 @@ public class MainMenuController {
     @Inject
     @Named("JoinGame")
     private IGUIHandler joinGame;
-
-		@Inject
-		@Named("GameRoomGameLeader")
-		private IGUIHandler gameRoomGameLeader;
-
-		@Inject
-		private IConnectorForSetup connector;
 
     @FXML
     private void closeButtonAction() {
@@ -47,17 +43,16 @@ public class MainMenuController {
 
     @FXML
     private void replayButtonAction() {
-         replayGameList.setupScreen();
+        replayGameList.setupScreen();
     }
 
+    @FXML
     public void handleCreateGameButtonClick() {
-			connector.start();
-			connector.createRoom("Beergame ASD-C", "");
+        gameSetupStart.setupScreen();
+    }
 
-			gameRoomGameLeader.setupScreen();
-		}
-
-    public void handleJoinGameButtonClick(){
+    @FXML
+    public void handleJoinGameButtonClick() {
         joinGame.setupScreen();
     }
 
