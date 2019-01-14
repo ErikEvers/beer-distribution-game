@@ -35,7 +35,7 @@ public class FacilityRectangle extends StackPane {
 
 				double textSize = text.getFont().getSize();
 
-				rectangle = new Rectangle(51, 36, Color.web(determineColor(facility.getFacilityType().getFacilityName())));
+				rectangle = new Rectangle(text.getLayoutBounds().getWidth() + 10, text.getLayoutBounds().getHeight() + 10, Color.web(determineColor(facility.getFacilityType().getFacilityName())));
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeType(StrokeType.INSIDE);
         rectangle.setArcHeight(5);
