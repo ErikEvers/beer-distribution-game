@@ -179,6 +179,7 @@ public abstract class PlayGame implements IPlayGame {
     /**
      * Button event handling the order sending.
      */
+    @FXML
     protected void handleSendOrderButtonClick() {
         if (!outgoingOrderTextField.getText().isEmpty() && comboBox.getValue() != null) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
@@ -190,6 +191,7 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    @FXML
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
             Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
