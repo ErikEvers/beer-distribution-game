@@ -24,14 +24,12 @@ public class Agent extends GameAgent implements IParticipant {
 	private Configuration configuration;
 
 	@Inject
-	@Named("businessRules")
 	private IBusinessRules businessRules;
 
 	@Inject
 	private IPlayerGameLogic gameLogic;
 
 	@Inject
-	@Named("persistence")
 	private IPersistence persistence;
 
 
@@ -45,6 +43,9 @@ public class Agent extends GameAgent implements IParticipant {
         super(gameAgentName, facility, gameBusinessRulesList);
         this.configuration = configuration;
     }
+
+    public Agent() {
+	}
 
 	/**
 	 * Generates actions of an agent using the defined business rules.
@@ -135,4 +136,8 @@ public class Agent extends GameAgent implements IParticipant {
     public Facility getParticipant() {
         return getFacility();
     }
+
+    public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+	}
 }

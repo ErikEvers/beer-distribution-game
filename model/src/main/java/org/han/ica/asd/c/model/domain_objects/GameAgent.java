@@ -16,9 +16,17 @@ public class GameAgent implements IDomainModel, Serializable {
         this.gameBusinessRulesList = Collections.unmodifiableList(gameBusinessRules);
     }
 
+    public GameAgent() {
+    }
+
     public String getGameAgentName() {
         return gameAgentName;
     }
+
+    public void setGameAgentName(String gameAgentName) {
+        this.gameAgentName = gameAgentName;
+    }
+
     public Facility getFacility() {
         return facility;
     }

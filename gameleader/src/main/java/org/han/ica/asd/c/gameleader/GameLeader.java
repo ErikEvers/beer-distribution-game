@@ -40,6 +40,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
     private final Provider<Player> playerProvider;
+    private final Provider<Agent> agentProvider;
 
     private static RoomModel roomModel;
     private static BeerGame game;
@@ -52,10 +53,11 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private int roundId = 1;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider) {
+    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider, Provider<Agent> agentProvider) {
         this.beerGameProvider = beerGameProvider;
         this.roundProvider = roundProvider;
         this.playerProvider = playerProvider;
+        this.agentProvider = agentProvider;
     }
 
     /**
@@ -186,13 +188,18 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
     public void startGame() throws BeerGameException, TransactionException {
 			//persistence.saveGameLog(game);
-			for(Player player: game.getPlayers()) {
-				if(player.getFacility() == null) {
-					throw new BeerGameException("Every player needs to control a facility");
-				}
-			}
+//			for(Player player: game.getPlayers()) {
+//				if(player.getFacility() == null) {
+//					throw new BeerGameException("Every player needs to control a facility");
+//				}
+//			}
 			for(GameAgent agent : game.getAgents()) {
-			    gameLogic.addLocalParticipant(new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules()));
+			    Agent tempAgent = agentProvider.get();
+			    tempAgent.setFacility(agent.getFacility());
+			    tempAgent.setGameAgentName(agent.getGameAgentName());
+			    tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
+			    tempAgent.setConfiguration(game.getConfiguration());
+			    gameLogic.addLocalParticipant(tempAgent);
             }
 			connectorForLeader.startRoom(roomModel);
 			connectorForLeader.sendGameStart(game);
