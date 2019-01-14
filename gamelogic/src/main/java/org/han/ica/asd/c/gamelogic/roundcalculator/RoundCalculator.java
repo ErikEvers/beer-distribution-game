@@ -7,6 +7,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import java.util.List;
+import java.util.Random;
 
 public class RoundCalculator {
 
@@ -19,6 +20,30 @@ public class RoundCalculator {
         outcome.setRoundId(round.getRoundId() + 1);
 
         List<FacilityTurn> outcomeList = round.getFacilityTurns();
+
+        int lower = beerGame.getConfiguration().getMinimalOrderRetail();
+        int upper = beerGame.getConfiguration().getMaximumOrderRetail();
+
+        for(FacilityTurn facilityTurn : outcomeList) {
+            FacilityType facilityType = beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType();
+
+            if(facilityType.getFacilityName().equals("Retailer")) {
+                outcome.getFacilityOrders().add(new FacilityTurnOrder(
+                    facilityTurn.getFacilityId(),
+                    facilityTurn.getFacilityId(),
+                    ((int)(Math.random() * (upper - lower)) + lower)
+                ));
+
+                if(facilityTurn.getBackorders() > 0) {
+                    outcome.getFacilityTurnDelivers().add(new FacilityTurnDeliver(
+                        facilityTurn.getFacilityId(),
+                        facilityTurn.getFacilityId(),
+                        0,
+                        facilityTurn.getBackorders()
+                    ));
+                }
+            }
+        }
 
         for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
             FacilityTurn curDeliverer = outcomeList.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityTurnDeliver.getFacilityId()).findFirst().orElse(null);
@@ -36,13 +61,19 @@ public class RoundCalculator {
             curDeliverer.setBackorders(curDeliverer.getBackorders() - facilityTurnDeliver.getDeliverAmount());
             curDeliverer.setRemainingBudget(calculateOutgoingGoodsEarnings(curDeliverer, beerGame.getFacilityById(curDeliverer.getFacilityId()).getFacilityType(), facilityTurnDeliver.getDeliverAmount()));
 
-            curDeliveree.setStock(curDeliveree.getStock() + facilityTurnDeliver.getDeliverAmount());
-            curDeliverer.setRemainingBudget(calculateIncomingGoodsCosts(curDeliveree, beerGame.getFacilityById(curDeliveree.getFacilityId()).getFacilityType(), facilityTurnDeliver.getDeliverAmount()));
+            if(facilityTurnDeliver.getFacilityId() != facilityTurnDeliver.getFacilityIdDeliverTo()) {
+                curDeliveree.setStock(curDeliveree.getStock() + facilityTurnDeliver.getDeliverAmount());
+                curDeliverer.setRemainingBudget(calculateIncomingGoodsCosts(curDeliveree, beerGame.getFacilityById(curDeliveree.getFacilityId()).getFacilityType(), facilityTurnDeliver.getDeliverAmount()));
+            }
         }
 
         for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
             FacilityTurn curFacility = outcomeList.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityTurnOrder.getFacilityIdOrderTo()).findFirst().orElse(null);
-            curFacility.setBackorders(curFacility.getBackorders() + facilityTurnOrder.getOrderAmount());
+            if(facilityTurnOrder.getFacilityId() != facilityTurnOrder.getFacilityIdOrderTo()) {
+                curFacility.setBackorders(curFacility.getBackorders() + facilityTurnOrder.getOrderAmount());
+            } else {
+                curFacility.setBackorders(curFacility.getStock() + facilityTurnOrder.getOrderAmount());
+            }
         }
 
 
@@ -50,9 +81,11 @@ public class RoundCalculator {
 
             int remainingBudget = facilityTurn.getRemainingBudget() + 3;
 
-            boolean bankrupt = remainingBudget > 0;
+            facilityTurn.setBankrupt(remainingBudget > 0);
 
-            updateRemainingBudget(facilityTurn, beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType());
+            FacilityType facilityType = beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType();
+
+            updateRemainingBudget(facilityTurn, facilityType);
 
             outcome.getFacilityTurns().add(new FacilityTurn(
                 facilityTurn.getFacilityId(),

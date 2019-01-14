@@ -38,20 +38,20 @@ public class PlayGameFactoryController extends PlayGame {
 
     @Override
     public void submitTurnButtonClicked() {
-        int step2Value = 0;
-
-        if (!outgoingOrderTextField.getText().trim().isEmpty()) {
-            if (!step2TextField.getText().trim().isEmpty()) {
-                step2Value = Integer.parseInt(step2TextField.getText());
-            }
-            if (!step1TextField.getText().trim().isEmpty()) {
-                step2TextField.setText(step1TextField.getText());
-            }
-
-            step1TextField.setText(outgoingOrderTextField.getText());
-            outgoingOrderTextField.clear();
-
-        }
+//        int step2Value = 0;
+//
+//        if (!outgoingOrderTextField.getText().trim().isEmpty()) {
+//            if (!step2TextField.getText().trim().isEmpty()) {
+//                step2Value = Integer.parseInt(step2TextField.getText());
+//            }
+//            if (!step1TextField.getText().trim().isEmpty()) {
+//                step2TextField.setText(step1TextField.getText());
+//            }
+//
+//            step1TextField.setText(outgoingOrderTextField.getText());
+//            outgoingOrderTextField.clear();
+//
+//        }
 
         super.submitTurnButtonClicked();
     }
