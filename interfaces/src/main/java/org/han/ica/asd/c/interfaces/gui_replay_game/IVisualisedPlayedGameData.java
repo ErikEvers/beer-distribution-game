@@ -76,7 +76,7 @@ public interface IVisualisedPlayedGameData {
      * Removes a Facility from the DisplayedFacilities list
      * @param facility
      */
-    void removeDisplayedFacility();
+    void removeDisplayedFacility(Facility facility);
 
     /***
      * Updates the Attribute that is being displayed
