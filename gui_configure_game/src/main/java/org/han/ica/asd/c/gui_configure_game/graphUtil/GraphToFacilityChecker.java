@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_configure_game.graphUtil;
+package org.han.ica.asd.c.gui_configure_game.graphutil;
 
 
 import org.han.ica.asd.c.gui_configure_game.graph.*;
@@ -18,20 +18,16 @@ public class GraphToFacilityChecker {
      */
     public Boolean graphChecker(List<GraphFacility> graphFacilityList) {
         for (GraphFacility currentFacility : graphFacilityList) {
-            if (currentFacility instanceof RegionalWarehouse || currentFacility instanceof Wholesale) {
-                if (!isConnectedBuyer(currentFacility) || !isConnectedSupplier(currentFacility)) {
-                    return false;
-                }
+            if ((currentFacility instanceof RegionalWarehouse || currentFacility instanceof Wholesale) && (isNotConnectedBuyer(currentFacility) || isNotConnectedSupplier(currentFacility))) {
+                return false;
             }
-            if (currentFacility instanceof Factory) {
-                if (!isConnectedBuyer(currentFacility)) {
-                    return false;
-                }
+            if (currentFacility instanceof Factory && isNotConnectedBuyer(currentFacility)) {
+                return false;
+
             }
-            if (currentFacility instanceof Retailer) {
-                if (!isConnectedSupplier(currentFacility)) {
-                    return false;
-                }
+            if (currentFacility instanceof Retailer && isNotConnectedSupplier(currentFacility)) {
+                return false;
+
             }
         }
         return true;
@@ -72,12 +68,13 @@ public class GraphToFacilityChecker {
         return (factoryAvailable && wholesaleAvailable && regionalWarehouseAvailable && retailAvailable);
     }
 
-    private boolean isConnectedBuyer(GraphFacility currentFacility) {
-        return (!isEmpty(currentFacility.getBuyers()));
+    private boolean isNotConnectedBuyer(GraphFacility currentFacility) {
+        return (isEmpty(currentFacility.getBuyers()));
+
     }
 
-    private boolean isConnectedSupplier(GraphFacility currentFacility) {
-        return (!isEmpty(currentFacility.getSuppliers()));
+    private boolean isNotConnectedSupplier(GraphFacility currentFacility) {
+        return (isEmpty(currentFacility.getSuppliers()));
     }
 
 }

@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.gui_configure_game.graph;
 
-import javafx.scene.Parent;
 
 import java.util.ArrayList;
 import java.util.List;

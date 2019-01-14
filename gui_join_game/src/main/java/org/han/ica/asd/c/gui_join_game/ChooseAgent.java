@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public class ChooseAgent implements IGUIHandler {
     @Override
     public void setData(Object[] data) {
-
+        // Methods from super
     }
 
     @Override

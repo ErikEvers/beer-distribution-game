@@ -2,36 +2,22 @@ package org.han.ica.asd.c.gui_configure_game.controllers;
 
 import javafx.fxml.FXML;
 
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.NodeOrientation;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.awt.*;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class GameSetupStartController {
 
-    private final int baseRoundNumber = 20;
-    private final int baseMinNumber = 1;
-    private final int baseMaxNumber = 50;
+    private static final int BASEROUNDNUMBER = 20;
+    private static final int BASEMINNUMBER = 1;
+    private static final int BASEMAXNUMBER = 50;
 
     @Inject
     @Named("GameSetup")
@@ -44,7 +30,6 @@ public class GameSetupStartController {
 
     @Inject
     private Configuration configuration;
-    private String onlineGame = "TRUE";
 
     @FXML
     private TextField gameName;
@@ -96,7 +81,7 @@ public class GameSetupStartController {
         }
         if (offlineGame.isSelected()) {
             data[2] = "FALSE";
-        } else data[2] = onlineGame;
+        } else data[2] = "TRUE";
         gameSetup.setData(data);
         gameSetup.setupScreen();
     }
@@ -119,17 +104,17 @@ public class GameSetupStartController {
         if (roundNumber.getText() != null && !roundNumber.getText().isEmpty()) {
             configuration.setAmountOfRounds(Integer.parseInt(roundNumber.getText()));
         } else {
-            configuration.setAmountOfRounds(baseRoundNumber);
+            configuration.setAmountOfRounds(BASEROUNDNUMBER);
         }
         if (minOrder.getText() != null && !minOrder.getText().isEmpty()) {
             configuration.setMinimalOrderRetail(Integer.parseInt(minOrder.getText()));
         } else {
-            configuration.setMinimalOrderRetail(baseMinNumber);
+            configuration.setMinimalOrderRetail(BASEMINNUMBER);
         }
         if (maxOrder.getText() != null && !maxOrder.getText().isEmpty()) {
             configuration.setMaximumOrderRetail(Integer.parseInt(maxOrder.getText()));
         } else {
-            configuration.setMaximumOrderRetail(baseMaxNumber);
+            configuration.setMaximumOrderRetail(BASEMAXNUMBER);
         }
 
         configuration.setContinuePlayingWhenBankrupt(bankrupt.isSelected());
@@ -151,7 +136,7 @@ public class GameSetupStartController {
 
 
     void setOnlineGame(String onlineGame) {
-        if (onlineGame.equals("FALSE")) {
+        if ("FALSE".equals(onlineGame)) {
             offlineGame.setSelected(true);
         }
     }
