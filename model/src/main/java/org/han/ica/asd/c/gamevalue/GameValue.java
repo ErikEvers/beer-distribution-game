@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.gamevalue;
 
+import java.util.Arrays;
+
 public enum GameValue {
     STOCK("stock", "inventory"),
     ORDERED("ordered"),
@@ -41,12 +43,7 @@ public enum GameValue {
      * @return
      */
     public boolean contains(String value) {
-        for (String s : this.value) {
-            if (s.contains(value)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(this.value).anyMatch(s -> s.contains(value));
     }
 
     /***
