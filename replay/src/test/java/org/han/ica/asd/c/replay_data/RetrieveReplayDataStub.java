@@ -91,4 +91,9 @@ public class RetrieveReplayDataStub implements IRetrieveReplayData {
         }
         return new BeerGame(new Leader(new Player()), new ArrayList<Player>(), new ArrayList<GameAgent>(), new Configuration(), rounds, "ID", "mooie game", "datum", "einddatum");
     }
+
+    @Override
+    public List<BeerGame> getAllBeerGames() {
+        return null;
+    }
 }

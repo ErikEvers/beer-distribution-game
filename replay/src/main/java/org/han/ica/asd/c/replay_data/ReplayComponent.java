@@ -27,7 +27,6 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private int currentRound;
     private int totalRounds;
     private GameValue displayedAttribute;
-    IRetrieveReplayData retrieveReplayData;
 
     @Inject
     public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
@@ -40,8 +39,6 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
         totalRounds = rounds.size()-1;
-
-        initializeAverageRounds();
     }
 
     /***
@@ -112,6 +109,9 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
             getSpecificData(lineChartData);
         }
         else {
+            if(averageRounds.isEmpty()){
+                initializeAverageRounds();
+            }
             getAverageData(lineChartData);
         }
 
