@@ -17,20 +17,24 @@ public class GraphToFacilityChecker {
      * @return true of false according to the check
      */
     public Boolean graphChecker(List<GraphFacility> graphFacilityList) {
-        for (GraphFacility currentFacility : graphFacilityList) {
+
+        final boolean[] returnValue = {true};
+        graphFacilityList.forEach(currentFacility -> {
             if ((currentFacility instanceof RegionalWarehouse || currentFacility instanceof Wholesale) && (isNotConnectedBuyer(currentFacility) || isNotConnectedSupplier(currentFacility))) {
-                return false;
+                returnValue[0] = false;
             }
             if (currentFacility instanceof Factory && isNotConnectedBuyer(currentFacility)) {
-                return false;
+                returnValue[0] = false;
 
             }
             if (currentFacility instanceof Retailer && isNotConnectedSupplier(currentFacility)) {
-                return false;
+                returnValue[0] = false;
 
             }
-        }
-        return true;
+
+        });
+
+        return returnValue[0];
     }
 
 
