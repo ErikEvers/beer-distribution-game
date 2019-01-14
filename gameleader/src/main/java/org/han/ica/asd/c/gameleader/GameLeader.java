@@ -191,6 +191,9 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 					throw new BeerGameException("Every player needs to control a facility");
 				}
 			}
+			for(GameAgent agent : game.getAgents()) {
+			    gameLogic.addLocalParticipant(new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules()));
+            }
 			connectorForLeader.startRoom(roomModel);
 			connectorForLeader.sendGameStart(game);
 		}
