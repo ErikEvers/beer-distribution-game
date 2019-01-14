@@ -27,14 +27,12 @@ public class BusinessRule extends ASTNode {
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
 
     private NodeConverter nodeConverter;
-    private Provider<NodeConverter> nodeConverterProvider;
 
     public BusinessRule() {
     }
 
     @Inject
     public BusinessRule(Provider<NodeConverter> nodeConverterProvider) {
-        this.nodeConverterProvider = nodeConverterProvider;
         nodeConverter = nodeConverterProvider.get();
     }
 
@@ -149,7 +147,7 @@ public class BusinessRule extends ASTNode {
 
     @Override
     public ASTNode getRightChild() {
-        return action;
+        return this.getAction();
     }
 
     /**
