@@ -64,7 +64,7 @@ public class JoinGameController {
                 alert.show();
             }
         } else {
-            handleJoinGameButtonClick();
+            nameInput.close();
         }
     }
 
