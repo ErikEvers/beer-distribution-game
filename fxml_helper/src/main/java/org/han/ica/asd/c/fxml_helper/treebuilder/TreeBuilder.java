@@ -7,8 +7,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class TreeBuilder {
 	private AnchorPane container;
 	private BeerGame beerGame;
 
-	private static Facility lastClickedFacility;
+	private static int lastClickedFacility;
 
 	/**
 	 * Method that loads facilities with its relevant edges.
@@ -56,9 +58,9 @@ public class TreeBuilder {
 
 		Map<Facility, List<Facility>> links = beerGame.getConfiguration().getFacilitiesLinkedTo();
 
-		for (Facility facility : links.keySet()) {
-			for (Facility child : links.get(facility)) {
-				drawLine(facility, child);
+		for (Map.Entry<Facility, List<Facility>> entry : links.entrySet()) {
+			for(Facility child: entry.getValue()){
+				drawLine(entry.getKey(), child);
 			}
 		}
 	}
@@ -75,42 +77,39 @@ public class TreeBuilder {
 	 */
 	private void drawLine(Facility parent, Facility child) {
 		EdgeLine line = new EdgeLine();
-		Optional<FacilityRectangle> exisitingDeliver = drawnFacilities.stream().filter(facility -> facility.getFacility().getFacilityId() == parent.getFacilityId()).findFirst();
-		FacilityRectangle rectangleDeliver;
-		if (exisitingDeliver.isPresent()) {
-			rectangleDeliver = exisitingDeliver.get();
-		} else {
-			rectangleDeliver = drawFacility(parent);
 
-			EventHandler<MouseEvent> eventHandler =
-					e -> {
-						lastClickedFacility = rectangleDeliver.getFacility();
-					};
-			rectangleDeliver.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
-
-			drawnFacilities.add(rectangleDeliver);
-		}
-
-		Optional<FacilityRectangle> exisitingOrder = drawnFacilities.stream().filter(facility -> facility.getFacility().getFacilityId() == child.getFacilityId()).findFirst();
-		FacilityRectangle rectangleOrder;
-		if (exisitingOrder.isPresent()) {
-			rectangleOrder = exisitingOrder.get();
-		} else {
-			rectangleOrder = drawFacility(child);
-
-			EventHandler<MouseEvent> eventHandler =
-					e -> {
-						lastClickedFacility = rectangleOrder.getFacility();
-					};
-			rectangleOrder.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
-
-			drawnFacilities.add(rectangleOrder);
-		}
+		FacilityRectangle rectangleDeliver = gatherFacility(parent);
+		FacilityRectangle rectangleOrder = gatherFacility(child);
 
 		line.drawLine(rectangleOrder, rectangleDeliver, rectangleOrder.getTranslateX(), rectangleOrder.getTranslateY());
 		setLineStroke(parent, child, line);
-
 		container.getChildren().add(line);
+	}
+
+	/**
+	 * Get rectangle from drawn list, or if not present create it.
+	 * @param facility facility of which the rectangle needs to be created.
+	 * @return the rectangle.
+	 * @author Yarno Boelens
+	 */
+	private FacilityRectangle gatherFacility(Facility facility) {
+		Optional<FacilityRectangle> existingRectangle = drawnFacilities.stream().filter(f -> f.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
+		FacilityRectangle rectangle;
+		if (existingRectangle.isPresent()) {
+			rectangle = existingRectangle.get();
+		} else {
+			rectangle = drawFacility(facility);
+
+			EventHandler<MouseEvent> eventHandler =
+					e -> {
+						lastClickedFacility = rectangle.getFacility().getFacilityId();
+						container.fireEvent(new FacilitySelectedEvent(rectangle));
+					};
+			rectangle.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
+
+			drawnFacilities.add(rectangle);
+		}
+		return rectangle;
 	}
 
 	/**
@@ -188,6 +187,9 @@ public class TreeBuilder {
 		if(tooltipRequired) {
 			installTooltip(facility, rectangle);
 		}
+		if(facility.getFacilityId() == lastClickedFacility) {
+			rectangle.addShadow();
+		}
 		return rectangle;
 	}
 
@@ -197,9 +199,21 @@ public class TreeBuilder {
 	 * @author Yarno Boelens
 	 */
 	private void installTooltip(Facility facility, FacilityRectangle rectangle) {
-		String tooltipString = facility.getFacilityType().getFacilityName() + " - " + facility.getFacilityId() +
-				" overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
-		Tooltip tooltip = new Tooltip(tooltipString);
+		Round round = beerGame.getRounds().get(beerGame.getRounds().size()-1);
+		FacilityTurn facilityTurn = round.getFacilityTurnByFacilityId(facility.getFacilityId());
+		StringBuilder builder = new StringBuilder();
+		builder.append(facility.getFacilityType().getFacilityName());
+		builder.append(" - ");
+		builder.append(facility.getFacilityId());
+		builder.append(" overview turn ");
+		builder.append(round.getRoundId());
+		builder.append("\nInventory: ");
+		builder.append(facilityTurn.getStock());
+		builder.append("\nBackorders: ");
+		builder.append(facilityTurn.getBackorders());
+		builder.append("\nCurrent budget: ");
+		builder.append(facilityTurn.getRemainingBudget());
+		Tooltip tooltip = new Tooltip(builder.toString());
 		Tooltip.install(rectangle, tooltip);
 	}
 
@@ -211,8 +225,8 @@ public class TreeBuilder {
 	 * @author Yarno Boelens
 	 */
 	private String getPlayerName(List<Player> players, Facility facility) {
-		for (Player player : players) {
-			if (player.getFacility().getFacilityId() == facility.getFacilityId()) {
+		for(Player player: players) {
+			if(player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return player.getName();
 			}
 		}
@@ -229,7 +243,7 @@ public class TreeBuilder {
 
 	private String getAgentName(List<GameAgent> agents, Facility facility) {
 		for(GameAgent agent: agents) {
-			if(agent.getFacility().getFacilityId() == facility.getFacilityId()) {
+			if(agent.getFacility() != null && agent.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return agent.getGameAgentName();
 			}
 		}
@@ -238,9 +252,5 @@ public class TreeBuilder {
 
 	public List<FacilityRectangle> getDrawnFacilities() {
 		return drawnFacilities;
-	}
-
-	public static Facility getLastClickedFacility() {
-		return lastClickedFacility;
 	}
 }

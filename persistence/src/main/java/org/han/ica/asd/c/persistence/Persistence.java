@@ -86,6 +86,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 
 	@Override
 	public void saveGameLog(BeerGame beerGame) {
+		beergameDAO.deleteBeergame(beerGame.getGameId());
 		beergameDAO.createBeergame(beerGame);
 	}
 

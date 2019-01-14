@@ -33,7 +33,7 @@
         </dependency>
     </dependencies>
 
-    <parent>
+	<parent>
         <groupId>org.han.ica.asd.c</groupId>
         <artifactId>beergame</artifactId>
         <version>1.0-SNAPSHOT</version>
