@@ -212,9 +212,6 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected void submitTurnButtonClicked() {
-        final boolean cmbChooseOutgoingDeliveryExisting = (cmbChooseOutgoingDelivery != null);
-        final boolean comboboxExisting = (comboBox != null);
-
 				submitTurnButton.setDisable(true);
 				if(playerComponent.submitTurn()) {
 					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);

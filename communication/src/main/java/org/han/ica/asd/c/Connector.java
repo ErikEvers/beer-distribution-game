@@ -205,15 +205,15 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     /**
      * The data of a specific round gets sent to the participants of said game.
-     *
-     * @param allData
+     * @param previousRound
+     * @param newRound
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round allData, BeerGame beerGame) throws TransactionException {
+    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException {
 			//initNodeInfoList();
 			List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
-			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
+			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
 
     public void startFaultDetector(){

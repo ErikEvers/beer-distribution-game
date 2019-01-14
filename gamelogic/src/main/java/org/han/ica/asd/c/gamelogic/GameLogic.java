@@ -188,13 +188,16 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     /**
-     * @param currentRound The current round to save.
+		 * @param previousRound The previous round to save.
+     * @param newRound The current round to save.
      */
     @Override
-    public void roundModelReceived(Round currentRound) {
-        beerGame.getRounds().removeIf(round -> round.getRoundId() == currentRound.getRoundId());
-        beerGame.getRounds().add(currentRound);
-        curRoundId = currentRound.getRoundId();
+    public void roundModelReceived(Round previousRound, Round newRound) {
+				beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
+				beerGame.getRounds().add(previousRound);
+        beerGame.getRounds().removeIf(round -> round.getRoundId() == newRound.getRoundId());
+        beerGame.getRounds().add(newRound);
+        curRoundId = newRound.getRoundId();
         sendRoundActionFromAgents();
     }
 
