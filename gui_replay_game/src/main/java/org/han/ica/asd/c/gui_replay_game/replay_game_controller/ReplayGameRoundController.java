@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,6 +43,9 @@ public class ReplayGameRoundController {
     private Button showGraph;
 
     @Inject
+    private IVisualisedPlayedGameData replayComponent;
+
+    @Inject
     @Named("ReplayGame")
     IGUIHandler replayGame;
 
@@ -50,13 +54,25 @@ public class ReplayGameRoundController {
     IGUIHandler replayGameList;
 
     @FXML
-    void handleNextRoundButton(ActionEvent event) {
+    void initialize() {
+        roundId.setTextFormatter(NumericTextFormatter.getTextFormatter());
+        maxRoundId.setText(replayComponent.getTotalRoundsString());
 
+        updateCurrentRound();
+    }
+
+    @FXML
+    void handleNextRoundButton(ActionEvent event) {
+        if (replayComponent.incrementCurrentRound()) {
+            updateCurrentRound();
+        }
     }
 
     @FXML
     void handlePreviousRoundButton(ActionEvent event) {
-
+        if (replayComponent.decrementCurrentRound()) {
+            updateCurrentRound();
+        }
     }
 
     @FXML
@@ -71,11 +87,16 @@ public class ReplayGameRoundController {
 
     @FXML
     void showGraphHandler(ActionEvent event) {
+        replayGame.setData(new Integer[]{Integer.parseInt(replayComponent.getCurrentRoundString())});
         replayGame.setupScreen();
     }
 
-    public void setGameId(String gameId){
-        //TODO GET GAME VALUES.
+    private void updateCurrentRound() {
+        roundId.setText(replayComponent.getCurrentRoundString());
     }
 
+    public void setCurrentRound(int round){
+        replayComponent.updateCurrentRound(round);
+        updateCurrentRound();
+    }
 }

@@ -87,8 +87,6 @@ public class ReplayGameController {
         initializeFacilityComboBox();
         initializeAttributeComboBox();
         initializeCheckBoxes();
-        updateCurrentRound();
-        drawGraph();
     }
 
     private void initializeAttributeComboBox() {
@@ -232,8 +230,15 @@ public class ReplayGameController {
     }
 
     @FXML
-    void backButtonClicked(ActionEvent event) {
+    private void backButtonClicked(ActionEvent event) {
+        replayGameRound.setData(new Integer[]{Integer.parseInt(replayComponent.getCurrentRoundString())});
         replayGameRound.setupScreen();
+    }
+
+    public void setCurrentRound(int round){
+        replayComponent.updateCurrentRound(round);
+        updateCurrentRound();
+        drawGraph();
     }
 }
 
