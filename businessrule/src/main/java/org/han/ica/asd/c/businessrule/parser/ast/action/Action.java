@@ -141,6 +141,9 @@ public class Action extends ASTNode {
         int facilityId;
 
         if(person != null){
+            if(person.getPerson().matches("\\d+")){
+                return Integer.parseInt(person.getPerson());
+            }
             facilityId = nodeConverter.getFacilityId(person.getPerson());
         } else {
             facilityId = nodeConverter.getFacilityIdByAction(ownFacilityId,actionName);
