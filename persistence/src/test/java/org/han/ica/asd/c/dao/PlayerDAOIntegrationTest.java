@@ -7,6 +7,7 @@ import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ public class PlayerDAOIntegrationTest {
     private FacilityDAO facilityDAO;
 
     @BeforeEach
-    void setup () {
+    void setup() {
         MockitoAnnotations.initMocks(this);
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -47,6 +48,12 @@ public class PlayerDAOIntegrationTest {
         player = new Player(PLAYER_ID, IP_ADDRESS, new Facility(), PLAYER_NAME, true);
         player2 = new Player(PLAYER_ID2, IP_ADDRESS, null, PLAYER_NAME, true);
 
+    }
+
+    @AfterEach
+    void teardown() {
+        DBConnectionTest.getInstance().cleanup();
+        DaoConfig.clearCurrentGameId();
     }
 
     @Test

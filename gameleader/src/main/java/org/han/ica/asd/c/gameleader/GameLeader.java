@@ -44,7 +44,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private static RoomModel roomModel;
     private static BeerGame game;
 
-		private Round previousRoundData;
+    private Round previousRoundData;
     private Round currentRoundData;
 
     private int highestPlayerId = 0;
@@ -168,7 +168,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
-        if (turnsReceivedInCurrentRound == game.getConfiguration().getFacilities().size())
+        if (turnsReceivedInCurrentRound == turnsExpectedPerRound)
             allTurnDataReceived();
     }
 
@@ -180,14 +180,14 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private void allTurnDataReceived() {
 				this.previousRoundData = this.currentRoundData;
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
-        //persistence.saveRoundData(this.currentRoundData);
+        persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
         startNextRound();
     }
 
     public void startGame() throws BeerGameException, TransactionException {
-			//persistence.saveGameLog(game);
+			persistence.saveGameLog(game,false);
 			for(Player player: game.getPlayers()) {
 				if(player.getFacility() == null) {
 					throw new BeerGameException("Every player needs to control a facility");

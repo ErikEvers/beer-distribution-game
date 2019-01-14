@@ -23,9 +23,11 @@ public class GameLogicTest {
     private IConnectedForPlayer communication;
     private IGameStore persistence;
     private IPlayerRoundListener player;
+    private Round round;
 
     @BeforeEach
     void setup() {
+        round = new Round();
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IGameStore.class);
         participantsPool = mock(ParticipantsPool.class);
@@ -36,10 +38,12 @@ public class GameLogicTest {
             protected void configure() {
                 bind(IGameStore.class).toInstance(persistence);
                 bind(IConnectedForPlayer.class).toInstance(communication);
-                bind(ParticipantsPool.class).toInstance(participantsPool);
+                //bind(ParticipantsPool.class).toInstance(participantsPool);
             }
         });
+
         gameLogic = injector.getInstance(GameLogic.class);
+        gameLogic.setParticipantsPool(participantsPool);
         gameLogic.setPlayer(player);
         gameLogic.gameStartReceived(mock(BeerGame.class));
     }
@@ -64,18 +68,21 @@ public class GameLogicTest {
     @Test
     void getBeerGameCallsPersistence() {
         gameLogic.getBeerGame();
-        verify(persistence, times(1)).fetchRoundData(anyInt());
+        doNothing().when(persistence).saveGameLog(any(BeerGame.class),anyBoolean());
+        verify(persistence, times(1)).saveGameLog(any(BeerGame.class),anyBoolean());
     }
 
     @Test
     public void letAgentTakeOverPlayerReplacesPlayer() {
         gameLogic.letAgentTakeOverPlayer(mock(Agent.class));
+        doNothing().when(participantsPool).addParticipant(any(IParticipant.class));
         verify(participantsPool, times(1)).addParticipant(any());
     }
 
     @Test
     public void letPlayerTakeOverAgentReplacesAgent() {
         gameLogic.letPlayerTakeOverAgent();
+        doNothing().when(participantsPool).replaceAgentWithPlayer();
         verify(participantsPool, times(1)).replaceAgentWithPlayer();
     }
 

@@ -1,18 +1,17 @@
 package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
@@ -21,9 +20,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +35,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Inject
     private IGameStore persistence;
 
-		private static ParticipantsPool participantsPool;
+    @Inject
+    private static ParticipantsPool participantsPool;
 
     private static int curRoundId;
     private static BeerGame beerGame;
@@ -174,7 +172,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void gameStartReceived(BeerGame beerGame) {
         GameLogic.beerGame = beerGame;
-        //persistence.saveGameLog(beerGame);
+        persistence.saveGameLog(beerGame,false);
         player.startGame();
         curRoundId = 1;
         sendRoundActionFromAgents();

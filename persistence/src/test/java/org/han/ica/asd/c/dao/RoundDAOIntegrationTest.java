@@ -23,6 +23,7 @@ class RoundDAOIntegrationTest {
 	private FacilityTurnOrder facilityTurnOrder;
 	private FacilityTurnDeliver facilityTurnDeliver;
 	private BeergameDAO beergameDAO;
+	private Round round;
 
 	@BeforeEach
 	void setUp() {
@@ -40,44 +41,47 @@ class RoundDAOIntegrationTest {
 		facilityTurn = new FacilityTurn(1,1,1,1, 1,false);
 		facilityTurnDeliver = new FacilityTurnDeliver(1,2,0,4);
 		facilityTurnOrder = new FacilityTurnOrder(1,2,50);
+		round = new Round();
+		round.setRoundId(1);
 	}
 
 	@AfterEach
 	void tearDown() {
 		DBConnectionTest.getInstance().cleanup();
+		DaoConfig.clearCurrentGameId();
 	}
 
 	@Test
 	void createRound() {
 		beergameDAO.createBeergame(DaoConfig.getCurrentGameId());
-		roundDAO.createRound(1);
+		roundDAO.createRound(round);
 		roundDAO.createFacilityDeliver(1,facilityTurnDeliver);
 		roundDAO.createFacilityOrder(1,facilityTurnOrder);
 		roundDAO.createFacilityTurn(1,facilityTurn);
 
-		Round round = roundDAO.getRound(1);
+		Round roundDb = roundDAO.getRound(1);
 
-		Assert.assertEquals(1,round.getRoundId());
-		Assert.assertEquals(facilityTurn.getRemainingBudget(),round.getFacilityTurns().get(0).getRemainingBudget());
-		Assert.assertEquals(facilityTurn.getStock(),round.getFacilityTurns().get(0).getStock());
-		Assert.assertEquals(facilityTurn.getBackorders(),round.getFacilityTurns().get(0).getBackorders());
-		Assert.assertEquals(facilityTurn.getFacilityId(),round.getFacilityTurns().get(0).getFacilityId());
+		Assert.assertEquals(1,roundDb.getRoundId());
+		Assert.assertEquals(facilityTurn.getRemainingBudget(),roundDb.getFacilityTurns().get(0).getRemainingBudget());
+		Assert.assertEquals(facilityTurn.getStock(),roundDb.getFacilityTurns().get(0).getStock());
+		Assert.assertEquals(facilityTurn.getBackorders(),roundDb.getFacilityTurns().get(0).getBackorders());
+		Assert.assertEquals(facilityTurn.getFacilityId(),roundDb.getFacilityTurns().get(0).getFacilityId());
 
-		Assert.assertEquals(facilityTurnDeliver.getFacilityId(),round.getFacilityTurnDelivers().get(0).getFacilityId());
-		Assert.assertEquals(facilityTurnDeliver.getFacilityIdDeliverTo(),round.getFacilityTurnDelivers().get(0).getFacilityIdDeliverTo());
-		Assert.assertEquals(facilityTurnDeliver.getOpenOrderAmount(),round.getFacilityTurnDelivers().get(0).getOpenOrderAmount());
-		Assert.assertEquals(facilityTurnDeliver.getDeliverAmount(),round.getFacilityTurnDelivers().get(0).getDeliverAmount());
+		Assert.assertEquals(facilityTurnDeliver.getFacilityId(),roundDb.getFacilityTurnDelivers().get(0).getFacilityId());
+		Assert.assertEquals(facilityTurnDeliver.getFacilityIdDeliverTo(),roundDb.getFacilityTurnDelivers().get(0).getFacilityIdDeliverTo());
+		Assert.assertEquals(facilityTurnDeliver.getOpenOrderAmount(),roundDb.getFacilityTurnDelivers().get(0).getOpenOrderAmount());
+		Assert.assertEquals(facilityTurnDeliver.getDeliverAmount(),roundDb.getFacilityTurnDelivers().get(0).getDeliverAmount());
 
 
-		Assert.assertEquals(facilityTurnOrder.getFacilityId(),round.getFacilityOrders().get(0).getFacilityId());
-		Assert.assertEquals(facilityTurnOrder.getFacilityIdOrderTo(),round.getFacilityOrders().get(0).getFacilityIdOrderTo());
-		Assert.assertEquals(facilityTurnOrder.getOrderAmount(),round.getFacilityOrders().get(0).getOrderAmount());
+		Assert.assertEquals(facilityTurnOrder.getFacilityId(),roundDb.getFacilityOrders().get(0).getFacilityId());
+		Assert.assertEquals(facilityTurnOrder.getFacilityIdOrderTo(),roundDb.getFacilityOrders().get(0).getFacilityIdOrderTo());
+		Assert.assertEquals(facilityTurnOrder.getOrderAmount(),roundDb.getFacilityOrders().get(0).getOrderAmount());
 	}
 
 	@Test
 	void deleteRound() {
 		beergameDAO.createBeergame(DaoConfig.getCurrentGameId());
-		roundDAO.createRound(1);
+		roundDAO.createRound(round);
 		roundDAO.createFacilityDeliver(1,facilityTurnDeliver);
 		roundDAO.createFacilityOrder(1,facilityTurnOrder);
 		roundDAO.createFacilityTurn(1,facilityTurn);
