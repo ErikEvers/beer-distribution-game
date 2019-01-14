@@ -1,6 +1,10 @@
 package org.han.ica.asd.c.gamelogic.roundcalculator;
 
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -14,27 +18,29 @@ public class RoundCalculator {
         currentTurnBackOrders = 0; //Zero unless a backorder is calculated in calculateNewFacilityStockDeliver.
     }
 
-    public Round calculateRound(Round previousRound, Round currentRound, Map<Facility, List<Facility>> facilityLinks) {
-        //TODO Afvangen wanneer fabriek bij zichzelf (null) bestelt
-        currentRound.setFacilityTurns(previousRound.getFacilityTurns());
+    public Round calculateRound(Round round, BeerGame beerGame) {
+        Round outcome = new Round();
 
-        for(Map.Entry<Facility, List<Facility>> entry : facilityLinks.entrySet()) {
+        //TODO Afvangen wanneer fabriek bij zichzelf (null) bestelt
+        outcome.setFacilityTurns(round.getFacilityTurns());
+
+        for(Map.Entry<Facility, List<Facility>> entry : beerGame.getConfiguration().getFacilitiesLinkedTo().entrySet()) {
             Facility order = entry.getKey();
 
             for(Facility deliver: entry.getValue()) {
-                int ordered = previousRound.getTurnOrderByFacility(order, deliver);
+                int ordered = round.getTurnOrderByFacility(order, deliver);
 
-                ordered = dealWithBackOrders(ordered, previousRound, order, deliver);
+                ordered = dealWithBackOrders(ordered, round, order, deliver);
 
-                ordered = calculateNewFacilityStockDeliver(currentRound, ordered, deliver, order);
+                ordered = calculateNewFacilityStockDeliver(round, ordered, deliver, order);
 
-                updateStock(currentRound, ordered, order, deliver);
+                updateStock(round, ordered, order, deliver);
             }
         }
 
-        updateRemainingBudget(currentRound, facilityLinks);
+        updateRemainingBudget(round, beerGame);
 
-        return currentRound;
+        return outcome;
     }
 
     /**
@@ -95,8 +101,8 @@ public class RoundCalculator {
      * The remaining budget for the facility Deliver gets calculated on basis of the backOrders it has.
      * @param round
      */
-    private void updateRemainingBudget(Round round, Map<Facility, List<Facility>> facilityLinks) {
-        for(Map.Entry<Facility, List<Facility>> entry : facilityLinks.entrySet()) {
+    private void updateRemainingBudget(Round round, BeerGame beerGame) {
+        for(Map.Entry<Facility, List<Facility>> entry : beerGame.getConfiguration().getFacilitiesLinkedTo().entrySet()) {
             Facility facilityOrder = entry.getKey();
 
             for (Facility facilityDeliver : entry.getValue()) {
@@ -181,6 +187,6 @@ public class RoundCalculator {
      * @return
      */
     private int dealWithBackOrders(int ordered, Round round, Facility facilityOrder, Facility facilityDeliver) {
-        return ordered + round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
+        return ordered; //round.getTurnBacklogByFacility(facilityOrder, facilityDeliver);
     }
 }

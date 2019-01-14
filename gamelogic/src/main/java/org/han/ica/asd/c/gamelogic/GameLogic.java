@@ -2,23 +2,29 @@ package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
-import org.han.ica.asd.c.interfaces.gamelogic.IRoundStore;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
@@ -26,40 +32,29 @@ import java.util.Map;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
-public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver {
+public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
     private IConnectedForPlayer communication;
-    private IRoundStore persistence;
-    private ParticipantsPool participantsPool;
-    private int round;
 
-    private Map<Facility, List<Facility>> facilityLinks;
-    private final BeerGame beerGame;
+    @Inject
+    private IGameStore persistence;
 
-    public GameLogic(IConnectedForPlayer communication, IRoundStore persistence, ParticipantsPool participantsPool, BeerGame beerGame) {
+		private static ParticipantsPool participantsPool;
+
+    private static int curRoundId;
+    private static BeerGame beerGame;
+    private static IPlayerRoundListener player;
+
+    @Inject
+    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
+        if(participantsPool == null) {
+					participantsPool = participantsPoolProvider.get();
+				}
         this.communication = communication;
-        this.persistence = persistence;
-        this.participantsPool = participantsPool;
-        this.round = 0;
-        facilityLinks = new HashMap<>();
-        this.beerGame = beerGame;
+        this.communication.addObserver(this);
     }
 
-    public Map<Facility, List<Facility>> getFacilityLinks() {
-        return facilityLinks;
-    }
-
-    public void addFacilities(Facility facilityOrder, Facility facilityDeliver) {
-        List<Facility> delivers;
-        if(facilityLinks.containsKey(facilityOrder)) {
-            delivers = facilityLinks.get(facilityOrder);
-            if(!delivers.contains(facilityDeliver)) {
-                delivers.add(facilityDeliver);
-            }
-        } else {
-            delivers = new ArrayList<>();
-            delivers.add(facilityDeliver);
-            facilityLinks.put(facilityOrder, delivers);
-        }
+    public void setParticipantsPool(ParticipantsPool participantsPool) {
+        GameLogic.participantsPool = participantsPool;
     }
 
     /**
@@ -67,9 +62,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param turn
      */
     @Override
-    public void placeOrder(Round turn) {
-        persistence.saveTurnData(turn);
-        communication.sendTurnData(turn);
+    public boolean submitTurn(Round turn) {
+				//persistence.saveRoundData(turn);
+        return communication.sendTurnData(turn);
     }
 
     /**
@@ -77,10 +72,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @return The current state of the game.
      */
     @Override
-    public Map<Facility, List<Facility>> seeOtherFacilities() {
-        //Yet to be implemented.
-        persistence.fetchRoundData(0);
-        return null;
+    public BeerGame getBeerGame() {
+        return beerGame;
     }
 
     /**
@@ -88,8 +81,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param agent Agent that will replace the player.
      */
     @Override
-    public void letAgentTakeOverPlayer(Agent agent) {
-        participantsPool.replacePlayerWithAgent(agent);
+    public void letAgentTakeOverPlayer(IParticipant agent) {
+        participantsPool.addParticipant(agent);
     }
 
     /**
@@ -111,6 +104,19 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         //Yet to be implemented
     }
 
+		/**
+		 * Calculates the round.
+		 * @param round has the information needed to calculate the round.
+		 * @return
+		 */
+		@Override
+		public Round calculateRound(Round round, BeerGame game) {
+			Round previousRound = beerGame.getRounds().get(round.getRoundId()- 1);
+			RoundCalculator roundCalculator = new RoundCalculator();
+
+			return  roundCalculator.calculateRound(round, game);
+		}
+
     /**
      * Adds a local participant to the game.
      * @param participant The local participant to add to the game.
@@ -126,25 +132,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void removeAgentByPlayerId(String playerId) {
-        Player player = persistence.getPlayerById(playerId);
-        participantsPool.replaceAgentWithPlayer(new PlayerParticipant(player));
-    }
-
-    /**
-     * Calculates the round.
-     * @param round has the information needed to calculate the round.
-     * @return
-     */
-    @Override
-    public Round calculateRound(Round round) {
-        Round previousRound = beerGame.getRounds().get(round.getRoundId()- 1);
-        RoundCalculator roundCalculator = new RoundCalculator();
-
-        return  roundCalculator.calculateRound(previousRound, round, facilityLinks);
-    }
-
-    public BeerGame getBeerGame() {
-        return beerGame;
+        //TODO: please remove this. Quick fix for now.
+        participantsPool.replaceAgentWithPlayer();
     }
 
     @Override
@@ -158,23 +147,49 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         return new ArrayList<>();
     }
 
+    public int getRoundId() {
+        return curRoundId;
+    }
+
+    @Override
+    public void setPlayer(IPlayerRoundListener player) {
+        GameLogic.player = player;
+        participantsPool.setPlayer(player);
+    }
+
     /**
      * @param currentRound The current round to save.
      */
     @Override
     public void roundModelReceived(Round currentRound) {
-        persistence.saveRoundData(currentRound);
-        participantsPool.excecuteRound(currentRound);
-        round++;
+        beerGame.getRounds().removeIf(round -> round.getRoundId() == currentRound.getRoundId());
+        beerGame.getRounds().add(currentRound);
+        curRoundId = currentRound.getRoundId();
+        sendRoundActionFromAgents();
     }
 
-    /**
-     * Gets the current round number.
-     *
-     * @return The current round number
-     */
     @Override
-    public int getCurrentRoundNumber() {
-        return round;
+    public void gameStartReceived(BeerGame beerGame) {
+        GameLogic.beerGame = beerGame;
+        //persistence.saveGameLog(beerGame);
+        player.startGame();
+        curRoundId = 1;
+        sendRoundActionFromAgents();
+    }
+
+    private void sendRoundActionFromAgents() {
+        for (IParticipant participant : participantsPool.getParticipants()) {
+            Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
+            communication.sendTurnData(round);
+        }
+        player.roundStarted();
+    }
+
+    private Round makeRoundFromGameRoundAction(GameRoundAction action, int facilityId) {
+        return new Round(curRoundId,
+                null,
+                action.targetOrderMap.entrySet().stream().map(e -> new FacilityTurnOrder(facilityId, e.getKey().getFacilityId(), e.getValue())).collect(Collectors.toList()),
+                action.targetDeliverMap.entrySet().stream().map(e -> new FacilityTurnDeliver(facilityId, e.getKey().getFacilityId(), 0, e.getValue())).collect(Collectors.toList())
+        );
     }
 }

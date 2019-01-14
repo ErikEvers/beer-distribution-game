@@ -9,21 +9,30 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultHandlerLeader {
 	FaultHandlerLeader faultHandlerLeader;
 
 
 	@Mock
-	NodeInfoList nodeInfoList = mock(NodeInfoList.class);
+	NodeInfoList nodeInfoList;
+
 	ArrayList<IConnectorObserver> observers = spy(ArrayList.class);
 
 	@BeforeEach
 	void setUp(){
-		faultHandlerLeader = new FaultHandlerLeader(nodeInfoList, observers);
+		initMocks(this);
+		faultHandlerLeader = new FaultHandlerLeader();
+		faultHandlerLeader.setNodeInfoList(nodeInfoList);
+		faultHandlerLeader.setObservers(observers);
 	}
 
 	@Test
@@ -40,32 +49,18 @@ public class TestFaultHandlerLeader {
 	}
 
 	@Test
-	void TestShouldReturnDeadIpWhenIncrementedTooMuch() {
-
-		when(nodeInfoList.size()).thenReturn(10);
-
-		for (int i = 1; i < 10; i++) {
-			assertNull(faultHandlerLeader.incrementFailure("1234"));
-
-		}
-
-		assertEquals("1234",faultHandlerLeader.incrementFailure("1234"));
-
-	}
-
-	@Test
 	void TestIsLeaderAliveAndIAmDisconnected() {
 		assertFalse(faultHandlerLeader.isLeaderAlive());
 		faultHandlerLeader.iAmDisconnected();
 		assertTrue(faultHandlerLeader.isLeaderAlive());
 	}
 
-	@Test
-	void TestIsPeerAlive() {
-
-		faultHandlerLeader.isPeerAlive("");
-		verify(nodeInfoList).getStatusOfOneNode("");
-	}
+//	@Test
+//	void TestIsPeerAlive() {
+//
+//		faultHandlerLeader.isPeerAlive("");
+//		verify(nodeInfoList).getStatusOfOneNode("");
+//	}
 
 	@Test
 	void TestReset() {

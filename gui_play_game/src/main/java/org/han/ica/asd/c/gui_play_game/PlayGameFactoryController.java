@@ -2,10 +2,10 @@ package org.han.ica.asd.c.gui_play_game;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import javafx.scene.control.TextFormatter;
+import javafx.util.converter.IntegerStringConverter;
 
 public class PlayGameFactoryController extends PlayGame {
-    private Configuration configuration;
 
     @FXML
     private TextField step1TextField;
@@ -18,15 +18,26 @@ public class PlayGameFactoryController extends PlayGame {
      */
     public void initialize() {
         superInitialize();
+
+        txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
     }
 
     /**
      * Button event handling the order sending.
      */
+    @Override
     public void handleSendOrderButtonClick() {
-        //TODO get the real order from the facility ordering from this one.
-        outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
-        roundNumber++;
+        int order = Integer.parseInt(outgoingOrderTextField.getText());
+        playerComponent.placeOrder(playerComponent.getPlayer().getFacility(), order);
+    }
+
+    @Override
+    public void fillComboBox() {
+        fillOutGoingDeliveryFacilityComboBox(cmbChooseOutgoingDelivery);
+    }
+
+    @Override
+    public void submitTurnButtonClicked() {
         int step2Value = 0;
 
         if (!outgoingOrderTextField.getText().trim().isEmpty()) {
@@ -37,22 +48,17 @@ public class PlayGameFactoryController extends PlayGame {
                 step2TextField.setText(step1TextField.getText());
             }
 
-            //TODO get the real calculation result from the game logic component/from the game leader.
-            inventory.setText(calculateInventory(step2Value, Integer.parseInt(outgoingGoodsNextRound.getText())));
             step1TextField.setText(outgoingOrderTextField.getText());
             outgoingOrderTextField.clear();
 
-            int order = Integer.parseInt(outgoingOrderTextField.getText());
-            playerComponent.placeOrder(null, order);
         }
+
+        super.submitTurnButtonClicked();
     }
 
-    public void seeOtherFacilitiesButtonClicked() {
-        seeOtherFacilities.setData(new Object[]{configuration});
-        seeOtherFacilities.setupScreen();
-    }
-
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    @Override
+    public void refreshInterfaceWithCurrentStatus(int roundId) {
+        super.refreshInterfaceWithCurrentStatus(roundId);
+        fillComboBox();
     }
 }

@@ -1,9 +1,11 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class BeerGame implements IDomainModel{
+public class BeerGame implements IDomainModel, Serializable {
 
     private Leader leader;
     private List<Player> players;
@@ -26,6 +28,9 @@ public class BeerGame implements IDomainModel{
         this.gameName = gameName;
         this.gameDate = gameDate;
         this.gameEndDate = gameEndDate;
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
     }
 
     public BeerGame(Leader leader, List<Player> players, List<GameAgent> agents, Configuration configuration, //NOSONAR
@@ -54,6 +59,21 @@ public class BeerGame implements IDomainModel{
         return players;
     }
 
+    public Player getPlayerById(String playerId) {
+        return players.stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst().orElse(null);
+    }
+
+    public void removePlayerById(String playerId) {
+        Player found = getPlayerById(playerId);
+        if(found != null) {
+            players.remove(found);
+        }
+    }
+
+    public Facility getFacilityById(int facilityId) {
+        return configuration.getFacilities().stream().filter(facility -> facility.getFacilityId() == facilityId).findFirst().orElse(null);
+    }
+
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
@@ -76,6 +96,11 @@ public class BeerGame implements IDomainModel{
 
     public List<Round> getRounds() {
         return rounds;
+    }
+
+    public Round getRoundById(int roundId) {
+        Optional<Round> r = rounds.stream().filter(round -> round.getRoundId() == roundId).findFirst();
+        return r.orElse(null);
     }
 
     public void setRounds(List<Round> rounds) {

@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.gameleader;
 
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -8,6 +9,8 @@ import org.han.ica.asd.c.model.domain_objects.Round;
  * which is responsible for storing and fetching data to and from a persistent data store.
  */
 public interface IPersistence {
+
+    void saveGameLog(BeerGame beerGame);
 
     /**
      * Store the actions of a facility in a specific round.
@@ -21,7 +24,7 @@ public interface IPersistence {
      * @param facilityId, the identifier of the facility of which the round actions are to be retrieved.
      * @return the round data for that facility in that round.
      */
-    Round fetchFacilityTurn(int roundId, int facilityId);
+    Round fetchFacilityTurn(int roundId);
 
     /**
      * Store the actions of a specific round.

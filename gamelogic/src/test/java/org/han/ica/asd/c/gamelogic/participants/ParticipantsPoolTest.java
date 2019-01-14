@@ -1,47 +1,29 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
 import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
-import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerParticipantFake;
+import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParticipantsPoolTest {
     private ParticipantsPool participantsPool;
-    private PlayerParticipantFake fakePlayer;
+    private IPlayerRoundListener fakePlayer;
 
     @BeforeEach
     public void setup() {
-        fakePlayer = new PlayerParticipantFake();
-        participantsPool = new ParticipantsPool(fakePlayer);
+        fakePlayer = mock(PlayerFake.class);
+        participantsPool = new ParticipantsPool();
+        participantsPool.setPlayer(fakePlayer);
     }
-
-    @Test
-    public void replacePlayerWithAgentRemovesPlayer() {
-        participantsPool.replacePlayerWithAgent(mock(Agent.class));
-         assertFalse(participantsPool.getParticipants().contains(fakePlayer));
-    }
-
-    @Test
-    public void replacePlayerWithAgentAddsAgent() {
-        Agent agent = mock(Agent.class);
-        participantsPool.replacePlayerWithAgent(agent);
-        assertTrue(participantsPool.getParticipants().contains(agent));
-    }
-
-    @Test
-    public void replaceAgentWithPlayerAddsPlayer() {
-        Agent agent = mock(Agent.class);
-        when(agent.getParticipant()).thenReturn(fakePlayer.getParticipant());
-        participantsPool.replaceAgentWithPlayer();
-        assertTrue(participantsPool.getParticipants().contains(fakePlayer));
-    }
-
     @Test
     public void replaceAgentWithPlayerRemovesAgent() {
         Agent agent = mock(Agent.class);
@@ -62,13 +44,12 @@ class ParticipantsPoolTest {
     }
 
     @Test
-    public void excecuteRoundCallsParticipantsToAction() {
-        PlayerParticipant playerMock = mock(PlayerParticipant.class);
+    public void getParticipantsReturnsParticipants() {
+        IParticipant playerMock = mock(IParticipant.class);
         Agent agentMock = mock(Agent.class);
         participantsPool.addParticipant(playerMock);
         participantsPool.addParticipant(agentMock);
-        participantsPool.excecuteRound(any(Round.class));
-        verify(playerMock, times(1)).executeTurn(any());
-        verify(agentMock, times(1)).executeTurn(any());
+        List<IParticipant> list = participantsPool.getParticipants();
+        assertEquals(2, list.size());
     }
 }

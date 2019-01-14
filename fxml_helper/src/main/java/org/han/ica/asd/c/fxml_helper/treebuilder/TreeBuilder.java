@@ -1,73 +1,67 @@
 package org.han.ica.asd.c.fxml_helper.treebuilder;
 
+import javafx.event.EventHandler;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Class responsible for displaying the facility tree.
- * Most of the code is created by Rick Zweers.
+ * @author Rick Zweers
+ * @author Yarno Boelens
  */
 public class TreeBuilder {
 
-	private static List<FacilityRectangle> factories;
-	private static List<FacilityRectangle> wholesalers;
-	private static List<FacilityRectangle> warehouses;
-	private static List<FacilityRectangle> retailers;
+	private List<FacilityRectangle> factories;
+	private List<FacilityRectangle> wholesalers;
+	private List<FacilityRectangle> warehouses;
+	private List<FacilityRectangle> retailers;
+	private List<FacilityRectangle> drawnFacilities;
 
-	private static List<Facility> drawnFacilities;
-	private static List<FacilityRectangle> drawnFacilityRectangles;
+	private boolean tooltipRequired;
+	private AnchorPane container;
+	private BeerGame beerGame;
 
-	private static boolean tooltipRequired;
-	private static AnchorPane container;
-
-	private static BeerGame beerGame;
+	private static int lastClickedFacility;
 
 	/**
 	 * Method that loads facilities with its relevant edges.
 	 *
 	 * First it draws the facilities connected through the edge (if they haven't been drawn yet). Then it draws the corresponding edge between the facilities.
 	 *
-	 * When a facility is of an unknown type.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
-	public static void loadFacilityView(BeerGame beerGame, AnchorPane container, boolean tooltipRequired) {
-		TreeBuilder.container = container;
-		TreeBuilder.tooltipRequired = tooltipRequired;
-		TreeBuilder.beerGame = beerGame;
+	public void loadFacilityView(BeerGame beerGame, AnchorPane container, boolean tooltipRequired) {
+		this.container = container;
+		this.tooltipRequired = tooltipRequired;
+		this.beerGame = beerGame;
 		factories = new ArrayList<>();
 		wholesalers = new ArrayList<>();
 		warehouses = new ArrayList<>();
 		retailers = new ArrayList<>();
 		drawnFacilities = new ArrayList<>();
-		drawnFacilityRectangles = new ArrayList<>();
+
+		container.getChildren().clear();
 
 		Map<Facility, List<Facility>> links = beerGame.getConfiguration().getFacilitiesLinkedTo();
 
-		for (Facility facility : links.keySet()) {
-			addFacility(facility);
-			for (Facility child : links.get(facility)) {
-				addFacility(child);
-				drawLine(facility, child);
+		for (Map.Entry<Facility, List<Facility>> entry : links.entrySet()) {
+			for(Facility child: entry.getValue()){
+				drawLine(entry.getKey(), child);
 			}
-		}
-	}
-
-	/**
-	 * Draws the facility in the link on the screen.
-	 */
-	private static void addFacility(Facility facility) {
-		if(!drawnFacilities.contains(facility)) {
-			drawnFacilityRectangles.add(drawFacility(facility));
-			drawnFacilities.add(facility);
 		}
 	}
 
@@ -78,26 +72,45 @@ public class TreeBuilder {
 	 * @param parent
 	 * @param child
 	 * Link/edge through which the facilities are connected
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
-	private static void drawLine(Facility parent, Facility child) {
+	private void drawLine(Facility parent, Facility child) {
 		EdgeLine line = new EdgeLine();
-		FacilityRectangle rectangleDeliver = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1),"");
-		FacilityRectangle rectangleOrder = new FacilityRectangle(new Facility(new FacilityType("Retailer", 0, 0, 0, 0, 0, 0, 0), 1),"");
 
-		for(FacilityRectangle rectangle : drawnFacilityRectangles) {
+		FacilityRectangle rectangleDeliver = gatherFacility(parent);
+		FacilityRectangle rectangleOrder = gatherFacility(child);
 
-			if(rectangle.getFacility() == child) {
-				rectangleDeliver = rectangle;
-			}
-			if(rectangle.getFacility() == parent) {
-				rectangleOrder = rectangle;
-			}
-		}
-
-		line.drawLine(rectangleDeliver, rectangleOrder, rectangleDeliver.getTranslateX(), rectangleDeliver.getTranslateY());
+		line.drawLine(rectangleOrder, rectangleDeliver, rectangleOrder.getTranslateX(), rectangleOrder.getTranslateY());
 		setLineStroke(parent, child, line);
 
 		container.getChildren().add(line);
+	}
+
+	/**
+	 * Get rectangle from drawn list, or if not present create it.
+	 * @param facility facility of which the rectangle needs to be created.
+	 * @return the rectangle.
+	 * @author Yarno Boelens
+	 */
+	private FacilityRectangle gatherFacility(Facility facility) {
+		Optional<FacilityRectangle> existingRectangle = drawnFacilities.stream().filter(f -> f.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
+		FacilityRectangle rectangle;
+		if (existingRectangle.isPresent()) {
+			rectangle = existingRectangle.get();
+		} else {
+			rectangle = drawFacility(facility);
+
+			EventHandler<MouseEvent> eventHandler =
+					e -> {
+						lastClickedFacility = rectangle.getFacility().getFacilityId();
+						container.fireEvent(new FacilitySelectedEvent(rectangle));
+					};
+			rectangle.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, eventHandler);
+
+			drawnFacilities.add(rectangle);
+		}
+		return rectangle;
 	}
 
 	/**
@@ -108,6 +121,9 @@ public class TreeBuilder {
 	 * Link/edge through which the facilities are connected
 	 * @param line
 	 * Visual representation of the link.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
+	 * TODO: add red stroke whenever either facility is bankrupt
 	 */
 	private static void setLineStroke(Facility parent, Facility child, EdgeLine line) {
 		line.setStroke(Color.BLACK);
@@ -116,12 +132,12 @@ public class TreeBuilder {
 	/**
 	 * Calls the drawFacilityOnScreen method in different ways depending on the type of the given facility.
 	 *
-	 * @param facility
-	 * Facility to be drawn.
-	 * @return
-	 * Returns facility that was drawn.
+	 * @param facility Facility to be drawn.
+	 * @return Returns facility that was drawn.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
-	private static FacilityRectangle drawFacility(Facility facility) {
+	private FacilityRectangle drawFacility(Facility facility) {
 		if("Factory".equalsIgnoreCase(facility.getFacilityType().getFacilityName())) {
 			drawFacilityOnScreen(facility, factories, 0);
 			return factories.get(factories.size()-1);
@@ -139,58 +155,85 @@ public class TreeBuilder {
 
 	/**
 	 * Draws the facility on the screen.
-	 * @param facility
-	 * Facility to be drawn.
-	 * @param facilityList
-	 * List of drawn facility rectangles.
-	 * @param y
-	 * Y-axis on which the facility is to be drawn.
+	 * @param facility Facility to be drawn.
+	 * @param facilityList List of drawn facility rectangles.
+	 * @param y Y-axis on which the facility is to be drawn.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
-	private static void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
+	private void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
 		double rows = (container.getPrefHeight()/4);
 		double columns = 60;
 		container.getChildren().removeAll(facilityList);
 		facilityList.add(createRectangle(facility));
 		for (int i = 0; i < facilityList.size(); i++) {
-			facilityList.get(i).setTranslateX(columns * i);
-			facilityList.get(i).setTranslateY(rows * y);
-			if ((facilityList.get(i).getTranslateX() + facilityList.get(i).getWidth()) > container.getMinWidth()){
-				container.setMinWidth(facilityList.get(i).getTranslateX() + facilityList.get(i).getWidth());
+			FacilityRectangle node = facilityList.get(i);
+			node.setTranslateX(columns * i);
+			node.setTranslateY(rows * y);
+			if ((node.getTranslateX() + node.getWidth()) > container.getMinWidth()){
+				container.setMinWidth(node.getTranslateX() + node.getWidth());
 			}
-			container.getChildren().add(facilityList.get(i));
+			container.getChildren().add(node);
 		}
 	}
 
 	/**
 	 * Method creates a new FacilityRectangle based on the facility given to the method.
 	 * @return New FacilityRectangle.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
-	private static FacilityRectangle createRectangle(Facility facility) {
+	private FacilityRectangle createRectangle(Facility facility) {
 		FacilityRectangle rectangle = new FacilityRectangle(facility, getPlayerName(beerGame.getPlayers(), beerGame.getAgents(), facility));
 		if(tooltipRequired) {
 			installTooltip(facility, rectangle);
+		}
+		if(facility.getFacilityId() == lastClickedFacility) {
+			rectangle.addShadow();
 		}
 		return rectangle;
 	}
 
 	/**
 	 * Installs the tooltip with information regarding the facility on the rectangle.
+	 * @author Rick Zweers
+	 * @author Yarno Boelens
 	 */
-	private static void installTooltip(Facility facility, FacilityRectangle rectangle) {
-		String tooltipString = facility.getFacilityType().getFacilityName() + " - " + facility.getFacilityId() +
-				" overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500";
-		Tooltip tooltip = new Tooltip(tooltipString);
+	private void installTooltip(Facility facility, FacilityRectangle rectangle) {
+		Round round = beerGame.getRounds().get(beerGame.getRounds().size()-1);
+		FacilityTurn facilityTurn = round.getFacilityTurnByFacilityId(facility.getFacilityId());
+		StringBuilder builder = new StringBuilder();
+		builder.append(facility.getFacilityType().getFacilityName());
+		builder.append(" - ");
+		builder.append(facility.getFacilityId());
+		builder.append(" overview turn ");
+		builder.append(round.getRoundId());
+		builder.append("\nInventory: ");
+		builder.append(facilityTurn.getStock());
+		builder.append("\nBackorders: ");
+		builder.append(facilityTurn.getBackorders());
+		builder.append("\nCurrent budget: ");
+		builder.append(facilityTurn.getRemainingBudget());
+		Tooltip tooltip = new Tooltip(builder.toString());
 		Tooltip.install(rectangle, tooltip);
 	}
 
-	private static String getPlayerName(List<Player> players, List<GameAgent> agents, Facility facility) {
+	/**
+	 * Fetch the name of the player or agent that is controlling the facility.
+	 * @param players list of all players.
+	 * @param agents list of all agents.
+	 * @param facility the facility to check.
+	 * @return name of the controlling entity.
+	 * @author Yarno Boelens
+	 */
+	private String getPlayerName(List<Player> players, List<GameAgent> agents, Facility facility) {
 		for(Player player: players) {
-			if(player.getFacility() == facility) {
+			if(player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return player.getName();
 			}
 		}
 		for(GameAgent agent: agents) {
-			if(agent.getFacility() == facility) {
+			if(agent.getFacility() != null && agent.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return agent.getGameAgentName();
 			}
 		}

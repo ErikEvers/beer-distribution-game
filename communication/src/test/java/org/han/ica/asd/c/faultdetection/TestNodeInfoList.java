@@ -1,68 +1,69 @@
 package org.han.ica.asd.c.faultdetection;
 
 import junit.framework.TestCase;
-import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfo;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 public class TestNodeInfoList {
 
-    NodeInfo nodeInfo = mock(NodeInfo.class);
-    NodeInfoList nodeInfoList = new NodeInfoList();
-
+    NodeInfoList nodeInfoList;
     private String testIp1;
     private String testIp2;
-
 
     @BeforeEach
     void setUp() {
         testIp1 = "TestIp1";
         testIp2 = "TestIp2";
+        Player leaderPlayer = mock(Player.class);
+        Leader leader = new Leader(leaderPlayer);
+        List<Player> playerList = new ArrayList<>();
+        nodeInfoList = new NodeInfoList(leader, playerList);
     }
 
     @Test
     @DisplayName("Test if getAllIps returns the right ips")
     void TestGetAllIps() {
-        NodeInfo nodeInfo1 = new NodeInfo();
-        nodeInfo1.setIp(testIp1);
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        nodeInfoList.add(player1);
 
-        NodeInfo nodeInfo2 = new NodeInfo();
-        nodeInfo2.setIp(testIp2);
-
-        nodeInfoList.add(nodeInfo1);
-        nodeInfoList.add(nodeInfo2);
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        nodeInfoList.add(player2);
 
         List<String> result = nodeInfoList.getAllIps();
 
-        assertTrue(result.get(0).equals(testIp1) || result.get(1).equals(testIp1));
+        assertTrue(result.get(0).equals(testIp1) || result.get(1).equals(testIp2));
         assertTrue(result.get(0).equals(testIp2) || result.get(1).equals(testIp2));
     }
 
     @Test
     @DisplayName("Test if getActiveIps returns the right ips")
     void TestGetAllActiveIps() {
-        NodeInfo nodeInfo1 = new NodeInfo();
-        nodeInfo1.setIp(testIp1);
-        nodeInfo1.setConnected(true);
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(true);
 
-        NodeInfo nodeInfo2 = new NodeInfo();
-        nodeInfo2.setIp(testIp2);
-        nodeInfo2.setConnected(false);
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        player2.setConnected(false);
 
-        nodeInfoList.add(nodeInfo1);
-        nodeInfoList.add(nodeInfo2);
+        nodeInfoList.add(player1);
+        nodeInfoList.add(player2);
 
         List<String> result = nodeInfoList.getActiveIps();
 
@@ -73,17 +74,17 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if getActiveIpsWithoutLeader returns the right ips")
     void TestGetAllActiveIpsThatAreNotLeader() {
-        NodeInfo nodeInfo1 = new NodeInfo();
-        nodeInfo1.setIp(testIp1);
-        nodeInfo1.setConnected(true);
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(true);
 
-        NodeInfo nodeInfo2 = new NodeInfo();
-        nodeInfo2.setIp(testIp2);
-        nodeInfo2.setConnected(true);
-        nodeInfo2.setLeader(true);
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        player2.setConnected(true);
 
-        nodeInfoList.add(nodeInfo1);
-        nodeInfoList.add(nodeInfo2);
+        nodeInfoList.add(player1);
+        nodeInfoList.add(player2);
+        nodeInfoList.getLeader().setPlayer(player2);
 
         List<String> result = nodeInfoList.getActiveIpsWithoutLeader();
 
@@ -93,49 +94,32 @@ public class TestNodeInfoList {
 
 
     @Test
-    @DisplayName("Test if the getStatusOfOneNode returns the right value")
-    void TestGetStatusOfOneNode() {
-        NodeInfo nodeInfo1 = new NodeInfo();
-        nodeInfo1.setIp(testIp1);
-        nodeInfo1.setConnected(true);
-
-        NodeInfo nodeInfo2 = new NodeInfo();
-        nodeInfo2.setIp(testIp2);
-        nodeInfo2.setConnected(false);
-
-        nodeInfoList.add(nodeInfo1);
-
-        assertTrue(nodeInfoList.getStatusOfOneNode(testIp1));
-        assertFalse(nodeInfoList.getStatusOfOneNode(testIp2));
-    }
-
-    @Test
-    @DisplayName("Test if AddIp function adds the ip to the nodeInfoList")
-    void TestAddIp() {
-        nodeInfoList.addIp(testIp1);
-
-        assertEquals(testIp1, nodeInfoList.get(0).getIp());
-    }
-
-    @Test
     @DisplayName("Test if the UpdateIsConnected updates the value of a node")
     void TestUpdateIsConnected() {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testIp1);
-        nodeInfo.setConnected(false);
+        Player player = new Player();
+        player.setIpAddress(testIp1);
+        player.setConnected(false);
 
-        nodeInfoList.add(nodeInfo);
+        nodeInfoList.add(player);
         nodeInfoList.updateIsConnected(testIp1, true);
 
-        assertTrue(nodeInfoList.get(0).getConnected());
+        assertTrue(nodeInfoList.get(0).isConnected());
     }
 
     @Test
     @DisplayName("Test if the size method returns the right value")
     void TestSize() {
-        nodeInfoList.addIp(testIp1);
+        Player player = new Player();
+        player.setIpAddress(testIp1);
+        player.setConnected(false);
 
-        assertEquals(1, nodeInfoList.size());
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        player2.setConnected(true);
+
+        nodeInfoList.add(player);
+        nodeInfoList.add(player2);
+        assertEquals(2, nodeInfoList.size());
     }
 
     @Test
@@ -152,15 +136,17 @@ public class TestNodeInfoList {
         assertEquals(new NodeInfoList().hashCode(), nodeInfoList.hashCode());
     }
 
+
     @Test
     @DisplayName("Test if the getResponse works happy flow")
     void TestGetLeaderIpHappyFlow() {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testIp1);
-        nodeInfo.setLeader(true);
-        nodeInfo.setConnected(true);
+        Player player = new Player();
+        player.setIpAddress(testIp1);
 
-        nodeInfoList.add(nodeInfo);
+        nodeInfoList.getLeader().setPlayer(player);
+        player.setConnected(true);
+
+        nodeInfoList.add(player);
 
         assertEquals(testIp1, nodeInfoList.getLeaderIp());
     }
@@ -168,12 +154,12 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if the getResponse returns null when the Leader is disconnected")
     void TestGetLeaderIpWhenLeaderIsDisconnected() {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testIp1);
-        nodeInfo.setLeader(true);
-        nodeInfo.setConnected(false);
+        Player player = new Player();
+        player.setIpAddress(testIp1);
+        nodeInfoList.getLeader().setPlayer(player);
+        player.setConnected(false);
 
-        nodeInfoList.add(nodeInfo);
+        nodeInfoList.add(player);
 
         assertNull(nodeInfoList.getLeaderIp());
     }
@@ -181,12 +167,11 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if the getResponse returns null when there is no Leader")
     void TestGetLeaderIpWhenThereAreNoLeaders() {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testIp1);
-        nodeInfo.setLeader(false);
-        nodeInfo.setConnected(true);
+        Player player = new Player();
+        player.setIpAddress(testIp1);
+        player.setConnected(true);
 
-        nodeInfoList.add(nodeInfo);
+        nodeInfoList.add(player);
 
         assertNull(nodeInfoList.getLeaderIp());
     }
@@ -194,12 +179,11 @@ public class TestNodeInfoList {
     @Test
     @DisplayName("Test if the getResponse returns null when noone is connected")
     void TestGetLeaderIpWhenThereAreNoNodesConnected() {
-        NodeInfo nodeInfo = new NodeInfo();
-        nodeInfo.setIp(testIp1);
-        nodeInfo.setLeader(false);
-        nodeInfo.setConnected(false);
+        Player player = new Player();
+        player.setIpAddress(testIp1);
+        player.setConnected(false);
 
-        nodeInfoList.add(nodeInfo);
+        nodeInfoList.add(player);
 
         assertNull(nodeInfoList.getLeaderIp());
     }

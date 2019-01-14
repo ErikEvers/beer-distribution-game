@@ -1,30 +1,54 @@
 package org.han.ica.asd.c.player;
 
-import org.han.ica.asd.c.gamelogic.GameLogic;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
-import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
-public class PlayerComponent implements IPlayerComponent {
-    IPlayerGameLogic gameLogic;
-    private Configuration configuration;
+public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
+    private Provider<Round> roundProvider;
+    private Provider<FacilityTurnOrder> facilityTurnOrderProvider;
+    private Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
 
-    public PlayerComponent() {
-        gameLogic = new GameLogic(null, null, null);
+    private static Player player;
+    private static Round round;
+    private static IPlayGame ui;
+
+    private IPlayerGameLogic gameLogic;
+
+    @Inject
+    private IConnectorForSetup communication;
+
+    @Inject
+		@Named("PlayGame")
+    private IGUIHandler playGame;
+
+    @Inject
+		public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
+				this.roundProvider = roundProvider;
+				this.facilityTurnOrderProvider = facilityTurnOrderProvider;
+				this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+				this.gameLogic = gameLogic;
+				gameLogic.setPlayer(this);
     }
-
-	public PlayerComponent(Configuration configuration) {
-		this.configuration = configuration;
-	}
 
 	@Override
 	public void activatePlayer() {
@@ -47,10 +71,6 @@ public class PlayerComponent implements IPlayerComponent {
         //Yet to be implemented.
     }
 
-	public void setConfiguration(Configuration configuration) {
-		this.configuration = configuration;
-	}
-
     @Override
     public List<String> getAllGames() {
         return gameLogic.getAllGames();
@@ -67,37 +87,118 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public Map<Facility, List<Facility>> seeOtherFacilities() {
-        //Fake method for testing purposes
-        gameLogic.seeOtherFacilities();
-        Map<Facility, List<Facility>> map = new HashMap<>();
-
-        Facility facility = new Facility(new FacilityType("Distributor", 1, 1, 1, 2, 25, 1, 1), 0);
-        List<Facility> facilityList = new ArrayList<>();
-        facilityList.add(new Facility(new FacilityType("Retailer", 1, 1, 1, 2, 25, 1, 2), 1));
-        map.put(facility, facilityList);
-
-        return map;
+    public BeerGame getBeerGame() {
+        return gameLogic.getBeerGame();
     }
+
+    public Round getRound() {
+    	return round;
+		}
     
     @Override
     public void placeOrder(Facility facility, int amount) {
-        //Not implemented yet
+
+        Optional<FacilityTurnOrder> facilityTurnOrderOptional = round.getFacilityOrders().stream().filter(facilityTurnDeliver -> facilityTurnDeliver.getFacilityId() == player.getFacility().getFacilityId() && facilityTurnDeliver.getFacilityIdOrderTo() == facility.getFacilityId()).findFirst();
+        if(!facilityTurnOrderOptional.isPresent()) {
+            FacilityTurnOrder facilityTurnOrder = facilityTurnOrderProvider.get();
+            facilityTurnOrder.setFacilityId(player.getFacility().getFacilityId());
+            facilityTurnOrder.setFacilityIdOrderTo(facility.getFacilityId());
+            facilityTurnOrder.setOrderAmount(amount);
+            round.getFacilityOrders().add(facilityTurnOrder);
+        } else {
+            facilityTurnOrderOptional.get().setOrderAmount(facilityTurnOrderOptional.get().getOrderAmount() + amount);
+        }
+    }
+
+    @Override
+    public void sendDelivery(Facility facility, int amount) {
+        Optional<FacilityTurnDeliver> facilityTurnDeliverOptional = round.getFacilityTurnDelivers().stream().filter(facilityTurnDeliver -> facilityTurnDeliver.getFacilityId() == player.getFacility().getFacilityId() && facilityTurnDeliver.getFacilityIdDeliverTo() == facility.getFacilityId()).findFirst();
+        if(!facilityTurnDeliverOptional.isPresent()) {
+            FacilityTurnDeliver facilityTurnDeliver = facilityTurnDeliverProvider.get();
+            facilityTurnDeliver.setFacilityId(player.getFacility().getFacilityId());
+            facilityTurnDeliver.setFacilityIdDeliverTo(facility.getFacilityId());
+            facilityTurnDeliver.setDeliverAmount(amount);
+            round.getFacilityTurnDelivers().add(facilityTurnDeliver);
+        } else {
+            facilityTurnDeliverOptional.get().setDeliverAmount(facilityTurnDeliverOptional.get().getDeliverAmount() + amount);
+        }
+    }
+
+    public boolean submitTurn() {
+        return gameLogic.submitTurn(round);
     }
 
     @Override
     public void chooseFacility(Facility facility) {
-        //Not implemented yet
+        try {
+            communication.chooseFacility(facility, player.getPlayerId());
+            player.setFacility(facility);
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
+						alert.showAndWait();
+        } catch (FacilityNotAvailableException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
+					alert.showAndWait();
+        }
     }
 
     @Override
     public String getFacilityName() {
-        //Not implemented yet
-        return "";
+        return player.getFacility().getFacilityType().getFacilityName();
     }
 
-    public String requestFacilityInfo(Facility facility) {
-        //Fake method for testing purposes
-        return "placeholderfac overview turn x\nBacklog: 25\nInventory: 0\nMoney: 500"+facility.getFacilityId();
+    public void setPlayer(Player player) {
+        PlayerComponent.player = player;
+    }
+
+	@Override
+	public void clearPlayer() {
+		player = null;
+	}
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
+    public void setUi(IPlayGame game) {
+        ui = game;
+    }
+
+	@Override
+	public void clearUi() {
+		ui = null;
+	}
+
+	public Facility getFacility() {
+        return player.getFacility();
+    }
+
+    public void startGame() {
+			Platform.runLater(() -> playGame.setupScreen());
+		}
+
+    /**
+     * doOrder will notify the  participant to make an order.
+     *
+     * @return The current beergame status.
+     */
+    @Override
+    public void roundStarted() {
+    	if(round == null || round.getRoundId() != gameLogic.getRoundId()) {
+				round = roundProvider.get();
+				round.setRoundId(gameLogic.getRoundId());
+			}
+    	Platform.runLater(() ->
+            ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
+    }
+
+    /**
+     * Returns the facility for the ParticipantPool to compare with other participants.
+     *
+     * @return The facility instance.
+     */
+    @Override
+    public int getFacilityId() {
+        return player.getFacility().getFacilityId();
     }
 }

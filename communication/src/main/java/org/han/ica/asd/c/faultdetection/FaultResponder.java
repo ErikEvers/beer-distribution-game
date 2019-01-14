@@ -5,16 +5,18 @@ import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 
 import javax.inject.Inject;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class FaultResponder {
-	@Inject private static Logger logger; //NOSONAR
+public class FaultResponder {
+	@Inject private static Logger logger;
 
+	@Inject
 	private FaultDetectionClient faultDetectionClient;
 
-	FaultResponder() {
-		faultDetectionClient = new FaultDetectionClient();
+	public FaultResponder() {
+		//For inject purposes
 	}
 
 	public void faultMessageReceived(FaultMessage faultMessage, String senderIp) {

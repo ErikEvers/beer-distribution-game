@@ -1,6 +1,9 @@
 package org.han.ica.asd.c.faultdetection;
 
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +25,6 @@ public class TestFailLog {
     private FailLog failLog;
     private HashMap<String, Integer> beginHashMap;
 
-
     @Mock
     NodeInfoList nodeInfoList = new NodeInfoList();
 
@@ -30,7 +32,15 @@ public class TestFailLog {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        failLog = new FailLog(nodeInfoList);
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(FailLog.class);
+            }
+        });
+
+        failLog = injector.getInstance(FailLog.class);
+        failLog.setNodeInfoList(nodeInfoList);
         beginHashMap = failLog.getFailLogHashMap();
     }
 
@@ -113,13 +123,11 @@ public class TestFailLog {
         assertEquals(1, startValue);
 
         assertEquals(false, failLog.checkIfIpIsFailed(ipToAdd));
-
     }
 
     @Test
     @DisplayName("Test if the method returns false when the key(ip) has a value more than 3")
     void TestIfCheckIsFailedReturnsFalseWhenAmountOfFailsIsMoreThanThree() {
-
         String ipToAdd = "testIp";
         failLog.increment(ipToAdd);
         failLog.increment(ipToAdd);
@@ -131,7 +139,6 @@ public class TestFailLog {
         assertEquals(4, startValue);
 
         assertEquals(false, failLog.checkIfIpIsFailed(ipToAdd));
-
     }
 
     @Test
@@ -142,13 +149,11 @@ public class TestFailLog {
         HashMap<String, Integer> result = failLog.getFailLogHashMap();
 
         assertTrue(failLog.isAlive("IpThatIsNotInTheList"), "IsAlive did not return true");
-
     }
 
     @Test
     @DisplayName("Test if isalive returns true when the key(ip) is in the list and has a value of 0")
     void TestIfIsAliveReturnsTrueWhenTheIpIsInTheListWithTheValueOnZero() {
-
         String ipToAdd = "testIp";
         failLog.add(ipToAdd);
         HashMap<String, Integer> result = failLog.getFailLogHashMap();
@@ -163,7 +168,6 @@ public class TestFailLog {
     @Test
     @DisplayName("Test if isalive returns false when the key(ip) is in the list and has a value of > 0")
     void TestIfIsAliveReturnsFalseWhenTheIpIsInTheListWithAValueGreaterThanZero() {
-
         //setup the values in the hashmap
         String ipToAdd = "testIp";
         failLog.add(ipToAdd);
@@ -188,8 +192,7 @@ public class TestFailLog {
 
         when(nodeInfoList.getActiveIps()).thenReturn(mockList);
 
-        assertEquals(3, failLog.getSuccesSize());
-
+        assertEquals(3, failLog.getSuccessSize());
     }
 
     @Test
@@ -206,8 +209,7 @@ public class TestFailLog {
 
         when(nodeInfoList.getActiveIps()).thenReturn(mockList);
 
-        assertEquals(2, failLog.getSuccesSize());
-
+        assertEquals(2, failLog.getSuccessSize());
     }
 
     @Test
@@ -230,11 +232,6 @@ public class TestFailLog {
 
         when(nodeInfoList.getActiveIps()).thenReturn(mockList);
 
-        assertEquals(1, failLog.getSuccesSize());
-
+        assertEquals(1, failLog.getSuccessSize());
     }
-
-
 }
-
-

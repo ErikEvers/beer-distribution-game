@@ -1,10 +1,11 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
-public class Round implements IDomainModel{
+public class Round implements IDomainModel, Serializable {
     private int roundId;
     private List<FacilityTurn> facilityTurns;
     private List<FacilityTurnOrder> facilityOrders;
@@ -131,6 +132,11 @@ public class Round implements IDomainModel{
 
     public List<FacilityTurn> getFacilityTurns() {
         return facilityTurns;
+    }
+
+    public FacilityTurn getFacilityTurnByFacilityId(int facilityId) {
+        Optional<FacilityTurn> ft = facilityTurns.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityId).findFirst();
+        return ft.orElse(null);
     }
 
     public void setFacilityTurns(List<FacilityTurn> facilityTurns) {
