@@ -111,10 +111,11 @@ public class GameMessageClient {
      * This method sends the handled round data back to every peer.
      *
      * @param ips        The ips to send the round to.
-     * @param roundModel The round object.
+     * @oaram previousRound the object of the previous round.
+     * @param newRound The new round object.
      */
-    public void sendRoundToAllPlayers(String[] ips, Round roundModel) throws TransactionException {
-        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
+    public void sendRoundToAllPlayers(String[] ips, Round previousRound, Round newRound) throws TransactionException {
+        RoundModelMessage roundModelMessage = new RoundModelMessage(previousRound, newRound);
         new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 

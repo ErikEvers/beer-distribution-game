@@ -83,7 +83,6 @@ public class TreeBuilder {
 
 		line.drawLine(rectangleOrder, rectangleDeliver, rectangleOrder.getTranslateX(), rectangleOrder.getTranslateY());
 		setLineStroke(parent, child, line);
-
 		container.getChildren().add(line);
 	}
 
@@ -184,7 +183,7 @@ public class TreeBuilder {
 	 * @author Yarno Boelens
 	 */
 	private FacilityRectangle createRectangle(Facility facility) {
-		FacilityRectangle rectangle = new FacilityRectangle(facility, getPlayerName(beerGame.getPlayers(), beerGame.getAgents(), facility));
+		FacilityRectangle rectangle = new FacilityRectangle(facility, getPlayerName(beerGame.getPlayers(), facility), getAgentName(beerGame.getAgents(), facility));
 		if(tooltipRequired) {
 			installTooltip(facility, rectangle);
 		}
@@ -221,22 +220,37 @@ public class TreeBuilder {
 	/**
 	 * Fetch the name of the player or agent that is controlling the facility.
 	 * @param players list of all players.
-	 * @param agents list of all agents.
 	 * @param facility the facility to check.
 	 * @return name of the controlling entity.
 	 * @author Yarno Boelens
 	 */
-	private String getPlayerName(List<Player> players, List<GameAgent> agents, Facility facility) {
+	private String getPlayerName(List<Player> players, Facility facility) {
 		for(Player player: players) {
 			if(player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return player.getName();
 			}
 		}
+		return "Unassigned";
+	}
+
+	/**
+	 * Fetch the name of the player or agent that is controlling the facility.
+	 * @param agents list of all agents.
+	 * @param facility the facility to check.
+	 * @return name of the controlling entity.
+	 * @author Yarno Boelens
+	 */
+
+	private String getAgentName(List<GameAgent> agents, Facility facility) {
 		for(GameAgent agent: agents) {
 			if(agent.getFacility() != null && agent.getFacility().getFacilityId() == facility.getFacilityId()) {
 				return agent.getGameAgentName();
 			}
 		}
-		return "";
+		return "Unassigned";
+	}
+
+	public List<FacilityRectangle> getDrawnFacilities() {
+		return drawnFacilities;
 	}
 }

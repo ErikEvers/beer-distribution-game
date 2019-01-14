@@ -94,7 +94,7 @@ public class GameLogicTest {
 
     @Test
     public void roundModelReceivedSavesOldRoundToDatabase() {
-        gameLogic.roundModelReceived(mock(Round.class));
+        gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
         //verify(persistence, times(1)).saveRoundData(any());
     }
 
@@ -104,7 +104,7 @@ public class GameLogicTest {
         Round round = new Round();
         int roundId = 33;
         round.setRoundId(roundId);
-        gameLogic.roundModelReceived(round);
+        gameLogic.roundModelReceived(mock(Round.class), round);
         int newRoundNumber = gameLogic.getRoundId();
         Assertions.assertNotEquals(currentRoundNumber, newRoundNumber);
         Assertions.assertEquals(roundId, newRoundNumber);
@@ -112,7 +112,7 @@ public class GameLogicTest {
 
     @Test
     public void roundModelReceivedCallsLocalParticipants() {
-        gameLogic.roundModelReceived(mock(Round.class));
+        gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
         verify(participantsPool, times(2)).getParticipants();
     }
 }
