@@ -9,10 +9,8 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
@@ -31,7 +29,6 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,16 +43,17 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
     private static Connector instance = null;
     private static String leaderIp = null;
 
-    private ArrayList<IConnectorObserver> observers;
+    private static ArrayList<IConnectorObserver> observers;
 
     @Inject
-    IGameStore persistence;
+    private IGameStore persistence;
 
     @Inject
     private NodeInfoList nodeInfoList;
@@ -84,17 +82,18 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     private String externalIP;
     private String internalIP;
 
-    Provider<GameLeader> gameLeaderProvider;
+
+	Provider<GameLeader> gameLeaderProvider;
 
     @Inject
     public Connector(Provider<GameLeader> gameLeaderProvider) {
         this.gameLeaderProvider = gameLeaderProvider;
-				observers = new ArrayList<>();
     }
 
     public void start() {
         observers = new ArrayList<>();
         finder = new RoomFinder();
+				nodeInfoList = new NodeInfoList();
 
         faultDetector.setObservers(observers);
 
@@ -116,25 +115,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         socketServer.startThread();
     }
 
-    public Connector(FaultDetector faultDetector, GameMessageClient gameMessageClient, RoomFinder finder, SocketServer socketServer) {
-        nodeInfoList = new NodeInfoList();
-        this.finder = finder;
-        this.gameMessageClient = gameMessageClient;
-        this.faultDetector = faultDetector;
-
-        faultDetector.setObservers(observers);
-
-        GameMessageReceiver gameMessageReceiver1 = new GameMessageReceiver();
-				GameMessageReceiver.setObservers(observers);
-
-        MessageDirector messageDirector1 = new MessageDirector();
-        messageDirector1.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
-        messageDirector1.setGameMessageReceiver(gameMessageReceiver1);
-
-        socketServer.setServerObserver(messageDirector1);
-        socketServer.startThread();
-    }
-
     public List<String> getAvailableRooms() {
         try {
             return finder.getAvailableRooms();
@@ -145,11 +125,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
 
-    public RoomModel createRoom(String roomName, String password) {
+    public RoomModel createRoom(String roomName, String password, BeerGame beerGame) {
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
-            leader.init(externalIP, roomName);
+            leader.init(externalIP, createdRoom, beerGame);
+
             return createdRoom;
         } catch (DiscoveryException e) {
             logger.log(Level.INFO, e.getMessage());
@@ -157,7 +138,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return null;
     }
 
-    public RoomModel joinRoom(String roomName,  String password) throws RoomException, DiscoveryException {
+    public RoomModel joinRoom(String roomName, String password) throws RoomException, DiscoveryException {
         RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
         if (makeConnection(joinedRoom.getLeaderIP())) {
             Connector.leaderIp = joinedRoom.getLeaderIP();
@@ -177,11 +158,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     public void startRoom(RoomModel room) {
-        try {
-            finder.startGameRoom(room.getRoomName());
-        } catch (DiscoveryException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
+			try {
+				finder.startGameRoom(room.getRoomName());
+			} catch (DiscoveryException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
     }
 
     public void removeHostFromRoom(RoomModel room, String hostIP) {
@@ -193,13 +174,13 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     @Override
-    public void chooseFacility(Facility facility) throws FacilityNotAvailableException {
-        gameMessageClient.sendChooseFacilityMessage(leaderIp, facility);
+    public void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException {
+        gameMessageClient.sendChooseFacilityMessage(leaderIp, facility, playerId);
     }
 
     @Override
-    public GamePlayerId getGameData() throws ClassNotFoundException, IOException {
-        return gameMessageClient.sendGameDataRequestMessage(leaderIp);
+    public GamePlayerId getGameData(String userName) throws ClassNotFoundException, IOException {
+        return gameMessageClient.sendGameDataRequestMessage(leaderIp, userName);
     }
 
     @Override
@@ -212,8 +193,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
     }
 
-    public void sendTurnData(Round turn) {
-        //stub
+    public boolean sendTurnData(Round turn) {
+        return gameMessageClient.sendTurnModel(leaderIp, turn);
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -228,9 +209,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param allData
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round allData) throws TransactionException {
-        List<String> ips = nodeInfoList.getAllIps();
-        gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
+    public void sendRoundDataToAllPlayers(Round allData, BeerGame beerGame) throws TransactionException {
+			//initNodeInfoList();
+			List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+
+			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), allData);
     }
 
     public void startFaultDetector(){
@@ -262,7 +245,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-        List<String> ips = nodeInfoList.getAllIps();
+				//initNodeInfoList();
+				//List<String> ips = nodeInfoList.getAllIps();
+				List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
@@ -286,7 +271,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return ip;
+        return "25.0.21.80";
     }
 
     /**

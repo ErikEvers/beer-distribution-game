@@ -80,8 +80,8 @@ public class GameSetupStartController {
             data[1] = gameName.getText();
         }
         if (offlineGame.isSelected()) {
-            data[2] = "FALSE";
-        } else data[2] = "TRUE";
+            data[2] = false;
+        } else data[2] = true;
         gameSetup.setData(data);
         gameSetup.setupScreen();
     }
@@ -135,8 +135,8 @@ public class GameSetupStartController {
     }
 
 
-    void setOnlineGame(String onlineGame) {
-        if ("FALSE".equals(onlineGame)) {
+    void setOnlineGame(boolean onlineGame) {
+        if (!onlineGame) {
             offlineGame.setSelected(true);
         }
     }

@@ -8,16 +8,13 @@ import java.util.ResourceBundle;
 
 public class AssignAgents implements IGUIHandler {
 
-    private BeerGame beerGame;
-
     @Override
     public void setData(Object[] data) {
-        this.beerGame = (BeerGame) data[0];
+        // unused
     }
 
     @Override
     public void setupScreen() {
-        AssignAgentsController controller = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesAssignAgents"), getClass().getResource("/fxml/AssignAgentsToFacilities.fxml"));
-        controller.setBeerGame(beerGame);
+        FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesAssignAgents"), getClass().getResource("/fxml/AssignAgentsToFacilities.fxml"));
     }
 }

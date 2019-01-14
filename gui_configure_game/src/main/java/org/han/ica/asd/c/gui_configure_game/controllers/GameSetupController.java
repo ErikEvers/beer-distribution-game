@@ -75,7 +75,7 @@ public class GameSetupController implements Initializable {
      */
     private Configuration configuration;
     private String gameName = "";
-    private String onlineGame = "TRUE";
+    private boolean onlineGame = true;
 
     @FXML
     private ComboBox<GraphFacility> comboBox;
@@ -100,7 +100,7 @@ public class GameSetupController implements Initializable {
         this.configuration = configuration;
     }
 
-    void setOnlineGame(String onlineGame) {
+    void setOnlineGame(boolean onlineGame) {
         this.onlineGame = onlineGame;
     }
 

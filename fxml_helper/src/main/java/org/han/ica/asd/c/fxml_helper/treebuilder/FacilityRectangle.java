@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.fxml_helper.treebuilder;
 
 import javafx.scene.Cursor;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -15,6 +16,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
  */
 public class FacilityRectangle extends StackPane {
     private Facility facility;
+    private Rectangle rectangle;
 
 	/**
 	 * @param facility the particular object that this rectangle represents.
@@ -47,13 +49,6 @@ public class FacilityRectangle extends StackPane {
         this.setWidth(rectangle.getWidth());
     }
 
-	private double getLongestTextLength(String assignedPlayer, String assignedAgent) {
-		if(assignedPlayer.length() > assignedAgent.length()) {
-			return assignedPlayer.length();
-		}
-		return assignedAgent.length();
-	}
-
 	/**
 	 * Returns a color based on the particular type of facility.
 	 * @param facilityType the name of the type of facility.
@@ -78,6 +73,19 @@ public class FacilityRectangle extends StackPane {
 
         return color;
     }
+
+	/**
+	 * Add color around rectangle
+	 * @author Yarno Boelens
+	 */
+	public void addShadow() {
+		DropShadow e = new DropShadow();
+		e.setWidth(20);
+		e.setHeight(20);
+		e.setRadius(25);
+		e.setColor(Color.web("ff8000"));
+		rectangle.setEffect(e);
+	}
 
 	/**
 	 * Retrieve the facility

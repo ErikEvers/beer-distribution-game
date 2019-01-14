@@ -1,20 +1,25 @@
 package org.han.ica.asd.c.gui_configure_game.assign_agents_to_facilities;
 
-import com.google.inject.Inject;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -23,6 +28,9 @@ public class AssignAgentsController {
 
     @FXML
     ComboBox<ProgrammedAgent> agentComboBox;
+
+		@FXML
+		private Button chooseFacilityButton;
 
     @FXML
     private AnchorPane facilitiesContainer;
@@ -38,7 +46,10 @@ public class AssignAgentsController {
     @Named("MainMenu")
     private IGUIHandler mainMenu;
 
-    private BeerGame beerGame;
+		@Inject
+		@Named("GameLeader")
+		private IGameLeader gameLeader;
+
     private FacilityRectangle lastClickedFacilityRectangle;
     private ResourceBundle resourceBundle;
 
@@ -49,24 +60,30 @@ public class AssignAgentsController {
         } catch (NoProgrammedAgentsFoundException e) {
             agentComboBox.setPromptText(resourceBundle.getString("no_agents_found_warning"));
         }
+        initTree();
     }
 
     private void initTree() {
         TreeBuilder treeBuilder = new TreeBuilder();
-        treeBuilder.loadFacilityView(beerGame, facilitiesContainer, false);
+        treeBuilder.loadFacilityView(gameLeader.getBeerGame(), facilitiesContainer, false);
 
         for (FacilityRectangle rectangle : treeBuilder.getDrawnFacilities()) {
             addEventHandlerToFacilityRectangle(rectangle);
         }
     }
 
-    public void setBeerGame(BeerGame beerGame) {
-        this.beerGame = beerGame;
-        initTree();
-    }
+		public void handleChooseFacilityButtonClicked() {
+    	try {
+				gameLeader.chooseFacility(lastClickedFacilityRectangle.getFacility(), "0");
+			} catch (FacilityNotAvailableException e) {
+				Alert alert = new Alert(Alert.AlertType.ERROR, "Facility already taken", ButtonType.CLOSE);
+				alert.show();
+			}
+			initTree();
+		}
 
-    @FXML
     public void handleAddAgentsButtonClick() {
+    		BeerGame beerGame = gameLeader.getBeerGame();
         if (agentComboBox.getValue() != null && lastClickedFacilityRectangle != null) {
             for (int i = 0; i < beerGame.getAgents().size(); i++) {
                 if (agentComboBox.getValue().getProgrammedAgentName().equals(beerGame.getAgents().get(i).getGameAgentName()) && (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId())) {
@@ -88,8 +105,8 @@ public class AssignAgentsController {
         initTree();
     }
 
-    @FXML
     public void handleRemoveAgentsButtonClick() {
+				BeerGame beerGame = gameLeader.getBeerGame();
         for (int i = 0; i < beerGame.getAgents().size(); i++) {
             if (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId()) {
                 beerGame.getAgents().remove(i);
@@ -98,7 +115,10 @@ public class AssignAgentsController {
         initTree();
     }
 
-    @FXML
+		public void handleRefreshButtonClick() {
+		initTree();
+	}
+
     public void handleBackToMenuButtonClick() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, resourceBundle.getString("assign_agents_menu_warning"));
         alert.setTitle(resourceBundle.getString("warning_title"));
@@ -109,16 +129,22 @@ public class AssignAgentsController {
         }
     }
 
-    @FXML
     public void handleManagePlayersButtonClick() {
-        managePlayers.setData(new Object[]{beerGame});
         managePlayers.setupScreen();
     }
 
-    @FXML
     public void handleStartGameButtonClick() {
-        this.beerGame = gameAgentService.fillEmptyFacilitiesWithDefaultAgents(beerGame);
+        gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame());
         initTree();
+				try {
+					gameLeader.startGame();
+				} catch (BeerGameException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't start a game unless every player controls a facility", ButtonType.CLOSE);
+					alert.showAndWait();
+				} catch (TransactionException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
+					alert.showAndWait();
+				}
     }
 
     private void addEventHandlerToFacilityRectangle(FacilityRectangle rectangle) {

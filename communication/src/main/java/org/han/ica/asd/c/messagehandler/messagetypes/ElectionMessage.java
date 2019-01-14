@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.messagehandler.messagetypes;
 
-import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.model.interface_models.ElectionModel;
 
 import static org.han.ica.asd.c.messagehandler.messagetypes.MessageIds.ELECTION_MESSAGE;

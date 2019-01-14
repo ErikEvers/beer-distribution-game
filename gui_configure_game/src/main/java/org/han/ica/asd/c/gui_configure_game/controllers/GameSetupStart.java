@@ -9,15 +9,14 @@ import java.util.ResourceBundle;
 public class GameSetupStart implements IGUIHandler {
 
     private String gamename = "";
-    private String onlineGame = "TRUE";
+    private boolean onlineGame = true;
     private Configuration configuration;
 
     @Override
     public void setData(Object[] data) {
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
-        this.onlineGame = (String) data[2];
-
+        this.onlineGame = (boolean) data[2];
     }
 
     @Override

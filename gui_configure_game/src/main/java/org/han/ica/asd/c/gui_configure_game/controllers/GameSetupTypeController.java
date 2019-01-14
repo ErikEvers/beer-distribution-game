@@ -11,13 +11,20 @@ import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import java.net.URL;
 import java.util.*;
 
@@ -108,8 +115,16 @@ public class GameSetupTypeController implements Initializable {
     @Named("AssignAgents")
     private IGUIHandler assignAgents;
 
+    @Inject
+		private IConnectorForSetup connector;
+
+    @Inject
+		private IGameStore persistence;
+
     @FXML
     private AnchorPane mainContainer;
+
+    private Provider<Round> roundProvider;
 
     /**
      * Configuration variables that should be passed down to the next screen
@@ -118,7 +133,12 @@ public class GameSetupTypeController implements Initializable {
     private BeerGame beerGame;
     private Configuration configuration;
     private String gameName = "";
-    private String onlineGame = "TRUE";
+    private boolean onlineGame = true;
+
+    @Inject
+		private GameSetupTypeController(Provider<Round> roundProvider) {
+    	this.roundProvider = roundProvider;
+		}
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
@@ -157,7 +177,7 @@ public class GameSetupTypeController implements Initializable {
         this.gameName = gameName;
     }
 
-    void isOnlineGame(String onlineGame) {
+    void isOnlineGame(boolean onlineGame) {
         this.onlineGame = onlineGame;
     }
 
@@ -171,6 +191,13 @@ public class GameSetupTypeController implements Initializable {
             beerGame.setConfiguration(this.configuration);
             beerGame.setGameName(this.gameName);
             beerGame.setGameId(DaoConfig.getCurrentGameId());
+            createFirstTurn();
+
+            if(onlineGame) {
+							connector.start();
+							connector.createRoom(gameName, "", beerGame);
+						}
+						//persistence.saveGameLog(beerGame);
             assignAgents.setData(new Object[]{beerGame});
             assignAgents.setupScreen();
         }
@@ -223,6 +250,26 @@ public class GameSetupTypeController implements Initializable {
         }
 
     }
+
+    private void createFirstTurn() {
+			Round firstRound = roundProvider.get();
+			firstRound.setRoundId(1);
+
+			List<FacilityTurn> turns = new ArrayList<>();
+			for(Facility facility: beerGame.getConfiguration().getFacilities()) {
+				turns.add(
+						new FacilityTurn(
+								facility.getFacilityId(),
+								1,
+								facility.getFacilityType().getStartingStock(),
+								0,
+								facility.getFacilityType().getStartingBudget(),
+								false));
+			}
+
+			firstRound.setFacilityTurns(turns);
+			beerGame.getRounds().add(firstRound);
+		}
 
     /**
      * Sets the facilityType for the child of a node
