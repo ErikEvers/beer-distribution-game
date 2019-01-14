@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_play_game.PlayGameFacilitiesController">
     <children>
         <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -24,14 +25,25 @@
                 <RowConstraints maxHeight="186.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <!--The facility name can be on of the next texts: 'Regional warehouse', 'Wholesalerr' or 'retailer'-->
-                <Label alignment="BOTTOM_LEFT" text="[Facilityname]" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+                <!--The facility name can be on of the next texts: 'Regional warehouse', 'Wholesaler' or 'retailer'-->
+                <Label fx:id="lblFacilities" alignment="BOTTOM_LEFT" text="[Facilityname]" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" />
                     </GridPane.margin>
                     <font>
                         <Font size="50.0" />
                     </font>
+                </Label>
+                <Label text="Incoming goods next round:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                    <GridPane.margin>
+                        <Insets bottom="50.0" left="30.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="Incoming orders next round:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets left="30.0" top="60.0" />
+                    </GridPane.margin>
                 </Label>
                 <GridPane fx:id="playGridPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columnConstraints>
@@ -46,17 +58,45 @@
                     </rowConstraints>
                     <children>
 
-                        <Button defaultButton="true" mnemonicParsing="false" text="Send order" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                        <TextField editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                        <TextField layoutX="39.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                        <Label text="Incoming order:" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                        <Button mnemonicParsing="false" onAction="#handleSendOrderButtonClick" style="-fx-background-color: #ff8000;" text="Send order" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#handleSendDeliveryButtonClick" style="-fx-background-color: #ff8000;" text="Send delivery" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+
+                        <TextField fx:id="txtOutgoingDelivery" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <TextField fx:id="outgoingOrderTextField" layoutX="39.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                            <GridPane.margin>
+                                <Insets bottom="60.0" />
+                            </GridPane.margin></TextField>
+                        <Label text="Choose outgoing delivery:" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets bottom="60.0" left="30.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label text="Outgoing order:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <ComboBox fx:id="cmbChooseOutgoingDelivery" prefWidth="150.0">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
                             <GridPane.margin>
-                                <Insets bottom="60.0" left="30.0" />
+                                <Insets left="50.0" top="125.0" />
+                            </GridPane.margin>
+                        </ComboBox>
+                        <Label text="To:">
+                            <padding>
+                                <Insets left="30.0" top="75.0" />
+                            </padding>
+                        </Label>
+                        <Label text="Outgoing order:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                            <GridPane.margin>
+                                <Insets left="30.0" top="25.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <ComboBox fx:id="comboBox" prefWidth="150.0" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                            <GridPane.margin>
+                                <Insets bottom="55.0" left="50.0" />
+                            </GridPane.margin>
+                        </ComboBox>
+                        <Label text="To:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                            <GridPane.margin>
+                                <Insets bottom="80.0" left="30.0" />
                             </GridPane.margin>
                         </Label>
                         <Label text="Inventory:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -67,7 +107,7 @@
                                 <Insets />
                             </GridPane.margin>
                         </Label>
-                        <Label text="40" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                        <Label fx:id="inventory" text="40" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets right="30.0" />
                             </GridPane.margin>
@@ -80,7 +120,7 @@
                                 <Font size="21.0" />
                             </font>
                         </Label>
-                        <Label text="0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <Label fx:id="backOrders" text="0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                             <font>
                                 <Font size="21.0" />
                             </font>
@@ -106,25 +146,29 @@
                         </Label>
                     </children>
                 </GridPane>
-                <TextField editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                <TextField fx:id="incomingOrdersTextField" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="30.0" top="85.0" />
                     </GridPane.margin></TextField>
-                <TextField editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                <TextField fx:id="incomingGoodsNextRound" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="30.0" top="285.0" />
                     </GridPane.margin></TextField>
-                <Button mnemonicParsing="false" text="See graph" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="See graph" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets top="20.0" />
                     </GridPane.margin></Button>
-                <Button mnemonicParsing="false" text="Use agent" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="Use agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
-                        <Insets top="20.0" />
+                        <Insets left="150.0" top="20.0" />
                     </GridPane.margin></Button>
-                <Button mnemonicParsing="false" text="See other facilities" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button mnemonicParsing="false" onMouseClicked="#seeOtherFacilitiesButtonClicked" style="-fx-background-color: #ff8000;" text="See other facilities" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
-                        <Insets top="20.0" />
+                        <Insets left="300.0" top="20.0" />
+                    </GridPane.margin></Button>
+                <Button mnemonicParsing="false" onMouseClicked="#submitTurnButtonClicked" style="-fx-background-color: #ff8000;" text="Submit turn" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets left="0.0" top="20.0" />
                     </GridPane.margin></Button>
             </children>
         </GridPane>

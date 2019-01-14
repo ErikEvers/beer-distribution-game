@@ -1,101 +1,61 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
-import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
 import org.han.ica.asd.c.socketrpc.SocketClient;
+import java.util.Map;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+/**
+ * Helper class for transactional sending of data.
+ *
+ * @author Mathijs Bouwmeister, Rogier Grobbee
+ */
 public class SendInTransaction {
 
-    String[] ips;
-    Round roundModel;
-    SocketClient socketClient;
+    private String[] ips;
+    private TransactionMessage transactionMessage;
+    private SocketClient socketClient;
 
-    private static final Logger LOGGER = Logger.getLogger(SendInTransaction.class.getName());
-
-    SendInTransaction(String[] ips, Round roundModel, SocketClient socketClient) {
+    public SendInTransaction(String[] ips, TransactionMessage transactionMessage, SocketClient socketClient) {
         this.ips = ips;
-        this.roundModel = roundModel;
+        this.transactionMessage = transactionMessage;
         this.socketClient = socketClient;
-
     }
 
-    private int numberOfSuccesses = 0;
-    private int numberFinished = 0;
-    private int numberOfThreads = 0;
+    /**
+     * The beginning of the transaction.
+     *
+     * @throws TransactionException Throws an exception when something went wrong with transactional sending.
+     */
+    public void sendToAllPlayers() throws TransactionException {
+        transactionMessage.setPhaseToStage();
+        handleStagePhase(socketClient.sendToAll(ips, transactionMessage));
+    }
 
-    public void sendRoundToAllPlayers() {
+    /**
+     * Handles the stage phase. Throws an exception when the map contains one.
+     * @param map Contains the respond objects.
+     * @throws TransactionException Throws an exception when the respond object is an exception.
+     */
+    private void handleStagePhase(Map<String, Object> map) throws TransactionException {
+        boolean allSuccessful = true;
 
-        //TODO implement with this: https://stackoverflow.com/questions/9148899/returning-value-from-thread
-
-        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel, 0);
-
-        numberOfSuccesses = 0;
-        numberFinished = 0;
-        try {
-            numberOfThreads = ips.length;
-            for (String ip : ips) {
-                sendCanCommit(ip, roundModelMessage);
+        for(Object value : map.values()) {
+            if(value instanceof Exception) {
+                allSuccessful = false;
             }
-        } catch (Exception ex) {
-            //rollback
-            LOGGER.log(Level.INFO, "Stagecommit failed, rolling back", ex);
-            RoundModelMessage rollbackRoundModelMessage = new RoundModelMessage(roundModel, -1);
-            send(rollbackRoundModelMessage);
+        }
+
+        if(allSuccessful) {
+            transactionMessage.setPhaseToCommit();
+            socketClient.sendToAll(ips, transactionMessage);
+        }
+
+        else {
+            transactionMessage.setPhaseToRollback();
+            socketClient.sendToAll(ips, transactionMessage);
+
+            throw new TransactionException("Something went wrong with transactional sending data");
         }
     }
-
-    private void sendCanCommit(String ip, RoundModelMessage roundModelMessage) {
-
-        Thread t = new Thread(() -> {
-            try {
-                ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, roundModelMessage);
-                canCommitFinished(response.getIsSuccess());
-
-            } catch (IOException | ClassNotFoundException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            }
-        });
-        t.setDaemon(true);
-        t.start();
-    }
-
-    private void canCommitFinished(boolean isSuccess) {
-        numberFinished++;
-        if (isSuccess) {
-            numberOfSuccesses++;
-        }
-        if (numberOfSuccesses == numberOfThreads) {
-            //All succeeded, do commit.
-            RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel, 1);
-            send(roundModelMessage);
-
-        } else if (numberFinished == numberOfThreads) {
-            //Failure, rollback
-            RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel, -1);
-            send(roundModelMessage);
-        }
-    }
-
-    private void send(RoundModelMessage roundModelMessage) {
-        for (String ip : ips) {
-
-            Thread t = new Thread(() -> {
-                try {
-                    ResponseMessage response = (ResponseMessage) socketClient.sendObjectWithResponse(ip, roundModelMessage);
-
-                } catch (IOException | ClassNotFoundException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                }
-            });
-            t.setDaemon(true);
-            t.start();
-
-        }
-    }
-
 }

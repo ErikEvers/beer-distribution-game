@@ -1,8 +1,10 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class BeerGame implements IDomainModel{
+public class BeerGame implements IDomainModel, Serializable {
 
     private Leader leader;
     private List<Player> players;
@@ -13,6 +15,22 @@ public class BeerGame implements IDomainModel{
     private String gameName;
     private String gameDate;
     private String gameEndDate;
+
+    public BeerGame() {
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
+    }
+
+    public BeerGame(String gameId, String gameName, String gameDate, String gameEndDate){
+        this.gameId = gameId;
+        this.gameName = gameName;
+        this.gameDate = gameDate;
+        this.gameEndDate = gameEndDate;
+        this.players = new ArrayList<>();
+        this.agents = new ArrayList<>();
+        this.rounds = new ArrayList<>();
+    }
 
     public BeerGame(Leader leader, List<Player> players, List<GameAgent> agents, Configuration configuration, //NOSONAR
                     List<Round> rounds, String gameId, String gameName, String gameDate, String gameEndDate) //NOSONAR
@@ -28,10 +46,6 @@ public class BeerGame implements IDomainModel{
         this.gameEndDate = gameEndDate;
     }
 
-    public BeerGame() {
-
-    }
-
     public Leader getLeader() {
         return leader;
     }
@@ -42,6 +56,10 @@ public class BeerGame implements IDomainModel{
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public Player getPlayerById(String playerId) {
+        return players.stream().filter(player -> player.getPlayerId() == playerId).findFirst().get();
     }
 
     public void setPlayers(List<Player> players) {

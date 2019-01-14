@@ -1,10 +1,10 @@
 package org.han.ica.asd.c.gamelogic.participants;
 
-import org.han.ica.asd.c.gamelogic.participants.domain_models.AgentParticipant;
-import org.han.ica.asd.c.gamelogic.participants.domain_models.PlayerParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,9 +13,10 @@ import java.util.List;
  */
 public class ParticipantsPool {
     private List<IParticipant> participants;
-    private PlayerParticipant player;
+    private IParticipant player;
 
-    public ParticipantsPool(PlayerParticipant playerParticipant) {
+    @Inject
+    public ParticipantsPool(IParticipant playerParticipant) {
         participants = new LinkedList<>();
         participants.add(playerParticipant);
         player = playerParticipant;
@@ -41,7 +42,7 @@ public class ParticipantsPool {
      * Replaces the local player with the given agent.
      * @param agent The agent to replace the local player with.
      */
-    public void replacePlayerWithAgent(AgentParticipant agent) {
+    public void replacePlayerWithAgent(IParticipant agent) {
         participants.remove(player);
         participants.add(agent);
     }
@@ -53,7 +54,7 @@ public class ParticipantsPool {
         replaceParticipantWithPlayer(player);
     }
 
-    public void replaceAgentWithPlayer(PlayerParticipant playerParticipant) {
+    public void replaceAgentWithPlayer(IParticipant playerParticipant) {
         replaceParticipantWithPlayer(playerParticipant);
     }
 
@@ -62,7 +63,7 @@ public class ParticipantsPool {
      * This method is used when a player gets back in to the game.
      * @param playerParticipant The player that got back into the game.
      */
-    private void replaceParticipantWithPlayer(PlayerParticipant playerParticipant) {
+    private void replaceParticipantWithPlayer(IParticipant playerParticipant) {
         for (IParticipant participant : participants) {
             if (participant.getParticipant() == playerParticipant.getParticipant()) {
                 participants.remove(participant);
@@ -82,6 +83,12 @@ public class ParticipantsPool {
                 participants.remove(participant);
                 return;
             }
+        }
+    }
+
+    public void excecuteRound(Round round) {
+        for (IParticipant participant : participants) {
+            participant.executeTurn(round);
         }
     }
 }

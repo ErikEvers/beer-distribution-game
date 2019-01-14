@@ -1,42 +1,73 @@
 package org.han.ica.asd.c.gui_play_game;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.input.MouseEvent;
+import javafx.util.converter.IntegerStringConverter;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-public class PlayGameFactoryController {
-    private Configuration configuration;
+public class PlayGameFactoryController extends PlayGame {
 
     @FXML
-    GridPane playGridPane;
+    private TextField step1TextField;
 
     @FXML
-    AnchorPane mainContainer;
+    private TextField step2TextField;
 
-    @Inject @Named("SeeOtherFacilities")
-    IGUIHandler seeOtherFacilities;
+    @FXML
+    private ComboBox<Facility> cmbChooseOutgoingDelivery;
 
-    public void initialize(){
-        mainContainer.getChildren().addAll();
-        playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
+    @FXML
+    private TextField txtOutgoingDelivery;
 
+    /**
+     * Button event handling the order sending.
+     */
+    public void initialize() {
+        superInitialize();
+
+        txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
     }
 
+    /**
+     * Button event handling the order sending.
+     */
     public void handleSendOrderButtonClick() {
-        // implementation coming
+        int order = Integer.parseInt(outgoingOrderTextField.getText());
+        playerComponent.placeOrder(null, order);
     }
 
-    public void seeOtherFacilitiesButtonClicked() {
-        seeOtherFacilities.setData(new Object[]{configuration});
-        seeOtherFacilities.setupScreen();
+    @Override
+    public void fillComboBox() {
+        fillOutGoingDeliveryFacilityComboBox(cmbChooseOutgoingDelivery);
     }
 
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    /**
+     * Button event handling the order delivering.
+     */
+    public void handleSendDeliveryButtonClick(ActionEvent actionEvent) {
+        super.handleSendDeliveryButtonClick();
+    }
+
+    public void submitTurnButtonClicked(MouseEvent mouseEvent) {
+        int step2Value = 0;
+
+        if (!outgoingOrderTextField.getText().trim().isEmpty()) {
+            if (!step2TextField.getText().trim().isEmpty()) {
+                step2Value = Integer.parseInt(step2TextField.getText());
+            }
+            if (!step1TextField.getText().trim().isEmpty()) {
+                step2TextField.setText(step1TextField.getText());
+            }
+
+            step1TextField.setText(outgoingOrderTextField.getText());
+            outgoingOrderTextField.clear();
+
+        }
+
+        super.submitTurnButtonClicked();
     }
 }

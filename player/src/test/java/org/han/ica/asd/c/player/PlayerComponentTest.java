@@ -1,75 +1,79 @@
 package org.han.ica.asd.c.player;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.gamelogic.GameLogic;
+import org.han.ica.asd.c.interfaces.communication.IFinder;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+
+import org.han.ica.asd.c.interfaces.player.IPlayerGameLogic;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.GameAgent;
+
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
+
 
 import static org.mockito.Mockito.*;
 
 public class PlayerComponentTest {
     private PlayerComponent playerComponent;
+    private IPlayerGameLogic logicMock;
 
     @BeforeEach
     void beforeTest() {
-        playerComponent = new PlayerComponent();
+        logicMock = mock(GameLogic.class);
+
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(IPlayerGameLogic.class).toInstance(logicMock);
+                bind(IGameStore.class).to(PersistenceStub.class);
+                bind(IConnectedForPlayer.class).to(CommunicationStub.class);
+                bind(IFinder.class).to(RoomFinderStub.class);
+            }
+        });
+        playerComponent = injector.getInstance(PlayerComponent.class);
     }
 
     @Test
     void getAllGamesCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Arrange
-        playerComponent.gameLogic = mock(GameLogic.class);
-
-        ArrayList<String> list = new ArrayList<>();
-        list.add("");
-
-        when(playerComponent.gameLogic.getAllGames()).thenReturn(list);
 
         //Act
         playerComponent.getAllGames();
 
         //Assert
-        verify(playerComponent.gameLogic, times(1)).getAllGames();
+        verify(logicMock, times(1)).getAllGames();
     }
 
     @Test
     void connectToGameCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Arrange
-        playerComponent.gameLogic = mock(GameLogic.class);
-
         //Act
         playerComponent.connectToGame("");
 
         //Assert
-        verify(playerComponent.gameLogic, times(1)).connectToGame("");
+        verify(logicMock, times(1)).connectToGame("");
     }
 
     @Test
     void requestFacilityUsageCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Arrange
-        playerComponent.gameLogic = mock(GameLogic.class);
-        Facility facility = mock(Facility.class);
-
         //Act
-        playerComponent.requestFacilityUsage(facility);
+        playerComponent.requestFacilityUsage(mock(Facility.class));
 
         //Assert
-        verify(playerComponent.gameLogic, times(1)).requestFacilityUsage(facility);
+        verify(logicMock, times(1)).requestFacilityUsage(any(Facility.class));
     }
 
     @Test
     void getAllFacilitiesCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Arrange
-        playerComponent.gameLogic = mock(GameLogic.class);
-
         //Act
         playerComponent.getAllFacilities();
 
         //Assert
-        verify(playerComponent.gameLogic, times(1)).getAllFacilities();
+        verify(logicMock, times(1)).getAllFacilities();
     }
 
     @Test

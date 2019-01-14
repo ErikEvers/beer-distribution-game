@@ -1,11 +1,17 @@
 package org.han.ica.asd.c.model.domain_objects;
 
-public class Player implements IDomainModel{
+import java.io.Serializable;
+
+public class Player implements IDomainModel, Serializable {
     private String playerId;
     private String ipAddress;
     private Facility facility;
     private String name;
     private boolean isConnected;
+
+    public Player(){
+        //Empty constructor for Guice
+    }
 
     public Player(String playerId, String ipAddress, Facility facility, String name, boolean isConnected) {
         this.playerId = playerId;
@@ -15,8 +21,8 @@ public class Player implements IDomainModel{
         this.isConnected = isConnected;
     }
 
-    public Player() {
-
+    public String concatIpId() {
+        return playerId.concat(ipAddress);
     }
 
     public String getPlayerId() {
@@ -57,9 +63,5 @@ public class Player implements IDomainModel{
 
     public void setConnected(boolean connected) {
         isConnected = connected;
-    }
-
-    public String concatIpId() {
-        return playerId.concat(ipAddress);
     }
 }
