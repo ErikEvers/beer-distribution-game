@@ -44,7 +44,7 @@ public class NodeConverter {
         return Integer.parseInt(facilityId);
     }
 
-    public List<List<String>> sortFacilities(List<List<String>> facilities){
+    private List<List<String>> sortFacilities(List<List<String>> facilities){
         List<List<String>> returnList = new ArrayList<>();
         for (List<String> facility : facilities) {
             Collections.sort(facility);
@@ -66,7 +66,7 @@ public class NodeConverter {
         return 0;
     }
 
-    public Integer getFacilityIdByAction(int ownFacilityId, ActionReference actionName) {
+    public int getFacilityIdByAction(int ownFacilityId, ActionReference actionName) {
         List<List<String>> facilities = sortFacilities(businessRuleStore.getAllFacilities());
 
         for (int i = 0; i < facilities.size(); i++) {
@@ -78,7 +78,7 @@ public class NodeConverter {
         return FACILITYNOTFOUND;
     }
 
-    private Integer getFacilityIdByAction(ActionReference actionName, int facility) {
+    private int getFacilityIdByAction(ActionReference actionName, int facility) {
         if("order".equals(actionName.getAction())){
             if(facility == FacilityType.FACTORY.getIndex()){
                 return 0;
