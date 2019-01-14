@@ -209,6 +209,15 @@ public class Replacer {
         return "";
     }
 
+    /***
+     * Gets the facility id based on the highest or lowest and the attribute
+     * @param attribute like inventory,
+     * @param facility the current facility
+     * @param round the round
+     * @param highestOrLowest if the filter selects the highest or the lowest
+     * @return the facility id
+     * @throws NotFoundException
+     */
     private int getExtreme(GameValue attribute, GameValue facility, Round round, GameValue highestOrLowest) throws NotFoundException {
         String notFound = "the identifier is not found";
         switch (attribute) {
@@ -229,15 +238,26 @@ public class Replacer {
         }
     }
 
-    private <T extends IFacility> int getFacilityExtreme(List<T> facilityList, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<T> facilityTurnOrderComparator, String notFound) throws NotFoundException {
+    /***
+     *
+     * @param facilityList
+     * @param highestOrLowest
+     * @param facilityTypeList
+     * @param facilityComparator the comparator
+     * @param notFound raises the not found error when triggered
+     * @param <T> An object which implements IFacility
+     * @return the found facility id
+     * @throws NotFoundException
+     */
+    private <T extends IFacility> int getFacilityExtreme(List<T> facilityList, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<T> facilityComparator, String notFound) throws NotFoundException {
         T facilityTurnOrder;
         Stream<T> stream = facilityList.stream().filter(i ->
                 facilityTypeList.contains(String.valueOf(i.getFacilityId())));
 
         if (highestOrLowest.equals(GameValue.HIGHEST)) {
-            facilityTurnOrder = stream.max(facilityTurnOrderComparator).orElse(null);
+            facilityTurnOrder = stream.max(facilityComparator).orElse(null);
         } else {
-            facilityTurnOrder = stream.min(facilityTurnOrderComparator).orElse(null);
+            facilityTurnOrder = stream.min(facilityComparator).orElse(null);
         }
         if (facilityTurnOrder != null) {
             return facilityTurnOrder.getFacilityId();
@@ -245,6 +265,12 @@ public class Replacer {
         throw new NotFoundException(notFound);
     }
 
+    /**
+     * Gets all the facilities of the game
+     * @param facilityType the desired facilities
+     * @return a list of facilities
+     * @throws NotFoundException
+     */
     private List<String> getDesiredFacilities(GameValue facilityType) throws NotFoundException {
         switch (facilityType) {
             case FACTORY:
@@ -261,12 +287,12 @@ public class Replacer {
     }
 
     /***
-     *
-     * @param action
-     * @param round
-     * @param facilityType
-     * @param attribute
-     * @param highestOrLowest
+     * Replaces the person with the found facility id
+     * @param action the corresponding action
+     * @param round the round
+     * @param facilityType the desired facility type
+     * @param attribute an attribute like inventory
+     * @param highestOrLowest if the filter is applied using highest or lowest
      */
     public void replacePerson(Action action, Round round, GameValue facilityType, GameValue attribute, GameValue highestOrLowest) {
         try {

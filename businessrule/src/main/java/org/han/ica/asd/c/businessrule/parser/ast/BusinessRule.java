@@ -218,7 +218,10 @@ public class BusinessRule extends ASTNode {
     }
 
 
-
+    /***
+     * finds the leaf and replaces the action
+     * @param astNode a node of the tree
+     */
     private void findLeafAndReplaceAction(ASTNode astNode) {
         if (astNode instanceof Value) {
             GameValue foundAttribute = getAttribute((Value) astNode);
@@ -238,6 +241,11 @@ public class BusinessRule extends ASTNode {
         }
     }
 
+    /***
+     * The value that probably contains an attribute
+     * @param value
+     * @return the corresponding game value
+     */
     private GameValue getAttribute(Value value) {
         if (containsAttribute(value, GameValue.STOCK.getValue())) {
             return GameValue.STOCK;
@@ -273,6 +281,11 @@ public class BusinessRule extends ASTNode {
         return ((BooleanLiteral) this.condition).getValue();
     }
 
+    /***
+     * The given facility type
+     * @param person the person which contains the facility type
+     * @return the corresponding facility
+     */
     private GameValue getFacilityType(Person person) {
         if (containsGameValue(person.getPerson(), GameValue.FACTORY.getValue())) {
             return GameValue.FACTORY;
@@ -286,20 +299,36 @@ public class BusinessRule extends ASTNode {
         return null;
     }
 
+    /***
+     * Checks if the given value contains an attribute
+     * @param value the given value
+     * @param items the collection which holds the attributes
+     * @return true if the value contains an attribute
+     */
     private boolean containsAttribute(Value value, String[] items) {
-
         String part1 = value.getFirstPartVariable();
         String part2 = "";
-        if(value.getValue().size()>1) {
+        if (value.getValue().size() > 1) {
             part2 = value.getSecondPartVariable();
         }
         return containsGameValue(part1, items) || containsGameValue(part2, items);
     }
 
+    /***
+     * Checks if the string is an game value
+     * @param inputStr the string to check
+     * @param items the collection of gamevalues
+     * @return returns true if the game value has been found
+     */
     private boolean containsGameValue(String inputStr, String[] items) {
         return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
     }
 
+    /***
+     * Checks if the value has the game value highest or lowest
+     * @param value the given value
+     * @returns highest if value has highest, returns lowest if the value has lowest and returns null of it doesn't contain highest or lowest.
+     */
     private GameValue getHighestOrLowest(Value value) {
         if (containsAttribute(value, GameValue.HIGHEST.getValue())) {
             return GameValue.HIGHEST;
