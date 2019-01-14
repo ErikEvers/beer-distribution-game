@@ -31,6 +31,7 @@ public class ConfigurationDAO {
     private static final String GET_LOWER_LINKED_FACILITIES = "SELECT flt.FacilityIdOrdering FROM FacilityLinkedTo flt WHERE flt.GameId = ?";
     private static final String SET_LOWER_LINKED_FACILITIES = "INSERT INTO FacilityLinkedTo VALUES (?,?,?)";
     private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdOrdering = ?, FacilityIdDelivering = ? WHERE GameId = ?;";
+    private static final String DELETE_FACILITY_LINKS = "DELETE FROM FacilityLinkedTo WHERE GameId = ?;";
     private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
 
     @Inject
@@ -190,6 +191,7 @@ public class ConfigurationDAO {
      * A method which deletes a specific configurations according to a specific gameId
      */
     public void deleteConfigurations() {
+        deleteFacilityLinks();
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_CONFIGURATION)) {
@@ -230,6 +232,25 @@ public class ConfigurationDAO {
 
             }
         }));
+    }
+
+    /**
+     * Deletes facility links
+     */
+    public void deleteFacilityLinks() {
+        Connection conn = databaseConnection.connect();
+        if (conn == null) return;
+        try (PreparedStatement pstmt = conn.prepareStatement(DELETE_FACILITY_LINKS)) {
+            conn.setAutoCommit(false);
+
+            DaoConfig.gameIdNotSetCheck(pstmt, 1);
+
+            pstmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException | GameIdNotSetException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            databaseConnection.rollBackTransaction(conn);
+        }
     }
 
     /**

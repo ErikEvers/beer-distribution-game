@@ -10,6 +10,7 @@ import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -30,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AgentIntegrationTest {
     private IParticipant participant;
@@ -43,10 +46,15 @@ class AgentIntegrationTest {
             new Facility(
                     new FacilityType("retail 1", 3, 3, 10, 30, 1000, 3, 40), 3)));
     private Map<Facility, List<Facility>> facilitiesLinkedTo = createFacilitiesLinkedTo();
+
+
+    private IPlayerGameLogic gameLogic = mock(IPlayerGameLogic .class);
+
     private Injector participantInjector = Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
             bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
+            bind(IPlayerGameLogic.class).toInstance(gameLogic);
             bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                 @Override
                 public void saveGameLog(BeerGame beerGame) {
@@ -107,6 +115,7 @@ class AgentIntegrationTest {
             });
         }
     });
+
     private Configuration configuration = new Configuration(
             10,
             1,
@@ -153,7 +162,12 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(1, 2, 0, 20),
                         new FacilityTurnDeliver(2, 3, 0, 20)));
 
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
+        GameRoundAction gameRoundAction = participant.executeTurn();
         assertEquals(new Integer(10), gameRoundAction.targetOrderMap.get(facilityList.get(0)));
     }
 
@@ -183,7 +197,12 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(1, 2, 0, 20),
                         new FacilityTurnDeliver(2, 3, 0, 20)));
 
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
+        GameRoundAction gameRoundAction = participant.executeTurn();
         assertEquals(new Integer(20), gameRoundAction.targetOrderMap.get(facilityList.get(0)));
     }
 
@@ -212,7 +231,12 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(1, 2, 0, 20),
                         new FacilityTurnDeliver(2, 3, 0, 20)));
 
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
+        GameRoundAction gameRoundAction = participant.executeTurn();
         assertEquals(new Integer(1), gameRoundAction.targetOrderMap.get(facilityList.get(0)));
     }
 
@@ -242,7 +266,12 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(1, 2, 0, 20),
                         new FacilityTurnDeliver(2, 3, 0, 20)));
 
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
+        GameRoundAction gameRoundAction = participant.executeTurn();
         assertEquals(actualOrder, gameRoundAction.targetOrderMap.get(facilityList.get(0)));
     }
 
@@ -272,7 +301,12 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(1, 2, 0, outgoingGoods),
                         new FacilityTurnDeliver(2, 3, 0, 20)));
 
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
+        GameRoundAction gameRoundAction = participant.executeTurn();
         assertEquals(actualOrder, gameRoundAction.targetOrderMap.get(facilityList.get(0)));
     }
 
@@ -303,7 +337,12 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(1, 2, 0, 20),
                         new FacilityTurnDeliver(2, 3, 0, 20)));
 
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
+        GameRoundAction gameRoundAction = participant.executeTurn();
         assertEquals(actualOrder, gameRoundAction.targetOrderMap.get(facilityList.get(0)));
     }
 

@@ -70,7 +70,7 @@ public class GameMessageReceiver {
                     TransactionMessage gameStartMessage = (TransactionMessage) gameMessage;
                     return handleTransactionMessage(gameStartMessage);
                 case REQUEST_GAME_DATA_MESSAGE:
-                    return handleRequestGameData(senderIp);
+                    return handleRequestGameData(senderIp, ((RequestGameDataMessage)gameMessage).getUserName());
                 default:
                     break;
             }
@@ -116,7 +116,7 @@ public class GameMessageReceiver {
         try {
             for (IConnectorObserver observer : gameMessageObservers) {
                 if (observer instanceof IFacilityMessageObserver) {
-                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility());
+                    ((IFacilityMessageObserver) observer).chooseFacility(chooseFacilityMessage.getFacility(), chooseFacilityMessage.getPlayerId());
                     return chooseFacilityMessage.createResponseMessage();
                 }
             }
@@ -127,11 +127,11 @@ public class GameMessageReceiver {
         return null;
     }
 
-    private RequestGameDataMessage handleRequestGameData(String playerIp) {
+    private RequestGameDataMessage handleRequestGameData(String playerIp, String userName) {
         for (IConnectorObserver observer : gameMessageObservers) {
             if (observer instanceof IFacilityMessageObserver) {
                 RequestGameDataMessage requestGameDataMessageResponse = new RequestGameDataMessage();
-                requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp));
+                requestGameDataMessageResponse.setGameData(((IFacilityMessageObserver) observer).getGameData(playerIp, userName));
                 return requestGameDataMessageResponse;
             }
         }
@@ -162,7 +162,8 @@ public class GameMessageReceiver {
         switch (transactionMessage.getPhase()) {
             case 0:
                 toBecommittedRound = transactionMessage;
-                break;
+                transactionMessage.createResponseMessage();
+                return transactionMessage;
             case 1:
                 return doCommit(transactionMessage);
             case -1:

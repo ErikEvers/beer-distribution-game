@@ -27,12 +27,13 @@ public class MainMenuController {
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
-    @Inject
-    private IConnectorForSetup connector;
+		@Inject
+		@Named("GameRoomGameLeader")
+		private IGUIHandler gameRoomGameLeader;
 
-    public void initialize() {
+		@Inject
+		private IConnectorForSetup connector;
 
-    }
     @FXML
     private void closeButtonAction() {
         Stage stage = (Stage) close.getScene().getWindow();
@@ -51,7 +52,9 @@ public class MainMenuController {
 
     public void handleCreateGameButtonClick() {
 			connector.start();
-			connector.createRoom("12345", "");
+			connector.createRoom("Beergame ASD-C", "");
+
+			gameRoomGameLeader.setupScreen();
 		}
 
     public void handleJoinGameButtonClick(){

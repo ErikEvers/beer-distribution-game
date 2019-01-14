@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS GameAgent (
 CREATE TABLE IF NOT EXISTS Player (
   GameId varchar(36) NOT NULL,
   PlayerId varchar(36) NOT NULL,
-  FacilityId int NOT NULL,
+  FacilityId int NULL,
   IpAddress varchar(45) NOT NULL,
   Name varchar(255) NOT NULL,
   CONSTRAINT PK_Player PRIMARY KEY (GameId, PlayerId),
