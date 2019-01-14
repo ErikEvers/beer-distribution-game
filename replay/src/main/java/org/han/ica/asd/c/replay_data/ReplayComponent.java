@@ -22,6 +22,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private List<GameValue> displayedAverages;
     private List<AverageRound> averageRounds;
     private List<Facility> facilities;
+    private BeerGame beerGame;
     private List<Round> rounds;
     private int currentRound;
     private int totalRounds;
@@ -30,7 +31,8 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     @Inject
     public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
         facilities = retrieveReplayData.getAllFacilities();
-        rounds = retrieveReplayData.getAllRounds();
+        beerGame = retrieveReplayData.getBeerGame();
+        rounds = beerGame.getRounds();
 
         displayedAverages = new ArrayList<>();
         averageRounds = new ArrayList<>();
@@ -250,6 +252,14 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     @Override
     public void setDisplayedAttribute(GameValue value) {
         this.displayedAttribute = value;
+    }
+
+    @Override
+    public BeerGame getBeerGameForCurrentRound() {
+//        BeerGame returnGame = beerGame;
+//        returnGame.getRounds().stream().filter(round -> round.getRoundId() == currentRound);
+//        return returnGame;
+        return beerGame;
     }
 
     /***

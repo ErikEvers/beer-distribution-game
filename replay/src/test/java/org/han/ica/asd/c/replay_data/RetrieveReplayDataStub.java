@@ -6,7 +6,7 @@ import org.han.ica.asd.c.model.domain_objects.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RetrieveReplayDataStub implements IRetrieveReplayData{
+public class RetrieveReplayDataStub implements IRetrieveReplayData {
     @Override
     public List<Facility> getAllFacilities() {
         FacilityType factory = new FacilityType("factory", 1, 1, 1, 1, 1, 1, 1);
@@ -41,23 +41,23 @@ public class RetrieveReplayDataStub implements IRetrieveReplayData{
     }
 
     @Override
-    public List<Round> getAllRounds() {
+    public BeerGame getBeerGame() {
         List<Round> rounds = new ArrayList<>();
 
-        for(int i = 0; i <= 10; i++){
+        for (int i = 0; i <= 10; i++) {
             Round round = new Round();
             round.setRoundId(i);
 
             List<FacilityTurn> facilityTurns = new ArrayList<>();
-            facilityTurns.add(new FacilityTurn(1, i, 800, 500,5, false));
-            facilityTurns.add(new FacilityTurn(2, i, 40, 40,40, false));
-            facilityTurns.add(new FacilityTurn(3, i, 200, 200,200, false));
-            facilityTurns.add(new FacilityTurn(4, i, 50, 50,50, false));
-            facilityTurns.add(new FacilityTurn(5, i, 800, 500,15, false));
-            facilityTurns.add(new FacilityTurn(6, i, 40, 40,40, false));
-            facilityTurns.add(new FacilityTurn(7, i, 200, 200,200, false));
-            facilityTurns.add(new FacilityTurn(8, i, 100, 100,100, false));
-            facilityTurns.add(new FacilityTurn(9, i, 150, 150,150, false));
+            facilityTurns.add(new FacilityTurn(1, i, 800, 500, 5, false));
+            facilityTurns.add(new FacilityTurn(2, i, 40, 40, 40, false));
+            facilityTurns.add(new FacilityTurn(3, i, 200, 200, 200, false));
+            facilityTurns.add(new FacilityTurn(4, i, 50, 50, 50, false));
+            facilityTurns.add(new FacilityTurn(5, i, 800, 500, 15, false));
+            facilityTurns.add(new FacilityTurn(6, i, 40, 40, 40, false));
+            facilityTurns.add(new FacilityTurn(7, i, 200, 200, 200, false));
+            facilityTurns.add(new FacilityTurn(8, i, 100, 100, 100, false));
+            facilityTurns.add(new FacilityTurn(9, i, 150, 150, 150, false));
 
             round.setFacilityTurns(facilityTurns);
 
@@ -89,6 +89,6 @@ public class RetrieveReplayDataStub implements IRetrieveReplayData{
 
             rounds.add(round);
         }
-        return rounds;
+        return new BeerGame(new Leader(new Player()), new ArrayList<Player>(), new ArrayList<GameAgent>(), new Configuration(), rounds, "ID", "mooie game", "datum", "einddatum");
     }
 }

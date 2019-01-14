@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
 
 import javax.inject.Inject;
@@ -57,6 +58,9 @@ public class ReplayGameRoundController {
     void initialize() {
         roundId.setTextFormatter(NumericTextFormatter.getTextFormatter());
         maxRoundId.setText(replayComponent.getTotalRoundsString());
+
+        TreeBuilder builder = new TreeBuilder();
+        builder.loadFacilityView(replayComponent.getBeerGameForCurrentRound(), facilitiesContainer, true);
 
         updateCurrentRound();
     }

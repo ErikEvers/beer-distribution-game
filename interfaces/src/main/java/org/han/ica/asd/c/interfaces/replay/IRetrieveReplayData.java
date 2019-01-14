@@ -20,5 +20,5 @@ public interface IRetrieveReplayData {
      * @return
      * Returns a list of all available rounds in a BeerGame with gameId
      */
-    List<Round> getAllRounds();
+    BeerGame getBeerGame();
 }
