@@ -138,4 +138,11 @@ public class BeerGame implements IDomainModel, Serializable {
     public void setGameEndDate(String gameEndDate) {
         this.gameEndDate = gameEndDate;
     }
+    {
+
+    }
+
+    public void addRound(Round round)  {
+        rounds.add(round);
+    }
 }
