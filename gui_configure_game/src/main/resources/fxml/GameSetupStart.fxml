@@ -29,12 +29,12 @@
                 <RowConstraints maxHeight="220.0" minHeight="92.0" prefHeight="107.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button mnemonicParsing="false" onAction="#nextScreenButton" text="%next_button" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                <Button mnemonicParsing="false" onAction="#nextScreenButton" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="%next_button" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets right="15.0" />
                     </GridPane.margin>
                 </Button>
-                <Button fx:id="back" mnemonicParsing="false" text="%back_main_menu" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                <Button fx:id="back" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="%back_main_menu" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                 <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" vbarPolicy="NEVER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <content>
                         <AnchorPane fx:id="facilitiesContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="680.0">
