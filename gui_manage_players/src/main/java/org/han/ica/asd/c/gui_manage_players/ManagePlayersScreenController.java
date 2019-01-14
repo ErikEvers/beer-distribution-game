@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gameconfiguration.ManagePlayersService;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;

@@ -149,7 +149,10 @@ public class AssignAgentsController {
     }
 
     private void addEventHandlerToFacilityRectangle(FacilityRectangle rectangle) {
-        rectangle.setOnMouseClicked(event -> lastClickedFacilityRectangle = rectangle);
+        rectangle.setOnMouseClicked(event -> {
+        	lastClickedFacilityRectangle = rectangle;
+        	initTree();
+				});
     }
 
 }
