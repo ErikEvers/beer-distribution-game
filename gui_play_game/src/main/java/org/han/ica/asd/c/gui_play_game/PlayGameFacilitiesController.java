@@ -1,13 +1,12 @@
 package org.han.ica.asd.c.gui_play_game;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.input.MouseEvent;
 import javafx.util.converter.IntegerStringConverter;
 
 public class PlayGameFacilitiesController extends PlayGame {
+
     @FXML
     private Label lblFacilities;
 
@@ -19,13 +18,8 @@ public class PlayGameFacilitiesController extends PlayGame {
         superInitialize();
 
         txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
-    }
-
-    /**
-     * Button event handling the order sending.
-     */
-    public void handleSendOrderButtonClick() {
-        super.handleSendOrderButtonClick();
+        deliverList.setItems(deliverFacilities);
+        orderList.setItems(orderFacilities);
     }
 
     /**
@@ -41,15 +35,9 @@ public class PlayGameFacilitiesController extends PlayGame {
         lblFacilities.setText(facilityName);
     }
 
-    /**
-     * Button event handling the order delivering.
-     */
-    public void handleSendDeliveryButtonClick(ActionEvent actionEvent) {
-        super.handleSendDeliveryButtonClick();
-    }
-
-
-    public void submitTurnButtonClicked(MouseEvent mouseEvent) {
-        super.submitTurnButtonClicked();
+    @Override
+    public void refreshInterfaceWithCurrentStatus(int roundId) {
+        super.refreshInterfaceWithCurrentStatus(roundId);
+        fillComboBox();
     }
 }

@@ -5,21 +5,21 @@ import com.google.inject.name.Named;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Player;
 
 import java.util.ResourceBundle;
 
 public class PlayGameSetupScreen implements IGUIHandler {
-    BeerGame beerGame;
+
+    private static final String RESOURCE_BUNDLE = "languageResources";
+
+    @Inject @Named("PlayerComponent")
+    IPlayerComponent playerComponent;
 
     @Override
     public void setData(Object[] data) {
-        beerGame = (BeerGame) data[0];
+        // not used in this handler
     }
-
-    @Inject
-    @Named("PlayerComponent") protected IPlayerComponent playerComponent;
 
     @Override
     public void setupScreen() {
@@ -31,17 +31,14 @@ public class PlayGameSetupScreen implements IGUIHandler {
 
         String facilityNamePlayedByPlayer = player.getFacility().getFacilityType().getFacilityName();
         if (facilityNamePlayedByPlayer.equals(factoryName)) {
-            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/PlayGameFactory.fxml"));
-            playGame.setBeerGame(beerGame);
+            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameFactory.fxml"));
         } else if (facilityNamePlayedByPlayer.equals(retailerName)) {
-            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/PlayGameRetailer.fxml"));
-            playGame.setBeerGame(beerGame);
+            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameRetailer.fxml"));
         } else {
-            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
-            playGame.setBeerGame(beerGame);
+            playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
             ((PlayGameFacilitiesController)playGame).setLblFacilitiesText(facilityNamePlayedByPlayer);
         }
 
-        playGame.fillComboBox();
+        playerComponent.setUi(playGame);
     }
 }

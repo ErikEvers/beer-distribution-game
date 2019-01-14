@@ -68,11 +68,18 @@ public class FaultDetectorPlayer extends TimerTask {
      *
      * @author Oscar, Tarik
      */
+    //From team2
+//    public void start() {
+//        timer = createTimer(true);
+//        timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
+//        faultHandlerPlayer.setObservers(observers);
+//        this.active = true;
+//    }
+
+    //from dev
     public void start() {
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
-        faultHandlerPlayer.setObservers(observers);
-        this.active = true;
     }
 
     /**
@@ -116,7 +123,7 @@ public class FaultDetectorPlayer extends TimerTask {
     public boolean leaderIsNotPinging() {
         long current = System.currentTimeMillis();
         long timeDifference = current - lastReceived;
-        long threeIntervals = Global.FAULT_DETECTION_INTERVAL * 3;
+        long threeIntervals = Global.FAULT_DETECTION_INTERVAL * 3L;
 
         return timeDifference > threeIntervals;
     }
@@ -307,5 +314,9 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     public Timer getTimer() {
         return timer;
+    }
+
+    public void setPlayersWhoAlreadyCouldntReachLeader(Map<String, Long> playersWhoAlreadyCouldntReachLeader) {
+        this.playersWhoAlreadyCouldntReachLeader = (HashMap<String, Long>) playersWhoAlreadyCouldntReachLeader;
     }
 }

@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dao.BeergameDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
+import org.han.ica.asd.c.dao.LeaderDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
@@ -15,6 +16,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,11 +40,13 @@ class PersistenceTest {
 	private RoundDAO roundDAOMock;
 	private BeergameDAO beerGameDAOMock;
 	private PlayerDAO playerDAOMock;
+	private LeaderDAO leaderDAOMock;
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnMock;
 	private Persistence persistence;
 	private Round round;
 	private Player player;
 	private BeerGame beerGame;
+	private Leader leader;
 	private GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn;
 	private GameBusinessRules businessrules;
 	private List<GameBusinessRules> businessRulesList;
@@ -55,6 +59,7 @@ class PersistenceTest {
 		facilityTurns = new ArrayList<>();
 		facilityTurnOrders = new ArrayList<>();
 		facilityTurnDelivers = new ArrayList<>();
+		leader = new Leader(player);
 
 		facilityTurns.add(new FacilityTurn(1,1,1,1,1,false));
 		facilityTurnOrders.add(new FacilityTurnOrder(1,1,1));
@@ -70,7 +75,7 @@ class PersistenceTest {
 
 
 		roundDAOMock = mock(RoundDAO.class);
-		Mockito.doNothing().when(roundDAOMock).createRound(anyInt());
+		//Mockito.doNothing().when(roundDAOMock).executePreparedStatement(anyInt(),any(Connection.class),anyString());
 		when((roundDAOMock).getRound(anyInt())).thenReturn(round);
 
 		beerGameDAOMock = mock(BeergameDAO.class);
@@ -81,6 +86,9 @@ class PersistenceTest {
 
 		playerDAOMock = mock(PlayerDAO.class);
 		when(playerDAOMock.getPlayer(anyString())).thenReturn(player);
+
+		leaderDAOMock = mock(LeaderDAO.class);
+		Mockito.doNothing().when(leaderDAOMock).insertLeader(player);
 
 		round = mock(Round.class);
 		when(round.getFacilityTurns()).thenReturn(facilityTurns);
@@ -97,6 +105,7 @@ class PersistenceTest {
 				bind(BeergameDAO.class).toInstance(beerGameDAOMock);
 				bind(GameBusinessRulesInFacilityTurnDAO.class).toInstance(gameBusinessRulesInFacilityTurnMock);
 				bind(PlayerDAO.class).toInstance(playerDAOMock);
+				bind(LeaderDAO.class).toInstance(leaderDAOMock);
 			}
 		});
 
@@ -106,7 +115,7 @@ class PersistenceTest {
 	@Test
 	void saveRoundDataTest() {
 		persistence.saveRoundData(round);
-		verify((roundDAOMock), times(1)).createRound(anyInt());
+		verify((roundDAOMock), times(1)).createRound(any(Round.class));
 	}
 
 
@@ -135,10 +144,7 @@ class PersistenceTest {
 	@Test
 	void saveTurnDataTest() {
 		persistence.saveFacilityTurn(round);
-		verify((roundDAOMock), times(1)).createRound(anyInt());
-		verify((roundDAOMock),times(1)).createFacilityOrder(anyInt(),any(FacilityTurnOrder.class));
-		verify((roundDAOMock),times(1)).createFacilityDeliver(anyInt(),any(FacilityTurnDeliver.class));
-		verify((roundDAOMock),times(1)).createFacilityTurn(anyInt(),any(FacilityTurn.class));
+		verify((roundDAOMock), times(1)).createRound(any(Round.class));
 	}
 
 	@Test
@@ -149,7 +155,20 @@ class PersistenceTest {
 
 	@Test
 	public void saveGameLogTest(){
-		persistence.saveGameLog(beerGame);
+		persistence.saveGameLog(beerGame,false);
 		verify((beerGameDAOMock),times(1)).createBeergame(beerGame);
+	}
+
+	@Test
+	public void saveGameLogTestWithStartedGame(){
+		persistence.saveGameLog(beerGame,true);
+		verify((beerGameDAOMock),times(0)).createBeergame(beerGame);
+		verify((roundDAOMock),times(0)).createRound(round);
+	}
+
+	@Test
+	public void saveNewLeaderTest(){
+		persistence.saveNewLeader(player);
+		verify((leaderDAOMock),times(1)).insertLeader(any(Player.class));
 	}
 }

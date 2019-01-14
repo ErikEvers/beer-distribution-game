@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_manage_players.ManagePlayersScreenController">
+   <children>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <bottom>
+            <GridPane prefHeight="61.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+								<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="81.0" minHeight="56.0" prefHeight="76.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+								 	<Button fx:id="kickPlayerButton" contentDisplay="RIGHT" disable="true" mnemonicParsing="false" onMouseClicked="#handleKickPlayerButtonClick" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #ff8000; -fx-cursor: hand;" text="%kick_player" textFill="WHITE" wrapText="true" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
+								  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleReturnToGameRoomButtonClick" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: #ff8000; -fx-cursor: hand;" text="%back_to_room" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" GridPane.valignment="TOP">
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin></Button>
+               </children>
+            </GridPane>
+         </bottom>
+         <center>
+            <AnchorPane BorderPane.alignment="CENTER">
+               <children>
+                  <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="337.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="636.0" minHeight="10.0" prefHeight="636.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TableView fx:id="playerTable" onMouseClicked="#handlePlayerSelection" GridPane.rowIndex="1">
+                          <columns>
+                            <TableColumn fx:id="playerIdColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%player_id" />
+                            <TableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%name" />
+														<TableColumn fx:id="ipColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="%IP" />
+                          </columns>
+                        </TableView>
+                        <Label style="-fx-text-fill: #1997ff;" text="%connected_players" GridPane.halignment="CENTER">
+													 <font>
+														 <Font size="19.0" />
+													 </font>
+												</Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                     </padding>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

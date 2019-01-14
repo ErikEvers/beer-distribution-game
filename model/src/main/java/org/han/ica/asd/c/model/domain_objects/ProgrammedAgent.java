@@ -26,4 +26,9 @@ public class ProgrammedAgent implements IDomainModel{
     public void setProgrammedBusinessRules(List<ProgrammedBusinessRules> programmedBusinessRules) {
         this.programmedBusinessRules = programmedBusinessRules;
     }
+
+    @Override
+    public String toString() {
+        return this.programmedAgentName;
+    }
 }

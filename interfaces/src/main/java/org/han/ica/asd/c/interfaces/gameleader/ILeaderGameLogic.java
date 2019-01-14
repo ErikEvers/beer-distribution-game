@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.interfaces.gameleader;
 
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 /**
@@ -13,7 +14,7 @@ public interface ILeaderGameLogic {
      * @param round a Round object containing the turns of all facilities in a beer game instance.
      * @return a Round object containing updated game values which will be distributed to all players using the communication component.
      */
-    Round calculateRound(Round round);
+    Round calculateRound(Round round, BeerGame beerGame);
 
     /**
      * Adds a local participant to the game when the connection to a facility is interrupted.
