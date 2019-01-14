@@ -292,7 +292,7 @@ public class Replacer {
      * @param round the round
      * @param facilityType the desired facility type
      * @param attribute an attribute like inventory
-     * @param highestOrLowest if the filter is applied using highest or lowest
+     * @param highestOrLowest
      */
     public void replacePerson(Action action, Round round, GameValue facilityType, GameValue attribute, GameValue highestOrLowest) {
         try {

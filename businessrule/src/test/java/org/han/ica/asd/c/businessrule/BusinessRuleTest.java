@@ -277,7 +277,7 @@ class BusinessRuleTest {
     }
     @Test
     void replaceRegionalWarehouseWithLowestOutGoingGoodsOrder() {
-        String input = "if inventory is 20 then order 20 from retailer where outgoing goods is lowest";
+        String input = "if inventory is 20 then order 20 from wholesaler where outgoing goods is lowest";
         String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
