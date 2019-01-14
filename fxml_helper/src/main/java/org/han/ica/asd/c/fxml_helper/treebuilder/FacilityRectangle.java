@@ -38,9 +38,6 @@ public class FacilityRectangle extends StackPane {
         rectangle.setStrokeType(StrokeType.INSIDE);
         rectangle.setArcHeight(5);
         rectangle.setArcWidth(5);
-        if(text.getText().length() > 0) {
-					rectangle.setWidth((text.getText().length()/2 * textSize) + 5);
-				}
 
 				this.getChildren().addAll(rectangle, text);
 
