@@ -53,18 +53,23 @@ public class RoundDAO {
 	 * @param round The round that the players have played
 	 */
 	public void createRound(Round round) {
-		Connection conn = databaseConnection.connect();
-		executePreparedStatement(round.getRoundId(), conn, CREATE_ROUND);
-		for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
-			createFacilityTurn(round.getRoundId(),facilityTurn);
+		if(getRound(round.getRoundId()) != null){
+			updateRound(round);
 		}
+		else {
+			Connection conn = databaseConnection.connect();
+			executePreparedStatement(round.getRoundId(), conn, CREATE_ROUND);
+			for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
+				createFacilityTurn(round.getRoundId(), facilityTurn);
+			}
 
-		for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
-			createFacilityOrder(round.getRoundId(),facilityTurnOrder);
-		}
+			for (FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
+				createFacilityOrder(round.getRoundId(), facilityTurnOrder);
+			}
 
-		for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
-			createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+			for (FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
+				createFacilityDeliver(round.getRoundId(), facilityTurnDeliver);
+			}
 		}
 	}
 

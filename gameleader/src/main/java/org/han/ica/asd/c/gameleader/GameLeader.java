@@ -44,7 +44,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private static RoomModel roomModel;
     private static BeerGame game;
 
-		private Round previousRoundData;
+    private Round previousRoundData;
     private Round currentRoundData;
 
     private int highestPlayerId = 0;
