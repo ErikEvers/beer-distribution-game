@@ -185,8 +185,12 @@ public class BusinessRule extends ASTNode {
      */
     public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId) {
         findLeafAndReplaceComparisonStatement(condition, round, facilityId);
-        findLeafAndReplaceAction(action.getComparisonStatement());
-        replacePerson(round);
+        if(action.hasPerson()) {
+            findLeafAndReplaceAction(action.getComparisonStatement());
+            replacePerson(round);
+        }else{
+            findLeafAndReplaceComparisonStatement(action, round, facilityId);
+        }
     }
 
     private void replacePerson(Round round) {
