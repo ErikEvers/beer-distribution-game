@@ -231,7 +231,7 @@ class BusinessRuleTest {
     Provider<Fixtures> tmp;
 
     @Test
-    void replacePersonWithHighest() {
+    void replaceFactoryWithHighest() {
         String input = "if inventory is 20 then order 20 from factory where inventory is highest";
         String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(5)))";
         BusinessRule businessRule = parseString(input);
@@ -240,13 +240,59 @@ class BusinessRuleTest {
     }
 
     @Test
-    void replacePersonWithLowest() {
-        String input = "if inventory is 20 then order 20 from factory where inventory is lowest";
-        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(0)))";
+    void replaceRetailerWithLowest() {
+        String input = "if inventory is 20 then order 20 from retailer where ordered is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
         assertEquals(expected, businessRule.encode());
     }
+
+
+    @Test
+    void replaceWholesalerWithHighest() {
+        String input = "if inventory is 20 then order 20 from regional warehouse where outgoing goods is highest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(9)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+    @Test
+    void replaceRegionalWarehouseWithLowest() {
+        String input = "if inventory is 20 then order 20 from retailer where back orders is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+    @Test
+    void replaceRegionalWarehouseWithLowestIncomingOrder() {
+        String input = "if inventory is 20 then order 20 from retailer where incoming order is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+    @Test
+    void replaceRegionalWarehouseWithLowestOutGoingGoodsOrder() {
+        String input = "if inventory is 20 then order 20 from retailer where outgoing goods is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+    @Test
+    void replaceRegionalWarehouseWithLowestBudget() {
+        String input = "if inventory is 20 then order 20 from retailer where budget is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
 
     BusinessRule parseString(String input) {
         CharStream inputStream = CharStreams.fromString(input);
