@@ -25,9 +25,11 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
@@ -187,19 +189,22 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
     public void startGame() throws BeerGameException, TransactionException {
-			//persistence.saveGameLog(game);
-//			for(Player player: game.getPlayers()) {
-//				if(player.getFacility() == null) {
-//					throw new BeerGameException("Every player needs to control a facility");
-//				}
-//			}
+			for(Player player: game.getPlayers()) {
+				if(player.getFacility() == null) {
+					throw new BeerGameException("Every player needs to control a facility");
+				}
+			}
+            //persistence.saveGameLog(game);
+            List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
 			for(GameAgent agent : game.getAgents()) {
-			    Agent tempAgent = agentProvider.get();
-			    tempAgent.setFacility(agent.getFacility());
-			    tempAgent.setGameAgentName(agent.getGameAgentName());
-			    tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
-			    tempAgent.setConfiguration(game.getConfiguration());
-			    gameLogic.addLocalParticipant(tempAgent);
+			    if(!takenFacilityIds.contains(agent.getFacility().getFacilityId())) {
+                    Agent tempAgent = agentProvider.get();
+                    tempAgent.setFacility(agent.getFacility());
+                    tempAgent.setGameAgentName(agent.getGameAgentName());
+                    tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
+                    tempAgent.setConfiguration(game.getConfiguration());
+                    gameLogic.addLocalParticipant(tempAgent);
+                }
             }
 			connectorForLeader.startRoom(roomModel);
 			connectorForLeader.sendGameStart(game);

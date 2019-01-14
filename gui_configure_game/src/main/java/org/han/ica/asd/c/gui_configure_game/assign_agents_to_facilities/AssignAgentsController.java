@@ -16,6 +16,7 @@ import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 
@@ -134,7 +135,9 @@ public class AssignAgentsController {
     }
 
     public void handleStartGameButtonClick() {
-        gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame());
+        for (GameAgent agent : gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame())) {
+            gameLeader.getBeerGame().getAgents().add(agent);
+        }
         initTree();
 				try {
 					gameLeader.startGame();
