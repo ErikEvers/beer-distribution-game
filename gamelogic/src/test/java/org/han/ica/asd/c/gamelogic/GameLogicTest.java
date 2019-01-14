@@ -7,8 +7,8 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.participants.fakes.PlayerFake;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -24,6 +24,7 @@ public class GameLogicTest {
     private ParticipantsPool participantsPool;
     private IConnectedForPlayer communication;
     private IGameStore persistence;
+    private BeerGame beerGameMock;
 
     @BeforeEach
     public void setup() {
@@ -40,7 +41,9 @@ public class GameLogicTest {
         });
         gameLogic = injector.getInstance(GameLogic.class);
         gameLogic.setParticipantsPool(participantsPool);
-        gameLogic.gameStartReceived(mock(BeerGame.class));
+
+        beerGameMock = mock(BeerGame.class);
+        gameLogic.gameStartReceived(beerGameMock);
     }
 
     @Test
@@ -57,6 +60,11 @@ public class GameLogicTest {
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
         verify(communication, times(1)).sendTurnData(turn);
+    }
+
+    @Test
+    public void seeOtherFacilitiesReturnsBeerGame() {
+        Assert.assertEquals(beerGameMock, gameLogic.seeOtherFacilities());
     }
 
     @Test
@@ -111,5 +119,68 @@ public class GameLogicTest {
     public void roundModelReceivedCallsLocalParticipants() {
         gameLogic.roundModelReceived(mock(Round.class));
         verify(participantsPool, times(1)).excecuteRound(any(Round.class));
+    }
+
+    @Test
+    public void getAllGamesCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Act
+        gameLogic.getAllGames();
+
+        //Assert
+        verify(communication, times(1)).getAllGames();
+    }
+
+    @Test
+    public void connectToGameCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Act
+        gameLogic.connectToGame("");
+
+        //Assert
+        verify(communication, times(1)).connectToGame("");
+    }
+
+    @Test
+    public void requestFacilityUsageCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Arrange
+        Facility facility = mock(Facility.class);
+
+        //Act
+        gameLogic.requestFacilityUsage(facility);
+
+        //Assert
+        verify(communication, times(1)).requestFacilityUsage(facility);
+    }
+
+    @Test
+    public void getAllFacilitiesCallsMethodOfSameNameOnceInIConnectedForPlayer() {
+        //Act
+        gameLogic.getAllFacilities();
+
+        //Assert
+        verify(communication, times(1)).getAllFacilities();
+    }
+
+    @Test
+    public void selectAgentCallsSaveSelectedAgentOnceInIPersistence() {
+        //Arrange
+        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
+
+        //Act
+        gameLogic.selectAgent(programmedAgent);
+
+        //Assert
+        verify(persistence, times(1)).saveSelectedAgent(programmedAgent);
+    }
+
+    @Test
+    public void selectAgentCallsSendSelectedAgentOnceInIConnectedForPlayer() {
+        //Arrange
+        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
+
+        //Act
+        gameLogic.selectAgent(programmedAgent);
+
+        //Assert
+        verify(communication, times(1)).sendSelectedAgent(programmedAgent);
     }
 }

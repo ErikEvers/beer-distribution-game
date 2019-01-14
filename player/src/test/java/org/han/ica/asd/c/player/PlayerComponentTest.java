@@ -4,13 +4,15 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.gamelogic.GameLogic;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 
+import org.han.ica.asd.c.interfaces.player.IPlayerGameLogic;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -74,4 +76,16 @@ public class PlayerComponentTest {
         verify(logicMock, times(1)).getAllFacilities();
     }
 
+    @Test
+    void selectAgentCallsMethodOfSameNameOnceInGameLogicTest() {
+        //Arrange
+        playerComponent.gameLogic = mock(GameLogic.class);
+        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
+
+        //Act
+        playerComponent.selectAgent(programmedAgent);
+
+        //Assert
+        verify(playerComponent.gameLogic, times(1)).selectAgent(programmedAgent);
+    }
 }

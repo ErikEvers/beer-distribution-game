@@ -1,11 +1,10 @@
-package org.han.ica.asd.c.gamelogic.public_interfaces;
+package org.han.ica.asd.c.interfaces.player;
 
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import java.util.List;
-
-import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerGameLogic {
@@ -25,7 +24,7 @@ public interface IPlayerGameLogic {
      * Replaces the player with the given agent.
      * @param agent Agent that will replace the player.
      */
-    void letAgentTakeOverPlayer(Agent agent);
+    void letAgentTakeOverPlayer(IParticipant agent);
 
     /**
      * Replaces the agent with the player.
@@ -39,6 +38,8 @@ public interface IPlayerGameLogic {
     void requestFacilityUsage(Facility facility);
 
     List<Facility> getAllFacilities();
+
+    void selectAgent(ProgrammedAgent programmedAgent);
 
     int getRound();
 

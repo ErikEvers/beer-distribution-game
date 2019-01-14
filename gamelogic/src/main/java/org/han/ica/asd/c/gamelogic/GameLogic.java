@@ -1,10 +1,8 @@
 package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
-import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
+import org.han.ica.asd.c.interfaces.player.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -13,11 +11,10 @@ import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +23,7 @@ import java.util.List;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
+
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
     @Inject
     private IConnectedForPlayer communication;
@@ -72,7 +70,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param agent Agent that will replace the player.
      */
     @Override
-    public void letAgentTakeOverPlayer(Agent agent) {
+    public void letAgentTakeOverPlayer(IParticipant agent) {
         participantsPool.replacePlayerWithAgent(agent);
     }
 
@@ -86,13 +84,12 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public List<String> getAllGames() {
-        //Yet to be implemented
-        return new ArrayList<>();
+        return communication.getAllGames();
     }
 
     @Override
     public void connectToGame(String game) {
-        //Yet to be implemented
+        communication.connectToGame(game);
     }
 
     public Round calculateRound(Round round) {
@@ -118,15 +115,17 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.replaceAgentWithPlayer(player);
     }
 
-    @Override
-    public void requestFacilityUsage(Facility facility) {
-        //Yet to be implemented
+    public void sendTurnData(Round turn) {
+        communication.sendTurnData(turn);
+    }
+
+    public void addObserver(IConnectorObserver observer) {
+        communication.addObserver(observer);
     }
 
     @Override
-    public List<Facility> getAllFacilities() {
-        //Yet to be implemented.
-        return new ArrayList<>();
+    public void requestFacilityUsage(Facility facility) {
+        communication.requestFacilityUsage(facility);
     }
 
     public int getRound() {
@@ -138,10 +137,17 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         this.player = participant;
     }
 
-    /**
-     * @param currentRound The current round to save.
-     */
     @Override
+    public List<Facility> getAllFacilities() {
+        return communication.getAllFacilities();
+    }
+
+    @Override
+    public void selectAgent(ProgrammedAgent programmedAgent) {
+        persistence.saveSelectedAgent(programmedAgent);
+        communication.sendSelectedAgent(programmedAgent);
+    }
+
     public void roundModelReceived(Round currentRound) {
         persistence.saveRoundData(currentRound);
         participantsPool.excecuteRound(currentRound);

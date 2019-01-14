@@ -1,14 +1,16 @@
 package org.han.ica.asd.c.player;
 
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.player.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import javax.inject.Inject;
-import org.han.ica.asd.c.model.domain_objects.*;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +25,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     private IPlayGame ui;
 
     @Inject
-    private IPlayerGameLogic gameLogic;
+    IPlayerGameLogic gameLogic;
 
     @Inject
     public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
@@ -37,12 +39,12 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
 	@Override
 	public void activatePlayer() {
-		//stub for now
+		throw new NotImplementedException();
 	}
 
     @Override
     public void activateAgent() {
-        //Yet to be implemented.
+        throw new NotImplementedException();
     }
 
     @Override
@@ -52,8 +54,8 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
 
     @Override
-    public void selectAgent() {
-        //Yet to be implemented.
+    public void selectAgent(ProgrammedAgent programmedAgent) {
+        gameLogic.selectAgent(programmedAgent);
     }
 
     @Override

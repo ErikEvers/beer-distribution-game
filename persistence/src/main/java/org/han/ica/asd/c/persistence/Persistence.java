@@ -10,13 +10,8 @@ import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 
@@ -98,6 +93,11 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	@Override
 	public Player getPlayerById(String playerId) {
 		return playerDAO.getPlayer(playerId);
+	}
+
+	@Override
+	public void saveSelectedAgent(ProgrammedAgent agent) {
+		throw new NotImplementedException();
 	}
 
 	@Override
