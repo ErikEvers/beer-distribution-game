@@ -17,8 +17,8 @@ public class TurnHandler {
     Round processFacilityTurn(Round turnModel, Round currentRoundData) {
         currentRoundData.getFacilityOrders().addAll(turnModel.getFacilityOrders());
         currentRoundData.getFacilityTurnDelivers().addAll(turnModel.getFacilityTurnDelivers());
-        currentRoundData.getFacilityTurns().addAll(turnModel.getFacilityTurns());
-        persistenceLayer.saveFacilityTurn(turnModel);
+        //currentRoundData.getFacilityTurns().addAll(turnModel.getFacilityTurns());
+//        persistenceLayer.saveFacilityTurn(turnModel);
 
         return currentRoundData;
     }

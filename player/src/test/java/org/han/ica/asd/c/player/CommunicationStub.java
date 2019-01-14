@@ -6,8 +6,8 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 public class CommunicationStub implements IConnectedForPlayer {
 	@Override
-	public void sendTurnData(Round turn) {
-
+	public boolean sendTurnData(Round turn) {
+		return true;
 	}
 
 	@Override

@@ -1,18 +1,20 @@
 package org.han.ica.asd.c.player;
 
-import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
-import org.han.ica.asd.c.model.domain_objects.ProgrammedBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
@@ -20,55 +22,42 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class PlayerComponent implements IPlayerComponent {
+public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private Provider<Round> roundProvider;
     private Provider<FacilityTurnOrder> facilityTurnOrderProvider;
     private Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
 
-    private Configuration configuration;
-
     private static Player player;
-    private Round round;
+    private static Round round;
+    private static IPlayGame ui;
 
-    @Inject
     private IPlayerGameLogic gameLogic;
 
     @Inject
-    @Named("BusinessruleStore")
-    IBusinessRuleStore iBusinessRuleStore;
+    private IConnectorForSetup communication;
 
     @Inject
-    @Named("GameLogic")
-    IPlayerGameLogic iPlayerGameLogic;
+		@Named("PlayGame")
+    private IGUIHandler playGame;
 
     @Inject
-	public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider) {
-		this.roundProvider = roundProvider;
-		this.facilityTurnOrderProvider = facilityTurnOrderProvider;
-		this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+		public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
+				this.roundProvider = roundProvider;
+				this.facilityTurnOrderProvider = facilityTurnOrderProvider;
+				this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+				this.gameLogic = gameLogic;
+				gameLogic.setPlayer(this);
     }
 
 	@Override
 	public void activatePlayer() {
-        iPlayerGameLogic.letPlayerTakeOverAgent();
+		//stub for now
 	}
 
     @Override
-    public void activateGameAgent(String agentName, Facility facility) {
-        ProgrammedAgent programmedAgent = iBusinessRuleStore.getProgrammedGameAgent(agentName);
-
-        List <ProgrammedBusinessRules> programmedBusinessRules = programmedAgent.getProgrammedBusinessRules();
-
-        List<GameBusinessRules> gameBusinessRules = programmedBusinessRules
-                .stream()
-                .map(programmedBusinessRule -> new GameBusinessRules(programmedBusinessRule.getProgrammedBusinessRule(), programmedBusinessRule.getProgrammedAST()))
-                .collect(Collectors.toList());
-
-        Agent agent = new Agent(configuration, agentName, facility, gameBusinessRules);
-
-        iPlayerGameLogic.letAgentTakeOverPlayer(agent);
+    public void activateAgent() {
+        //Yet to be implemented.
     }
 
     @Override
@@ -98,14 +87,13 @@ public class PlayerComponent implements IPlayerComponent {
     }
 
     @Override
-    public BeerGame seeOtherFacilities() {
-        return gameLogic.seeOtherFacilities();
+    public BeerGame getBeerGame() {
+        return gameLogic.getBeerGame();
     }
 
-    public void startNewTurn() {
-        round = roundProvider.get();
-        round.setRoundId(gameLogic.getRound());
-    }
+    public Round getRound() {
+    	return round;
+		}
     
     @Override
     public void placeOrder(Facility facility, int amount) {
@@ -117,7 +105,6 @@ public class PlayerComponent implements IPlayerComponent {
             facilityTurnOrder.setFacilityIdOrderTo(facility.getFacilityId());
             facilityTurnOrder.setOrderAmount(amount);
             round.getFacilityOrders().add(facilityTurnOrder);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnOrderOptional.get().setOrderAmount(facilityTurnOrderOptional.get().getOrderAmount() + amount);
         }
@@ -132,19 +119,26 @@ public class PlayerComponent implements IPlayerComponent {
             facilityTurnDeliver.setFacilityIdDeliverTo(facility.getFacilityId());
             facilityTurnDeliver.setDeliverAmount(amount);
             round.getFacilityTurnDelivers().add(facilityTurnDeliver);
-            gameLogic.submitTurn(round);
         } else {
             facilityTurnDeliverOptional.get().setDeliverAmount(facilityTurnDeliverOptional.get().getDeliverAmount() + amount);
         }
     }
 
-    public void submitTurn() {
-        gameLogic.submitTurn(round);
+    public boolean submitTurn() {
+        return gameLogic.submitTurn(round);
     }
 
     @Override
     public void chooseFacility(Facility facility) {
-        //comm.chooseFacility(facility, player.getPlayerId());
+        try {
+            communication.chooseFacility(facility, player.getPlayerId());
+            player.setFacility(facility);
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
+						alert.showAndWait();
+        } catch (FacilityNotAvailableException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
+					alert.showAndWait();
+        }
     }
 
     @Override
@@ -152,15 +146,59 @@ public class PlayerComponent implements IPlayerComponent {
         return player.getFacility().getFacilityType().getFacilityName();
     }
 
-    public static void setPlayer(Player player) {
+    public void setPlayer(Player player) {
         PlayerComponent.player = player;
     }
 
-    public static Player getPlayer() {
+	@Override
+	public void clearPlayer() {
+		player = null;
+	}
+    @Override
+    public Player getPlayer() {
         return player;
     }
 
-    public Facility getFacility() {
+    @Override
+    public void setUi(IPlayGame game) {
+        ui = game;
+    }
+
+	@Override
+	public void clearUi() {
+		ui = null;
+	}
+
+	public Facility getFacility() {
         return player.getFacility();
+    }
+
+    public void startGame() {
+			Platform.runLater(() -> playGame.setupScreen());
+		}
+
+    /**
+     * doOrder will notify the  participant to make an order.
+     *
+     * @return The current beergame status.
+     */
+    @Override
+    public void roundStarted() {
+    	if(round == null || round.getRoundId() != gameLogic.getRoundId()) {
+				round = roundProvider.get();
+				round.setRoundId(gameLogic.getRoundId());
+			}
+    	Platform.runLater(() ->
+            ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
+    }
+
+    /**
+     * Returns the facility for the ParticipantPool to compare with other participants.
+     *
+     * @return The facility instance.
+     */
+    @Override
+    public int getFacilityId() {
+        return player.getFacility().getFacilityId();
     }
 }

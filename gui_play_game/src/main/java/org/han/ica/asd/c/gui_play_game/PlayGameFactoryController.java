@@ -1,15 +1,9 @@
 package org.han.ica.asd.c.gui_play_game;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.input.MouseEvent;
 import javafx.util.converter.IntegerStringConverter;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 
 public class PlayGameFactoryController extends PlayGame {
 
@@ -18,12 +12,6 @@ public class PlayGameFactoryController extends PlayGame {
 
     @FXML
     private TextField step2TextField;
-
-    @FXML
-    private ComboBox<Facility> cmbChooseOutgoingDelivery;
-
-    @FXML
-    private TextField txtOutgoingDelivery;
 
     /**
      * Button event handling the order sending.
@@ -37,10 +25,10 @@ public class PlayGameFactoryController extends PlayGame {
     /**
      * Button event handling the order sending.
      */
+    @Override
     public void handleSendOrderButtonClick() {
-        //TODO get the real order from the facility ordering from this one.
         int order = Integer.parseInt(outgoingOrderTextField.getText());
-        playerComponent.placeOrder(null, order);
+        playerComponent.placeOrder(playerComponent.getPlayer().getFacility(), order);
     }
 
     @Override
@@ -48,17 +36,8 @@ public class PlayGameFactoryController extends PlayGame {
         fillOutGoingDeliveryFacilityComboBox(cmbChooseOutgoingDelivery);
     }
 
-    /**
-     * Button event handling the order delivering.
-     */
-    public void handleSendDeliveryButtonClick(ActionEvent actionEvent) {
-        super.handleSendDeliveryButtonClick();
-    }
-
-    public void submitTurnButonClicked(MouseEvent mouseEvent) {
-
-        outgoingGoodsNextRound.setText(Integer.toString(orderFake.orders()[roundNumber]));
-        roundNumber++;
+    @Override
+    public void submitTurnButtonClicked() {
         int step2Value = 0;
 
         if (!outgoingOrderTextField.getText().trim().isEmpty()) {
@@ -69,13 +48,17 @@ public class PlayGameFactoryController extends PlayGame {
                 step2TextField.setText(step1TextField.getText());
             }
 
-            //TODO get the real calculation result from the game logic component/from the game leader.
-            inventory.setText(calculateInventory(step2Value, Integer.parseInt(outgoingGoodsNextRound.getText())));
             step1TextField.setText(outgoingOrderTextField.getText());
             outgoingOrderTextField.clear();
 
         }
 
-        super.submitTurnButonClicked();
+        super.submitTurnButtonClicked();
+    }
+
+    @Override
+    public void refreshInterfaceWithCurrentStatus(int roundId) {
+        super.refreshInterfaceWithCurrentStatus(roundId);
+        fillComboBox();
     }
 }

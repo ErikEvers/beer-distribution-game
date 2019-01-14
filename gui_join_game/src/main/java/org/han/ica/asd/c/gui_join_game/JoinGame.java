@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public class JoinGame implements IGUIHandler {
     @Override
     public void setData(Object[] data) {
-
+        // not used in this handler
     }
 
     @Override
