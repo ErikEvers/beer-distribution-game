@@ -65,7 +65,6 @@ public class FaultDetectorLeader extends TimerTask {
      */
     @Override
     public void run() {
-        //TODO remove the printlns.
         //Tries to make the connection once every set interval.
         ips = nodeInfoList.getActiveIpsWithoutLeader();
         for (String ip : ips) {
@@ -92,7 +91,7 @@ public class FaultDetectorLeader extends TimerTask {
     public void start() {
         //running timer task as daemon thread
         timer = createTimer(true);
-        timer.scheduleAtFixedRate(this, 0, Global.FaultDetectionInterval);
+        timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerLeader.setObservers(observers);
     }
 
@@ -177,7 +176,6 @@ public class FaultDetectorLeader extends TimerTask {
             faultDetectionClient.makeConnection(ip);
             failLog.reset(ip);
             faultHandlerLeader.reset(ip);
-            nodeInfoList.updateIsConnected(ip, true);
         } catch (NodeCantBeReachedException e) {
             if (!failLog.checkIfIpIsFailed(ip)) {
                 failLog.increment(ip);

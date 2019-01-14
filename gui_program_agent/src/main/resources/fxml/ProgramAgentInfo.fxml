@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
 <AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_program_agent.ProgramAgentInfoController">
     <children>
         <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -18,9 +27,7 @@
                 <RowConstraints maxHeight="186.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label alignment="BOTTOM_LEFT" prefHeight="73.0" prefWidth="854.0" text="%businessrule_info_header"
-                       textFill="#ff8000" GridPane.columnIndex="1" GridPane.halignment="LEFT"
-                       GridPane.valignment="BOTTOM">
+                <Label alignment="BOTTOM_LEFT" prefHeight="73.0" prefWidth="854.0" text="%businessrule_info_header" textFill="#ff8000" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" />
                     </GridPane.margin>
@@ -42,42 +49,37 @@
                         <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="%close_button" textFill="WHITE" GridPane.columnIndex="3" />
                     </children>
                 </GridPane>
-                <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1"
-                         GridPane.rowIndex="1">
+                <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <tabs>
                         <Tab text="Default rule">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <Label layoutX="14.0" layoutY="14.0" prefHeight="60.0" prefWidth="938.0"
-                                               text="%info_default_content" wrapText="true"/>
-                                        <TableView layoutY="74.0" prefHeight="103.0" prefWidth="228.0"
-                                                   style="-fx-background-color: transparent;">
+                                        <Label layoutX="14.0" layoutY="14.0" prefHeight="60.0" prefWidth="938.0" text="%info_default_content" wrapText="true" />
+                                        <TableView layoutY="74.0" prefHeight="103.0" prefWidth="228.0" style="-fx-background-color: transparent;">
                                             <placeholder>
-                                                <Label text=""/>
+                                                <Label text="" />
                                             </placeholder>
                                             <columns>
-                                                <TableColumn editable="false" minWidth="1.0" prefWidth="106.0"
-                                                             sortable="false" text="Default">
+                                                <TableColumn editable="false" minWidth="1.0" prefWidth="106.0" sortable="false" text="Default">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="Default">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="Default"/>
+                                                                <TableColumn prefWidth="75.0" text="Default" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
-                                                <TableColumn editable="false" prefWidth="507.0" sortable="false"
-                                                             text="%table_action">
+                                                <TableColumn editable="false" prefWidth="507.0" sortable="false" text="%table_action">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="%table_action">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="Order"/>
+                                                                <TableColumn prefWidth="75.0" text="Order" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="10"/>
+                                                                <TableColumn prefWidth="75.0" text="10" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
@@ -92,76 +94,67 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <Label layoutX="9.0" layoutY="9.0" prefHeight="74.0" prefWidth="938.0"
-                                               text="%info_if_content" wrapText="true"/>
-                                        <TableView editable="false" fixedCellSize="0.0" layoutY="102.0"
-                                                   prefHeight="103.0" prefWidth="630.0"
-                                                   style="-fx-background-color: transparent;">
+                                        <Label layoutX="9.0" layoutY="9.0" prefHeight="74.0" prefWidth="938.0" text="%info_if_content" wrapText="true" />
+                                        <TableView editable="false" fixedCellSize="0.0" layoutY="102.0" prefHeight="103.0" prefWidth="630.0" style="-fx-background-color: transparent;">
                                             <placeholder>
-                                                <Label text=""/>
+                                                <Label text="" />
                                             </placeholder>
                                             <columns>
-                                                <TableColumn editable="false" prefWidth="107.0" sortable="false"
-                                                             text="If">
+                                                <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="If">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="If"/>
+                                                                <TableColumn prefWidth="75.0" text="If" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
-                                                <TableColumn editable="false" prefWidth="177.0" sortable="false"
-                                                             text="%table_comparison">
+                                                <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="inventory"/>
+                                                                <TableColumn prefWidth="75.0" text="inventory" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="%table_operation">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="is"/>
+                                                                <TableColumn prefWidth="75.0" text="is" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="20"/>
+                                                                <TableColumn prefWidth="75.0" text="20" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
-                                                <TableColumn editable="false" prefWidth="350.0" sortable="false"
-                                                             text="Then">
+                                                <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="Then">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="then"/>
+                                                                <TableColumn prefWidth="75.0" text="then" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
-                                                <TableColumn editable="false" prefWidth="253.0" sortable="false"
-                                                             text="%table_action">
+                                                <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                     <columns>
                                                         <TableColumn text="%table_action">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="order"/>
+                                                                <TableColumn prefWidth="75.0" text="order" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="173.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="178.0" text="35"/>
+                                                                <TableColumn prefWidth="178.0" text="35" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
                                             </columns>
                                         </TableView>
-                                        <Label layoutX="14.0" layoutY="226.0" prefHeight="74.0" prefWidth="938.0"
-                                               text="IF &amp; THEN" wrapText="true"/>
-                                        <Label layoutX="14.0" layoutY="263.0" prefHeight="74.0" prefWidth="938.0"
-                                               text="%info_if_then_content" wrapText="true"/>
+                                        <Label layoutX="14.0" layoutY="226.0" prefHeight="74.0" prefWidth="938.0" text="IF &amp; THEN" wrapText="true" />
+                                        <Label layoutX="14.0" layoutY="263.0" prefHeight="74.0" prefWidth="938.0" text="%info_if_then_content" wrapText="true" />
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -170,258 +163,203 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <Label prefHeight="74.0" prefWidth="938.0" text="%info_comparison_content"
-                                               wrapText="true"/>
-                                        <TableView layoutX="5.0" layoutY="86.0" prefHeight="103.0" prefWidth="854.0"
-                                                   style="-fx-background-color: transparent;">
+                                        <Label prefHeight="74.0" prefWidth="938.0" text="%info_comparison_content" wrapText="true" />
+                                        <TableView layoutX="5.0" layoutY="86.0" prefHeight="103.0" prefWidth="854.0" style="-fx-background-color: transparent;">
                                             <placeholder>
-                                                <Label text=""/>
+                                                <Label text="" />
                                             </placeholder>
                                             <columns>
-                                                <TableColumn editable="false" prefWidth="107.0" sortable="false"
-                                                             text="If">
+                                                <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="If">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="if"/>
+                                                                <TableColumn prefWidth="75.0" text="if" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
-                                                <TableColumn editable="false" prefWidth="177.0" sortable="false"
-                                                             text="%table_comparison">
+                                                <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="inventory"/>
+                                                                <TableColumn prefWidth="75.0" text="inventory" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="%table_operation">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="is"/>
+                                                                <TableColumn prefWidth="75.0" text="is" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="20"/>
+                                                                <TableColumn prefWidth="75.0" text="20" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="Operator">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="than"/>
+                                                                <TableColumn prefWidth="75.0" text="and" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="Back orders"/>
+                                                                <TableColumn prefWidth="75.0" text="Back orders" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="71.0" text="%table_operation">
                                                             <columns>
-                                                                <TableColumn prefWidth="100.0" text="is higher than"/>
+                                                                <TableColumn prefWidth="100.0" text="is higher than" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="79.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="30"/>
+                                                                <TableColumn prefWidth="75.0" text="30" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
-                                                <TableColumn editable="false" prefWidth="350.0" sortable="false"
-                                                             text="Then">
+                                                <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="Then">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="then"/>
+                                                                <TableColumn prefWidth="75.0" text="then" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
-                                                <TableColumn editable="false" prefWidth="294.0" sortable="false"
-                                                             text="%table_action">
+                                                <TableColumn editable="false" prefWidth="294.0" sortable="false" text="%table_action">
                                                     <columns>
                                                         <TableColumn prefWidth="75.0" text="%table_action">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="order"/>
+                                                                <TableColumn prefWidth="75.0" text="order" />
                                                             </columns>
                                                         </TableColumn>
                                                         <TableColumn prefWidth="75.0" text="%table_value">
                                                             <columns>
-                                                                <TableColumn prefWidth="75.0" text="35"/>
+                                                                <TableColumn prefWidth="75.0" text="35" />
                                                             </columns>
                                                         </TableColumn>
                                                     </columns>
                                                 </TableColumn>
                                             </columns>
                                         </TableView>
-                                        <TabPane layoutX="9.0" layoutY="201.0" prefHeight="402.0" prefWidth="934.0"
-                                                 tabClosingPolicy="UNAVAILABLE">
+                                        <TabPane layoutX="9.0" layoutY="201.0" prefHeight="402.0" prefWidth="934.0" tabClosingPolicy="UNAVAILABLE">
                                             <tabs>
                                                 <Tab text="%info_comparison_tab_basic">
                                                     <content>
-                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
-                                                                    prefWidth="200.0">
+                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                             <children>
-                                                                <Label prefHeight="74.0" prefWidth="938.0"
-                                                                       text="%info_comparison_basic_content"
-                                                                       wrapText="true"/>
-                                                                <Label layoutY="162.0" prefHeight="74.0"
-                                                                       prefWidth="938.0"
-                                                                       text="%info_comparison_basic_percentage_content"
-                                                                       wrapText="true"/>
-                                                                <TableView editable="false" fixedCellSize="0.0"
-                                                                           layoutY="74.0" prefHeight="103.0"
-                                                                           prefWidth="877.0"
-                                                                           style="-fx-background-color: transparent;">
+                                                                <Label prefHeight="74.0" prefWidth="938.0" text="%info_comparison_basic_content" wrapText="true" />
+                                                                <Label layoutY="162.0" prefHeight="74.0" prefWidth="938.0" text="%info_comparison_basic_percentage_content" wrapText="true" />
+                                                                <TableView editable="false" fixedCellSize="0.0" layoutY="74.0" prefHeight="103.0" prefWidth="877.0" style="-fx-background-color: transparent;">
                                                                     <placeholder>
-                                                                        <Label text=""/>
+                                                                        <Label text="" />
                                                                     </placeholder>
                                                                     <columns>
-                                                                        <TableColumn editable="false" prefWidth="107.0"
-                                                                                     sortable="false" text="If">
+                                                                        <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                             <columns>
                                                                                 <TableColumn prefWidth="75.0" text="If">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="If"/>
+                                                                                        <TableColumn prefWidth="75.0" text="If" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="177.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_comparison">
+                                                                        <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="250.0"
-                                                                                                     text="inventory+10"/>
+                                                                                        <TableColumn prefWidth="250.0" text="inventory+10" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_operation">
+                                                                                <TableColumn prefWidth="75.0" text="%table_operation">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="is"/>
+                                                                                        <TableColumn prefWidth="75.0" text="is" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="20"/>
+                                                                                        <TableColumn prefWidth="75.0" text="20" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="350.0"
-                                                                                     sortable="false" text="Then">
+                                                                        <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="Then">
+                                                                                <TableColumn prefWidth="75.0" text="Then">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="then"/>
+                                                                                        <TableColumn prefWidth="75.0" text="then" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="553.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_action">
+                                                                        <TableColumn editable="false" prefWidth="553.0" sortable="false" text="%table_action">
                                                                             <columns>
                                                                                 <TableColumn text="%table_action">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="order"/>
+                                                                                        <TableColumn prefWidth="75.0" text="order" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="478.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="478.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="250.0"
-                                                                                                     text="Inventory*2"/>
+                                                                                        <TableColumn prefWidth="250.0" text="Inventory*2" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
                                                                     </columns>
                                                                 </TableView>
-                                                                <TableView editable="false" fixedCellSize="0.0"
-                                                                           layoutY="250.0" prefHeight="103.0"
-                                                                           prefWidth="877.0"
-                                                                           style="-fx-background-color: transparent;">
+                                                                <TableView editable="false" fixedCellSize="0.0" layoutY="250.0" prefHeight="103.0" prefWidth="877.0" style="-fx-background-color: transparent;">
                                                                     <placeholder>
-                                                                        <Label text=""/>
+                                                                        <Label text="" />
                                                                     </placeholder>
                                                                     <columns>
-                                                                        <TableColumn editable="false" prefWidth="107.0"
-                                                                                     sortable="false" text="If">
+                                                                        <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                             <columns>
                                                                                 <TableColumn prefWidth="75.0" text="If">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="If"/>
+                                                                                        <TableColumn prefWidth="75.0" text="If" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="177.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_comparison">
+                                                                        <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="250.0"
-                                                                                                     text="inventory+10"/>
+                                                                                        <TableColumn prefWidth="250.0" text="inventory+10" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_operation">
+                                                                                <TableColumn prefWidth="75.0" text="%table_operation">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="is"/>
+                                                                                        <TableColumn prefWidth="75.0" text="is" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="150.0"
-                                                                                                     text="20% of back order"/>
+                                                                                        <TableColumn prefWidth="150.0" text="20% of back order" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="350.0"
-                                                                                     sortable="false" text="Then">
+                                                                        <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="Then">
+                                                                                <TableColumn prefWidth="75.0" text="Then">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="then"/>
+                                                                                        <TableColumn prefWidth="75.0" text="then" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="253.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_action">
+                                                                        <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                             <columns>
                                                                                 <TableColumn text="%table_action">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="order"/>
+                                                                                        <TableColumn prefWidth="75.0" text="order" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="173.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="173.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="178.0"
-                                                                                                     text="30"/>
+                                                                                        <TableColumn prefWidth="178.0" text="30" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
@@ -434,85 +372,61 @@
                                                 </Tab>
                                                 <Tab text="%info_comparison_tab_linear">
                                                     <content>
-                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
-                                                                    prefWidth="200.0">
+                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                             <children>
-                                                                <Label prefHeight="74.0" prefWidth="938.0"
-                                                                       text="%info_comparison_linear_content"
-                                                                       wrapText="true"/>
-                                                                <TableView editable="false" fixedCellSize="0.0"
-                                                                           layoutY="100.0" prefHeight="103.0"
-                                                                           prefWidth="805.0"
-                                                                           style="-fx-background-color: transparent;">
+                                                                <Label prefHeight="74.0" prefWidth="938.0" text="%info_comparison_linear_content" wrapText="true" />
+                                                                <TableView editable="false" fixedCellSize="0.0" layoutY="100.0" prefHeight="103.0" prefWidth="805.0" style="-fx-background-color: transparent;">
                                                                     <placeholder>
-                                                                        <Label text=""/>
+                                                                        <Label text="" />
                                                                     </placeholder>
                                                                     <columns>
-                                                                        <TableColumn editable="false" prefWidth="107.0"
-                                                                                     sortable="false" text="If">
+                                                                        <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                             <columns>
                                                                                 <TableColumn prefWidth="75.0" text="If">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="If"/>
+                                                                                        <TableColumn prefWidth="75.0" text="If" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="177.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_comparison">
+                                                                        <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="250.0"
-                                                                                                     text="inventory of factory"/>
+                                                                                        <TableColumn prefWidth="250.0" text="inventory of factory" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_operation">
+                                                                                <TableColumn prefWidth="75.0" text="%table_operation">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="is"/>
+                                                                                        <TableColumn prefWidth="75.0" text="is" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="20"/>
+                                                                                        <TableColumn prefWidth="75.0" text="20" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="350.0"
-                                                                                     sortable="false" text="Then">
+                                                                        <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="Then">
+                                                                                <TableColumn prefWidth="75.0" text="Then">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="then"/>
+                                                                                        <TableColumn prefWidth="75.0" text="then" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="253.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_action">
+                                                                        <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                             <columns>
                                                                                 <TableColumn text="%table_action">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="order"/>
+                                                                                        <TableColumn prefWidth="75.0" text="order" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="173.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="173.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="178.0"
-                                                                                                     text="30"/>
+                                                                                        <TableColumn prefWidth="178.0" text="30" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
@@ -525,85 +439,61 @@
                                                 </Tab>
                                                 <Tab text="%info_comparison_tab_piramid_graph">
                                                     <content>
-                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
-                                                                    prefWidth="200.0">
+                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                             <children>
-                                                                <Label prefHeight="74.0" prefWidth="938.0"
-                                                                       text="%info_comparison_piramid_content"
-                                                                       wrapText="true"/>
-                                                                <TableView editable="false" fixedCellSize="0.0"
-                                                                           layoutY="100.0" prefHeight="103.0"
-                                                                           prefWidth="804.0"
-                                                                           style="-fx-background-color: transparent;">
+                                                                <Label prefHeight="74.0" prefWidth="938.0" text="%info_comparison_piramid_content" wrapText="true" />
+                                                                <TableView editable="false" fixedCellSize="0.0" layoutY="100.0" prefHeight="103.0" prefWidth="804.0" style="-fx-background-color: transparent;">
                                                                     <placeholder>
-                                                                        <Label text=""/>
+                                                                        <Label text="" />
                                                                     </placeholder>
                                                                     <columns>
-                                                                        <TableColumn editable="false" prefWidth="107.0"
-                                                                                     sortable="false" text="If">
+                                                                        <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                             <columns>
                                                                                 <TableColumn prefWidth="75.0" text="If">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="If"/>
+                                                                                        <TableColumn prefWidth="75.0" text="If" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="177.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_comparison">
+                                                                        <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="250.0"
-                                                                                                     text="inventory of above"/>
+                                                                                        <TableColumn prefWidth="250.0" text="inventory of above" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_operation">
+                                                                                <TableColumn prefWidth="75.0" text="%table_operation">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="is"/>
+                                                                                        <TableColumn prefWidth="75.0" text="is" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="75.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="20"/>
+                                                                                        <TableColumn prefWidth="75.0" text="20" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="350.0"
-                                                                                     sortable="false" text="Then">
+                                                                        <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                             <columns>
-                                                                                <TableColumn prefWidth="75.0"
-                                                                                             text="Then">
+                                                                                <TableColumn prefWidth="75.0" text="Then">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="then"/>
+                                                                                        <TableColumn prefWidth="75.0" text="then" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
                                                                         </TableColumn>
-                                                                        <TableColumn editable="false" prefWidth="253.0"
-                                                                                     sortable="false"
-                                                                                     text="%table_action">
+                                                                        <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                             <columns>
                                                                                 <TableColumn text="%table_action">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="75.0"
-                                                                                                     text="order"/>
+                                                                                        <TableColumn prefWidth="75.0" text="order" />
                                                                                     </columns>
                                                                                 </TableColumn>
-                                                                                <TableColumn prefWidth="173.0"
-                                                                                             text="%table_value">
+                                                                                <TableColumn prefWidth="173.0" text="%table_value">
                                                                                     <columns>
-                                                                                        <TableColumn prefWidth="178.0"
-                                                                                                     text="30"/>
+                                                                                        <TableColumn prefWidth="178.0" text="30" />
                                                                                     </columns>
                                                                                 </TableColumn>
                                                                             </columns>
@@ -628,309 +518,243 @@
                                    <tabs>
                                        <Tab text="Order">
                                            <content>
-                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
-                                                           prefWidth="200.0">
+                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="65.0"
-                                                                  prefHeight="103.0" prefWidth="630.0"
-                                                                  style="-fx-background-color: transparent;">
+                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="65.0" prefHeight="103.0" prefWidth="630.0" style="-fx-background-color: transparent;">
                                                            <placeholder>
-                                                               <Label text=""/>
+                                                               <Label text="" />
                                                            </placeholder>
                                                            <columns>
-                                                               <TableColumn editable="false" prefWidth="107.0"
-                                                                            sortable="false" text="If">
+                                                               <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="If">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="If"/>
+                                                                               <TableColumn prefWidth="75.0" text="If" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="177.0"
-                                                                            sortable="false" text="%table_comparison">
+                                                               <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                    <columns>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="is"/>
+                                                                               <TableColumn prefWidth="75.0" text="is" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="350.0"
-                                                                            sortable="false" text="Then">
+                                                               <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Then">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="then"/>
+                                                                               <TableColumn prefWidth="75.0" text="then" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="253.0"
-                                                                            sortable="false" text="%table_action">
+                                                               <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                    <columns>
                                                                        <TableColumn text="%table_action">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="order"/>
+                                                                               <TableColumn prefWidth="75.0" text="order" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="173.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="173.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="178.0"
-                                                                                            text="35"/>
+                                                                               <TableColumn prefWidth="178.0" text="35" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
                                                            </columns>
                                                        </TableView>
-                                                       <Label layoutY="20.0" prefHeight="45.0" prefWidth="956.0"
-                                                              text="%order_basic_content" wrapText="true"/>
-                                                       <Label prefHeight="27.0" prefWidth="956.0"
-                                                              text="%info_comparison_tab_basic" wrapText="true">
+                                                       <Label layoutY="20.0" prefHeight="45.0" prefWidth="956.0" text="%order_basic_content" wrapText="true" />
+                                                       <Label prefHeight="27.0" prefWidth="956.0" text="%info_comparison_tab_basic" wrapText="true">
                                                            <font>
-                                                               <Font size="14.0"/>
+                                                               <Font size="14.0" />
                                                            </font>
                                                        </Label>
-                                                       <Label layoutY="168.0" prefHeight="27.0" prefWidth="956.0"
-                                                              text="%info_comparison_tab_piramid_graph" wrapText="true">
+                                                       <Label layoutY="168.0" prefHeight="27.0" prefWidth="956.0" text="%info_comparison_tab_piramid_graph" wrapText="true">
                                                            <font>
-                                                               <Font size="14.0"/>
+                                                               <Font size="14.0" />
                                                            </font>
                                                        </Label>
-                                                       <Label layoutY="195.0" prefHeight="45.0" prefWidth="956.0"
-                                                              text="%order_piramid_graph" wrapText="true"/>
-                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="282.0"
-                                                                  prefHeight="103.0" prefWidth="968.0"
-                                                                  style="-fx-background-color: transparent;">
+                                                       <Label layoutY="195.0" prefHeight="45.0" prefWidth="956.0" text="%order_piramid_graph" wrapText="true" />
+                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="282.0" prefHeight="103.0" prefWidth="968.0" style="-fx-background-color: transparent;">
                                                            <placeholder>
-                                                               <Label text=""/>
+                                                               <Label text="" />
                                                            </placeholder>
                                                            <columns>
-                                                               <TableColumn editable="false" prefWidth="107.0"
-                                                                            sortable="false" text="If">
+                                                               <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="If">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="If"/>
+                                                                               <TableColumn prefWidth="75.0" text="If" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="177.0"
-                                                                            sortable="false" text="%table_comparison">
+                                                               <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                    <columns>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="is"/>
+                                                                               <TableColumn prefWidth="75.0" text="is" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="350.0"
-                                                                            sortable="false" text="Then">
+                                                               <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Then">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="then"/>
+                                                                               <TableColumn prefWidth="75.0" text="then" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="253.0"
-                                                                            sortable="false" text="%table_action">
+                                                               <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Actie">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="65.0"
-                                                                                            text="order"/>
+                                                                               <TableColumn prefWidth="65.0" text="order" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="60.0" text="10"/>
+                                                                               <TableColumn prefWidth="60.0" text="10" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_direction">
+                                                                       <TableColumn prefWidth="75.0" text="%table_direction">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="from"/>
+                                                                               <TableColumn prefWidth="75.0" text="from" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_person">
+                                                                       <TableColumn prefWidth="75.0" text="%table_person">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="node 2 above"/>
+                                                                               <TableColumn prefWidth="75.0" text="factory 2" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_condition">
+                                                                       <TableColumn prefWidth="75.0" text="%table_condition">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="when"/>
+                                                                               <TableColumn prefWidth="75.0" text="where" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="is higher than "/>
+                                                                               <TableColumn prefWidth="75.0" text="is higher than " />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
                                                            </columns>
                                                        </TableView>
-                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="405.0"
-                                                                  prefHeight="103.0" prefWidth="968.0"
-                                                                  style="-fx-background-color: transparent;">
+                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="405.0" prefHeight="103.0" prefWidth="968.0" style="-fx-background-color: transparent;">
                                                            <placeholder>
-                                                               <Label text=""/>
+                                                               <Label text="" />
                                                            </placeholder>
                                                            <columns>
-                                                               <TableColumn editable="false" prefWidth="107.0"
-                                                                            sortable="false" text="If">
+                                                               <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="If">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="If"/>
+                                                                               <TableColumn prefWidth="75.0" text="If" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="177.0"
-                                                                            sortable="false" text="%table_comparison">
+                                                               <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                    <columns>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="is"/>
+                                                                               <TableColumn prefWidth="75.0" text="is" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="350.0"
-                                                                            sortable="false" text="Then">
+                                                               <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Then">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="then"/>
+                                                                               <TableColumn prefWidth="75.0" text="then" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="253.0"
-                                                                            sortable="false" text="%table_action">
+                                                               <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Actie">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="order"/>
+                                                                               <TableColumn prefWidth="75.0" text="order" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="10"/>
+                                                                               <TableColumn prefWidth="75.0" text="10" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_direction">
+                                                                       <TableColumn prefWidth="75.0" text="%table_direction">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="from"/>
+                                                                               <TableColumn prefWidth="75.0" text="from" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_person">
+                                                                       <TableColumn prefWidth="75.0" text="%table_person">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="node above"/>
+                                                                               <TableColumn prefWidth="75.0" text="regional warehouse 1" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_condition">
+                                                                       <TableColumn prefWidth="75.0" text="%table_condition">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="with"/>
+                                                                               <TableColumn prefWidth="75.0" text="where" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="highest"/>
+                                                                               <TableColumn prefWidth="75.0" text="highest" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
@@ -943,307 +767,243 @@
                                        </Tab>
                                        <Tab text="Deliver">
                                            <content>
-                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
-                                                           prefWidth="200.0">
+                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="65.0"
-                                                                  prefHeight="103.0" prefWidth="630.0"
-                                                                  style="-fx-background-color: transparent;">
+                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="65.0" prefHeight="103.0" prefWidth="630.0" style="-fx-background-color: transparent;">
                                                            <placeholder>
-                                                               <Label text=""/>
+                                                               <Label text="" />
                                                            </placeholder>
                                                            <columns>
-                                                               <TableColumn editable="false" prefWidth="107.0"
-                                                                            sortable="false" text="If">
+                                                               <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="If">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="If"/>
+                                                                               <TableColumn prefWidth="75.0" text="If" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="177.0"
-                                                                            sortable="false" text="%table_comparison">
+                                                               <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                    <columns>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="is"/>
+                                                                               <TableColumn prefWidth="75.0" text="is" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="350.0"
-                                                                            sortable="false" text="Then">
+                                                               <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Then">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="then"/>
+                                                                               <TableColumn prefWidth="75.0" text="then" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="253.0"
-                                                                            sortable="false" text="%table_action">
+                                                               <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                    <columns>
                                                                        <TableColumn text="%table_action">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="deliver"/>
+                                                                               <TableColumn prefWidth="75.0" text="deliver" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="173.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="173.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="178.0"
-                                                                                            text="35"/>
+                                                                               <TableColumn prefWidth="178.0" text="35" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
                                                            </columns>
                                                        </TableView>
-                                                       <Label layoutY="20.0" prefHeight="45.0" prefWidth="956.0"
-                                                              text="%deliver_basic_content" wrapText="true"/>
-                                                       <Label prefHeight="27.0" prefWidth="956.0"
-                                                              text="%info_comparison_tab_basic" wrapText="true">
+                                                       <Label layoutY="20.0" prefHeight="45.0" prefWidth="956.0" text="%deliver_basic_content" wrapText="true" />
+                                                       <Label prefHeight="27.0" prefWidth="956.0" text="%info_comparison_tab_basic" wrapText="true">
                                                            <font>
-                                                               <Font size="14.0"/>
+                                                               <Font size="14.0" />
                                                            </font>
                                                        </Label>
-                                                       <Label layoutY="168.0" prefHeight="27.0" prefWidth="956.0"
-                                                              text="%info_comparison_tab_piramid_graph" wrapText="true">
+                                                       <Label layoutY="168.0" prefHeight="27.0" prefWidth="956.0" text="%info_comparison_tab_piramid_graph" wrapText="true">
                                                            <font>
-                                                               <Font size="14.0"/>
+                                                               <Font size="14.0" />
                                                            </font>
                                                        </Label>
-                                                       <Label layoutY="195.0" prefHeight="45.0" prefWidth="956.0"
-                                                              text="%deliver_piramid_graph" wrapText="true"/>
-                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="282.0"
-                                                                  prefHeight="103.0" prefWidth="968.0"
-                                                                  style="-fx-background-color: transparent;">
+                                                       <Label layoutY="195.0" prefHeight="45.0" prefWidth="956.0" text="%deliver_piramid_graph" wrapText="true" />
+                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="282.0" prefHeight="103.0" prefWidth="968.0" style="-fx-background-color: transparent;">
                                                            <placeholder>
-                                                               <Label text=""/>
+                                                               <Label text="" />
                                                            </placeholder>
                                                            <columns>
-                                                               <TableColumn editable="false" prefWidth="107.0"
-                                                                            sortable="false" text="If">
+                                                               <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="If">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="If"/>
+                                                                               <TableColumn prefWidth="75.0" text="If" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="177.0"
-                                                                            sortable="false" text="%table_comparison">
+                                                               <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                    <columns>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="is"/>
+                                                                               <TableColumn prefWidth="75.0" text="is" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="350.0"
-                                                                            sortable="false" text="Then">
+                                                               <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Then">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="then"/>
+                                                                               <TableColumn prefWidth="75.0" text="then" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="253.0"
-                                                                            sortable="false" text="%table_action">
+                                                               <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Actie">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="65.0"
-                                                                                            text="deliver"/>
+                                                                               <TableColumn prefWidth="65.0" text="deliver" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="60.0" text="10"/>
+                                                                               <TableColumn prefWidth="60.0" text="10" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_direction">
+                                                                       <TableColumn prefWidth="75.0" text="%table_direction">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="to"/>
+                                                                               <TableColumn prefWidth="75.0" text="to" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_person">
+                                                                       <TableColumn prefWidth="75.0" text="%table_person">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="node 2 above"/>
+                                                                               <TableColumn prefWidth="75.0" text="node 2 above" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_condition">
+                                                                       <TableColumn prefWidth="75.0" text="%table_condition">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="when"/>
+                                                                               <TableColumn prefWidth="75.0" text="when" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="is higher than "/>
+                                                                               <TableColumn prefWidth="75.0" text="is higher than " />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
                                                            </columns>
                                                        </TableView>
-                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="405.0"
-                                                                  prefHeight="103.0" prefWidth="968.0"
-                                                                  style="-fx-background-color: transparent;">
+                                                       <TableView editable="false" fixedCellSize="0.0" layoutY="405.0" prefHeight="103.0" prefWidth="968.0" style="-fx-background-color: transparent;">
                                                            <placeholder>
-                                                               <Label text=""/>
+                                                               <Label text="" />
                                                            </placeholder>
                                                            <columns>
-                                                               <TableColumn editable="false" prefWidth="107.0"
-                                                                            sortable="false" text="If">
+                                                               <TableColumn editable="false" prefWidth="107.0" sortable="false" text="If">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="If">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="If"/>
+                                                                               <TableColumn prefWidth="75.0" text="If" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="177.0"
-                                                                            sortable="false" text="%table_comparison">
+                                                               <TableColumn editable="false" prefWidth="177.0" sortable="false" text="%table_comparison">
                                                                    <columns>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="is"/>
+                                                                               <TableColumn prefWidth="75.0" text="is" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="20"/>
+                                                                               <TableColumn prefWidth="75.0" text="20" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="350.0"
-                                                                            sortable="false" text="Then">
+                                                               <TableColumn editable="false" prefWidth="350.0" sortable="false" text="Then">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Then">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="then"/>
+                                                                               <TableColumn prefWidth="75.0" text="then" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>
                                                                </TableColumn>
-                                                               <TableColumn editable="false" prefWidth="253.0"
-                                                                            sortable="false" text="%table_action">
+                                                               <TableColumn editable="false" prefWidth="253.0" sortable="false" text="%table_action">
                                                                    <columns>
                                                                        <TableColumn prefWidth="75.0" text="Actie">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="deliver"/>
+                                                                               <TableColumn prefWidth="75.0" text="deliver" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="10"/>
+                                                                               <TableColumn prefWidth="75.0" text="10" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_direction">
+                                                                       <TableColumn prefWidth="75.0" text="%table_direction">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0" text="to"/>
+                                                                               <TableColumn prefWidth="75.0" text="to" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_person">
+                                                                       <TableColumn prefWidth="75.0" text="%table_person">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="node below"/>
+                                                                               <TableColumn prefWidth="75.0" text="node below" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_condition">
+                                                                       <TableColumn prefWidth="75.0" text="%table_condition">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="with"/>
+                                                                               <TableColumn prefWidth="75.0" text="with" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_operation">
+                                                                       <TableColumn prefWidth="75.0" text="%table_operation">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="highest"/>
+                                                                               <TableColumn prefWidth="75.0" text="highest" />
                                                                            </columns>
                                                                        </TableColumn>
-                                                                       <TableColumn prefWidth="75.0"
-                                                                                    text="%table_value">
+                                                                       <TableColumn prefWidth="75.0" text="%table_value">
                                                                            <columns>
-                                                                               <TableColumn prefWidth="75.0"
-                                                                                            text="inventory"/>
+                                                                               <TableColumn prefWidth="75.0" text="inventory" />
                                                                            </columns>
                                                                        </TableColumn>
                                                                    </columns>

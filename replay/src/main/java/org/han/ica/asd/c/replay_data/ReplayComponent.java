@@ -38,7 +38,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         averageRounds = new ArrayList<>();
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
-        totalRounds = rounds.size()-1;
+        totalRounds = rounds.size() - 1;
     }
 
     /***
@@ -105,11 +105,10 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     @Override
     public ObservableList<XYChart.Series<Double, Double>> getChartData() {
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
-        if(displayedAverages.isEmpty() && displayedFacility != null){
+        if (displayedAverages.isEmpty() && displayedFacility != null) {
             getSpecificData(lineChartData);
-        }
-        else {
-            if(averageRounds.isEmpty()){
+        } else {
+            if (averageRounds.isEmpty()) {
                 initializeAverageRounds();
             }
             getAverageData(lineChartData);
@@ -118,14 +117,14 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         return lineChartData;
     }
 
-    private void getSpecificData(ObservableList<XYChart.Series<Double, Double>> lineChartData){
+    private void getSpecificData(ObservableList<XYChart.Series<Double, Double>> lineChartData) {
         LineChart.Series<Double, Double> facilitySeries = new LineChart.Series<>();
         facilitySeries.setName(displayedFacility.getFacilityType().getFacilityName());
         createDataForSpecificFacility(facilitySeries);
         addSeriesToChart(lineChartData, facilitySeries);
     }
 
-    private void getAverageData(ObservableList<XYChart.Series<Double, Double>> lineChartData){
+    private void getAverageData(ObservableList<XYChart.Series<Double, Double>> lineChartData) {
         LineChart.Series<Double, Double> factorySeries = new LineChart.Series<>();
         factorySeries.setName(GameValue.FACTORY.getValue()[0]);
         LineChart.Series<Double, Double> warehouseSeries = new LineChart.Series<>();
@@ -164,10 +163,10 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
                 map(round -> new Round(round.getRoundId(), round.getFacilityTurns(), round.getFacilityOrders(), round.getFacilityTurnDelivers())).collect(Collectors.toList()).stream().
                 filter(round -> round.getRoundId() <= currentRound).collect(Collectors.toList());
         roundsToShow.forEach(round -> {
-                round.setFacilityTurns(round.getFacilityTurns().stream().filter(facilityTurn -> facilityTurn.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
-                round.setFacilityOrders(round.getFacilityOrders().stream().filter(facilityTurnOrder -> facilityTurnOrder.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
-                round.setFacilityTurnDelivers(round.getFacilityTurnDelivers().stream().filter(facilityTurnDeliver -> facilityTurnDeliver.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
-            });
+            round.setFacilityTurns(round.getFacilityTurns().stream().filter(facilityTurn -> facilityTurn.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
+            round.setFacilityOrders(round.getFacilityOrders().stream().filter(facilityTurnOrder -> facilityTurnOrder.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
+            round.setFacilityTurnDelivers(round.getFacilityTurnDelivers().stream().filter(facilityTurnDeliver -> facilityTurnDeliver.getFacilityId() == displayedFacility.getFacilityId()).collect(Collectors.toList()));
+        });
         roundsToShow.forEach(round -> facilitySeries.getData().add(new XYChart.Data<>((double) round.getRoundId(), getAttributeForFacility(round, displayedAttribute))));
     }
 
@@ -289,7 +288,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     }
 
     private double getAttributeForFacility(Round round, GameValue value) {
-        switch(value) {
+        switch (value) {
             case BUDGET:
                 return round.getFacilityTurns().get(0).getRemainingBudget();
             case STOCK:
@@ -447,7 +446,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         return ids;
     }
 
-    public String getBeerGameName(){
+    public String getBeerGameName() {
         return beerGame.getGameName();
     }
 }

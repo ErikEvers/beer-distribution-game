@@ -1,9 +1,11 @@
 package org.han.ica.asd.c.model.domain_objects;
 
+import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class GameAgent implements IDomainModel{
+public class GameAgent implements IDomainModel, Serializable {
     private String gameAgentName;
     private Facility facility;
     private List<GameBusinessRules> gameBusinessRulesList;
@@ -33,7 +35,8 @@ public class GameAgent implements IDomainModel{
         this.gameBusinessRulesList = gameBusinessRules;
     }
 
-    public void setAgentName(String agentName) {
-        this.gameAgentName = agentName;
+    @Override
+    public String toString() {
+        return this.gameAgentName;
     }
 }

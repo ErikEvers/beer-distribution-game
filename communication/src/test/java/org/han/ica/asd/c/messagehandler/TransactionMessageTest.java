@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -27,7 +28,7 @@ public class TransactionMessageTest {
 
     @BeforeEach
     public void init() {
-        transactionMessage = new RoundModelMessage(round);
+        transactionMessage = new RoundModelMessage(mock(Round.class), round);
     }
 
     @Test

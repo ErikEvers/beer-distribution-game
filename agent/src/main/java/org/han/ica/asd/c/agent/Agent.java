@@ -3,6 +3,8 @@ package org.han.ica.asd.c.agent;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
@@ -26,8 +28,12 @@ public class Agent extends GameAgent implements IParticipant {
 	private IBusinessRules businessRules;
 
 	@Inject
+	private IPlayerGameLogic gameLogic;
+
+	@Inject
 	@Named("persistence")
 	private IPersistence persistence;
+
 
     /**
      * Constructor with default agent name and facility
@@ -43,10 +49,11 @@ public class Agent extends GameAgent implements IParticipant {
 	/**
 	 * Generates actions of an agent using the defined business rules.
 	 *
-	 * @param round     The round data of last round used to determine what actions the agent is going to do.
+	 * @param beerGame  The round data of last round used to determine what actions the agent is going to do.
 	 * @return          A GameRoundAction with all actions that the agent wants to do.
 	 */
-	private GameRoundAction generateRoundActions(Round round) {
+	private GameRoundAction generateRoundActions(BeerGame beerGame, int roundId) {
+		Round round = beerGame.getRoundById(roundId);
 		Map<Facility, Integer> targetOrderMap = new HashMap<>();
 		Map<Facility, Integer> targetDeliverMap = new HashMap<>();
 		List<GameBusinessRules> triggeredBusinessRules = new ArrayList<>();
@@ -58,7 +65,7 @@ public class Agent extends GameAgent implements IParticipant {
 
 		while (shouldIterate.getAsBoolean()) {
 			GameBusinessRules gameBusinessRules = gameBusinessRulesIterator.next();
-			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round);
+			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round, getFacility().getFacilityId());
 			if (actionModel != null) {
 				if (canAddToOrderMap.apply(actionModel.isOrderType())) {
 					this.updateTargetMap(this.resolveLowerFacilityId(actionModel.facilityId), actionModel.amount, targetOrderMap, triggeredBusinessRules, gameBusinessRules);
@@ -120,11 +127,11 @@ public class Agent extends GameAgent implements IParticipant {
 	}
 
     @Override
-    public GameRoundAction executeTurn(Round round) {
-        return generateRoundActions(round);
+    public GameRoundAction executeTurn() {
+        return generateRoundActions(gameLogic.getBeerGame(), gameLogic.getRoundId());
     }
 
-    @Override
+	@Override
     public Facility getParticipant() {
         return getFacility();
     }

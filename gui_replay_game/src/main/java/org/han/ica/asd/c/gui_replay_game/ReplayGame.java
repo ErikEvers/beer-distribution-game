@@ -6,10 +6,12 @@ import org.han.ica.asd.c.gui_replay_game.replay_game_controller.ReplayGameContro
 
 public class ReplayGame implements IGUIHandler {
     private int currentRound;
+
     @Override
     public void setData(Object[] data) {
         this.currentRound = (int) data[0];
     }
+
 
     public void setupScreen() {
         ReplayGameController replayGameController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameScreen.fxml"));

@@ -26,7 +26,7 @@ public class BooleanOperator extends Operator {
      */
     @Override
     public BooleanOperator addValue(String value) {
-        operatorVal = value;
+        operatorVal = findBooleanOperator(value);
         return this;
     }
 
@@ -46,9 +46,9 @@ public class BooleanOperator extends Operator {
      * @return Returns the boolean operator as code
      */
     private String findBooleanOperator(String operator) {
-        if ("and".equals(operator)) {
+        if ("and".equals(operator) || "&&".equals(operator)) {
             return BooleanType.AND.getBooleanSymbol();
-        } else if ("or".equals(operator)){
+        } else if ("or".equals(operator) || "||".equals(operator)){
             return BooleanType.OR.getBooleanSymbol();
         }
 

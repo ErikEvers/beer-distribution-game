@@ -1,12 +1,14 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-public class Configuration implements IDomainModel{
+public class Configuration implements IDomainModel, Serializable {
     private int amountOfRounds;
     private int amountOfFactories;
     private int amountOfWholesalers;
@@ -54,6 +56,8 @@ public class Configuration implements IDomainModel{
         this.maximumOrderRetail = maximumOrderRetail;
         this.continuePlayingWhenBankrupt = continuePlayingWhenBankrupt;
         this.insightFacilities = insightFacilities;
+        this.facilities = new ArrayList<>();
+        this.facilitiesLinkedTo = new HashMap<>();
     }
 
     public int getAmountOfRounds() {
@@ -142,5 +146,17 @@ public class Configuration implements IDomainModel{
 
     public void setFacilitiesLinkedTo(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         this.facilitiesLinkedTo = facilitiesLinkedTo;
+    }
+
+    public List<Facility> getFacilitiesLinkedToFacilitiesByFacilityId(int facilityId) {
+        Optional<Facility> optional = facilitiesLinkedTo.keySet().stream().filter(facility -> facility.getFacilityId() == facilityId).findFirst();
+        if(optional.isPresent()) {
+              return facilitiesLinkedTo.get(optional.get());
+        }
+        return new ArrayList<>();
+    }
+
+    public List<Facility> getFacilitiesLinkedToFacilities(Facility facility) {
+        return facilitiesLinkedTo.get(facility);
     }
 }
