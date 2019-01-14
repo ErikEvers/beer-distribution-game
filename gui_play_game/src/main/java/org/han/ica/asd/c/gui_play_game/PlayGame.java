@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -96,8 +97,15 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected ListView<String> orderList;
 
-    protected ObservableList<String> orderFacilities;
-    protected ObservableList<String> deliverFacilities;
+    ObservableList<String> orderFacilities;
+
+    ObservableList<String> deliverFacilities;
+
+    @FXML
+    protected Button deleteOrderButton;
+
+    @FXML
+    protected Button deleteDeliveryButton;
 
     protected static Alert currentAlert;
 
@@ -278,5 +286,23 @@ public abstract class PlayGame implements IPlayGame {
 				currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
 				currentAlert.show();
 				submitTurnButton.setDisable(false);
+    }
+
+    @FXML
+    public void deletePlacedOrder(ActionEvent actionEvent) {
+        int index = orderList.getItems().indexOf(orderList.getSelectionModel().getSelectedItem());
+        if (index != -1) {
+            playerComponent.getRound().getFacilityOrders().remove(index);
+            orderList.getItems().removeIf(order -> order.contains(orderList.getSelectionModel().getSelectedItem()));
+        }
+    }
+
+    @FXML
+    public void deletePlacedDelivery(ActionEvent actionEvent) {
+        int index = deliverList.getItems().indexOf(deliverList.getSelectionModel().getSelectedItem());
+        if (index != -1) {
+            playerComponent.getRound().getFacilityTurnDelivers().remove(index);
+            deliverList.getItems().removeIf(order -> order.contains(deliverList.getSelectionModel().getSelectedItem()));
+        }
     }
 }
