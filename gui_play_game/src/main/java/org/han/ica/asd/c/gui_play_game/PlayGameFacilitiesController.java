@@ -1,8 +1,6 @@
 package org.han.ica.asd.c.gui_play_game;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
