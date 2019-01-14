@@ -48,7 +48,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
     private int highestPlayerId = 0;
     private int turnsExpectedPerRound;
-    private int turnsReceivedInCurrentRound;
+    private int turnsReceivedInCurrentRound = 0;
     private int roundId = 1;
 
     @Inject
@@ -167,7 +167,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
-        if (turnsReceivedInCurrentRound == turnsExpectedPerRound)
+        if (turnsReceivedInCurrentRound == game.getConfiguration().getFacilities().size())
             allTurnDataReceived();
     }
 
