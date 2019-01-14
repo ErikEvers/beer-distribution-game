@@ -27,6 +27,8 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private int totalRounds;
     private GameValue displayedAttribute;
 
+    private ObservableList<XYChart.Series<Double, Double>> lineChartData;
+
     @Inject
     public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
         facilities = retrieveReplayData.getAllFacilities();
@@ -104,11 +106,15 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
      */
     @Override
     public ObservableList<XYChart.Series<Double, Double>> getChartData() {
-        ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
         if(displayedAverages.isEmpty() && displayedFacility != null){
+            lineChartData = FXCollections.observableArrayList();
             getSpecificData(lineChartData);
         }
+        else if(displayedAverages.isEmpty() && displayedFacility == null){
+            return lineChartData;
+        }
         else {
+            lineChartData = FXCollections.observableArrayList();
             getAverageData(lineChartData);
         }
 
@@ -240,7 +246,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
      * {@inheritDoc}
      */
     @Override
-    public void removeDisplayedFacility(Facility facility) {
+    public void removeDisplayedFacility() {
         displayedFacility = null;
     }
 

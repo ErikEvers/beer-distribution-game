@@ -146,7 +146,7 @@ public class ReplayGameController {
         ObservableList<Facility> observableList = FXCollections.observableArrayList(replayComponent.getAllFacilities());
         facilityComboBox.setItems(observableList);
         facilityComboBox.valueProperty().addListener((obs, oldVal, newVal) ->
-                facilityComboBoxUpdated(oldVal, newVal));
+                facilityComboBoxUpdated(newVal));
         facilityComboBox.setConverter(new StringConverter<Facility>() {
             @Override
             public String toString(Facility object) {
@@ -159,8 +159,8 @@ public class ReplayGameController {
         });
     }
 
-    private void facilityComboBoxUpdated(Facility facilityOld, Facility facilityNew) {
-        replayComponent.removeDisplayedFacility(facilityOld);
+    private void facilityComboBoxUpdated(Facility facilityNew) {
+        replayComponent.removeDisplayedFacility();
         if (facilityNew != null) {
             clearCheckBoxes();
             replayComponent.addDisplayedFacility(facilityNew);
