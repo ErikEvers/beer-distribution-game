@@ -5,10 +5,7 @@ import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -213,59 +210,34 @@ public class Replacer {
     }
 
     private int getExtreme(GameValue attribute, GameValue facility, Round round, GameValue highestOrLowest) throws NotFoundException {
-        List<String> facilityTypeList = getDesiredFacilities(facility);
         String notFound = "the identifier is not found";
         switch (attribute) {
             case ORDERED:
-                Comparator<FacilityTurnOrder> facilityTurnOrderComparator = Comparator.comparing(FacilityTurnOrder::getOrderAmount);
-                return getFacilityTurnOrderExtreme(round, highestOrLowest, facilityTypeList, facilityTurnOrderComparator, notFound);
+                return getFacilityExtreme(round.getFacilityOrders(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnOrder::getOrderAmount), notFound);
             case STOCK:
-                Comparator<FacilityTurn> facilityTurnComparator = Comparator.comparing(FacilityTurn::getStock);
-                return getFacilityTurnExtreme(round, highestOrLowest, facilityTypeList, facilityTurnComparator, notFound);
+                return getFacilityExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getStock), notFound);
             case BUDGET:
-                Comparator<FacilityTurn> comparator = Comparator.comparing(FacilityTurn::getRemainingBudget);
-                return getFacilityTurnExtreme(round, highestOrLowest, facilityTypeList, comparator, notFound);
+                return getFacilityExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getRemainingBudget), notFound);
             case BACKLOG:
-                Comparator<FacilityTurn> facilityTurnComparator1 = Comparator.comparing(FacilityTurn::getBackorders);
-                return getFacilityTurnExtreme(round, highestOrLowest, facilityTypeList, facilityTurnComparator1, notFound);
+                return getFacilityExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getBackorders), notFound);
             case INCOMINGORDER:
-                Comparator<FacilityTurnOrder> facilityTurnOrderComparator1 = Comparator.comparing(FacilityTurnOrder::getOrderAmount);
-                return getFacilityTurnOrderExtreme(round, highestOrLowest, facilityTypeList, facilityTurnOrderComparator1, notFound);
+                return getFacilityExtreme(round.getFacilityOrders(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnOrder::getOrderAmount), notFound);
             case OUTGOINGGOODS:
-
-                break;
+                return getFacilityExtreme(round.getFacilityTurnDelivers(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnDeliver::getDeliverAmount), notFound);
             default:
                 throw new NotFoundException(notFound);
         }
-        return 0;
     }
 
-    private int getFacilityTurnExtreme(Round round, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<FacilityTurn> facilityTurnComparator, String notFound) throws NotFoundException {
-        FacilityTurn facilityTurn;
-        Stream<FacilityTurn> streamForBacklog = round.getFacilityTurns().stream()
-                .filter(f -> facilityTypeList.contains(String.valueOf(f.getFacilityId())));
-
-        if (highestOrLowest == GameValue.HIGHEST) {
-            facilityTurn = streamForBacklog.max(facilityTurnComparator).orElse(null);
-        } else {
-            facilityTurn = streamForBacklog.min(facilityTurnComparator).orElse(null);
-        }
-
-        if (facilityTurn != null) {
-            return facilityTurn.getFacilityId();
-        }
-        throw new NotFoundException(notFound);
-    }
-
-    private int getFacilityTurnOrderExtreme(Round round, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<FacilityTurnOrder> facilityTurnOrderComparator, String notFound) throws NotFoundException {
-        FacilityTurnOrder facilityTurnOrder;
-        Stream<FacilityTurnOrder> stream = round.getFacilityOrders().stream().filter(i ->
+    private <T extends IFacility> int getFacilityExtreme(List<T> facilityList, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<T> facilityTurnOrderComparator, String notFound) throws NotFoundException {
+        T facilityTurnOrder;
+        Stream<T> stream = facilityList.stream().filter(i ->
                 facilityTypeList.contains(String.valueOf(i.getFacilityId())));
 
         if (highestOrLowest.equals(GameValue.HIGHEST)) {
-            facilityTurnOrder = stream.min(facilityTurnOrderComparator).orElse(null);
-        } else {
             facilityTurnOrder = stream.max(facilityTurnOrderComparator).orElse(null);
+        } else {
+            facilityTurnOrder = stream.min(facilityTurnOrderComparator).orElse(null);
         }
         if (facilityTurnOrder != null) {
             return facilityTurnOrder.getFacilityId();
@@ -288,6 +260,14 @@ public class Replacer {
         }
     }
 
+    /***
+     *
+     * @param action
+     * @param round
+     * @param facilityType
+     * @param attribute
+     * @param highestOrLowest
+     */
     public void replacePerson(Action action, Round round, GameValue facilityType, GameValue attribute, GameValue highestOrLowest) {
         try {
             action.replacePerson(getExtreme(attribute, facilityType, round, highestOrLowest));
