@@ -7,7 +7,6 @@ import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
@@ -25,7 +24,6 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -218,27 +216,29 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public List<String> getAllGames() {
-        return null;
+        //Yet to be implemented
+        return Collections.emptyList();
     }
 
     @Override
     public void connectToGame(String game) {
-
+        //Yet to be implemented
     }
 
     @Override
     public void requestFacilityUsage(Facility facility) {
-
+        //Yet to be implemented
     }
 
     @Override
     public List<Facility> getAllFacilities() {
-        return null;
+        //Yet to be implemented
+        return Collections.emptyList();
     }
 
     @Override
     public void sendSelectedAgent(ProgrammedAgent programmedAgent) {
-
+        //Yet to be implemented
     }
 
     /**
