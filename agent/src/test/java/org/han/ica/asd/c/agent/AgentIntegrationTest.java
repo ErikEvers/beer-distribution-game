@@ -57,7 +57,7 @@ class AgentIntegrationTest {
             bind(IPlayerGameLogic.class).toInstance(gameLogic);
             bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                 @Override
-                public void saveGameLog(BeerGame beerGame) {
+                public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
                 }
 

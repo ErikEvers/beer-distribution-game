@@ -51,7 +51,7 @@ class AgentTest {
 
 	private IPersistence persistence = new IPersistence() {
 		@Override
-		public void saveGameLog(BeerGame beerGame) {
+		public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
 		}
 

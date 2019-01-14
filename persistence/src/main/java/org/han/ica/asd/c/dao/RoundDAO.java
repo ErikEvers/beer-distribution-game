@@ -46,12 +46,24 @@ public class RoundDAO {
 	/**
 	 * A method to create a round in the SQLite Database
 	 *
-	 * @param roundId The id of the round that the players have played
+	 * @param round The round that the players have played
 	 */
-	public void createRound(int roundId) {
+	public void createRound(Round round) {
 		Connection conn = databaseConnection.connect();
-		executePreparedStatement(roundId, conn, CREATE_ROUND);
+		executePreparedStatement(round.getRoundId(), conn, CREATE_ROUND);
+		for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
+			createFacilityTurn(round.getRoundId(),facilityTurn);
+		}
+
+		for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
+			createFacilityOrder(round.getRoundId(),facilityTurnOrder);
+		}
+
+		for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
+			createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+		}
 	}
+
 
 	/**
 	 * A method which inserts multiple rounds into the database
@@ -59,7 +71,7 @@ public class RoundDAO {
 	 */
 	public void insertRounds(List<Round> rounds) {
 		for (Round round: rounds) {
-			createRound(round.getRoundId());
+			createRound(round);
 			for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
 				createFacilityTurn(round.getRoundId(),facilityTurn);
 			}

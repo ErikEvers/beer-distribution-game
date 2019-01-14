@@ -58,7 +58,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	@Override
 	public void saveRoundData(Round rounddata)
 	{
-		roundDAO.createRound(rounddata.getRoundId());
+		roundDAO.createRound(rounddata);
 		for (FacilityTurn facilityTurn: rounddata.getFacilityTurns()) {
 			roundDAO.createFacilityTurn(rounddata.getRoundId(),facilityTurn);
 		}
@@ -85,9 +85,13 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	}
 
 	@Override
-	public void saveGameLog(BeerGame beerGame) {
-		beergameDAO.deleteBeergame(beerGame.getGameId());
-		beergameDAO.createBeergame(beerGame);
+	public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+		if(isStarted){
+			roundDAO.createRound(beerGame.getRoundById(beerGame.getRounds().size()-1));
+		}
+		else {
+			beergameDAO.createBeergame(beerGame);
+		}
 	}
 
 	@Override
