@@ -32,8 +32,12 @@ public class RoundDAO {
 	private static final String DELETE_ORDERS = "DELETE FROM FacilityTurnOrder WHERE GameId = ? AND RoundId = ?;";
 	private static final String DELETE_DELIVERS = "DELETE FROM FacilityTurnDeliver WHERE GameId = ? AND RoundId = ?;";
 	private static final String DELETE_FACILITIES = "DELETE FROM FacilityTurn WHERE GameId = ? AND RoundId = ?;";
-	public static final String ROUND_ID = "RoundId";
-	public static final String FACILITY_ID = "FacilityId";
+	private static final String ROUND_ID = "RoundId";
+	private static final String FACILITY_ID = "FacilityId";
+	private static final String UPDATE_FACILITYDELIVER = "UPDATE FacilityTurnDeliver SET FacilityId = ?, FacilityIdDeliver = ?,DeliverAmount =?,OpenOrderAmount = ? WHERE GameId = ? AND RoundId = ?;";
+	private static final String UPDATE_FACILITYORDER = "UPDATE FacilityTurnOrder SET FacilityId = ?, FacilityIdOrder = ?, OrderAmount = ? WHERE GameId = ?, RoundId = ?;";
+	private static final String UPDATE_FACILITYTURN = "UPDATE FacilityTurn SET FacilityId = ?, Stock = ?, Backorders = ?, RemainingBudget = ?, Bankrupt = ? WHERE GameId = ? AND RoundId = ?;";
+
 
 	@Inject
 	private IDatabaseConnection databaseConnection;
@@ -72,19 +76,106 @@ public class RoundDAO {
 	public void insertRounds(List<Round> rounds) {
 		for (Round round: rounds) {
 			createRound(round);
-			for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
-				createFacilityTurn(round.getRoundId(),facilityTurn);
-			}
+		}
+	}
 
-			for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
-				createFacilityOrder(round.getRoundId(),facilityTurnOrder);
-			}
+	public void updateRounds(List<Round> rounds) {
+		for (Round round: rounds) {
+			updateRound(round);
+		}
+	}
 
-			for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
-				createFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+	private void updateRound(Round round) {
+		for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
+			updateFacilityTurn(round.getRoundId(),facilityTurn);
+		}
+
+		for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
+			updateFacilityOrder(round.getRoundId(),facilityTurnOrder);
+		}
+
+		for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
+			updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
+		}
+	}
+
+	private void updateFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
+		if (getFacilityDeliversInRound(roundId).contains(facilityTurnDeliver)) {
+			Connection conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYDELIVER)) {
+
+					conn.setAutoCommit(false);
+
+					pstmt.setInt(1, facilityTurnDeliver.getFacilityId());
+					pstmt.setInt(2, facilityTurnDeliver.getFacilityIdDeliverTo());
+					pstmt.setInt(3, facilityTurnDeliver.getDeliverAmount());
+					pstmt.setInt(4, facilityTurnDeliver.getOpenOrderAmount());
+					pstmt.setString(5, DaoConfig.getCurrentGameId());
+					pstmt.setInt(6, roundId);
+
+					pstmt.executeUpdate();
+					conn.commit();
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
 			}
 		}
 	}
+
+	private void updateFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder) {
+		if(getFacilityOrdersInRound(roundId).contains(facilityTurnOrder)) {
+			Connection conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYORDER)) {
+
+					conn.setAutoCommit(false);
+
+
+					pstmt.setInt(1, facilityTurnOrder.getFacilityId());
+					pstmt.setInt(2, facilityTurnOrder.getFacilityIdOrderTo());
+					pstmt.setInt(3, facilityTurnOrder.getOrderAmount());
+					pstmt.setString(4, DaoConfig.getCurrentGameId());
+					pstmt.setInt(5, roundId);
+
+					pstmt.executeUpdate();
+					conn.commit();
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
+			}
+		}
+	}
+
+	private void updateFacilityTurn(int roundId, FacilityTurn facilityTurn) {
+		if (getFacilityDeliversInRound(roundId).contains(facilityTurn)) {
+			Connection conn = databaseConnection.connect();
+			if (conn != null) {
+				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTURN)) {
+
+					conn.setAutoCommit(false);
+
+
+					pstmt.setInt(1, facilityTurn.getFacilityId());
+					pstmt.setInt(2, facilityTurn.getStock());
+					pstmt.setInt(3, facilityTurn.getBackorders());
+					pstmt.setInt(4, facilityTurn.getRemainingBudget());
+					pstmt.setBoolean(5, facilityTurn.isBankrupt());
+					pstmt.setString(6, DaoConfig.getCurrentGameId());
+					pstmt.setInt(7, roundId);
+
+					pstmt.executeUpdate();
+					conn.commit();
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * A method which deletes a specific round in the SQLite Database
@@ -119,7 +210,9 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					round = createRoundModel(rs);
+					if(!rs.isClosed()) {
+						round = createRoundModel(rs);
+					}
 				}
 
 				conn.commit();
@@ -145,8 +238,9 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					orders.add(new FacilityTurnOrder(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
-
+					if(!rs.isClosed()) {
+						orders.add(new FacilityTurnOrder(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
+					}
 				}
 
 				conn.commit();
@@ -171,8 +265,9 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					delivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
-
+					if(!rs.isClosed()) {
+						delivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
+					}
 				}
 
 				conn.commit();
@@ -197,8 +292,9 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					facilities.add(new FacilityTurn(rs.getInt(FACILITY_ID), rs.getInt(ROUND_ID),rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
-
+					if(!rs.isClosed()) {
+						facilities.add(new FacilityTurn(rs.getInt(FACILITY_ID), rs.getInt(ROUND_ID), rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
+					}
 				}
 
 				conn.commit();

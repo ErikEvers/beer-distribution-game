@@ -204,7 +204,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Override
     public void gameStartReceived(BeerGame beerGame) {
         GameLogic.beerGame = beerGame;
-        //persistence.saveGameLog(beerGame);
+        persistence.saveGameLog(beerGame,false);
         player.startGame();
         curRoundId = 1;
         sendRoundActionFromAgents();
