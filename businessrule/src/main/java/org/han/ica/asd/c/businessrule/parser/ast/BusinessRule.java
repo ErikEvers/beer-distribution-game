@@ -109,6 +109,14 @@ public class BusinessRule extends ASTNode {
             }
         }
 
+        if(node instanceof Action){
+            Action actionNode = (Action) node;
+            OperationValue operationValue = actionNode.getOperationValue();
+            if (operationValue instanceof Operation) {
+                actionNode.setOperationValue(((Operation) operationValue).resolveOperation());
+            }
+        }
+
         if(node instanceof Value) {
             Value value = ((Value)node);
             Integer integerValue = value.getIntegerValue();
