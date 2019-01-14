@@ -183,10 +183,10 @@ public class MessageTypeTest {
         assertEquals(MessageIds.TURN_MODEL_MESSAGE, gameMessage.getMessageType());
 
         assertEquals(roundMock, ((TurnModelMessage) gameMessage).getTurnModel());
-        assertFalse(((TurnModelMessage) gameMessage).isSuccess());
+        assertNull(gameMessage.getException());
 
         ((TurnModelMessage) gameMessage).createResponseMessage();
-        assertTrue(((TurnModelMessage) gameMessage).isSuccess());
+        assertNull(gameMessage.getException());
         assertNull(((TurnModelMessage) gameMessage).getTurnModel());
 
         ((TurnModelMessage) gameMessage).createResponseMessage(exceptionMock);

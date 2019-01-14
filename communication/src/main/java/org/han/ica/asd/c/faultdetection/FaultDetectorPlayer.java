@@ -6,7 +6,6 @@ import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
-import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
 
 import javax.inject.Inject;
 import java.util.HashMap;

@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
@@ -53,7 +54,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void submitTurn(Round turn) {
-        communication.sendTurnData(turn);
+        try {
+            communication.sendTurn(turn);
+        } catch (SendGameMessageException e) {
+            //TODO sending the turn failed, check SendGameMessageException for the reason and show an error message
+        }
         persistence.saveRoundData(turn);
         System.out.println("=============== TURN AFGEROND =====================");
     }

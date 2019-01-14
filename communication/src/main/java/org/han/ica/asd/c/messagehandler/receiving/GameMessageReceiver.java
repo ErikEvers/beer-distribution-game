@@ -167,7 +167,8 @@ public class GameMessageReceiver {
         switch (transactionMessage.getPhase()) {
             case 0:
                 toBecommittedRound = transactionMessage;
-                break;
+                transactionMessage.createResponseMessage();
+                return transactionMessage;
             case 1:
                 return doCommit(transactionMessage);
             case -1:
