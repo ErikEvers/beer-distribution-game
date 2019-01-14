@@ -124,7 +124,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -135,7 +135,7 @@ class AgentTest {
 						return new ActionModel(ORDER, 30, lowerFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -154,7 +154,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -165,7 +165,7 @@ class AgentTest {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -182,7 +182,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -199,7 +199,7 @@ class AgentTest {
 						return null;
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -217,7 +217,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -231,7 +231,7 @@ class AgentTest {
 						return null;
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -249,7 +249,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -263,7 +263,7 @@ class AgentTest {
 						return null;
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -281,7 +281,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -295,7 +295,7 @@ class AgentTest {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -313,7 +313,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -327,7 +327,7 @@ class AgentTest {
 						return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -383,7 +383,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -397,7 +397,7 @@ class AgentTest {
 						return new ActionModel(ORDER, 5, mainFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistenceMock);
+				bind(IPersistence.class).toInstance(persistenceMock);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
