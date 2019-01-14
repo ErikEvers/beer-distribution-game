@@ -234,4 +234,9 @@ public class PlayerDAO {
         return player;
     }
 
+	public void updatePlayers(List<Player> players) {
+        for (Player player: players) {
+            updatePlayer(player);
+        }
+	}
 }

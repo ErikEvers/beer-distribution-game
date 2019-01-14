@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -9,8 +11,6 @@ import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +23,11 @@ public class GameLogicTest {
     private IConnectedForPlayer communication;
     private IGameStore persistence;
     private IPlayerRoundListener player;
+    private Round round;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
+        round = new Round();
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IGameStore.class);
         participantsPool = mock(ParticipantsPool.class);
@@ -36,8 +38,10 @@ public class GameLogicTest {
             protected void configure() {
                 bind(IGameStore.class).toInstance(persistence);
                 bind(IConnectedForPlayer.class).toInstance(communication);
+                //bind(ParticipantsPool.class).toInstance(participantsPool);
             }
         });
+
         gameLogic = injector.getInstance(GameLogic.class);
         gameLogic.setParticipantsPool(participantsPool);
         gameLogic.setPlayer(player);
@@ -62,14 +66,23 @@ public class GameLogicTest {
     }
 
     @Test
+    void getBeerGameCallsPersistence() {
+        gameLogic.getBeerGame();
+        doNothing().when(persistence).saveGameLog(any(BeerGame.class),anyBoolean());
+        verify(persistence, times(1)).saveGameLog(any(BeerGame.class),anyBoolean());
+    }
+
+    @Test
     public void letAgentTakeOverPlayerReplacesPlayer() {
         gameLogic.letAgentTakeOverPlayer(mock(Agent.class));
+        doNothing().when(participantsPool).addParticipant(any(IParticipant.class));
         verify(participantsPool, times(1)).addParticipant(any());
     }
 
     @Test
     public void letPlayerTakeOverAgentReplacesAgent() {
         gameLogic.letPlayerTakeOverAgent();
+        doNothing().when(participantsPool).replaceAgentWithPlayer();
         verify(participantsPool, times(1)).replaceAgentWithPlayer();
     }
 

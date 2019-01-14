@@ -3,12 +3,12 @@ package org.han.ica.asd.c.gameleader;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
-import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
+import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
+import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
@@ -16,14 +16,11 @@ import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.lang.reflect.Method;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static junit.framework.TestCase.*;
+
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 
 class TurnHandlerTest {

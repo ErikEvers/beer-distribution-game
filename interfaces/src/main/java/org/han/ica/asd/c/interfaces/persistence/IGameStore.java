@@ -6,7 +6,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IGameStore {
     BeerGame getGameLog();
-    void saveGameLog(BeerGame beerGame);
+    void saveGameLog(BeerGame beerGame, boolean isStarted);
     void saveRoundData(Round roundData);
     Round fetchRoundData(int roundId);
     Player getPlayerById(String playerId);

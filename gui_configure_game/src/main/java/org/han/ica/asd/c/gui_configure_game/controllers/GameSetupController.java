@@ -439,7 +439,7 @@ public class GameSetupController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "The graph is either incomplete or does not have a complete line of facilities");
         alert.setHeaderText("Warning");
         alert.setTitle("Warning");
-        alert.showAndWait();
+        alert.show();
     }
 
     /**
