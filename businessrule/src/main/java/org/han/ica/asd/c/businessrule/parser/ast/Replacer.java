@@ -208,87 +208,25 @@ public class Replacer {
 
     private int getExtreme(GameValue attribute, GameValue facility, Round round, GameValue highestOrLowest) throws NotFoundException {
         List<String> facilityTypeList = getDesiredFacilities(facility);
-        Comparator<FacilityTurn> facilityTurnComparator = null;
-        Comparator<FacilityTurnOrder> facilityTurnOrderComparator;
-        Comparator<FacilityTurnDeliver> facilityTurnDeliverComparator = null;
-
-        FacilityTurn facilityTurn = null;
-        FacilityTurnOrder facilityTurnOrder = null;
-        FacilityTurnDeliver facilityTurnDeliver = null;
         String notFound = "the identifier is not found";
         switch (attribute) {
             case ORDERED:
-                facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
-                Stream<FacilityTurnOrder> streamForOrdered = round.getFacilityOrders().stream()
-                        .filter(i -> facilityTypeList.contains(String.valueOf(i.getFacilityId())));
-
-                if(highestOrLowest == GameValue.HIGHEST) {
-                    facilityTurnOrder = streamForOrdered.max(facilityTurnOrderComparator).orElse(null);
-                } else {
-                    facilityTurnOrder = streamForOrdered.min(facilityTurnOrderComparator).orElse(null);
-                }
-
-                if(facilityTurnOrder!=null) {
-                    return facilityTurnOrder.getFacilityId();
-                }
-                throw new NotFoundException(notFound);
+                Comparator<FacilityTurnOrder> facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
+                return getFacilityTurnOrderExtreme(round, highestOrLowest, facilityTypeList, facilityTurnOrderComparator, notFound);
             case STOCK:
-                facilityTurnComparator = Comparator.comparing( FacilityTurn::getStock );
-                Stream<FacilityTurn> streamForStock = round.getFacilityTurns().stream()
-                        .filter(i -> facilityTypeList.contains(String.valueOf(i.getFacilityId())));
-
-                if(highestOrLowest == GameValue.HIGHEST) {
-                    facilityTurn = streamForStock.max(facilityTurnComparator).orElse(null);
-                } else {
-                    facilityTurn = streamForStock.min(facilityTurnComparator).orElse(null);
-                }
-
-                if(facilityTurn!=null) {
-                    return facilityTurn.getFacilityId();
-                }
-                throw new NotFoundException(notFound);
+                Comparator<FacilityTurn> facilityTurnComparator  = Comparator.comparing( FacilityTurn::getStock );
+                return getFacilityTurnExtreme(round, highestOrLowest, facilityTypeList, facilityTurnComparator, notFound);
             case BUDGET:
                 Comparator<FacilityTurn> comparator = Comparator.comparing( FacilityTurn::getRemainingBudget );
-                Stream<FacilityTurn> streamForBudget = round.getFacilityTurns().stream()
-                        .filter(i -> facilityTypeList.contains(String.valueOf(i.getFacilityId())));
-
-                if(highestOrLowest == GameValue.HIGHEST) {
-                    facilityTurn = streamForBudget.max(comparator).orElse(null);
-                } else {
-                    facilityTurn = streamForBudget.min(comparator).orElse(null);
-                }
-
-                if(facilityTurn!=null) {
-                    return facilityTurn.getFacilityId();
-                }
-                throw new NotFoundException(notFound);
+                return getFacilityTurnExtreme(round, highestOrLowest, facilityTypeList, comparator, notFound);
             case BACKLOG:
-                facilityTurnComparator = Comparator.comparing(FacilityTurn::getBackorders);
-                Stream<FacilityTurn> streamForBacklog = round.getFacilityTurns().stream()
-                        .filter( f -> facilityTypeList.contains(String.valueOf(f.getFacilityId())));
-
-                if(highestOrLowest == GameValue.HIGHEST) {
-                    facilityTurn = streamForBacklog.max(facilityTurnComparator).orElse(null);
-                } else {
-                    facilityTurn = streamForBacklog.min(facilityTurnComparator).orElse(null);
-                }
-
-                if (facilityTurn!=null){
-                    return facilityTurn.getFacilityId();
-                }
-                throw new NotFoundException(notFound);
+                Comparator<FacilityTurn> facilityTurnComparator1  = Comparator.comparing(FacilityTurn::getBackorders);
+                return getFacilityTurnExtreme(round, highestOrLowest, facilityTypeList, facilityTurnComparator1, notFound);
             case INCOMINGORDER:
-                facilityTurnOrderComparator = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
-
-                Stream<FacilityTurnOrder> stream = round.getFacilityOrders().stream().filter(i ->
-                        facilityTypeList.contains(String.valueOf(i.getFacilityId())));
-
-                if(highestOrLowest.equals(GameValue.HIGHEST)){
-                    stream.min(facilityTurnOrderComparator).orElse(null);
-                }else{
-                    stream.max(facilityTurnOrderComparator).orElse(null);
-                }
+                Comparator<FacilityTurnOrder> facilityTurnOrderComparator1 = Comparator.comparing( FacilityTurnOrder::getOrderAmount );
+                return getFacilityTurnOrderExtreme(round, highestOrLowest, facilityTypeList, facilityTurnOrderComparator1, notFound);
             case OUTGOINGGOODS:
+
                 break;
             default:
                 throw new NotFoundException(notFound);
@@ -296,7 +234,40 @@ public class Replacer {
         return 0;
     }
 
-    private List<String> getDesiredFacilities(GameValue facilityType) {
+      private int getFacilityTurnExtreme(Round round, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<FacilityTurn> facilityTurnComparator, String notFound) throws NotFoundException {
+        FacilityTurn facilityTurn;
+        Stream<FacilityTurn> streamForBacklog = round.getFacilityTurns().stream()
+                .filter(f -> facilityTypeList.contains(String.valueOf(f.getFacilityId())));
+
+        if (highestOrLowest == GameValue.HIGHEST) {
+            facilityTurn = streamForBacklog.max(facilityTurnComparator).orElse(null);
+        } else {
+            facilityTurn = streamForBacklog.min(facilityTurnComparator).orElse(null);
+        }
+
+        if (facilityTurn != null) {
+            return facilityTurn.getFacilityId();
+        }
+        throw new NotFoundException(notFound);
+    }
+
+    private int getFacilityTurnOrderExtreme(Round round, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<FacilityTurnOrder> facilityTurnOrderComparator, String notFound) throws NotFoundException {
+        FacilityTurnOrder facilityTurnOrder;
+        Stream<FacilityTurnOrder> stream = round.getFacilityOrders().stream().filter(i ->
+                facilityTypeList.contains(String.valueOf(i.getFacilityId())));
+
+        if(highestOrLowest.equals(GameValue.HIGHEST)){
+            facilityTurnOrder =stream.min(facilityTurnOrderComparator).orElse(null);
+        }else{
+            facilityTurnOrder =stream.max(facilityTurnOrderComparator).orElse(null);
+        }
+        if (facilityTurnOrder!=null){
+            return facilityTurnOrder.getFacilityId();
+        }
+        throw new NotFoundException(notFound);
+    }
+
+    private List<String> getDesiredFacilities(GameValue facilityType) throws NotFoundException {
         switch (facilityType) {
             case FACTORY:
                 return businessRuleStore.getAllFacilities().get(0);
@@ -307,13 +278,8 @@ public class Replacer {
             case RETAILER:
                 return businessRuleStore.getAllFacilities().get(3);
             default:
-                try {
-                    throw new NotFoundException("Cannot find the specified facility");
-                } catch (NotFoundException e) {
-                    e.printStackTrace();
-                }
+                throw new NotFoundException("Cannot find the specified facility");
         }
-        return null;
     }
 
     public void replacePerson(Action action, Round round, GameValue facilityType, GameValue attribute, GameValue highestOrLowest) {
