@@ -11,7 +11,6 @@ import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.alternatives.AlternativeFinder;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
