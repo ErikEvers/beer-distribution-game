@@ -54,18 +54,18 @@ public class ActionTest {
         Action action = actionProvider.get();
         action.addChild(personProvider.get().addValue("factory 1"));
 
-        int exp = 0;
+        int exp = 1;
         int res = action.getFacilityId(0);
 
         assertEquals(exp, res);
     }
 
     @Test
-    void testAction_GetFacilityId_Distributor(){
+    void testAction_GetFacilityId_RegionalWarehouse(){
         Action action = actionProvider.get();
         action.addChild(personProvider.get().addValue("regional warehouse 1"));
 
-        int exp = 1;
+        int exp = 4;
         int res = action.getFacilityId(1);
 
         assertEquals(exp, res);
@@ -76,7 +76,7 @@ public class ActionTest {
         Action action = actionProvider.get();
         action.addChild(personProvider.get().addValue("wholesaler 1"));
 
-        int exp = 2;
+        int exp = 6;
         int res = action.getFacilityId(2);
 
         assertEquals(exp, res);
