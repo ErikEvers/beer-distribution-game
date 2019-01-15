@@ -14,6 +14,8 @@ import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 
 import org.han.ica.asd.c.model.domain_objects.Facility;
+
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,42 +42,4 @@ public class PlayerComponentTest {
         });
         playerComponent = injector.getInstance(PlayerComponent.class);
     }
-
-    @Test
-    void getAllGamesCallsMethodOfSameNameOnceInGameLogicTest() {
-
-        //Act
-        playerComponent.getAllGames();
-
-        //Assert
-        verify(logicMock, times(1)).getAllGames();
-    }
-
-    @Test
-    void connectToGameCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Act
-        playerComponent.connectToGame("");
-
-        //Assert
-        verify(logicMock, times(1)).connectToGame("");
-    }
-
-    @Test
-    void requestFacilityUsageCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Act
-        playerComponent.requestFacilityUsage(mock(Facility.class));
-
-        //Assert
-        verify(logicMock, times(1)).requestFacilityUsage(any(Facility.class));
-    }
-
-    @Test
-    void getAllFacilitiesCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Act
-        playerComponent.getAllFacilities();
-
-        //Assert
-        verify(logicMock, times(1)).getAllFacilities();
-    }
-
 }
