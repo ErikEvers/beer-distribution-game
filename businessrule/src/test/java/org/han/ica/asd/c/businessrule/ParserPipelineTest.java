@@ -79,36 +79,6 @@ class ParserPipelineTest {
     }
 
     @Test
-    void testFindEndErrorWord(){
-        String businessRule = "if inventory is 20 then order 20";
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(parserPipeline, "findEndErrorWord", businessRule,12);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        int exp = 11;
-        assertEquals(exp, res);
-    }
-
-    @Test
-    void testFindBeginErrorWord(){
-        String businessRule = "if inventory is 20 then order 20";
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(parserPipeline, "findBeginErrorWord", businessRule,11);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        int exp = 3;
-        assertEquals(exp, res);
-    }
-
-    @Test
     void testEncodeBusinessRules(){
         parserPipeline.parseString("default order 20");
 

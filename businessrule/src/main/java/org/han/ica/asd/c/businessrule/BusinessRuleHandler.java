@@ -17,8 +17,6 @@ import javax.inject.Provider;
 import java.util.List;
 
 public class BusinessRuleHandler implements IBusinessRules {
-    private Provider<ParserPipeline> parserPipelineProvider;
-    private Provider<BusinessRuleDecoder> businessRuleDecoderProvider;
 
     private ParserPipeline parserPipeline;
     private BusinessRuleDecoder businessRuleDecoder;
@@ -29,10 +27,8 @@ public class BusinessRuleHandler implements IBusinessRules {
 
     @Inject
     public BusinessRuleHandler(Provider<ParserPipeline> parserPipelineProvider, Provider<BusinessRuleDecoder> businessRuleDecoderProvider) {
-        this.parserPipelineProvider = parserPipelineProvider;
-        this.businessRuleDecoderProvider = businessRuleDecoderProvider;
-        parserPipeline = this.parserPipelineProvider.get();
-        businessRuleDecoder = this.businessRuleDecoderProvider.get();
+        parserPipeline = parserPipelineProvider.get();
+        businessRuleDecoder = businessRuleDecoderProvider.get();
     }
 
     /**
@@ -46,6 +42,7 @@ public class BusinessRuleHandler implements IBusinessRules {
             return parserPipeline.getBusinessRulesInput();
         }
         iBusinessRuleStore.synchronizeBusinessRules(agentName,parserPipeline.getBusinessRulesMap());
+        parserPipeline.getBusinessRulesMap().clear();
         return parserPipeline.getBusinessRulesInput();
     }
 
@@ -60,7 +57,7 @@ public class BusinessRuleHandler implements IBusinessRules {
             return new ActionModel(
                     action.getType(),
                     action.getAmount(),
-                    action.getFacilityId());
+                    action.getFacilityId(facilityId));
         }
         return null;
     }

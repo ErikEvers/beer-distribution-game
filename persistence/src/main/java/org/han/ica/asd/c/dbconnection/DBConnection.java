@@ -38,7 +38,7 @@ public class DBConnection implements IDatabaseConnection {
 		findFileAndRun(scriptname, sb, connect(), LOGGER);
 	}
 
-	static void findFileAndRun(String scriptname, StringBuilder sb, Connection connect2, Logger logger){
+	public static void findFileAndRun(String scriptname, StringBuilder sb, Connection connect2, Logger logger){
 		String s;
 		try(FileReader fr = new FileReader(new File(Thread.currentThread().getContextClassLoader().getResource(scriptname).toURI()))){
 			BufferedReader br = new BufferedReader(fr);

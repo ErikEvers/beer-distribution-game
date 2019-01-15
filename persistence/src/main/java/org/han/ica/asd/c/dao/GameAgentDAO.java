@@ -171,8 +171,6 @@ public class GameAgentDAO{
     }
 
 	public void updateGameagents(List<GameAgent> agents) {
-        for (GameAgent agent: agents) {
-            updateGameagent(agent);
-        }
+        agents.forEach(this::updateGameagent);
 	}
 }
