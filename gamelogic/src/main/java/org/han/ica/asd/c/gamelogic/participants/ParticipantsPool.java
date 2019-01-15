@@ -40,7 +40,6 @@ public class ParticipantsPool {
      * @param agent The agent to replace the local player with.
      */
     public void replacePlayerWithAgent(Agent agent) {
-        participants.remove(player);
         participants.add(agent);
     }
 
