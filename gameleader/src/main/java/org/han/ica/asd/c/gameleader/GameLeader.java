@@ -39,8 +39,6 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 		@Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
     @Inject private static Logger logger; //NOSONAR
 
-    private final Provider<BeerGame> beerGameProvider;
-    private final Provider<Round> roundProvider;
     private final Provider<Player> playerProvider;
     private final Provider<Agent> agentProvider;
 
@@ -56,9 +54,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private int roundId = 1;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider, Provider<Agent> agentProvider) {
-        this.beerGameProvider = beerGameProvider;
-        this.roundProvider = roundProvider;
+    public GameLeader(Provider<Player> playerProvider, Provider<Agent> agentProvider) {
         this.playerProvider = playerProvider;
         this.agentProvider = agentProvider;
     }
