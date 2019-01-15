@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -109,7 +108,11 @@ public class Agent extends GameAgent implements IParticipant {
 		if(getFacility().getFacilityId() == targetFacilityId)
 			return getFacility();
 
-		List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
+		Facility facility = getFacility();
+		List<Facility> links = configuration.getFacilitiesLinkedTo().entrySet().stream()
+                .filter(m -> m.getKey().getFacilityId() == facility.getFacilityId())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
 		if(targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
             Collections.sort(links);
@@ -125,6 +128,19 @@ public class Agent extends GameAgent implements IParticipant {
 		throw new FacilityNotFound(targetFacilityId);
 	}
 
+	private boolean entryContainsFacilityInValue(Map.Entry<Facility, List<Facility>> entry){
+	    Facility facility = getFacility();
+
+	    List<Facility> list = entry.getValue();
+
+	    for(Facility f : list){
+	        if (f.getFacilityId() == facility.getFacilityId()){
+	            return true;
+            }
+        }
+	    return false;
+    }
+
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
 	 *
@@ -133,21 +149,24 @@ public class Agent extends GameAgent implements IParticipant {
 	 */
 	private Facility resolveHigherFacilityId(int targetFacilityId) throws FacilityNotFound {
 		if (targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
+		    List<Map.Entry<Facility, List<Facility>>> entryList = new ArrayList<>(configuration.getFacilitiesLinkedTo().entrySet());
 
-			Map<Facility, List<Facility>> map = configuration.getFacilitiesLinkedTo().entrySet().stream()
-					.filter(m -> m.getValue().contains(getFacility()))
-					.collect(
-							Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-									LinkedHashMap::new));
-
-			List<Facility> list = map.keySet().stream().sorted().collect(Collectors.toList());
+		    List<Facility> list = entryList.stream()
+                    .filter(this::entryContainsFacilityInValue)
+                    .map(Map.Entry::getKey)
+                    .sorted()
+                    .collect(Collectors.toList());
 
 			if (!list.isEmpty()) {
 				return list.get(0);
 			}
 		} else {
+		    Facility facility = getFacility();
+		    if (facility.getFacilityId() == targetFacilityId){
+		        return facility;
+            }
 			for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
-				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
+				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == facility.getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
 					return link.getKey();
 				}
 			}
@@ -163,5 +182,9 @@ public class Agent extends GameAgent implements IParticipant {
 	@Override
     public Facility getParticipant() {
         return getFacility();
+    }
+
+    public void setConfiguration(Configuration configuration) {
+	    this.configuration = configuration;
     }
 }

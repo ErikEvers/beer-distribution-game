@@ -90,7 +90,7 @@ public class RoundDAO {
 		}
 	}
 
-	private void updateRound(Round round) {
+	public void updateRound(Round round) {
 		for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
 			updateFacilityTurn(round.getRoundId(),facilityTurn);
 		}
@@ -243,7 +243,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					if(!rs.isClosed()) {
+					while(!rs.isClosed() && rs.next()) {
 						orders.add(new FacilityTurnOrder(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdOrder"), rs.getInt("OrderAmount")));
 					}
 				}
@@ -270,7 +270,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					if(!rs.isClosed()) {
+					while(!rs.isClosed() && rs.next()) {
 						delivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
 					}
 				}
@@ -297,7 +297,7 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					if(!rs.isClosed()) {
+					while(!rs.isClosed() && rs.next()) {
 						facilities.add(new FacilityTurn(rs.getInt(FACILITY_ID), rs.getInt(ROUND_ID), rs.getInt("Stock"), rs.getInt("Backorders"), rs.getInt("RemainingBudget"), rs.getBoolean("Bankrupt")));
 					}
 				}
@@ -390,7 +390,7 @@ public class RoundDAO {
 				conn.setAutoCommit(false);
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
-					if(!rs.isClosed()) {
+					while(!rs.isClosed() && rs.next()) {
 						round = createRoundModel(rs);
 						rounds.add(round);
 					}

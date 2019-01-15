@@ -108,6 +108,11 @@ class Fixtures {
                         @Override
                         public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
                         }
+
+                        @Override
+                        public void updateRound(Round round) {
+
+                        }
                     });
                     bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).toInstance(new IBusinessRuleStore() {
                         @Override
@@ -290,6 +295,11 @@ class Fixtures {
 
                         @Override
                         public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+                        }
+
+                        @Override
+                        public void updateRound(Round round) {
+
                         }
                     });
                     bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).toInstance(new IBusinessRuleStore() {
@@ -478,6 +488,11 @@ class Fixtures {
 
                         @Override
                         public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+                        }
+
+                        @Override
+                        public void updateRound(Round round) {
+
                         }
                     });
                     bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).toInstance(new IBusinessRuleStore() {

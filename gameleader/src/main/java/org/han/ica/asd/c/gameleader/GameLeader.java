@@ -1,7 +1,6 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
@@ -183,8 +182,9 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Then it starts a new round.
      */
     private void allTurnDataReceived() {
-				this.previousRoundData = this.currentRoundData;
-        this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
+        this.previousRoundData = this.currentRoundData;
+        this.currentRoundData = gameLogic.calculateRound(this.previousRoundData, game);
+        persistence.updateRound(this.previousRoundData);
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
@@ -204,6 +204,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
                     Agent tempAgent = agentProvider.get();
                     tempAgent.setFacility(agent.getFacility());
                     tempAgent.setGameAgentName(agent.getGameAgentName());
+                    tempAgent.setConfiguration(getBeerGame().getConfiguration());
                     tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
                     gameLogic.addLocalParticipant(tempAgent);
                 }

@@ -30,4 +30,14 @@ public class PersistenceStub implements IGameStore {
     public Player getPlayerById(String playerId) {
         return null;
     }
+
+    @Override
+    public void updateRound(Round round) {
+
+    }
+
+    @Override
+    public void createRound(Round round) {
+
+    }
 }

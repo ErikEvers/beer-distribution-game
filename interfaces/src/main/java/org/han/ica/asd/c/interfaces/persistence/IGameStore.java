@@ -10,4 +10,6 @@ public interface IGameStore {
     void saveRoundData(Round roundData);
     Round fetchRoundData(int roundId);
     Player getPlayerById(String playerId);
+    void updateRound(Round round );
+    void createRound(Round round );
 }
