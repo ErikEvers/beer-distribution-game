@@ -76,7 +76,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 				pstmt.setInt(2, roundId);
 				pstmt.setInt(3, facilityId);
 				try (ResultSet rs = pstmt.executeQuery()){
-					gameBusinessRulesInFacilityTurn = createGameBusinessRulesInFacilityTurnModel(roundId, facilityId, gameAgentName, gameBusinessRules, rs);
+					gameBusinessRulesInFacilityTurn = createGameBusinessRulesInFacilityTurnModel(facilityId, gameAgentName, gameBusinessRules, rs);
 				}
 				conn.commit();
 			} catch (SQLException e) {
@@ -87,7 +87,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 		return gameBusinessRulesInFacilityTurn;
 	}
 
-	private GameBusinessRulesInFacilityTurn createGameBusinessRulesInFacilityTurnModel(int roundId, int facilityId, String gameAgentName, List<GameBusinessRules> gameBusinessRules, ResultSet rs) throws SQLException {
+	private GameBusinessRulesInFacilityTurn createGameBusinessRulesInFacilityTurnModel(int facilityId, String gameAgentName, List<GameBusinessRules> gameBusinessRules, ResultSet rs) throws SQLException {
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn();
 		gameBusinessRulesInFacilityTurn.setFacilityId(rs.getInt("FacilityId"));
 		gameBusinessRulesInFacilityTurn.setRoundId(rs.getInt("RoundId"));
