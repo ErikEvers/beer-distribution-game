@@ -35,6 +35,4 @@ public interface IPlayerGameLogic {
     int getRoundId();
 
     void setPlayer(IPlayerRoundListener player);
-
-    BeerGame seeOtherFacilities();
 }

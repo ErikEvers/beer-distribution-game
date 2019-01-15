@@ -73,15 +73,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @return The current state of the game.
      */
     @Override
-    public BeerGame seeOtherFacilities() {
-        return beerGame;
-    }
-
-    /**
-     * Returns the current state of the game.
-     * @return The current state of the game.
-     */
-    @Override
     public BeerGame getBeerGame() {
         return beerGame;
     }
@@ -133,10 +124,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void removeAgentByPlayerId(String playerId) {
         //TODO: please remove this. Quick fix for now.
         participantsPool.replaceAgentWithPlayer();
-    }
-
-    public void sendTurnData(Round turn) {
-        communication.sendTurnData(turn);
     }
 
     public void addObserver(IConnectorObserver observer) {
