@@ -72,8 +72,8 @@ public class GameMessageClient {
         return response.getResponse();
     }
 
-    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException, SendGameMessageException {
-        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility, String playerId) throws FacilityNotAvailableException, SendGameMessageException {
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility, playerId);
         ChooseFacilityMessage response = gameMessageSender.sendGameMessageGeneric(ip, chooseFacilityMessage);
         if (response.getException() != null) {
             throw (FacilityNotAvailableException) response.getException();
@@ -81,8 +81,8 @@ public class GameMessageClient {
         return response;
     }
 
-    public GamePlayerId sendGameDataRequestMessage(String ip) throws SendGameMessageException {
-        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
+    public GamePlayerId sendGameDataRequestMessage(String ip, String userName) throws SendGameMessageException {
+        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage(userName);
         RequestGameDataMessage response = gameMessageSender.sendGameMessageGeneric(ip, requestAllFacilitiesMessage);
         if (response.getException() != null) {
             //Implement is specific error en throw that, if that is need by the Setup Component.
@@ -96,10 +96,11 @@ public class GameMessageClient {
      * This method sends the handled round data back to every peer.
      *
      * @param ips        The ips to send the round to.
-     * @param roundModel The round object.
+     * @param prevRound The previous round object.
+     * @param prevRound The new round object.
      */
-    public void sendRoundToAllPlayers(String[] ips, Round roundModel) throws TransactionException {
-        RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
+    public void sendRoundToAllPlayers(String[] ips, Round prevRound, Round newRound) throws TransactionException {
+        RoundModelMessage roundModelMessage = new RoundModelMessage(prevRound, newRound);
         new SendInTransaction(ips, roundModelMessage, gameMessageSender).sendToAllPlayers();
     }
 

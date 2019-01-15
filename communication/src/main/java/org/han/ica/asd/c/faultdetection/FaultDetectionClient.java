@@ -130,9 +130,8 @@ public class FaultDetectionClient {
     private void sendObject(Object object, String ipAddress) throws NodeCantBeReachedException {
         outputStream = null;
         isConnected = false;
-        boolean isConnecting = true;
 
-        while (!isConnected && isConnecting) {
+        while (!isConnected) {
             try (Socket socket = new Socket()) {
                 socket.connect(new InetSocketAddress(ipAddress, 4445), 2000);
                 isConnected = true;

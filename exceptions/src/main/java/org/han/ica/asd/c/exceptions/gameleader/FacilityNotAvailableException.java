@@ -5,15 +5,15 @@ public class FacilityNotAvailableException extends Exception {
         super();
     }
 
-    FacilityNotAvailableException(String message) {
+    public FacilityNotAvailableException(String message) {
         super(message);
     }
 
-    FacilityNotAvailableException(Throwable cause) {
+    public FacilityNotAvailableException(Throwable cause) {
         super(cause);
     }
 
-    FacilityNotAvailableException(String message, Throwable cause) {
+    public FacilityNotAvailableException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -3,6 +3,7 @@ package org.han.ica.asd.c.model.domain_objects;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Round implements IDomainModel, Serializable {
     private int roundId;
@@ -16,12 +17,14 @@ public class Round implements IDomainModel, Serializable {
        facilityTurnDelivers = new ArrayList<>();
     }
 
-    public Round(int roundId, List<FacilityTurn> facilityTurns, List<FacilityTurnOrder> facilityOrders, List<FacilityTurnDeliver> facilityTurnDelivers) {
+    public Round(int roundId, List<FacilityTurn> facilityTurns, List<FacilityTurnOrder> facilityOrders,
+                 List<FacilityTurnDeliver> facilityTurnDelivers) {
         this.roundId = roundId;
         this.facilityTurns = facilityTurns;
         this.facilityOrders = facilityOrders;
         this.facilityTurnDelivers = facilityTurnDelivers;
     }
+
 
     public int getRoundId() {
         return roundId;
@@ -33,6 +36,11 @@ public class Round implements IDomainModel, Serializable {
 
     public List<FacilityTurn> getFacilityTurns() {
         return facilityTurns;
+    }
+
+    public FacilityTurn getFacilityTurnByFacilityId(int facilityId) {
+        Optional<FacilityTurn> ft = facilityTurns.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityId).findFirst();
+        return ft.orElse(null);
     }
 
     public void setFacilityTurns(List<FacilityTurn> facilityTurns) {

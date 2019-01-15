@@ -1,34 +1,25 @@
 package org.han.ica.asd.c.gui_play_game;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-
-
 public class PlayGameRetailerController extends PlayGame {
-    @FXML
-    private TextField incomingGoodsNextRound;
-
-    @FXML
-    private ComboBox<Facility> comboBox;
 
     /**
      * First code being executed.
      */
     public void initialize() {
         superInitialize();
+        orderList.setItems(orderFacilities);
     }
 
     /**
      * Button event handling the order sending.
      */
+    @Override
     public void handleSendOrderButtonClick() {
         super.handleSendOrderButtonClick();
     }
 
-    public void submitTurnButtonClicked(MouseEvent mouseEvent) {
+    @Override
+    public void submitTurnButtonClicked() {
         super.submitTurnButtonClicked();
     }
 
@@ -38,5 +29,11 @@ public class PlayGameRetailerController extends PlayGame {
     @Override
     public void fillComboBox(){
         fillOutGoingOrderFacilityComboBox(comboBox);
+    }
+
+    @Override
+    public void refreshInterfaceWithCurrentStatus(int roundId) {
+			super.refreshInterfaceWithCurrentStatus(roundId);
+			fillComboBox();
     }
 }

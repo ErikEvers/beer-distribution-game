@@ -16,4 +16,9 @@ public class CommunicationStub implements IConnectedForPlayer {
 	public void addObserver(IConnectorObserver observer) {
 
 	}
+
+	@Override
+	public void startFaultDetector() {
+
+	}
 }

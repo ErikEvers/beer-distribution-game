@@ -7,6 +7,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import java.util.ResourceBundle;
 
 public class ProgramAgent implements IGUIHandler {
+
     private String agentName;
     private ObservableList<String> items;
 

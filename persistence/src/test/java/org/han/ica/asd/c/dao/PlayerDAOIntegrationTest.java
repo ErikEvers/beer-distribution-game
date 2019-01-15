@@ -7,6 +7,7 @@ import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,16 +22,18 @@ import static org.mockito.Mockito.when;
 public class PlayerDAOIntegrationTest {
     private final String GAME_ID = "game";
     private final String PLAYER_ID = "id";
+    private final String PLAYER_ID2 = "id2";
     private final String PLAYER_NAME = "name";
     private final String IP_ADDRESS = "127.0.0.1";
     private PlayerDAO playerDAO;
     private Player player;
+    private Player player2;
 
     @Mock
     private FacilityDAO facilityDAO;
 
     @BeforeEach
-    void setup () {
+    void setup() {
         MockitoAnnotations.initMocks(this);
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -39,12 +42,18 @@ public class PlayerDAOIntegrationTest {
                 bind(FacilityDAO.class).toInstance(facilityDAO);
             }
         });
-        when(facilityDAO.readSpecificFacility(anyInt())).thenReturn(new Facility());
         DBConnectionTest.getInstance().createNewDatabase();
         playerDAO = injector.getInstance(PlayerDAO.class);
         DaoConfig.setCurrentGameId(GAME_ID);
         player = new Player(PLAYER_ID, IP_ADDRESS, new Facility(), PLAYER_NAME, true);
+        player2 = new Player(PLAYER_ID2, IP_ADDRESS, null, PLAYER_NAME, true);
 
+    }
+
+    @AfterEach
+    void teardown() {
+        DBConnectionTest.getInstance().cleanup();
+        DaoConfig.clearCurrentGameId();
     }
 
     @Test
@@ -67,10 +76,20 @@ public class PlayerDAOIntegrationTest {
 
     @Test
     void getSinglePlayerTest() {
+		when(facilityDAO.readSpecificFacility(anyInt())).thenReturn(new Facility());
         playerDAO.createPlayer(player);
         Player tempPlayer = playerDAO.getPlayer(PLAYER_ID);
         Assertions.assertEquals(PLAYER_ID, tempPlayer.getPlayerId());
     }
+
+	@Test
+	void getSinglePlayerWithoutFacilityTest() {
+		when(facilityDAO.readSpecificFacility(0)).thenReturn(null);
+		playerDAO.createPlayer(player2);
+		Player tempPlayer = playerDAO.getPlayer(PLAYER_ID2);
+		Assertions.assertEquals(PLAYER_ID2, tempPlayer.getPlayerId());
+		Assertions.assertNull(tempPlayer.getFacility());
+	}
 
     @Test
     void deletePlayerTest() {

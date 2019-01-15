@@ -31,18 +31,25 @@ import java.util.logging.Logger;
 public class FaultDetectorLeader extends TimerTask {
     @Inject
     private NodeInfoList nodeInfoList;
+
     @Inject
     private FaultDetectionClient faultDetectionClient;
+
     @Inject
     private FaultHandlerLeader faultHandlerLeader;
+
     @Inject
     private FailLog failLog;
+
     @Inject
     private static Logger logger;//NOSONAR
 
-    private Timer timer;
     private List<String> ips;
+
+    private Timer timer;
+
     private List<IConnectorObserver> observers;
+
     private boolean active = false;
 
     public FaultDetectorLeader() {
@@ -60,6 +67,7 @@ public class FaultDetectorLeader extends TimerTask {
      */
     @Override
     public void run() {
+        //Tries to make the connection once every set interval.
         ips = nodeInfoList.getActiveIpsWithoutLeader();
         for (String ip : ips) {
             logger.log(Level.INFO, "Sending Ping to : {0} : {1}", new Object[]{ip, new Date()});
@@ -69,6 +77,7 @@ public class FaultDetectorLeader extends TimerTask {
 
         //Checks if node wasn't reached 3 times, it then sends a faultMessage to all peers that can be reached.
         sendFaultMessagesToActivePlayers(ips);
+
         checkIfThisMachineIsDisconnected();
     }
 
@@ -82,11 +91,11 @@ public class FaultDetectorLeader extends TimerTask {
      * @see Timer
      */
     public void start() {
-        this.active = true;
         //running timer task as daemon thread
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerLeader.setObservers(observers);
+        active = true;
     }
 
     /**
@@ -252,29 +261,14 @@ public class FaultDetectorLeader extends TimerTask {
         this.ips = ips;
     }
 
-    /**
-     * Sets new timer.
-     *
-     * @param t New value of timer.
-     */
     void setTimer(Timer t) {
         this.timer = t;
     }
 
-    /**
-     * Sets new observers.
-     *
-     * @param observers New value of observers.
-     */
     public void setObservers(List<IConnectorObserver> observers) {
         this.observers = observers;
     }
 
-    /**
-     * Sets new nodeInfoList.
-     *
-     * @param nodeInfoList New value of nodeInfoList.
-     */
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
         failLog.setNodeInfoList(nodeInfoList);

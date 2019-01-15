@@ -3,12 +3,8 @@ package org.han.ica.asd.c.gui_main_menu;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
-import javafx.scene.control.Button;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,6 +13,10 @@ public class MainMenuController {
 
     @FXML
     private Button close;
+
+    @Inject
+    @Named("GameSetupStart")
+    private IGUIHandler gameSetupStart;
 
     @Inject
     @Named("ProgramAgentList")
@@ -30,12 +30,6 @@ public class MainMenuController {
     @Named("JoinGame")
     private IGUIHandler joinGame;
 
-		@Inject
-		private IConnectorForSetup connector;
-
-    public void initialize() {
-
-    }
     @FXML
     private void closeButtonAction() {
         Stage stage = (Stage) close.getScene().getWindow();
@@ -49,15 +43,16 @@ public class MainMenuController {
 
     @FXML
     private void replayButtonAction() {
-         replayGameList.setupScreen();
+        replayGameList.setupScreen();
     }
 
+    @FXML
     public void handleCreateGameButtonClick() {
-			connector.start();
-			connector.createRoom("12345", "");
-		}
+        gameSetupStart.setupScreen();
+    }
 
-    public void handleJoinGameButtonClick(){
+    @FXML
+    public void handleJoinGameButtonClick() {
         joinGame.setupScreen();
     }
 

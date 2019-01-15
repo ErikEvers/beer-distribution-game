@@ -1,20 +1,27 @@
 package org.han.ica.asd.c.gui_join_game;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.dao.DaoConfig;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
+import org.han.ica.asd.c.fxml_helper.treebuilder.FacilitySelectedEvent;
+import org.han.ica.asd.c.fxml_helper.treebuilder.FacilitySelectedEventHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
-import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
-import org.han.ica.asd.c.player.PlayerComponent;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 
 public class GameRoomController {
 	private RoomModel roomModel;
@@ -25,6 +32,9 @@ public class GameRoomController {
 
 	@FXML
 	private Label gameRoom;
+
+	@FXML
+	private Button chooseFacilityButton;
 
 	@Inject
 	@Named("JoinGame")
@@ -42,27 +52,48 @@ public class GameRoomController {
 	@Named("PlayerComponent")
 	private IPlayerComponent playerComponent;
 
+	private Facility selectedFacility;
+
     public void initialize() {
+    	facilitiesContainer.addEventHandler(FacilitySelectedEvent.FACILITY_SELECTED_EVENT, new FacilitySelectedEventHandler(){
+				@Override
+				public void handleFacilitySelection(FacilityRectangle facilityRectangle) {
+					selectedFacility = facilityRectangle.getFacility();
+					chooseFacilityButton.setDisable(false);
+					handleRefreshButtonClick();
+				}
+			});
 		}
 
     public void handleBackToJoinGameButtonClick() {
     	iConnectorForSetup.removeYourselfFromRoom(roomModel);
-        joinGame.setupScreen();
-
+			DaoConfig.clearCurrentGameId();
+    	playerComponent.clearPlayer();
+    	joinGame.setupScreen();
     }
 
-    public void handleReadyButtonClick() {
-    	playerComponent.chooseFacility(TreeBuilder.getLastClickedFacility());
-        playGame.setData(new Object[]{beerGame});
-        playGame.setupScreen();
+    public void handleChooseFacilityButtonClick() {
+    	playerComponent.chooseFacility(selectedFacility);
+    	handleRefreshButtonClick();
     }
 
-    public void setGameData(RoomModel roomModel, BeerGame beerGame) {
+    public void handleRefreshButtonClick() {
+    	try {
+				beerGame = iConnectorForSetup.getGameData("").getBeerGame();
+				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
+			} catch (SendGameMessageException e) {
+				Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
+				alert.show();
+			}
+		}
+
+    public void setGameData(RoomModel roomModel, BeerGame beerGame, String playerId) {
         this.roomModel = roomModel;
 				this.beerGame = beerGame;
+
+				playerComponent.setPlayer(beerGame.getPlayerById(playerId));
         gameRoom.setText(roomModel.getRoomName());
 
-				DaoConfig.setCurrentGameId(beerGame.getGameId());
 				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
     }
 }

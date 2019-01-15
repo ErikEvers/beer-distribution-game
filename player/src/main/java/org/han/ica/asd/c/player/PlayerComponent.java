@@ -1,38 +1,54 @@
 package org.han.ica.asd.c.player;
 
-import org.han.ica.asd.c.gamelogic.public_interfaces.IPlayerGameLogic;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
+
 import javax.inject.Inject;
-import org.han.ica.asd.c.model.domain_objects.*;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Optional;
 
-public class PlayerComponent implements IPlayerComponent, IParticipant {
+public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private Provider<Round> roundProvider;
     private Provider<FacilityTurnOrder> facilityTurnOrderProvider;
     private Provider<FacilityTurnDeliver> facilityTurnDeliverProvider;
 
     private static Player player;
-    private Round round;
-    private IPlayGame ui;
+    private static Round round;
+    private static IPlayGame ui;
 
-    @Inject
     private IPlayerGameLogic gameLogic;
 
     @Inject
-    public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
-        this.roundProvider = roundProvider;
-        this.facilityTurnOrderProvider = facilityTurnOrderProvider;
-        this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
-        this.gameLogic = gameLogic;
-        gameLogic.setPlayerParticipant(this);
+    private IConnectorForSetup communication;
 
+    @Inject
+		@Named("PlayGame")
+    private IGUIHandler playGame;
+
+    @Inject
+		public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
+				this.roundProvider = roundProvider;
+				this.facilityTurnOrderProvider = facilityTurnOrderProvider;
+				this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+				this.gameLogic = gameLogic;
+				gameLogic.setPlayer(this);
     }
 
 	@Override
@@ -72,14 +88,13 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
     }
 
     @Override
-    public BeerGame seeOtherFacilities() {
-        return gameLogic.seeOtherFacilities();
+    public BeerGame getBeerGame() {
+        return gameLogic.getBeerGame();
     }
 
-    public void startNewTurn() {
-        round = roundProvider.get();
-        round.setRoundId(gameLogic.getRound());
-    }
+    public Round getRound() {
+    	return round;
+		}
     
     @Override
     public void placeOrder(Facility facility, int amount) {
@@ -110,13 +125,21 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
         }
     }
 
-    public void submitTurn() {
+    public void submitTurn() throws SendGameMessageException {
         gameLogic.submitTurn(round);
     }
 
     @Override
     public void chooseFacility(Facility facility) {
-        //comm.chooseFacility(facility, player.getPlayerId());
+        try {
+            communication.chooseFacility(facility, player.getPlayerId());
+            player.setFacility(facility);
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
+						alert.show();
+        } catch (FacilityNotAvailableException | SendGameMessageException e) {
+					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
+					alert.show();
+        }
     }
 
     @Override
@@ -124,10 +147,14 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
         return player.getFacility().getFacilityType().getFacilityName();
     }
 
-    public static void setPlayer(Player player) {
+    public void setPlayer(Player player) {
         PlayerComponent.player = player;
     }
 
+	@Override
+	public void clearPlayer() {
+		player = null;
+	}
     @Override
     public Player getPlayer() {
         return player;
@@ -135,23 +162,35 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
 
     @Override
     public void setUi(IPlayGame game) {
-        this.ui = game;
+        ui = game;
     }
 
-    public Facility getFacility() {
+	@Override
+	public void clearUi() {
+		ui = null;
+	}
+
+	public Facility getFacility() {
         return player.getFacility();
     }
+
+    public void startGame() {
+			Platform.runLater(() -> playGame.setupScreen());
+		}
 
     /**
      * doOrder will notify the  participant to make an order.
      *
-     * @param round
-     * @return A FacilityTurn with an order for the current round.
+     * @return The current beergame status.
      */
     @Override
-    public GameRoundAction executeTurn(Round round) {
-        ui.refreshInterfaceWithCurrentStatus(gameLogic.getRound());
-        return null;
+    public void roundStarted() {
+    	if(round == null || round.getRoundId() != gameLogic.getRoundId()) {
+				round = roundProvider.get();
+				round.setRoundId(gameLogic.getRoundId());
+			}
+    	Platform.runLater(() ->
+            ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
     }
 
     /**
@@ -160,7 +199,7 @@ public class PlayerComponent implements IPlayerComponent, IParticipant {
      * @return The facility instance.
      */
     @Override
-    public Facility getParticipant() {
-        return null;
+    public int getFacilityId() {
+        return player.getFacility().getFacilityId();
     }
 }

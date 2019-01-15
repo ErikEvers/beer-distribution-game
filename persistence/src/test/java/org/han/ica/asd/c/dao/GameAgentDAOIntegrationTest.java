@@ -62,6 +62,7 @@ class GameAgentDAOIntegrationTest {
     @AfterEach
     void tearDown() {
         DBConnectionTest.getInstance().cleanup();
+        DaoConfig.clearCurrentGameId();
     }
 
     @Test
