@@ -125,9 +125,8 @@ public class BusinessRuleStore implements IBusinessRuleStore {
 
         List<ProgrammedAgent> dbProgrammedAgents = programmedAgentDAO.readAllProgrammedAgents();
 
-        for (ProgrammedAgent programmedAgent : dbProgrammedAgents){
-                programmedAgentNames.add(programmedAgent.getProgrammedAgentName());
-        }
+        dbProgrammedAgents.forEach((programmedAgent) -> programmedAgentNames.add(programmedAgent.getProgrammedAgentName()));
+
         return programmedAgentNames;
     }
 
