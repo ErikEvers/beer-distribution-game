@@ -89,7 +89,7 @@ public class RoundDAO {
 	 * Updates a single round in the database
 	 * @param round
 	 */
-	private void updateRound(Round round) {
+	public void updateRound(Round round) {
 		round.getFacilityTurnDelivers().forEach(facilityTurnDeliver -> updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver));
 		round.getFacilityOrders().forEach(facilityTurnOrder -> updateFacilityOrder(round.getRoundId(),facilityTurnOrder));
 		round.getFacilityTurnDelivers().forEach(facilityTurnDeliver -> updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver));
