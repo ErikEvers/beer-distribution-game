@@ -19,7 +19,6 @@ public interface IPlayerComponent {
     boolean submitTurn();
     void requestFacilityUsage(Facility facility);
     void selectAgent(ProgrammedAgent agent);
-    List<String> getAllGames();
     void connectToGame(String game);
     List<Facility> getAllFacilities();
     void chooseFacility(Facility facility);

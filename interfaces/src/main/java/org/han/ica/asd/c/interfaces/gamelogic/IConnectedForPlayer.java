@@ -10,7 +10,6 @@ import java.util.List;
 public interface IConnectedForPlayer {
     boolean sendTurnData(Round turn);
     void addObserver(IConnectorObserver observer);
-    List<String> getAllGames();
     void connectToGame(String game);
     void requestFacilityUsage(Facility facility);
     List<Facility> getAllFacilities();

@@ -34,8 +34,6 @@ public interface IPlayerGameLogic {
 
     void selectAgent(ProgrammedAgent programmedAgent);
 
-    List<String> getAllGames();
-
     void connectToGame(String game);
 
     void requestFacilityUsage(Facility facility);

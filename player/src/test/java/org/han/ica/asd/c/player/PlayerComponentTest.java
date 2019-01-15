@@ -44,16 +44,6 @@ public class PlayerComponentTest {
     }
 
     @Test
-    void getAllGamesCallsMethodOfSameNameOnceInGameLogicTest() {
-
-        //Act
-        playerComponent.getAllGames();
-
-        //Assert
-        verify(logicMock, times(1)).getAllGames();
-    }
-
-    @Test
     void connectToGameCallsMethodOfSameNameOnceInGameLogicTest() {
         //Act
         playerComponent.connectToGame("");

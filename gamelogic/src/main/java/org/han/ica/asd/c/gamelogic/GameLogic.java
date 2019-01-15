@@ -104,11 +104,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     @Override
-    public List<String> getAllGames() {
-        return communication.getAllGames();
-    }
-
-    @Override
     public void connectToGame(String game) {
         communication.connectToGame(game);
     }

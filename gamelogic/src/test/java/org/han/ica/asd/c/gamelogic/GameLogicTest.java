@@ -133,15 +133,6 @@ public class GameLogicTest {
     }
 
     @Test
-    public void getAllGamesCallsMethodOfSameNameOnceInIConnectedForPlayer() {
-        //Act
-        gameLogic.getAllGames();
-
-        //Assert
-        verify(communication, times(1)).getAllGames();
-    }
-
-    @Test
     public void connectToGameCallsMethodOfSameNameOnceInIConnectedForPlayer() {
         //Act
         gameLogic.connectToGame("");

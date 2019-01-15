@@ -78,11 +78,6 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     }
 
     @Override
-    public List<String> getAllGames() {
-        return gameLogic.getAllGames();
-    }
-
-    @Override
     public void connectToGame(String game) {
         gameLogic.connectToGame(game);
     }
