@@ -107,6 +107,7 @@ public class ReplayGameRoundController {
     public void setCurrentRound(int round){
         replayComponent.updateCurrentRound(round);
         updateCurrentRound();
+        updateTree();
     }
 
     private void updateTree(){

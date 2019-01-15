@@ -86,7 +86,17 @@ public interface IVisualisedPlayedGameData {
      */
     void setDisplayedAttribute(GameValue value);
 
+    /***
+     * Get an entire beerGame with rounds filtered to the current round
+     * @return
+     * The beerGame filtered on currentRound
+     */
     BeerGame getBeerGameForCurrentRound();
 
+    /***
+     * Get the Name of the current BeerGame
+     * @return
+     *
+     */
     String getBeerGameName();
 }

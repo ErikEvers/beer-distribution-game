@@ -8,10 +8,10 @@ public enum GameValue {
     INCOMINGORDER("incoming order"),
     HIGHEST("highest", "biggest"),
     LOWEST("lowest", "smallest"),
-    FACTORY("Factory", "factory"),
-    REGIONALWAREHOUSE( "Regional Warehouse", "regional warehouse"),
-    WHOLESALER( "Wholesaler", "wholesaler"),
-    RETAILER( "Retailer", "retailer"),
+    FACTORY("factory"),
+    REGIONALWAREHOUSE("regional warehouse"),
+    WHOLESALER("wholesaler"),
+    RETAILER("retailer"),
     BUDGET("budget");
 
     String[] value;

@@ -12,7 +12,6 @@ import org.han.ica.asd.c.model.domain_objects.*;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class ReplayComponent implements IVisualisedPlayedGameData {
@@ -27,13 +26,14 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private int currentRound;
     private int totalRounds;
     private GameValue displayedAttribute;
+
     private IRetrieveReplayData retrieveReplayData;
 
     @Inject
     public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
         this.retrieveReplayData = retrieveReplayData;
         facilities = retrieveReplayData.getAllFacilities();
-        beerGame = retrieveReplayData.getBeerGame();
+        beerGame = retrieveReplayData.getGameLog();
         rounds = beerGame.getRounds();
 
         displayedAverages = new ArrayList<>();
@@ -41,9 +41,6 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
         totalRounds = rounds.size() - 1;
-
-
-        initializeAverageRounds();
     }
 
     /***
@@ -114,7 +111,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
             getSpecificData(lineChartData);
         } else {
             if (averageRounds.size() == 0) {
-                //initializeAverageRounds();
+                initializeAverageRounds();
             }
             getAverageData(lineChartData);
         }
@@ -122,6 +119,11 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         return lineChartData;
     }
 
+    /***
+     * Calls all functions needed for the chartSeries to be filled
+     * @param lineChartData
+     * The lineChartData that needs to be filled
+     */
     private void getSpecificData(ObservableList<XYChart.Series<Double, Double>> lineChartData) {
         LineChart.Series<Double, Double> facilitySeries = new LineChart.Series<>();
         facilitySeries.setName(displayedFacility.getFacilityType().getFacilityName());
@@ -129,16 +131,21 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         addSeriesToChart(lineChartData, facilitySeries);
     }
 
+    /***
+     * Calls all functions needed for the chartSeries to be filled
+     * @param lineChartData
+     * The lineChartData that needs to be filled
+     */
     private void getAverageData(ObservableList<XYChart.Series<Double, Double>> lineChartData) {
         LineChart.Series<Double, Double> factorySeries = new LineChart.Series<>();
-        factorySeries.setName(GameValue.FACTORY.getValue()[1]);
+        factorySeries.setName(GameValue.FACTORY.getValue()[0]);
         LineChart.Series<Double, Double> warehouseSeries = new LineChart.Series<>();
-        warehouseSeries.setName(GameValue.REGIONALWAREHOUSE.getValue()[1]);
+        warehouseSeries.setName(GameValue.REGIONALWAREHOUSE.getValue()[0]);
         LineChart.Series<Double, Double> wholesalerSeries = new LineChart.Series<>();
-        wholesalerSeries.setName(GameValue.WHOLESALER.getValue()[1]);
+        wholesalerSeries.setName(GameValue.WHOLESALER.getValue()[0]);
         LineChart.Series<Double, Double> retailerSeries = new LineChart.Series<>();
-        retailerSeries.setName(GameValue.RETAILER.getValue()[1]);
-        createData(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries);
+        retailerSeries.setName(GameValue.RETAILER.getValue()[0]);
+        createDataForAverageFacility(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries);
         addSeriesToChart(lineChartData, factorySeries);
         addSeriesToChart(lineChartData, warehouseSeries);
         addSeriesToChart(lineChartData, wholesalerSeries);
@@ -146,7 +153,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     }
 
     /***
-     * Creates the data that is returned in the getChartData()
+     * Creates the data that is returned in the getChartData() for an average facility
      * @param factorySeries
      * A XYChart series that will be filled with Factory data
      * @param warehouseSeries
@@ -156,13 +163,17 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
      * @param retailerSeries
      * A XYChart series that will be filled with Retailer data
      */
-    private void createData(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries) {
+    private void createDataForAverageFacility(XYChart.Series<Double, Double> factorySeries, XYChart.Series<Double, Double> warehouseSeries, XYChart.Series<Double, Double> wholesalerSeries, XYChart.Series<Double, Double> retailerSeries) {
         List<AverageRound> roundsToShow = averageRounds.stream().filter(averageRound ->
                 displayedAverages.contains(averageRound.getFacilityType()) && averageRound.getRoundId() <= currentRound).collect(Collectors.toList());
         roundsToShow.forEach(averageRound ->
                 insertDataIntoSeries(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries, averageRound));
     }
 
+    /***
+     * Creates the data that is returned in the getChartData() for a specific facility
+     * @param facilitySeries
+     */
     private void createDataForSpecificFacility(XYChart.Series<Double, Double> facilitySeries) {
         List<Round> roundsToShow = rounds.stream().
                 map(round -> new Round(round.getRoundId(), round.getFacilityTurns(), round.getFacilityOrders(), round.getFacilityTurnDelivers())).collect(Collectors.toList()).stream().
@@ -260,9 +271,12 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         this.displayedAttribute = value;
     }
 
+    /***
+     * {@inheritDoc}
+     */
     @Override
     public BeerGame getBeerGameForCurrentRound() {
-        BeerGame returnGame = retrieveReplayData.getBeerGame();
+        BeerGame returnGame = retrieveReplayData.getGameLog();
         returnGame.setRounds(returnGame.getRounds().stream().filter(round -> round.getRoundId() <= currentRound).collect(Collectors.toList()));
         return returnGame;
     }
@@ -292,6 +306,14 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         }
     }
 
+    /***
+     *
+     * @param round
+     * The round from which te value is wanted
+     * @param value
+     * The GameValue for the wanted attribute
+     * @return The value of the wanted Attribute from the AverageRound
+     */
     private double getAttributeForFacility(Round round, GameValue value) {
         switch (value) {
             case BUDGET:
@@ -442,7 +464,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
      */
     private List<Integer> getFacilityIds(GameValue gameValue) {
         List<Facility> wantedFacilities = facilities.stream().filter(facility ->
-                facility.getFacilityType().getFacilityName().equals(gameValue.getValue()[0])).collect(Collectors.toList());
+                facility.getFacilityType().getFacilityName().equalsIgnoreCase(gameValue.getValue()[0])).collect(Collectors.toList());
 
         List<Integer> ids = new ArrayList<>();
 
@@ -451,6 +473,10 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         return ids;
     }
 
+    /***
+     * {@inheritDoc}
+     */
+    @Override
     public String getBeerGameName() {
         return beerGame.getGameName();
     }

@@ -41,8 +41,25 @@ public class RetrieveReplayDataStub implements IRetrieveReplayData {
     }
 
     @Override
-    public BeerGame getBeerGame() {
+    public BeerGame getGameLog() {
         List<Round> rounds = new ArrayList<>();
+
+        List<Facility> facilities = getAllFacilities();
+        Configuration configuration = new Configuration();
+        ArrayList<Facility> list = new ArrayList<>();
+        list.add(facilities.get(3));
+        list.add(facilities.get(4));
+        configuration.getFacilitiesLinkedTo().put(facilities.get(2), list);
+
+        list = new ArrayList<>();
+        list.add(facilities.get(2));
+        configuration.getFacilitiesLinkedTo().put(facilities.get(1), list);
+
+        list = new ArrayList<>();
+        list.add(facilities.get(1));
+        configuration.getFacilitiesLinkedTo().put(facilities.get(0), list);
+
+        configuration.setFacilities(getAllFacilities());
 
         for (int i = 0; i <= 10; i++) {
             Round round = new Round();
@@ -89,7 +106,7 @@ public class RetrieveReplayDataStub implements IRetrieveReplayData {
 
             rounds.add(round);
         }
-        return new BeerGame(new Leader(new Player()), new ArrayList<Player>(), new ArrayList<GameAgent>(), new Configuration(), rounds, "ID", "mooie game", "datum", "einddatum");
+        return new BeerGame(new Leader(new Player()), new ArrayList<Player>(), new ArrayList<GameAgent>(), configuration, rounds, "ID", "mooie game", "datum", "einddatum");
     }
 
     @Override

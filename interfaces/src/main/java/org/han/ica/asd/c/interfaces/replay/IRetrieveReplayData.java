@@ -18,9 +18,9 @@ public interface IRetrieveReplayData {
 
     /**
      * @return
-     * Returns a list of all available rounds in a BeerGame with gameId
+     * Returns the current BeerGame
      */
-    BeerGame getBeerGame();
+    BeerGame getGameLog();
 
     /***
      *
