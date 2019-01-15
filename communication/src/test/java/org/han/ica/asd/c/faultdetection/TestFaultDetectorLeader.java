@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -64,8 +66,8 @@ public class TestFaultDetectorLeader {
     }
 
     @Test
-    @DisplayName("Tests if the Timer is used and the method scheduleAtAFixedRate has been called")
-    void TestStartMethodCallsTimerMethod() {
+    @DisplayName("Tests if the Timer is used and the method scheduleAtAFixedRate has been called and cancelled when stopped")
+    void TestStartAndStopMethodCallsTimerMethod() {
         Timer toTest = mock(Timer.class);
         FaultDetectorLeader faultDetectorLeader = new FaultDetectorLeader() {
 
@@ -81,6 +83,11 @@ public class TestFaultDetectorLeader {
 
         faultDetectorLeader.start();
         verify(toTest, times(1)).scheduleAtFixedRate(faultDetectorLeader, 0, 10000);
+        assertTrue(faultDetectorLeader.isActive());
+
+        faultDetectorLeader.stop();
+        assertFalse(faultDetectorLeader.isActive());
+        verify(toTest, times(1)).cancel();
     }
 
     @Test

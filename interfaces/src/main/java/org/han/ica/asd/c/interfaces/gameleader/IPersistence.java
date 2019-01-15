@@ -41,4 +41,5 @@ public interface IPersistence {
 
     void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
 
+    void updateRound(Round round);
 }

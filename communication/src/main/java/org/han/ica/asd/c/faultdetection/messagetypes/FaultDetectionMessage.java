@@ -13,10 +13,12 @@ import java.io.Serializable;
  * received.
  *
  * @author Rogier
- * @see org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage
+ * @see CanYouReachLeaderMessage
+ * @see FaultMessage
+ * @see FaultMessageResponse
+ * @see PingMessage
  * @see FaultDetectionMessageReceiver
  */
-
 public abstract class FaultDetectionMessage implements Serializable {
     protected int messageId;
 

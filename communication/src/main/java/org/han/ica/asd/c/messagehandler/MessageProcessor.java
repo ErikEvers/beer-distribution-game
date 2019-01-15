@@ -3,7 +3,7 @@ package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
-import org.han.ica.asd.c.messagehandler.exceptions.LeaderNotPresentException;
+import org.han.ica.asd.c.exceptions.communication.LeaderNotPresentException;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 
 import javax.inject.Inject;

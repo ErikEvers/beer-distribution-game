@@ -15,7 +15,7 @@ public class CommunicationStub implements IConnectorForLeader {
     }
 
     @Override
-    public void sendRoundDataToAllPlayers(Round previousRound, Round currentRound, BeerGame beerGame) {
+    public void sendRoundDataToAllPlayers(Round previousRound, Round currentRound) {
 
     }
 

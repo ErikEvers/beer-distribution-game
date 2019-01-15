@@ -57,8 +57,9 @@ public class GameAgentService implements IGameAgentService {
         return new GameAgent(programmedAgent.getProgrammedAgentName(), facility, gameBusinessRules);
     }
 
-    public BeerGame fillEmptyFacilitiesWithDefaultAgents(BeerGame beerGame) {
-        if (throwAlertIfNoDefaultAgentAvailable(beerGame)) return beerGame;
+    public List<GameAgent> fillEmptyFacilitiesWithDefaultAgents(BeerGame beerGame) {
+        List<GameAgent> agents = new ArrayList<>();
+        if (throwAlertIfNoDefaultAgentAvailable(beerGame)) return new ArrayList<>();
 
         List<Facility> facilitiesNotTaken = new ArrayList<>(beerGame.getConfiguration().getFacilities());
         for (int i = 0; i < beerGame.getConfiguration().getFacilities().size(); i++) {
@@ -72,10 +73,10 @@ public class GameAgentService implements IGameAgentService {
 
         for (Facility f : facilitiesNotTaken) {
             if (f != null) {
-                beerGame.getAgents().add(createGameAgentFromProgrammedAgent(f, defaultAgent));
+                agents.add(createGameAgentFromProgrammedAgent(f, defaultAgent));
             }
         }
-        return beerGame;
+        return agents;
     }
 
     private boolean throwAlertIfNoDefaultAgentAvailable(BeerGame beerGame) {

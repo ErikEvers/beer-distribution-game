@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.faultdetection.messagetypes;
 
+import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 
 /**
@@ -8,7 +9,8 @@ import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
  * This 'messageId' is then used at the 'FaultDetectionMessageReceiver' to determine which type of message was received.
  *
  * @author Tarik
- * @see org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage
+ * @see FaultDetectionClient
+ * @see FaultDetectionMessage
  * @see FaultDetectionMessageReceiver
  */
 public class CanYouReachLeaderMessage extends FaultDetectionMessage {

@@ -3,6 +3,7 @@ package org.han.ica.asd.c.interfaces.communication;
 
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -11,6 +12,7 @@ import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface IConnectorForSetup {
     void start();
@@ -21,6 +23,8 @@ public interface IConnectorForSetup {
     void removeHostFromRoom(RoomModel room, String hostIP);
     void removeYourselfFromRoom(RoomModel room);
     void addObserver(IConnectorObserver connectorObserver);
-    void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException;
-    GamePlayerId getGameData(String userName) throws IOException, ClassNotFoundException;
+    Map<String, String> listAllIPs();
+    void setMyIp(String ip);
+    void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException, SendGameMessageException;
+    GamePlayerId getGameData(String userName) throws SendGameMessageException;
 }

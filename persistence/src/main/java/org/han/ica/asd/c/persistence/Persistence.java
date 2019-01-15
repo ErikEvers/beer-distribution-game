@@ -14,6 +14,7 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Inject;
 
@@ -91,10 +92,26 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
         return playerDAO.getPlayer(playerId);
     }
 
-    @Override
-    public void saveNewLeader(Player newLeader) {
-        leaderDAO.insertLeader(newLeader);
-    }
+	@Override
+	public void saveSelectedAgent(ProgrammedAgent agent) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void saveNewLeader(Player newLeader) {
+		leaderDAO.insertLeader(newLeader);
+	}
+
+	@Override
+	public void updateRound(Round round) {
+		roundDAO.updateRound(round);
+	}
+
+	@Override
+	public void createRound(Round round) {
+		roundDAO.createRound(round);
+	}
+
 }
 
 
