@@ -33,6 +33,8 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.IOException;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +65,7 @@ public abstract class PlayGame implements IPlayGame {
     @Inject
     @Named("SeeOtherFacilities")
     private IGUIHandler seeOtherFacilities;
+
 
     @FXML
     protected Label inventory;
@@ -308,4 +311,5 @@ public abstract class PlayGame implements IPlayGame {
             deliverList.getItems().remove(index);
         }
     }
+
 }

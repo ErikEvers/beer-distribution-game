@@ -251,6 +251,13 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
+    @Override
+    public void sendGameEnd(BeerGame beerGame) throws TransactionException {
+        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        gameMessageClient.sendGameEndToAllPlayers(ips.toArray(new String[0]), beerGame);
+    }
+
+
     public NodeInfoList getIps() {
         return nodeInfoList;
     }
@@ -271,7 +278,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "25.20.29.75";
+        return "25.20.114.146";
     }
 
     /**

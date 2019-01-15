@@ -2,13 +2,8 @@ package org.han.ica.asd.c.messagehandler.sending;
 
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
-import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.*;
 
-import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
@@ -137,5 +132,10 @@ public class GameMessageClient {
      */
     public void setSocketClient(SocketClient socketClient) {
         this.socketClient = socketClient;
+    }
+
+    public void sendGameEndToAllPlayers(String[] ips, BeerGame beerGame) throws TransactionException {
+        GameEndMessage gameStartMessage = new GameEndMessage(beerGame);
+        new SendInTransaction(ips, gameStartMessage, socketClient).sendToAllPlayers();
     }
 }

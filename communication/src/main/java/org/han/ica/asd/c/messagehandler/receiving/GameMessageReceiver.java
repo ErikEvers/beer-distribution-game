@@ -9,16 +9,7 @@ import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.messagehandler.MessageProcessor;
-import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ElectionMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -70,7 +61,10 @@ public class GameMessageReceiver {
                     TransactionMessage gameStartMessage = (TransactionMessage) gameMessage;
                     return handleTransactionMessage(gameStartMessage);
                 case REQUEST_GAME_DATA_MESSAGE:
-                    return handleRequestGameData(senderIp, ((RequestGameDataMessage)gameMessage).getUserName());
+                    return handleRequestGameData(senderIp, ((RequestGameDataMessage) gameMessage).getUserName());
+                case GAME_END_MESSAGE:
+                    TransactionMessage gameEndMessage = (TransactionMessage) gameMessage;
+                    return handleTransactionMessage(gameEndMessage);
                 default:
                     break;
             }
@@ -184,18 +178,23 @@ public class GameMessageReceiver {
         //in theory, a bug can still occur where we receive a commit message with a different content.
         if (toBecommittedRound != null) {
             for (IConnectorObserver observer : gameMessageObservers) {
-                if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == 2) {
+                if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == ROUND_MESSAGE) {
                     //noinspection ConstantConditions
                     RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
                     ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getPreviousRound(), roundModelMessage.getNewRound());
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
-                } else if (observer instanceof IGameStartObserver && transactionMessage.getMessageType() == 7) {
+                } else if (observer instanceof IGameStartObserver && transactionMessage.getMessageType() == GAME_START_MESSAGE) {
                     //noinspection ConstantConditions
                     GameStartMessage gameStartMessage = (GameStartMessage) transactionMessage;
                     ((IGameStartObserver) observer).gameStartReceived(gameStartMessage.getBeerGame());
                     gameStartMessage.createResponseMessage();
                     return gameStartMessage;
+                } else if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == GAME_END_MESSAGE){
+                    GameEndMessage gameEndMessage = (GameEndMessage) transactionMessage;
+                    ((IRoundModelObserver) observer).roundEndRecieved();
+                    gameEndMessage.createResponseMessage();
+                    return gameEndMessage;
                 }
             }
         }

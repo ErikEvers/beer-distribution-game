@@ -4,4 +4,5 @@ public interface IPlayerRoundListener {
     void roundStarted();
     int getFacilityId();
     void startGame();
+    void endGame();
 }

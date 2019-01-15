@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gameleader;
 
+import com.sun.org.apache.xpath.internal.operations.Equals;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
@@ -30,12 +31,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
-    @Inject private IConnectorForLeader connectorForLeader;
-    @Inject private ILeaderGameLogic gameLogic;
-    @Inject private IPersistence persistence;
-    @Inject private TurnHandler turnHandler;
-		@Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
-    @Inject private static Logger logger; //NOSONAR
+    @Inject
+    private IConnectorForLeader connectorForLeader;
+    @Inject
+    private ILeaderGameLogic gameLogic;
+    @Inject
+    private IPersistence persistence;
+    @Inject
+    private TurnHandler turnHandler;
+    @Inject
+    @Named("PlayerComponent")
+    private IPlayerComponent playerComponent;
+    @Inject
+    private static Logger logger; //NOSONAR
 
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
@@ -66,12 +74,12 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         connectorForLeader.addObserver(this);
 
         game = beerGame;
-				GameLeader.roomModel = roomModel;
+        GameLeader.roomModel = roomModel;
 
-				Player player = new Player("0", leaderIp, null, "Yarno", true);
-				game.getPlayers().add(player);
-				game.setLeader(new Leader(player));
-				playerComponent.setPlayer(player);
+        Player player = new Player("0", leaderIp, null, "Yarno", true);
+        game.getPlayers().add(player);
+        game.setLeader(new Leader(player));
+        playerComponent.setPlayer(player);
 
         this.currentRoundData = game.getRounds().get(0);
         this.currentRoundData.setRoundId(roundId);
@@ -122,33 +130,33 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
     @Override
     public void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException {
-			Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst();
-			Player actualPlayer;
-			if(connectingPlayerO.isPresent()) {
-				actualPlayer = connectingPlayerO.get();
-				Optional<Player> facilityTaken = game.getPlayers().stream().filter(player -> player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
-				if(!facilityTaken.isPresent()) {
-					game.removePlayerById(actualPlayer.getPlayerId());
-					actualPlayer.setFacility(facility);
-					game.getPlayers().add(actualPlayer);
-					return;
-				}
-			}
-			throw new FacilityNotAvailableException();
+        Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getPlayerId().equals(playerId)).findFirst();
+        Player actualPlayer;
+        if (connectingPlayerO.isPresent()) {
+            actualPlayer = connectingPlayerO.get();
+            Optional<Player> facilityTaken = game.getPlayers().stream().filter(player -> player.getFacility() != null && player.getFacility().getFacilityId() == facility.getFacilityId()).findFirst();
+            if (!facilityTaken.isPresent()) {
+                game.removePlayerById(actualPlayer.getPlayerId());
+                actualPlayer.setFacility(facility);
+                game.getPlayers().add(actualPlayer);
+                return;
+            }
+        }
+        throw new FacilityNotAvailableException();
     }
 
     public GamePlayerId getGameData(String playerIp, String userName) {
         Optional<Player> connectingPlayerO = game.getPlayers().stream().filter(player -> player.getIpAddress().equals(playerIp)).findFirst();
         Player actualPlayer;
-        if(!connectingPlayerO.isPresent()) {
+        if (!connectingPlayerO.isPresent()) {
             actualPlayer = playerProvider.get();
             actualPlayer.setPlayerId(Integer.toString(highestPlayerId + 1));
             actualPlayer.setIpAddress(playerIp);
             actualPlayer.setName(userName);
-            if(highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
+            if (highestPlayerId < Integer.parseInt(actualPlayer.getPlayerId())) {
                 highestPlayerId = Integer.parseInt(actualPlayer.getPlayerId());
             }
-						game.getPlayers().add(actualPlayer);
+            game.getPlayers().add(actualPlayer);
         } else {
             actualPlayer = connectingPlayerO.get();
         }
@@ -164,7 +172,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      *
      * @param turnModel an incoming turn from a facility
      */
-    public void turnModelReceived(Round turnModel) {
+    public void turnModelReceived(Round turnModel) throws TransactionException {
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
@@ -177,8 +185,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Afterwards it sends the Round containing the calculated Round information to all players using the IConnectorForLeader interface.
      * Then it starts a new round.
      */
-    private void allTurnDataReceived() {
-				this.previousRoundData = this.currentRoundData;
+    private void allTurnDataReceived() throws TransactionException {
+        this.previousRoundData = this.currentRoundData;
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
@@ -187,36 +195,41 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
     public void startGame() throws BeerGameException, TransactionException {
-			persistence.saveGameLog(game,false);
-			for(Player player: game.getPlayers()) {
-				if(player.getFacility() == null) {
-					throw new BeerGameException("Every player needs to control a facility");
-				}
-			}
-			connectorForLeader.startRoom(roomModel);
-			connectorForLeader.sendGameStart(game);
-		}
+        persistence.saveGameLog(game, false);
+        for (Player player : game.getPlayers()) {
+            if (player.getFacility() == null) {
+                throw new BeerGameException("Every player needs to control a facility");
+            }
+        }
+        connectorForLeader.startRoom(roomModel);
+        connectorForLeader.sendGameStart(game);
+    }
+
 
     /**
      * Starts a new round of the beer game.
      * Sets the amount of received turns from players to zero.
      * Creates a new Round for the beer game.
      */
-    private void startNextRound() {
+    private void startNextRound() throws TransactionException {
         //TODO: check if game is done? (round count exceeds config max)
         roundId++;
         currentRoundData.setRoundId(roundId);
         turnsReceivedInCurrentRound = 0;
 
-				try {
-					connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData, game);
-				} catch (TransactionException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
+        try {
+            connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData, game);
+        } catch (TransactionException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        if (currentRoundData.getRoundId() == getBeerGame().getConfiguration().getAmountOfRounds()) {
+            connectorForLeader.sendGameEnd(game);
+        }
     }
 
     /**
      * Checks if the incoming playerId is the same as the playerId of the game leader.
+     *
      * @param p supplied player object
      * @return true if the supplied player is the local player, false otherwise
      */
@@ -225,7 +238,6 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
     /**
-     *
      * @return the amount of turns received from players in the current round. Since each player can send one turn, this also indicates the amount of players who have sent their turn to the game leader.
      */
     public int getTurnsReceivedInCurrentRound() {
@@ -234,10 +246,11 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
     /**
      * Retrieves the agent which belongs to the supplied FacilityId.
+     *
      * @param facilityId the id of the facility that will be used to find the correct Facility instance.
      * @return Agent object belonging to the facility.
      */
-    Agent getAgentByFacility (int facilityId) {
+    Agent getAgentByFacility(int facilityId) {
         for (GameAgent agent : game.getAgents()) {
             if (agent.getFacility().getFacilityId() == facilityId) {
                 return new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
@@ -247,13 +260,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
 
-	@Override
-	public BeerGame getBeerGame() {
-		return game;
-	}
+    @Override
+    public BeerGame getBeerGame() {
+        return game;
+    }
 
-	@Override
-	public RoomModel getRoomModel() {
-		return roomModel;
-	}
+    @Override
+    public RoomModel getRoomModel() {
+        return roomModel;
+    }
 }

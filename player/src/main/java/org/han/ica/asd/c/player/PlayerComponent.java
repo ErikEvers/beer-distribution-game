@@ -38,22 +38,27 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private IConnectorForSetup communication;
 
     @Inject
-		@Named("PlayGame")
+    @Named("PlayGame")
     private IGUIHandler playGame;
 
     @Inject
-		public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
-				this.roundProvider = roundProvider;
-				this.facilityTurnOrderProvider = facilityTurnOrderProvider;
-				this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
-				this.gameLogic = gameLogic;
-				gameLogic.setPlayer(this);
+    @Named("ReplayGame")
+    private IGUIHandler toEndScreen;
+
+
+    @Inject
+    public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
+        this.roundProvider = roundProvider;
+        this.facilityTurnOrderProvider = facilityTurnOrderProvider;
+        this.facilityTurnDeliverProvider = facilityTurnDeliverProvider;
+        this.gameLogic = gameLogic;
+        gameLogic.setPlayer(this);
     }
 
-	@Override
-	public void activatePlayer() {
-		//stub for now
-	}
+    @Override
+    public void activatePlayer() {
+        //stub for now
+    }
 
     @Override
     public void activateAgent() {
@@ -92,14 +97,14 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     }
 
     public Round getRound() {
-    	return round;
-		}
-    
+        return round;
+    }
+
     @Override
     public void placeOrder(Facility facility, int amount) {
 
         Optional<FacilityTurnOrder> facilityTurnOrderOptional = round.getFacilityOrders().stream().filter(facilityTurnDeliver -> facilityTurnDeliver.getFacilityId() == player.getFacility().getFacilityId() && facilityTurnDeliver.getFacilityIdOrderTo() == facility.getFacilityId()).findFirst();
-        if(!facilityTurnOrderOptional.isPresent()) {
+        if (!facilityTurnOrderOptional.isPresent()) {
             FacilityTurnOrder facilityTurnOrder = facilityTurnOrderProvider.get();
             facilityTurnOrder.setFacilityId(player.getFacility().getFacilityId());
             facilityTurnOrder.setFacilityIdOrderTo(facility.getFacilityId());
@@ -113,7 +118,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     @Override
     public void sendDelivery(Facility facility, int amount) {
         Optional<FacilityTurnDeliver> facilityTurnDeliverOptional = round.getFacilityTurnDelivers().stream().filter(facilityTurnDeliver -> facilityTurnDeliver.getFacilityId() == player.getFacility().getFacilityId() && facilityTurnDeliver.getFacilityIdDeliverTo() == facility.getFacilityId()).findFirst();
-        if(!facilityTurnDeliverOptional.isPresent()) {
+        if (!facilityTurnDeliverOptional.isPresent()) {
             FacilityTurnDeliver facilityTurnDeliver = facilityTurnDeliverProvider.get();
             facilityTurnDeliver.setFacilityId(player.getFacility().getFacilityId());
             facilityTurnDeliver.setFacilityIdDeliverTo(facility.getFacilityId());
@@ -133,11 +138,11 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         try {
             communication.chooseFacility(facility, player.getPlayerId());
             player.setFacility(facility);
-						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
-						alert.show();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
+            alert.show();
         } catch (FacilityNotAvailableException e) {
-					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
-					alert.show();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
+            alert.show();
         }
     }
 
@@ -150,10 +155,11 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         PlayerComponent.player = player;
     }
 
-	@Override
-	public void clearPlayer() {
-		player = null;
-	}
+    @Override
+    public void clearPlayer() {
+        player = null;
+    }
+
     @Override
     public Player getPlayer() {
         return player;
@@ -164,18 +170,24 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         ui = game;
     }
 
-	@Override
-	public void clearUi() {
-		ui = null;
-	}
+    @Override
+    public void clearUi() {
+        ui = null;
+    }
 
-	public Facility getFacility() {
+    public Facility getFacility() {
         return player.getFacility();
     }
 
     public void startGame() {
-			Platform.runLater(() -> playGame.setupScreen());
-		}
+        Platform.runLater(() -> playGame.setupScreen());
+    }
+
+    @Override
+    public void endGame() {
+        toEndScreen.setData(new Object[]{getBeerGame().getGameId()});
+        toEndScreen.setupScreen();
+    }
 
     /**
      * doOrder will notify the  participant to make an order.
@@ -184,12 +196,12 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
      */
     @Override
     public void roundStarted() {
-    	if(round == null || round.getRoundId() != gameLogic.getRoundId()) {
-				round = roundProvider.get();
-				round.setRoundId(gameLogic.getRoundId());
-			}
-    	Platform.runLater(() ->
-            ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
+        if (round == null || round.getRoundId() != gameLogic.getRoundId()) {
+            round = roundProvider.get();
+            round.setRoundId(gameLogic.getRoundId());
+        }
+        Platform.runLater(() ->
+                ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
     }
 
     /**

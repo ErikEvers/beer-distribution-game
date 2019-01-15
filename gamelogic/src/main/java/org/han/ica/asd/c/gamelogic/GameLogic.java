@@ -170,6 +170,13 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     @Override
+    public void roundEndRecieved() {
+        persistence.updateEndGame();
+        player.endGame();
+
+    }
+
+    @Override
     public void gameStartReceived(BeerGame beerGame) {
         GameLogic.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
