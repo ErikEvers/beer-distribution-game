@@ -178,7 +178,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Then it starts a new round.
      */
     private void allTurnDataReceived() {
-				this.previousRoundData = this.currentRoundData;
+        this.previousRoundData = this.currentRoundData;
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);

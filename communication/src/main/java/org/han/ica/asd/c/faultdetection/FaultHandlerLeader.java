@@ -44,6 +44,7 @@ public class FaultHandlerLeader {
             // Dit is om niet meer te pingen tot er een rejoin request gedaan word.
             // Dan moet het dus weer op true gezet worden
             nodeInfoList.updateIsConnected(ip, false);
+            System.out.println("PLAYER : " + ip + " Is Dood");
             notifyObserversPlayerDied(ip);
             return ip;
         } else {
@@ -79,6 +80,7 @@ public class FaultHandlerLeader {
      */
     public void iAmDisconnected() {
         iAmDisconnected = true;
+        System.out.println("LEIDER DOOD " + iAmDisconnected);
         notifyObserversIDied();
     }
 

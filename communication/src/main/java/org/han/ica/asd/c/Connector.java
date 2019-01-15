@@ -93,8 +93,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     public void start() {
         observers = new ArrayList<>();
-        finder = new RoomFinder();
-        nodeInfoList = new NodeInfoList();
+//        finder = new RoomFinder();
+//        nodeInfoList = new NodeInfoList();
 
         faultDetector.setObservers(observers);
         try {
@@ -223,10 +223,13 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void startFaultDetector() {
         initNodeInfoList();
         Leader leader = persistence.getGameLog().getLeader();
-        String ip = this.externalIP;
-
+        try {
+            this.externalIP = getExternalIP();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
         if (externalIP.equals(leader.getPlayer().getIpAddress())) {
-            faultDetector.startFaultDetectorLeader(nodeInfoList);
+              faultDetector.startFaultDetectorLeader(nodeInfoList);
         } else {
             faultDetector.startFaultDetectorPlayer(nodeInfoList);
         }
@@ -249,12 +252,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-        try {
-            this.externalIP = getExternalIP();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
@@ -280,7 +277,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "169.254.156.128";
+        return "169.254.231.222";
     }
 
     /**
