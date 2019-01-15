@@ -97,7 +97,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         nodeInfoList = new NodeInfoList();
 
         faultDetector.setObservers(observers);
-
         try {
             externalIP = getExternalIP();
         } catch (IOException e) {
@@ -224,6 +223,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void startFaultDetector() {
         initNodeInfoList();
         Leader leader = persistence.getGameLog().getLeader();
+        String ip = this.externalIP;
 
         if (externalIP.equals(leader.getPlayer().getIpAddress())) {
             faultDetector.startFaultDetectorLeader(nodeInfoList);
@@ -249,6 +249,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
+        try {
+            this.externalIP = getExternalIP();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
