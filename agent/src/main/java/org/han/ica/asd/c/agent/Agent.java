@@ -138,13 +138,11 @@ public class Agent extends GameAgent implements IParticipant {
 			if (!list.isEmpty()) {
 				return list.get(0);
 			}
-
-			throw new FacilityNotFound(targetFacilityId);
-		}
-
-		for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
-			if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
-				return link.getKey();
+		} else {
+			for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
+				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
+					return link.getKey();
+				}
 			}
 		}
 		throw new FacilityNotFound(targetFacilityId);
