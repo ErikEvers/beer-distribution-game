@@ -213,9 +213,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      */
     private void startNextRound() throws TransactionException {
         //TODO: check if game is done? (round count exceeds config max)
-        if (roundId == getBeerGame().getConfiguration().getAmountOfRounds()) {
-            connectorForLeader.sendGameEnd(game);
-        }
+
         roundId++;
         currentRoundData.setRoundId(roundId);
         turnsReceivedInCurrentRound = 0;
@@ -225,7 +223,9 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         } catch (TransactionException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
-
+        if (roundId == getBeerGame().getConfiguration().getAmountOfRounds()) {
+            connectorForLeader.sendGameEnd(game);
+        }
     }
 
     /**
