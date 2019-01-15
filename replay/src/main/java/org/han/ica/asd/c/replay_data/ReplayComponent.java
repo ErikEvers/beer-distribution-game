@@ -110,7 +110,7 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         if (displayedAverages.isEmpty() && displayedFacility != null) {
             getSpecificData(lineChartData);
         } else {
-            if (averageRounds.size() == 0) {
+            if (averageRounds.isEmpty()) {
                 initializeAverageRounds();
             }
             getAverageData(lineChartData);
