@@ -39,6 +39,7 @@ import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
+import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
@@ -67,18 +68,21 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IDatabaseConnection.class).to(DBConnection.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
 		bind(IGameAgentService.class).to(GameAgentService.class);
-		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
-		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
+		bind(IPlayerGameLogic.class).to(GameLogic.class);
+        //todo: TMP vervangen met daadwerkelijke implementatie
 		bind(IRetrieveReplayData.class).to(TMP.class);
 		bind(IVisualisedPlayedGameData.class).to(ReplayComponent.class);
-		bind(IPlayerGameLogic.class).to(GameLogic.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IPersistence.class).to(Persistence.class);
 		bind(IConnectedForPlayer.class).to(Connector.class);
-		bind(ILeaderGameLogic.class).to(GameLogic.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
+		bind(ILeaderGameLogic.class).to(GameLogic.class);
 		bind(IFinder.class).to(RoomFinder.class);
 		bind(IGameStore.class).to(Persistence.class);
+		bind(IGameLeader.class).annotatedWith(Names.named("GameLeader")).to(GameLeader.class);
+
+		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
+		bind(IServerObserver.class).annotatedWith(Names.named("MessageDirector")).to(MessageDirector.class);
 
 		guiBinds();
 		staticRequests();
@@ -114,5 +118,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGUIHandler.class).annotatedWith(Names.named("GameSetup")).to(GameSetup.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("ManagePlayers")).to(ManagePlayers.class);
 		bind(IGUIHandler.class).annotatedWith(Names.named("AssignAgents")).to(AssignAgents.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGame")).to(ReplayGame.class);
+		bind(IGUIHandler.class).annotatedWith(Names.named("ReplayGameList")).to(ReplayGameList.class);
 	}
 }
