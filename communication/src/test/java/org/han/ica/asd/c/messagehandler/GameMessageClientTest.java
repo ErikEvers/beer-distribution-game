@@ -96,7 +96,7 @@ public class GameMessageClientTest {
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
 
         when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
-        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility);
+        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility, "");
 
         assertNull(response.getException());
     }

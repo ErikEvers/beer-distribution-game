@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,6 +27,11 @@ public class SeeOtherFacilitiesController {
      * Initialises the facility overview screen by calling the loadFacilityView() method.
      */
     public void initialize() {
-        new TreeBuilder().loadFacilityView(playerComponent.seeOtherFacilities(), facilitiesContainer, true);
+        new TreeBuilder().loadFacilityView(playerComponent.getBeerGame(), facilitiesContainer, true);
+    }
+
+    public void handleBackToGameButtonClicked(){
+        ((IPlayerRoundListener)playerComponent).startGame();
+        ((IPlayerRoundListener)playerComponent).roundStarted();
     }
 }

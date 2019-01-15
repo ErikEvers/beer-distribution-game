@@ -22,7 +22,6 @@ import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.Timeout;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 

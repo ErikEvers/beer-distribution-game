@@ -2,6 +2,10 @@ package org.han.ica.asd.c.agent;
 
 import com.google.common.collect.Lists;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
@@ -18,8 +22,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AgentIntegrationTest {
     // Linear tests
@@ -44,6 +49,11 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacilityId, 20)),
                 Collections.singletonList(
                         new FacilityTurnDeliver(targetFacility.getFacilityId(), sourceFacilityId, 0, 20)));
+
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
@@ -73,6 +83,11 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacilityIndex, 20)),
                 Collections.emptyList());
 
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
         GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
@@ -101,6 +116,11 @@ class AgentIntegrationTest {
                 Collections.singletonList(
                         new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 0, 20)));
 
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
         GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
         assertEquals(expectedDeliver, actualDeliver);
@@ -128,6 +148,11 @@ class AgentIntegrationTest {
                 Collections.singletonList(
                         new FacilityTurnDeliver(sourceFacility.getFacilityId(), 2, 0, 20)));
 
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
+
         GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
@@ -154,6 +179,11 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.singletonList(
                         new FacilityTurnDeliver(sourceFacility.getFacilityId(), 2, 0, outgoingGoods)));
+
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
@@ -496,6 +526,11 @@ class AgentIntegrationTest {
                 Collections.emptyList(),
                 Collections.singletonList(
                         new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 10, outgoingGoods)));
+
+        BeerGame beerGame = new BeerGame();
+        beerGame.getRounds().add(round);
+        when(gameLogic.getBeerGame()).thenReturn(beerGame);
+        when(gameLogic.getRoundId()).thenReturn(2);
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(sourceFacility);
