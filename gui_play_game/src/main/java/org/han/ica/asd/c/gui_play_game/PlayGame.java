@@ -237,7 +237,6 @@ public abstract class PlayGame implements IPlayGame {
     public void refreshInterfaceWithCurrentStatus(int roundId) {
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
-        Round round = playerComponent.getRound();
         int budget = 0;
         List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
         for (FacilityTurn f: facilityTurns) {
