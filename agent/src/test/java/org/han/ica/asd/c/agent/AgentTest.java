@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class AgentTest {
@@ -51,7 +53,7 @@ class AgentTest {
 
 	private IPersistence persistence = new IPersistence() {
 		@Override
-		public void saveGameLog(BeerGame beerGame) {
+		public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
 		}
 
@@ -82,7 +84,9 @@ class AgentTest {
 	private Facility upperFacility;
 	private Facility lowerFacility;
 	private Configuration configuration;
+	private BeerGame beerGame;
 	private Round round;
+	private IPlayerGameLogic gameLogic;
 
 	@BeforeEach
 	private void init() {
@@ -101,8 +105,13 @@ class AgentTest {
 		list.add(lowerFacility);
 		configuration.getFacilitiesLinkedTo().put(mainFacility, list);
 
+		beerGame = new BeerGame();
 		round = new Round();
 		round.setRoundId(0);
+		beerGame.getRounds().add(round);
+
+		gameLogic = mock(IPlayerGameLogic.class);
+		when(gameLogic.getBeerGame()).thenReturn(beerGame);
 	}
 
 	private List<GameBusinessRules> gameBusinessRuleList = Lists.newArrayList(
@@ -125,16 +134,17 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						return new ActionModel(ORDER, 30, lowerFacility.getFacilityId());
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn();
 		Map.Entry<Facility, Integer> entry = result.targetOrderMap.entrySet().iterator().next();
 
 		assertEquals(30, (int) entry.getValue());
@@ -154,15 +164,16 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn();
 		Map.Entry<Facility, Integer> entry = result.targetDeliverMap.entrySet().iterator().next();
 
 		assertEquals(5, (int) entry.getValue());
@@ -181,7 +192,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						switch (businessRule) {
 							case BUSINESS_RULE_1:
 								return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
@@ -192,11 +203,12 @@ class AgentTest {
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn();
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -215,7 +227,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -223,11 +235,12 @@ class AgentTest {
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn();
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(0, result.targetDeliverMap.size());
@@ -246,7 +259,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						if (!BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -254,11 +267,12 @@ class AgentTest {
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn();
 
 		assertEquals(0, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -277,7 +291,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						if (BUSINESS_RULE_3.equals(businessRule)) {
 							return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 						}
@@ -285,11 +299,12 @@ class AgentTest {
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn();
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -308,7 +323,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 						}
@@ -316,11 +331,12 @@ class AgentTest {
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
 
-		GameRoundAction result = agent.executeTurn(round);
+		GameRoundAction result = agent.executeTurn();
 
 		assertEquals(1, result.targetOrderMap.size());
 		assertEquals(1, result.targetDeliverMap.size());
@@ -378,6 +394,7 @@ class AgentTest {
 	void testCallingLogWhenTriggeringBusinessRulesExpectsMethodCall() {
 		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
 		IPersistence persistenceMock = mock(IPersistence.class);
+
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -388,7 +405,7 @@ class AgentTest {
 					}
 
 					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round roundData, int facilityId) {
+					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
 						if (BUSINESS_RULE_1.equals(businessRule)) {
 							return new ActionModel(DELIVER, 5, mainFacility.getFacilityId());
 						}
@@ -396,11 +413,12 @@ class AgentTest {
 					}
 				});
 				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistenceMock);
+				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
 		injector.injectMembers(agent);
 
-		agent.executeTurn(round);
+		agent.executeTurn();
 
 		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));
 		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));

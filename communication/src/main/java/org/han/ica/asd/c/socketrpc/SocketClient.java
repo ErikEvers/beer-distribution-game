@@ -124,18 +124,23 @@ public class SocketClient {
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
-            Thread t = new Thread(() -> {
-                try {
-                    Object response = sendObjectWithResponse(ip, object);
-                    map.put(ip, response);
-                } catch (IOException | ClassNotFoundException e) {
-                    logger.log(Level.SEVERE, e.getMessage(), e);
-                    map.put(ip, e);
-                }
-                cdl.countDown();
-            });
-            t.setDaemon(false);
-            t.start();
+					if(ip.equals("25.0.21.80")) {
+						SocketServer.serverObserver.serverObjectReceived(object, ip);
+						cdl.countDown();
+					} else {
+						Thread t = new Thread(() -> {
+							try {
+								Object response = sendObjectWithResponse(ip, object);
+								map.put(ip, response);
+							} catch (IOException | ClassNotFoundException e) {
+								logger.log(Level.SEVERE, e.getMessage(), e);
+								map.put(ip, e);
+							}
+							cdl.countDown();
+						});
+						t.setDaemon(false);
+						t.start();
+					}
         }
 
         try {

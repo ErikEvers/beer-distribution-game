@@ -11,6 +11,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,6 +57,12 @@ class AverageCalculationDAOIntegrationTest {
         });
 
         facilityDAO = injectorFacilityDAO.getInstance(FacilityDAO.class);
+    }
+
+    @AfterEach
+    void cleanup(){
+        DBConnectionTest.getInstance().cleanup();
+        DaoConfig.clearCurrentGameId();
     }
 
     @Test

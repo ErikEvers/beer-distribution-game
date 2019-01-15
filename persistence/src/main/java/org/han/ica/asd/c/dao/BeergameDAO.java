@@ -50,6 +50,12 @@ public class BeergameDAO {
 	@Inject
 	private LeaderDAO leaderDAO;
 
+	@Inject
+	private FacilityDAO facilityDAO;
+
+	@Inject
+	private FacilityTypeDAO facilityTypeDAO;
+
 
 
 
@@ -88,6 +94,10 @@ public class BeergameDAO {
 	 * @param beerGame A beergame which needs to be inserted
 	 */
 	public void createBeergame(BeerGame beerGame) {
+		if(DaoConfig.getCurrentGameId() != null){
+			updateBeergame(beerGame);
+		}
+		else{
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME_FROM_MODEL)) {
@@ -102,18 +112,34 @@ public class BeergameDAO {
 				DaoConfig.setCurrentGameId(beerGame.getGameId());
 
 				configurationDAO.createConfiguration(beerGame.getConfiguration());
+
+				beerGame.getConfiguration().getFacilities().forEach(facility -> {
+					facilityDAO.createFacility(facility);
+					facilityTypeDAO.createFacilityType(facility.getFacilityType());
+				});
+
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
 				leaderDAO.insertLeader(beerGame.getLeader().getPlayer());
 
 
-			} catch (SQLException e) {
-				LOGGER.log(Level.SEVERE, e.toString(), e);
-				databaseConnection.rollBackTransaction(conn);
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
 			}
 		}
 	}
+
+	public void updateBeergame(BeerGame beerGame) {
+		configurationDAO.updateConfigurations(beerGame.getConfiguration());
+		roundDAO.updateRounds(beerGame.getRounds());
+		playerDAO.updatePlayers(beerGame.getPlayers());
+		gameAgentDAO.updateGameagents(beerGame.getAgents());
+		leaderDAO.updateLeader(beerGame.getLeader().getPlayer());
+		}
+
 
 	/**
 	 * A method which returns all BeerGames which are inserted in the database
