@@ -9,8 +9,6 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import org.han.ica.asd.c.test.IntegrationTest;
-import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import java.util.logging.Logger;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Category(IntegrationTest.class)
 class AgentIntegrationTest {
     // Linear tests
     @Test
