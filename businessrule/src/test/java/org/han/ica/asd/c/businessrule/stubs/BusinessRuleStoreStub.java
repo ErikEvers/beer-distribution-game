@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,11 +21,11 @@ public class BusinessRuleStoreStub implements IBusinessRuleStore {
 
     @Override
     public List<List<String>> getAllFacilities() {
-        return Lists.newArrayList(
-                Lists.newArrayList("0"),
-                Lists.newArrayList("1"),
-                Lists.newArrayList("2"),
-                Lists.newArrayList("3")
+        return Arrays.asList(
+                Lists.newArrayList("1", "2", "3"),
+                Lists.newArrayList("4", "5"),
+                Lists.newArrayList("6", "7", "8", "9"),
+                Lists.newArrayList("10", "11", "12", "13", "14", "15")
         );
     }
 
