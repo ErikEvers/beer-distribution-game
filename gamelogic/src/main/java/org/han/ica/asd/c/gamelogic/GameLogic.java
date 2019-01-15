@@ -49,6 +49,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 					participantsPool = participantsPoolProvider.get();
 				}
         this.communication = communication;
+    initObserver();}
+
+    public void initObserver() {
         this.communication.addObserver(this);
     }
 
@@ -174,7 +177,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        DaoConfig.setCurrentGameId(beerGame.getGameId());
+        //initObserver();
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
         player.startGame();

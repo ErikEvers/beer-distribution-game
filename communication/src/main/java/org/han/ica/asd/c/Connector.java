@@ -246,9 +246,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-				//initNodeInfoList();
-				//List<String> ips = nodeInfoList.getAllIps();
-				List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
