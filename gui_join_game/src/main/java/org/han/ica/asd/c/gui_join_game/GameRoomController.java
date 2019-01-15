@@ -94,7 +94,6 @@ public class GameRoomController {
 				playerComponent.setPlayer(beerGame.getPlayerById(playerId));
         gameRoom.setText(roomModel.getRoomName());
 
-				DaoConfig.setCurrentGameId(beerGame.getGameId());
 				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
     }
 }
