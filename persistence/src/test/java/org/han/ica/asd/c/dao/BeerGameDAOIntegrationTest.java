@@ -25,7 +25,8 @@ import java.util.logging.Logger;
 public class BeerGameDAOIntegrationTest {
 	private static final Logger LOGGER = Logger.getLogger(BeerGameDAOIntegrationTest.class.getName());
 	private BeergameDAO beergameDAO;
-
+	private Player player;
+	private Leader leader;
 	private BeerGame beerGame;
 
 
@@ -35,7 +36,11 @@ public class BeerGameDAOIntegrationTest {
 		beerGame.getPlayers().add(new Player("1","127.0.01",new Facility(),"Carsten Flokstra",true));
 		beerGame.getRounds().add(new Round());
 		beerGame.setConfiguration(new Configuration(40,1,1,1,1,1,99,false,false));
-		beerGame.setLeader(new Leader(new Player()));
+		player = new Player();
+		player.setPlayerId("1");
+		leader = new Leader(player);
+
+		beerGame.setLeader(leader);
 		DBConnectionTest.getInstance().cleanup();
 		DBConnectionTest.getInstance().createNewDatabase();
 		Injector injector = Guice.createInjector(new AbstractModule() {

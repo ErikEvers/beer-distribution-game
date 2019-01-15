@@ -21,11 +21,13 @@ import org.han.ica.asd.c.gui_configure_game.graph.Wholesale;
 import org.han.ica.asd.c.gui_configure_game.graphutil.GraphConverterToDomain;
 import org.han.ica.asd.c.gui_configure_game.graphutil.GraphToFacilityChecker;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,6 +78,7 @@ public class GameSetupController implements Initializable {
     private Configuration configuration;
     private String gameName = "";
     private boolean onlineGame = true;
+
 
     @FXML
     private ComboBox<GraphFacility> comboBox;
@@ -436,7 +439,7 @@ public class GameSetupController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "The graph is either incomplete or does not have a complete line of facilities");
         alert.setHeaderText("Warning");
         alert.setTitle("Warning");
-        alert.showAndWait();
+        alert.show();
     }
 
     /**
@@ -506,6 +509,114 @@ public class GameSetupController implements Initializable {
         configuration.setAmountOfWholesalers(countAll[2]);
         configuration.setAmountOfRetailers(countAll[3]);
 
+    }
+
+    public void linearPreset() throws GraphException {
+        if (graph.getFacilities() != null) {
+            graph.getFacilities().clear();
+        }
+        factories.clear();
+        warehouses.clear();
+        wholesalers.clear();
+        retailers.clear();
+        facilitiesContainer.getChildren().clear();
+
+        for (int i = 0; i <= 3; i++) {
+            comboBox.getSelectionModel().select(graphFacilityListView.get(i));
+            handleAddFacilityButtonClick();
+        }
+        facilitiesContainer.getChildren().add(createLine(factories.get(0), warehouses.get(0), warehouses.get(0).getTranslateX(), factories.get(0).getTranslateY()));
+        facilitiesContainer.getChildren().add(createLine(warehouses.get(0), wholesalers.get(0), wholesalers.get(0).getTranslateX(), warehouses.get(0).getTranslateY()));
+        facilitiesContainer.getChildren().add(createLine(wholesalers.get(0), retailers.get(0), retailers.get(0).getTranslateX(), wholesalers.get(0).getTranslateY()));
+    }
+
+    public void pyramidPreeset() throws GraphException {
+        if (graph.getFacilities() != null) {
+            graph.getFacilities().clear();
+        }
+        factories.clear();
+        warehouses.clear();
+        wholesalers.clear();
+        retailers.clear();
+        facilitiesContainer.getChildren().clear();
+
+
+        int factoryAmount = 1;
+        int warehouseAmount = 2;
+        int wholesalerAmount = 4;
+        int retailersAmount = 8;
+        drawPresetFactories(factoryAmount);
+        drawPresetWarehouse(warehouseAmount);
+        drawPresetWholesale(wholesalerAmount);
+        drawPresetRetailer(retailersAmount);
+        drawLinesPresetFactory(factoryAmount, warehouseAmount);
+        drawLinesPresetWarehouse(warehouseAmount, wholesalerAmount);
+        drawLinesPresetWholesale(wholesalerAmount, retailersAmount);
+
+    }
+
+    private void drawLinesPresetFactory(int factoryAmount, int warehouseAmount) throws GraphException {
+        for (int i = 0; i < factoryAmount; i++) {
+            for (int y = 0; y < warehouseAmount; y++) {
+                facilitiesContainer.getChildren().add(createLine(factories.get(i), warehouses.get(y), warehouses.get(i).getTranslateX(), factories.get(i).getTranslateY()));
+            }
+        }
+    }
+
+    private void drawLinesPresetWarehouse(int warehouseAmount, int wholesaleAmount) throws GraphException {
+        int drawCounter = 0;
+        drawLinesforPresets(warehouseAmount, wholesaleAmount, drawCounter, warehouses, wholesalers);
+    }
+
+    private void drawLinesPresetWholesale(int wholesaleAmount, int retailerAmount) throws GraphException {
+        int drawCounterWholesale = 0;
+        drawLinesforPresets(wholesaleAmount, retailerAmount, drawCounterWholesale, wholesalers, retailers);
+    }
+
+    private void drawLinesforPresets(int wholesaleAmount, int retailerAmount, int drawCounterWholesale, ArrayList<FacilityRectangle> wholesalers, ArrayList<FacilityRectangle> retailers) throws GraphException {
+        int counterWholesale;
+        for (int i = 0; i < wholesaleAmount; i++) {
+            counterWholesale = 0;
+            for (int y = drawCounterWholesale; y < retailerAmount; y++) {
+                facilitiesContainer.getChildren().add(createLine(wholesalers.get(i), retailers.get(y), retailers.get(i).getTranslateX(), wholesalers.get(i).getTranslateY()));
+                drawCounterWholesale++;
+                counterWholesale++;
+                if (counterWholesale == 2) {
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public void drawPresetFactories(int amount) {
+        for (int i = 1; i <= amount; i++) {
+            comboBox.getSelectionModel().select(graphFacilityListView.get(0));
+            handleAddFacilityButtonClick();
+        }
+
+    }
+
+    public void drawPresetWarehouse(int amount) {
+        for (int i = 1; i <= amount; i++) {
+            comboBox.getSelectionModel().select(graphFacilityListView.get(1));
+            handleAddFacilityButtonClick();
+        }
+
+    }
+
+    public void drawPresetWholesale(int amount) {
+        for (int i = 1; i <= amount; i++) {
+            comboBox.getSelectionModel().select(graphFacilityListView.get(2));
+            handleAddFacilityButtonClick();
+        }
+    }
+
+    public void drawPresetRetailer(int amount) {
+        for (int i = 1; i <= amount; i++) {
+            comboBox.getSelectionModel().select(graphFacilityListView.get(3));
+            handleAddFacilityButtonClick();
+        }
     }
 
 }

@@ -175,8 +175,10 @@ public class FacilityDAO {
 								DaoConfig.gameIdNotSetCheck(pstmt, 2);
 
 								try (ResultSet rs = pstmt.executeQuery()) {
-												facilityFromDb = new Facility(facilityTypeDAO.readSpecificFacilityType(rs.getString("FacilityName")),
-																rs.getInt("FacilityId"));
+									if(!rs.isClosed()) {
+										facilityFromDb = new Facility(facilityTypeDAO.readSpecificFacilityType(rs.getString("FacilityName")),
+												rs.getInt("FacilityId"));
+									}
 								}
 								conn.commit();
 						} catch (GameIdNotSetException | SQLException e) {

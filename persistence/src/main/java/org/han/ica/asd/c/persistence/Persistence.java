@@ -11,9 +11,6 @@ import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -58,18 +55,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	@Override
 	public void saveRoundData(Round rounddata)
 	{
-		roundDAO.createRound(rounddata.getRoundId());
-		for (FacilityTurn facilityTurn: rounddata.getFacilityTurns()) {
-			roundDAO.createFacilityTurn(rounddata.getRoundId(),facilityTurn);
-		}
-
-		for (FacilityTurnOrder facilityTurnOrder: rounddata.getFacilityOrders()) {
-			roundDAO.createFacilityOrder(rounddata.getRoundId(),facilityTurnOrder);
-		}
-
-		for (FacilityTurnDeliver facilityTurnDeliver: rounddata.getFacilityTurnDelivers()) {
-			roundDAO.createFacilityDeliver(rounddata.getRoundId(),facilityTurnDeliver);
-		}
+		roundDAO.createRound(rounddata);
 	}
 
 
@@ -85,9 +71,13 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	}
 
 	@Override
-	public void saveGameLog(BeerGame beerGame) {
-		beergameDAO.deleteBeergame(beerGame.getGameId());
-		beergameDAO.createBeergame(beerGame);
+	public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+		if(isStarted){
+			roundDAO.createRound(beerGame.getRoundById(beerGame.getRounds().size()-1));
+		}
+		else {
+			beergameDAO.createBeergame(beerGame);
+		}
 	}
 
 	@Override

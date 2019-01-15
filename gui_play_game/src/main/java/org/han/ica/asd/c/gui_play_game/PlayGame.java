@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -96,8 +97,15 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected ListView<String> orderList;
 
-    protected ObservableList<String> orderFacilities;
-    protected ObservableList<String> deliverFacilities;
+    ObservableList<String> orderFacilities;
+
+    ObservableList<String> deliverFacilities;
+
+    @FXML
+    protected Button deleteOrderButton;
+
+    @FXML
+    protected Button deleteDeliveryButton;
 
     protected static Alert currentAlert;
 
@@ -205,10 +213,9 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
-    private String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
+    protected String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
         return facilityName.concat(" id: " + Integer.toString(facilityid)).concat(" Amount: " + Integer.toString(amount));
     }
-
 
     @FXML
     protected void submitTurnButtonClicked() {
@@ -248,19 +255,7 @@ public abstract class PlayGame implements IPlayGame {
             }
         }
 
-        for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
-        	if(facilityTurnOrder.getFacilityId() == facility.getFacilityId()) {
-						String facilityAndOrderAmount = concatFacilityAndIdAndOrder(beerGame.getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
-						orderFacilities.add(facilityAndOrderAmount);
-					}
-				}
 
-				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
-					if(facilityTurnDeliver.getFacilityId() == facility.getFacilityId()) {
-						String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(beerGame.getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
-						deliverFacilities.add(facilityAndDeliverAmount);
-					}
-				}
 
         int incomingOrders = 0;
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
@@ -278,5 +273,39 @@ public abstract class PlayGame implements IPlayGame {
 				currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
 				currentAlert.show();
 				submitTurnButton.setDisable(false);
+    }
+
+    private void initLijst() {
+        for(FacilityTurnOrder facilityTurnOrder : playerComponent.getRound().getFacilityOrders()) {
+            if(facilityTurnOrder.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
+                String facilityAndOrderAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
+                orderFacilities.add(facilityAndOrderAmount);
+            }
+        }
+
+        for(FacilityTurnDeliver facilityTurnDeliver : playerComponent.getRound().getFacilityTurnDelivers()) {
+            if(facilityTurnDeliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
+                String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
+                deliverFacilities.add(facilityAndDeliverAmount);
+            }
+        }
+    }
+
+    @FXML
+    public void deletePlacedOrder(ActionEvent actionEvent) {
+        int index = orderList.getItems().indexOf(orderList.getSelectionModel().getSelectedItem());
+        if (index >= 0) {
+            playerComponent.getRound().getFacilityOrders().remove(index);
+            orderList.getItems().remove(index);
+        }
+    }
+
+    @FXML
+    public void deletePlacedDelivery(ActionEvent actionEvent) {
+        int index = deliverList.getItems().indexOf(deliverList.getSelectionModel().getSelectedItem());
+        if (index >= 0) {
+            playerComponent.getRound().getFacilityTurnDelivers().remove(index);
+            deliverList.getItems().remove(index);
+        }
     }
 }
