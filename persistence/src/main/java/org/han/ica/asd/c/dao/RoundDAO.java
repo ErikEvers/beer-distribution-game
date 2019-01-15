@@ -59,17 +59,11 @@ public class RoundDAO {
 		else {
 			Connection conn = databaseConnection.connect();
 			executePreparedStatement(round.getRoundId(), conn, CREATE_ROUND);
-			for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
-				createFacilityTurn(round.getRoundId(), facilityTurn);
-			}
 
-			for (FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
-				createFacilityOrder(round.getRoundId(), facilityTurnOrder);
-			}
+			round.getFacilityTurns().forEach(facilityTurn -> createFacilityTurn(round.getRoundId(),facilityTurn));
+			round.getFacilityOrders().forEach(facilityTurnOrder -> createFacilityOrder(round.getRoundId(),facilityTurnOrder));
+			round.getFacilityTurnDelivers().forEach(facilityTurnDeliver -> createFacilityDeliver(round.getRoundId(),facilityTurnDeliver));
 
-			for (FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
-				createFacilityDeliver(round.getRoundId(), facilityTurnDeliver);
-			}
 		}
 	}
 
@@ -79,29 +73,26 @@ public class RoundDAO {
 	 * @param rounds
 	 */
 	public void insertRounds(List<Round> rounds) {
-		for (Round round: rounds) {
-			createRound(round);
-		}
+		rounds.forEach(this::createRound);
 	}
 
+	/**
+	 * Updates a list with rounds in the database
+	 * @param rounds
+	 */
 	public void updateRounds(List<Round> rounds) {
-		for (Round round: rounds) {
-			updateRound(round);
-		}
+		rounds.forEach(this::createRound);
 	}
 
+
+	/**
+	 * Updates a single round in the database
+	 * @param round
+	 */
 	private void updateRound(Round round) {
-		for (FacilityTurn facilityTurn: round.getFacilityTurns()) {
-			updateFacilityTurn(round.getRoundId(),facilityTurn);
-		}
-
-		for (FacilityTurnOrder facilityTurnOrder: round.getFacilityOrders()) {
-			updateFacilityOrder(round.getRoundId(),facilityTurnOrder);
-		}
-
-		for (FacilityTurnDeliver facilityTurnDeliver: round.getFacilityTurnDelivers()) {
-			updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver);
-		}
+		round.getFacilityTurnDelivers().forEach(facilityTurnDeliver -> updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver));
+		round.getFacilityOrders().forEach(facilityTurnOrder -> updateFacilityOrder(round.getRoundId(),facilityTurnOrder));
+		round.getFacilityTurnDelivers().forEach(facilityTurnDeliver -> updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver));
 	}
 
 	private void updateFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
