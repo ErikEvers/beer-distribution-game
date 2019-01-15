@@ -198,26 +198,26 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
     public void startGame() throws BeerGameException, TransactionException {
-			for(Player player: game.getPlayers()) {
-				if(player.getFacility() == null) {
-					throw new BeerGameException("Every player needs to control a facility");
-				}
-			}
-			persistence.saveGameLog(game, false);
-			List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
-			for(GameAgent agent : game.getAgents()) {
-			    if(!takenFacilityIds.contains(agent.getFacility().getFacilityId())) {
-                    Agent tempAgent = agentProvider.get();
-                    tempAgent.setFacility(agent.getFacility());
-                    tempAgent.setGameAgentName(agent.getGameAgentName());
-                    tempAgent.setConfiguration(getBeerGame().getConfiguration());
-                    tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
-                    gameLogic.addLocalParticipant(tempAgent);
-                }
+        for (Player player : game.getPlayers()) {
+            if (player.getFacility() == null) {
+                throw new BeerGameException("Every player needs to control a facility");
             }
-			connectorForLeader.startRoom(roomModel);
-			connectorForLeader.sendGameStart(game);
-		}
+        }
+        persistence.saveGameLog(game, false);
+        List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
+        for (GameAgent agent : game.getAgents()) {
+            if (!takenFacilityIds.contains(agent.getFacility().getFacilityId())) {
+                Agent tempAgent = agentProvider.get();
+                tempAgent.setFacility(agent.getFacility());
+                tempAgent.setGameAgentName(agent.getGameAgentName());
+                tempAgent.setConfiguration(getBeerGame().getConfiguration());
+                tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
+                gameLogic.addLocalParticipant(tempAgent);
+            }
+        }
+        connectorForLeader.startRoom(roomModel);
+        connectorForLeader.sendGameStart(game);
+    }
 
 
     /**
@@ -226,21 +226,19 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() throws TransactionException {
-        //TODO: check if game is done? (round count exceeds config max)
-
-        roundId++;
-        currentRoundData.setRoundId(roundId);
-        turnsReceivedInCurrentRound = 0;
-				try {
-					connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
-				} catch (TransactionException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
         if (roundId == getBeerGame().getConfiguration().getAmountOfRounds()) {
             connectorForLeader.sendGameEnd(game);
         }
-
+        roundId++;
+        currentRoundData.setRoundId(roundId);
+        turnsReceivedInCurrentRound = 0;
+        try {
+            connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+        } catch (TransactionException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
     }
+
 
     /**
      * Checks if the incoming playerId is the same as the playerId of the game leader.

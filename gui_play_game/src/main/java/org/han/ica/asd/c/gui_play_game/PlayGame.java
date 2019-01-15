@@ -80,6 +80,8 @@ public abstract class PlayGame implements IPlayGame {
     @Named("PlayerComponent")
     protected IPlayerComponent playerComponent;
 
+
+
     @FXML
     protected TextField incomingGoodsNextRound;
 
@@ -235,7 +237,7 @@ public abstract class PlayGame implements IPlayGame {
     }
 
     @Override
-    public void refreshInterfaceWithCurrentStatus(int roundId) {
+    public void refreshInterfaceWithCurrentStatus(int roundId, boolean gameEnded) {
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
         int budget = 0;
@@ -265,8 +267,13 @@ public abstract class PlayGame implements IPlayGame {
 				if(currentAlert != null && currentAlert.isShowing()) {
 					currentAlert.close();
 				}
-				currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
-				currentAlert.show();
+				if(!gameEnded) {
+                    currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
+                    currentAlert.show();
+                } else{
+                    currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your game has ended! well played!", ButtonType.OK);
+                    currentAlert.show();
+                }
 				submitTurnButton.setDisable(false);
     }
 

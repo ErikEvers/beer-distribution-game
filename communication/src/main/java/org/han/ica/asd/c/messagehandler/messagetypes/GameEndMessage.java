@@ -18,7 +18,6 @@ public class GameEndMessage extends TransactionMessage {
 
     @Override
     public void createResponseMessage(){
-        beerGame = null;
-        createResponseMessage();
+
     }
 }

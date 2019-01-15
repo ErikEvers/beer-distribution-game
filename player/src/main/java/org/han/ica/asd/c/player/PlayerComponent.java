@@ -9,10 +9,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.*;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -36,6 +33,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private static Player player;
     private static Round round;
     private static IPlayGame ui;
+    boolean gameEnded = false;
 
     @Inject
     IPlayerGameLogic gameLogic;
@@ -61,10 +59,10 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         gameLogic.setPlayer(this);
     }
 
-	@Override
-	public void activatePlayer() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void activatePlayer() {
+        throw new UnsupportedOperationException();
+    }
 
 
     @Override
@@ -110,9 +108,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         }
     }
 
-		@Override
+    @Override
     public void submitTurn() throws SendGameMessageException {
-    	gameLogic.submitTurn(round);
+        gameLogic.submitTurn(round);
     }
 
     @Override
@@ -146,11 +144,11 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
             communication.chooseFacility(facility, player.getPlayerId());
             player.setFacility(facility);
 
-						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
-						alert.show();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
+            alert.show();
         } catch (FacilityNotAvailableException | SendGameMessageException e) {
-					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
-					alert.show();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
+            alert.show();
         }
     }
 
@@ -193,7 +191,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
 
     @Override
     public void endGame() {
-        Platform.runLater(() -> toEndScreen.setData(new Object[]{getBeerGame().getGameId()}));
+        gameEnded = true;
+
+        Platform.runLater(() -> toEndScreen.setData(new Object[]{gameLogic.getBeerGame().getGameId()}));
         Platform.runLater(() -> toEndScreen.setupScreen());
     }
 
@@ -208,10 +208,11 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
             round = roundProvider.get();
             round.setRoundId(gameLogic.getRoundId());
         }
-        Platform.runLater(() ->
-                ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
+        if (!gameEnded) {
+            Platform.runLater(() ->
+                    ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId(), gameEnded));
+        }
     }
-
     /**
      * Returns the facility for the ParticipantPool to compare with other participants.
      *
