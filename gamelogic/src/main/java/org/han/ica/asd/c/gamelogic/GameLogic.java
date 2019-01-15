@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
@@ -13,7 +12,6 @@ import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
@@ -22,8 +20,6 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -186,7 +182,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void gameStartReceived(BeerGame beerGame) {
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
-        if (beerGame.getPlayers().size() == 1 && beerGame.getPlayers().stream().findFirst().get().getFacility() == null) {
+        if (isBotGame()) {
             seeOtherFacilities.setupScreen();
         } else {
             player.startGame();
@@ -200,7 +196,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
             Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
             communication.sendTurnData(round);
         }
-        player.roundStarted();
+        if (isBotGame()) {
+            seeOtherFacilities.setupScreen();
+        } else {
+            player.roundStarted();
+        }
     }
 
     private Round makeRoundFromGameRoundAction(GameRoundAction action, int facilityId) {
@@ -210,4 +210,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
                 action.targetDeliverMap.entrySet().stream().map(e -> new FacilityTurnDeliver(facilityId, e.getKey().getFacilityId(), 0, e.getValue())).collect(Collectors.toList())
         );
     }
+
+    private boolean isBotGame() {
+        return beerGame.getPlayers().size() == 1 && beerGame.getPlayers().stream().findFirst().get().getFacility() == null;
+    }
+
+
 }

@@ -30,22 +30,18 @@ public class PlayerGameLogicStub implements IPlayerGameLogic {
 
     }
 
-    @Override
+
     public List<String> getAllGames() {
         return null;
     }
 
-    @Override
     public void connectToGame(String game) {
 
     }
 
-    @Override
     public void requestFacilityUsage(Facility facility) {
 
     }
-
-    @Override
     public List<Facility> getAllFacilities() {
         return null;
     }
