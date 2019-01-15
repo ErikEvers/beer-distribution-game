@@ -201,7 +201,7 @@ public class ParserPipeline {
     private boolean setErrorsBusinessrules(boolean hasErrors, int i) {
         if(!businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)){
             businessRulesInput.get(i).setErrorMessage("Only legitimate business rules are allowed");
-            hasErrors = true;
+            return true;
         }
         return hasErrors;
     }
