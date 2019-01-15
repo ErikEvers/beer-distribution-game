@@ -7,6 +7,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.dao.DaoConfig;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilitySelectedEvent;
@@ -80,8 +81,8 @@ public class GameRoomController {
     	try {
 				beerGame = iConnectorForSetup.getGameData("").getBeerGame();
 				new TreeBuilder().loadFacilityView(beerGame, facilitiesContainer, false);
-			} catch (IOException | ClassNotFoundException e) {
-				Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong with updating the room data", ButtonType.CLOSE);
+			} catch (SendGameMessageException e) {
+				Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
 				alert.show();
 			}
 		}

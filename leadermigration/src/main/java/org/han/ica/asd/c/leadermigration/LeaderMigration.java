@@ -20,11 +20,12 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
   @Inject ElectionHandler electionHandler;
 
   /**
-   * Start the bully algorithm to get new Leader of the network
-   * @param players -> all the connected player
+   * Start the bully algorithm to get new Leader of the network.
+   * @param players -> all the connected player.
+   * @param localIp -> the local ip address.
    */
-  public Player startMigration(Player[] players) throws PlayerNotFoundException {
-    Player currentPlayer = electionHandler.setupAlgorithm(players);
+  public Player startMigration(Player[] players, String localIp) {
+    Player currentPlayer = electionHandler.setupAlgorithm(players, localIp);
     Player winner = currentPlayer;
 
 		List<Player> answeredPlayers = electionHandler.sendElectionMessage(players);

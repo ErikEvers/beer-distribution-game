@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
@@ -58,9 +59,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param turn
      */
     @Override
-    public boolean submitTurn(Round turn) {
+    public void submitTurn(Round turn) throws SendGameMessageException {
         persistence.saveRoundData(turn);
-        return communication.sendTurnData(turn);
+        communication.sendTurnData(turn);
     }
 
     /**
@@ -157,7 +158,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private void sendRoundActionFromAgents() {
         for (IParticipant participant : participantsPool.getParticipants()) {
             Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
-            communication.sendTurnData(round);
+            try {
+                communication.sendTurnData(round);
+            } catch (SendGameMessageException e) {
+                //No error should be thrown if the agent runs locally
+            }
         }
         player.roundStarted();
     }

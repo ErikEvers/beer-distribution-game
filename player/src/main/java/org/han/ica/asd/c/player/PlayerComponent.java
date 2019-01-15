@@ -3,6 +3,7 @@ package org.han.ica.asd.c.player;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
@@ -103,8 +104,34 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         }
     }
 
-    public boolean submitTurn() {
-        return gameLogic.submitTurn(round);
+		@Override
+    public void submitTurn() throws SendGameMessageException {
+    	gameLogic.submitTurn(round);
+    }
+
+    @Override
+    public void requestFacilityUsage(Facility facility) {
+
+    }
+
+    @Override
+    public void selectAgent() {
+
+    }
+
+    @Override
+    public List<String> getAllGames() {
+        return null;
+    }
+
+    @Override
+    public void connectToGame(String game) {
+
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        return null;
     }
 
     @Override
@@ -114,7 +141,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
             player.setFacility(facility);
 						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
 						alert.show();
-        } catch (FacilityNotAvailableException e) {
+        } catch (FacilityNotAvailableException | SendGameMessageException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
 					alert.show();
         }

@@ -50,6 +50,8 @@ public class FaultDetectorLeader extends TimerTask {
 
     private List<IConnectorObserver> observers;
 
+    private boolean active = false;
+
     public FaultDetectorLeader() {
         //for inject purposes
     }
@@ -93,6 +95,28 @@ public class FaultDetectorLeader extends TimerTask {
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerLeader.setObservers(observers);
+        active = true;
+    }
+
+    /**
+     * Stops the Timertask and sets the fault detector to false so the messages wont be handled.
+     *
+     * @author Tarik
+     * @see TimerTask
+     * @see Timer
+     */
+    public void stop(){
+        timer.cancel();
+        this.active = false;
+    }
+
+    /**
+     * Returns the 'FaultDetectorLeader' state.
+     *
+     * @return isActive
+     */
+    public boolean isActive() {
+        return active;
     }
 
     /**

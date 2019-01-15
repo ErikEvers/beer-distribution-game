@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
@@ -214,20 +215,21 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected void submitTurnButtonClicked() {
 				submitTurnButton.setDisable(true);
-				if(playerComponent.submitTurn()) {
-					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
-					currentAlert.show();
-					orderFacilities.clear();
-					deliverFacilities.clear();
-				} else {
-					currentAlert = new Alert(Alert.AlertType.ERROR, "Something went wrong while submitting your turn, please try again", ButtonType.OK, ButtonType.CLOSE);
-					Optional<ButtonType> result = currentAlert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						currentAlert.close();
-						submitTurnButtonClicked();
-					}
-					submitTurnButton.setDisable(false);
-				}
+        try {
+            playerComponent.submitTurn();
+						currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
+						currentAlert.show();
+						orderFacilities.clear();
+						deliverFacilities.clear();
+        } catch (SendGameMessageException e) {
+            currentAlert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.OK, ButtonType.CLOSE);
+            Optional<ButtonType> result = currentAlert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                currentAlert.close();
+                submitTurnButtonClicked();
+            }
+            submitTurnButton.setDisable(false);
+        }
     }
 
     @Override

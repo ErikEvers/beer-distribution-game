@@ -11,8 +11,8 @@ import java.util.List;
 
 public class GameLogicStub implements IPlayerGameLogic {
     @Override
-    public boolean submitTurn(Round turn) {
-        return false;
+    public void submitTurn(Round round) {
+
     }
 
     @Override
