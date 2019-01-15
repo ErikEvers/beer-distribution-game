@@ -2,6 +2,7 @@ package org.han.ica.asd.c.businessrule.stubs;
 
 import com.google.common.collect.Lists;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
 import java.util.List;
 import java.util.Map;
@@ -35,5 +36,10 @@ public class BusinessRuleStoreStub implements IBusinessRuleStore {
     @Override
     public void deleteProgrammedAgent(String agentName) {
 
+    }
+
+    @Override
+    public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+        return null;
     }
 }

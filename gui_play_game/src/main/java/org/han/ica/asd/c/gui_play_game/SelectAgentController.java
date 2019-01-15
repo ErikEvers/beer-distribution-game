@@ -51,7 +51,7 @@ public class SelectAgentController {
     @FXML
     public void selectAgentButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
-        iPlayerComponent.activateGameAgent(selectedAgent.toString(),facility);
+        iPlayerComponent.activateAgent();
         headerText.setText("Agent selected: " +selectedAgent.toString());
         list.setVisible(false);
         selectAgentButton.setVisible(false);

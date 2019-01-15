@@ -21,6 +21,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Test;
 
@@ -111,6 +112,11 @@ class AgentIntegrationTest {
 
                 @Override
                 public void deleteProgrammedAgent(String agentName) {
+                }
+
+                @Override
+                public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+                    return null;
                 }
             });
         }
