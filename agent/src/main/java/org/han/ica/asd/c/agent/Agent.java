@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -71,12 +70,11 @@ public class Agent extends GameAgent implements IParticipant {
 			updateActionCollector(actionCollector, actionModel, gameBusinessRules);
 		}
 
-		/*persistence.logUsedBusinessRuleToCreateOrder(new GameBusinessRulesInFacilityTurn(
+		persistence.logUsedBusinessRuleToCreateOrder(new GameBusinessRulesInFacilityTurn(
 				getFacility().getFacilityId(),
 				round.getRoundId(),
-				getGameAgentName() + 1,
+				getGameAgentName(),
 				actionCollector.businessRulesList));
-*/
 		return new GameRoundAction(actionCollector.orderMap, actionCollector.deliverMap);
 	}
 
@@ -102,6 +100,8 @@ public class Agent extends GameAgent implements IParticipant {
 
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
+	 *
+	 * ORDER
 	 *
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility below the current facility that needs to be resolved. NULL when facility is not found.
@@ -136,20 +136,22 @@ public class Agent extends GameAgent implements IParticipant {
 	}
 
 	private boolean entryContainsFacilityInValue(Map.Entry<Facility, List<Facility>> entry){
-		Facility facility = getFacility();
+	    Facility facility = getFacility();
 
-		List<Facility> list = entry.getValue();
+	    List<Facility> list = entry.getValue();
 
-		for(Facility f : list){
-			if (f.getFacilityId() == facility.getFacilityId()){
-				return true;
-			}
-		}
-		return false;
-	}
+	    for(Facility f : list){
+	        if (f.getFacilityId() == facility.getFacilityId()){
+	            return true;
+            }
+        }
+	    return false;
+    }
 
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
+	 *
+	 * DELIVER
 	 *
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility above the current facility that needs to be resolved. NULL when facility is not found.

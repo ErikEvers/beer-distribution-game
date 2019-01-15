@@ -7,25 +7,20 @@ import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultDetector {
-
-    FaultDetector faultDetector;
-
     @Mock
     NodeInfoList nodeInfoList;
 
@@ -41,41 +36,51 @@ public class TestFaultDetector {
     @Mock
     FaultDetectorPlayer faultDetectorPlayer;
 
+    FaultDetector faultDetector;
+
     @BeforeEach
     void setUp() {
         initMocks(this);
-
         faultDetector = spy(new FaultDetector());
         faultDetector.setObservers(observers);
     }
 
     @Test
-    public void TestSetLeader() {
+    @DisplayName("Test if the start and stop methods are called correctly on FaultDetectorLeader")
+    public void TestStartAndStopFaultDetectorLeader() {
         doReturn(faultDetectorLeader)
                 .when(faultDetector)
                 .makeFaultDetectorLeader(nodeInfoList, observers);
 
         faultDetector.startFaultDetectorLeader(nodeInfoList);
-        assertNotNull(faultDetector.getFaultDetectorLeader());
         verify(faultDetectorLeader).start();
+
+        faultDetector.stopFaultDetectorLeader();
+        verify(faultDetectorLeader).stop();
     }
 
     @Test
-    public void TestSetPlayer() {
+    @DisplayName("Test if the start and stop methods are called correctly on FaultDetectorPlayer")
+    public void TestStartAndStopFaultDetectorPlayer() {
         doReturn(faultResponder)
                 .when(faultDetector)
                 .makeFaultResponder();
 
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
-        assertNotNull(faultDetector.getFaultResponder());
-        assertNotNull(faultDetector.getFaultDetectorPlayer());
+        verify(faultDetectorPlayer).start();
+        verify(faultResponder).start();
+
+        faultDetector.stopFaultDetectorPlayer();
+        verify(faultDetectorPlayer).stop();
+        verify(faultResponder).stop();
     }
 
     @Test
+    @DisplayName("Test if faultMessageReceived is delegated correctly")
     void TestFaultMessageReceived() {
         doReturn(faultResponder)
                 .when(faultDetector)
@@ -83,56 +88,75 @@ public class TestFaultDetector {
 
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
+
+        doReturn(true)
+                .when(faultResponder)
+                .isActive();
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.faultMessageReceived(any(), any());
-        assertNotNull(faultDetector.getFaultResponder());
         verify(faultResponder).faultMessageReceived(any(), any());
     }
 
     @Test
+    @DisplayName("Test if faultMessageResponseReceived is delegated correctly")
     void TestFaultMessageResponseReceived() {
         doReturn(faultDetectorLeader)
                 .when(faultDetector)
                 .makeFaultDetectorLeader(nodeInfoList, observers);
 
+        doReturn(true)
+                .when(faultDetectorLeader)
+                .isActive();
+
         faultDetector.startFaultDetectorLeader(nodeInfoList);
         faultDetector.faultMessageResponseReceived(any());
-        assertNotNull(faultDetector.getFaultDetectorLeader());
         verify(faultDetectorLeader).faultMessageResponseReceived(any());
     }
 
     @Test
+    @DisplayName("Test if pingMessageReceived is delegated correctly")
     void TestPingMessageReceived() {
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
+
+        doReturn(faultResponder)
+                .when(faultDetector)
+                .makeFaultResponder();
+
+        doReturn(true)
+                .when(faultDetectorPlayer)
+                .isActive();
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.pingMessageReceived(any());
-        assertNotNull(faultDetector.getFaultDetectorPlayer());
         verify(faultDetectorPlayer).pingMessageReceived(any());
     }
 
     @Test
+    @DisplayName("Test if canYouReachLeaderMessageReceived is delegated correctly")
     void TestCanYouReachLeaderMessageReceived() {
         doReturn(faultDetectorPlayer)
                 .when(faultDetector)
-                .makeFaultDetectorPlayer(nodeInfoList);
+                .makeFaultDetectorPlayer(nodeInfoList, observers);
+
+        doReturn(faultResponder)
+                .when(faultDetector)
+                .makeFaultResponder();
+
+        doReturn(true)
+                .when(faultDetectorPlayer)
+                .isActive();
 
         faultDetector.startFaultDetectorPlayer(nodeInfoList);
         faultDetector.canYouReachLeaderMessageReceived(any(), any());
-        assertNotNull(faultDetector.getFaultDetectorPlayer());
         verify(faultDetectorPlayer).canYouReachLeaderMessageReceived(any(), any());
     }
 
     @Test
-    void TestFaultDetectionMessageReceiver() {
-        assertNull(faultDetector.getFaultDetectionMessageReceiver());
-    }
-
-    @Test
+    @DisplayName("Test if makeFaultDetectorLeader sets the variables correctly")
     void TestMakeFaultDetectorLeader(){
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -153,6 +177,7 @@ public class TestFaultDetector {
     }
 
     @Test
+    @DisplayName("Test if makeFaultDetectorPlayer sets the variables correctly")
     void testMakeFaultDetectorPlayer(){
 
         Injector injector = Guice.createInjector(new AbstractModule() {
@@ -165,7 +190,7 @@ public class TestFaultDetector {
         faultDetector = injector.getInstance(FaultDetector.class);
         faultDetectorPlayer = injector.getInstance(FaultDetectorPlayer.class);
 
-        FaultDetectorPlayer result = faultDetector.makeFaultDetectorPlayer(nodeInfoList);
+        FaultDetectorPlayer result = faultDetector.makeFaultDetectorPlayer(nodeInfoList, observers);
 
         assertEquals(nodeInfoList, result.getNodeInfoList());
     }

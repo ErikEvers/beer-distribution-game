@@ -6,9 +6,12 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.junit.jupiter.api.Assertions;
@@ -49,7 +52,7 @@ public class GameLogicTest {
     }
 
     @Test
-    public void submitTurnCallsPersistence() {
+    public void submitTurnCallsPersistence() throws SendGameMessageException {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
@@ -58,7 +61,7 @@ public class GameLogicTest {
     }
 
     @Test
-    public void submitTurnCallsCommunication() {
+    public void submitTurnCallsCommunication() throws SendGameMessageException {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
@@ -100,13 +103,13 @@ public class GameLogicTest {
     }
 
     @Test
-    public void roundModelReceivedSavesOldRoundToDatabase() {
+    public void roundModelReceivedSavesOldRoundToDatabase() throws SendGameMessageException {
         gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
         //verify(persistence, times(1)).saveRoundData(any());
     }
 
     @Test
-    public void roundModelReceivedUpdatesRound() {
+    public void roundModelReceivedUpdatesRound() throws SendGameMessageException {
         int currentRoundNumber = gameLogic.getRoundId();
         Round round = new Round();
         int roundId = 33;
@@ -118,7 +121,7 @@ public class GameLogicTest {
     }
 
     @Test
-    public void roundModelReceivedCallsLocalParticipants() {
+    public void roundModelReceivedCallsLocalParticipants() throws SendGameMessageException {
         gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
         verify(participantsPool, times(2)).getParticipants();
     }

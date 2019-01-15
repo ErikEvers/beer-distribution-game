@@ -1,21 +1,18 @@
 package org.han.ica.asd.c.gameleader;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import org.han.ica.asd.c.agent.Agent;
-import org.han.ica.asd.c.dao.DaoConfig;
-import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
+import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
+import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
+import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
-import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
-import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -45,8 +42,6 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     @Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
     @Inject private static Logger logger; //NOSONAR
 
-    private final Provider<BeerGame> beerGameProvider;
-    private final Provider<Round> roundProvider;
     private final Provider<Player> playerProvider;
     private final Provider<Agent> agentProvider;
 
@@ -62,9 +57,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private int roundId = 1;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider, Provider<Agent> agentProvider) {
-        this.beerGameProvider = beerGameProvider;
-        this.roundProvider = roundProvider;
+    public GameLeader(Provider<Player> playerProvider, Provider<Agent> agentProvider) {
         this.playerProvider = playerProvider;
         this.agentProvider = agentProvider;
     }
@@ -189,7 +182,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      */
     private void allTurnDataReceived() {
         this.previousRoundData = this.currentRoundData;
-        this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
+        this.currentRoundData = gameLogic.calculateRound(this.previousRoundData, game);
+        persistence.updateRound(this.previousRoundData);
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
@@ -236,16 +230,14 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private void startNextRound() {
         //TODO: check if game is done? (round count exceeds config max)
         roundId++;
-
         currentRoundData.setRoundId(roundId);
         turnsReceivedInCurrentRound = 0;
 
-        try {
-            connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
-        } catch (TransactionException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-
-        }
+				try {
+					connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+				} catch (TransactionException e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
     }
 
     private void endGame() {

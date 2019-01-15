@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
@@ -32,9 +31,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class AgentTest {
@@ -77,6 +74,11 @@ class AgentTest {
 
 		@Override
 		public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+		}
+
+		@Override
+		public void updateRound(Round round) {
+
 		}
 	};
 
@@ -470,20 +472,20 @@ class AgentTest {
 		facilityWithId5.setFacilityId(5);
 
 		List<Facility> facilitiesBelow = new ArrayList<>();
-		facilitiesBelow.add(facilityWithId2);
-		facilitiesBelow.add(facilityWithId3);
+		facilitiesBelow.add(facilityWithId4);
+		facilitiesBelow.add(facilityWithId5);
 
 		List<Facility> listWithMyFacility = new ArrayList<>();
 		listWithMyFacility.add(myFacility);
 
 		facilitiesLinkedTo.put(myFacility, facilitiesBelow);
-		facilitiesLinkedTo.put(facilityWithId4, listWithMyFacility);
-		facilitiesLinkedTo.put(facilityWithId5, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId2, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId3, listWithMyFacility);
 		config.setFacilitiesLinkedTo(facilitiesLinkedTo);
 
 		Agent agent = new Agent(config, "", myFacility, gameBusinessRuleList);
 
-		int exp = 2;
+		int exp = 4;
 		Facility res = new Facility();
 
 		try {

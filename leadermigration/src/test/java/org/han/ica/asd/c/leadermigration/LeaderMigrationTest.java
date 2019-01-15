@@ -43,20 +43,4 @@ public class LeaderMigrationTest {
     leaderMigration.initialize();
     Mockito.verify(connector).addObserver(any(LeaderMigration.class));
   }
-
-  @Test(expected = PlayerNotFoundException.class)
-  public void testDifferentIpThrowsException() throws Exception {
-    Player[] players = new Player[1];
-    IpHandlerStub.setIpString("1");
-    players[0] = new Player("0","0", mock(Facility.class), "Joost", true);
-    leaderMigration.startMigration(players);
-  }
-
-  @Test(expected = PlayerNotFoundException.class)
-  public void testNoIpThrowsException() throws Exception {
-    Player[] players = new Player[1];
-    IpHandlerStub.setIpString(null);
-    players[0] = new Player("0","0", mock(Facility.class), "Joost", true);
-    leaderMigration.startMigration(players);
-  }
 }

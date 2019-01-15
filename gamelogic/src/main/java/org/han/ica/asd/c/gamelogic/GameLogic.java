@@ -1,8 +1,10 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -21,8 +23,6 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
+
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
     private IConnectedForPlayer communication;
 
@@ -41,7 +42,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private static ParticipantsPool participantsPool;
 
     private static int curRoundId;
-    private BeerGame beerGame;
     private static IPlayerRoundListener player;
 
     @Inject
@@ -70,9 +70,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @param turn
      */
     @Override
-    public boolean submitTurn(Round turn) {
+    public void submitTurn(Round turn) throws SendGameMessageException {
         persistence.saveRoundData(turn);
-        return communication.sendTurnData(turn);
+        communication.sendTurnData(turn);
     }
 
     /**
@@ -81,8 +81,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public BeerGame getBeerGame() {
-        this.beerGame = persistence.getGameLog();
-        return beerGame;
+        return persistence.getGameLog();
     }
 
     /**
@@ -102,17 +101,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.replaceAgentWithPlayer();
     }
 
-    @Override
-    public List<String> getAllGames() {
-        //Yet to be implemented
-        return new ArrayList<>();
-    }
-
-    @Override
-    public void connectToGame(String game) {
-        //Yet to be implemented
-    }
-
 		/**
 		 * Calculates the round.
 		 * @param round has the information needed to calculate the round.
@@ -120,7 +108,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 		 */
 		@Override
 		public Round calculateRound(Round round, BeerGame game) {
-			Round previousRound = beerGame.getRounds().get(round.getRoundId()- 1);
 			RoundCalculator roundCalculator = new RoundCalculator();
 
 			return  roundCalculator.calculateRound(round, game);
@@ -145,15 +132,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.replaceAgentWithPlayer();
     }
 
-    @Override
-    public void requestFacilityUsage(Facility facility) {
-        //Yet to be implemented
-    }
-
-    @Override
-    public List<Facility> getAllFacilities() {
-        //Yet to be implemented.
-        return new ArrayList<>();
+    public void addObserver(IConnectorObserver observer) {
+        communication.addObserver(observer);
     }
 
     public int getRoundId() {
@@ -172,18 +152,14 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void roundModelReceived(Round previousRound, Round newRound) {
-				beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
-				beerGame.getRounds().add(previousRound);
-        beerGame.getRounds().removeIf(round -> round.getRoundId() == newRound.getRoundId());
-        beerGame.getRounds().add(newRound);
         curRoundId = newRound.getRoundId();
-        persistence.saveGameLog(beerGame,true);
+        persistence.updateRound(previousRound);
+        persistence.createRound(newRound);
         sendRoundActionFromAgents();
     }
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        this.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
         if (isBotGame()) {
             seeOtherFacilities.setupScreen();
@@ -199,10 +175,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
             Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
             try {
                 Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                communication.sendTurnData(round);
+            } catch (SendGameMessageException | InterruptedException e) {
+                //No error should be thrown if the agent runs locally
             }
-            communication.sendTurnData(round);
         }
         if (isBotGame()) {
             seeOtherFacilities.setupScreen();
@@ -220,6 +196,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     private boolean isBotGame() {
+        BeerGame beerGame = getBeerGame();
         return beerGame.getPlayers().size() == 1 && beerGame.getPlayers().stream().findFirst().get().getFacility() == null;
     }
 

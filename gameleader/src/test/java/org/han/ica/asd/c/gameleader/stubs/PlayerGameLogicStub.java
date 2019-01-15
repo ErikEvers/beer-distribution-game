@@ -11,8 +11,8 @@ import java.util.List;
 
 public class PlayerGameLogicStub implements IPlayerGameLogic {
     @Override
-    public boolean submitTurn(Round turn) {
-        return false;
+    public void submitTurn(Round turn) {
+
     }
 
     @Override
@@ -30,18 +30,22 @@ public class PlayerGameLogicStub implements IPlayerGameLogic {
 
     }
 
-
+    @Override
     public List<String> getAllGames() {
         return null;
     }
 
+    @Override
     public void connectToGame(String game) {
 
     }
 
+    @Override
     public void requestFacilityUsage(Facility facility) {
 
     }
+
+    @Override
     public List<Facility> getAllFacilities() {
         return null;
     }
