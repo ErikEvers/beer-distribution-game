@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dao.BeergameDAO;
+import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
@@ -19,7 +20,7 @@ import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -78,6 +79,7 @@ class PersistenceTest {
 		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
 		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1,1,"Beergame",businessRulesList);
 
+		DaoConfig.setCurrentGameId("BeerGame");
 
 		roundDAOMock = mock(RoundDAO.class);
 		Mockito.doNothing().when(roundDAOMock).createRound(anyInt());
@@ -98,7 +100,7 @@ class PersistenceTest {
 		when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
 
 		facilityDAOMock = mock(FacilityDAO.class);
-		when((facilityDAOMock).readAllFacilitiesInGame()).thenReturn();
+		when((facilityDAOMock).readAllFacilitiesInGame()).thenReturn(facilities);
 
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
@@ -108,6 +110,7 @@ class PersistenceTest {
 				bind(BeergameDAO.class).toInstance(beerGameDAOMock);
 				bind(GameBusinessRulesInFacilityTurnDAO.class).toInstance(gameBusinessRulesInFacilityTurnMock);
 				bind(PlayerDAO.class).toInstance(playerDAOMock);
+				bind(FacilityDAO.class).toInstance(facilityDAOMock);
 			}
 		});
 
@@ -167,8 +170,8 @@ class PersistenceTest {
 	@Test
 	void getAllFacilities(){
 		List<Facility> facilities = persistence.getAllFacilities();
-		verify((facilityDAOMock), times(1)).readAllFacilitiesInGame();
-		Assert.assertEquals(2, facilities.size());
+		verify((facilityDAOMock),times(1)).readAllFacilitiesInGame();
+		Assertions.assertEquals(2, facilities.size());
 	}
 
 	@Test
