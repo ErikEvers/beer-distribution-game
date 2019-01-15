@@ -275,9 +275,11 @@ public abstract class PlayGame implements IPlayGame {
         deliverFacilities.clear();
         Facility ownFacility = playerComponent.getPlayer().getFacility();
 
-        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order -> orderFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
+        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order ->
+                orderFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
 
-        playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == ownFacility.getFacilityId()).forEach(deliver -> deliverFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
+        playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == ownFacility.getFacilityId()).forEach(deliver ->
+                deliverFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
     }
 
     @FXML
