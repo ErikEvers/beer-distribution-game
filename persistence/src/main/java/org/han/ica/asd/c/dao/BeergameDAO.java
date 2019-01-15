@@ -3,6 +3,8 @@ package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -50,6 +52,11 @@ public class BeergameDAO {
 	@Inject
 	private LeaderDAO leaderDAO;
 
+	@Inject
+	private FacilityDAO facilityDAO;
+
+	@Inject
+	private FacilityTypeDAO facilityTypeDAO;
 
 
 
@@ -106,6 +113,11 @@ public class BeergameDAO {
 				DaoConfig.setCurrentGameId(beerGame.getGameId());
 
 				configurationDAO.createConfiguration(beerGame.getConfiguration());
+				for (Facility facility : beerGame.getConfiguration().getFacilities()) {
+					facilityDAO.createFacility(facility);
+					facilityTypeDAO.createFacilityType(facility.getFacilityType());
+
+				}
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());

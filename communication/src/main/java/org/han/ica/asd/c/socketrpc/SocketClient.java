@@ -124,7 +124,7 @@ public class SocketClient {
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
-            if (ip.equals("127.0.0.1")) {
+            if (ip.equals("169.254.46.82")) {
                 Object response = SocketServer.serverObserver.serverObjectReceived(object, ip);
                 map.put(ip, response);
                 cdl.countDown();
