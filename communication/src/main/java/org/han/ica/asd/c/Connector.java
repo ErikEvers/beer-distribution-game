@@ -231,13 +231,13 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void startFaultDetector() {
-        initNodeInfoList();
-        Leader leader = persistence.getGameLog().getLeader();
-        if (internalIP.equals(leader.getPlayer().getIpAddress())) {
-            faultDetector.startFaultDetectorLeader(nodeInfoList);
-        } else {
-            faultDetector.startFaultDetectorPlayer(nodeInfoList);
-        }
+//        initNodeInfoList();
+//        Leader leader = persistence.getGameLog().getLeader();
+//        if (internalIP.equals(leader.getPlayer().getIpAddress())) {
+//            faultDetector.startFaultDetectorLeader(nodeInfoList);
+//        } else {
+//            faultDetector.startFaultDetectorPlayer(nodeInfoList);
+//        }
     }
 
     public boolean makeConnection(String destinationIP) {
