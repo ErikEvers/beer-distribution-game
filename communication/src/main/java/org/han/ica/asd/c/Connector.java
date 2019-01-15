@@ -346,7 +346,17 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
                 checkInterfacesAndGiveIP(ips, networkInterface, addresses);
             }
         }
+        try {
+            ips.put("external", getExternalIP());
+        } catch (IOException e) {
+            logger.log(Level.INFO, "No external ip available", e);
+        }
         return ips;
+    }
+
+    @Override
+    public void setMyIp(String ip) {
+        internalIP = ip;
     }
 
     private void checkInterfacesAndGiveIP(Map<String, String> ips, NetworkInterface networkInterface, Enumeration<InetAddress> addresses) {
