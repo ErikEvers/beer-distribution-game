@@ -193,10 +193,9 @@ public abstract class PlayGame implements IPlayGame {
         if (!outgoingOrderTextField.getText().isEmpty() && comboBox.getValue() != null) {
             int order = Integer.parseInt(outgoingOrderTextField.getText());
             Facility facility = comboBox.getValue();
-            String facilityAndOrderAmount = concatFacilityAndIdAndOrder(facility.getFacilityType().getFacilityName(), facility.getFacilityId(), order);
             outgoingOrderTextField.clear();
             playerComponent.placeOrder(facility, order);
-            orderFacilities.add(facilityAndOrderAmount);
+            initLijst();
         }
     }
 
@@ -205,11 +204,9 @@ public abstract class PlayGame implements IPlayGame {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
             Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
             int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
-            String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(chosenFacility.getFacilityType().getFacilityName(), chosenFacility.getFacilityId(), delivery);
             txtOutgoingDelivery.clear();
             playerComponent.sendDelivery(chosenFacility, delivery);
-            deliverFacilities.add(facilityAndDeliverAmount);
-            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), delivery);
+            initLijst();
         }
     }
 
@@ -238,7 +235,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
-    		BeerGame beerGame = playerComponent.getBeerGame();
+        BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
         Round round = playerComponent.getRound();
         int budget = 0;
@@ -254,8 +251,6 @@ public abstract class PlayGame implements IPlayGame {
 								budget = f.getRemainingBudget();
             }
         }
-
-
 
         int incomingOrders = 0;
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
@@ -276,19 +271,17 @@ public abstract class PlayGame implements IPlayGame {
     }
 
     private void initLijst() {
-        for(FacilityTurnOrder facilityTurnOrder : playerComponent.getRound().getFacilityOrders()) {
-            if(facilityTurnOrder.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
-                String facilityAndOrderAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
-                orderFacilities.add(facilityAndOrderAmount);
-            }
-        }
+        orderFacilities.clear();
+        deliverFacilities.clear();
+        Facility ownFacility = playerComponent.getPlayer().getFacility();
 
-        for(FacilityTurnDeliver facilityTurnDeliver : playerComponent.getRound().getFacilityTurnDelivers()) {
-            if(facilityTurnDeliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
-                String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
-                deliverFacilities.add(facilityAndDeliverAmount);
-            }
-        }
+        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order -> {
+            orderFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount()));
+        });
+
+        playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == ownFacility.getFacilityId()).forEach(deliver -> {
+            deliverFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount()));
+        });
     }
 
     @FXML
