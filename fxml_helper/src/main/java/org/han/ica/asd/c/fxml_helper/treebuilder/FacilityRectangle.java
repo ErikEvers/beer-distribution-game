@@ -61,16 +61,16 @@ public class FacilityRectangle extends StackPane {
 	private static String determineColor(String facilityType) {
         String color = "#FFFFFF";
 
-        if ("Factory".equals(facilityType)) {
+        if ("Factory".equalsIgnoreCase(facilityType)) {
             color = "#1fff34";
 
-        } else if ("Regional Warehouse".equals(facilityType)) {
+        } else if ("Regional Warehouse".equalsIgnoreCase(facilityType)) {
             color = "DODGERBLUE";
 
-        } else if ("Wholesaler".equals(facilityType)) {
+        } else if ("Wholesaler".equalsIgnoreCase(facilityType)) {
             color = "#ffbc1f";
 
-        } else if ("Retailer".equals(facilityType)) {
+        } else if ("Retailer".equalsIgnoreCase(facilityType)) {
             color = "#ff2151";
         }
 

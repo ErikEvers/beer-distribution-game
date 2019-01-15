@@ -6,7 +6,7 @@ public class NumericTextFormatter {
     private static TextFormatter textFormatter;
 
     public static TextFormatter getTextFormatter(){
-        if(textFormatter == null) setuptextFormatter();
+        setuptextFormatter();
         return textFormatter;
     }
 

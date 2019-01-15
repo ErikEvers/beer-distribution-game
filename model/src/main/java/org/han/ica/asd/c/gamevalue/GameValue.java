@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.gamevalue;
 
+import java.util.Arrays;
+
 public enum GameValue {
     STOCK("stock", "inventory"),
     ORDERED("ordered"),
@@ -39,14 +41,10 @@ public enum GameValue {
      *
      * @param value the given value
      * @return
+     * boolean value stating whether the given value is already in the String array
      */
     public boolean contains(String value) {
-        for (String s : this.value) {
-            if (s.contains(value)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(this.value).anyMatch(s -> s.contains(value));
     }
 
     /***
@@ -58,14 +56,14 @@ public enum GameValue {
     public static boolean checkIfFacility(String variable) {
         int endOfFirstPart = variable.indexOf(' ');
         int notFound = -1;
-        if(endOfFirstPart==notFound){
+        if (endOfFirstPart == notFound) {
             endOfFirstPart = variable.length();
         }
         for (GameValue gameValue : GameValue.values()) {
-            if(!isFacility(gameValue)){
+            if (!isFacility(gameValue)) {
                 continue;
             }
-            if (gameValue.contains(variable.substring(0,endOfFirstPart)) ) {
+            if (gameValue.contains(variable.substring(0, endOfFirstPart))) {
                 return true;
             }
         }
@@ -85,13 +83,13 @@ public enum GameValue {
                 gameValue == GameValue.RETAILER;
     }
 
-    public static boolean isDisplayAttribute(String variable){
+    public static boolean isDisplayAttribute(String variable) {
 
         for (GameValue gameValue : GameValue.values()) {
-            if(isFacility(gameValue) || gameValue == GameValue.INCOMINGORDER || gameValue == GameValue.HIGHEST || gameValue == GameValue.LOWEST){
+            if (isFacility(gameValue) || gameValue == GameValue.INCOMINGORDER || gameValue == GameValue.HIGHEST || gameValue == GameValue.LOWEST) {
                 continue;
             }
-            if(gameValue.contains(variable)){
+            if (gameValue.contains(variable)) {
                 return true;
             }
         }
