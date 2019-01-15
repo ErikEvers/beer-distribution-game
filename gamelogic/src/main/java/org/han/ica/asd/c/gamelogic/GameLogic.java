@@ -149,6 +149,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 				beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
 				beerGame.getRounds().add(previousRound);
         beerGame.getRounds().removeIf(round -> round.getRoundId() == newRound.getRoundId());
+        persistence.saveRoundData(newRound);
         beerGame.getRounds().add(newRound);
         curRoundId = newRound.getRoundId();
         sendRoundActionFromAgents();
