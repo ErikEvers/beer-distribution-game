@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
@@ -17,16 +16,7 @@ import javax.inject.Named;
 public class ReplayGameRoundController {
 
     @FXML
-    private AnchorPane mainContainer;
-
-    @FXML
     private AnchorPane facilitiesContainer;
-
-    @FXML
-    private Button returnButton;
-
-    @FXML
-    private Button previousRoundButton;
 
     @FXML
     private TextField roundId;
@@ -39,9 +29,6 @@ public class ReplayGameRoundController {
 
     @FXML
     private Label gameName;
-
-    @FXML
-    private Button showGraph;
 
     @Inject
     private IVisualisedPlayedGameData replayComponent;
@@ -90,8 +77,11 @@ public class ReplayGameRoundController {
     }
 
     @FXML
-    void handleRoundIdChange(InputMethodEvent event) {
+    void handleRoundIdChange(ActionEvent event) {
+        replayComponent.updateCurrentRound(Integer.parseInt(roundId.getText()));
 
+        updateCurrentRound();
+        updateTree();
     }
 
     @FXML
