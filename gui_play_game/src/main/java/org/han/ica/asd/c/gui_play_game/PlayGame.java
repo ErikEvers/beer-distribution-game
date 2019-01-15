@@ -27,12 +27,9 @@ import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.IOException;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -195,7 +192,7 @@ public abstract class PlayGame implements IPlayGame {
             Facility facility = comboBox.getValue();
             outgoingOrderTextField.clear();
             playerComponent.placeOrder(facility, order);
-            initLijst();
+            refillOrdersList();
         }
     }
 
@@ -206,7 +203,7 @@ public abstract class PlayGame implements IPlayGame {
             int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
             txtOutgoingDelivery.clear();
             playerComponent.sendDelivery(chosenFacility, delivery);
-            initLijst();
+            refillDeliveriesList();
         }
     }
 
@@ -269,16 +266,19 @@ public abstract class PlayGame implements IPlayGame {
 				submitTurnButton.setDisable(false);
     }
 
-    private void initLijst() {
+    protected void refillOrdersList() {
         orderFacilities.clear();
-        deliverFacilities.clear();
         Facility ownFacility = playerComponent.getPlayer().getFacility();
 
         playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order ->
-                orderFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
+                orderFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(order.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
+    }
 
+    protected void refillDeliveriesList() {
+        deliverFacilities.clear();
+        Facility ownFacility = playerComponent.getPlayer().getFacility();
         playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == ownFacility.getFacilityId()).forEach(deliver ->
-                deliverFacilities.add(concatFacilityAndIdAndOrder(ownFacility.getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
+                deliverFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(deliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
     }
 
     @FXML
