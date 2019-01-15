@@ -135,25 +135,14 @@ public class Agent extends GameAgent implements IParticipant {
 
 			List<Facility> list = map.keySet().stream().sorted().collect(Collectors.toList());
 
-//			List<Facility> list2 = map.keySet().stream().sorted().collect(Collectors.toList());
-
 			if (!list.isEmpty()) {
 				return list.get(0);
 			}
-
-			throw new FacilityNotFound(targetFacilityId);
-
-//			return configuration.getFacilitiesLinkedTo().entrySet().stream()
-//					.filter(entry -> entry.getValue().contains(getFacility()))
-//					.map(Map.Entry::getKey)
-//					.sorted(Comparator.comparing((Facility::getFacilityId)).reversed())
-//					.collect(
-//							Collectors.toList()).get(0);
-		}
-
-		for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
-			if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
-				return link.getKey();
+		} else {
+			for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
+				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
+					return link.getKey();
+				}
 			}
 		}
 		throw new FacilityNotFound(targetFacilityId);
