@@ -41,6 +41,7 @@ public enum GameValue {
      *
      * @param value the given value
      * @return
+     * boolean value stating whether the given value is already in the String array
      */
     public boolean contains(String value) {
         return Arrays.stream(this.value).anyMatch(s -> s.contains(value));
