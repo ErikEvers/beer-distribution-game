@@ -5,7 +5,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.agent.stubs.GameLogicStub;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
@@ -18,6 +17,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.Arrays;
@@ -131,6 +131,11 @@ class Fixtures {
 
                         @Override
                         public void deleteProgrammedAgent(String agentName) {
+                        }
+
+                        @Override
+                        public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+                            return null;
                         }
                     });
                 }
@@ -309,6 +314,11 @@ class Fixtures {
 
                         @Override
                         public void deleteProgrammedAgent(String agentName) {
+                        }
+
+                        @Override
+                        public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+                            return null;
                         }
                     });
                 }
@@ -492,6 +502,11 @@ class Fixtures {
 
                         @Override
                         public void deleteProgrammedAgent(String agentName) {
+                        }
+
+                        @Override
+                        public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+                            return null;
                         }
                     });
                 }

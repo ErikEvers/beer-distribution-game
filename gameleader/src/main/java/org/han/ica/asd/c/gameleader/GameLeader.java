@@ -2,17 +2,17 @@ package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.dao.DaoConfig;
-import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
+import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
+import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
+import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
-import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
-import org.han.ica.asd.c.interfaces.communication.ITurnModelObserver;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -206,7 +206,6 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
                     tempAgent.setFacility(agent.getFacility());
                     tempAgent.setGameAgentName(agent.getGameAgentName());
                     tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
-                    tempAgent.setConfiguration(game.getConfiguration());
                     gameLogic.addLocalParticipant(tempAgent);
                 }
             }

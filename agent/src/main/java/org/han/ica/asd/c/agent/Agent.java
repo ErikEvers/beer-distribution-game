@@ -16,7 +16,6 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -32,15 +31,17 @@ public class Agent extends GameAgent implements IParticipant {
 	private Configuration configuration;
 
 	@Inject
-	@Named("businessRules")
 	private IBusinessRules businessRules;
 
 	@Inject
 	private IPlayerGameLogic gameLogic;
 
 	@Inject
-	@Named("persistence")
 	private IPersistence persistence;
+
+	public Agent(){
+
+	}
 
     /**
      * Constructor with default agent name and facility
@@ -73,7 +74,7 @@ public class Agent extends GameAgent implements IParticipant {
 		persistence.logUsedBusinessRuleToCreateOrder(new GameBusinessRulesInFacilityTurn(
 				getFacility().getFacilityId(),
 				round.getRoundId(),
-				getGameAgentName() + 1,
+				getGameAgentName(),
 				actionCollector.businessRulesList));
 		return new GameRoundAction(actionCollector.orderMap, actionCollector.deliverMap);
 	}
