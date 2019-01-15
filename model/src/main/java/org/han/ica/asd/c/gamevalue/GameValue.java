@@ -56,14 +56,14 @@ public enum GameValue {
     public static boolean checkIfFacility(String variable) {
         int endOfFirstPart = variable.indexOf(' ');
         int notFound = -1;
-        if(endOfFirstPart==notFound){
+        if (endOfFirstPart == notFound) {
             endOfFirstPart = variable.length();
         }
         for (GameValue gameValue : GameValue.values()) {
-            if(!isFacility(gameValue)){
+            if (!isFacility(gameValue)) {
                 continue;
             }
-            if (gameValue.contains(variable.substring(0,endOfFirstPart)) ) {
+            if (gameValue.contains(variable.substring(0, endOfFirstPart))) {
                 return true;
             }
         }
@@ -83,13 +83,13 @@ public enum GameValue {
                 gameValue == GameValue.RETAILER;
     }
 
-    public static boolean isDisplayAttribute(String variable){
+    public static boolean isDisplayAttribute(String variable) {
 
         for (GameValue gameValue : GameValue.values()) {
-            if(isFacility(gameValue) || gameValue == GameValue.INCOMINGORDER || gameValue == GameValue.HIGHEST || gameValue == GameValue.LOWEST){
+            if (isFacility(gameValue) || gameValue == GameValue.INCOMINGORDER || gameValue == GameValue.HIGHEST || gameValue == GameValue.LOWEST) {
                 continue;
             }
-            if(gameValue.contains(variable)){
+            if (gameValue.contains(variable)) {
                 return true;
             }
         }

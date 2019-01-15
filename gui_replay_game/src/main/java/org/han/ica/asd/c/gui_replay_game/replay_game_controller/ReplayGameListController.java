@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_replay_game;
+package org.han.ica.asd.c.gui_replay_game.replay_game_controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,8 +23,8 @@ public class ReplayGameListController {
     ListView list;
 
     @Inject
-    @Named("ReplayGame")
-    IGUIHandler replayGame;
+    @Named("ReplayGameRound")
+    IGUIHandler replayGameRound;
 
     @Inject
     @Named("MainMenu")
@@ -39,14 +39,14 @@ public class ReplayGameListController {
     public void initialize() {
 //TODO INJECT PRESSICTENCE AND GET ALL GAMES.
         list.setItems(items);
-        items.add("hello");
-        items.add("lol");
+        items.add("Beergame 14 januari");
+        items.add("ASD Beergame");
     }
 
     @FXML
     private void replayButtonAction() {
-        replayGame.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
-        replayGame.setupScreen();
+        replayGameRound.setData(new Object[]{list.getSelectionModel().getSelectedItem()});
+        replayGameRound.setupScreen();
     }
 
     @FXML

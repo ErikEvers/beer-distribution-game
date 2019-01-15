@@ -3,6 +3,7 @@ package org.han.ica.asd.c.interfaces.gui_replay_game;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 import org.han.ica.asd.c.gamevalue.GameValue;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import java.util.List;
@@ -84,4 +85,18 @@ public interface IVisualisedPlayedGameData {
      * The attribute that needs to be displayed
      */
     void setDisplayedAttribute(GameValue value);
+
+    /***
+     * Get an entire beerGame with rounds filtered to the current round
+     * @return
+     * The beerGame filtered on currentRound
+     */
+    BeerGame getBeerGameForCurrentRound();
+
+    /***
+     * Get the Name of the current BeerGame
+     * @return
+     *
+     */
+    String getBeerGameName();
 }
