@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.agent;
 
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
+import org.han.ica.asd.c.businessrule.parser.replacer.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;

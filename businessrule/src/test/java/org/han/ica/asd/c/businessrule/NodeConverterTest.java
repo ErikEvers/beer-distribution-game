@@ -4,35 +4,16 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.businessrule.parser.ast.BooleanLiteral;
-import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
-import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.replacer.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
-import org.han.ica.asd.c.businessrule.parser.ast.comparison.Comparison;
-import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
-import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.DivideOperation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.MultiplyOperation;
-import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
-import org.han.ica.asd.c.businessrule.parser.ast.operators.CalculationOperator;
-import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
-import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.powermock.reflect.Whitebox;
 
 import javax.inject.Provider;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

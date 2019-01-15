@@ -1,8 +1,10 @@
-package org.han.ica.asd.c.businessrule.parser.ast;
+package org.han.ica.asd.c.businessrule.parser.replacer;
 
 import com.google.inject.Inject;
+import org.han.ica.asd.c.businessrule.parser.ast.FacilityType;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
+
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +46,7 @@ public class NodeConverter {
         return Integer.parseInt(facilityId);
     }
 
-    public List<List<String>> sortFacilities(List<List<String>> facilities){
+    public List<List<String>> sortFacilities(List<List<String>> facilities) {
         List<List<String>> returnList = new ArrayList<>();
         for (List<String> facility : facilities) {
             Collections.sort(facility);
@@ -61,7 +63,7 @@ public class NodeConverter {
     private int separateFacilityId(String facility) {
         String[] stringSplit = facility.split(" ");
         if (stringSplit.length > 1) {
-            return Integer.parseInt(stringSplit[stringSplit.length-1]) - 1;
+            return Integer.parseInt(stringSplit[stringSplit.length - 1]) - 1;
         }
         return 0;
     }
@@ -70,8 +72,8 @@ public class NodeConverter {
         List<List<String>> facilities = sortFacilities(businessRuleStore.getAllFacilities());
 
         for (int i = 0; i < facilities.size(); i++) {
-            if(facilities.get(i).contains(String.valueOf(ownFacilityId))){
-                return getFacilityIdByAction(actionName,i);
+            if (facilities.get(i).contains(String.valueOf(ownFacilityId))) {
+                return getFacilityIdByAction(actionName, i);
             }
         }
 
@@ -79,14 +81,14 @@ public class NodeConverter {
     }
 
     private Integer getFacilityIdByAction(ActionReference actionName, int facility) {
-        if("order".equals(actionName.getAction())){
-            if(facility == FacilityType.FACTORY.getIndex()){
+        if ("order".equals(actionName.getAction())) {
+            if (facility == FacilityType.FACTORY.getIndex()) {
                 return 0;
             } else {
                 return FIRSTFACILITYABOVEBELOW;
             }
         } else {
-            if(facility == FacilityType.RETAILER.getIndex()){
+            if (facility == FacilityType.RETAILER.getIndex()) {
                 return 0;
             } else {
                 return FIRSTFACILITYABOVEBELOW;

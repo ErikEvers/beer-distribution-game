@@ -1,11 +1,15 @@
-package org.han.ica.asd.c.businessrule.parser.ast;
+package org.han.ica.asd.c.businessrule.parser.replacer;
 
 import org.apache.ibatis.javassist.NotFoundException;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
-import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.IFacility;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,8 +24,9 @@ public class Replacer {
 
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
     private NodeConverter nodeConverter;
-    private static final Logger LOGGER = Logger.getLogger(Replacer.class.getName());
-
+    private static  final Logger LOGGER = Logger.getLogger(Replacer.class.getName());
+    private static  final String THE_IDENTIFIER_IS_NOT_FOUND = "the identifier is not found";
+    private static  final String THE_FACILITY_IS_NOT_FOUND = "the facility is not found";
     private IBusinessRuleStore businessRuleStore;
 
     @Inject
@@ -219,22 +224,21 @@ public class Replacer {
      * @throws NotFoundException
      */
     private int getExtreme(GameValue attribute, GameValue facility, Round round, GameValue highestOrLowest) throws NotFoundException {
-        String notFound = "the identifier is not found";
         switch (attribute) {
             case ORDERED:
-                return getFacilityExtreme(round.getFacilityOrders(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnOrder::getOrderAmount), notFound);
+                return getFacilityIdBasedOnExtreme(round.getFacilityOrders(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnOrder::getOrderAmount));
             case STOCK:
-                return getFacilityExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getStock), notFound);
+                return getFacilityIdBasedOnExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getStock));
             case BUDGET:
-                return getFacilityExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getRemainingBudget), notFound);
+                return getFacilityIdBasedOnExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getRemainingBudget));
             case BACKLOG:
-                return getFacilityExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getBackorders), notFound);
+                return getFacilityIdBasedOnExtreme(round.getFacilityTurns(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurn::getBackorders));
             case INCOMINGORDER:
-                return getFacilityExtreme(round.getFacilityOrders(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnOrder::getOrderAmount), notFound);
+                return getFacilityIdBasedOnExtreme(round.getFacilityOrders(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnOrder::getOrderAmount));
             case OUTGOINGGOODS:
-                return getFacilityExtreme(round.getFacilityTurnDelivers(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnDeliver::getDeliverAmount), notFound);
+                return getFacilityIdBasedOnExtreme(round.getFacilityTurnDelivers(), highestOrLowest, getDesiredFacilities(facility), Comparator.comparing(FacilityTurnDeliver::getDeliverAmount));
             default:
-                throw new NotFoundException(notFound);
+                throw new NotFoundException(THE_IDENTIFIER_IS_NOT_FOUND);
         }
     }
 
@@ -244,12 +248,11 @@ public class Replacer {
      * @param highestOrLowest
      * @param facilityTypeList
      * @param facilityComparator the comparator
-     * @param notFound raises the not found error when triggered
      * @param <T> An object which implements IFacility
      * @return the found facility id
      * @throws NotFoundException
      */
-    private <T extends IFacility> int getFacilityExtreme(List<T> facilityList, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<T> facilityComparator, String notFound) throws NotFoundException {
+    private <T extends IFacility> int getFacilityIdBasedOnExtreme(List<T> facilityList, GameValue highestOrLowest, List<String> facilityTypeList, Comparator<T> facilityComparator) throws NotFoundException {
         T facilityTurnOrder;
         Stream<T> stream = facilityList.stream().filter(i ->
                 facilityTypeList.contains(String.valueOf(i.getFacilityId())));
@@ -262,11 +265,12 @@ public class Replacer {
         if (facilityTurnOrder != null) {
             return facilityTurnOrder.getFacilityId();
         }
-        throw new NotFoundException(notFound);
+        throw new NotFoundException(THE_IDENTIFIER_IS_NOT_FOUND);
     }
 
     /**
      * Gets all the facilities of the game
+     *
      * @param facilityType the desired facilities
      * @return a list of facilities
      * @throws NotFoundException
@@ -282,7 +286,7 @@ public class Replacer {
             case RETAILER:
                 return businessRuleStore.getAllFacilities().get(3);
             default:
-                throw new NotFoundException("Cannot find the specified facility");
+                throw new NotFoundException(THE_FACILITY_IS_NOT_FOUND);
         }
     }
 

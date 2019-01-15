@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.action;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
+import org.han.ica.asd.c.businessrule.parser.replacer.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
