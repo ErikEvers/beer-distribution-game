@@ -307,7 +307,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             }
         }
 
-        return "127.0.0.1";
+        return null;
     }
 
     /**
