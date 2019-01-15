@@ -53,9 +53,9 @@ class AgentIntegrationTest {
     private Injector participantInjector = Guice.createInjector(new AbstractModule() {
         @Override
         protected void configure() {
-            bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
+            bind(IBusinessRules.class).to(BusinessRuleHandler.class);
             bind(IPlayerGameLogic.class).toInstance(gameLogic);
-            bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
+            bind(IPersistence.class).toInstance(new IPersistence() {
                 @Override
                 public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 

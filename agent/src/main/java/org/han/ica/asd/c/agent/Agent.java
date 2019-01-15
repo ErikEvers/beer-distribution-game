@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.agent;
 
+import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -15,23 +16,27 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 
 import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 public class Agent extends GameAgent implements IParticipant {
 	private Configuration configuration;
 
 	@Inject
-	@Named("businessRules")
 	private IBusinessRules businessRules;
 
 	@Inject
 	private IPlayerGameLogic gameLogic;
 
 	@Inject
-	@Named("persistence")
 	private IPersistence persistence;
 
 
@@ -45,6 +50,9 @@ public class Agent extends GameAgent implements IParticipant {
         super(gameAgentName, facility, gameBusinessRulesList);
         this.configuration = configuration;
     }
+
+    public Agent() {
+	}
 
 	/**
 	 * Generates actions of an agent using the defined business rules.
@@ -67,6 +75,9 @@ public class Agent extends GameAgent implements IParticipant {
 			GameBusinessRules gameBusinessRules = gameBusinessRulesIterator.next();
 			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round, getFacility().getFacilityId());
 			if (actionModel != null) {
+				if(actionModel.amount < 0){
+					actionModel.amount = 0;
+				}
 				if (canAddToOrderMap.apply(actionModel.isOrderType())) {
 					this.updateTargetMap(this.resolveLowerFacilityId(actionModel.facilityId), actionModel.amount, targetOrderMap, triggeredBusinessRules, gameBusinessRules);
 				} else if (canAddToDeliverMap.apply(actionModel.isDeliverType())) {
@@ -75,8 +86,8 @@ public class Agent extends GameAgent implements IParticipant {
 			}
 		}
 
-		persistence.logUsedBusinessRuleToCreateOrder(
-				new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
+			persistence.logUsedBusinessRuleToCreateOrder(
+			new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
 		return new GameRoundAction(targetOrderMap, targetDeliverMap);
 	}
 
@@ -102,12 +113,19 @@ public class Agent extends GameAgent implements IParticipant {
 	 * @return  The facility below the current facility that needs to be resolved. NULL when facility is not found.
 	 */
 	private Facility resolveLowerFacilityId(int targetFacilityId) {
-		List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
+		List<Facility> links = configuration.getFacilitiesLinkedToFacilitiesByFacilityId(getFacility().getFacilityId());
+
+		if(targetFacilityId == NodeConverter.FIRSTFACILITYABOVEBELOW){
+            Collections.sort(links);
+            return links.get(0);
+        }
+
 		for (Facility link : links) {
 			if (targetFacilityId == link.getFacilityId()) {
 				return link;
 			}
 		}
+
 		return null;
 	}
 
@@ -118,6 +136,23 @@ public class Agent extends GameAgent implements IParticipant {
 	 * @return  The facility above the current facility that needs to be resolved. NULL when facility is not found.
 	 */
 	private Facility resolveHigherFacilityId(int targetFacilityId) {
+		if (targetFacilityId == NodeConverter.FIRSTFACILITYABOVEBELOW){
+
+			Map<Facility, List<Facility>> map = configuration.getFacilitiesLinkedTo().entrySet().stream()
+					.filter(m -> m.getValue().contains(getFacility()))
+					.collect(
+							Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+									LinkedHashMap::new));
+
+			List<Facility> list = map.keySet().stream().sorted().collect(Collectors.toList());
+
+			if (!list.isEmpty()) {
+				return list.get(0);
+			}
+
+			return null;
+		}
+
 		for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
 			if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
 				return link.getKey();
@@ -135,4 +170,8 @@ public class Agent extends GameAgent implements IParticipant {
     public Facility getParticipant() {
         return getFacility();
     }
+
+    public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+	}
 }

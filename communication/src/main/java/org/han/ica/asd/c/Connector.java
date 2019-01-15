@@ -130,6 +130,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
             leader.init(externalIP, createdRoom, beerGame);
+            leaderIp = "25.20.29.75";
 
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -209,9 +210,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param newRound
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException {
+    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
 			//initNodeInfoList();
-			List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+			List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
 			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
@@ -247,7 +248,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
 				//initNodeInfoList();
 				//List<String> ips = nodeInfoList.getAllIps();
-				List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+				List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
@@ -271,7 +272,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "25.28.108.244";
+        return "25.20.29.75";
     }
 
     /**

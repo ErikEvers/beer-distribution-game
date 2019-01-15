@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gameleader;
 
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
@@ -25,9 +26,11 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
     @Inject private IConnectorForLeader connectorForLeader;
@@ -40,6 +43,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private final Provider<BeerGame> beerGameProvider;
     private final Provider<Round> roundProvider;
     private final Provider<Player> playerProvider;
+    private final Provider<Agent> agentProvider;
 
     private static RoomModel roomModel;
     private static BeerGame game;
@@ -53,10 +57,11 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private int roundId = 1;
 
     @Inject
-    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider) {
+    public GameLeader(Provider<BeerGame> beerGameProvider, Provider<Round> roundProvider, Provider<Player> playerProvider, Provider<Agent> agentProvider) {
         this.beerGameProvider = beerGameProvider;
         this.roundProvider = roundProvider;
         this.playerProvider = playerProvider;
+        this.agentProvider = agentProvider;
     }
 
     /**
@@ -187,12 +192,24 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     }
 
     public void startGame() throws BeerGameException, TransactionException {
-			persistence.saveGameLog(game,false);
 			for(Player player: game.getPlayers()) {
 				if(player.getFacility() == null) {
 					throw new BeerGameException("Every player needs to control a facility");
 				}
 			}
+			DaoConfig.setCurrentGameId(game.getGameId());
+            persistence.saveGameLog(game, false);
+            List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
+			for(GameAgent agent : game.getAgents()) {
+			    if(!takenFacilityIds.contains(agent.getFacility().getFacilityId())) {
+                    Agent tempAgent = agentProvider.get();
+                    tempAgent.setFacility(agent.getFacility());
+                    tempAgent.setGameAgentName(agent.getGameAgentName());
+                    tempAgent.setGameBusinessRules(agent.getGameBusinessRules());
+                    tempAgent.setConfiguration(game.getConfiguration());
+                    gameLogic.addLocalParticipant(tempAgent);
+                }
+            }
 			connectorForLeader.startRoom(roomModel);
 			connectorForLeader.sendGameStart(game);
 		}
@@ -209,7 +226,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         turnsReceivedInCurrentRound = 0;
 
 				try {
-					connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData, game);
+					connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
 				} catch (TransactionException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
