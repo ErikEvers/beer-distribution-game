@@ -57,7 +57,7 @@ public class FaultHandlerPlayer {
      * @author Tarik
      */
     private void notifyObserversLeaderDied() {
-        if (!observers.isEmpty()) {
+        if (observers != null && !observers.isEmpty()) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof ILeaderMigration) {
                     Player[] players = nodeInfoList.getPlayersWithoutLeader();

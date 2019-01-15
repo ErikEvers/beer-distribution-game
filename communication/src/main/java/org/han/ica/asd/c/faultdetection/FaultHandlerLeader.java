@@ -88,7 +88,7 @@ public class FaultHandlerLeader {
      * @author Tarik
      */
     private void notifyObserversIDied() {
-        if (!observers.isEmpty()) {
+        if (observers != null && !observers.isEmpty()) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof IPlayerDisconnectedObserver) {
                     ((IPlayerDisconnectedObserver) observer).iAmDisconnected();
