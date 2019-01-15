@@ -238,7 +238,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
-    		BeerGame beerGame = playerComponent.getBeerGame();
+        BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
         Round round = playerComponent.getRound();
         int budget = 0;

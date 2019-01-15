@@ -23,4 +23,6 @@ public interface IConnectorForSetup {
     void addObserver(IConnectorObserver connectorObserver);
     void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException;
     GamePlayerId getGameData(String userName) throws IOException, ClassNotFoundException;
+
+    RoomModel createOfflineRoom(String roomName, String password, BeerGame beerGame);
 }

@@ -26,6 +26,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -193,12 +194,17 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
     public void startGame() throws BeerGameException, TransactionException {
 			for(Player player: game.getPlayers()) {
-				if(player.getFacility() == null) {
+				if(player.getFacility() == null && !player.getPlayerId().equals(game.getLeader().getPlayer().getPlayerId())) {
 					throw new BeerGameException("Every player needs to control a facility");
 				}
 			}
             persistence.saveGameLog(game, false);
-            List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
+			List<Integer> takenFacilityIds;
+			if (game.getPlayers().stream().findFirst().get().getFacility() == null && game.getPlayers().size() == 1) {
+			    takenFacilityIds = new ArrayList<>();
+            } else {
+                takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
+            }
 			for(GameAgent agent : game.getAgents()) {
 			    if(!takenFacilityIds.contains(agent.getFacility().getFacilityId())) {
                     Agent tempAgent = agentProvider.get();

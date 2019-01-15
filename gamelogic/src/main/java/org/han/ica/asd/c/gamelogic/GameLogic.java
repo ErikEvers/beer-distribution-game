@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.dao.DaoConfig;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
@@ -19,6 +20,7 @@ import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +46,17 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private static IPlayerRoundListener player;
 
     @Inject
+    @Named("SeeOtherFacilities")
+    private IGUIHandler seeOtherFacilities;
+
+    @Inject
     public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
         if(participantsPool == null) {
 					participantsPool = participantsPoolProvider.get();
 				}
         this.communication = communication;
-    initObserver();}
+        initObserver();
+    }
 
     public void initObserver() {
         this.communication.addObserver(this);
@@ -177,10 +184,13 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        //initObserver();
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
-        player.startGame();
+        if (beerGame.getPlayers().size() == 1 && beerGame.getPlayers().stream().findFirst().get().getFacility() == null && beerGame.getPlayers().stream().findFirst().get().getPlayerId().equals(beerGame.getLeader().getPlayer().getPlayerId())) {
+            seeOtherFacilities.setupScreen();
+        } else {
+            player.startGame();
+        }
         curRoundId = 1;
         sendRoundActionFromAgents();
     }

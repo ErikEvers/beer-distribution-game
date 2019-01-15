@@ -198,9 +198,12 @@ public class GameSetupTypeController implements Initializable {
             createFirstTurn();
 
             if(onlineGame) {
-							connector.start();
-							connector.createRoom(gameName, "", beerGame);
-						}
+                connector.start();
+                connector.createRoom(gameName, "", beerGame);
+            } else {
+                connector.start();
+                connector.createOfflineRoom(gameName, "", beerGame);
+            }
 						persistence.saveGameLog(beerGame,false);
             assignAgents.setData(new Object[]{beerGame});
             assignAgents.setupScreen();

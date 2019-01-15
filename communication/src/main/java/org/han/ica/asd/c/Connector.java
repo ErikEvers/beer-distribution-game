@@ -139,6 +139,20 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return null;
     }
 
+    public RoomModel createOfflineRoom(String roomName, String password, BeerGame beerGame) {
+        try {
+            RoomModel createdOfflineRoom = finder.createGameRoomModel(roomName, "127.0.0.1", password);
+            GameLeader leader = gameLeaderProvider.get();
+            leader.init("127.0.0.1", createdOfflineRoom, beerGame);
+            leaderIp = "127.0.0.1";
+
+            return createdOfflineRoom;
+        } catch (DiscoveryException e) {
+            logger.log(Level.INFO, e.getMessage());
+        }
+        return null;
+    }
+
     public RoomModel joinRoom(String roomName, String password) throws RoomException, DiscoveryException {
         RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
         if (makeConnection(joinedRoom.getLeaderIP())) {
