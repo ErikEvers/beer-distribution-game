@@ -9,6 +9,8 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.junit.jupiter.api.Assertions;

@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gamelogic;
 
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
+import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -15,6 +16,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
  *  - Handling player actions involving data;
  *  - Delegating the task of managing local participants to the ParticipantsPool.
  */
+
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
     private IConnectedForPlayer communication;
 
@@ -91,17 +94,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.replaceAgentWithPlayer();
     }
 
-    @Override
-    public List<String> getAllGames() {
-        //Yet to be implemented
-        return new ArrayList<>();
-    }
-
-    @Override
-    public void connectToGame(String game) {
-        //Yet to be implemented
-    }
-
 		/**
 		 * Calculates the round.
 		 * @param round has the information needed to calculate the round.
@@ -134,15 +126,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.replaceAgentWithPlayer();
     }
 
-    @Override
-    public void requestFacilityUsage(Facility facility) {
-        //Yet to be implemented
-    }
-
-    @Override
-    public List<Facility> getAllFacilities() {
-        //Yet to be implemented.
-        return new ArrayList<>();
+    public void addObserver(IConnectorObserver observer) {
+        communication.addObserver(observer);
     }
 
     public int getRoundId() {
@@ -164,6 +149,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 				beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
 				beerGame.getRounds().add(previousRound);
         beerGame.getRounds().removeIf(round -> round.getRoundId() == newRound.getRoundId());
+        persistence.saveRoundData(newRound);
         beerGame.getRounds().add(newRound);
         curRoundId = newRound.getRoundId();
         sendRoundActionFromAgents();
