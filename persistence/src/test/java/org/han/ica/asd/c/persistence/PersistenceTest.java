@@ -4,12 +4,15 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.dao.BeergameDAO;
+import org.han.ica.asd.c.dao.DaoConfig;
+import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
 import org.han.ica.asd.c.dao.RoundDAO;
 import org.han.ica.asd.c.dbconnection.DBConnectionTest;
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
@@ -17,6 +20,7 @@ import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -39,6 +43,7 @@ class PersistenceTest {
 	private BeergameDAO beerGameDAOMock;
 	private PlayerDAO playerDAOMock;
 	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnMock;
+	private FacilityDAO facilityDAOMock;
 	private Persistence persistence;
 	private Round round;
 	private Player player;
@@ -49,16 +54,22 @@ class PersistenceTest {
 	private List<FacilityTurn> facilityTurns;
 	private List<FacilityTurnOrder> facilityTurnOrders;
 	private List<FacilityTurnDeliver> facilityTurnDelivers;
+	private List<Facility> facilities;
+	private static final Facility FACILITY = new Facility(null, 1);
+	private static final Facility FACILITY2 = new Facility(null, 2);
 
 	@BeforeEach
 	void setUp() {
 		facilityTurns = new ArrayList<>();
 		facilityTurnOrders = new ArrayList<>();
 		facilityTurnDelivers = new ArrayList<>();
+		facilities = new ArrayList<>();
 
 		facilityTurns.add(new FacilityTurn(1,1,1,1,1,false));
 		facilityTurnOrders.add(new FacilityTurnOrder(1,1,1));
 		facilityTurnDelivers.add(new FacilityTurnDeliver(1,1,1,1));
+		facilities.add(FACILITY);
+		facilities.add(FACILITY2);
 
 		player = new Player("1", "234", null, "Henk", true);
 		businessRulesList = new ArrayList<>();
@@ -68,6 +79,7 @@ class PersistenceTest {
 		beerGame = new BeerGame(UUID.randomUUID().toString(),"Beergame", LocalDateTime.now().toString(),"");
 		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1,1,"Beergame",businessRulesList);
 
+		DaoConfig.setCurrentGameId("BeerGame");
 
 		roundDAOMock = mock(RoundDAO.class);
 		Mockito.doNothing().when(roundDAOMock).createRound(anyInt());
@@ -87,7 +99,8 @@ class PersistenceTest {
 		when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
 		when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
 
-
+		facilityDAOMock = mock(FacilityDAO.class);
+		when((facilityDAOMock).readAllFacilitiesInGame()).thenReturn(facilities);
 
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
@@ -97,6 +110,7 @@ class PersistenceTest {
 				bind(BeergameDAO.class).toInstance(beerGameDAOMock);
 				bind(GameBusinessRulesInFacilityTurnDAO.class).toInstance(gameBusinessRulesInFacilityTurnMock);
 				bind(PlayerDAO.class).toInstance(playerDAOMock);
+				bind(FacilityDAO.class).toInstance(facilityDAOMock);
 			}
 		});
 
@@ -151,5 +165,19 @@ class PersistenceTest {
 	public void saveGameLogTest(){
 		persistence.saveGameLog(beerGame);
 		verify((beerGameDAOMock),times(1)).createBeergame(beerGame);
+	}
+
+	@Test
+	void getAllFacilities(){
+		List<Facility> facilities = persistence.getAllFacilities();
+		verify((facilityDAOMock),times(1)).readAllFacilitiesInGame();
+		Assertions.assertEquals(2, facilities.size());
+	}
+
+	@Test
+	void getAllBeerGames(){
+		persistence.getAllBeerGames();
+		verify((beerGameDAOMock), times(1)).readBeergames();
+
 	}
 }

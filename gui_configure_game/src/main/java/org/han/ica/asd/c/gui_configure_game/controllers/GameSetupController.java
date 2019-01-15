@@ -18,8 +18,8 @@ import org.han.ica.asd.c.gui_configure_game.graph.GraphFacility;
 import org.han.ica.asd.c.gui_configure_game.graph.RegionalWarehouse;
 import org.han.ica.asd.c.gui_configure_game.graph.Retailer;
 import org.han.ica.asd.c.gui_configure_game.graph.Wholesale;
-import org.han.ica.asd.c.gui_configure_game.graphutil.GraphConverterToDomain;
-import org.han.ica.asd.c.gui_configure_game.graphutil.GraphToFacilityChecker;
+import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphConverterToDomain;
+import org.han.ica.asd.c.gui_configure_game.graphUtil.GraphToFacilityChecker;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
