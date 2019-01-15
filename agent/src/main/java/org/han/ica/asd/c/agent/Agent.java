@@ -70,11 +70,12 @@ public class Agent extends GameAgent implements IParticipant {
 			updateActionCollector(actionCollector, actionModel, gameBusinessRules);
 		}
 
-		persistence.logUsedBusinessRuleToCreateOrder(new GameBusinessRulesInFacilityTurn(
+		/*persistence.logUsedBusinessRuleToCreateOrder(new GameBusinessRulesInFacilityTurn(
 				getFacility().getFacilityId(),
 				round.getRoundId(),
 				getGameAgentName() + 1,
 				actionCollector.businessRulesList));
+				*/
 		return new GameRoundAction(actionCollector.orderMap, actionCollector.deliverMap);
 	}
 
@@ -108,7 +109,7 @@ public class Agent extends GameAgent implements IParticipant {
 		if(getFacility().getFacilityId() == targetFacilityId)
 			return getFacility();
 
-		List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
+		List<Facility> links = configuration.getFacilitiesLinkedToFacilitiesByFacilityId(getFacility().getFacilityId());
 
 		if(targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
             Collections.sort(links);
