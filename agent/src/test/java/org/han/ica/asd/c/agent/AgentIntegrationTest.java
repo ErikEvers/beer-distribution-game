@@ -16,11 +16,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,486 +27,571 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AgentIntegrationTest {
     // Linear tests
     @Test
-    void testBusinessRulesOfAgentUsesDefaultBusinessRule() {
+    void testLinearBusinessRulesOfRegionalWarehouse1UsesDefaultBusinessRuleToOrder10GoodsFromFactory() {
         Integer sourceFacilityId = 1;
         Integer targetFacilityId = 0;
-        Integer actualOrder = 10;
+        Facility sourceFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(sourceFacilityId);
+        Facility targetFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(targetFacilityId);
+        Integer expectedOrder = 10;
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(40)))BoolO(&&)CS(C(CV(V(0))ComO(<)CV(V(3)))))A(AR(order)V(20)P(factory 1)))"),
-                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(" + actualOrder + ")P(factory 1)))")));
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(40)))BoolO(&&)CS(C(CV(V(0))ComO(<)CV(V(3)))))A(AR(order)V(20)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(" + expectedOrder + ")))")));
         IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
 
         Round round = new Round(
                 2,
                 Arrays.asList(
-                        new FacilityTurn(targetFacilityId, 1, 10, 0, 1000, false),
-                        new FacilityTurn(sourceFacilityId, 1, 10, 0, 1000, false)),
+                        new FacilityTurn(targetFacility.getFacilityId(), 1, 10, 0, 1000, false),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 10, 0, 1000, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacilityId, 20)),
                 Collections.singletonList(
-                        new FacilityTurnDeliver(targetFacilityId, sourceFacilityId, 0, 20)));
+                        new FacilityTurnDeliver(targetFacility.getFacilityId(), sourceFacilityId, 0, 20)));
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.LinearConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testBusinessRulesOfAgentUsesBusinessRuleWithOrBooleanOperatorInventoryIsGreaterOrEqualsTo40() {
-        Integer sourceFacilityId = 1;
-        int inventory = 40;
+    void testLinearBusinessRulesOfAgentUsesBusinessRuleWithOrBooleanOperatorInventoryIsGreaterThan20AndLowerThan40Order15Goods() {
+        Integer sourceFacilityIndex = 3;
+        Integer targetFacilityIndex = 2;
+        Facility sourceFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer inventory = 40;
+        Integer expectedOrder = 15;
+
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>=)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(<)CV(V(3)))))A(AR(order)V(20)P(factory 1)))"),
-                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(40)))BoolO(||)CS(C(CV(V(0))ComO(>)CV(V(3)))))A(AR(order)V(20)P(factory 1)CS(C(CV(V(inventory))ComO(<)CV(V(10))))))"),
-                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(10)))")));
-        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(==)CV(V(24))))A(AR(order)V(20)))"),
+                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(>)CV(V(20)))BoolO(||)CS(C(CV(V(0))ComO(>)CV(V(3)))))A(AR(order)V(" + expectedOrder + ")CS(C(CV(V(inventory))ComO(<)CV(V(40))))))"),
+                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(1)))")));
+        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, inventory, 0, 1000, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, inventory, 0, 1000, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, 0, 20)),
-                Collections.singletonList(
-                        new FacilityTurnDeliver(sourceFacilityId, 2, 0, 20)));
-
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.LinearConfiguration.getInstance().facilityList.get(0));
-        assertEquals(new Integer(20), result);
-    }
-
-    @Test
-    void testBusinessRulesOfAgentUsesBusinessRuleWithOrComparisonOperatorInventoryIsNotBetween20And40() {
-        Integer sourceFacilityId = 1;
-        Integer actualOrder = 1;
-        Integer inventory = 60;
-        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>)CV(V(20)))BoolO(&&)CS(C(CV(V(inventory))ComO(<)CV(V(40)))))A(AR(order)V(20)P(factory 1)))"),
-                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(<=)CV(V(20)))BoolO(||)CS(C(CV(V(inventory))ComO(>=)CV(V(40)))))A(AR(order)V(" + actualOrder + ")P(factory 1)))"),
-                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(10)P(factory 1)))")));
-        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
-
-        Round round = new Round(
-                2,
-                Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, inventory, 0, 1000, false)),
-                Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, 0, 20)),
-                Collections.singletonList(
-                        new FacilityTurnDeliver(sourceFacilityId, 2, 0, 20)));
-
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.LinearConfiguration.getInstance().facilityList.get(0));
-        assertEquals(actualOrder, result);
-    }
-
-    @Test
-    void testBusinessRulesOfAgentUsesBusinessRuleBacklogIsEqualsTo10() {
-        Integer sourceFacilityId = 1;
-        Integer actualOrder = 15;
-        Integer backlog = 10;
-        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(backlog))ComO(==)CV(V(" + backlog + "))))A(AR(order)V(" + actualOrder + ")P(factory 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(factory 1)))")));
-        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
-
-        Round round = new Round(
-                2,
-                Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, backlog, 1000, false)),
-                Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, 0, 20)),
-                Collections.singletonList(
-                        new FacilityTurnDeliver(sourceFacilityId, 2, 0, 20)));
-
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.LinearConfiguration.getInstance().facilityList.get(0));
-        assertEquals(actualOrder, result);
-    }
-
-    @Test
-    void testBusinessRulesOfAgentUsesBusinessRuleOutgoingGoodsIsEqualsTo35() {
-        Integer sourceFacilityId = 1;
-        Integer actualOrder = 25;
-        Integer outgoingGoods = 35;
-        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(" + outgoingGoods + "))))A(AR(order)V(" + actualOrder + ")P(factory 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(factory 1)))")));
-        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
-
-        Round round = new Round(
-                2,
-                Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, 1000, false)),
-                Collections.singletonList(
-                        new FacilityTurnOrder(1, 0, 20)),
-                Collections.singletonList(
-                        new FacilityTurnDeliver(1, 2, 0, outgoingGoods)));
-
-        GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.LinearConfiguration.getInstance().facilityList.get(0));
-        assertEquals(actualOrder, result);
-    }
-
-    @Test
-    void testBusinessRulesOfAgentUsesBusinessRuleNotEqualsComparisonOperator() {
-        Integer sourceFacilityId = 1;
-        Integer targetFacilityId = 0;
-        Integer actualOrder = 25;
-        Integer businessRuleComparedBudget = 999;
-        Integer actualBudget = 1000;
-        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(order)V(" + actualOrder + ")P(factory 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(factory 1)))")));
-        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
-
-        Round round = new Round(
-                2,
-                Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, actualBudget, false)),
-                Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacilityIndex, 20)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.LinearConfiguration.getInstance().facilityList.get(0));
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
+    }
+
+    @Test
+    void testLinearBusinessRulesOfWholesalerUsesBusinessRuleWithOrComparisonOperatorInventoryIsNotBetween20And40ToOrder2GoodsFromRetail() {
+        Integer sourceFacilityIndex = 2;
+        Integer targetFacilityIndex = 3;
+        Facility sourceFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedDeliver = 2;
+        Integer inventory = 60;
+        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>)CV(V(20)))BoolO(&&)CS(C(CV(V(inventory))ComO(<)CV(V(40)))))A(AR(deliver)V(20)))"),
+                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(inventory))ComO(<=)CV(V(20)))BoolO(||)CS(C(CV(V(inventory))ComO(>=)CV(V(40)))))A(AR(deliver)V(" + expectedDeliver + ")))"),
+                new GameBusinessRules("business rule 3", "BR(D()A(AR(deliver)V(10)))")));
+        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
+
+        Round round = new Round(
+                2,
+                Collections.singletonList(
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, inventory, 0, 1000, false)),
+                Collections.singletonList(
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), 0, 20)),
+                Collections.singletonList(
+                        new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 0, 20)));
+
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
+        assertEquals(expectedDeliver, actualDeliver);
+    }
+
+    @Test
+    void testLinearBusinessRulesOfRegionalWarehouseUsesBusinessRuleBacklogIsEqualsTo10ToOrder15GoodsFromFactory() {
+        Integer sourceFacilityIndex = 1;
+        Integer targetFacilityIndex = 0;
+        Facility sourceFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 15;
+        Integer backlog = 10;
+        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(backlog))ComO(==)CV(V(" + backlog + "))))A(AR(order)V(" + expectedOrder + ")))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)))")));
+        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
+
+        Round round = new Round(
+                2,
+                Collections.singletonList(
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, backlog, 1000, false)),
+                Collections.singletonList(
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
+                Collections.singletonList(
+                        new FacilityTurnDeliver(sourceFacility.getFacilityId(), 2, 0, 20)));
+
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
+    }
+
+    @Test
+    void testLinearBusinessRulesOfRegionalWarehouseUsesBusinessRuleOutgoingGoodsIsEqualsTo35ToOrder25GoodsFromFactory() {
+        Integer sourceFacilityIndex = 1;
+        Integer targetFacilityIndex = 0;
+        Facility sourceFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
+        Integer outgoingGoods = 35;
+        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(" + outgoingGoods + "))))A(AR(order)V(" + expectedOrder + ")))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)))")));
+        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
+
+        Round round = new Round(
+                2,
+                Collections.singletonList(
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, 1000, false)),
+                Collections.singletonList(
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
+                Collections.singletonList(
+                        new FacilityTurnDeliver(sourceFacility.getFacilityId(), 2, 0, outgoingGoods)));
+
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
+    }
+
+    @Test
+    void testLinearBusinessRulesOfRegionalWarehouseUsesBusinessRuleBudgetNotEqualsTo999ToOrder25GoodsFromFactory() {
+        Integer sourceFacilityIndex = 1;
+        Integer targetFacilityIndex = 0;
+        Facility sourceFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.LinearConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
+        Integer businessRuleComparedBudget = 999;
+        Integer actualBudget = 1000;
+        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(order)V(" + expectedOrder + ")))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)))")));
+        IParticipant participant = Fixtures.LinearConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
+
+        Round round = new Round(
+                2,
+                Collections.singletonList(
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, actualBudget, false)),
+                Collections.singletonList(
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
+                Collections.emptyList());
+
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     // Tree tests
     @Test
-    void testTreeRegionalWarehouse1Order25GoodsFromFacilityFactory1WhenRegionalWarehouse1Ordered20PreviousRound() {
-        Integer sourceFacilityId = 1;
-        Integer targetFacilityId = 0;
-        Integer actualOrder = 25;
+    void testTreeBusinessRulesOfRegionalWarehouse1UsesBusinessRuleOrderedEquals20ToOrder25GoodsFromFactory() {
+        Integer sourceFacilityIndex = 1;
+        Integer targetFacilityIndex = 0;
+        Facility sourceFacility = Fixtures.TreeConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.TreeConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
         Integer orderedAmount = 20;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(ordered))ComO(==)CV(V(" + orderedAmount + "))))A(AR(order)V(" + actualOrder + ")P(factory 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(factory 1)))")));
-        IParticipant participant = Fixtures.TreeConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(ordered))ComO(==)CV(V(" + orderedAmount + "))))A(AR(order)V(" + expectedOrder + ")P(factory 1)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)P(factory 1)))")));
+        IParticipant participant = Fixtures.TreeConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, 0, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, 0, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, orderedAmount)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), orderedAmount)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.TreeConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testTreeWholesaler3Deliver20GoodsToRetail5WhenBackOrdersAreLowerThan20() {
-        Integer sourceFacilityId = 5;
-        Integer targetFacilityId = 11;
-        Integer actualOrder = 25;
+    void testTreeBusinessRulesOfWholesaler3UsesBusinessRuleBackOrdersLowerThan20ToOrder25GoodsFromRetail5() {
+        Integer sourceFacilityIndex = 5;
+        Integer targetFacilityIndex = 11;
+        Facility sourceFacility = Fixtures.TreeConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.TreeConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
         Integer backOrderAmount = 20;
         Integer currentBackOrderAmount = 19;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(back orders))ComO(<)CV(V(" + backOrderAmount + "))))A(AR(order)V(" + actualOrder + ")P(retail 5)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(retail 5)))")));
-        IParticipant participant = Fixtures.TreeConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(back orders))ComO(<)CV(V(" + backOrderAmount + "))))A(AR(deliver)V(" + expectedOrder + ")P(retail 5)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(deliver)V(5)P(retail 5)))")));
+        IParticipant participant = Fixtures.TreeConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, currentBackOrderAmount, 0, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, currentBackOrderAmount, 0, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 0)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 0)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.TreeConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetDeliverMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     // Graph tests
     @Test
-    void testGraphRegionalWarehouse1OrderFromFacilityFactory1() {
-        Integer sourceFacilityId = 3;
-        Integer targetFacilityId = 0;
-        Integer actualOrder = 25;
-        Integer businessRuleComparedBudget = 999;
+    void testGraphBusinessRulesOfRegionalWarehouse1UsesBusinessRuleBudgetGreaterThan500ToOrder25GoodsFromFactory1() {
+        Integer sourceFacilityIndex = 3;
+        Integer targetFacilityIndex = 0;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
+        Integer businessRuleComparedBudget = 500;
         Integer actualBudget = 1000;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(order)V(" + actualOrder + ")P(factory 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(factory 1)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(budget))ComO(>)CV(V(" + businessRuleComparedBudget + "))))A(AR(order)V(" + expectedOrder + ")P(factory 1)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)P(factory 1)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, actualBudget, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, actualBudget, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testGraphRetail14OrderFromWholesaler3() {
-        Integer sourceFacilityId = 12;
-        Integer targetFacilityId = 7;
-        Integer actualOrder = 25;
-        Integer businessRuleComparedBudget = 999;
-        Integer actualBudget = 1000;
+    void testGraphBusinessRulesOfRetail4UsesBusinessRuleStockLowerThan20ToOrder25GoodsFromWholesaler3() {
+        Integer sourceFacilityIndex = 12;
+        Integer targetFacilityIndex = 7;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
+        Integer stockLimit = 20;
+        Integer stockCurrent = 10;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(order)V(" + actualOrder + ")P(wholesaler 3)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(factory 1)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(stock))ComO(<)CV(V(" + stockLimit + "))))A(AR(order)V(" + expectedOrder + ")P(wholesaler 3)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)P(wholesaler 3)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, actualBudget, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, stockCurrent, 0, 30, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testGraphWholesaler1OrderFromRegionalWarehouse2() {
-        Integer sourceFacilityId = 5;
-        Integer targetFacilityId = 4;
-        Integer actualOrder = 25;
-        Integer businessRuleComparedBudget = 999;
-        Integer actualBudget = 1000;
+    void testGraphBusinessRulesOfWholesaler1UsesBusinessRuleIncomingOrderGreaterThan20ToOrder25GoodsFromRegionalWarehouse2() {
+        Integer sourceFacilityIndex = 5;
+        Integer targetFacilityIndex = 4;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
+        Integer incomingOrderLimit = 20;
+        Integer incomingOrderCurrent = 1000;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(order)V(" + actualOrder + ")P(regional warehouse 2)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(factory 1)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(incoming order))ComO(>)CV(V(" + incomingOrderLimit + "))))A(AR(order)V(" + expectedOrder + ")P(regional warehouse 2)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)P(factory 1)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, actualBudget, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, 30, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(targetFacility.getFacilityId(), sourceFacility.getFacilityId(), incomingOrderCurrent)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testGraphRegionalWarehouse1DeliverToWholesaler3() {
-        Integer sourceFacilityId = 7;
-        Integer targetFacilityId = 9;
-        Integer actualDeliver = 25;
-        Integer businessRuleComparedBudget = 999;
-        Integer actualBudget = 1000;
+    void testGraphBusinessRulesOfWholesaler3UsesBusinessRuleRoundGreaterThan8ToDeliver25GoodsToRetail1() {
+        Integer sourceFacilityIndex = 7;
+        Integer targetFacilityIndex = 9;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedDeliver = 25;
+        Integer roundLimit = 8;
+        Integer roundCurrent = 9;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(deliver)V(" + actualDeliver + ")P(retail 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(deliver)V(5)P(retail 1)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(round))ComO(>)CV(V(" + roundLimit + "))))A(AR(deliver)V(" + expectedDeliver + ")P(retail 1)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(deliver)V(5)P(retail 1)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
-                2,
+                roundCurrent,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, actualBudget, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), roundCurrent - 1, 20, 0, 30, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetDeliverMap.get(Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualDeliver, result);
+        Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
+        assertEquals(expectedDeliver, actualDeliver);
     }
 
     @Test
-    void testGraphFactory2DeliverToRegionalWarehouse2() {
-        Integer sourceFacilityId = 4;
-        Integer targetFacilityId = 1;
-        Integer actualDeliver = 5;
+    void testGraphBusinessRulesOfFactory2BusinessRuleBudgetNotEqualTo999FailsUsesDefaultBusinessRuleToDeliver5GoodsToRegionalWarehouse2() {
+        Integer sourceFacilityIndex = 1;
+        Integer targetFacilityIndex = 4;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedDeliver = 5;
         Integer businessRuleComparedBudget = 999;
         Integer actualBudget = 999;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(deliver)V(20)P(factory 2)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(deliver)V(" + actualDeliver + ")P(factory 2)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(deliver)V(20)P(regional warehouse 2)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(deliver)V(" + expectedDeliver + ")P(regional warehouse 2)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, actualBudget, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, actualBudget, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetDeliverMap.get(Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualDeliver, result);
+        Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
+        assertEquals(expectedDeliver, actualDeliver);
     }
 
     @Test
-    void testGraphRegionalWarehouse2DeliverToWholesaler4() {
-        Integer sourceFacilityId = 4;
-        Integer targetFacilityId = 8;
-        Integer actualDeliver = 5;
+    void testGraphBusinessRulesOfRegionalWarehouse2DefaultBusinessRuleDeliver5GoodsToWholesaler4() {
+        Integer sourceFacilityIndex = 4;
+        Integer targetFacilityIndex = 8;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedDeliver = 5;
         Integer businessRuleComparedBudget = 999;
         Integer actualBudget = 999;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(deliver)V(20)P(wholesaler 4)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(deliver)V(" + actualDeliver + ")P(wholesaler 4)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(budget))ComO(!=)CV(V(" + businessRuleComparedBudget + "))))A(AR(deliver)V(20)P(wholesaler 4)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(deliver)V(" + expectedDeliver + ")P(wholesaler 4)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, actualBudget, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, actualBudget, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, targetFacilityId, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetDeliverMap.get(Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualDeliver, result);
+        Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
+        assertEquals(expectedDeliver, actualDeliver);
     }
 
     @Test
-    void testGraphFactory2DeliverToRegionalWarehouse1() {
-        Integer sourceFacilityId = 1;
-        Integer targetFacilityId = 3;
+    void testGraphBusinessRulesOfFactory2BusinessRuleOutgoingGoodsEqualsTo20Deliver25GoodsToRegionalWarehouse2() {
+        Integer sourceFacilityIndex = 1;
+        Integer targetFacilityIndex = 4;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
         Integer outgoingGoods = 20;
-        Integer actualDeliver = 25;
+        Integer expectedOrder = 25;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(inventory))ComO(==)CV(V(" + outgoingGoods + "))))A(AR(order)V(" + actualDeliver + ")P(regional warehouse 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(regional warehouse 1)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(" + outgoingGoods + "))))A(AR(deliver)V(" + expectedOrder + ")P(regional warehouse 2)))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(deliver)V(5)P(regional warehouse 2)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, 1000, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, 1000, false)),
                 Collections.emptyList(),
                 Collections.singletonList(
-                        new FacilityTurnDeliver(sourceFacilityId, targetFacilityId, 10, outgoingGoods)));
+                        new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 10, outgoingGoods)));
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer resultDeliver = gameRoundAction.targetOrderMap.get(Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityId));
-        assertEquals(actualDeliver, resultDeliver);
+        Integer actualOrder = gameRoundAction.targetDeliverMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testGraphFactory2DeliverToRetail1WontGetOrdersOrDelivers() {
-        Integer sourceFacilityId = 1;
+    void testGraphFactory2DeliverToRetail1WontGetOrdersOrDeliversLogsExceptionInAgent() {
+        Integer sourceFacilityIndex = 1;
+        Integer targetFacilityIndex = 9;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        String expectedMessage = "Facility with ID: 10 is not found.";
+        Level expectedLevel = Level.SEVERE;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(20))))A(AR(deliver)V(20)P(retail 1)))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)P(retail 1)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(10))))A(AR(deliver)V(20)P(retail 1)))"),
+                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(20))))A(AR(deliver)V(20)P(retail 1)))"),
+                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(5)P(retail 1)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, 1000, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, 1000, false)),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, 0, 20)),
+                        new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.singletonList(
-                        new FacilityTurnDeliver(sourceFacilityId, 0, 10, 20)));
+                        new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 10, 20)));
+
+        Logger logger = Logger.getLogger(Agent.class.getName());
+        TestExceptionLogHandler testExceptionLogHandler = new TestExceptionLogHandler();
+
+        logger.addHandler(testExceptionLogHandler);
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
         assertTrue(gameRoundAction.targetOrderMap.isEmpty());
         assertTrue(gameRoundAction.targetDeliverMap.isEmpty());
+        assertEquals(expectedLevel, testExceptionLogHandler.level);
+        assertEquals(expectedMessage, testExceptionLogHandler.message);
     }
 
     @Test
-    void testGraphFactory2Create60Goods() {
-        Integer sourceFacilityId = 2;
+    void testGraphBusinessRulesOfFactory3BusinessRuleOutgoingGoodsToRegionalWarehouse1Equals20Produce60Goods() {
+        Integer sourceFacilityIndex = 2;
+        Integer targetFacilityIndex = 3;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
         Integer outgoingGoods = 20;
-        Integer actualOrder = 60;
+        Integer expectedOrder = 60;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(" + outgoingGoods + "))))A(AR(order)V(" + actualOrder + ")))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(" + outgoingGoods + "))))A(AR(order)V(" + expectedOrder + ")))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, 20, 0, 1000, false)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, 20, 0, 1000, false)),
+                Collections.emptyList(),
                 Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, 0, 20)),
-                Collections.singletonList(
-                        new FacilityTurnDeliver(sourceFacilityId, 0, 10, outgoingGoods)));
+                        new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 10, outgoingGoods)));
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(null);
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(sourceFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testGraphFactoryOrder25Goods() {
-        Integer sourceFacilityId = 0;
-        Integer actualOrder = 25;
+    void testGraphBusinessRulesOfFactory1BusinessRuleInventoryLowerThan20Produce25Goods() {
+        Integer sourceFacilityIndex = 0;
+        Integer expectedOrder = 25;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
         Integer inventoryIsLowerThan = 20;
         Integer inventory = 10;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(" + inventoryIsLowerThan + "))))A(AR(order)V(" + actualOrder + ")))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(" + inventoryIsLowerThan + "))))A(AR(order)V(" + expectedOrder + ")))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, inventory, 0, 0, false)),
-                Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, 0, 20)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, inventory, 0, 0, false)),
+                Collections.emptyList(),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        Integer result = gameRoundAction.targetOrderMap.get(null);
-        assertEquals(actualOrder, result);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(sourceFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testGraphRetail2Order25Goods() {
-        Integer sourceFacilityId = 9;
-        Integer actualOrder = 25;
+    void testGraphBusinessRulesOfRetail2BusinessRuleInventoryGreaterThan20Order25GoodsFromWholesaler1() {
+        Integer sourceFacilityIndex = 10;
+        Integer targetFacilityIndex = 5;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
+        Integer expectedOrder = 25;
         Integer inventoryLowerThan = 20;
-        Integer inventory = 10;
+        Integer inventory = 30;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
-                new GameBusinessRules("business rule 3", "BR(CS(C(CV(V(inventory))ComO(<)CV(V(" + inventoryLowerThan + "))))A(AR(order)V(" + actualOrder + ")))"),
-                new GameBusinessRules("business rule 4", "BR(D()A(AR(order)V(5)))")));
-        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityId, businessRulesList);
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(inventory))ComO(>)CV(V(" + inventoryLowerThan + "))))A(AR(order)V(" + expectedOrder + ")))"),
+                new GameBusinessRules("business rule 2", "BR(D()A(AR(order)V(5)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
 
         Round round = new Round(
                 2,
                 Collections.singletonList(
-                        new FacilityTurn(sourceFacilityId, 1, inventory, 0, 0, false)),
-                Collections.singletonList(
-                        new FacilityTurnOrder(sourceFacilityId, 0, 20)),
+                        new FacilityTurn(sourceFacility.getFacilityId(), 1, inventory, 0, 0, false)),
+                Collections.emptyList(),
                 Collections.emptyList());
 
         GameRoundAction gameRoundAction = participant.executeTurn(round);
-        assertTrue(gameRoundAction.targetOrderMap.isEmpty());
-        assertTrue(gameRoundAction.targetDeliverMap.isEmpty());
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
-    void testGraphPlayMakeshiftGameOf10Turns() {
+    void testGraphBusinessRulesOfRegionalWarehouse2DefaultBusinessRulesForOrderingAndDeliveringToFactory2AndWholesaler4() {
+        Integer sourceFacilityIndex = 4;
+        Integer targetOrderFacilityIndex = 1;
+        Integer targetDeliverFacilityIndex = 8;
+        Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
+        Facility targetOrderFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetOrderFacilityIndex);
+        Facility targetDeliverFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetDeliverFacilityIndex);
+        Integer expectedOrder = 5;
+        Integer expectedDeliver = 20;
+
+        List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
+                new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(incoming order))ComO(>)CV(V(20))))A(AR(order)V(10)P(factory 2)))"),
+                new GameBusinessRules("business rule 2", "BR(CS(C(CV(V(outgoing goods))ComO(>)CV(V(20))))A(AR(deliver)V(15)P(wholesaler 4))"),
+                new GameBusinessRules("business rule 3", "BR(D()A(AR(order)V(" + expectedOrder + ")P(factory 2)))"),
+                new GameBusinessRules("business rule 4", "BR(D()A(AR(deliver)V(" + expectedDeliver + ")P(wholesaler 4)))")));
+        IParticipant participant = Fixtures.GraphConfiguration.getInstance().createAgent(sourceFacilityIndex, businessRulesList);
+
+        Round round = new Round(
+                2,
+                Collections.singletonList(
+                        new FacilityTurn(sourceFacility.getFacilityId(), 0, 30, 0, 500, false)),
+                Collections.emptyList(),
+                Collections.emptyList());
+
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
+        Integer actualOrder = gameRoundAction.targetOrderMap.get(targetOrderFacility);
+        Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetDeliverFacility);
+        assertEquals(expectedOrder, actualOrder);
+        assertEquals(expectedDeliver, actualDeliver);
+    }
+
+
+    @Test
+    void testGraphPlayMakeshiftGameOf10TurnsWith15AgentsContainingDefaultBusinessRules() {
         //Order business rules
         GameBusinessRules gameBusinessRulesOrder5GoodsFromFactory1              = new GameBusinessRules("default rule 1", "BR(D()A(AR(order)V(5)P(factory 1)))");
         GameBusinessRules gameBusinessRulesOrder5GoodsFromFactory2              = new GameBusinessRules("default rule 1", "BR(D()A(AR(order)V(5)P(factory 2)))");
@@ -618,7 +701,6 @@ class AgentIntegrationTest {
 
         // Setup turns/ orders and delivers
         List<FacilityTurn>          listOfFacilityTurns         = Arrays.asList(
-                new FacilityTurn(0, 0, 30, 0, 1000, false),
                 new FacilityTurn(1, 0, 30, 0, 1000, false),
                 new FacilityTurn(2, 0, 30, 0, 1000, false),
                 new FacilityTurn(3, 0, 30, 0, 1000, false),
@@ -632,10 +714,10 @@ class AgentIntegrationTest {
                 new FacilityTurn(11, 0, 30, 0, 1000, false),
                 new FacilityTurn(12, 0, 30, 0, 1000, false),
                 new FacilityTurn(13, 0, 30, 0, 1000, false),
-                new FacilityTurn(14, 0, 30, 0, 1000, false)
-        );
+                new FacilityTurn(14, 0, 30, 0, 1000, false),
+                new FacilityTurn(15, 0, 30, 0, 1000, false));
+
         List<FacilityTurnOrder>     listOfFacilityTurnOrders    = Arrays.asList(
-                new FacilityTurnOrder(0, -1, 5),
                 new FacilityTurnOrder(1, -1, 5),
                 new FacilityTurnOrder(2, -1, 5),
                 new FacilityTurnOrder(3, 0, 5),
@@ -649,10 +731,10 @@ class AgentIntegrationTest {
                 new FacilityTurnOrder(11, 6, 5),
                 new FacilityTurnOrder(12, 6, 5),
                 new FacilityTurnOrder(13, 8, 5),
-                new FacilityTurnOrder(14, 7, 5)
-        );
+                new FacilityTurnOrder(14, 7, 5),
+                new FacilityTurnOrder(0, -1, 5));
+
         List<FacilityTurnDeliver>   listOfFacilityTurnDelivers  = Arrays.asList(
-                new FacilityTurnDeliver(0, 3, 0, 5),
                 new FacilityTurnDeliver(1, 4, 0, 5),
                 new FacilityTurnDeliver(2, 3, 0, 5),
                 new FacilityTurnDeliver(3, 6, 0, 5),
@@ -666,8 +748,8 @@ class AgentIntegrationTest {
                 new FacilityTurnDeliver(11, -1, 0, 5),
                 new FacilityTurnDeliver(12, -1, 0, 5),
                 new FacilityTurnDeliver(13, -1, 0, 5),
-                new FacilityTurnDeliver(14, -1, 0, 5)
-        );
+                new FacilityTurnDeliver(14, -1, 0, 5),
+                new FacilityTurnDeliver(0, 3, 0, 5));
 
         // Run makeshift engine to test get results from business rules for 10 rounds
         int roundCount = 10;
@@ -748,22 +830,5 @@ class AgentIntegrationTest {
         assertEquals(80, listOfFacilityTurns.get(12).getStock());
         assertEquals(80, listOfFacilityTurns.get(13).getStock());
         assertEquals(80, listOfFacilityTurns.get(14).getStock());
-    }
-
-    @Test
-    void test() {
-        Map<Integer, Integer> testMap = new HashMap<>();
-        testMap.put(0, 4);
-        testMap.put(1, 5);
-        testMap.put(2, 6);
-        testMap.put(3, 7);
-
-        List<Integer> list = testMap.entrySet().stream()
-                .filter(entry -> entry.getValue() == 5)
-                .map(Map.Entry::getKey)
-                .sorted()
-                .collect(
-                        Collectors.toList());
-        System.out.println(list);
     }
 }
