@@ -24,7 +24,7 @@ public interface IConnectorForSetup {
     void removeYourselfFromRoom(RoomModel room);
     void addObserver(IConnectorObserver connectorObserver);
     Map<String, String> listAllIPs();
-
+    void setMyIp(String ip);
     void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException, SendGameMessageException;
     GamePlayerId getGameData(String userName) throws SendGameMessageException;
 }

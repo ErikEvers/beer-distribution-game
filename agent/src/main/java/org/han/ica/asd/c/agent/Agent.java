@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.agent;
 
+import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -16,11 +17,18 @@ import org.han.ica.asd.c.model.interface_models.ActionModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
-import java.util.function.BooleanSupplier;
-import java.util.function.UnaryOperator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Agent extends GameAgent implements IParticipant {
+	private static final Logger LOGGER = Logger.getLogger(Agent.class.getName());
 	private Configuration configuration;
 
 	@Inject
@@ -33,7 +41,6 @@ public class Agent extends GameAgent implements IParticipant {
 	@Inject
 	@Named("persistence")
 	private IPersistence persistence;
-
 
     /**
      * Constructor with default agent name and facility
@@ -54,44 +61,40 @@ public class Agent extends GameAgent implements IParticipant {
 	 */
 	private GameRoundAction generateRoundActions(BeerGame beerGame, int roundId) {
 		Round round = beerGame.getRoundById(roundId);
-		Map<Facility, Integer> targetOrderMap = new HashMap<>();
-		Map<Facility, Integer> targetDeliverMap = new HashMap<>();
-		List<GameBusinessRules> triggeredBusinessRules = new ArrayList<>();
+		ActionCollector actionCollector = new ActionCollector();
 		Iterator<GameBusinessRules> gameBusinessRulesIterator = this.getGameBusinessRules().iterator();
 
-		UnaryOperator<Boolean> canAddToOrderMap = isOrderType -> targetOrderMap.isEmpty() && isOrderType;
-		UnaryOperator<Boolean> canAddToDeliverMap = isDeliverType -> targetDeliverMap.isEmpty() && isDeliverType;
-		BooleanSupplier shouldIterate = () -> (targetDeliverMap.isEmpty() || targetOrderMap.isEmpty()) && gameBusinessRulesIterator.hasNext();
-
-		while (shouldIterate.getAsBoolean()) {
+		while (actionCollector.hasBothActionTypes() && gameBusinessRulesIterator.hasNext()) {
 			GameBusinessRules gameBusinessRules = gameBusinessRulesIterator.next();
 			ActionModel actionModel = businessRules.evaluateBusinessRule(gameBusinessRules.getGameAST(), round, getFacility().getFacilityId());
-			if (actionModel != null) {
-				if (canAddToOrderMap.apply(actionModel.isOrderType())) {
-					this.updateTargetMap(this.resolveLowerFacilityId(actionModel.facilityId), actionModel.amount, targetOrderMap, triggeredBusinessRules, gameBusinessRules);
-				} else if (canAddToDeliverMap.apply(actionModel.isDeliverType())) {
-					this.updateTargetMap(this.resolveHigherFacilityId(actionModel.facilityId), actionModel.amount, targetDeliverMap, triggeredBusinessRules, gameBusinessRules);
-				}
-			}
+			updateActionCollector(actionCollector, actionModel, gameBusinessRules);
 		}
 
-		persistence.logUsedBusinessRuleToCreateOrder(
-				new GameBusinessRulesInFacilityTurn(getFacility().getFacilityId(), round.getRoundId(), getGameAgentName() + 1, triggeredBusinessRules));
-		return new GameRoundAction(targetOrderMap, targetDeliverMap);
+		persistence.logUsedBusinessRuleToCreateOrder(new GameBusinessRulesInFacilityTurn(
+				getFacility().getFacilityId(),
+				round.getRoundId(),
+				getGameAgentName() + 1,
+				actionCollector.businessRulesList));
+		return new GameRoundAction(actionCollector.orderMap, actionCollector.deliverMap);
 	}
 
 	/**
-	 * Update targetMap with triggered gameBusinessRule. Preventing NULL values to be used as keys
-	 * @param targetFacility            The facility that is targeted by the business rule
-	 * @param amount                    The amount of the action
-	 * @param targetMap                 The map the action will be stored in
-	 * @param triggeredBusinessRules    A list of triggered business rules
+	 * Update actionCollector with triggered gameBusinessRule and deliver or order action. Preventing NULL values to be used as keys
+	 * @param actionCollector			Action collector is the model that keeps all triggered actions and business rules
+	 * @param actionModel            	Action model containing the information of the action
 	 * @param gameBusinessRules         The business rule that is triggered
 	 */
-	private void updateTargetMap(Facility targetFacility, int amount, Map<Facility, Integer> targetMap, List<GameBusinessRules> triggeredBusinessRules, GameBusinessRules gameBusinessRules) {
-		if(targetFacility != null) {
-			targetMap.put(targetFacility, amount);
-			triggeredBusinessRules.add(gameBusinessRules);
+	private void updateActionCollector(ActionCollector actionCollector, ActionModel actionModel, GameBusinessRules gameBusinessRules) {
+		try {
+			if (actionModel != null) {
+				if (actionCollector.needsOrderAction(actionModel)) {
+					actionCollector.addOrderAction(this.resolveLowerFacilityId(actionModel.facilityId), actionModel, gameBusinessRules);
+				} else if (actionCollector.needsDeliverAction(actionModel)) {
+					actionCollector.addDeliverAction(this.resolveHigherFacilityId(actionModel.facilityId), actionModel, gameBusinessRules);
+				}
+			}
+		} catch (FacilityNotFound exception) {
+			LOGGER.log(Level.SEVERE, exception.getMessage(), exception);
 		}
 	}
 
@@ -101,14 +104,24 @@ public class Agent extends GameAgent implements IParticipant {
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility below the current facility that needs to be resolved. NULL when facility is not found.
 	 */
-	private Facility resolveLowerFacilityId(int targetFacilityId) {
+	private Facility resolveLowerFacilityId(int targetFacilityId) throws FacilityNotFound {
+		if(getFacility().getFacilityId() == targetFacilityId)
+			return getFacility();
+
 		List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
+
+		if(targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
+            Collections.sort(links);
+            return links.get(0);
+        }
+
 		for (Facility link : links) {
 			if (targetFacilityId == link.getFacilityId()) {
 				return link;
 			}
 		}
-		return null;
+
+		throw new FacilityNotFound(targetFacilityId);
 	}
 
 	/**
@@ -117,13 +130,28 @@ public class Agent extends GameAgent implements IParticipant {
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility above the current facility that needs to be resolved. NULL when facility is not found.
 	 */
-	private Facility resolveHigherFacilityId(int targetFacilityId) {
-		for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
-			if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
-				return link.getKey();
+	private Facility resolveHigherFacilityId(int targetFacilityId) throws FacilityNotFound {
+		if (targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
+
+			Map<Facility, List<Facility>> map = configuration.getFacilitiesLinkedTo().entrySet().stream()
+					.filter(m -> m.getValue().contains(getFacility()))
+					.collect(
+							Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+									LinkedHashMap::new));
+
+			List<Facility> list = map.keySet().stream().sorted().collect(Collectors.toList());
+
+			if (!list.isEmpty()) {
+				return list.get(0);
+			}
+		} else {
+			for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
+				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
+					return link.getKey();
+				}
 			}
 		}
-		return null;
+		throw new FacilityNotFound(targetFacilityId);
 	}
 
     @Override

@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.businessrule.parser.evaluator;
+package org.han.ica.asd.c.businessrule.parser;
 
 import java.util.Objects;
 

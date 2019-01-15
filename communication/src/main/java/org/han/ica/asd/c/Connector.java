@@ -227,7 +227,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         nodeInfoList.init(playerList, leader);
     }
 
-    @Override
     public void startFaultDetector() {
         initNodeInfoList();
         Leader leader = persistence.getGameLog().getLeader();
@@ -285,8 +284,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-
-        return "my IP";
+        return ip;
     }
 
     /**
@@ -344,7 +342,17 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
                 checkInterfacesAndGiveIP(ips, networkInterface, addresses);
             }
         }
+        try {
+            ips.put("external", getExternalIP());
+        } catch (IOException e) {
+            logger.log(Level.INFO, "No external ip available", e);
+        }
         return ips;
+    }
+
+    @Override
+    public void setMyIp(String ip) {
+        internalIP = ip;
     }
 
     private void checkInterfacesAndGiveIP(Map<String, String> ips, NetworkInterface networkInterface, Enumeration<InetAddress> addresses) {

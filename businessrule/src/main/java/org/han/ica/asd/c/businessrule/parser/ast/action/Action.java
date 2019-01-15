@@ -22,15 +22,13 @@ public class Action extends ASTNode {
     private ComparisonStatement comparisonStatement;
 
     private NodeConverter nodeConverter;
-    private Provider<NodeConverter> nodeConverterProvider;
 
     public Action() {
     }
 
     @Inject
     public Action(Provider<NodeConverter> nodeConverterProvider) {
-        this.nodeConverterProvider = nodeConverterProvider;
-        nodeConverter = this.nodeConverterProvider.get();
+        nodeConverter = nodeConverterProvider.get();
     }
 
     /**
@@ -137,16 +135,11 @@ public class Action extends ASTNode {
      *
      * @return Returns the facility id of the receiving end
      */
-    public int getFacilityId() {
-        int facilityId;
-
+    public int getFacilityId(int ownFacilityId) {
         if(person != null){
-            facilityId = nodeConverter.getFacilityId(person.getPerson());
-        } else {
-            facilityId = -1;
+            return nodeConverter.getFacilityId(person.getPerson());
         }
-
-        return facilityId;
+        return nodeConverter.getFacilityIdByAction(ownFacilityId, actionName);
     }
 
     @Override
