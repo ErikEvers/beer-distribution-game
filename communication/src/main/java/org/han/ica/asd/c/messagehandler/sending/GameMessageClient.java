@@ -72,8 +72,8 @@ public class GameMessageClient {
         return response.getResponse();
     }
 
-    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException, SendGameMessageException {
-        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility, String playerId) throws FacilityNotAvailableException, SendGameMessageException {
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility, playerId);
         ChooseFacilityMessage response = gameMessageSender.sendGameMessageGeneric(ip, chooseFacilityMessage);
         if (response.getException() != null) {
             throw (FacilityNotAvailableException) response.getException();
@@ -81,8 +81,8 @@ public class GameMessageClient {
         return response;
     }
 
-    public GamePlayerId sendGameDataRequestMessage(String ip) throws SendGameMessageException {
-        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
+    public GamePlayerId sendGameDataRequestMessage(String ip, String userName) throws SendGameMessageException {
+        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage(userName);
         RequestGameDataMessage response = gameMessageSender.sendGameMessageGeneric(ip, requestAllFacilitiesMessage);
         if (response.getException() != null) {
             //Implement is specific error en throw that, if that is need by the Setup Component.

@@ -91,7 +91,8 @@ public class GameMessageClientTest {
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
 
         when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
-        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility);
+
+        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility, null);
 
         assertNull(response.getException());
     }
@@ -105,7 +106,7 @@ public class GameMessageClientTest {
 
         when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
 
-        assertThrows(FacilityNotAvailableException.class,()-> gameMessageClient.sendChooseFacilityMessage(correctIp, facility));
+        assertThrows(FacilityNotAvailableException.class,()-> gameMessageClient.sendChooseFacilityMessage(correctIp, facility, null));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class GameMessageClientTest {
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
 
         when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
-        assertEquals(chooseFacilityMessage.getClass(), gameMessageClient.sendChooseFacilityMessage(correctIp, facility).getClass());
+        assertEquals(chooseFacilityMessage.getClass(), gameMessageClient.sendChooseFacilityMessage(correctIp, facility, null).getClass());
     }
 
     @Test
@@ -124,7 +125,7 @@ public class GameMessageClientTest {
         response.setGameData(new GamePlayerId(new BeerGame(), "1"));
 
         when(socketClient.sendObjectWithResponse(any(), any(RequestGameDataMessage.class))).thenReturn(response);
-        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp);
+        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp, null);
 
         assertNotNull(responseRequest);
     }
@@ -135,7 +136,7 @@ public class GameMessageClientTest {
         response.setException(new Exception());
 
         when(socketClient.sendObjectWithResponse(any(), any(RequestGameDataMessage.class))).thenReturn(response);
-        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp);
+        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp, null);
 
         assertNotNull(response.getException());
     }

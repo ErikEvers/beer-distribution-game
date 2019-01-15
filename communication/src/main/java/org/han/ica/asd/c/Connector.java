@@ -176,12 +176,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException, SendGameMessageException {
-        gameMessageClient.sendChooseFacilityMessage(leaderIp, facility);
+        gameMessageClient.sendChooseFacilityMessage(leaderIp, facility, playerId);
     }
 
     @Override
     public GamePlayerId getGameData(String userName) throws SendGameMessageException {
-        return gameMessageClient.sendGameDataRequestMessage(leaderIp);
+        return gameMessageClient.sendGameDataRequestMessage(leaderIp, userName);
     }
 
     @Override
@@ -275,7 +275,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "25.28.108.244";
+        return "169.254.231.222";
     }
 
     /**

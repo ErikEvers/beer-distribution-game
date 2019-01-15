@@ -118,7 +118,7 @@ public class SocketClient {
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
-					if(ip.equals("25.0.21.80")) {
+					if(ip.equals("169.254.231.222")) {
 						SocketServer.serverObserver.serverObjectReceived(object, ip);
 						cdl.countDown();
 					} else {
