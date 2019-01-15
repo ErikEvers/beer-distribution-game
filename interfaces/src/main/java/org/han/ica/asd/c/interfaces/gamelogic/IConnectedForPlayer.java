@@ -7,4 +7,6 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 public interface IConnectedForPlayer {
     void sendTurn(Round turn) throws SendGameMessageException;
     void addObserver(IConnectorObserver observer);
+
+    void startFaultDetector();
 }
