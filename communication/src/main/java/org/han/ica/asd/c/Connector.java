@@ -2,7 +2,6 @@ package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
-import org.han.ica.asd.c.model.domain_objects.*;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
@@ -23,6 +22,9 @@ import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
@@ -128,6 +130,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
             leader.init(externalIP, createdRoom, beerGame);
+            leaderIp = "25.20.29.75";
 
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -207,9 +210,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param newRound
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException {
+    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
 			//initNodeInfoList();
-			List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+			List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
 			gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
@@ -245,7 +248,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
 				//initNodeInfoList();
 				//List<String> ips = nodeInfoList.getAllIps();
-				List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+				List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
@@ -269,7 +272,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "25.20.29.75";
+        return "25.20.76.41";
     }
 
     /**

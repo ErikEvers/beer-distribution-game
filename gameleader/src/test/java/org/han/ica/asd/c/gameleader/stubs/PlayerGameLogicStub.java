@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.agent.stubs;
+package org.han.ica.asd.c.gameleader.stubs;
 
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
@@ -9,7 +9,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
 
-public class GameLogicStub implements IPlayerGameLogic {
+public class PlayerGameLogicStub implements IPlayerGameLogic {
     @Override
     public boolean submitTurn(Round turn) {
         return false;

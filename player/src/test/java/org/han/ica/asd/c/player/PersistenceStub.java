@@ -33,6 +33,14 @@ public class PersistenceStub implements IGameStore {
     }
 
     @Override
+    public void updateRound(Round round) {
+
+    }
+
+    @Override
+    public void createRound(Round round) {
+
+    }
     public void saveSelectedAgent(ProgrammedAgent agent) {
 
     }

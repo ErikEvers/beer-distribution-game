@@ -12,17 +12,13 @@ import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
-import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +38,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private static ParticipantsPool participantsPool;
 
     private static int curRoundId;
-    private static BeerGame beerGame;
     private static IPlayerRoundListener player;
 
     @Inject
@@ -64,7 +59,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public boolean submitTurn(Round turn) {
-				//persistence.saveRoundData(turn);
+        persistence.saveRoundData(turn);
         return communication.sendTurnData(turn);
     }
 
@@ -74,7 +69,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public BeerGame getBeerGame() {
-        return beerGame;
+        return persistence.getGameLog();
     }
 
     /**
@@ -101,7 +96,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 		 */
 		@Override
 		public Round calculateRound(Round round, BeerGame game) {
-			Round previousRound = beerGame.getRounds().get(round.getRoundId()- 1);
 			RoundCalculator roundCalculator = new RoundCalculator();
 
 			return  roundCalculator.calculateRound(round, game);
@@ -146,18 +140,14 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      */
     @Override
     public void roundModelReceived(Round previousRound, Round newRound) {
-				beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
-				beerGame.getRounds().add(previousRound);
-        beerGame.getRounds().removeIf(round -> round.getRoundId() == newRound.getRoundId());
-        persistence.saveRoundData(newRound);
-        beerGame.getRounds().add(newRound);
         curRoundId = newRound.getRoundId();
+        persistence.updateRound(previousRound);
+        persistence.createRound(newRound);
         sendRoundActionFromAgents();
     }
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        GameLogic.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
         player.startGame();
         curRoundId = 1;

@@ -101,6 +101,16 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	public void saveNewLeader(Player newLeader) {
 		leaderDAO.insertLeader(newLeader);
 	}
+
+	@Override
+	public void updateRound(Round round) {
+		roundDAO.updateRound(round);
+	}
+
+	@Override
+	public void createRound(Round round) {
+		roundDAO.createRound(round);
+	}
 }
 
 
