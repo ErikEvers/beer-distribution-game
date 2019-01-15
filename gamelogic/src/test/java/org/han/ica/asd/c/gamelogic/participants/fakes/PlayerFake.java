@@ -22,4 +22,9 @@ public class PlayerFake implements IPlayerRoundListener {
     public void startGame() {
 
     }
+
+    @Override
+    public void endGame() {
+
+    }
 }

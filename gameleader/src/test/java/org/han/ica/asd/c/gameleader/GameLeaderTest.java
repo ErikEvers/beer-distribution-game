@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
@@ -24,6 +25,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class GameLeaderTest {
+
     @Mock
     private Facility facil;
 
@@ -115,7 +117,7 @@ public class GameLeaderTest {
     }
 
     @Test
-    public void facilitiesIs2AndTurnModelReceivedIsCalledTwice_TurnsReceived_IS_Zero() {
+    public void facilitiesIs2AndTurnModelReceivedIsCalledTwice_TurnsReceived_IS_Zero() throws TransactionException {
         gameLeader.init("", new RoomModel(), gameTest);
         gameLeader.turnModelReceived(facilityTurnModel);
         gameLeader.turnModelReceived(facilityTurnModel);
@@ -124,7 +126,7 @@ public class GameLeaderTest {
     }
 
     @Test
-    public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() {
+    public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() throws TransactionException {
         gameLeader.init("", new RoomModel(), gameTest);
         gameLeader.turnModelReceived(facilityTurnModel);
 
@@ -132,7 +134,7 @@ public class GameLeaderTest {
     }
 
     @Test
-    public void verifyThatMethodsAreCalled() {
+    public void verifyThatMethodsAreCalled() throws TransactionException {
         gameLeader.init("", new RoomModel(), gameTest);
 
         gameLeader.turnModelReceived(facilityTurnModel);

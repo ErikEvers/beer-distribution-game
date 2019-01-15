@@ -185,8 +185,8 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
 
     @Override
     public void endGame() {
-        toEndScreen.setData(new Object[]{getBeerGame().getGameId()});
-        toEndScreen.setupScreen();
+        Platform.runLater(() -> toEndScreen.setData(new Object[]{getBeerGame().getGameId()}));
+        Platform.runLater(() -> toEndScreen.setupScreen());
     }
 
     /**
