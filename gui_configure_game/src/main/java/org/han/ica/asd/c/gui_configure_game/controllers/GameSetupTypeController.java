@@ -204,7 +204,7 @@ public class GameSetupTypeController implements Initializable {
                 connector.start();
                 connector.createOfflineRoom(gameName, "", beerGame);
             }
-						persistence.saveGameLog(beerGame,false);
+						//persistence.saveGameLog(beerGame,false);
             assignAgents.setData(new Object[]{beerGame});
             assignAgents.setupScreen();
         }

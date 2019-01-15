@@ -50,6 +50,12 @@ public class BeergameDAO {
 	@Inject
 	private LeaderDAO leaderDAO;
 
+	@Inject
+	private FacilityDAO facilityDAO;
+
+	@Inject
+	private FacilityTypeDAO facilityTypeDAO;
+
 
 
 
@@ -104,6 +110,11 @@ public class BeergameDAO {
 				pstmt.executeUpdate();
 				conn.commit();
 				DaoConfig.setCurrentGameId(beerGame.getGameId());
+
+				beerGame.getConfiguration().getFacilities().forEach(facility -> {
+					facilityDAO.createFacility(facility);
+					facilityTypeDAO.createFacilityType(facility.getFacilityType());
+				});
 
 				configurationDAO.createConfiguration(beerGame.getConfiguration());
 				roundDAO.insertRounds(beerGame.getRounds());

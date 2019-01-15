@@ -186,13 +186,14 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void gameStartReceived(BeerGame beerGame) {
         this.beerGame = beerGame;
         persistence.saveGameLog(beerGame,false);
-        if (beerGame.getPlayers().size() == 1 && beerGame.getPlayers().stream().findFirst().get().getFacility() == null && beerGame.getPlayers().stream().findFirst().get().getPlayerId().equals(beerGame.getLeader().getPlayer().getPlayerId())) {
+        if (beerGame.getPlayers().size() == 1 && beerGame.getPlayers().stream().findFirst().get().getFacility() == null) {
+            System.out.println("hoi");
             seeOtherFacilities.setupScreen();
         } else {
             player.startGame();
         }
         curRoundId = 1;
-        sendRoundActionFromAgents();
+        //sendRoundActionFromAgents();
     }
 
     private void sendRoundActionFromAgents() {
