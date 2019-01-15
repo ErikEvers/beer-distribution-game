@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BusinessRuleFactory {
-    private static final Logger LOGGER = Logger.getLogger(Logger.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(BusinessRuleFactory.class.getName());
     private final Map<String, Provider<? extends ASTNode>> astNodeProviderMap;
 
     @Inject
