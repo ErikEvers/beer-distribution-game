@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.gamelogic;
 
-import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
@@ -168,7 +167,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        DaoConfig.setCurrentGameId(beerGame.getGameId());
         persistence.saveGameLog(beerGame,false);
         player.startGame();
         curRoundId = 1;

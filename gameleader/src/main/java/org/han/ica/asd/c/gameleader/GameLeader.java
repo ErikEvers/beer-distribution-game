@@ -193,8 +193,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 					throw new BeerGameException("Every player needs to control a facility");
 				}
 			}
-            persistence.saveGameLog(game, false);
-            List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
+			persistence.saveGameLog(game, false);
+			List<Integer> takenFacilityIds = game.getPlayers().stream().map(Player::getFacility).map(Facility::getFacilityId).collect(Collectors.toList());
 			for(GameAgent agent : game.getAgents()) {
 			    if(!takenFacilityIds.contains(agent.getFacility().getFacilityId())) {
                     Agent tempAgent = agentProvider.get();

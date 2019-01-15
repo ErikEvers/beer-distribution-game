@@ -34,6 +34,7 @@ public class RoundCalculator {
                     ((int)(Math.random() * (upper - lower)) + lower)
                 ));
 
+                //TODO: move to prevent costs
                 if(facilityTurn.getBackorders() > 0) {
                     round.getFacilityTurnDelivers().add(new FacilityTurnDeliver(
                         facilityTurn.getFacilityId(),
