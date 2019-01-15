@@ -172,12 +172,6 @@ class PersistenceTest {
 	}
 
 	@Test
-	void getBeerGame(){
-		persistence.getGameLog();
-		verify((beerGameDAOMock), times(1)).getGameLog();
-	}
-
-	@Test
 	void getAllBeerGames(){
 		persistence.getAllBeerGames();
 		verify((beerGameDAOMock), times(1)).readBeergames();

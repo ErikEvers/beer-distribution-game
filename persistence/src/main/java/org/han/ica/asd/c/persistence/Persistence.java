@@ -124,14 +124,6 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	 * @inheritDoc
 	 */
 	@Override
-	public BeerGame getBeerGame() {
-		return beergameDAO.getGameLog();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	@Override
 	public List<BeerGame> getAllBeerGames(){
 		return beergameDAO.readBeergames();
 	}
