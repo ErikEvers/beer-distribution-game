@@ -17,6 +17,9 @@ persistence/src/test/resources/BeerGameDBTest.db-journal
 persistence/src/main/resources/BeerGameDB.db
 persistence/src/main/resources/BeerGameDB.db-journal
 
+bootstrap/src/test/resources/BeerGameDBTest.db
+bootstrap/src/test/resources/BeerGameDBTest.db-journal
+
 *.iws
 *.ipr
 

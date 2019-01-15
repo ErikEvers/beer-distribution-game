@@ -1,14 +1,20 @@
 package org.han.ica.asd.c.businessrule.parser.ast;
 
 import com.google.inject.Inject;
+import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NodeConverter {
     @Inject
     @Named("BusinessruleStore")
     private IBusinessRuleStore businessRuleStore;
+
+    public static final int FIRSTFACILITYABOVEBELOW = -1;
+    private static final int FACILITYNOTFOUND = -404;
 
     public NodeConverter() {
         //Empty constructor for Guice
@@ -21,7 +27,7 @@ public class NodeConverter {
      * @return the identifier
      */
     public int getFacilityId(String facility) {
-        List<List<String>> facilities = businessRuleStore.getAllFacilities();
+        List<List<String>> facilities = sortFacilities(businessRuleStore.getAllFacilities());
 
         String facilityId;
 
@@ -38,6 +44,15 @@ public class NodeConverter {
         return Integer.parseInt(facilityId);
     }
 
+    public List<List<String>> sortFacilities(List<List<String>> facilities){
+        List<List<String>> returnList = new ArrayList<>();
+        for (List<String> facility : facilities) {
+            Collections.sort(facility);
+            returnList.add(facility);
+        }
+        return returnList;
+    }
+
     /***
      * Splits the facility name into the facility and the corresponding number
      * @param facility
@@ -49,5 +64,33 @@ public class NodeConverter {
             return Integer.parseInt(stringSplit[stringSplit.length-1]) - 1;
         }
         return 0;
+    }
+
+    public Integer getFacilityIdByAction(int ownFacilityId, ActionReference actionName) {
+        List<List<String>> facilities = sortFacilities(businessRuleStore.getAllFacilities());
+
+        for (int i = 0; i < facilities.size(); i++) {
+            if(facilities.get(i).contains(String.valueOf(ownFacilityId))){
+                return getFacilityIdByAction(actionName,i);
+            }
+        }
+
+        return FACILITYNOTFOUND;
+    }
+
+    private Integer getFacilityIdByAction(ActionReference actionName, int facility) {
+        if("order".equals(actionName.getAction())){
+            if(facility == FacilityType.FACTORY.getIndex()){
+                return null;
+            } else {
+                return FIRSTFACILITYABOVEBELOW;
+            }
+        } else {
+            if(facility == FacilityType.RETAILER.getIndex()){
+                return null;
+            } else {
+                return FIRSTFACILITYABOVEBELOW;
+            }
+        }
     }
 }

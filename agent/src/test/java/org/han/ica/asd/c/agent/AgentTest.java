@@ -5,8 +5,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
@@ -18,13 +20,11 @@ import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,11 +48,16 @@ class AgentTest {
 
 	private IPersistence persistence = new IPersistence() {
 		@Override
+		public void saveGameLog(BeerGame beerGame) {
+
+		}
+
+		@Override
 		public void saveFacilityTurn(Round data) {
 		}
 
 		@Override
-		public Round fetchFacilityTurn(int roundId, int facilityId) {
+		public Round fetchFacilityTurn(int roundId) {
 			return null;
 		}
 
@@ -392,4 +397,112 @@ class AgentTest {
 
         assertEquals(mainFacility, agent.getParticipant());
     }
+
+	@Test
+	void testFacilitySorting() {
+		List<Facility> links = new ArrayList<>();
+		links.add(new Facility());
+		links.get(0).setFacilityId(4);
+		links.add(new Facility());
+		links.get(1).setFacilityId(5);
+		links.add(new Facility());
+		links.get(2).setFacilityId(1);
+
+		Collections.sort(links);
+
+		String exp = "145";
+		StringBuilder res = new StringBuilder();
+
+		for (Facility link : links) {
+			res.append(link.getFacilityId());
+		}
+
+		assertEquals(exp,res.toString());
+	}
+
+	@Test
+	void testresolveLowerFacilityId() {
+		Configuration config = new Configuration();
+		Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
+
+		Facility myFacility = new Facility();
+		myFacility.setFacilityId(1);
+		Facility facilityWithId2 = new Facility();
+		facilityWithId2.setFacilityId(2);
+		Facility facilityWithId3 = new Facility();
+		facilityWithId3.setFacilityId(3);
+		Facility facilityWithId4 = new Facility();
+		facilityWithId4.setFacilityId(4);
+		Facility facilityWithId5 = new Facility();
+		facilityWithId5.setFacilityId(5);
+
+		List<Facility> facilitiesBelow = new ArrayList<>();
+		facilitiesBelow.add(facilityWithId2);
+		facilitiesBelow.add(facilityWithId3);
+
+		List<Facility> listWithMyFacility = new ArrayList<>();
+		listWithMyFacility.add(myFacility);
+
+		facilitiesLinkedTo.put(myFacility, facilitiesBelow);
+		facilitiesLinkedTo.put(facilityWithId4, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId5, listWithMyFacility);
+		config.setFacilitiesLinkedTo(facilitiesLinkedTo);
+
+		Agent agent = new Agent(config, "", myFacility, gameBusinessRuleList);
+
+		int exp = 2;
+		Facility res = new Facility();
+
+		try {
+			res = Whitebox.invokeMethod(agent, "resolveLowerFacilityId", -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		assertNotNull(res);
+		assertEquals(exp,res.getFacilityId());
+	}
+
+	@Test
+	void testresolveHigherFacilityId() {
+		Configuration config = new Configuration();
+		Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
+
+		Facility myFacility = new Facility();
+		myFacility.setFacilityId(1);
+		Facility facilityWithId2 = new Facility();
+		facilityWithId2.setFacilityId(2);
+		Facility facilityWithId3 = new Facility();
+		facilityWithId3.setFacilityId(3);
+		Facility facilityWithId4 = new Facility();
+		facilityWithId4.setFacilityId(4);
+		Facility facilityWithId5 = new Facility();
+		facilityWithId5.setFacilityId(5);
+
+		List<Facility> facilitiesBelow = new ArrayList<>();
+		facilitiesBelow.add(facilityWithId2);
+		facilitiesBelow.add(facilityWithId3);
+
+		List<Facility> listWithMyFacility = new ArrayList<>();
+		listWithMyFacility.add(myFacility);
+
+		facilitiesLinkedTo.put(myFacility, facilitiesBelow);
+		facilitiesLinkedTo.put(facilityWithId4, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId5, listWithMyFacility);
+		config.setFacilitiesLinkedTo(facilitiesLinkedTo);
+
+		Agent agent = new Agent(config, "", myFacility, gameBusinessRuleList);
+
+		int exp = 4;
+		Facility res = new Facility();
+
+		try {
+			res = Whitebox.invokeMethod(agent, "resolveHigherFacilityId", -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		assertNotNull(res);
+		assertEquals(exp,res.getFacilityId());
+	}
 }

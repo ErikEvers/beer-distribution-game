@@ -1,10 +1,17 @@
 package org.han.ica.asd.c.messagehandler.sending;
 
-import org.han.ica.asd.c.messagehandler.messagetypes.ConfigurationMessage;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
+
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 
@@ -28,8 +35,8 @@ public class GameMessageClient {
     /**
      * This method sends turn data to the leader.
      *
-     * @param ip
-     * @param turn
+     * @param ip   The IP to send the turn to.
+     * @param turn The turn object to be send.
      * @return ResponseMessage. Can either be with an exception or without, depending whether a connection can be made or not.
      */
     public boolean sendTurnModel(String ip, Round turn) {
@@ -39,7 +46,7 @@ public class GameMessageClient {
         while (nFailedAttempts < 3) {
             try {
                 TurnModelMessage response = socketClient.sendObjectWithResponseGeneric(ip, turnModelMessage);
-                if (response.getException() != null){
+                if (response.getException() != null) {
                     logger.log(Level.INFO, response.getException().getMessage(), response.getException());
                 }
                 return response.isSuccess();
@@ -67,30 +74,59 @@ public class GameMessageClient {
      * @see WhoIsTheLeaderMessage
      * @see SocketClient
      */
-    public WhoIsTheLeaderMessage sendWhoIsTheLeaderMessage(String ip) {
+    public String sendWhoIsTheLeaderMessage(String ip) {
         WhoIsTheLeaderMessage whoIsTheLeaderMessageReturn = new WhoIsTheLeaderMessage();
         try {
             whoIsTheLeaderMessageReturn = socketClient.sendObjectWithResponseGeneric(ip, whoIsTheLeaderMessageReturn);
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
-        return whoIsTheLeaderMessageReturn;
+        return whoIsTheLeaderMessageReturn.getResponse();
+    }
+
+    public ChooseFacilityMessage sendChooseFacilityMessage(String ip, Facility facility) throws FacilityNotAvailableException {
+        ChooseFacilityMessage chooseFacilityMessageReturn = new ChooseFacilityMessage(facility);
+        try {
+            ChooseFacilityMessage response = socketClient.sendObjectWithResponseGeneric(ip, chooseFacilityMessageReturn);
+            if (response.getException() != null) {
+                throw (FacilityNotAvailableException) response.getException();
+            }
+            return response;
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
+        return chooseFacilityMessageReturn;
+    }
+
+    public GamePlayerId sendGameDataRequestMessage(String ip) throws IOException, ClassNotFoundException {
+        RequestGameDataMessage requestAllFacilitiesMessage = new RequestGameDataMessage();
+        RequestGameDataMessage response = socketClient.sendObjectWithResponseGeneric(ip, requestAllFacilitiesMessage);
+        if (response.getException() != null) {
+            logger.log(Level.INFO, response.getException().getMessage(), response.getException());
+        }
+        return response.getGameData();
     }
 
     /**
      * This method sends the handled round data back to every peer.
      *
-     * @param ips
-     * @param roundModel
+     * @param ips        The ips to send the round to.
+     * @param roundModel The round object.
      */
-    public void sendRoundToAllPlayers(String[] ips, Round roundModel) {
+    public void sendRoundToAllPlayers(String[] ips, Round roundModel) throws TransactionException {
         RoundModelMessage roundModelMessage = new RoundModelMessage(roundModel);
         new SendInTransaction(ips, roundModelMessage, socketClient).sendToAllPlayers();
     }
 
-    public void sendConfigurationToAllPlayers(String[] ips, Configuration configuration) {
-        ConfigurationMessage configurationMessage = new ConfigurationMessage(configuration);
-        new SendInTransaction(ips, configurationMessage, socketClient).sendToAllPlayers();
+    /**
+     * This method sends the GameStart data to every peer.
+     *
+     * @param ips      The ips to send the GameStart data to.
+     * @param beerGame The BeerGame object.
+     */
+    public void sendStartGameToAllPlayers(String[] ips, BeerGame beerGame) throws TransactionException {
+        GameStartMessage gameStartMessage = new GameStartMessage(beerGame);
+        new SendInTransaction(ips, gameStartMessage, socketClient).sendToAllPlayers();
     }
 
     /**

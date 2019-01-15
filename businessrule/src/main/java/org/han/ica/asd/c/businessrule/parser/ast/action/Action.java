@@ -137,13 +137,13 @@ public class Action extends ASTNode {
      *
      * @return Returns the facility id of the receiving end
      */
-    public int getFacilityId() {
+    public int getFacilityId(int ownFacilityId) {
         int facilityId;
 
         if(person != null){
             facilityId = nodeConverter.getFacilityId(person.getPerson());
         } else {
-            facilityId = -1;
+            facilityId = nodeConverter.getFacilityIdByAction(ownFacilityId,actionName);
         }
 
         return facilityId;

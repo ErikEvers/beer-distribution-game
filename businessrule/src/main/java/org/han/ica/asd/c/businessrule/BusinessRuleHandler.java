@@ -22,6 +22,7 @@ public class BusinessRuleHandler implements IBusinessRules {
     private ParserPipeline parserPipeline;
     private BusinessRuleDecoder businessRuleDecoder;
 
+    @Inject
     @Named("BusinessruleStore")
     public IBusinessRuleStore iBusinessRuleStore;
 
@@ -44,6 +45,7 @@ public class BusinessRuleHandler implements IBusinessRules {
             return parserPipeline.getBusinessRulesInput();
         }
         iBusinessRuleStore.synchronizeBusinessRules(agentName,parserPipeline.getBusinessRulesMap());
+        parserPipeline.getBusinessRulesMap().clear();
         return parserPipeline.getBusinessRulesInput();
     }
 
@@ -58,7 +60,7 @@ public class BusinessRuleHandler implements IBusinessRules {
             return new ActionModel(
                     action.getType(),
                     action.getAmount(),
-                    action.getFacilityId());
+                    action.getFacilityId(facilityId));
         }
         return null;
     }

@@ -110,6 +110,7 @@ public class BusinessRule extends ASTNode {
                 comparisonValue.setOperationValue(operation.resolveOperation());
             }
         }
+
         if(node instanceof Value) {
             Value value = ((Value)node);
             Integer integerValue = value.getIntegerValue();
@@ -303,6 +304,8 @@ public class BusinessRule extends ASTNode {
                 return getIncomingOrder(round, facilityId);
             case OUTGOINGGOODS:
                 return getOutgoingGoods(round, facilityId);
+            case ROUND:
+                return String.valueOf(round.getRoundId() + 1);
             default:
                 return "";
         }

@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.discovery;
+package org.han.ica.asd.c.interfaces.communication;
 
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;

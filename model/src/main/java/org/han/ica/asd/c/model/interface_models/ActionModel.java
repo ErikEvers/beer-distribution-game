@@ -3,7 +3,7 @@ package org.han.ica.asd.c.model.interface_models;
 public class ActionModel {
 	public static final int NO_FACILITY = -1;
 	public final String    type;
-	public final int       amount;
+	public int       amount;
 	public final int       facilityId;
 
 	public ActionModel(String type, int amount, int facilityId) {
