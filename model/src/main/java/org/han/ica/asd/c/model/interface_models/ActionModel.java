@@ -2,7 +2,7 @@ package org.han.ica.asd.c.model.interface_models;
 
 public class ActionModel {
 	public final String    type;
-	public final int       amount;
+	public int       amount;
 	public final int       facilityId;
 
 	public ActionModel(String type, int amount, int facilityId) {

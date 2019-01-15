@@ -11,7 +11,6 @@ import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.alternatives.AlternativeFinder;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
@@ -92,7 +91,7 @@ public class ParserPipeline {
      */
     private boolean setSyntaxError() {
         boolean hasErrors = false;
-        int lineOffset = 1;
+        final int lineOffset = 1;
 
         for (int i = 0; i < businessRulesInput.size(); i++) {
             String businessRule = businessRulesInput.get(i).getBusinessRule();
@@ -101,15 +100,16 @@ public class ParserPipeline {
                 break;
             }
 
-            if(ParseErrorListener.INSTANCE.getWordExceptions().containsKey(i + 1)){
-                int endErrorWord = findEndErrorWord(businessRule,ParseErrorListener.INSTANCE.getWordExceptions().get(i + lineOffset) - 1);
-                int beginErrorWord = findBeginErrorWord(businessRule, endErrorWord);
-                String errorWord = findWordInBusinessRule(businessRule, beginErrorWord, endErrorWord);
+            if(ParseErrorListener.INSTANCE.getWordExceptions().containsKey(i + lineOffset)){
+                int beginError = ParseErrorListener.INSTANCE.getWordExceptions().get(i + lineOffset);
+                int endError = findEndError(businessRule,beginError);
+
+                String errorWord = findWordInBusinessRule(businessRule, beginError, endError);
                 String errorMessage = "Input error found on: '" + errorWord + "'.";
                 String alternative = alternativeFinder.findAlternative(errorWord);
 
                 businessRulesInput.get(i).setErrorMessage(extendErrorMessageWithAlternative(errorMessage, alternative));
-                businessRulesInput.get(i).setErrorWord(beginErrorWord, endErrorWord);
+                businessRulesInput.get(i).setErrorWord(beginError, endError);
                 hasErrors = true;
             } else if (ParseErrorListener.INSTANCE.getExceptions().contains(i + lineOffset)) {
                 businessRulesInput.get(i).setErrorMessage("Input error found on: '" + businessRule + "'");
@@ -140,27 +140,19 @@ public class ParserPipeline {
         return builder.toString();
     }
     private String findWordInBusinessRule(String businessRule, int beginChar, int endChar){
-        return businessRule.substring(beginChar,endChar+1);
+        return businessRule.substring(beginChar,endChar + 1);
     }
 
-    private int findEndErrorWord(String businessRule, int charPosition){
-        if(!" ".equals(String.valueOf(businessRule.charAt(charPosition)))){
-            return charPosition;
-        }
-
-        return findEndErrorWord(businessRule,charPosition-1);
-    }
-
-    private int findBeginErrorWord(String businessRule, int charPosition){
-        if(charPosition < 0){
-            return 0;
+    private int findEndError(String businessRule, int charPosition){
+        if(charPosition > businessRule.length() - 1){
+            return charPosition - 1;
         }
 
         if(" ".equals(String.valueOf(businessRule.charAt(charPosition)))){
-            return charPosition+1;
+            return charPosition - 1;
         }
 
-        return findBeginErrorWord(businessRule,charPosition-1);
+        return findEndError(businessRule,charPosition+1);
     }
 
     /**
@@ -200,7 +192,7 @@ public class ParserPipeline {
             return evaluator.evaluate(map) || hasErrors;
         } else {
             for (UserInputBusinessRule input : businessRulesInput) {
-                input.setErrorMessage("Only legitimate business rules are allowed");
+                input.setErrorMessage("Only legitimate business rules are allowed. They start with 'default' or 'if'");
             }
             return true;
         }
@@ -209,7 +201,7 @@ public class ParserPipeline {
     private boolean setErrorsBusinessrules(boolean hasErrors, int i) {
         if(!businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)){
             businessRulesInput.get(i).setErrorMessage("Only legitimate business rules are allowed");
-            hasErrors = true;
+            return true;
         }
         return hasErrors;
     }

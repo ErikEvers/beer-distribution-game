@@ -39,6 +39,9 @@ public class DivideOperation extends Operation {
      */
     @Override
     public Value executeOperation(int left, int right) {
+        if(right == 0){
+            return new Value(left);
+        }
         return new Value(left / right);
     }
 

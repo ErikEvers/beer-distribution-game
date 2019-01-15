@@ -1,8 +1,9 @@
 package org.han.ica.asd.c.model.domain_objects;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-public class Facility implements IDomainModel, Serializable {
+public class Facility implements IDomainModel, Serializable, Comparable<Facility> {
     private FacilityType facilityType;
     private int facilityId;
 
@@ -34,5 +35,20 @@ public class Facility implements IDomainModel, Serializable {
     @Override
     public String toString() {
         return facilityType.getFacilityName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(facilityType, facilityId);
+    }
+
+    @Override
+    public int compareTo(Facility o) {
+        return facilityId-o.facilityId;
     }
 }
