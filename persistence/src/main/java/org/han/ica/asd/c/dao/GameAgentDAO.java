@@ -50,9 +50,10 @@ public class GameAgentDAO{
      * @param agents A list of gameagents
      */
     public void insertGameAgents(List<GameAgent> agents) {
-        for (GameAgent agent: agents) {
-            createGameAgent(agent);
-        }
+//        for (GameAgent agent: agents) {
+//            createGameAgent(agent);
+//        }
+        agents.forEach(this::createGameAgent);
     }
 
     /**
