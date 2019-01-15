@@ -284,7 +284,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "25.20.29.75";
+        return "127.0.0.1";
     }
 
     /**
