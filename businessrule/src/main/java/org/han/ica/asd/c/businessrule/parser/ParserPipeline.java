@@ -11,7 +11,6 @@ import org.han.ica.asd.c.businessrule.BusinessRuleLexer;
 import org.han.ica.asd.c.businessrule.BusinessRuleParser;
 import org.han.ica.asd.c.businessrule.parser.alternatives.AlternativeFinder;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
-import org.han.ica.asd.c.businessrule.parser.evaluator.Counter;
 import org.han.ica.asd.c.businessrule.parser.evaluator.Evaluator;
 import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
@@ -202,7 +201,7 @@ public class ParserPipeline {
     private boolean setErrorsBusinessrules(boolean hasErrors, int i) {
         if(!businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)){
             businessRulesInput.get(i).setErrorMessage("Only legitimate business rules are allowed");
-            hasErrors = true;
+            return true;
         }
         return hasErrors;
     }
