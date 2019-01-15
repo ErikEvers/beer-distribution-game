@@ -27,9 +27,11 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
     private int currentRound;
     private int totalRounds;
     private GameValue displayedAttribute;
+    private IRetrieveReplayData retrieveReplayData;
 
     @Inject
     public ReplayComponent(IRetrieveReplayData retrieveReplayData) {
+        this.retrieveReplayData = retrieveReplayData;
         facilities = retrieveReplayData.getAllFacilities();
         beerGame = retrieveReplayData.getBeerGame();
         rounds = beerGame.getRounds();
@@ -39,6 +41,9 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
         currentRound = FIRST_ROUND_TO_DISPLAY;
         totalRounds = rounds.size() - 1;
+
+
+        initializeAverageRounds();
     }
 
     /***
@@ -108,8 +113,8 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
         if (displayedAverages.isEmpty() && displayedFacility != null) {
             getSpecificData(lineChartData);
         } else {
-            if (averageRounds.isEmpty()) {
-                initializeAverageRounds();
+            if (averageRounds.size() == 0) {
+                //initializeAverageRounds();
             }
             getAverageData(lineChartData);
         }
@@ -126,13 +131,13 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
     private void getAverageData(ObservableList<XYChart.Series<Double, Double>> lineChartData) {
         LineChart.Series<Double, Double> factorySeries = new LineChart.Series<>();
-        factorySeries.setName(GameValue.FACTORY.getValue()[0]);
+        factorySeries.setName(GameValue.FACTORY.getValue()[1]);
         LineChart.Series<Double, Double> warehouseSeries = new LineChart.Series<>();
-        warehouseSeries.setName(GameValue.REGIONALWAREHOUSE.getValue()[0]);
+        warehouseSeries.setName(GameValue.REGIONALWAREHOUSE.getValue()[1]);
         LineChart.Series<Double, Double> wholesalerSeries = new LineChart.Series<>();
-        wholesalerSeries.setName(GameValue.WHOLESALER.getValue()[0]);
+        wholesalerSeries.setName(GameValue.WHOLESALER.getValue()[1]);
         LineChart.Series<Double, Double> retailerSeries = new LineChart.Series<>();
-        retailerSeries.setName(GameValue.RETAILER.getValue()[0]);
+        retailerSeries.setName(GameValue.RETAILER.getValue()[1]);
         createData(factorySeries, warehouseSeries, wholesalerSeries, retailerSeries);
         addSeriesToChart(lineChartData, factorySeries);
         addSeriesToChart(lineChartData, warehouseSeries);
@@ -257,8 +262,8 @@ public class ReplayComponent implements IVisualisedPlayedGameData {
 
     @Override
     public BeerGame getBeerGameForCurrentRound() {
-        BeerGame returnGame = beerGame;
-        returnGame.setRounds(returnGame.getRounds().stream().filter(round -> round.getRoundId() == currentRound).collect(Collectors.toList()));
+        BeerGame returnGame = retrieveReplayData.getBeerGame();
+        returnGame.setRounds(returnGame.getRounds().stream().filter(round -> round.getRoundId() <= currentRound).collect(Collectors.toList()));
         return returnGame;
     }
 

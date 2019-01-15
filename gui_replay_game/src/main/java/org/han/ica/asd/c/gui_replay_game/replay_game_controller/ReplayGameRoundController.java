@@ -46,6 +46,8 @@ public class ReplayGameRoundController {
     @Inject
     private IVisualisedPlayedGameData replayComponent;
 
+    private TreeBuilder treeBuilder;
+
     @Inject
     @Named("ReplayGame")
     IGUIHandler replayGame;
@@ -60,16 +62,17 @@ public class ReplayGameRoundController {
         maxRoundId.setText(replayComponent.getTotalRoundsString());
         gameName.setText(replayComponent.getBeerGameName());
 
-        TreeBuilder builder = new TreeBuilder();
-        builder.loadFacilityView(replayComponent.getBeerGameForCurrentRound(), facilitiesContainer, true);
+        treeBuilder = new TreeBuilder();
 
         updateCurrentRound();
+        updateTree();
     }
 
     @FXML
     void handleNextRoundButton(ActionEvent event) {
         if (replayComponent.incrementCurrentRound()) {
             updateCurrentRound();
+            updateTree();
         }
     }
 
@@ -77,6 +80,7 @@ public class ReplayGameRoundController {
     void handlePreviousRoundButton(ActionEvent event) {
         if (replayComponent.decrementCurrentRound()) {
             updateCurrentRound();
+            updateTree();
         }
     }
 
@@ -103,5 +107,9 @@ public class ReplayGameRoundController {
     public void setCurrentRound(int round){
         replayComponent.updateCurrentRound(round);
         updateCurrentRound();
+    }
+
+    private void updateTree(){
+        treeBuilder.loadFacilityView(replayComponent.getBeerGameForCurrentRound(), facilitiesContainer, true);
     }
 }
