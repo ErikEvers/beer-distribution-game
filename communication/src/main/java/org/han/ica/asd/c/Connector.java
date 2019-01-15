@@ -99,7 +99,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         nodeInfoList = new NodeInfoList();
 
         faultDetector.setObservers(observers);
-
         try {
             externalIP = getExternalIP();
         } catch (IOException e) {
@@ -230,10 +229,10 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         nodeInfoList.init(playerList, leader);
     }
 
+    @Override
     public void startFaultDetector() {
+        initNodeInfoList();
         Leader leader = persistence.getGameLog().getLeader();
-        nodeInfoList.setMyIp(internalIP);
-
         if (internalIP.equals(leader.getPlayer().getIpAddress())) {
             faultDetector.startFaultDetectorLeader(nodeInfoList);
         } else {
@@ -258,8 +257,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-        //initNodeInfoList();
-        //List<String> ips = nodeInfoList.getAllIps();
+        try {
+            this.externalIP = getExternalIP();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
@@ -285,7 +288,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "myIP";
+        return "169.254.156.128";
     }
 
     /**
