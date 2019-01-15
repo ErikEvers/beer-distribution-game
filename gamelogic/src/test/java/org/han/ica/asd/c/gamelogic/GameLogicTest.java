@@ -133,15 +133,6 @@ public class GameLogicTest {
     }
 
     @Test
-    public void connectToGameCallsMethodOfSameNameOnceInIConnectedForPlayer() {
-        //Act
-        gameLogic.connectToGame("");
-
-        //Assert
-        verify(communication, times(1)).connectToGame("");
-    }
-
-    @Test
     public void requestFacilityUsageCallsMethodOfSameNameOnceInIConnectedForPlayer() {
         //Arrange
         Facility facility = mock(Facility.class);

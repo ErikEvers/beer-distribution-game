@@ -103,11 +103,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.replaceAgentWithPlayer();
     }
 
-    @Override
-    public void connectToGame(String game) {
-        communication.connectToGame(game);
-    }
-
 		/**
 		 * Calculates the round.
 		 * @param round has the information needed to calculate the round.

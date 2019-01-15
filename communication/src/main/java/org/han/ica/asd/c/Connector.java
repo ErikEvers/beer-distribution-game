@@ -203,11 +203,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     @Override
-    public void connectToGame(String game) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public void requestFacilityUsage(Facility facility) {
         throw new NotImplementedException();
     }

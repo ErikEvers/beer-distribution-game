@@ -76,12 +76,6 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     public void selectAgent(ProgrammedAgent programmedAgent) {
         gameLogic.selectAgent(programmedAgent);
     }
-
-    @Override
-    public void connectToGame(String game) {
-        gameLogic.connectToGame(game);
-    }
-
     @Override
     public List<Facility> getAllFacilities() {
         return gameLogic.getAllFacilities();

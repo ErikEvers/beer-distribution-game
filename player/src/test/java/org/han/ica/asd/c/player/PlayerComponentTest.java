@@ -44,15 +44,6 @@ public class PlayerComponentTest {
     }
 
     @Test
-    void connectToGameCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Act
-        playerComponent.connectToGame("");
-
-        //Assert
-        verify(logicMock, times(1)).connectToGame("");
-    }
-
-    @Test
     void requestFacilityUsageCallsMethodOfSameNameOnceInGameLogicTest() {
         //Act
         playerComponent.requestFacilityUsage(mock(Facility.class));
