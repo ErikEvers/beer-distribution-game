@@ -11,7 +11,6 @@ import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.Assert;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
@@ -60,11 +59,6 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 
 	}
 
-	@AfterEach
-	void tearDown() {
-		DBConnectionTest.getInstance().cleanup();
-	}
-
 	@Test
 	void createTurnTest() {
 		gameBusinessRulesDAO.createGameBusinessRule(new GameAgent(GAME_AGENT_NAME ,new Facility(), gameBusinessRules),gameBusinessRules.get(0));
@@ -85,7 +79,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 		//Check if record is created in the database
 		Assert.assertNotNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
 
-		gameBusinessRulesInFacilityTurnDAO.deleteTurn(GAME_ID,1,1);
+		gameBusinessRulesInFacilityTurnDAO.deleteTurn(1,1);
 		Assert.assertNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
 
 	}
