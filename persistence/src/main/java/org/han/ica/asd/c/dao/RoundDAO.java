@@ -159,8 +159,10 @@ public class RoundDAO {
 				pstmt.setInt(2, roundId);
 
 				try (ResultSet rs = pstmt.executeQuery()) {
-					delivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
-
+					while (!rs.isClosed()) {
+						delivers.add(new FacilityTurnDeliver(rs.getInt(FACILITY_ID), rs.getInt("FacilityIdDeliver"), rs.getInt("OpenOrderAmount"), rs.getInt("DeliverAmount")));
+						rs.next();
+					}
 				}
 
 				conn.commit();

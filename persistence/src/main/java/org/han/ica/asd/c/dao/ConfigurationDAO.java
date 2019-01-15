@@ -179,6 +179,7 @@ public class ConfigurationDAO {
 
                 pstmt.execute();
                 conn.commit();
+                updateFacilityLinks(configuration.getFacilitiesLinkedTo());
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -212,7 +213,7 @@ public class ConfigurationDAO {
      * @param facilitiesLinkedTo The facilities that are linked
      */
     public void createFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
-        facilitiesLinkedTo.forEach((k, v) -> v.forEach(lowerFacility -> {
+        facilitiesLinkedTo.forEach((higherFacility, lowerFacilityList) -> lowerFacilityList.forEach(lowerFacility -> {
             Connection conn = databaseConnection.connect();
             if (conn != null) {
 
@@ -220,7 +221,7 @@ public class ConfigurationDAO {
                     conn.setAutoCommit(false);
 
                     DaoConfig.gameIdNotSetCheck(pstmt, 1);
-                    pstmt.setInt(2, k.getFacilityId());
+                    pstmt.setInt(2, higherFacility.getFacilityId());
                     pstmt.setInt(3, lowerFacility.getFacilityId());
 
                     pstmt.execute();
@@ -283,13 +284,13 @@ public class ConfigurationDAO {
      * @param facilitiesLinkedTo Map with the updated facility links
      */
     public void updateFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
-        facilitiesLinkedTo.forEach((k, v) -> v.forEach(lowerFacility -> {
+        facilitiesLinkedTo.forEach((higherFacility, lowerFacilityList) -> lowerFacilityList.forEach(lowerFacility -> {
             Connection conn = databaseConnection.connect();
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LOWER_LINKED_FACILITIES)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, k.getFacilityId());
+                    pstmt.setInt(1, higherFacility.getFacilityId());
                     pstmt.setInt(2, lowerFacility.getFacilityId());
                     DaoConfig.gameIdNotSetCheck(pstmt, 3);
 
@@ -306,15 +307,16 @@ public class ConfigurationDAO {
     private void packageLinkedFacilities(Map<Facility, List<Facility>> linkedFacilities, ResultSet rs) throws SQLException {
         Facility lastKnownParent = null;
 
-        if (!rs.isClosed()) {
-            while (rs.next()) {
-                int parent = rs.getInt("FacilityIdOrdering");
-                if (lastKnownParent == null || parent != lastKnownParent.getFacilityId()) {
-                    lastKnownParent = facilityDAO.readSpecificFacility(parent);
-                    linkedFacilities.put(lastKnownParent, new ArrayList<>());
-                }
-                linkedFacilities.get(lastKnownParent).add(facilityDAO.readSpecificFacility(rs.getInt("FacilityIdDelivering")));
+        if (rs.isClosed()) {
+            return;
+        }
+        while (rs.next()) {
+            int parent = rs.getInt("FacilityIdOrdering");
+            if (lastKnownParent == null || parent != lastKnownParent.getFacilityId()) {
+                lastKnownParent = facilityDAO.readSpecificFacility(parent);
+                linkedFacilities.put(lastKnownParent, new ArrayList<>());
             }
+            linkedFacilities.get(lastKnownParent).add(facilityDAO.readSpecificFacility(rs.getInt("FacilityIdDelivering")));
         }
 
     }

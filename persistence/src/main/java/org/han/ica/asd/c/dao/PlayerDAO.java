@@ -41,8 +41,12 @@ public class PlayerDAO {
     public void createPlayer(Player player) {
         if(player.getFacility() == null) {
             createPlayerWithoutFacility(player);
-            return;
+        } else {
+            createPlayerWithFacility(player);
         }
+    }
+
+    private void createPlayerWithFacility(Player player) {
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(CREATE_PLAYER)) {
 
@@ -62,7 +66,7 @@ public class PlayerDAO {
         }
     }
 
-    public void createPlayerWithoutFacility (Player player) {
+    private void createPlayerWithoutFacility (Player player) {
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(CREATE_PLAYER_WITHOUT_FACILITY)) {
 
@@ -86,9 +90,7 @@ public class PlayerDAO {
      * @param players A list of players which needs to be inserted
      */
     public void insertPlayers(List<Player> players) {
-        for (Player player : players) {
-            createPlayer(player);
-        }
+        players.forEach(this::createPlayer);
     }
 
     /**
