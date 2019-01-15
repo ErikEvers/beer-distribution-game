@@ -237,7 +237,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             logger.log(Level.SEVERE, e.getMessage());
         }
         if (externalIP.equals(leader.getPlayer().getIpAddress())) {
-              faultDetector.startFaultDetectorLeader(nodeInfoList);
+            faultDetector.startFaultDetectorLeader(nodeInfoList);
         } else {
             faultDetector.startFaultDetectorPlayer(nodeInfoList);
         }
