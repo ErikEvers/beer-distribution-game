@@ -47,6 +47,9 @@ public class SocketClient {
      * @throws ClassNotFoundException
      */
     public Object sendObjectWithResponse(String ip, Object object) throws IOException, ClassNotFoundException {
+        if(ip.equals("myIP")) {
+            return SocketServer.serverObserver.serverObjectReceived(object, ip);
+        }
         try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(object);
@@ -118,7 +121,7 @@ public class SocketClient {
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
-					if(ip.equals("169.254.231.222")) {
+					if(ip.equals("myIP")) {
 						SocketServer.serverObserver.serverObjectReceived(object, ip);
 						cdl.countDown();
 					} else {

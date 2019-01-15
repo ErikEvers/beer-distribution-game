@@ -195,7 +195,7 @@ public class GameSetupTypeController implements Initializable {
 
             beerGame.setGameId(uuid);
             beerGame.setGameDate(new Date().toString());
-            DaoConfig.setCurrentGameId(uuid);
+            //DaoConfig.setCurrentGameId(uuid);
             createFirstTurn();
 
             if(onlineGame) {
