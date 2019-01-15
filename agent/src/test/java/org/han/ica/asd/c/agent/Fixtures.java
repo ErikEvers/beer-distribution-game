@@ -5,13 +5,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.agent.stubs.GameLogicStub;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
-import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -26,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Mockito.mock;
-
 class Fixtures {
     public static class LinearConfiguration {
         private static LinearConfiguration testConfiguration;
@@ -36,7 +32,6 @@ class Fixtures {
         final Configuration configuration;
         final List<List<String>> facilityIdList;
         private Injector participantInjector;
-        final IPlayerGameLogic gameLogic = mock(IPlayerGameLogic.class);
 
         private LinearConfiguration() {
             facilityList = Collections.unmodifiableList(Lists.newArrayList(
@@ -79,10 +74,9 @@ class Fixtures {
                 @Override
                 protected void configure() {
                     bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
-                    bind(IPlayerGameLogic.class).toInstance(gameLogic);
                     bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                         @Override
-                        public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+                        public void saveGameLog(BeerGame beerGame) {
 
                         }
 
@@ -157,7 +151,6 @@ class Fixtures {
         final Configuration configuration;
         final List<List<String>> facilityIdList;
         private final Injector participantInjector;
-        final IPlayerGameLogic gameLogic = mock(IPlayerGameLogic.class);
 
         private TreeConfiguration() {
             facilityList = Collections.unmodifiableList(Lists.newArrayList(
@@ -257,10 +250,9 @@ class Fixtures {
                 @Override
                 protected void configure() {
                     bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
-                    bind(IPlayerGameLogic.class).toInstance(gameLogic);
                     bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                         @Override
-                        public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+                        public void saveGameLog(BeerGame beerGame) {
 
                         }
 
@@ -335,7 +327,6 @@ class Fixtures {
         final Configuration configuration;
         final List<List<String>> facilityIdList;
         private final Injector participantInjector;
-        final IPlayerGameLogic gameLogic = mock(IPlayerGameLogic.class);
 
         private GraphConfiguration() {
             facilityList = Collections.unmodifiableList(Lists.newArrayList(
@@ -440,10 +431,9 @@ class Fixtures {
                 @Override
                 protected void configure() {
                     bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
-                    bind(IPlayerGameLogic.class).toInstance(gameLogic);
                     bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
                         @Override
-                        public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+                        public void saveGameLog(BeerGame beerGame) {
 
                         }
 

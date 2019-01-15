@@ -60,7 +60,7 @@ public class Agent extends GameAgent implements IParticipant {
 	 * @return          A GameRoundAction with all actions that the agent wants to do.
 	 */
 	private GameRoundAction generateRoundActions(BeerGame beerGame, int roundId) {
-		Round round = beerGame.getRoundById(roundId);
+		Round round = beerGame.getRoundById(roundId);=
 		ActionCollector actionCollector = new ActionCollector();
 		Iterator<GameBusinessRules> gameBusinessRulesIterator = this.getGameBusinessRules().iterator();
 

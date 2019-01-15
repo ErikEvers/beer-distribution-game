@@ -15,7 +15,6 @@ import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,11 +52,10 @@ class AgentIntegrationTest {
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.LinearConfiguration.getInstance().gameLogic;
         when(gameLogic.getBeerGame()).thenReturn(beerGame);
         when(gameLogic.getRoundId()).thenReturn(2);
 
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -88,12 +85,10 @@ class AgentIntegrationTest {
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
-
-        IPlayerGameLogic gameLogic = Fixtures.LinearConfiguration.getInstance().gameLogic;
         when(gameLogic.getBeerGame()).thenReturn(beerGame);
         when(gameLogic.getRoundId()).thenReturn(2);
 
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -123,11 +118,10 @@ class AgentIntegrationTest {
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.LinearConfiguration.getInstance().gameLogic;
         when(gameLogic.getBeerGame()).thenReturn(beerGame);
         when(gameLogic.getRoundId()).thenReturn(2);
 
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
         assertEquals(expectedDeliver, actualDeliver);
     }
@@ -156,11 +150,10 @@ class AgentIntegrationTest {
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.LinearConfiguration.getInstance().gameLogic;
         when(gameLogic.getBeerGame()).thenReturn(beerGame);
         when(gameLogic.getRoundId()).thenReturn(2);
 
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -189,11 +182,10 @@ class AgentIntegrationTest {
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.LinearConfiguration.getInstance().gameLogic;
         when(gameLogic.getBeerGame()).thenReturn(beerGame);
         when(gameLogic.getRoundId()).thenReturn(2);
 
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -220,14 +212,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
-
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.LinearConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -255,13 +240,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), orderedAmount)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.TreeConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -289,13 +268,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 0)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.TreeConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetDeliverMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -324,13 +297,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -358,13 +325,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -392,13 +353,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(targetFacility.getFacilityId(), sourceFacility.getFacilityId(), incomingOrderCurrent)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -426,13 +381,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(roundCurrent);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
         assertEquals(expectedDeliver, actualDeliver);
     }
@@ -460,13 +409,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
         assertEquals(expectedDeliver, actualDeliver);
     }
@@ -494,13 +437,7 @@ class AgentIntegrationTest {
                         new FacilityTurnOrder(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 20)),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetFacility);
         assertEquals(expectedDeliver, actualDeliver);
     }
@@ -527,13 +464,7 @@ class AgentIntegrationTest {
                 Collections.singletonList(
                         new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 10, outgoingGoods)));
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetDeliverMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -567,13 +498,7 @@ class AgentIntegrationTest {
 
         logger.addHandler(testExceptionLogHandler);
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         assertTrue(gameRoundAction.targetOrderMap.isEmpty());
         assertTrue(gameRoundAction.targetDeliverMap.isEmpty());
         assertEquals(expectedLevel, testExceptionLogHandler.level);
@@ -604,11 +529,10 @@ class AgentIntegrationTest {
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
         when(gameLogic.getBeerGame()).thenReturn(beerGame);
         when(gameLogic.getRoundId()).thenReturn(2);
 
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(sourceFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -633,13 +557,7 @@ class AgentIntegrationTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(sourceFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -666,13 +584,7 @@ class AgentIntegrationTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetFacility);
         assertEquals(expectedOrder, actualOrder);
     }
@@ -702,13 +614,7 @@ class AgentIntegrationTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        BeerGame beerGame = new BeerGame();
-        beerGame.getRounds().add(round);
-        IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-        when(gameLogic.getBeerGame()).thenReturn(beerGame);
-        when(gameLogic.getRoundId()).thenReturn(2);
-
-        GameRoundAction gameRoundAction = participant.executeTurn();
+        GameRoundAction gameRoundAction = participant.executeTurn(round);
         Integer actualOrder = gameRoundAction.targetOrderMap.get(targetOrderFacility);
         Integer actualDeliver = gameRoundAction.targetDeliverMap.get(targetDeliverFacility);
         assertEquals(expectedOrder, actualOrder);
@@ -897,13 +803,7 @@ class AgentIntegrationTest {
                 IParticipant participant = listOfParticipants.get(participantId);
                 int facilityId = participant.getParticipant().getFacilityId();
 
-                BeerGame beerGame = new BeerGame();
-                beerGame.getRounds().add(round);
-                IPlayerGameLogic gameLogic = Fixtures.GraphConfiguration.getInstance().gameLogic;
-                when(gameLogic.getBeerGame()).thenReturn(beerGame);
-                when(gameLogic.getRoundId()).thenReturn(roundId);
-
-                GameRoundAction participantGameRoundAction = participant.executeTurn();
+                GameRoundAction participantGameRoundAction = participant.executeTurn(round);
 
                 // New turn values
                 FacilityTurn temporaryFacilityTurn =            listOfTemporaryFacilityTurns.get(participantId);
