@@ -77,11 +77,6 @@ public class GameLogicTest {
     }
 
     @Test
-    public void seeOtherFacilitiesReturnsBeerGame() {
-        Assert.assertEquals(beerGameMock, gameLogic.seeOtherFacilities());
-    }
-
-    @Test
     public void letAgentTakeOverPlayerReplacesPlayer() {
         gameLogic.letAgentTakeOverPlayer(mock(Agent.class));
         doNothing().when(participantsPool).addParticipant(any(IParticipant.class));
@@ -130,50 +125,5 @@ public class GameLogicTest {
     public void roundModelReceivedCallsLocalParticipants() {
         gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
         verify(participantsPool, times(2)).getParticipants();
-    }
-
-    @Test
-    public void requestFacilityUsageCallsMethodOfSameNameOnceInIConnectedForPlayer() {
-        //Arrange
-        Facility facility = mock(Facility.class);
-
-        //Act
-        gameLogic.requestFacilityUsage(facility);
-
-        //Assert
-        verify(communication, times(1)).requestFacilityUsage(facility);
-    }
-
-    @Test
-    public void getAllFacilitiesCallsMethodOfSameNameOnceInIConnectedForPlayer() {
-        //Act
-        gameLogic.getAllFacilities();
-
-        //Assert
-        verify(communication, times(1)).getAllFacilities();
-    }
-
-    @Test
-    public void selectAgentCallsSaveSelectedAgentOnceInIPersistence() {
-        //Arrange
-        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
-
-        //Act
-        gameLogic.selectAgent(programmedAgent);
-
-        //Assert
-        verify(persistence, times(1)).saveSelectedAgent(programmedAgent);
-    }
-
-    @Test
-    public void selectAgentCallsSendSelectedAgentOnceInIConnectedForPlayer() {
-        //Arrange
-        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
-
-        //Act
-        gameLogic.selectAgent(programmedAgent);
-
-        //Assert
-        verify(communication, times(1)).sendSelectedAgent(programmedAgent);
     }
 }

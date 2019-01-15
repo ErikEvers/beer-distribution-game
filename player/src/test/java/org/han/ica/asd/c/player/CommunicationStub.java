@@ -18,29 +18,4 @@ public class CommunicationStub implements IConnectedForPlayer {
 	public void addObserver(IConnectorObserver observer) {
 
 	}
-
-	@Override
-	public List<String> getAllGames() {
-		return null;
-	}
-
-	@Override
-	public void connectToGame(String game) {
-
-	}
-
-	@Override
-	public void requestFacilityUsage(Facility facility) {
-
-	}
-
-	@Override
-	public List<Facility> getAllFacilities() {
-		return null;
-	}
-
-	@Override
-	public void sendSelectedAgent(ProgrammedAgent programmedAgent) {
-
-	}
 }

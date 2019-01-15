@@ -10,7 +10,4 @@ import java.util.List;
 public interface IConnectedForPlayer {
     boolean sendTurnData(Round turn);
     void addObserver(IConnectorObserver observer);
-    void requestFacilityUsage(Facility facility);
-    List<Facility> getAllFacilities();
-    void sendSelectedAgent(ProgrammedAgent programmedAgent);
 }

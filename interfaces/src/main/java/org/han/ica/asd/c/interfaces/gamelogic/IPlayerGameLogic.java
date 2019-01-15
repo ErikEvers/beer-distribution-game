@@ -32,12 +32,6 @@ public interface IPlayerGameLogic {
      */
     void letPlayerTakeOverAgent();
 
-    void selectAgent(ProgrammedAgent programmedAgent);
-
-    void requestFacilityUsage(Facility facility);
-
-    List<Facility> getAllFacilities();
-
     int getRoundId();
 
     void setPlayer(IPlayerRoundListener player);

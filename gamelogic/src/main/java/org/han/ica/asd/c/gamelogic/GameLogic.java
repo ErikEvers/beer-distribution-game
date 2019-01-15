@@ -143,11 +143,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         communication.addObserver(observer);
     }
 
-    @Override
-    public void requestFacilityUsage(Facility facility) {
-        communication.requestFacilityUsage(facility);
-    }
-
     public int getRoundId() {
         return curRoundId;
     }
@@ -156,17 +151,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void setPlayer(IPlayerRoundListener player) {
         GameLogic.player = player;
         participantsPool.setPlayer(player);
-    }
-
-    @Override
-    public List<Facility> getAllFacilities() {
-        return communication.getAllFacilities();
-    }
-
-    @Override
-    public void selectAgent(ProgrammedAgent programmedAgent) {
-        persistence.saveSelectedAgent(programmedAgent);
-        communication.sendSelectedAgent(programmedAgent);
     }
 
     /**

@@ -18,7 +18,6 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.Player;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -58,27 +57,12 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
 
 	@Override
 	public void activatePlayer() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
     @Override
     public void activateAgent() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void requestFacilityUsage(Facility facility) {
-        gameLogic.requestFacilityUsage(facility);
-    }
-
-
-    @Override
-    public void selectAgent(ProgrammedAgent programmedAgent) {
-        gameLogic.selectAgent(programmedAgent);
-    }
-    @Override
-    public List<Facility> getAllFacilities() {
-        return gameLogic.getAllFacilities();
+        throw new UnsupportedOperationException();
     }
 
     @Override

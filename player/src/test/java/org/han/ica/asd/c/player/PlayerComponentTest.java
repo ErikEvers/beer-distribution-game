@@ -42,35 +42,4 @@ public class PlayerComponentTest {
         });
         playerComponent = injector.getInstance(PlayerComponent.class);
     }
-
-    @Test
-    void requestFacilityUsageCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Act
-        playerComponent.requestFacilityUsage(mock(Facility.class));
-
-        //Assert
-        verify(logicMock, times(1)).requestFacilityUsage(any(Facility.class));
-    }
-
-    @Test
-    void getAllFacilitiesCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Act
-        playerComponent.getAllFacilities();
-
-        //Assert
-        verify(logicMock, times(1)).getAllFacilities();
-    }
-
-    @Test
-    void selectAgentCallsMethodOfSameNameOnceInGameLogicTest() {
-        //Arrange
-        playerComponent.gameLogic = mock(GameLogic.class);
-        ProgrammedAgent programmedAgent = mock(ProgrammedAgent.class);
-
-        //Act
-        playerComponent.selectAgent(programmedAgent);
-
-        //Assert
-        verify(playerComponent.gameLogic, times(1)).selectAgent(programmedAgent);
-    }
 }

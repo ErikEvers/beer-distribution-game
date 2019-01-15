@@ -17,9 +17,6 @@ public interface IPlayerComponent {
     void placeOrder(Facility facility, int amount);
     void sendDelivery(Facility facility, int amount);
     boolean submitTurn();
-    void requestFacilityUsage(Facility facility);
-    void selectAgent(ProgrammedAgent agent);
-    List<Facility> getAllFacilities();
     void chooseFacility(Facility facility);
     String getFacilityName();
     Player getPlayer();
