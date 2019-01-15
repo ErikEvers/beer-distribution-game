@@ -36,4 +36,9 @@ public class PersistenceStub implements IPersistence {
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 
 	}
+
+	@Override
+	public void updateRound(Round round) {
+
+	}
 }

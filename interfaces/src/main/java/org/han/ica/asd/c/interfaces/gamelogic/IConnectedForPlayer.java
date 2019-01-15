@@ -9,6 +9,6 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import java.util.List;
 
 public interface IConnectedForPlayer {
-    void sendTurn(Round turn) throws SendGameMessageException;
+    void sendTurnData(Round turn) throws SendGameMessageException;
     void addObserver(IConnectorObserver observer);
 }

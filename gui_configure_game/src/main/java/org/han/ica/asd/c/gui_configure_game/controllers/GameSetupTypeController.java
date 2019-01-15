@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
@@ -195,14 +194,12 @@ public class GameSetupTypeController implements Initializable {
 
             beerGame.setGameId(uuid);
             beerGame.setGameDate(new Date().toString());
-            //DaoConfig.setCurrentGameId(uuid);
             createFirstTurn();
 
             if(onlineGame) {
 							connector.start();
 							connector.createRoom(gameName, "", beerGame);
 						}
-						persistence.saveGameLog(beerGame,false);
             assignAgents.setData(new Object[]{beerGame});
             assignAgents.setupScreen();
         }

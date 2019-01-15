@@ -22,8 +22,7 @@ public interface IConnectorForLeader {
      * The data of a specific round gets sent to the participants of said game.
      * @param newRound, the game data of a specific round.
      */
-
-    void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException;
+    void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException;
 
     void sendGameStart(BeerGame beerGame) throws TransactionException;
 

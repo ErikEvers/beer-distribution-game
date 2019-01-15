@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 
 public class PlayGameFactoryController extends PlayGame {
 
@@ -32,6 +33,17 @@ public class PlayGameFactoryController extends PlayGame {
         int order = Integer.parseInt(outgoingOrderTextField.getText());
         orderFacilities.add(addProduceOrderToList(order));
         playerComponent.placeOrder(playerComponent.getPlayer().getFacility(), order);
+        refillOrdersList();
+    }
+
+    @Override
+    protected void refillOrdersList() {
+        orderFacilities.clear();
+        Facility ownFacility = playerComponent.getPlayer().getFacility();
+
+        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order ->
+                orderFacilities.add(addProduceOrderToList(order.getOrderAmount())));
+
     }
 
 

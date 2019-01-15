@@ -57,7 +57,7 @@ public class GameLogicTest {
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
         //verify(persistence, times(1)).saveRoundData(turn);
-				verify(communication, times(1)).sendTurn(turn);
+				verify(communication, times(1)).sendTurnData(turn);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class GameLogicTest {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
-        verify(communication, times(1)).sendTurn(turn);
+        verify(communication, times(1)).sendTurnData(turn);
     }
 
     @Test

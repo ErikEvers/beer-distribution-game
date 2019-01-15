@@ -105,8 +105,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
-        internalIP = getInternalIP();
-
         faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
 
@@ -138,6 +136,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             RoomModel createdRoom = finder.createGameRoomModel(roomName, internalIP, password);
             GameLeader leader = gameLeaderProvider.get();
             leader.init(internalIP, createdRoom, beerGame);
+            leaderIp = internalIP;
 
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -203,6 +202,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
     }
 
+    @Override
+    public void sendTurnData(Round turn) throws SendGameMessageException {
+        Leader leader = persistence.getGameLog().getLeader();
+        gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
+    }
+
     public void addObserver(IConnectorObserver observer) {
         observers.add(observer);
         faultDetector.setObservers(observers);
@@ -216,9 +221,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param newRound
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException {
-        //initNodeInfoList();
-        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
+			//initNodeInfoList();
+			List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
@@ -249,11 +254,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return false;
     }
 
-    public void sendTurn(Round turn) throws SendGameMessageException {
-        Leader leader = persistence.getGameLog().getLeader();
-        gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
-    }
-
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
         try {
@@ -261,8 +261,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+				//initNodeInfoList();
+				//List<String> ips = nodeInfoList.getAllIps();
+				List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
@@ -288,25 +289,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             ip = in.readLine();
         }
         return ip;
-    }
-
-    /**
-     * Gets the local ip4 address from ethernet connection.
-     *
-     * @return The IP.
-     */
-    private String getInternalIP() {
-        Map<String, String> ips = listAllIPs();
-
-
-        for (Map.Entry<String, String> interfaceIP : ips.entrySet())
-        {
-            if(interfaceIP.getKey().contains("eth")){
-                return interfaceIP.getValue();
-            }
-        }
-
-        return null;
     }
 
     /**

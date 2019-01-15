@@ -24,10 +24,7 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class BusinessRuleStoreTest {
 
@@ -137,5 +134,10 @@ class BusinessRuleStoreTest {
         Assert.assertEquals(Integer.toString(DISTRIBUTOR.getFacilityId()), facilities.get(1).get(0));
         Assert.assertEquals(Integer.toString(WHOLESALER.getFacilityId()), facilities.get(2).get(0));
         Assert.assertEquals(Integer.toString(RETAILER.getFacilityId()), facilities.get(3).get(0));
+    }
+    @Test
+    void getProgrammedGameAgent() {
+        ProgrammedAgent programmedAgentDb = businessRuleStore.getProgrammedGameAgent(PROGRAMMED_AGENT_NAME);
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedBusinessRule(), programmedAgentDb.getProgrammedBusinessRules().get(0).getProgrammedBusinessRule());
     }
 }
