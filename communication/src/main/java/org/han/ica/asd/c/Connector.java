@@ -299,16 +299,15 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     private String getInternalIP() {
         Map<String, String> ips = listAllIPs();
 
-        Map.Entry<String,String> entry = ips.entrySet().iterator().next();
-        String adapter = entry.getKey();
-        String ip = entry.getValue();
 
         for (Map.Entry<String, String> interfaceIP : ips.entrySet())
         {
-            System.out.println(interfaceIP.getKey());
+            if(interfaceIP.getKey().contains("eth")){
+                return interfaceIP.getValue();
+            }
         }
 
-        return ip;
+        return "127.0.0.1";
     }
 
     /**
@@ -357,7 +356,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
                 String displayName = networkInterface.getDisplayName();
                 if(!displayName.contains("Virtual")) {
                     String ipAddress = ip.getHostAddress();
-                    ips.put(displayName, ipAddress);
+                    ips.put(networkInterface.getName(), ipAddress);
                 }
 
             }
