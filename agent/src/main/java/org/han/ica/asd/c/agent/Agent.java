@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -101,6 +102,8 @@ public class Agent extends GameAgent implements IParticipant {
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
 	 *
+	 * ORDER
+	 *
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility below the current facility that needs to be resolved. NULL when facility is not found.
 	 */
@@ -109,10 +112,15 @@ public class Agent extends GameAgent implements IParticipant {
 			return getFacility();
 
 		Facility facility = getFacility();
-		List<Facility> links = configuration.getFacilitiesLinkedTo().entrySet().stream()
-                .filter(m -> m.getKey().getFacilityId() == facility.getFacilityId())
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+		Optional<Map.Entry<Facility, List<Facility>>> value = configuration.getFacilitiesLinkedTo().entrySet().stream()
+				.filter(m -> m.getKey().getFacilityId() == facility.getFacilityId()).findFirst();
+
+		List<Facility> links;
+		if (value.isPresent()) {
+			links = value.get().getValue();
+		} else {
+			links = new ArrayList<>();
+		}
 
 		if(targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
             Collections.sort(links);
@@ -143,6 +151,8 @@ public class Agent extends GameAgent implements IParticipant {
 
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
+	 *
+	 * DELIVER
 	 *
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility above the current facility that needs to be resolved. NULL when facility is not found.

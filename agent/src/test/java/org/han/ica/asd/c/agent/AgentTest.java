@@ -472,20 +472,20 @@ class AgentTest {
 		facilityWithId5.setFacilityId(5);
 
 		List<Facility> facilitiesBelow = new ArrayList<>();
-		facilitiesBelow.add(facilityWithId2);
-		facilitiesBelow.add(facilityWithId3);
+		facilitiesBelow.add(facilityWithId4);
+		facilitiesBelow.add(facilityWithId5);
 
 		List<Facility> listWithMyFacility = new ArrayList<>();
 		listWithMyFacility.add(myFacility);
 
 		facilitiesLinkedTo.put(myFacility, facilitiesBelow);
-		facilitiesLinkedTo.put(facilityWithId4, listWithMyFacility);
-		facilitiesLinkedTo.put(facilityWithId5, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId2, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId3, listWithMyFacility);
 		config.setFacilitiesLinkedTo(facilitiesLinkedTo);
 
 		Agent agent = new Agent(config, "", myFacility, gameBusinessRuleList);
 
-		int exp = 2;
+		int exp = 4;
 		Facility res = new Facility();
 
 		try {
