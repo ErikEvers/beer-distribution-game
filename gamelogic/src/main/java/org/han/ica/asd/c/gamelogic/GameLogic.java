@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 
 /**
  * This class is responsible for game logic of the 'Beer Distribution Game'. The concept of game logic includes:
- *  - Keeping track of the current round number;
- *  - Handling player actions involving data;
- *  - Delegating the task of managing local participants to the ParticipantsPool.
+ * - Keeping track of the current round number;
+ * - Handling player actions involving data;
+ * - Delegating the task of managing local participants to the ParticipantsPool.
  */
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
     private IConnectedForPlayer communication;
@@ -44,10 +44,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private static IPlayerRoundListener player;
 
     @Inject
-    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
-        if(participantsPool == null) {
-					participantsPool = participantsPoolProvider.get();
-				}
+    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication) {
+        if (participantsPool == null) {
+            participantsPool = participantsPoolProvider.get();
+        }
         this.communication = communication;
         this.communication.addObserver(this);
     }
@@ -58,6 +58,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     /**
      * Sends and saves an order of the player / agent.
+     *
      * @param turn
      */
     @Override
@@ -69,6 +70,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     /**
      * Returns the current state of the game.
+     *
      * @return The current state of the game.
      */
     @Override
@@ -78,6 +80,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     /**
      * Replaces the player with the given agent.
+     *
      * @param agent Agent that will replace the player.
      */
     @Override
@@ -104,21 +107,23 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         //Yet to be implemented
     }
 
-		/**
-		 * Calculates the round.
-		 * @param round has the information needed to calculate the round.
-		 * @return
-		 */
-		@Override
-		public Round calculateRound(Round round, BeerGame game) {
-			Round previousRound = beerGame.getRounds().get(round.getRoundId()- 1);
-			RoundCalculator roundCalculator = new RoundCalculator();
+    /**
+     * Calculates the round.
+     *
+     * @param round has the information needed to calculate the round.
+     * @return
+     */
+    @Override
+    public Round calculateRound(Round round, BeerGame game) {
+        Round previousRound = beerGame.getRounds().get(round.getRoundId() - 1);
+        RoundCalculator roundCalculator = new RoundCalculator();
 
-			return  roundCalculator.calculateRound(round, game);
-		}
+        return roundCalculator.calculateRound(round, game);
+    }
 
     /**
      * Adds a local participant to the game.
+     *
      * @param participant The local participant to add to the game.
      */
     @Override
@@ -128,6 +133,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     /**
      * Removes an agent with the given playerId.
+     *
      * @param playerId Identifier of the player to remove.
      */
     @Override
@@ -158,23 +164,24 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     /**
-		 * @param previousRound The previous round to save.
-     * @param newRound The current round to save.
+     * @param previousRound The previous round to save.
+     * @param newRound      The current round to save.
      */
     @Override
     public void roundModelReceived(Round previousRound, Round newRound) {
-				beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
-				beerGame.getRounds().add(previousRound);
+        beerGame.getRounds().removeIf(round -> round.getRoundId() == previousRound.getRoundId());
+        beerGame.getRounds().add(previousRound);
         beerGame.getRounds().removeIf(round -> round.getRoundId() == newRound.getRoundId());
         beerGame.getRounds().add(newRound);
         curRoundId = newRound.getRoundId();
         sendRoundActionFromAgents();
+        persistence.saveRoundData(newRound);
     }
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
         GameLogic.beerGame = beerGame;
-        persistence.saveGameLog(beerGame,false);
+        persistence.saveGameLog(beerGame, false);
         player.startGame();
         curRoundId = 1;
         sendRoundActionFromAgents();
