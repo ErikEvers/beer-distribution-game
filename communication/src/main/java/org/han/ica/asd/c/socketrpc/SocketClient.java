@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.socketrpc;
 
 
+import org.han.ica.asd.c.Connector;
+
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -47,7 +49,7 @@ public class SocketClient {
      * @throws ClassNotFoundException
      */
     public Object sendObjectWithResponse(String ip, Object object) throws IOException, ClassNotFoundException {
-        if(ip.equals("myIP")) {
+        if(ip.equals(Connector.internalIP)) {
             return SocketServer.serverObserver.serverObjectReceived(object, ip);
         }
         try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
@@ -121,7 +123,7 @@ public class SocketClient {
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
-					if(ip.equals("myIP")) {
+					if(ip.equals(Connector.internalIP)) {
 						SocketServer.serverObserver.serverObjectReceived(object, ip);
 						cdl.countDown();
 					} else {
