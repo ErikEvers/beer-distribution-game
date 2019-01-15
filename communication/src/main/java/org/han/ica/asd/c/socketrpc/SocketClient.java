@@ -144,12 +144,12 @@ public class SocketClient {
             }
         }
 
-//        try {
-//            cdl.await();
-//        } catch (InterruptedException e) {
-//            logger.log(Level.SEVERE, e.getMessage(), e);
-//            Thread.currentThread().interrupt();
-//        }
+        try {
+            cdl.await();
+        } catch (InterruptedException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            Thread.currentThread().interrupt();
+        }
         return map;
     }
 }

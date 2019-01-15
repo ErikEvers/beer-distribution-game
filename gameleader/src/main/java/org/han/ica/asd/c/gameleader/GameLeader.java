@@ -42,7 +42,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
     @Inject private TurnHandler turnHandler;
-		@Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
+    @Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
     @Inject private static Logger logger; //NOSONAR
 
     private final Provider<BeerGame> beerGameProvider;
@@ -188,12 +188,17 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Then it starts a new round.
      */
     private void allTurnDataReceived() {
-				this.previousRoundData = this.currentRoundData;
+        this.previousRoundData = this.currentRoundData;
         this.currentRoundData = gameLogic.calculateRound(this.currentRoundData, game);
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
-        startNextRound();
+        if (game.getRounds().size() >= game.getConfiguration().getAmountOfRounds() && game.getGameEndDate() == null) {
+            endGame();
+        }
+        if (game.getGameEndDate() == null) {
+            startNextRound();
+        }
     }
 
     public void startGame() throws BeerGameException, TransactionException {
@@ -230,25 +235,21 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      */
     private void startNextRound() {
         //TODO: check if game is done? (round count exceeds config max)
-        if (game.getRounds().size() >= game.getConfiguration().getAmountOfRounds()) {
-            endGame();
-        }
-        while (game.getGameEndDate().isEmpty()) {
-            roundId++;
+        roundId++;
 
-            currentRoundData.setRoundId(roundId);
-            turnsReceivedInCurrentRound = 0;
+        currentRoundData.setRoundId(roundId);
+        turnsReceivedInCurrentRound = 0;
 
-            try {
-                connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
-            } catch (TransactionException e) {
-                logger.log(Level.SEVERE, e.getMessage(), e);
-            }
+        try {
+            connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+        } catch (TransactionException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+
         }
     }
 
     private void endGame() {
-        game.setGameDate(LocalDateTime.now().toString());
+        game.setGameEndDate(LocalDateTime.now().toString());
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "Game over");
         alert.showAndWait();
     }

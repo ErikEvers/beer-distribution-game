@@ -130,7 +130,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
             GameLeader leader = gameLeaderProvider.get();
             leader.init(externalIP, createdRoom, beerGame);
-            leaderIp = "25.20.29.75";
+            leaderIp = "213.127.118.19";
 
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -284,7 +284,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "127.0.0.1";
+        return "213.127.118.19";
     }
 
     /**
