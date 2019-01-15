@@ -40,9 +40,9 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     public List<String> readInputBusinessRules(String agentName) {
         List<String> returnBusinessRules = new ArrayList<>();
         List<ProgrammedBusinessRules> businessRules = programmedBusinessRulesDao.readAllProgrammedBusinessRulesFromAProgrammedAgent(agentName);
-        for(ProgrammedBusinessRules businessRules1 : businessRules){
-            returnBusinessRules.add(businessRules1.getProgrammedBusinessRule());
-        }
+
+        businessRules.forEach((businessRule) -> returnBusinessRules.add(businessRule.getProgrammedBusinessRule()));
+
         return returnBusinessRules;
     }
 
@@ -57,11 +57,11 @@ public class BusinessRuleStore implements IBusinessRuleStore {
 
         programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
 
-        for (Map.Entry<String, String> businessRule : businessRuleMap.entrySet()){
-            programmedBusinessRule.setProgrammedBusinessRule(businessRule.getKey());
-            programmedBusinessRule.setProgrammedAST(businessRule.getValue());
+        businessRuleMap.forEach((key, value) -> {
+            programmedBusinessRule.setProgrammedBusinessRule(key);
+            programmedBusinessRule.setProgrammedAST(value);
             programmedBusinessRulesDao.createProgrammedbusinessRule(programmedBusinessRule, agentName);
-        }
+        });
     }
 
     /**
