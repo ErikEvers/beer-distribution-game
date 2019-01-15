@@ -13,7 +13,6 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ public class GameLogicTest {
     private IGameStore persistence;
     private IPlayerRoundListener player;
     private Round round;
-    private BeerGame beerGameMock;
 
     @BeforeEach
     void setup() {
