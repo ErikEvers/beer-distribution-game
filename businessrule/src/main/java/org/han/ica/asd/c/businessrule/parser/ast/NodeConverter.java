@@ -4,17 +4,17 @@ import com.google.inject.Inject;
 import org.han.ica.asd.c.businessrule.parser.ast.action.ActionReference;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class NodeConverter {
     @Inject
     @Named("BusinessruleStore")
     private IBusinessRuleStore businessRuleStore;
 
-    public static final int FIRSTFACILITYABOVEBELOW = -1;
-    private static final int FACILITYNOTFOUND = -404;
+    public static final int FIRST_FACILITY_ABOVE_BELOW = -1;
+    private static final int FACILITY_NOT_FOUND = -404;
 
     public NodeConverter() {
         //Empty constructor for Guice
@@ -45,12 +45,11 @@ public class NodeConverter {
     }
 
     private List<List<String>> sortFacilities(List<List<String>> facilities){
-        List<List<String>> returnList = new ArrayList<>();
-        for (List<String> facility : facilities) {
-            Collections.sort(facility);
-            returnList.add(facility);
-        }
-        return returnList;
+        return facilities.stream()
+            .map(facility -> facility.stream()
+                .sorted(Comparator.comparingInt(Integer::parseInt))
+                .collect(Collectors.toList()))
+            .collect(Collectors.toList());
     }
 
     /***
@@ -61,7 +60,7 @@ public class NodeConverter {
     private int separateFacilityId(String facility) {
         String[] stringSplit = facility.split(" ");
         if (stringSplit.length > 1) {
-            return Integer.parseInt(stringSplit[stringSplit.length-1]) - 1;
+            return Integer.parseInt(stringSplit[stringSplit.length - 1]) - 1;
         }
         return 0;
     }
@@ -71,25 +70,25 @@ public class NodeConverter {
 
         for (int i = 0; i < facilities.size(); i++) {
             if(facilities.get(i).contains(String.valueOf(ownFacilityId))){
-                return getFacilityIdByAction(actionName,i);
+                return getFacilityIdByAction(actionName, i, ownFacilityId);
             }
         }
 
-        return FACILITYNOTFOUND;
+        return FACILITY_NOT_FOUND;
     }
 
-    private int getFacilityIdByAction(ActionReference actionName, int facility) {
+    private int getFacilityIdByAction(ActionReference actionName, int facility , int ownFacilityId) {
         if("order".equals(actionName.getAction())){
             if(facility == FacilityType.FACTORY.getIndex()){
-                return 0;
+                return ownFacilityId;
             } else {
-                return FIRSTFACILITYABOVEBELOW;
+                return FIRST_FACILITY_ABOVE_BELOW;
             }
         } else {
             if(facility == FacilityType.RETAILER.getIndex()){
-                return 0;
+                return ownFacilityId;
             } else {
-                return FIRSTFACILITYABOVEBELOW;
+                return FIRST_FACILITY_ABOVE_BELOW;
             }
         }
     }

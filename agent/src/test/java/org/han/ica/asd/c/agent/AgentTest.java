@@ -352,30 +352,42 @@ class AgentTest {
 	}
 
 	@Test
-	void testResolveLowerFacilityIdExpectsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	void testResolveLowerFacilityIdExpectsNull() throws NoSuchMethodException {
 		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
-		Method method = agent.getClass().getDeclaredMethod(RESOLVE_LOWER_FACILITY_ID, int.class);
+		Method method = Agent.class.getDeclaredMethod(RESOLVE_LOWER_FACILITY_ID, int.class);
 		method.setAccessible(true);
-		Facility resultFacility = (Facility) method.invoke(agent, upperFacility.getFacilityId());
-		assertNull(resultFacility);
+
+		assertThrows(FacilityNotFound.class, () -> {
+			try {
+				method.invoke(agent, upperFacility.getFacilityId());
+			} catch (InvocationTargetException exception) {
+				throw exception.getCause();
+			}
+		}, "Facility with ID: 0 is not found.");
 	}
 
 	@Test
 	void testResolveHigherFacilityIdExpectsMockedFacility() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
-		Method method = agent.getClass().getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
+		Method method = Agent.class.getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, upperFacility.getFacilityId());
 		assertNotNull(resultFacility);
 	}
 
 	@Test
-	void testResolveHigherFacilityIdExpectsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	void testResolveHigherFacilityIdExpectsNull() throws NoSuchMethodException {
 		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
-		Method method = agent.getClass().getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
+		Method method = Agent.class.getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
 		method.setAccessible(true);
-		Facility resultFacility = (Facility) method.invoke(agent, lowerFacility.getFacilityId());
-		assertNull(resultFacility);
+
+		assertThrows(FacilityNotFound.class, () -> {
+			try {
+				method.invoke(agent, lowerFacility.getFacilityId());
+			} catch (InvocationTargetException exception) {
+				throw exception.getCause();
+			}
+		}, "Facility with ID: 2 is not found.");
 	}
 
 	@Test
