@@ -99,7 +99,7 @@ class BusinessRuleTest {
         List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
         round = Mockito.mock(Round.class);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             createTurnDeliver(i, facilityTurnDelivers);
             createTurnOrder(i, facilityTurnOrders);
             createTurn(i, facilityTurns);
@@ -241,7 +241,7 @@ class BusinessRuleTest {
     @Test
     void replaceFactoryWithHighest() {
         String input = "if inventory is 20 then order 20 from factory where inventory is highest";
-        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(5)))";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
         assertEquals(expected, businessRule.encode());
@@ -250,7 +250,7 @@ class BusinessRuleTest {
     @Test
     void replaceRetailerWithLowest() {
         String input = "if inventory is 20 then order 20 from retailer where ordered is lowest";
-        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
         assertEquals(expected, businessRule.encode());
@@ -269,7 +269,7 @@ class BusinessRuleTest {
     @Test
     void replaceRegionalWarehouseWithLowest() {
         String input = "if inventory is 20 then order 20 from retailer where back orders is lowest";
-        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
         assertEquals(expected, businessRule.encode());
@@ -278,7 +278,7 @@ class BusinessRuleTest {
     @Test
     void replaceRegionalWarehouseWithLowestIncomingOrder() {
         String input = "if inventory is 20 then order 20 from retailer where incoming order is lowest";
-        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
         assertEquals(expected, businessRule.encode());
@@ -286,7 +286,7 @@ class BusinessRuleTest {
     @Test
     void replaceRegionalWarehouseWithLowestOutGoingGoodsOrder() {
         String input = "if inventory is 20 then order 20 from wholesaler where outgoing goods is lowest";
-        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(1)))";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(4)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
         assertEquals(expected, businessRule.encode());
@@ -295,7 +295,7 @@ class BusinessRuleTest {
     @Test
     void replaceRegionalWarehouseWithLowestBudget() {
         String input = "if inventory is 20 then order 20 from retailer where budget is lowest";
-        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
         BusinessRule businessRule = parseString(input);
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
         assertEquals(expected, businessRule.encode());

@@ -589,7 +589,6 @@ class AgentIntegrationTest {
         assertEquals(expectedDeliver, actualDeliver);
     }
 
-
     @Test
     void testGraphPlayMakeshiftGameOf10TurnsWith15AgentsContainingDefaultBusinessRules() {
         //Order business rules
