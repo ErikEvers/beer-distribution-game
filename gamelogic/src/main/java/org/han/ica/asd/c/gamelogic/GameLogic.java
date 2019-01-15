@@ -197,6 +197,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private void sendRoundActionFromAgents() {
         for (IParticipant participant : participantsPool.getParticipants()) {
             Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             communication.sendTurnData(round);
         }
         if (isBotGame()) {

@@ -47,7 +47,7 @@ public class SocketClient {
      * @throws ClassNotFoundException
      */
     public Object sendObjectWithResponse(String ip, Object object) throws IOException, ClassNotFoundException {
-        if (ip.equals("25.20.29.75")) {
+        if (ip.equals("127.0.0.1")) {
             return SocketServer.serverObserver.serverObjectReceived(object, ip);
         }
 
@@ -144,12 +144,12 @@ public class SocketClient {
             }
         }
 
-        try {
-            cdl.await();
-        } catch (InterruptedException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-            Thread.currentThread().interrupt();
-        }
+//        try {
+//            cdl.await();
+//        } catch (InterruptedException e) {
+//            logger.log(Level.SEVERE, e.getMessage(), e);
+//            Thread.currentThread().interrupt();
+//        }
         return map;
     }
 }

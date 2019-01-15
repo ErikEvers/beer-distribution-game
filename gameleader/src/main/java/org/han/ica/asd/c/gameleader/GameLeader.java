@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.gameleader;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
@@ -26,6 +29,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -226,15 +230,27 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      */
     private void startNextRound() {
         //TODO: check if game is done? (round count exceeds config max)
-        roundId++;
-        currentRoundData.setRoundId(roundId);
-        turnsReceivedInCurrentRound = 0;
+        if (game.getRounds().size() >= game.getConfiguration().getAmountOfRounds()) {
+            endGame();
+        }
+        while (game.getGameEndDate().isEmpty()) {
+            roundId++;
 
-				try {
-					connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
-				} catch (TransactionException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
+            currentRoundData.setRoundId(roundId);
+            turnsReceivedInCurrentRound = 0;
+
+            try {
+                connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+            } catch (TransactionException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+    }
+
+    private void endGame() {
+        game.setGameDate(LocalDateTime.now().toString());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Game over");
+        alert.showAndWait();
     }
 
     /**
