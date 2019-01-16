@@ -43,7 +43,6 @@ public class ReplayGameListController {
      * Function for initialising the current ProgramAgentInfo FXML. It also sets the actions of the button to close current window on click.
      */
     public void initialize() {
-//TODO INJECT PRESSICTENCE AND GET ALL GAMES.
         ObservableList<BeerGame> items = FXCollections.observableArrayList(retrieveReplayData.getAllBeerGames());
 
         list.setCellFactory( list -> {
