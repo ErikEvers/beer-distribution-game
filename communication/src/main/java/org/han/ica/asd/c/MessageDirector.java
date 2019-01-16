@@ -17,7 +17,7 @@ public class MessageDirector implements IServerObserver {
     private GameMessageReceiver gameMessageReceiver;
 
     @Inject
-    private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
+    private static FaultDetectionMessageReceiver faultDetectionMessageReceiver;
 
 
     public MessageDirector() {
@@ -50,7 +50,7 @@ public class MessageDirector implements IServerObserver {
         this.gameMessageReceiver = gameMessageReceiver;
     }
 
-    public void setFaultDetectionMessageReceiver(FaultDetectionMessageReceiver faultDetectionMessageReceiver) {
-        this.faultDetectionMessageReceiver = faultDetectionMessageReceiver;
+    public static void setFaultDetectionMessageReceiver(FaultDetectionMessageReceiver faultDetectionMessageReceiver) {
+        MessageDirector.faultDetectionMessageReceiver = faultDetectionMessageReceiver;
     }
 }
