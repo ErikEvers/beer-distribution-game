@@ -3,6 +3,7 @@ package org.han.ica.asd.c.player;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
@@ -67,7 +68,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     @Override
     public void activateAgent(ProgrammedAgent agent) {
         GameAgent gameAgent = gameAgentService.createGameAgentFromProgrammedAgent(getFacility(), agent);
-        gameLogic.letAgentTakeOverPlayer((IParticipant) gameAgent);
+        gameLogic.letAgentTakeOverPlayer((Agent) gameAgent);
     }
 
     @Override
