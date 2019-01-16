@@ -78,6 +78,10 @@ public abstract class PlayGame implements IPlayGame {
     @Named("PlayerComponent")
     protected IPlayerComponent playerComponent;
 
+    @Inject
+    @Named("SelectAgent")
+    private IGUIHandler selectAgent;
+
     @FXML
     protected TextField incomingGoodsNextRound;
 
@@ -195,6 +199,11 @@ public abstract class PlayGame implements IPlayGame {
             playerComponent.placeOrder(facility, order);
             refillOrdersList();
         }
+    }
+
+    @FXML
+    protected void handleUseAgentButtonAction(){
+        selectAgent.setupScreen();
     }
 
     @FXML

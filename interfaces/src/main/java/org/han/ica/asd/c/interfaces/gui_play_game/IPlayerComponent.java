@@ -5,13 +5,14 @@ import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
 
 public interface IPlayerComponent {
     void activatePlayer();
-    void activateAgent();
+    void activateAgent(ProgrammedAgent agent);
     BeerGame getBeerGame();
     Round getRound();
     void placeOrder(Facility facility, int amount);

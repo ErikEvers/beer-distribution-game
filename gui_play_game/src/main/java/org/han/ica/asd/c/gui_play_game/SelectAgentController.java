@@ -9,7 +9,6 @@ import javafx.scene.control.ListView;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,7 +25,6 @@ public class SelectAgentController {
     Label headerText;
 
     @Inject
-    @Named("BusinessruleStore")
     IBusinessRuleStore iBusinessRuleStore;
 
     @Inject
@@ -39,8 +37,6 @@ public class SelectAgentController {
 
     private ObservableList<String> items = FXCollections.observableArrayList();
 
-    private Facility facility;
-
     public void initialize() {
         list.setItems(items);
         List<String> agents = iBusinessRuleStore.getAllProgrammedAgents();
@@ -51,7 +47,7 @@ public class SelectAgentController {
     @FXML
     public void selectAgentButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
-        iPlayerComponent.activateAgent();
+        iPlayerComponent.activateAgent(iBusinessRuleStore.getProgrammedGameAgent(selectedAgent.toString()));
         headerText.setText("Agent selected: " +selectedAgent.toString());
         list.setVisible(false);
         selectAgentButton.setVisible(false);
@@ -67,9 +63,5 @@ public class SelectAgentController {
     public void rejoinGameButtonAction() {
         iPlayerComponent.activatePlayer();
         playGameFactory.setupScreen();
-    }
-
-    public void setFacility(Facility facility){
-        this.facility = facility;
     }
 }
