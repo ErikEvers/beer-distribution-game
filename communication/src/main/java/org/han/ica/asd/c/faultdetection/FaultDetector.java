@@ -19,6 +19,7 @@ import java.util.List;
 public class FaultDetector {
 
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
+
     @Inject
     private FaultDetectorPlayer faultDetectorPlayer;
     @Inject
