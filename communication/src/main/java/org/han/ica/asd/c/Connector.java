@@ -345,7 +345,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             InetAddress ip = addresses.nextElement();
             if (ip instanceof Inet4Address) {
                 String displayName = networkInterface.getDisplayName();
-                if(!displayName.contains("Virtual")) {
+                if(!displayName.contains("Virtual") || "LogMeIn Hamachi Virtual Ethernet Adapter".equals(displayName)) {
                     String ipAddress = ip.getHostAddress();
                     ips.put(networkInterface.getName(), ipAddress);
                 }
