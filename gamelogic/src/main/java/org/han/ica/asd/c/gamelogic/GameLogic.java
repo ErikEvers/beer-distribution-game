@@ -174,7 +174,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         player.roundStarted();
     }
 
-    private void sendRoundForAgent(IParticipant participant){
+    public void sendRoundForAgent(IParticipant participant){
         Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
         try {
             communication.sendTurnData(round);

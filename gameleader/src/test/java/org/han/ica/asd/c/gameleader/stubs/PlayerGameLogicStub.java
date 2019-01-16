@@ -5,6 +5,7 @@ import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class PlayerGameLogicStub implements IPlayerGameLogic {
     }
 
     @Override
-    public void letAgentTakeOverPlayer(IParticipant agent) {
+    public void letAgentTakeOverPlayer(GameAgent agent) {
 
     }
 
