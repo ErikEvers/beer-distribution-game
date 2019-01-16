@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_play_game.PlayGameFactoryController">
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.han.ica.asd.c.gui_play_game.PlayGameFactoryController">
     <children>
         <GridPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -150,7 +150,7 @@
                         <Insets top="20.0" />
                     </GridPane.margin>
                 </Button>
-                <Button mnemonicParsing="false" fx:id="useAgentButton"  style="-fx-background-color: #ff8000;" onAction="#handleUseAgentButtonAction" text="Use agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="useAgentButton" mnemonicParsing="false" onAction="#handleUseAgentButtonAction" style="-fx-background-color: #ff8000;" text="Use agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="150.0" top="20.0" />
                     </GridPane.margin>
@@ -187,6 +187,11 @@
                         <Insets right="20.0" top="260.0" />
                     </GridPane.margin>
                 </Button>
+            <Label fx:id="roundLabel" alignment="BOTTOM_LEFT" text="[Round]" GridPane.columnIndex="2">
+               <font>
+                  <Font size="50.0" />
+               </font>
+            </Label>
             </children>
         </GridPane>
     </children>

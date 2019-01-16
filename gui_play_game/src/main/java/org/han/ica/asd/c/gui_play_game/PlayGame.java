@@ -107,6 +107,9 @@ public abstract class PlayGame implements IPlayGame {
     protected Button deleteOrderButton;
 
     @FXML
+    protected Label roundLabel;
+
+    @FXML
     protected Button deleteDeliveryButton;
 
     @FXML
@@ -282,6 +285,8 @@ public abstract class PlayGame implements IPlayGame {
 				currentAlert.show();
 				submitTurnButton.setDisable(false);
 				useAgentButton.setDisable(false);
+				roundLabel.setText("Round: "+roundId);
+
     }
 
     protected void refillOrdersList() {
