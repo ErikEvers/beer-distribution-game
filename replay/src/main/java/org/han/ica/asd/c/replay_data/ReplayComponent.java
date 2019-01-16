@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ReplayComponent implements IVisualisedPlayedGameData {
-    private static final int LOWEST_ROUND_POSSIBLE = 0;
+    private static final int LOWEST_ROUND_POSSIBLE = 1;
     private static final int FIRST_ROUND_TO_DISPLAY = 1;
     private Facility displayedFacility;
     private List<GameValue> displayedAverages;
