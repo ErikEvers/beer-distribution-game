@@ -120,7 +120,7 @@ public class BeergameDAO {
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
-				leaderDAO.insertLeader(beerGame.getLeader().getPlayer());
+				leaderDAO.insertLeader(beerGame.getLeader());
 
 
 				} catch (SQLException e) {
@@ -136,8 +136,8 @@ public class BeergameDAO {
 		roundDAO.updateRounds(beerGame.getRounds());
 		playerDAO.updatePlayers(beerGame.getPlayers());
 		gameAgentDAO.updateGameagents(beerGame.getAgents());
-		leaderDAO.updateLeader(beerGame.getLeader().getPlayer());
-		}
+		leaderDAO.updateLeader(beerGame.getLeader());
+	}
 
 
 	/**
