@@ -100,7 +100,7 @@ public class ProgrammedBusinessRulesDAO {
             }
         }
 
-        return programmedBusinessRules;
+        return removeSortingIndex(programmedBusinessRules);
     }
 
 
@@ -129,5 +129,19 @@ public class ProgrammedBusinessRulesDAO {
                 databaseConnection.rollBackTransaction(conn);
             }
         }
+    }
+
+    /**
+     * A method that removes the sorting index from all business rules it is given.
+     *
+     * @param businessRules Business rules that it needs to remove the sorting index (e.g. 1.) from
+     * @return Returns the Business rules without the sorting index
+     */
+    private List<ProgrammedBusinessRules> removeSortingIndex(List<ProgrammedBusinessRules> businessRules){
+        for (ProgrammedBusinessRules businessRule : businessRules) {
+            String[] strSplit = businessRule.getProgrammedBusinessRule().split(" ", 2);
+            businessRule.setProgrammedBusinessRule(strSplit[1]);
+        }
+        return businessRules;
     }
 }

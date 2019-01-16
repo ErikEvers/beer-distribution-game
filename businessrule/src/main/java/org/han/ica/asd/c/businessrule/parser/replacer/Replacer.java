@@ -118,7 +118,7 @@ public class Replacer {
             case OUTGOINGGOODS:
                 return getOutgoingGoods(round, facilityId);
             case ROUND:
-                return String.valueOf(round.getRoundId() + 1);
+                return String.valueOf(round.getRoundId());
             default:
                 return "";
         }
