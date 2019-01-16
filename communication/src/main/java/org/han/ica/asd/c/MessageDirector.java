@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import java.io.InvalidObjectException;
 
 public class MessageDirector implements IServerObserver {
-
+    @Inject
     private GameMessageReceiver gameMessageReceiver;
 
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
@@ -30,19 +30,17 @@ public class MessageDirector implements IServerObserver {
      */
     @Override
     public Object serverObjectReceived(Object receivedObject, String senderIp) {
-        if (faultDetectionMessageReceiver != null && gameMessageReceiver != null) {
             if (receivedObject instanceof GameMessage) {
                 GameMessage gameMessage = (GameMessage) receivedObject;
                 return gameMessageReceiver.gameMessageReceived(gameMessage, senderIp);
 
-            } else if (receivedObject instanceof FaultDetectionMessage) {
+            } else if (receivedObject instanceof FaultDetectionMessage && faultDetectionMessageReceiver != null) {
                 FaultDetectionMessage faultDetectionMessage = (FaultDetectionMessage) receivedObject;
                 return faultDetectionMessageReceiver.receiveMessage(faultDetectionMessage, senderIp);
             } else {
                 return new ResponseMessage(false, new InvalidObjectException("Invalid object"));
             }
-        }
-        return new ResponseMessage(false, new InvalidObjectException("Invalid object"));
+
     }
 
     @Override
