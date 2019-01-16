@@ -122,6 +122,8 @@ public abstract class PlayGame implements IPlayGame {
 
     protected boolean agentInUse;
 
+    protected int roundId;
+
 
     /**
      * superInitialization of the two controller subclasses. Has code needed for both initializations.
@@ -216,6 +218,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected void handleUseAgentButtonAction() {
+        selectAgent.setData(new Object[]{roundId});
         selectAgent.setupScreen();
     }
 
@@ -258,6 +261,7 @@ public abstract class PlayGame implements IPlayGame {
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
+        this.roundId =roundId;
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
         int budget = 0;
@@ -330,7 +334,8 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
-    public void setAgentInUse(boolean setInAgent) {
+    public void setAgentInUse(boolean setInAgent,int roundId) {
+        refreshInterfaceWithCurrentStatus(roundId);
         if (setInAgent) {
             agentInUse = true;
             useAgentButton.setDisable(true);

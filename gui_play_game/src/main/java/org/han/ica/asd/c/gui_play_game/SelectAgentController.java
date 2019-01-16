@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
@@ -20,9 +21,9 @@ public class SelectAgentController {
     @FXML
     Button selectAgentButton;
     @FXML
-    Button rejoinGame;
-    @FXML
     Label headerText;
+    @FXML
+    Button backButton;
 
     @Inject
     IBusinessRuleStore iBusinessRuleStore;
@@ -34,6 +35,8 @@ public class SelectAgentController {
     @Inject
     @Named("PlayGame")
     IGUIHandler playGameFactory;
+
+    private int roundId;
 
     private ObservableList<String> items = FXCollections.observableArrayList();
 
@@ -49,10 +52,16 @@ public class SelectAgentController {
     public void selectAgentButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
         iPlayerComponent.activateAgent(iBusinessRuleStore.getProgrammedGameAgent(selectedAgent.toString()));
-        headerText.setText("Agent selected: " + selectedAgent.toString());
-        list.setVisible(false);
-        selectAgentButton.setVisible(false);
-        playGameFactory.setData(new Object[]{true});
+        playGameFactory.setData(new Object[]{true,roundId});
+        playGameFactory.setupScreen();
+    }
+
+    public void setRoundId(int roundId) {
+        this.roundId = roundId;
+    }
+
+    public void backButtonAction() {
+        playGameFactory.setData(new Object[]{true,roundId});
         playGameFactory.setupScreen();
     }
 }
