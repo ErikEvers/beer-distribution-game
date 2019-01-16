@@ -7,6 +7,8 @@ import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
@@ -15,6 +17,7 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
@@ -45,6 +48,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private IGUIHandler playGame;
 
     @Inject
+    private IGameAgentService gameAgentService;
+
+    @Inject
     public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
         this.roundProvider = roundProvider;
         this.facilityTurnOrderProvider = facilityTurnOrderProvider;
@@ -55,12 +61,13 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
 
     @Override
     public void activatePlayer() {
-        throw new UnsupportedOperationException();
+        gameLogic.letPlayerTakeOverAgent();
     }
 
     @Override
     public void activateAgent(ProgrammedAgent agent) {
-        throw new UnsupportedOperationException();
+        GameAgent gameAgent = gameAgentService.createGameAgentFromProgrammedAgent(getFacility(), agent);
+        gameLogic.letAgentTakeOverPlayer((IParticipant) gameAgent);
     }
 
     @Override

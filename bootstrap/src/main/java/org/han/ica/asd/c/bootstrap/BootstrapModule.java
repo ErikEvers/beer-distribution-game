@@ -15,7 +15,7 @@ import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gameconfiguration.GameAgentService;
-import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
+import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.gui_configure_game.assign_agents_to_facilities.AssignAgents;
