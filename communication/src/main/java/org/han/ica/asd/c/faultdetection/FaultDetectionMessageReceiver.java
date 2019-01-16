@@ -35,7 +35,7 @@ public class FaultDetectionMessageReceiver {
      * @see FaultDetector
      */
     public Object receiveMessage(FaultDetectionMessage faultDetectionMessage, String senderIp) {
-        if(faultDetector != null) {
+        if (faultDetector != null) {
             switch (faultDetectionMessage.getMessageId()) {
                 case 1:
                     faultDetector.faultMessageReceived((FaultMessage) faultDetectionMessage, senderIp);
