@@ -17,6 +17,7 @@ import java.util.List;
  *
  * @author Oscar, Tarik
  */
+@Singleton
 public class FaultDetector {
 
     private static FaultDetectionMessageReceiver faultDetectionMessageReceiver;
@@ -34,9 +35,9 @@ public class FaultDetector {
     public FaultDetector(FaultDetectionMessageReceiver receiver) {
         if(FaultDetector.faultDetectionMessageReceiver == null) {
             //For inject purposes
-            receiver.setFaultDetector(this);
             FaultDetector.faultDetectionMessageReceiver = receiver;
         }
+        faultDetectionMessageReceiver.setFaultDetector(this);
     }
 
     /**
