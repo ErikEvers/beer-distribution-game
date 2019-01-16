@@ -41,12 +41,12 @@ public class GameBusinessRulesInFacilityTurnDAO {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
 				conn.setAutoCommit(false);
 
-				for (GameBusinessRules gamebusinessrule: gameBusinessRulesInFacilityTurn.getGameBusinessRulesList()) {
+				for (GameBusinessRules gamebusinessrule : gameBusinessRulesInFacilityTurn.getGameBusinessRulesList()) {
 					pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
 					pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityId());
 					pstmt.setString(3, DaoConfig.getCurrentGameId());
 					pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameAgentName());
-					pstmt.setString(5, gamebusinessrule.toString());
+					pstmt.setString(5, gamebusinessrule.getGameBusinessRule());
 					pstmt.setString(6, gamebusinessrule.getGameAST());
 
 					pstmt.execute();

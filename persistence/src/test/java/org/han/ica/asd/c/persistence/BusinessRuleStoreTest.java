@@ -39,7 +39,7 @@ class BusinessRuleStoreTest {
     private static final ProgrammedAgent PROGRAMMED_AGENT = new ProgrammedAgent(PROGRAMMED_AGENT_NAME, programmedBusinessRules);
     private static Map<String, String> businessRuleMap = new HashMap<>();
     private static final FacilityType FACTORYTYPE = new FacilityType("Factory", 1, 1, 1, 1, 1, 1, 1);
-    private static final FacilityType DISTRIBUTORTYPE = new FacilityType("Distributor", 1, 1, 1, 1, 1, 1, 1);
+    private static final FacilityType DISTRIBUTORTYPE = new FacilityType("Regional Warehouse", 1, 1, 1, 1, 1, 1, 1);
     private static final FacilityType WHOLESALERTYPE = new FacilityType("Wholesaler", 1, 1, 1, 1, 1, 1, 1);
     private static final FacilityType RETAILERTYPE = new FacilityType("Retailer", 1, 1, 1, 1, 1, 1, 1);
     private static final Facility FACTORY = new Facility(FACTORYTYPE, 1);

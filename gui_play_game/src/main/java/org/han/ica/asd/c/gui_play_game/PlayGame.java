@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -159,6 +158,18 @@ public abstract class PlayGame implements IPlayGame {
 
     public abstract void fillComboBox();
 
+    private void initDeliverBox() {
+        if (cmbChooseOutgoingDelivery != null && !cmbChooseOutgoingDelivery.getItems().isEmpty() ) {
+            cmbChooseOutgoingDelivery.getSelectionModel().selectFirst();
+        }
+    }
+
+    private void initOrderBox() {
+        if (comboBox != null && !comboBox.getItems().isEmpty()) {
+            comboBox.getSelectionModel().selectFirst();
+        }
+    }
+
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
         List<Facility> facilities = new ArrayList<>();
 
@@ -175,12 +186,14 @@ public abstract class PlayGame implements IPlayGame {
 				ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
 				facilityListView.addAll(facilities);
 				comboBox.setItems(facilityListView);
+				initDeliverBox();
     }
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
 				facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
 				comboBox.setItems(facilityListView);
+				initOrderBox();
     }
 
     /**
@@ -189,22 +202,18 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected void handleSendOrderButtonClick() {
         if (!outgoingOrderTextField.getText().isEmpty() && comboBox.getValue() != null) {
-            int order = Integer.parseInt(outgoingOrderTextField.getText());
-            Facility facility = comboBox.getValue();
-            outgoingOrderTextField.clear();
-            playerComponent.placeOrder(facility, order);
+            playerComponent.placeOrder(comboBox.getValue(), Integer.parseInt(outgoingOrderTextField.getText()));
             refillOrdersList();
+            outgoingOrderTextField.clear();
         }
     }
 
     @FXML
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
-            Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
-            int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
-            txtOutgoingDelivery.clear();
-            playerComponent.sendDelivery(chosenFacility, delivery);
+            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), Integer.parseInt(txtOutgoingDelivery.getText()));
             refillDeliveriesList();
+            txtOutgoingDelivery.clear();
         }
     }
 
@@ -270,21 +279,19 @@ public abstract class PlayGame implements IPlayGame {
 
     protected void refillOrdersList() {
         orderFacilities.clear();
-        Facility ownFacility = playerComponent.getPlayer().getFacility();
 
-        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order ->
+        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()).forEach(order ->
                 orderFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(order.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
     }
 
     protected void refillDeliveriesList() {
         deliverFacilities.clear();
-        Facility ownFacility = playerComponent.getPlayer().getFacility();
-        playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == ownFacility.getFacilityId()).forEach(deliver ->
+        playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()).forEach(deliver ->
                 deliverFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(deliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
     }
 
     @FXML
-    public void deletePlacedOrder(ActionEvent actionEvent) {
+    public void deletePlacedOrder() {
         int index = orderList.getItems().indexOf(orderList.getSelectionModel().getSelectedItem());
         if (index >= 0) {
             playerComponent.getRound().getFacilityOrders().remove(index);
@@ -293,7 +300,7 @@ public abstract class PlayGame implements IPlayGame {
     }
 
     @FXML
-    public void deletePlacedDelivery(ActionEvent actionEvent) {
+    public void deletePlacedDelivery() {
         int index = deliverList.getItems().indexOf(deliverList.getSelectionModel().getSelectedItem());
         if (index >= 0) {
             playerComponent.getRound().getFacilityTurnDelivers().remove(index);
