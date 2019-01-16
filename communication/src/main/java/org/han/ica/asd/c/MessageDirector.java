@@ -16,6 +16,7 @@ public class MessageDirector implements IServerObserver {
     @Inject
     private GameMessageReceiver gameMessageReceiver;
 
+    @Inject
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
 
 
