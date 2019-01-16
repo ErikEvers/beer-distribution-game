@@ -53,7 +53,6 @@ import org.han.ica.asd.c.persistence.BusinessRuleStore;
 import org.han.ica.asd.c.persistence.Persistence;
 import org.han.ica.asd.c.player.PlayerComponent;
 import org.han.ica.asd.c.replay_data.ReplayComponent;
-import org.han.ica.asd.c.replay_data.fakes.TMP;
 import org.han.ica.asd.c.socketrpc.IServerObserver;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.han.ica.asd.c.socketrpc.SocketServer;
@@ -69,8 +68,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
 		bind(IGameAgentService.class).to(GameAgentService.class);
 		bind(IPlayerGameLogic.class).to(GameLogic.class);
-        //todo: TMP vervangen met daadwerkelijke implementatie
-		bind(IRetrieveReplayData.class).to(TMP.class);
+		bind(IRetrieveReplayData.class).to(Persistence.class);
 		bind(IVisualisedPlayedGameData.class).to(ReplayComponent.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IPersistence.class).to(Persistence.class);
