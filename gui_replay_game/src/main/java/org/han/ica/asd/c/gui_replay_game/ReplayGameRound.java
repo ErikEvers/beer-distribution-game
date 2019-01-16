@@ -9,25 +9,27 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 public class ReplayGameRound implements IGUIHandler {
     private String gameId;
     private int currentRound;
+
     @Override
     public void setData(Object[] data) {
-        if (data[0] instanceof BeerGame){
+        if (data[0] instanceof BeerGame) {
             BeerGame game = (BeerGame) data[0];
             this.gameId = game.getGameId();
-        }
-        else if (data[0] instanceof Integer){
+        } else if (data[0] instanceof Integer) {
             this.currentRound = (int) data[0];
         }
     }
 
     @Override
     public void setupScreen() {
-        ReplayGameRoundController replayGameRoundController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameRoundScreen.fxml"));
-        if (gameId != null){
+        boolean gameIdNotNull = false;
+        if (gameId != null) {
             DaoConfig.setCurrentGameId(gameId);
+            gameIdNotNull = true;
         }
-        else{
+        ReplayGameRoundController replayGameRoundController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameRoundScreen.fxml"));
+
+        if (!gameIdNotNull)
             replayGameRoundController.setCurrentRound(currentRound);
-        }
     }
 }
