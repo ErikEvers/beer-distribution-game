@@ -235,6 +235,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         List<Player> playerList = persistence.getGameLog().getPlayers();
         Leader leader = persistence.getGameLog().getLeader();
         nodeInfoList.init(playerList, leader);
+        nodeInfoList.setMyIp(internalIP);
     }
 
     public void startFaultDetector() {
