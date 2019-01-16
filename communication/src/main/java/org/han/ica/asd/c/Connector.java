@@ -110,6 +110,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
         faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
+        GameMessageReceiver.setConnector(this);
 
         messageDirector.setGameMessageReceiver(gameMessageReceiver);
         messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
