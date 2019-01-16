@@ -132,7 +132,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return new ArrayList<>();
     }
 
-
     public RoomModel createRoom(String roomName, String password, BeerGame beerGame) {
         try {
             RoomModel createdRoom = finder.createGameRoomModel(roomName, internalIP, password);

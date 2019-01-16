@@ -17,6 +17,7 @@ import java.util.List;
  *
  * @author Oscar, Tarik
  */
+@Singleton
 public class FaultDetector {
 
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
