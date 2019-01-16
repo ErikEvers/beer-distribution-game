@@ -16,6 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +40,7 @@ public class BeerGameDAOIntegrationTest {
 		player = new Player();
 		player.setPlayerId("1");
 		leader = new Leader(player);
-
+		leader.setTimestamp(LocalDateTime.now().toString());
 		beerGame.setLeader(leader);
 		DBConnectionTest.getInstance().cleanup();
 		DBConnectionTest.getInstance().createNewDatabase();

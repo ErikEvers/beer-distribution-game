@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.gui_configure_game.graphutil;
+package org.han.ica.asd.c.gui_configure_game.graphUtil;
 
 import org.han.ica.asd.c.gui_configure_game.graph.*;
 import org.han.ica.asd.c.model.domain_objects.Facility;

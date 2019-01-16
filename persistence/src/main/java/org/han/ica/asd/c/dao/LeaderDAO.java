@@ -33,7 +33,7 @@ public class LeaderDAO {
 
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				pstmt.setString(2, leader.getPlayer().getPlayerId());
-				if(leader.getTimestamp() != "") {
+				if(!leader.getTimestamp().equals("")) {
 					pstmt.setString(3, leader.getTimestamp());
 				} else {
 					pstmt.setString(3, new Date().toString());
@@ -81,7 +81,7 @@ public class LeaderDAO {
 				conn.setAutoCommit(false);
 
 				pstmt.setString(1, leader.getPlayer().getPlayerId());
-				if(leader.getTimestamp() != "") {
+				if(!leader.getTimestamp().equals("")) {
 					pstmt.setString(2, leader.getTimestamp());
 				} else {
 					pstmt.setString(2, new Date().toString());
