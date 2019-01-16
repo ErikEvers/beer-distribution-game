@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Leader implements IDomainModel, Serializable {
     private Player player;
-    private String timestamp;
+    private String timestamp = "";
 
     public Leader(Player player) {
         this.player = player;

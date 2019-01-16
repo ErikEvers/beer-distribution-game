@@ -35,6 +35,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+/**
+ * Standard class for all the facility interfaces when in-game
+ */
 public abstract class PlayGame implements IPlayGame {
     @FXML
     private GridPane playGridPane;
@@ -111,7 +114,7 @@ public abstract class PlayGame implements IPlayGame {
      */
     protected void superInitialize() {
         mainContainer.getChildren().addAll();
-        playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
+        playGridPane.setStyle("-fx-border-style: solid inside; -fx-border-color: black; -fx-border-radius: 40;");
 
         //Make sure only numbers can be filled in the order textBox. This is done using a textFormatter
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
@@ -125,21 +128,31 @@ public abstract class PlayGame implements IPlayGame {
         deliverFacilities = FXCollections.observableArrayList();
     }
 
+    /**
+     * Retrieves a formatter that can be applied to text fields to ensure numbers only
+     * @return
+     * The text formatter
+     */
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
         return change -> {
                 String newText = change.getControlNewText();
-                if (newText.matches("-?([0-9]*)?")){
+                if (newText.matches("([0-9]*)?")){
                     return change;
                 }
                 return null;
             };
     }
 
+    /**
+     * Replaces the current screen with the graph view of the facilities in the current game
+     */
     public void seeOtherFacilitiesButtonClicked() {
         seeOtherFacilities.setupScreen();
     }
 
-
+    /**
+     * Replaces the current screen with the activity log
+     */
 		public void handleSeeActivityLogButtonClicked() {
     	Parent parent;
     	try {
@@ -156,6 +169,9 @@ public abstract class PlayGame implements IPlayGame {
 			}
 		}
 
+    /**
+     * Fills the comboboxes with the correct facilities
+     */
     public abstract void fillComboBox();
 
     private void initDeliverBox() {
@@ -170,6 +186,11 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    /**
+     * Fill the outgoing delivery combobox
+     * @param comboBox
+     * Combobox to be filled
+     */
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
         List<Facility> facilities = new ArrayList<>();
 
@@ -189,6 +210,11 @@ public abstract class PlayGame implements IPlayGame {
 				initDeliverBox();
     }
 
+    /**
+     * Fill the outgoing order combobox
+     * @param comboBox
+     * Combobox to be filled
+     */
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
 				facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
@@ -208,6 +234,9 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    /**
+     * Button event handling the delivery sending
+     */
     @FXML
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
@@ -217,10 +246,24 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    /**
+     * Concatenates the facility and order/delivery
+     * @param facilityName
+     * The facility where the order/delivery is going to
+     * @param facilityid
+     * The ID of the facility the order/delivery is going to
+     * @param amount
+     * The amount to be delivered/ordered
+     * @return
+     * The concatenated string with the above data. Inteded for use in ListViews.
+     */
     protected String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
         return facilityName.concat(" id: " + Integer.toString(facilityid)).concat(" Amount: " + Integer.toString(amount));
     }
 
+    /**
+     * Button event that submits the current round to the gameleader
+     */
     @FXML
     protected void submitTurnButtonClicked() {
 				submitTurnButton.setDisable(true);
@@ -241,6 +284,11 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    /**
+     * Refreshes the current view with the correct round data
+     * @param roundId
+     * The round to use for the refresh
+     */
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
         BeerGame beerGame = playerComponent.getBeerGame();
@@ -275,8 +323,13 @@ public abstract class PlayGame implements IPlayGame {
 				currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
 				currentAlert.show();
 				submitTurnButton.setDisable(false);
+				refillOrdersList();
+				refillDeliveriesList();
     }
 
+    /**
+     * Refills the orders list with the current orders for this turn
+     */
     protected void refillOrdersList() {
         orderFacilities.clear();
 
@@ -284,14 +337,20 @@ public abstract class PlayGame implements IPlayGame {
                 orderFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(order.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
     }
 
+    /**
+     * Refills the deliveries list with the current deliveries for this turn
+     */
     protected void refillDeliveriesList() {
         deliverFacilities.clear();
         playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()).forEach(deliver ->
                 deliverFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(deliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
     }
 
+    /**
+     * Deletes an order from the order list view
+     */
     @FXML
-    public void deletePlacedOrder() {
+    protected void deletePlacedOrder() {
         int index = orderList.getItems().indexOf(orderList.getSelectionModel().getSelectedItem());
         if (index >= 0) {
             playerComponent.getRound().getFacilityOrders().remove(index);
@@ -299,8 +358,11 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    /**
+     * Deletes a delivery from the list view
+     */
     @FXML
-    public void deletePlacedDelivery() {
+    protected void deletePlacedDelivery() {
         int index = deliverList.getItems().indexOf(deliverList.getSelectionModel().getSelectedItem());
         if (index >= 0) {
             playerComponent.getRound().getFacilityTurnDelivers().remove(index);

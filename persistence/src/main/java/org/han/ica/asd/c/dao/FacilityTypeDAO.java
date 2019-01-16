@@ -41,27 +41,29 @@ public class FacilityTypeDAO{
      * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to create a new FacilityTypeDB.
      */
     public void createFacilityType(FacilityType facilityType) {
-        Connection conn = databaseConnection.connect();
-        if (conn != null) {
-            try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
+        if (!readAllFacilityTypes().stream().anyMatch(type -> type.getFacilityName().equals(facilityType.getFacilityName()))) {
+            Connection conn = databaseConnection.connect();
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
 
-                conn.setAutoCommit(false);
+                    conn.setAutoCommit(false);
 
-                pstmt.setString(1, DaoConfig.getCurrentGameId());
-                pstmt.setString(2, facilityType.getFacilityName());
-                pstmt.setInt(3, facilityType.getValueIncomingGoods());
-                pstmt.setInt(4, facilityType.getValueOutgoingGoods());
-                pstmt.setInt(5, facilityType.getStockHoldingCosts());
-                pstmt.setInt(6, facilityType.getOpenOrderCosts());
-                pstmt.setInt(7, facilityType.getStartingBudget());
-                pstmt.setInt(8, facilityType.getStartingOrder());
-                pstmt.setInt(9,facilityType.getStartingStock());
+                    pstmt.setString(1, DaoConfig.getCurrentGameId());
+                    pstmt.setString(2, facilityType.getFacilityName());
+                    pstmt.setInt(3, facilityType.getValueIncomingGoods());
+                    pstmt.setInt(4, facilityType.getValueOutgoingGoods());
+                    pstmt.setInt(5, facilityType.getStockHoldingCosts());
+                    pstmt.setInt(6, facilityType.getOpenOrderCosts());
+                    pstmt.setInt(7, facilityType.getStartingBudget());
+                    pstmt.setInt(8, facilityType.getStartingOrder());
+                    pstmt.setInt(9, facilityType.getStartingStock());
 
-                pstmt.executeUpdate();
-                conn.commit();
-            } catch (SQLException e) {
-                LOGGER.log(Level.SEVERE, e.toString(), e);
-                databaseConnection.rollBackTransaction(conn);
+                    pstmt.executeUpdate();
+                    conn.commit();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
+                    databaseConnection.rollBackTransaction(conn);
+                }
             }
         }
     }
