@@ -112,6 +112,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         GameMessageReceiver.setObservers(observers);
 
         messageDirector.setGameMessageReceiver(gameMessageReceiver);
+        messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
 
         socketServer.setServerObserver(messageDirector);
         socketServer.startThread();
@@ -230,7 +231,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     public void startFaultDetector() {
         initNodeInfoList();
-        messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
         Leader leader = persistence.getGameLog().getLeader();
 
         if (internalIP.equals(leader.getPlayer().getIpAddress())) {
