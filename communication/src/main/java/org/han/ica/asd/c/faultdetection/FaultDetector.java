@@ -9,6 +9,7 @@ import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 /**
@@ -16,6 +17,7 @@ import java.util.List;
  *
  * @author Oscar, Tarik
  */
+@Singleton
 public class FaultDetector {
 
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
