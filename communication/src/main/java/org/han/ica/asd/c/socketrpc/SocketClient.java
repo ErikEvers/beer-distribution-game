@@ -49,7 +49,7 @@ public class SocketClient {
      * @throws ClassNotFoundException
      */
     public Object sendObjectWithResponse(String ip, Object object) throws IOException, ClassNotFoundException {
-        if(ip.equals(Connector.internalIP) || ip.equals("127.0.0.1")) {
+        if(ip.equals(Connector.internalIP)) {
             return SocketServer.serverObserver.serverObjectReceived(object, ip);
         }
         try (Socket socket = new Socket(ip, SocketSettings.PORT)) {

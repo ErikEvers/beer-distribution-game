@@ -148,6 +148,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public RoomModel createOfflineRoom(String roomName, String password, BeerGame beerGame) {
         try {
             RoomModel createdOfflineRoom = finder.createGameRoomModel(roomName, "127.0.0.1", password);
+            setMyIp("127.0.0.1");
             GameLeader leader = gameLeaderProvider.get();
             leader.init("127.0.0.1", createdOfflineRoom, beerGame);
             leaderIp = "127.0.0.1";

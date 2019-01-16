@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic;
 
+import javafx.application.Platform;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
@@ -174,14 +175,13 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         for (IParticipant participant : participantsPool.getParticipants()) {
             Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
             try {
-                Thread.sleep(200);
                 communication.sendTurnData(round);
-            } catch (SendGameMessageException | InterruptedException e) {
+            } catch (SendGameMessageException e) {
                 //No error should be thrown if the agent runs locally
             }
         }
         if (isBotGame()) {
-            seeOtherFacilities.setupScreen();
+            Platform.runLater(() -> seeOtherFacilities.setupScreen());
         } else {
             player.roundStarted();
         }
