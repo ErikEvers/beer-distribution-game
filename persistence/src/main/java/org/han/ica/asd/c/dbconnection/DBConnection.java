@@ -4,8 +4,12 @@ import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,11 +17,14 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.apache.ibatis.io.Resources.getResourceAsStream;
+
 @Singleton
 public class DBConnection implements IDatabaseConnection {
-	private static final Path currentDir = Paths.get("");
+	private static final String currentDir = System.getProperty("user.home");
+	private static final String PATH = currentDir+File.separator+"Documents"+File.separator+"Beer Distribution Game"+File.separator+"resources"+File.separator;
+
 	private static final String DATABASENAME = "BeerGameDB.db";
-	private static final String PATH = currentDir.toAbsolutePath().toString()+File.separator+"persistence"+ File.separator+"src"+ File.separator+"main"+File.separator+"resources"+File.separator;
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:" + PATH;
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
 
@@ -26,6 +33,7 @@ public class DBConnection implements IDatabaseConnection {
 	}
 
 	public void createNewDatabase() {
+		new File(PATH).mkdirs();
 		File file = new File(PATH + DATABASENAME);
 		if(!file.exists()) {
 			runSQLScript("ddl.sql");
@@ -40,7 +48,14 @@ public class DBConnection implements IDatabaseConnection {
 
 	public static void findFileAndRun(String scriptname, StringBuilder sb, Connection connect2, Logger logger){
 		String s;
-		try(FileReader fr = new FileReader(new File(Thread.currentThread().getContextClassLoader().getResource(scriptname).toURI()))){
+		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(scriptname);
+		try {
+			Files.copy(in, Paths.get(PATH + scriptname), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try(FileReader fr = new FileReader(new File(PATH + scriptname))){
 			BufferedReader br = new BufferedReader(fr);
 
 			while ((s = br.readLine()) != null) {
