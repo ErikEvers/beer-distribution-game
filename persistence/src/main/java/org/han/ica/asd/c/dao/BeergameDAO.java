@@ -58,6 +58,9 @@ public class BeergameDAO {
 	@Inject
 	private FacilityTypeDAO facilityTypeDAO;
 
+
+
+
 	public BeergameDAO(){
 		//Empty Constructor for GUICE
 	}
@@ -110,13 +113,12 @@ public class BeergameDAO {
 				conn.commit();
 				DaoConfig.setCurrentGameId(beerGame.getGameId());
 
-				configurationDAO.createConfiguration(beerGame.getConfiguration());
-
 				beerGame.getConfiguration().getFacilities().forEach(facility -> {
 					facilityDAO.createFacility(facility);
 					facilityTypeDAO.createFacilityType(facility.getFacilityType());
 				});
 
+				configurationDAO.createConfiguration(beerGame.getConfiguration());
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());

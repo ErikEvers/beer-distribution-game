@@ -17,7 +17,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     private ProgrammedBusinessRules programmedBusinessRule = new ProgrammedBusinessRules(null, null);
     private List<Facility> facilitiesInGame = new ArrayList<>();
     private List<String> factoryList = new ArrayList<>();
-    private List<String> distributeurList = new ArrayList<>();
+    private List<String> regionalWarehouseList = new ArrayList<>();
     private List<String> wholesalerList = new ArrayList<>();
     private List<String> retailerList = new ArrayList<>();
     private List<String> defaultList = new ArrayList<>();
@@ -71,38 +71,26 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     public List<List<String>> getAllFacilities() {
         List<List<String>> returnList = new ArrayList<>();
 
-        factoryList.add("1");
-        distributeurList.add("2");
-        wholesalerList.add("3");
-        retailerList.add("4");
+        facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
 
-        returnList.add(factoryList);
-        returnList.add(distributeurList);
-        returnList.add(wholesalerList);
-        returnList.add(retailerList);
+        switchCase();
 
+        if(!factoryList.isEmpty()) {
+            returnList.add(factoryList);
+        }
+        if(!regionalWarehouseList.isEmpty()) {
+            returnList.add(regionalWarehouseList);
+        }
+        if(!wholesalerList.isEmpty()) {
+            returnList.add(wholesalerList);
+        }
+        if(!retailerList.isEmpty()) {
+            returnList.add(retailerList);
+        }
+        if(!defaultList.isEmpty()) {
+            returnList.add(defaultList);
+        }
         return returnList;
-
-//        facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
-
-//        switchCase();
-
-//        if(!factoryList.isEmpty()) {
-//            returnList.add(factoryList);
-//        }
-//        if(!distributeurList.isEmpty()) {
-//            returnList.add(distributeurList);
-//        }
-//        if(!wholesalerList.isEmpty()) {
-//            returnList.add(wholesalerList);
-//        }
-//        if(!retailerList.isEmpty()) {
-//            returnList.add(retailerList);
-//        }
-//        if(!defaultList.isEmpty()) {
-//            returnList.add(defaultList);
-//        }
-//        return returnList;
     }
 
     /**
@@ -114,8 +102,8 @@ public class BusinessRuleStore implements IBusinessRuleStore {
                 case "Factory":
                     factoryList.add(Integer.toString(facility.getFacilityId()));
                     break;
-                case "Distributor":
-                    distributeurList.add(Integer.toString(facility.getFacilityId()));
+                case "Regional Warehouse":
+                    regionalWarehouseList.add(Integer.toString(facility.getFacilityId()));
                     break;
                 case "Wholesaler":
                     wholesalerList.add(Integer.toString(facility.getFacilityId()));

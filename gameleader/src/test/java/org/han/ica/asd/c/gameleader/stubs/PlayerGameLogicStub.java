@@ -30,6 +30,21 @@ public class PlayerGameLogicStub implements IPlayerGameLogic {
 
     }
 
+    public List<String> getAllGames() {
+        return null;
+    }
+
+    public void connectToGame(String game) {
+
+    }
+    public void requestFacilityUsage(Facility facility) {
+
+    }
+
+    public List<Facility> getAllFacilities() {
+        return null;
+    }
+
     @Override
     public int getRoundId() {
         return 0;
