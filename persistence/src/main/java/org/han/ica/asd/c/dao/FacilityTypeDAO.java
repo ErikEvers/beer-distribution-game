@@ -41,7 +41,7 @@ public class FacilityTypeDAO{
      * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to create a new FacilityTypeDB.
      */
     public void createFacilityType(FacilityType facilityType) {
-        if (!readAllFacilityTypes().stream().anyMatch(type -> type.getFacilityName() == facilityType.getFacilityName())) {
+        if (!readAllFacilityTypes().stream().anyMatch(type -> type.getFacilityName().equals(facilityType.getFacilityName()))) {
             Connection conn = databaseConnection.connect();
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTYPE)) {
