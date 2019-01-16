@@ -82,7 +82,7 @@ class TestFaultDetectorPlayer {
 
         faultDetectorPlayer.setLastReceived(0);
         faultDetectorPlayer.setLeaderIsPinging(true);
-
+        faultDetectorPlayer.setPlayersWhoAlreadyCouldntReachLeader(new HashMap<>());
 
         faultDetectorPlayer.run();
 
