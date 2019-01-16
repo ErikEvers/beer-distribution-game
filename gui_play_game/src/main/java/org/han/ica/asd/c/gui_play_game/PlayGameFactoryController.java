@@ -31,24 +31,20 @@ public class PlayGameFactoryController extends PlayGame {
     @Override
     public void handleSendOrderButtonClick() {
         int order = Integer.parseInt(outgoingOrderTextField.getText());
-        orderFacilities.add(addProduceOrderToList(order));
         playerComponent.placeOrder(playerComponent.getPlayer().getFacility(), order);
         refillOrdersList();
     }
 
-    @Override
     protected void refillOrdersList() {
         orderFacilities.clear();
         Facility ownFacility = playerComponent.getPlayer().getFacility();
 
         playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order ->
                 orderFacilities.add(addProduceOrderToList(order.getOrderAmount())));
-
     }
 
-
     private String addProduceOrderToList(int amount) {
-        return " To produce: " + Integer.toString(amount);
+        return "To produce: " + Integer.toString(amount);
     }
 
     @Override

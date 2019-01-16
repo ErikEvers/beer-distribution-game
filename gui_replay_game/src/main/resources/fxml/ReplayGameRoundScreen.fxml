@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="org.han.ica.asd.c.gui_replay_game.replay_game_controller.ReplayGameRoundController">
+    <GridPane layoutX="-11.0" layoutY="127.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="991.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-11.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="127.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.0" minWidth="0.0" prefWidth="185.8" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="672.2000061035158" minWidth="10.0" prefWidth="658.6000000000001" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="167.0" minWidth="10.0" prefWidth="145.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="534.4" minHeight="10.0" prefHeight="498.1999877929687" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="112.0" minHeight="10.0" prefHeight="53.400012207031295" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="81.0" minHeight="56.0" prefHeight="60.80001220703127" />
+            <RowConstraints maxHeight="81.0" minHeight="56.0" prefHeight="60.80001220703127" />
+        </rowConstraints>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <GridPane.margin>
+                <Insets left="5.0" top="10.0" />
+            </GridPane.margin>
+        </Rectangle>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="25.0" layoutY="499.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <GridPane.margin>
+                <Insets left="5.0" />
+            </GridPane.margin>
+        </Rectangle>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="30.0" layoutY="500.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="5.0" />
+            </GridPane.margin>
+        </Rectangle>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="170.0" layoutY="500.0" stroke="BLACK" strokeType="INSIDE" width="51.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <GridPane.margin>
+                <Insets left="5.0" top="10.0" />
+            </GridPane.margin>
+        </Rectangle>
+        <Label prefHeight="17.0" prefWidth="52.0" text="Factory" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="66.0" />
+            </GridPane.margin>
+        </Label>
+        <Label prefHeight="18.0" prefWidth="138.0" text="Regional Warehouse" GridPane.rowIndex="2">
+            <GridPane.margin>
+                <Insets left="66.0" />
+            </GridPane.margin>
+        </Label>
+        <Label layoutX="10.0" text="Wholesale" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="66.0" />
+            </GridPane.margin>
+        </Label>
+        <Label layoutX="207.0" layoutY="516.0" text="Retailer" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <GridPane.margin>
+                <Insets left="66.0" />
+            </GridPane.margin>
+        </Label>
+        <ScrollPane prefHeight="497.0" prefWidth="714.0" GridPane.columnIndex="1">
+            <AnchorPane fx:id="facilitiesContainer" prefHeight="501.0" prefWidth="662.0">
+
+            </AnchorPane>
+        </ScrollPane>
+        <Line endX="30.0" startX="-100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Line endX="30.0" startX="-100.0" stroke="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Label text="Active connection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+        <Label text="Inacive connection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+        <Label text="Hold the mouse over a facility or connection for more information" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+        <Button fx:id="returnButton" mnemonicParsing="false" onAction="#handleReturnButton" prefHeight="42.0" prefWidth="118.0" style="-fx-background-color: ff8000;" text="Back to Menu" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <GridPane.margin>
+                <Insets left="10.0" />
+            </GridPane.margin>
+        </Button>
+        <Button fx:id="previousRoundButton" mnemonicParsing="false" onAction="#handlePreviousRoundButton" prefHeight="42.0" prefWidth="110.0" style="-fx-background-color: ff8000;" text="Previous round" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+            <GridPane.margin>
+                <Insets left="5.0" />
+            </GridPane.margin>
+        </Button>
+        <TextField fx:id="roundId" maxWidth="-Infinity" onAction="#handleRoundIdChange" prefHeight="26.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <GridPane.margin>
+                <Insets right="150.0" />
+            </GridPane.margin>
+        </TextField>
+        <Label fx:id="maxRoundId" prefHeight="44.0" prefWidth="115.0" text="Maximum round number" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <GridPane.margin>
+                <Insets left="100.0" />
+            </GridPane.margin>
+            <font>
+                <Font size="17.0" />
+            </font>
+        </Label>
+        <Button fx:id="NextRoundButton" mnemonicParsing="false" onAction="#handleNextRoundButton" prefHeight="42.0" prefWidth="98.0" style="-fx-background-color: ff8000;" text="Next round" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <GridPane.margin>
+                <Insets right="5.0" />
+            </GridPane.margin>
+        </Button>
+        <Line endX="1129.7332763671875" endY="1.2091232538223267" startX="1141.878662109375" startY="-36.68376922607422" strokeLineJoin="ROUND" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+            <GridPane.margin>
+                <Insets right="40.0" />
+            </GridPane.margin>
+        </Line>
+    </GridPane>
+    <HBox layoutX="14.0" layoutY="14.0" prefHeight="127.0" prefWidth="1000.0" AnchorPane.bottomAnchor="673.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label prefHeight="98.0" prefWidth="366.0" text="Replay Game">
+            <font>
+                <Font size="50.0" />
+            </font>
+            <padding>
+                <Insets left="20.0" top="25.0" />
+            </padding>
+        </Label>
+        <Label fx:id="gameName" prefHeight="98.0" prefWidth="376.0" text="GameName">
+            <font>
+                <Font size="50.0" />
+            </font>
+            <padding>
+                <Insets left="20.0" top="25.0" />
+            </padding>
+        </Label>
+        <Button fx:id="showGraph" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#showGraphHandler" style="-fx-background-color: ff8000;" text="Show graph" textFill="WHITE">
+            <font>
+                <Font size="20.0" />
+            </font>
+            <HBox.margin>
+                <Insets left="100.0" top="40.0" />
+            </HBox.margin>
+        </Button>
+    </HBox>
+</AnchorPane>

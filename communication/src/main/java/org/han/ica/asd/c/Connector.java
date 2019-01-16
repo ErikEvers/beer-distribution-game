@@ -1,30 +1,30 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.RoomFinder;
-import org.han.ica.asd.c.interfaces.persistence.IGameStore;
-import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Leader;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
-import org.han.ica.asd.c.gameleader.GameLeader;
-import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.exceptions.communication.TransactionException;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
-import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
+import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
@@ -139,6 +139,21 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             leaderIp = internalIP;
 
             return createdRoom;
+        } catch (DiscoveryException e) {
+            logger.log(Level.INFO, e.getMessage());
+        }
+        return null;
+    }
+
+    public RoomModel createOfflineRoom(String roomName, String password, BeerGame beerGame) {
+        try {
+            setMyIp("127.0.0.1");
+            RoomModel createdOfflineRoom = finder.createGameRoomModel(roomName, "127.0.0.1", password);
+            GameLeader leader = gameLeaderProvider.get();
+            leader.init("127.0.0.1", createdOfflineRoom, beerGame);
+            leaderIp = "127.0.0.1";
+
+            return createdOfflineRoom;
         } catch (DiscoveryException e) {
             logger.log(Level.INFO, e.getMessage());
         }
@@ -261,8 +276,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         } catch (IOException e) {
             e.printStackTrace();
         }
-				//initNodeInfoList();
-				//List<String> ips = nodeInfoList.getAllIps();
 				List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }

@@ -27,6 +27,7 @@ class GameAgentDAOIntegrationTest {
     private static final GameAgent GAMEAGENT = new GameAgent("Agent1", FACILITY, GAME_BUSINESS_RULES);
     private static final GameAgent GAMEAGENT2 = new GameAgent("Agent2", FACILITY2, GAME_BUSINESS_RULES);
     private static final GameAgent GAMEAGENT2_UPDATE = new GameAgent("Agent2_Updated", FACILITY2, GAME_BUSINESS_RULES);
+    private List<GameAgent> gameAgents;
 
     private GameAgentDAO gameAgentDAO;
     private FacilityDAO facilityDAO;
@@ -34,6 +35,10 @@ class GameAgentDAOIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        gameAgents = new ArrayList<>();
+        gameAgents.add(GAMEAGENT);
+        gameAgents.add(GAMEAGENT2);
+
         DBConnectionTest.getInstance().cleanup();
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -136,5 +141,18 @@ class GameAgentDAOIntegrationTest {
     void gameIdNotSetExceptionTest() throws GameIdNotSetException{
         DaoConfig.setCurrentGameId(null);
         gameAgentDAO.createGameAgent(GAMEAGENT2);
+    }
+
+    @Test
+    void insertGameAgents() {
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE);
+        facilityDAO.createFacility(FACILITY);
+        facilityTypeDAO.createFacilityType(FACILITY_TYPE2);
+        facilityDAO.createFacility(FACILITY2);
+        
+        Assert.assertEquals(2, gameAgents.size());
+
+        gameAgentDAO.insertGameAgents(gameAgents);
+        Assert.assertEquals(2, gameAgentDAO.readGameAgentsForABeerGame().size());
     }
 }
