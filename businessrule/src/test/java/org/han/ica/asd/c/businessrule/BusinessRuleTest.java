@@ -69,8 +69,7 @@ class BusinessRuleTest {
     private Provider<DivideOperation> divideOperationProvider;
     private Provider<Action> actionProvider;
     private Provider<ActionReference> actionReferenceProvider;
-
-    private com.google.inject.Provider<ASTListener> astListenerProvider;
+    private Provider<ASTListener> astListenerProvider;
 
     @BeforeEach
     void setup() {
@@ -91,7 +90,6 @@ class BusinessRuleTest {
         booleanOperatorProvider = injector.getProvider(BooleanOperator.class);
         comparisonOperatorProvider = injector.getProvider(ComparisonOperator.class);
         divideOperationProvider = injector.getProvider(DivideOperation.class);
-        tmp = injector.getProvider(Fixtures.class);
         astListenerProvider = injector.getProvider(ASTListener.class);
 
         List<FacilityTurn> facilityTurns = new ArrayList<>();
@@ -235,8 +233,6 @@ class BusinessRuleTest {
         String result = businessRule.encode();
         assertEquals(expected, result);
     }
-
-    Provider<Fixtures> tmp;
 
     @Test
     void replaceFactoryWithHighest() {

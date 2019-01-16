@@ -20,6 +20,7 @@ public class Action extends ASTNode {
     private OperationValue operation;
     private Person person;
     private ComparisonStatement comparisonStatement;
+    private static final String ALREADY_FACILITY_ID = "\\d+";
 
     private NodeConverter nodeConverter;
 
@@ -138,7 +139,7 @@ public class Action extends ASTNode {
     public int getFacilityId(int ownFacilityId) {
         if(person != null){
 
-            if(person.getPerson().matches("\\d+")){
+            if(person.getPerson().matches(ALREADY_FACILITY_ID)){
                 return Integer.parseInt(person.getPerson());
             }
 
