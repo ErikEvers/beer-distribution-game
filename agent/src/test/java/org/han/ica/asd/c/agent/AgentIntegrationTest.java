@@ -783,20 +783,20 @@ class AgentIntegrationTest {
                 gameBusinessRulesDeliver5GoodsToRetail2
         )));
         listOfParticipants.add(6, Fixtures.GraphConfiguration.getInstance().createAgent(6, Arrays.asList(
-                gameBusinessRulesDeliver5GoodsToRegionalWarehouse1,
+                gameBusinessRulesOrder5GoodsFromRegionalWarehouse1,
                 gameBusinessRulesDeliver5GoodsToRetail1,
                 gameBusinessRulesDeliver5GoodsToRetail3,
                 gameBusinessRulesDeliver5GoodsToRetail4
         )));
         listOfParticipants.add(7, Fixtures.GraphConfiguration.getInstance().createAgent(7, Arrays.asList(
-                gameBusinessRulesDeliver5GoodsToRegionalWarehouse1,
+                gameBusinessRulesOrder5GoodsFromRegionalWarehouse1,
                 gameBusinessRulesDeliver5GoodsToRetail1,
                 gameBusinessRulesDeliver5GoodsToRetail3,
                 gameBusinessRulesDeliver5GoodsToRetail4,
                 gameBusinessRulesDeliver5GoodsToRetail6
         )));
         listOfParticipants.add(8, Fixtures.GraphConfiguration.getInstance().createAgent(8, Arrays.asList(
-                gameBusinessRulesDeliver5GoodsToRegionalWarehouse2,
+                gameBusinessRulesOrder5GoodsFromRegionalWarehouse2,
                 gameBusinessRulesDeliver5GoodsToRetail5
         )));
 
@@ -887,7 +887,6 @@ class AgentIntegrationTest {
                     listOfFacilityTurnDelivers);
 
             List<FacilityTurn>          listOfTemporaryFacilityTurns            = new ArrayList<>(listOfFacilityTurns);
-
             listOfFacilityTurns         = new ArrayList<>();
             listOfFacilityTurnOrders    = new ArrayList<>();
             listOfFacilityTurnDelivers  = new ArrayList<>();
@@ -952,9 +951,9 @@ class AgentIntegrationTest {
         assertEquals(30, listOfFacilityTurns.get(3).getStock());
         assertEquals(30, listOfFacilityTurns.get(4).getStock());
         assertEquals(30, listOfFacilityTurns.get(5).getStock());
-        assertEquals(-20, listOfFacilityTurns.get(6).getStock());
-        assertEquals(-20, listOfFacilityTurns.get(7).getStock());
-        assertEquals(-20, listOfFacilityTurns.get(8).getStock());
+        assertEquals(30, listOfFacilityTurns.get(6).getStock());
+        assertEquals(30, listOfFacilityTurns.get(7).getStock());
+        assertEquals(30, listOfFacilityTurns.get(8).getStock());
         assertEquals(80, listOfFacilityTurns.get(9).getStock());
         assertEquals(80, listOfFacilityTurns.get(10).getStock());
         assertEquals(80, listOfFacilityTurns.get(11).getStock());

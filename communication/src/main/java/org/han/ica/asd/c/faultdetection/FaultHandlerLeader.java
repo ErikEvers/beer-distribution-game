@@ -1,6 +1,5 @@
 package org.han.ica.asd.c.faultdetection;
 
-
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
@@ -13,6 +12,8 @@ import java.util.List;
  * This class will call methods on external interfaces when needed. Example: a node is disconnected from the game, this
  * class will then call the 'AgentComponent' to make sure an agent is started instead of the disconnected node.
  * It also keeps track of the amount of nodes that are able to reach nodes that this machine can't reach.
+ *
+ * @author Oscar, Tarik
  */
 public class FaultHandlerLeader {
     @Inject
@@ -21,10 +22,6 @@ public class FaultHandlerLeader {
     private HashMap<String, Integer> amountOfFailsPerIp;
     private boolean iAmDisconnected;
     private List<IConnectorObserver> observers;
-
-    HashMap<String, Integer> getAmountOfFailsPerIp() {
-        return amountOfFailsPerIp;
-    }
 
     FaultHandlerLeader() {
         amountOfFailsPerIp = new HashMap<>();
@@ -37,7 +34,7 @@ public class FaultHandlerLeader {
      *
      * @param ip The ip of the node that can/can't be reached.
      * @return The ip when its incremented, else it returns null
-     * @author Oscar, Tarik
+     * @author Oscar
      */
     public String incrementFailure(String ip) {
         increment(ip);
@@ -63,18 +60,6 @@ public class FaultHandlerLeader {
     public boolean isLeaderAlive() {
         return iAmDisconnected;
     }
-
-//    /**
-//     * Retrieves the value of isConnected of a specific ipAddress
-//     *
-//     * @param ip The ip of which the status is requested.
-//     * @return The value of isConnected for the specified ipAddress.
-//     * @author Oscar, Tarik
-//     */
-//    public boolean isPeerAlive(String ip) {
-//        //TODO probably remove this method entirely
-//        return nodeInfoList.getStatusOfOneNode(ip);
-//    }
 
     /**
      * Resets the amount of failures for a specific node, given the ip of said node.
@@ -170,5 +155,23 @@ public class FaultHandlerLeader {
 
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
+    }
+
+    /**
+     * Sets new amountOfFailsPerIp.
+     *
+     * @param amountOfFailsPerIp New value of amountOfFailsPerIp.
+     */
+    public void setAmountOfFailsPerIp(HashMap<String, Integer> amountOfFailsPerIp) {
+        this.amountOfFailsPerIp = amountOfFailsPerIp;
+    }
+
+    /**
+     * Gets amountOfFailsPerIp.
+     *
+     * @return Value of amountOfFailsPerIp.
+     */
+    public HashMap<String, Integer> getAmountOfFailsPerIp() {
+        return amountOfFailsPerIp;
     }
 }

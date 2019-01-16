@@ -161,7 +161,22 @@ public class Action extends ASTNode {
         return operation;
     }
 
-    /***
+    /**
+     * Sets the operationvalue
+     */
+    public void setOperationValue(OperationValue value){
+        this.operation = value;
+    }
+
+    /**
+     * Gets the operationValue
+     * @return the operationValue
+     */
+    public OperationValue getOperationValue(){
+        return this.operation;
+    }
+
+    /**
      * checks if action has an comparison statement.
      * @return true if action has an comparison statement
      */

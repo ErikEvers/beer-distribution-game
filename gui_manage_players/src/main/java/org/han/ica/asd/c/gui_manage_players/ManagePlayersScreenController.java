@@ -24,6 +24,7 @@ public class ManagePlayersScreenController  {
 	ManagePlayersService gameConfiguration;
 
 	@Inject
+	@Named("GameLeader")
 	IGameLeader gameLeader;
 
 	@Inject

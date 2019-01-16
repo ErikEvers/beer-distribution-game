@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 public class NodeConverter {
     @Inject
-    @Named("BusinessruleStore")
     private IBusinessRuleStore businessRuleStore;
 
     public static final int FIRST_FACILITY_ABOVE_BELOW = -1;

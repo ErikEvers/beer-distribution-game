@@ -14,9 +14,12 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
 
 public class TestNodeInfoList {
 
@@ -92,18 +95,65 @@ public class TestNodeInfoList {
         assertEquals(result.get(0), testIp1);
     }
 
+    @Test
+    @DisplayName("Test if getActiveIpsWithoutLeader only returns the ips when is it permitted. ")
+    void TestGetAllActiveIpsThatAreNotLeaderUnHappyFlow() {
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(false);
+
+        nodeInfoList.add(player1);
+        nodeInfoList.getLeader().setPlayer(player1);
+
+        List<String> result = nodeInfoList.getActiveIpsWithoutLeader();
+
+        assertEquals(0, result.size());
+    }
 
     @Test
-    @DisplayName("Test if the UpdateIsConnected updates the value of a node")
-    void TestUpdateIsConnected() {
-        Player player = new Player();
-        player.setIpAddress(testIp1);
-        player.setConnected(false);
+    @DisplayName("Test if getActiveIpsWithoutLeader only returns the ips when is it permitted. ")
+    void TestGetAllActiveIpsThatAreNotLeaderUnHappyFlow2() {
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(true);
 
-        nodeInfoList.add(player);
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        player2.setConnected(true);
+
+        nodeInfoList.add(player1);
+        nodeInfoList.getLeader().setPlayer(player2);
+
+        List<String> result = nodeInfoList.getActiveIpsWithoutLeader();
+
+        assertEquals(1, result.size());
+        assertEquals(player1, nodeInfoList.get(0));
+    }
+
+    @Test
+    @DisplayName("Test if the updateIsConnected updates the right player")
+    void TestUpdatePlayerIsConnectedRecursion() {
+        Player player1 = new Player();
+        player1.setIpAddress(testIp1);
+        player1.setConnected(false);
+
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+        player2.setConnected(true);
+
+        nodeInfoList.add(player1);
+        nodeInfoList.add(player2);
+
+        assertEquals(2, nodeInfoList.size());
+
         nodeInfoList.updateIsConnected(testIp1, true);
+        nodeInfoList.updateIsConnected(testIp2, false);
 
+        assertEquals(testIp1, nodeInfoList.get(0).getIpAddress());
         assertTrue(nodeInfoList.get(0).isConnected());
+
+        assertEquals(testIp2, nodeInfoList.get(1).getIpAddress());
+        assertFalse(nodeInfoList.get(1).isConnected());
     }
 
     @Test
@@ -186,5 +236,59 @@ public class TestNodeInfoList {
         nodeInfoList.add(player);
 
         assertNull(nodeInfoList.getLeaderIp());
+    }
+
+    @Test
+    @DisplayName("Test if the init methods sets the values correctly")
+    void TestInit() {
+        List<Player> listMock = new ArrayList<>();
+        Player playerMock = mock(Player.class);
+        Player getPlayerMock = mock(Player.class);
+        Leader leaderMock = mock(Leader.class);
+        listMock.add(playerMock);
+
+        when(leaderMock.getPlayer()).thenReturn(getPlayerMock);
+
+        nodeInfoList.init(listMock, leaderMock);
+
+        assertEquals(leaderMock, nodeInfoList.getLeader());
+        assertEquals(listMock, nodeInfoList.getPlayerList());
+    }
+
+    @Test
+    @DisplayName("Test the equals method")
+    void TestEqualsMethod() {
+        assertTrue(nodeInfoList.equals(nodeInfoList));
+        assertFalse(nodeInfoList.equals("Appel"));
+        assertFalse(nodeInfoList.equals(mock(List.class)));
+    }
+
+    @Test
+    @DisplayName("Test getters and setters")
+    void TestGettersAndSetters(){
+        nodeInfoList.setMyIp(testIp1);
+        assertEquals(testIp1, nodeInfoList.getMyIp());
+    }
+
+    @Test
+    @DisplayName("Test if getPlayersWithoutLeader returns every player but the leader")
+    void TestGetPLayersWithoutLeader(){
+        Player leaderPlayer = spy(Player.class);
+        leaderPlayer.setIpAddress(testIp1);
+
+        Leader leader = new Leader(leaderPlayer);
+
+        List<Player> playerList = new ArrayList<>();
+        nodeInfoList = new NodeInfoList(leader, playerList);
+
+        Player player2 = new Player();
+        player2.setIpAddress(testIp2);
+
+        nodeInfoList.add(player2);
+
+        Player[] result = nodeInfoList.getPlayersWithoutLeader();
+
+        assertEquals(1, result.length);
+        assertEquals(player2, result[0]);
     }
 }

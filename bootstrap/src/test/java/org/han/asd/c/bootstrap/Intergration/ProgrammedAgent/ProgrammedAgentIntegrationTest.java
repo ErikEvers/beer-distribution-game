@@ -28,7 +28,7 @@ class ProgrammedAgentIntegrationTest {
             @Override
             protected void configure() {
                 bind(IBusinessRules.class).to(BusinessRuleHandler.class);
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStore.class);
                 bind(IDatabaseConnection.class).to(DBConnectionIntegrationTest.class);
             }
         });

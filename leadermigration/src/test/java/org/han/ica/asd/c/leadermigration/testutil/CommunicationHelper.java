@@ -16,6 +16,7 @@ import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 public class CommunicationHelper implements IConnectorForLeaderElection {
     private LeaderMigration migrationObj;
     private Injector injector;
+    private String currentPlayerIp;
 
     public void setInjector() {
         this.injector = Guice.createInjector(new AbstractModule() {
@@ -29,10 +30,10 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
         });
 		}
 
-    public Player startElection(Player[] players) throws PlayerNotFoundException {
+    public Player startElection(Player[] players) {
         this.setInjector();
         this.migrationObj = injector.getInstance(LeaderMigration.class);
-				return this.migrationObj.startMigration(players);
+				return this.migrationObj.startMigration(players,currentPlayerIp);
     }
 
     public void addObserver(IConnectorObserver observer) {
@@ -53,5 +54,9 @@ public class CommunicationHelper implements IConnectorForLeaderElection {
         }
         this.setInjector();
 				injector.getInstance(LeaderMigration.class).receiveVictoryMessage(victory);
+    }
+
+    public void setCurrentPlayerIp(String currentPlayerIp) {
+        this.currentPlayerIp = currentPlayerIp;
     }
 }
