@@ -10,7 +10,6 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,4 +26,6 @@ public interface IConnectorForSetup {
     void setMyIp(String ip);
     void chooseFacility(Facility facility, String playerId) throws FacilityNotAvailableException, SendGameMessageException;
     GamePlayerId getGameData(String userName) throws SendGameMessageException;
+    RoomModel createOfflineRoom(String roomName, String password, BeerGame beerGame);
+
 }

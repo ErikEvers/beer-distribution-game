@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.gamelogic;
 
+import com.google.inject.name.Names;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gui_play_game.see_other_facilities.SeeOtherFacilities;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import com.google.inject.AbstractModule;
@@ -27,6 +30,8 @@ public class GameLogicTest {
     private IGameStore persistence;
     private IPlayerRoundListener player;
     private Round round;
+    private BeerGame beerGame;
+    private IGUIHandler seeOtherFacilities;
 
     @BeforeEach
     void setup() {
@@ -35,20 +40,24 @@ public class GameLogicTest {
         persistence = mock(IGameStore.class);
         participantsPool = mock(ParticipantsPool.class);
         player = mock(IPlayerRoundListener.class);
+        seeOtherFacilities = mock(SeeOtherFacilities.class);
+        beerGame = mock(BeerGame.class);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(IGameStore.class).toInstance(persistence);
                 bind(IConnectedForPlayer.class).toInstance(communication);
+                bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).toInstance(seeOtherFacilities);
                 //bind(ParticipantsPool.class).toInstance(participantsPool);
             }
         });
 
-        gameLogic = injector.getInstance(GameLogic.class);
+        gameLogic = spy(injector.getInstance(GameLogic.class));
+        doReturn(false).when(gameLogic).isBotGame();
         gameLogic.setParticipantsPool(participantsPool);
         gameLogic.setPlayer(player);
-        gameLogic.gameStartReceived(mock(BeerGame.class));
+        gameLogic.gameStartReceived(beerGame);
     }
 
     @Test

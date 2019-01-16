@@ -88,7 +88,7 @@ class PersistenceTest {
 		when(playerDAOMock.getPlayer(anyString())).thenReturn(player);
 
 		leaderDAOMock = mock(LeaderDAO.class);
-		Mockito.doNothing().when(leaderDAOMock).insertLeader(player);
+		Mockito.doNothing().when(leaderDAOMock).insertLeader(new Leader(player));
 
 		round = mock(Round.class);
 		when(round.getFacilityTurns()).thenReturn(facilityTurns);
@@ -169,6 +169,6 @@ class PersistenceTest {
 	@Test
 	public void saveNewLeaderTest(){
 		persistence.saveNewLeader(player);
-		verify((leaderDAOMock),times(1)).insertLeader(any(Player.class));
+		verify((leaderDAOMock),times(1)).insertLeader(any(Leader.class));
 	}
 }
