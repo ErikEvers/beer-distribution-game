@@ -335,10 +335,9 @@ public abstract class PlayGame implements IPlayGame {
     }
 
     public void setAgentInUse(boolean setInAgent,int roundId) {
-        if (roundId == 0){
-            roundId = 1;
+        if (roundId != 0) {
+            refreshInterfaceWithCurrentStatus(roundId);
         }
-        refreshInterfaceWithCurrentStatus(roundId);
         if (setInAgent) {
             agentInUse = true;
             useAgentButton.setDisable(true);
