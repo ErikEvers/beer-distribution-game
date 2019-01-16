@@ -47,53 +47,88 @@ public class ActivityLogPopupController {
 			ObservableList<String> items = FXCollections.observableArrayList();
 			for(Round round : beerGame.getRounds()) {
 				for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders().stream().filter(order -> order.getFacilityIdOrderTo() == facilityId).collect(Collectors.toList())) {
-					builder.append(ROUND_LITERAL);
-					builder.append(round.getRoundId());
-					builder.append(": ");
-					builder.append("Facility ");
-					builder.append(facilityTurnOrder.getFacilityId());
-					builder.append(" ordered ");
-					builder.append(facilityTurnOrder.getOrderAmount());
-					builder.append(" pc from you");
-					items.add(builder.toString());
-					builder = new StringBuilder();
+					if(facilityTurnOrder.getFacilityId() != facilityTurnOrder.getFacilityIdOrderTo()) {
+						builder.append(ROUND_LITERAL);
+						builder.append(round.getRoundId());
+						builder.append(": ");
+						builder.append("Facility ");
+						builder.append(facilityTurnOrder.getFacilityId());
+						builder.append(" ordered ");
+						builder.append(facilityTurnOrder.getOrderAmount());
+						builder.append(" pc from you");
+						items.add(builder.toString());
+						builder = new StringBuilder();
+					} else if(beerGame.getFacilityById(facilityId).getFacilityType().getFacilityName().equals("Retailer")) {
+						builder.append(ROUND_LITERAL);
+						builder.append(round.getRoundId());
+						builder.append(": ");
+						builder.append("The customer ordered ");
+						builder.append(facilityTurnOrder.getOrderAmount());
+						builder.append(" pc from you");
+						items.add(builder.toString());
+						builder = new StringBuilder();
+					}
 				}
 
 				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers().stream().filter(order -> order.getFacilityIdDeliverTo() == facilityId).collect(Collectors.toList())) {
-					builder.append(ROUND_LITERAL);
-					builder.append(round.getRoundId());
-					builder.append(": ");
-					builder.append("Facility ");
-					builder.append(facilityTurnDeliver.getFacilityId());
-					builder.append(" delivered ");
-					builder.append(facilityTurnDeliver.getDeliverAmount());
-					builder.append(" pc to you");
-					items.add(builder.toString());
-					builder = new StringBuilder();
+					if(facilityTurnDeliver.getFacilityId() != facilityTurnDeliver.getFacilityIdDeliverTo()) {
+						builder.append(ROUND_LITERAL);
+						builder.append(round.getRoundId());
+						builder.append(": ");
+						builder.append("Facility ");
+						builder.append(facilityTurnDeliver.getFacilityId());
+						builder.append(" delivered ");
+						builder.append(facilityTurnDeliver.getDeliverAmount());
+						builder.append(" pc to you");
+						items.add(builder.toString());
+						builder = new StringBuilder();
+					}
 				}
 
 				for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers().stream().filter(order -> order.getFacilityId() == facilityId).collect(Collectors.toList())) {
-					builder.append(ROUND_LITERAL);
-					builder.append(round.getRoundId());
-					builder.append(": ");
-					builder.append("You delivered ");
-					builder.append(facilityTurnDeliver.getDeliverAmount());
-					builder.append(" pc to facility ");
-					builder.append(facilityTurnDeliver.getFacilityId());
-					items.add(builder.toString());
-					builder = new StringBuilder();
+					if(facilityTurnDeliver.getFacilityId() != facilityTurnDeliver.getFacilityIdDeliverTo()) {
+						builder.append(ROUND_LITERAL);
+						builder.append(round.getRoundId());
+						builder.append(": ");
+						builder.append("You delivered ");
+						builder.append(facilityTurnDeliver.getDeliverAmount());
+						builder.append(" pc to facility ");
+						builder.append(facilityTurnDeliver.getFacilityIdDeliverTo());
+						items.add(builder.toString());
+						builder = new StringBuilder();
+					} else if(beerGame.getFacilityById(facilityId).getFacilityType().getFacilityName().equals("Retailer")) {
+						builder.append(ROUND_LITERAL);
+						builder.append(round.getRoundId());
+						builder.append(": ");
+						builder.append("You delivered ");
+						builder.append(facilityTurnDeliver.getDeliverAmount());
+						builder.append(" pc to the customer");
+						items.add(builder.toString());
+						builder = new StringBuilder();
+					}
 				}
 
 				for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders().stream().filter(order -> order.getFacilityId() == facilityId).collect(Collectors.toList())) {
-					builder.append(ROUND_LITERAL);
-					builder.append(round.getRoundId());
-					builder.append(": ");
-					builder.append("You ordered ");
-					builder.append(facilityTurnOrder.getOrderAmount());
-					builder.append(" pc from facility ");
-					builder.append(facilityTurnOrder.getFacilityId());
-					items.add(builder.toString());
-					builder = new StringBuilder();
+					if(facilityTurnOrder.getFacilityId() != facilityTurnOrder.getFacilityIdOrderTo()) {
+						builder.append(ROUND_LITERAL);
+						builder.append(round.getRoundId());
+						builder.append(": ");
+						builder.append("You ordered ");
+						builder.append(facilityTurnOrder.getOrderAmount());
+						builder.append(" pc from facility ");
+						builder.append(facilityTurnOrder.getFacilityIdOrderTo());
+						items.add(builder.toString());
+						builder = new StringBuilder();
+					} else if(beerGame.getFacilityById(facilityId).getFacilityType().getFacilityName().equals("Factory")) {
+						builder.append(ROUND_LITERAL);
+						builder.append(round.getRoundId());
+						builder.append(": ");
+						builder.append("You started producing ");
+						builder.append(facilityTurnOrder.getOrderAmount());
+						builder.append(" pcs");
+						items.add(builder.toString());
+						builder = new StringBuilder();
+					}
 				}
 			}
 			logTextArea.setItems(items);
