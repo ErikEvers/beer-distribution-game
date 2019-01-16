@@ -231,13 +231,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void startFaultDetector() {
         initNodeInfoList();
         Leader leader = persistence.getGameLog().getLeader();
-        try {
-            this.externalIP = getExternalIP();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, e.getMessage());
-        }
 
-        if (externalIP.equals(leader.getPlayer().getIpAddress())) {
+        if (internalIP.equals(leader.getPlayer().getIpAddress())) {
             faultDetector.startFaultDetectorLeader(nodeInfoList);
         } else {
             faultDetector.startFaultDetectorPlayer(nodeInfoList);
