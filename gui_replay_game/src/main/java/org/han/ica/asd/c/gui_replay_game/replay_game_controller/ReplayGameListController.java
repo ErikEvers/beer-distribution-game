@@ -45,7 +45,7 @@ public class ReplayGameListController {
     public void initialize() {
         ObservableList<BeerGame> items = FXCollections.observableArrayList(retrieveReplayData.getAllBeerGames());
 
-        list.setCellFactory( list -> {
+        list.setCellFactory( listView -> {
             TextFieldListCell<BeerGame> cell = new TextFieldListCell<>();
             cell.setConverter(new StringConverter<BeerGame>() {
                 @Override
