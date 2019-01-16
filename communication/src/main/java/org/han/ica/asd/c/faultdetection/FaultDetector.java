@@ -32,9 +32,11 @@ public class FaultDetector {
 
     @Inject
     public FaultDetector(FaultDetectionMessageReceiver receiver) {
-        //For inject purposes
-        receiver.setFaultDetector(this);
-        this.faultDetectionMessageReceiver = receiver;
+        if(this.faultDetectionMessageReceiver == null) {
+            //For inject purposes
+            receiver.setFaultDetector(this);
+            this.faultDetectionMessageReceiver = receiver;
+        }
     }
 
     /**
