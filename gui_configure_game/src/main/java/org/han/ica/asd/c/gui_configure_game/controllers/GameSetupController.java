@@ -7,7 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_configure_game.graph.EdgeLine;
@@ -22,17 +22,11 @@ import org.han.ica.asd.c.gui_configure_game.graph.Wholesale;
 import org.han.ica.asd.c.gui_configure_game.graphutil.GraphConverterToDomain;
 import org.han.ica.asd.c.gui_configure_game.graphutil.GraphToFacilityChecker;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.ini4j.Config;
-import org.ini4j.Ini;
-import org.ini4j.Profile;
-import org.ini4j.Wini;
+
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
