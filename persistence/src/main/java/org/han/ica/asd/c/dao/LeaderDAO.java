@@ -17,7 +17,7 @@ public class LeaderDAO {
 	private static final String CREATE_LEADER = "INSERT INTO Leader VALUES (?,?,?);";
 	private static final String GET_LEADER = "SELECT * FROM Leader WHERE GameId = ? ORDER BY Timestamp DESC LIMIT 1;";
 	private static final Logger LOGGER = Logger.getLogger(LeaderDAO.class.getName());
-	private static final String UPDATE_LEADER = "UPDATE Leader SET PlayerId = ? AND TIMESTAMP = ? WHERE GameId = ?;";
+	private static final String UPDATE_LEADER = "UPDATE Leader SET PlayerId = ?, TIMESTAMP = ? WHERE GameId = ?;";
 
 	@Inject
 	IDatabaseConnection databaseConnection;

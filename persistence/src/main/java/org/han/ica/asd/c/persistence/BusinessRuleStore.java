@@ -71,38 +71,26 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     public List<List<String>> getAllFacilities() {
         List<List<String>> returnList = new ArrayList<>();
 
-        factoryList.add("1");
-        regionalWarehouseList.add("2");
-        wholesalerList.add("3");
-        retailerList.add("4");
+        facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
 
-        returnList.add(factoryList);
-        returnList.add(regionalWarehouseList);
-        returnList.add(wholesalerList);
-        returnList.add(retailerList);
+        switchCase();
 
+        if(!factoryList.isEmpty()) {
+            returnList.add(factoryList);
+        }
+        if(!regionalWarehouseList.isEmpty()) {
+            returnList.add(regionalWarehouseList);
+        }
+        if(!wholesalerList.isEmpty()) {
+            returnList.add(wholesalerList);
+        }
+        if(!retailerList.isEmpty()) {
+            returnList.add(retailerList);
+        }
+        if(!defaultList.isEmpty()) {
+            returnList.add(defaultList);
+        }
         return returnList;
-
-//        facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
-
-//        switchCase();
-
-//        if(!factoryList.isEmpty()) {
-//            returnList.add(factoryList);
-//        }
-//        if(!regionalWarehouseList.isEmpty()) {
-//            returnList.add(regionalWarehouseList);
-//        }
-//        if(!wholesalerList.isEmpty()) {
-//            returnList.add(wholesalerList);
-//        }
-//        if(!retailerList.isEmpty()) {
-//            returnList.add(retailerList);
-//        }
-//        if(!defaultList.isEmpty()) {
-//            returnList.add(defaultList);
-//        }
-//        return returnList;
     }
 
     /**
