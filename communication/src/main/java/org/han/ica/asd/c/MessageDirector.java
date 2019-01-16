@@ -33,12 +33,11 @@ public class MessageDirector implements IServerObserver {
      */
     @Override
     public Object serverObjectReceived(Object receivedObject, String senderIp) {
-
         if (receivedObject instanceof GameMessage) {
             GameMessage gameMessage = (GameMessage) receivedObject;
             return gameMessageReceiver.gameMessageReceived(gameMessage, senderIp);
 
-        } else if (receivedObject instanceof FaultDetectionMessage && faultDetectionMessageReceiver != null) {
+        } else if (receivedObject instanceof FaultDetectionMessage) {
             FaultDetectionMessage faultDetectionMessage = (FaultDetectionMessage) receivedObject;
             return faultDetectionMessageReceiver.receiveMessage(faultDetectionMessage, senderIp);
         } else {
