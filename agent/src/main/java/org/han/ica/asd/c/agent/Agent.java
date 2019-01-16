@@ -49,11 +49,9 @@ public class Agent extends GameAgent implements IParticipant {
         super(gameAgentName, facility, gameBusinessRulesList);
         this.configuration = configuration;
     }
-
-	/**
-	 * Empty constructor for Guice.
-	 */
+	
 	public Agent() {
+		//Empty constructor for Guice.
 	}
 
 	/**
