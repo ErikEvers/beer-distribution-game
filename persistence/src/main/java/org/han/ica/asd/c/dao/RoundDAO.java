@@ -96,7 +96,7 @@ public class RoundDAO {
 	}
 
 	private void updateFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
-		if (getFacilityDeliversInRound(roundId).stream().map(FacilityTurnDeliver::getFacilityId).collect(Collectors.toList()).contains(facilityTurnDeliver.getFacilityId())) {
+		if(getFacilityDeliversInRound(roundId).stream().filter(turn -> turn.getFacilityId() == facilityTurnDeliver.getFacilityId() && turn.getFacilityIdDeliverTo() == facilityTurnDeliver.getFacilityIdDeliverTo()).findFirst().isPresent()) {
 			Connection conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYDELIVER)) {
@@ -123,7 +123,7 @@ public class RoundDAO {
 	}
 
 	private void updateFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder) {
-		if(getFacilityOrdersInRound(roundId).stream().map(FacilityTurnOrder::getFacilityId).collect(Collectors.toList()).contains(facilityTurnOrder.getFacilityId())) {
+		if(getFacilityOrdersInRound(roundId).stream().filter(turn -> turn.getFacilityId() == facilityTurnOrder.getFacilityId() && turn.getFacilityIdOrderTo() == facilityTurnOrder.getFacilityIdOrderTo()).findFirst().isPresent()) {
 			Connection conn = databaseConnection.connect();
 			if (conn != null) {
 				try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYORDER)) {
