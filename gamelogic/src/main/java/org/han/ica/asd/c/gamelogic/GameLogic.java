@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gamelogic;
 
+import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
@@ -15,6 +16,7 @@ import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
@@ -37,6 +39,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Inject
     private static ParticipantsPool participantsPool;
+
+    @Inject
+    private Provider<Agent> agentProvider;
 
     private static int curRoundId;
     private static IPlayerRoundListener player;
@@ -75,11 +80,16 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     /**
      * Replaces the player with the given agent.
-     * @param agent Agent that will replace the player.
+     * @param gameAgent Agent that will replace the player.
      */
     @Override
-    public void letAgentTakeOverPlayer(IParticipant agent) {
-        participantsPool.addParticipant(agent);
+    public void letAgentTakeOverPlayer(GameAgent gameAgent) {
+        Agent agent = this.agentProvider.get();
+        agent.setConfiguration(getBeerGame().getConfiguration());
+        agent.setGameAgentName(gameAgent.getGameAgentName());
+        agent.setFacility(gameAgent.getFacility());
+        agent.setGameBusinessRules(gameAgent.getGameBusinessRules());
+        participantsPool.replacePlayerWithAgent(agent);
     }
 
     /**
