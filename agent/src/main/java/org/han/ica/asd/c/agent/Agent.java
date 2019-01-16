@@ -95,7 +95,7 @@ public class Agent extends GameAgent implements IParticipant {
 				}
 			}
 		} catch (FacilityNotFound exception) {
-			LOGGER.log(Level.SEVERE, exception.getMessage(), exception);
+			LOGGER.log(Level.FINE, exception.getMessage(), exception);
 		}
 	}
 

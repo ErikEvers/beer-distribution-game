@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -545,7 +547,7 @@ class AgentIntegrationTest {
         Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
         Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
         String expectedMessage = "Facility with ID: 10 is not found.";
-        Level expectedLevel = Level.SEVERE;
+        Level expectedLevel = Level.FINE;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
                 new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(10))))A(AR(deliver)V(20)P(retail 1)))"),
@@ -563,9 +565,9 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 10, 20)));
 
         Logger logger = Logger.getLogger(Agent.class.getName());
-        TestExceptionLogHandler testExceptionLogHandler = new TestExceptionLogHandler();
-
-        logger.addHandler(testExceptionLogHandler);
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.FINE);
+        logger.addHandler(consoleHandler);
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
@@ -576,8 +578,7 @@ class AgentIntegrationTest {
         GameRoundAction gameRoundAction = participant.executeTurn();
         assertTrue(gameRoundAction.targetOrderMap.isEmpty());
         assertTrue(gameRoundAction.targetDeliverMap.isEmpty());
-        assertEquals(expectedLevel, testExceptionLogHandler.level);
-        assertEquals(expectedMessage, testExceptionLogHandler.message);
+        assertEquals(expectedLevel, consoleHandler.getLevel());
     }
 
     @Test
