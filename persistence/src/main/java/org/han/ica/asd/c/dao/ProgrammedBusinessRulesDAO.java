@@ -161,18 +161,14 @@ public class ProgrammedBusinessRulesDAO {
      * @param list List that Object is inserted in.
      * @param <T> Generic Object that list consists of.
      */
-    private static <T> void fillAndSet(int index, T object, List<T> list)
-    {
-        if (index > (list.size() - 1))
-        {
-            for (int i = list.size(); i < index; i++)
-            {
+    private static <T> void fillAndSet(int index, T object, List<T> list) {
+        if (index > (list.size() - 1)) {
+            for (int i = list.size(); i < index; i++) {
                 list.add(null);
             }
             list.add(object);
         }
-        else
-        {
+        else {
             list.set(index, object);
         }
     }
