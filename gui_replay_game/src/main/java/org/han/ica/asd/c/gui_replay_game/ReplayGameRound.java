@@ -11,11 +11,11 @@ public class ReplayGameRound implements IGUIHandler {
     private int currentRound;
     @Override
     public void setData(Object[] data) {
-        if (data[0].getClass().equals(BeerGame.class)){
+        if (data[0] instanceof BeerGame){
             BeerGame game = (BeerGame) data[0];
             this.gameId = game.getGameId();
         }
-        else if (data[0].getClass().equals(Integer.class)){
+        else if (data[0] instanceof Integer){
             this.currentRound = (int) data[0];
         }
     }
