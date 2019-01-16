@@ -16,6 +16,7 @@ import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Leader;
@@ -194,6 +195,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
+
+				for (FacilityTurn facilityTurn : currentRoundData.getFacilityTurns()) {
+					if(!game.getConfiguration().isContinuePlayingWhenBankrupt() && facilityTurn.isBankrupt()) {
+						endGame();
+						return;
+					}
+				}
         startNextRound();
     }
 
@@ -227,17 +235,22 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      */
     private void startNextRound() throws TransactionException {
         if (roundId == getBeerGame().getConfiguration().getAmountOfRounds()) {
-            connectorForLeader.sendGameEnd(game);
+            endGame();
+            return;
         }
-        roundId++;
-        currentRoundData.setRoundId(roundId);
-        turnsReceivedInCurrentRound = 0;
-        try {
-            connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
-        } catch (TransactionException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
+				roundId++;
+				currentRoundData.setRoundId(roundId);
+				turnsReceivedInCurrentRound = 0;
+				try {
+						connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+				} catch (TransactionException e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+				}
     }
+
+    private void endGame() throws TransactionException {
+			connectorForLeader.sendGameEnd(game);
+		}
 
 
     /**
