@@ -111,7 +111,7 @@ public abstract class PlayGame implements IPlayGame {
      */
     protected void superInitialize() {
         mainContainer.getChildren().addAll();
-        playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
+        playGridPane.setStyle("-fx-border-style: solid inside; -fx-border-color: black; -fx-border-radius: 40;");
 
         //Make sure only numbers can be filled in the order textBox. This is done using a textFormatter
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
@@ -128,7 +128,7 @@ public abstract class PlayGame implements IPlayGame {
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
         return change -> {
                 String newText = change.getControlNewText();
-                if (newText.matches("-?([0-9]*)?")){
+                if (newText.matches("([0-9]*)?")){
                     return change;
                 }
                 return null;
