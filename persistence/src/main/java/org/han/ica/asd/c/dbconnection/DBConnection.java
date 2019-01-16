@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
@@ -17,13 +16,10 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.apache.ibatis.io.Resources.getResourceAsStream;
-
 @Singleton
 public class DBConnection implements IDatabaseConnection {
 	private static final String currentDir = System.getProperty("user.home");
-	private static final String PATH = currentDir+File.separator+"Documents"+File.separator+"Beer Distribution Game"+File.separator+"resources"+File.separator;
-
+	private static final String PATH = currentDir+File.separator+"Documents"+File.separator+"Beer%20Distribution%20Game"+File.separator+"resources"+File.separator;
 	private static final String DATABASENAME = "BeerGameDB.db";
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:" + PATH;
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
