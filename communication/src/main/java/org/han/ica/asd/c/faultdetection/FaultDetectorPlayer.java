@@ -145,7 +145,7 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     private void askOtherPlayers() {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
-        faultHandlerPlayer.setAmountOfActiveIps(ips.size());
+        faultHandlerPlayer.setAmountOfActiveIps(ips.size()-1);
         HashMap<String, Long> filter = new HashMap<>(playersWhoAlreadyCouldntReachLeader);
 
         // filter out ips from ips that already send a message within the past 5 minutes
