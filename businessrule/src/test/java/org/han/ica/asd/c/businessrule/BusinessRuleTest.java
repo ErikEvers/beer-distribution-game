@@ -342,12 +342,12 @@ class BusinessRuleTest {
                                 .addChild(comparisonProvider.get()
                                         .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("round")))
                                         .addChild(comparisonOperatorProvider.get().addValue("equal"))
-                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("5"))))))
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("4"))))))
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))
                         .addChild(valueProvider.get().addValue("20")));
 
-        String expected = "BR(CS(CS(C(CV(V(5))ComO(==)CV(V(5)))))A(AR(order)V(20)))";
+        String expected = "BR(CS(CS(C(CV(V(4))ComO(==)CV(V(4)))))A(AR(order)V(20)))";
 
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
 
