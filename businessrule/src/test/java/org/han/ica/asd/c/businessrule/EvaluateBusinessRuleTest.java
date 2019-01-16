@@ -50,7 +50,7 @@ class EvaluateBusinessRuleTest {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
             }
         });
         valueProvider = injector.getProvider(Value.class);
@@ -389,6 +389,32 @@ class EvaluateBusinessRuleTest {
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))
                         .addChild(valueProvider.get().addValue("30")));
+
+        businessRuleBefore.evaluateBusinessRule();
+
+        assertEquals(businessRuleAfter, businessRuleBefore);
+    }
+
+    @Test
+    void testResolvingOperationInAction() {
+        BusinessRule businessRuleBefore = businessRuleProvider.get();
+        businessRuleBefore.addChild(comparisonStatementProvider.get()
+                .addChild(comparisonProvider.get()
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("19")))
+                        .addChild(comparisonOperatorProvider.get().addValue("less than or equal to"))
+                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("20")))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(subtractOperationProvider.get()
+                                .addChild(valueProvider.get().addValue("30"))
+                                .addChild(calculationOperatorProvider.get().addValue("-"))
+                                .addChild(valueProvider.get().addValue("10"))));
+
+        BusinessRule businessRuleAfter = businessRuleProvider.get();
+        businessRuleAfter.addChild(booleanLiteralProvider.get().setValue(true))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("20")));
 
         businessRuleBefore.evaluateBusinessRule();
 

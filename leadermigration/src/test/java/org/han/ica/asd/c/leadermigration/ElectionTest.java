@@ -17,10 +17,11 @@ public class ElectionTest {
     @Before
     public void testSetup() {
 			communicationHelper = new CommunicationHelper();
+			communicationHelper.setCurrentPlayerIp(currentPlayerIP);
     }
 
     @Test
-    public void basicElectionTest() throws PlayerNotFoundException {
+    public void basicElectionTest() {
         Player[] players = new Player[3];
         players[0] = new Player("1", currentPlayerIP, mock(Facility.class), "Joost", true);
         players[1] = new Player("1", "222", mock(Facility.class), "Henk", true);
@@ -31,7 +32,7 @@ public class ElectionTest {
     }
 
     @Test
-    public void secondBasicElectionTest() throws PlayerNotFoundException {
+    public void secondBasicElectionTest() {
         Player[] players = new Player[3];
         players[0] = new Player("1", "222", mock(Facility.class), "Henk", true);
         players[1] = new Player("1", "333", mock(Facility.class), "Piet", true);
@@ -41,7 +42,7 @@ public class ElectionTest {
     }
 
     @Test
-    public void singlePlayerElectionTest() throws PlayerNotFoundException {
+    public void singlePlayerElectionTest() {
         Player[] players = new Player[1];
         players[0] = new Player("1", currentPlayerIP, mock(Facility.class), "Joost", true);
         Player elected = communicationHelper.startElection(players);
@@ -49,7 +50,7 @@ public class ElectionTest {
     }
 
     @Test
-    public void playerDisconnectDuringElectionTest() throws PlayerNotFoundException {
+    public void playerDisconnectDuringElectionTest() {
         Player[] players = new Player[3];
         players[0] = new Player("1", currentPlayerIP, mock(Facility.class), "Joost", true);
         players[1] = new Player("1", "222", mock(Facility.class), "Henk", true);

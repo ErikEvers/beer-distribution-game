@@ -33,16 +33,11 @@ public class FacilityRectangle extends StackPane {
 
 				Text text = new Text("Player: " +assignedPlayer + "\n" + "Agent: " +assignedAgent);
 
-				double textSize = text.getFont().getSize();
-
 				rectangle = new Rectangle(text.getLayoutBounds().getWidth() + 10, text.getLayoutBounds().getHeight() + 10, Color.web(determineColor(facility.getFacilityType().getFacilityName())));
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeType(StrokeType.INSIDE);
         rectangle.setArcHeight(5);
         rectangle.setArcWidth(5);
-        if(text.getText().length() > 0) {
-					rectangle.setWidth((text.getText().length()/2 * textSize) + 5);
-				}
 
 				this.getChildren().addAll(rectangle, text);
 

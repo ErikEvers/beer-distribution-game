@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
@@ -59,7 +60,7 @@ public class JoinGameController {
                 GamePlayerId gameData = iConnectorForSetup.getGameData(output.get());
                 gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
                 gameRoom.setupScreen();
-            } catch (RoomException | DiscoveryException | ClassNotFoundException | IOException e) {
+            } catch (RoomException | DiscoveryException | SendGameMessageException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
                 alert.show();
             }

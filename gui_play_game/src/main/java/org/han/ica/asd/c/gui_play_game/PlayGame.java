@@ -20,15 +20,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -211,27 +210,27 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected void submitTurnButtonClicked() {
 				submitTurnButton.setDisable(true);
-				if(playerComponent.submitTurn()) {
-					currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
-					currentAlert.show();
-					orderFacilities.clear();
-					deliverFacilities.clear();
-				} else {
-					currentAlert = new Alert(Alert.AlertType.ERROR, "Something went wrong while submitting your turn, please try again", ButtonType.OK, ButtonType.CLOSE);
-					Optional<ButtonType> result = currentAlert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						currentAlert.close();
-						submitTurnButtonClicked();
-					}
-					submitTurnButton.setDisable(false);
-				}
+        try {
+            playerComponent.submitTurn();
+						currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
+						currentAlert.show();
+						orderFacilities.clear();
+						deliverFacilities.clear();
+        } catch (SendGameMessageException e) {
+            currentAlert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.OK, ButtonType.CLOSE);
+            Optional<ButtonType> result = currentAlert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                currentAlert.close();
+                submitTurnButtonClicked();
+            }
+            submitTurnButton.setDisable(false);
+        }
     }
 
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
-    		BeerGame beerGame = playerComponent.getBeerGame();
+        BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
-        Round round = playerComponent.getRound();
         int budget = 0;
         List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
         for (FacilityTurn f: facilityTurns) {
@@ -245,8 +244,6 @@ public abstract class PlayGame implements IPlayGame {
 								budget = f.getRemainingBudget();
             }
         }
-
-
 
         int incomingOrders = 0;
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
@@ -270,19 +267,13 @@ public abstract class PlayGame implements IPlayGame {
     private void initLists() {
 				orderFacilities.clear();
 				deliverFacilities.clear();
-        for(FacilityTurnOrder facilityTurnOrder : playerComponent.getRound().getFacilityOrders()) {
-            if(facilityTurnOrder.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
-                String facilityAndOrderAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
-                orderFacilities.add(facilityAndOrderAmount);
-            }
-        }
+				Facility ownFacility = playerComponent.getPlayer().getFacility();
 
-        for(FacilityTurnDeliver facilityTurnDeliver : playerComponent.getRound().getFacilityTurnDelivers()) {
-            if(facilityTurnDeliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
-                String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
-                deliverFacilities.add(facilityAndDeliverAmount);
-            }
-        }
+        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == ownFacility.getFacilityId()).forEach(order ->
+                orderFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(order.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
+        
+        playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == ownFacility.getFacilityId()).forEach(deliver ->
+                deliverFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(deliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
     }
 
     public void deletePlacedOrder() {

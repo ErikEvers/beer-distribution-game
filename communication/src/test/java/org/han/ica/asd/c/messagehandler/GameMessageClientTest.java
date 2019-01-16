@@ -1,14 +1,19 @@
 package org.han.ica.asd.c.messagehandler;
 
+import org.han.ica.asd.c.exceptions.communication.LeaderNotPresentException;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,10 +29,11 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -43,13 +49,13 @@ public class GameMessageClientTest {
     private GameMessageClient gameMessageClient;
 
     @Mock
-    private SocketClient socketClient = new SocketClient();
+    private SocketClient socketClient;
 
     @BeforeEach
     void setUp() {
         initMocks(this);
         roundDataClient = new GameMessageClient();
-        roundDataClient.setSocketClient(socketClient);
+        roundDataClient.linkGameMessageSenderToSocketClient(socketClient);
         data = new Round();
 
         Injector injector = Guice.createInjector(new AbstractModule() {
@@ -60,33 +66,22 @@ public class GameMessageClientTest {
         });
 
         gameMessageClient = injector.getInstance(GameMessageClient.class);
-        gameMessageClient.setSocketClient(socketClient);
+        gameMessageClient.linkGameMessageSenderToSocketClient(socketClient);
+
     }
 
     @Test
     void shouldReturnResponseMessageWithIOException() throws IOException, ClassNotFoundException {
-        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
-
-        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
-
-        assertFalse(responseMessage);
+        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenThrow(new IOException());
+        assertThrows(SendGameMessageException.class, () -> gameMessageClient.sendTurnModel(wrongIp, data));
     }
 
     @Test
-    void shouldReturnResponseMessageWithClassNotFoundException() throws IOException, ClassNotFoundException {
-        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenThrow(new ClassNotFoundException());
-        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
-        assertFalse(responseMessage);
-    }
-
-    @Test
-    void shouldReturnResponseMessageWithNoException() throws IOException, ClassNotFoundException {
+    void shouldReturnResponseMessageWithNoException() throws IOException, ClassNotFoundException, SendGameMessageException {
         TurnModelMessage turnModelMessage = new TurnModelMessage(new Round());
         turnModelMessage.createResponseMessage();
-        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(TurnModelMessage.class))).thenReturn(turnModelMessage);
-        boolean responseMessage = gameMessageClient.sendTurnModel(wrongIp, data);
-
-        assertTrue(responseMessage);
+        when(socketClient.sendObjectWithResponse(any(String.class), any(TurnModelMessage.class))).thenReturn(turnModelMessage);
+        gameMessageClient.sendTurnModel(wrongIp, data);
     }
 
     @Test
@@ -95,10 +90,55 @@ public class GameMessageClientTest {
         facility.setFacilityId(123);
         ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
 
-        when(socketClient.sendObjectWithResponseGeneric(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
-        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility, "");
+        when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
+
+        ChooseFacilityMessage response = gameMessageClient.sendChooseFacilityMessage(correctIp, facility, null);
 
         assertNull(response.getException());
+    }
+
+    @Test
+    public void shouldThrowErrorWhenChooseFacillity() throws IOException, ClassNotFoundException {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+        chooseFacilityMessage.setException(new FacilityNotAvailableException());
+
+        when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
+
+        assertThrows(FacilityNotAvailableException.class,()-> gameMessageClient.sendChooseFacilityMessage(correctIp, facility, null));
+    }
+
+    @Test
+    public void shouldReturnSameChooseFacilityMessage() throws IOException, ClassNotFoundException, FacilityNotAvailableException, SendGameMessageException {
+        Facility facility = new Facility();
+        facility.setFacilityId(123);
+        ChooseFacilityMessage chooseFacilityMessage = new ChooseFacilityMessage(facility);
+
+        when(socketClient.sendObjectWithResponse(any(String.class), any(ChooseFacilityMessage.class))).thenReturn(chooseFacilityMessage);
+        assertEquals(chooseFacilityMessage.getClass(), gameMessageClient.sendChooseFacilityMessage(correctIp, facility, null).getClass());
+    }
+
+    @Test
+    public void shouldReturnGamePlayerIDWithoutError() throws Exception {
+        RequestGameDataMessage response = new RequestGameDataMessage();
+        response.setGameData(new GamePlayerId(new BeerGame(), "1"));
+
+        when(socketClient.sendObjectWithResponse(any(), any(RequestGameDataMessage.class))).thenReturn(response);
+        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp, null);
+
+        assertNotNull(responseRequest);
+    }
+
+    @Test
+    public void shouldReturnGamePlayerIDWithError() throws SendGameMessageException, IOException, ClassNotFoundException {
+        RequestGameDataMessage response = new RequestGameDataMessage();
+        response.setException(new Exception());
+
+        when(socketClient.sendObjectWithResponse(any(), any(RequestGameDataMessage.class))).thenReturn(response);
+        GamePlayerId responseRequest = gameMessageClient.sendGameDataRequestMessage(correctIp, null);
+
+        assertNotNull(response.getException());
     }
 
 // Still unsure on how to test this cause of threading
@@ -115,14 +155,11 @@ public class GameMessageClientTest {
 
     @Test
     @DisplayName("Test If the sendWhoIsTheLeaderMessage calls the socketclient")
-    void TestSendWhoIsTheLeaderMessageHappyFlow() {
+    void TestSendWhoIsTheLeaderMessageHappyFlow() throws SendGameMessageException, LeaderNotPresentException, IOException, ClassNotFoundException {
         WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
         whoIsTheLeaderMessage.setResponse("test");
-        try {
-            when(socketClient.sendObjectWithResponseGeneric(any(), any())).thenReturn(whoIsTheLeaderMessage);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        when(socketClient.sendObjectWithResponse(any(), any())).thenReturn(whoIsTheLeaderMessage);
+
         String result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
 
         assertEquals("test", result);
@@ -130,17 +167,14 @@ public class GameMessageClientTest {
 
     @Test
     @DisplayName("Test If the sendWhoIsTheLeaderMessage throws catches exception")
-    void TestSendWhoIsTheLeaderMessageUnHappyFlow() {
+    void TestSendWhoIsTheLeaderMessageUnHappyFlow() throws SendGameMessageException, LeaderNotPresentException {
         WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
         whoIsTheLeaderMessage.setResponse("test");
         try {
-            when(socketClient.sendObjectWithResponseGeneric(any(), any())).thenThrow(new IOException("Error"));
+            when(socketClient.sendObjectWithResponse(any(), any())).thenThrow(new IOException("Error"));
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        String result = gameMessageClient.sendWhoIsTheLeaderMessage("TestIp");
-
-        assertNotEquals(whoIsTheLeaderMessage.getResponse(), result);
+        assertThrows(SendGameMessageException.class, () -> gameMessageClient.sendWhoIsTheLeaderMessage("TestIp"));
     }
-
 }

@@ -1,5 +1,7 @@
 package org.han.ica.asd.c.interfaces.businessrule;
 
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+
 import java.util.List;
 import java.util.Map;
 
@@ -40,4 +42,12 @@ public interface IBusinessRuleStore {
      * @param agentName The name of a agent.
      */
     void deleteProgrammedAgent(String agentName);
+
+    /**
+     * Gets the programmedAgent belonging to the given agentName
+     *
+     * @param agentName the name of the agent to get
+     * @return the programmedAgent
+     */
+    ProgrammedAgent getProgrammedGameAgent(String agentName);
 }

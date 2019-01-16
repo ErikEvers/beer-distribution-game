@@ -14,12 +14,12 @@ public class SendInTransaction {
 
     private String[] ips;
     private TransactionMessage transactionMessage;
-    private SocketClient socketClient;
+    private GameMessageSender gameMessageSender;
 
-    public SendInTransaction(String[] ips, TransactionMessage transactionMessage, SocketClient socketClient) {
+    public SendInTransaction(String[] ips, TransactionMessage transactionMessage, GameMessageSender gameMessageSender) {
         this.ips = ips;
         this.transactionMessage = transactionMessage;
-        this.socketClient = socketClient;
+        this.gameMessageSender = gameMessageSender;
     }
 
     /**
@@ -29,7 +29,7 @@ public class SendInTransaction {
      */
     public void sendToAllPlayers() throws TransactionException {
         transactionMessage.setPhaseToStage();
-        handleStagePhase(socketClient.sendToAll(ips, transactionMessage));
+        handleStagePhase(gameMessageSender.sendToAll(ips, transactionMessage));
     }
 
     /**
@@ -48,12 +48,12 @@ public class SendInTransaction {
 
         if(allSuccessful) {
             transactionMessage.setPhaseToCommit();
-            socketClient.sendToAll(ips, transactionMessage);
+            gameMessageSender.sendToAll(ips, transactionMessage);
         }
 
         else {
             transactionMessage.setPhaseToRollback();
-            socketClient.sendToAll(ips, transactionMessage);
+            gameMessageSender.sendToAll(ips, transactionMessage);
 
             throw new TransactionException("Something went wrong with transactional sending data");
         }

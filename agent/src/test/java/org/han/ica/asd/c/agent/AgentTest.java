@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
@@ -20,19 +19,19 @@ import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.powermock.reflect.Whitebox;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class AgentTest {
@@ -75,6 +74,11 @@ class AgentTest {
 
 		@Override
 		public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+		}
+
+		@Override
+		public void updateRound(Round round) {
+
 		}
 	};
 
@@ -125,7 +129,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -136,7 +140,7 @@ class AgentTest {
 						return new ActionModel(ORDER, 30, lowerFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -155,7 +159,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -166,7 +170,7 @@ class AgentTest {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -183,7 +187,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -200,7 +204,7 @@ class AgentTest {
 						return null;
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -218,7 +222,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -232,7 +236,7 @@ class AgentTest {
 						return null;
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -250,7 +254,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -264,7 +268,7 @@ class AgentTest {
 						return null;
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -282,7 +286,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -296,7 +300,7 @@ class AgentTest {
 						return new ActionModel(DELIVER, 5, upperFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -314,7 +318,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -328,7 +332,7 @@ class AgentTest {
 						return new ActionModel(ORDER, 5, lowerFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistence);
+				bind(IPersistence.class).toInstance(persistence);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -350,30 +354,42 @@ class AgentTest {
 	}
 
 	@Test
-	void testResolveLowerFacilityIdExpectsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	void testResolveLowerFacilityIdExpectsNull() throws NoSuchMethodException {
 		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
-		Method method = agent.getClass().getDeclaredMethod(RESOLVE_LOWER_FACILITY_ID, int.class);
+		Method method = Agent.class.getDeclaredMethod(RESOLVE_LOWER_FACILITY_ID, int.class);
 		method.setAccessible(true);
-		Facility resultFacility = (Facility) method.invoke(agent, upperFacility.getFacilityId());
-		assertNull(resultFacility);
+
+		assertThrows(FacilityNotFound.class, () -> {
+			try {
+				method.invoke(agent, upperFacility.getFacilityId());
+			} catch (InvocationTargetException exception) {
+				throw exception.getCause();
+			}
+		}, "Facility with ID: 0 is not found.");
 	}
 
 	@Test
 	void testResolveHigherFacilityIdExpectsMockedFacility() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
-		Method method = agent.getClass().getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
+		Method method = Agent.class.getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
 		method.setAccessible(true);
 		Facility resultFacility = (Facility) method.invoke(agent, upperFacility.getFacilityId());
 		assertNotNull(resultFacility);
 	}
 
 	@Test
-	void testResolveHigherFacilityIdExpectsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	void testResolveHigherFacilityIdExpectsNull() throws NoSuchMethodException {
 		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
-		Method method = agent.getClass().getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
+		Method method = Agent.class.getDeclaredMethod(RESOLVE_HIGHER_FACILITY_ID, int.class);
 		method.setAccessible(true);
-		Facility resultFacility = (Facility) method.invoke(agent, lowerFacility.getFacilityId());
-		assertNull(resultFacility);
+
+		assertThrows(FacilityNotFound.class, () -> {
+			try {
+				method.invoke(agent, lowerFacility.getFacilityId());
+			} catch (InvocationTargetException exception) {
+				throw exception.getCause();
+			}
+		}, "Facility with ID: 2 is not found.");
 	}
 
 	@Test
@@ -384,7 +400,7 @@ class AgentTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRules.class).annotatedWith(Names.named(BUSINESS_RULES)).toInstance(new IBusinessRules() {
+				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
 					@Override
 					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
 						return Collections.emptyList();
@@ -398,7 +414,7 @@ class AgentTest {
 						return new ActionModel(ORDER, 5, mainFacility.getFacilityId());
 					}
 				});
-				bind(IPersistence.class).annotatedWith(Names.named(PERSISTENCE)).toInstance(persistenceMock);
+				bind(IPersistence.class).toInstance(persistenceMock);
 				bind(IPlayerGameLogic.class).toInstance(gameLogic);
 			}
 		});
@@ -416,4 +432,112 @@ class AgentTest {
 
         assertEquals(mainFacility, agent.getParticipant());
     }
+
+	@Test
+	void testFacilitySorting() {
+		List<Facility> links = new ArrayList<>();
+		links.add(new Facility());
+		links.get(0).setFacilityId(4);
+		links.add(new Facility());
+		links.get(1).setFacilityId(5);
+		links.add(new Facility());
+		links.get(2).setFacilityId(1);
+
+		Collections.sort(links);
+
+		String exp = "145";
+		StringBuilder res = new StringBuilder();
+
+		for (Facility link : links) {
+			res.append(link.getFacilityId());
+		}
+
+		assertEquals(exp,res.toString());
+	}
+
+	@Test
+	void testresolveLowerFacilityId() {
+		Configuration config = new Configuration();
+		Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
+
+		Facility myFacility = new Facility();
+		myFacility.setFacilityId(1);
+		Facility facilityWithId2 = new Facility();
+		facilityWithId2.setFacilityId(2);
+		Facility facilityWithId3 = new Facility();
+		facilityWithId3.setFacilityId(3);
+		Facility facilityWithId4 = new Facility();
+		facilityWithId4.setFacilityId(4);
+		Facility facilityWithId5 = new Facility();
+		facilityWithId5.setFacilityId(5);
+
+		List<Facility> facilitiesBelow = new ArrayList<>();
+		facilitiesBelow.add(facilityWithId4);
+		facilitiesBelow.add(facilityWithId5);
+
+		List<Facility> listWithMyFacility = new ArrayList<>();
+		listWithMyFacility.add(myFacility);
+
+		facilitiesLinkedTo.put(myFacility, facilitiesBelow);
+		facilitiesLinkedTo.put(facilityWithId2, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId3, listWithMyFacility);
+		config.setFacilitiesLinkedTo(facilitiesLinkedTo);
+
+		Agent agent = new Agent(config, "", myFacility, gameBusinessRuleList);
+
+		int exp = 4;
+		Facility res = new Facility();
+
+		try {
+			res = Whitebox.invokeMethod(agent, "resolveLowerFacilityId", -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		assertNotNull(res);
+		assertEquals(exp,res.getFacilityId());
+	}
+
+	@Test
+	void testresolveHigherFacilityId() {
+		Configuration config = new Configuration();
+		Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
+
+		Facility myFacility = new Facility();
+		myFacility.setFacilityId(1);
+		Facility facilityWithId2 = new Facility();
+		facilityWithId2.setFacilityId(2);
+		Facility facilityWithId3 = new Facility();
+		facilityWithId3.setFacilityId(3);
+		Facility facilityWithId4 = new Facility();
+		facilityWithId4.setFacilityId(4);
+		Facility facilityWithId5 = new Facility();
+		facilityWithId5.setFacilityId(5);
+
+		List<Facility> facilitiesBelow = new ArrayList<>();
+		facilitiesBelow.add(facilityWithId2);
+		facilitiesBelow.add(facilityWithId3);
+
+		List<Facility> listWithMyFacility = new ArrayList<>();
+		listWithMyFacility.add(myFacility);
+
+		facilitiesLinkedTo.put(myFacility, facilitiesBelow);
+		facilitiesLinkedTo.put(facilityWithId4, listWithMyFacility);
+		facilitiesLinkedTo.put(facilityWithId5, listWithMyFacility);
+		config.setFacilitiesLinkedTo(facilitiesLinkedTo);
+
+		Agent agent = new Agent(config, "", myFacility, gameBusinessRuleList);
+
+		int exp = 4;
+		Facility res = new Facility();
+
+		try {
+			res = Whitebox.invokeMethod(agent, "resolveHigherFacilityId", -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		assertNotNull(res);
+		assertEquals(exp,res.getFacilityId());
+	}
 }
