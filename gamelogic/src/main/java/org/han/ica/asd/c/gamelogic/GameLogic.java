@@ -89,6 +89,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         agent.setGameAgentName(gameAgent.getGameAgentName());
         agent.setFacility(gameAgent.getFacility());
         agent.setGameBusinessRules(gameAgent.getGameBusinessRules());
+
+        sendRoundForAgent(agent);
         participantsPool.replacePlayerWithAgent(agent);
     }
 
@@ -167,14 +169,18 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     private void sendRoundActionFromAgents() {
         for (IParticipant participant : participantsPool.getParticipants()) {
-            Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
-            try {
-                communication.sendTurnData(round);
-            } catch (SendGameMessageException e) {
-                //No error should be thrown if the agent runs locally
-            }
+           sendRoundForAgent(participant);
         }
         player.roundStarted();
+    }
+
+    private void sendRoundForAgent(IParticipant participant){
+        Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
+        try {
+            communication.sendTurnData(round);
+        } catch (SendGameMessageException e) {
+            //No error should be thrown if the agent runs locally
+        }
     }
 
     private Round makeRoundFromGameRoundAction(GameRoundAction action, int facilityId) {
