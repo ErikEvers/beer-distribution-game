@@ -62,7 +62,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     private NodeInfoList nodeInfoList;
 
     @Inject
-    private static FaultDetector faultDetector;
+    private FaultDetector faultDetector;
 
     @Inject
     private GameMessageClient gameMessageClient;

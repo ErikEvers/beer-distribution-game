@@ -15,8 +15,8 @@ import javax.inject.Inject;
  * @author Oscar, Tarik
  */
 public class FaultDetectionMessageReceiver {
-    @Inject
-    private static FaultDetector faultDetector;
+
+    private FaultDetector faultDetector;
 
     public FaultDetectionMessageReceiver() {
         //For inject purposes

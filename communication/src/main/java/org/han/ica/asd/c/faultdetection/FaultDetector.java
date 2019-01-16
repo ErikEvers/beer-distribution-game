@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.faultdetection;
 
 import org.han.ica.asd.c.faultdetection.messagetypes.CanYouReachLeaderMessage;
+import org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author Oscar, Tarik
  */
 public class FaultDetector {
-    @Inject
+
     private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
     @Inject
     private FaultDetectorPlayer faultDetectorPlayer;
@@ -27,8 +28,11 @@ public class FaultDetector {
 
     private List<IConnectorObserver> observers;
 
-    public FaultDetector() {
+    @Inject
+    public FaultDetector(FaultDetectionMessageReceiver receiver) {
         //For inject purposes
+        receiver.setFaultDetector(this);
+        this.faultDetectionMessageReceiver = receiver;
     }
 
     /**

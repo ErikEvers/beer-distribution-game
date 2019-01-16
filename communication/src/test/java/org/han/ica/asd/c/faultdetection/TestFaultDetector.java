@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -41,7 +42,7 @@ public class TestFaultDetector {
     @BeforeEach
     void setUp() {
         initMocks(this);
-        faultDetector = spy(new FaultDetector());
+        faultDetector = spy(new FaultDetector(mock(FaultDetectionMessageReceiver.class)));
         faultDetector.setObservers(observers);
     }
 
