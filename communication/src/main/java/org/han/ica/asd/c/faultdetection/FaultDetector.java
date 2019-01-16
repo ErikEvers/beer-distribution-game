@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class FaultDetector {
 
-    private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
+    private static FaultDetectionMessageReceiver faultDetectionMessageReceiver;
 
     @Inject
     private FaultDetectorPlayer faultDetectorPlayer;
@@ -32,10 +32,10 @@ public class FaultDetector {
 
     @Inject
     public FaultDetector(FaultDetectionMessageReceiver receiver) {
-        if(this.faultDetectionMessageReceiver == null) {
+        if(FaultDetector.faultDetectionMessageReceiver == null) {
             //For inject purposes
             receiver.setFaultDetector(this);
-            this.faultDetectionMessageReceiver = receiver;
+            FaultDetector.faultDetectionMessageReceiver = receiver;
         }
     }
 
