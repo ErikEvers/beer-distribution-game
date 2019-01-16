@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
-
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
@@ -15,10 +14,11 @@ import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
-
 import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
-import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -90,7 +90,7 @@ public class AssignAgentsController {
                 if (agentComboBox.getValue().getProgrammedAgentName().equals(beerGame.getAgents().get(i).getGameAgentName()) && (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, resourceBundle.getString("agent_assigned_warning"));
                     alert.setHeaderText(resourceBundle.getString("warning_title"));
-                    alert.showAndWait();
+                    alert.show();
                 }
 
                 if (lastClickedFacilityRectangle.getFacility().getFacilityId() == beerGame.getAgents().get(i).getFacility().getFacilityId()) {
@@ -101,7 +101,7 @@ public class AssignAgentsController {
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, resourceBundle.getString("choose_agent_alert"));
             alert.setHeaderText(resourceBundle.getString("warning_title"));
-            alert.showAndWait();
+            alert.show();
         }
         initTree();
     }
@@ -135,16 +135,18 @@ public class AssignAgentsController {
     }
 
     public void handleStartGameButtonClick() {
-        gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame());
+        for (GameAgent agent : gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame())) {
+            gameLeader.getBeerGame().getAgents().add(agent);
+        }
         initTree();
 				try {
 					gameLeader.startGame();
 				} catch (BeerGameException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't start a game unless every player controls a facility", ButtonType.CLOSE);
-					alert.showAndWait();
+					alert.show();
 				} catch (TransactionException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
-					alert.showAndWait();
+					alert.show();
 				}
     }
 

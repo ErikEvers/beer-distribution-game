@@ -3,10 +3,14 @@ package org.han.ica.asd.c.player;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
@@ -15,6 +19,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.Player;
+
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
@@ -32,7 +37,8 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private static Round round;
     private static IPlayGame ui;
 
-    private IPlayerGameLogic gameLogic;
+    @Inject
+    IPlayerGameLogic gameLogic;
 
     @Inject
     private IConnectorForSetup communication;
@@ -52,38 +58,12 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
 
 	@Override
 	public void activatePlayer() {
-		//stub for now
+		throw new UnsupportedOperationException();
 	}
 
     @Override
     public void activateAgent() {
-        //Yet to be implemented.
-    }
-
-    @Override
-    public void requestFacilityUsage(Facility facility) {
-        gameLogic.requestFacilityUsage(facility);
-    }
-
-
-    @Override
-    public void selectAgent() {
-        //Yet to be implemented.
-    }
-
-    @Override
-    public List<String> getAllGames() {
-        return gameLogic.getAllGames();
-    }
-
-    @Override
-    public void connectToGame(String game) {
-        gameLogic.connectToGame(game);
-    }
-
-    @Override
-    public List<Facility> getAllFacilities() {
-        return gameLogic.getAllFacilities();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -124,8 +104,34 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         }
     }
 
-    public boolean submitTurn() {
-        return gameLogic.submitTurn(round);
+		@Override
+    public void submitTurn() throws SendGameMessageException {
+    	gameLogic.submitTurn(round);
+    }
+
+    @Override
+    public void requestFacilityUsage(Facility facility) {
+
+    }
+
+    @Override
+    public void selectAgent() {
+
+    }
+
+    @Override
+    public List<String> getAllGames() {
+        return null;
+    }
+
+    @Override
+    public void connectToGame(String game) {
+
+    }
+
+    @Override
+    public List<Facility> getAllFacilities() {
+        return null;
     }
 
     @Override
@@ -134,10 +140,10 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
             communication.chooseFacility(facility, player.getPlayerId());
             player.setFacility(facility);
 						Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
-						alert.showAndWait();
-        } catch (FacilityNotAvailableException e) {
+						alert.show();
+        } catch (FacilityNotAvailableException | SendGameMessageException e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't choose this particular facility, try another one :)", ButtonType.CLOSE);
-					alert.showAndWait();
+					alert.show();
         }
     }
 

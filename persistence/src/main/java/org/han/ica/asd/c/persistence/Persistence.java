@@ -14,12 +14,10 @@ import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.replay.IRetrieveReplayData;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -64,18 +62,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	@Override
 	public void saveRoundData(Round rounddata)
 	{
-		roundDAO.createRound(rounddata.getRoundId());
-		for (FacilityTurn facilityTurn: rounddata.getFacilityTurns()) {
-			roundDAO.createFacilityTurn(rounddata.getRoundId(),facilityTurn);
-		}
-
-		for (FacilityTurnOrder facilityTurnOrder: rounddata.getFacilityOrders()) {
-			roundDAO.createFacilityOrder(rounddata.getRoundId(),facilityTurnOrder);
-		}
-
-		for (FacilityTurnDeliver facilityTurnDeliver: rounddata.getFacilityTurnDelivers()) {
-			roundDAO.createFacilityDeliver(rounddata.getRoundId(),facilityTurnDeliver);
-		}
+		roundDAO.createRound(rounddata);
 	}
 
 
@@ -91,9 +78,13 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	}
 
 	@Override
-	public void saveGameLog(BeerGame beerGame) {
-		beergameDAO.deleteBeergame(beerGame.getGameId());
-		beergameDAO.createBeergame(beerGame);
+	public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+		if(isStarted){
+			roundDAO.createRound(beerGame.getRoundById(beerGame.getRounds().size()-1));
+		}
+		else {
+			beergameDAO.createBeergame(beerGame);
+		}
 	}
 
 	@Override
@@ -108,8 +99,23 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	}
 
 	@Override
+	public void saveSelectedAgent(ProgrammedAgent agent) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void saveNewLeader(Player newLeader) {
-		leaderDAO.insertLeader(newLeader);
+		leaderDAO.insertLeader(new Leader(newLeader));
+	}
+
+	@Override
+	public void updateRound(Round round) {
+		roundDAO.updateRound(round);
+	}
+
+	@Override
+	public void createRound(Round round) {
+		roundDAO.createRound(round);
 	}
 
 	/**

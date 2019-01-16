@@ -6,6 +6,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 
 public class PlayGameFacilitiesController extends PlayGame {
+
     @FXML
     private Label lblFacilities;
 

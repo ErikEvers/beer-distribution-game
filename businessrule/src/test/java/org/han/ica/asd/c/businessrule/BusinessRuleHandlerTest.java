@@ -39,7 +39,7 @@ class BusinessRuleHandlerTest {
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
-				bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+				bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
 			}
 		});
 		valueProvider = injector.getProvider(Value.class);
@@ -64,7 +64,7 @@ class BusinessRuleHandlerTest {
 					.addChild(valueProvider.get().addValue("1")));
 
 		Action expectedAction = (Action) businessRule.getChildren().get(1);
-		ActionModel actualAction = businessRuleHandlerProvider.get().evaluateBusinessRule(businessRule.encode(), new Round(),10);
+		ActionModel actualAction = businessRuleHandlerProvider.get().evaluateBusinessRule(businessRule.encode(), new Round(),1);
 
 		assertEquals(expectedAction.getType(), actualAction.type);
 		assertEquals(expectedAction.getAmount(), actualAction.amount);

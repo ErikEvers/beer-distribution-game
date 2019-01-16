@@ -21,11 +21,30 @@ public class ResponseMessage implements Serializable {
         this.isSuccess = true;
     }
 
-    public boolean getIsSuccess() {
-        return isSuccess;
+    /**
+     * Gets responseObject.
+     *
+     * @return Value of responseObject.
+     */
+    public Object getResponseObject() {
+        return responseObject;
     }
 
+    /**
+     * Gets exception.
+     *
+     * @return Value of exception.
+     */
     public Exception getException() {
         return exception;
+    }
+
+    /**
+     * Gets isSuccess.
+     *
+     * @return Value of isSuccess.
+     */
+    public boolean getIsSuccess() {
+        return isSuccess;
     }
 }

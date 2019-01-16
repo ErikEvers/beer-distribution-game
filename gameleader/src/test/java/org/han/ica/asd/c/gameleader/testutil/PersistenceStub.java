@@ -8,7 +8,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 public class PersistenceStub implements IPersistence {
 
 	@Override
-	public void saveGameLog(BeerGame beerGame) {
+	public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
 	}
 
@@ -34,6 +34,11 @@ public class PersistenceStub implements IPersistence {
 
 	@Override
 	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+
+	}
+
+	@Override
+	public void updateRound(Round round) {
 
 	}
 }

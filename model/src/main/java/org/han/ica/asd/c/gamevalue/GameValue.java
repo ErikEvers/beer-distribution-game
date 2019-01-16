@@ -14,7 +14,8 @@ public enum GameValue {
     REGIONALWAREHOUSE("regional warehouse"),
     WHOLESALER("wholesaler"),
     RETAILER("retailer"),
-    BUDGET("budget");
+    BUDGET("budget"),
+    ROUND("round");
 
     String[] value;
 

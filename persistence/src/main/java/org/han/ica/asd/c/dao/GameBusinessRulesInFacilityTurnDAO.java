@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameBusinessRulesInFacilityTurnDAO {
-	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRulesInFacilityTurn VALUES (?,?,?,?,?);";
+	private static final String CREATE_BUSINESSRULETURN = "INSERT INTO GameBusinessRulesInFacilityTurn VALUES (?,?,?,?,?,?);";
 	private static final String READ_BUSINESSRULETURN = "SELECT * FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
 	private static final String DELETE_BUSINESSRULETURN = "DELETE FROM GameBusinessRulesInFacilityTurn WHERE GameId = ? AND RoundId = ? AND FacilityId = ?;";
 	private static final Logger LOGGER = Logger.getLogger(GameBusinessRulesInFacilityTurnDAO.class.getName());
@@ -41,12 +41,13 @@ public class GameBusinessRulesInFacilityTurnDAO {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
 				conn.setAutoCommit(false);
 
-				for (GameBusinessRules gamebusinessrule: gameBusinessRulesInFacilityTurn.getGameBusinessRulesList()) {
+				for (GameBusinessRules gamebusinessrule : gameBusinessRulesInFacilityTurn.getGameBusinessRulesList()) {
 					pstmt.setInt(1, gameBusinessRulesInFacilityTurn.getRoundId());
 					pstmt.setInt(2, gameBusinessRulesInFacilityTurn.getFacilityId());
 					pstmt.setString(3, DaoConfig.getCurrentGameId());
 					pstmt.setString(4, gameBusinessRulesInFacilityTurn.getGameAgentName());
-					pstmt.setString(5, gamebusinessrule.toString());
+					pstmt.setString(5, gamebusinessrule.getGameBusinessRule());
+					pstmt.setString(6, gamebusinessrule.getGameAST());
 
 					pstmt.execute();
 				}

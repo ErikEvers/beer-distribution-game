@@ -1,16 +1,22 @@
 package org.han.ica.asd.c.gamelogic;
 
+import com.google.inject.name.Names;
+import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.gui_play_game.see_other_facilities.SeeOtherFacilities;
+import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,29 +29,39 @@ public class GameLogicTest {
     private IConnectedForPlayer communication;
     private IGameStore persistence;
     private IPlayerRoundListener player;
+    private Round round;
+    private BeerGame beerGame;
+    private IGUIHandler seeOtherFacilities;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
+        round = new Round();
         communication = mock(IConnectedForPlayer.class);
         persistence = mock(IGameStore.class);
         participantsPool = mock(ParticipantsPool.class);
         player = mock(IPlayerRoundListener.class);
+        seeOtherFacilities = mock(SeeOtherFacilities.class);
+        beerGame = mock(BeerGame.class);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(IGameStore.class).toInstance(persistence);
                 bind(IConnectedForPlayer.class).toInstance(communication);
+                bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).toInstance(seeOtherFacilities);
+                //bind(ParticipantsPool.class).toInstance(participantsPool);
             }
         });
-        gameLogic = injector.getInstance(GameLogic.class);
+
+        gameLogic = spy(injector.getInstance(GameLogic.class));
+        doReturn(false).when(gameLogic).isBotGame();
         gameLogic.setParticipantsPool(participantsPool);
         gameLogic.setPlayer(player);
-        gameLogic.gameStartReceived(mock(BeerGame.class));
+        gameLogic.gameStartReceived(beerGame);
     }
 
     @Test
-    public void submitTurnCallsPersistence() {
+    public void submitTurnCallsPersistence() throws SendGameMessageException {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
@@ -54,7 +70,7 @@ public class GameLogicTest {
     }
 
     @Test
-    public void submitTurnCallsCommunication() {
+    public void submitTurnCallsCommunication() throws SendGameMessageException {
         Round turn = new Round();
         //FacilityTurnDB turn = new FacilityTurnDB("", 0, 0, 0, 0, 0, 0, 0, 0);
         gameLogic.submitTurn(turn);
@@ -62,14 +78,23 @@ public class GameLogicTest {
     }
 
     @Test
+    void getBeerGameCallsPersistence() {
+        gameLogic.getBeerGame();
+        doNothing().when(persistence).saveGameLog(any(BeerGame.class),anyBoolean());
+        verify(persistence, times(1)).saveGameLog(any(BeerGame.class),anyBoolean());
+    }
+
+    @Test
     public void letAgentTakeOverPlayerReplacesPlayer() {
         gameLogic.letAgentTakeOverPlayer(mock(Agent.class));
+        doNothing().when(participantsPool).addParticipant(any(IParticipant.class));
         verify(participantsPool, times(1)).addParticipant(any());
     }
 
     @Test
     public void letPlayerTakeOverAgentReplacesAgent() {
         gameLogic.letPlayerTakeOverAgent();
+        doNothing().when(participantsPool).replaceAgentWithPlayer();
         verify(participantsPool, times(1)).replaceAgentWithPlayer();
     }
 
@@ -87,13 +112,13 @@ public class GameLogicTest {
     }
 
     @Test
-    public void roundModelReceivedSavesOldRoundToDatabase() {
+    public void roundModelReceivedSavesOldRoundToDatabase() throws SendGameMessageException {
         gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
         //verify(persistence, times(1)).saveRoundData(any());
     }
 
     @Test
-    public void roundModelReceivedUpdatesRound() {
+    public void roundModelReceivedUpdatesRound() throws SendGameMessageException {
         int currentRoundNumber = gameLogic.getRoundId();
         Round round = new Round();
         int roundId = 33;
@@ -105,7 +130,7 @@ public class GameLogicTest {
     }
 
     @Test
-    public void roundModelReceivedCallsLocalParticipants() {
+    public void roundModelReceivedCallsLocalParticipants() throws SendGameMessageException {
         gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
         verify(participantsPool, times(2)).getParticipants();
     }

@@ -11,6 +11,7 @@ import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
@@ -28,17 +29,18 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 
 	private static final String GAME_ID = "BeerGameZutphen";
 	private static final String GAME_AGENT_NAME = "Henk";
-	
+
 
 	@BeforeEach
 	void setUp() {
-		DBConnectionTest.getInstance().cleanup();
 		GameBusinessRules businessRules = new GameBusinessRules("als voorraad minder dan 10 dan bestellen bij frits","gameAST");
 		rounds = new ArrayList<>();
 		gameBusinessRules = new ArrayList<>();
 		gameBusinessRules.add(businessRules);
 		rounds.add(new Round());
+
 		DBConnectionTest.getInstance().createNewDatabase();
+
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -46,7 +48,9 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 			}
 		});
 		gameBusinessRulesDAO = injector.getInstance(GameBusinessRulesDAO.class);
+
 		DaoConfig.setCurrentGameId(GAME_ID);
+
 		Injector injector1 = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -57,6 +61,12 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 		gameBusinessRulesInFacilityTurnDAO = injector1.getInstance(GameBusinessRulesInFacilityTurnDAO.class);
 		gameBusinessRulesInFacilityTurn = new GameBusinessRulesInFacilityTurn(1, 1, "Henk", gameBusinessRules);
 
+	}
+
+	@AfterEach
+	void tearDown() {
+		DBConnectionTest.getInstance().cleanup();
+		DaoConfig.clearCurrentGameId();
 	}
 
 	@Test

@@ -62,7 +62,7 @@ class BusinessRuleTest {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
             }
         });
 
@@ -90,6 +90,7 @@ class BusinessRuleTest {
         when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
         when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
         when(round.getFacilityTurns()).thenReturn(facilityTurns);
+        when(round.getRoundId()).thenReturn(4);
 
         when(facilityTurn.getFacilityId()).thenReturn(facilityId);
         when(facilityTurn.getStock()).thenReturn(facilityId);
@@ -195,6 +196,27 @@ class BusinessRuleTest {
                                 .addChild(valueProvider.get().addValue("20%").addValue("outgoing goods"))));
 
         String expected = "BR(CS(CS(C(CV(V(15))ComO(==)CV(V(28))))BoolO(||)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
+
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
+
+        String result = businessRule.encode();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testBusinessruleGetReplacementRound() {
+        BusinessRule businessRule = (BusinessRule) businessRuleProvider.get()
+                .addChild(comparisonStatementProvider.get()
+                        .addChild(comparisonStatementProvider.get()
+                                .addChild(comparisonProvider.get()
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("round")))
+                                        .addChild(comparisonOperatorProvider.get().addValue("equal"))
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("5"))))))
+                .addChild(actionProvider.get()
+                        .addChild(actionReferenceProvider.get().addValue("order"))
+                        .addChild(valueProvider.get().addValue("20")));
+
+        String expected = "BR(CS(CS(C(CV(V(5))ComO(==)CV(V(5)))))A(AR(order)V(20)))";
 
         businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
 

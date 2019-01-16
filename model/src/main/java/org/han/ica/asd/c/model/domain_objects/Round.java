@@ -17,12 +17,14 @@ public class Round implements IDomainModel, Serializable {
        facilityTurnDelivers = new ArrayList<>();
     }
 
-    public Round(int roundId, List<FacilityTurn> facilityTurns, List<FacilityTurnOrder> facilityOrders, List<FacilityTurnDeliver> facilityTurnDelivers) {
+    public Round(int roundId, List<FacilityTurn> facilityTurns, List<FacilityTurnOrder> facilityOrders,
+                 List<FacilityTurnDeliver> facilityTurnDelivers) {
         this.roundId = roundId;
         this.facilityTurns = facilityTurns;
         this.facilityOrders = facilityOrders;
         this.facilityTurnDelivers = facilityTurnDelivers;
     }
+
 
     public int getRoundId() {
         return roundId;

@@ -28,7 +28,7 @@ public class ConfigurationDAO {
     private static final String READ_CONFIGURATIONS = "SELECT * FROM Configuration;";
     private static final String UPDATE_CONFIGURATION = "UPDATE Configuration SET AmountOfRounds = ?, AmountOfFactories = ?, AmountOfWholesalers = ?, AmountOfWarehouses = ?,AmountOfRetailers = ?,MinimalOrderRetail = ?, MaximumOrderRetail = ?, ContinuePlayingWhenBankrupt = ?, InsightFacilities = ? WHERE GameId = ?;";
     private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
-    private static final String GET_LOWER_LINKED_FACILITIES = "SELECT flt.FacilityIdOrdering FROM FacilityLinkedTo flt WHERE flt.GameId = ?";
+    private static final String GET_LOWER_LINKED_FACILITIES = "SELECT FacilityIdOrdering, FacilityIdDelivering FROM FacilityLinkedTo WHERE GameId = ?;";
     private static final String SET_LOWER_LINKED_FACILITIES = "INSERT INTO FacilityLinkedTo VALUES (?,?,?)";
     private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdOrdering = ?, FacilityIdDelivering = ? WHERE GameId = ?;";
     private static final String DELETE_FACILITY_LINKS = "DELETE FROM FacilityLinkedTo WHERE GameId = ?;";

@@ -168,4 +168,8 @@ public class GameAgentDAO{
             }
         }
     }
+
+	public void updateGameagents(List<GameAgent> agents) {
+        agents.forEach(this::updateGameagent);
+	}
 }

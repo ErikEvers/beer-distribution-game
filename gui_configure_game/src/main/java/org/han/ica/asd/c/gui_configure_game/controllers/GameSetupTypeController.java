@@ -3,14 +3,10 @@ package org.han.ica.asd.c.gui_configure_game.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-
-import org.han.ica.asd.c.dao.DaoConfig;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
-
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -18,15 +14,19 @@ import org.han.ica.asd.c.model.domain_objects.Configuration;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
-import org.han.ica.asd.c.model.domain_objects.Leader;
-import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class GameSetupTypeController implements Initializable {
 
@@ -182,6 +182,7 @@ public class GameSetupTypeController implements Initializable {
     }
 
     public void nextScreenButton() {
+        String uuid = UUID.randomUUID().toString();
         if (!emptyFields()) {
             popUpNotAssigned();
         } else {
@@ -190,14 +191,18 @@ public class GameSetupTypeController implements Initializable {
 
             beerGame.setConfiguration(this.configuration);
             beerGame.setGameName(this.gameName);
-            beerGame.setGameId(DaoConfig.getCurrentGameId());
+
+            beerGame.setGameId(uuid);
+            beerGame.setGameDate(new Date().toString());
             createFirstTurn();
 
             if(onlineGame) {
-							connector.start();
-							connector.createRoom(gameName, "", beerGame);
-						}
-						//persistence.saveGameLog(beerGame);
+                connector.start();
+                connector.createRoom(gameName, "", beerGame);
+            } else {
+                connector.start();
+                connector.createOfflineRoom(gameName, "", beerGame);
+            }
             assignAgents.setData(new Object[]{beerGame});
             assignAgents.setupScreen();
         }
@@ -390,7 +395,7 @@ public class GameSetupTypeController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "One or more fields do not have a value");
         alert.setHeaderText(WARNING);
         alert.setTitle(WARNING);
-        alert.showAndWait();
+        alert.show();
     }
 
     private TextField getInGoodsFactory() {

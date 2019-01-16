@@ -7,6 +7,7 @@ import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessage;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultMessageResponse;
 import org.han.ica.asd.c.faultdetection.messagetypes.PingMessage;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
@@ -31,6 +32,7 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	@DisplayName("Test if FaultMessage getters are working correctly")
 	void testFaultMessage(){
 		FaultMessage faultMessage = new FaultMessage("test");
 
@@ -39,12 +41,14 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	@DisplayName("Test if PingMessage getters are working correctly")
 	void testPingMessage(){
 		PingMessage pingMessage = new PingMessage();
 		assertEquals(3, pingMessage.getMessageId());
 	}
 
 	@Test
+	@DisplayName("Test if FaultMessageResponse getters are working correctly")
 	void testFaultMessageResponse(){
 		FaultMessageResponse realFaultDetectionMessage = new FaultMessageResponse(true, "test");
 		assertEquals(2, realFaultDetectionMessage.getMessageId());
@@ -53,6 +57,7 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	@DisplayName("Test if CanYouReachLeaderMessage getters/setters are working correctly")
 	void testCanYouReachLeaderMessage(){
 		CanYouReachLeaderMessage reachLeaderMessage = new CanYouReachLeaderMessage();
 		reachLeaderMessage.setLeaderState(true);
@@ -61,6 +66,7 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	@DisplayName("Test if receiveMessage delegates the FaultMessage to the correct method")
 	void TestFaultMessageReceivedCase(){
 		FaultDetectionMessage faultDetectionMessage = mock(FaultMessage.class);
 
@@ -74,6 +80,7 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	@DisplayName("Test if receiveMessage delegates the FaultMessageResponse to the correct method")
 	void TestFaultMessageResponseReceivedCase(){
 		FaultDetectionMessage faultDetectionMessage = mock(FaultMessageResponse.class);
 
@@ -87,6 +94,7 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	@DisplayName("Test if receiveMessage delegates the PingMessage to the correct method")
 	void TestPingMessageReceivedCase(){
 		FaultDetectionMessage faultDetectionMessage = mock(PingMessage.class);
 
@@ -100,6 +108,7 @@ public class TestFaultDetectionMessageReceiver {
 	}
 
 	@Test
+	@DisplayName("Test if receiveMessage delegates the CanYouReachLeaderMessage to the correct method")
 	void TestCanYouReachLeaderMessageReceivedCase(){
 		FaultDetectionMessage faultDetectionMessage = mock(CanYouReachLeaderMessage.class);
 

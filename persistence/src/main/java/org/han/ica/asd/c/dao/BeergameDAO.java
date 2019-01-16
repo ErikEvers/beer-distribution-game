@@ -3,6 +3,8 @@ package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -50,6 +52,12 @@ public class BeergameDAO {
 	@Inject
 	private LeaderDAO leaderDAO;
 
+	@Inject
+	private FacilityDAO facilityDAO;
+
+	@Inject
+	private FacilityTypeDAO facilityTypeDAO;
+
 
 
 
@@ -88,6 +96,10 @@ public class BeergameDAO {
 	 * @param beerGame A beergame which needs to be inserted
 	 */
 	public void createBeergame(BeerGame beerGame) {
+		if(DaoConfig.getCurrentGameId() != null){
+			updateBeergame(beerGame);
+		}
+		else{
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BEERGAME_FROM_MODEL)) {
@@ -101,19 +113,34 @@ public class BeergameDAO {
 				conn.commit();
 				DaoConfig.setCurrentGameId(beerGame.getGameId());
 
+				beerGame.getConfiguration().getFacilities().forEach(facility -> {
+					facilityDAO.createFacility(facility);
+					facilityTypeDAO.createFacilityType(facility.getFacilityType());
+				});
+
 				configurationDAO.createConfiguration(beerGame.getConfiguration());
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
-				leaderDAO.insertLeader(beerGame.getLeader().getPlayer());
+				leaderDAO.insertLeader(beerGame.getLeader());
 
 
-			} catch (SQLException e) {
-				LOGGER.log(Level.SEVERE, e.toString(), e);
-				databaseConnection.rollBackTransaction(conn);
+				} catch (SQLException e) {
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
 			}
 		}
 	}
+
+	public void updateBeergame(BeerGame beerGame) {
+		configurationDAO.updateConfigurations(beerGame.getConfiguration());
+		roundDAO.updateRounds(beerGame.getRounds());
+		playerDAO.updatePlayers(beerGame.getPlayers());
+		gameAgentDAO.updateGameagents(beerGame.getAgents());
+		leaderDAO.updateLeader(beerGame.getLeader());
+	}
+
 
 	/**
 	 * A method which returns all BeerGames which are inserted in the database

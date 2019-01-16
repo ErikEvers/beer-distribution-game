@@ -10,7 +10,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
  */
 public interface IPersistence {
 
-    void saveGameLog(BeerGame beerGame);
+    void saveGameLog(BeerGame beerGame, boolean isStarted);
 
     /**
      * Store the actions of a facility in a specific round.
@@ -41,4 +41,5 @@ public interface IPersistence {
 
     void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn);
 
+    void updateRound(Round round);
 }

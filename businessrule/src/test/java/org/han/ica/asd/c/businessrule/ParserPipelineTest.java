@@ -43,7 +43,7 @@ class ParserPipelineTest {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
             }
         });
         parserPipelineProvider = injector.getProvider(ParserPipeline.class);
@@ -75,36 +75,6 @@ class ParserPipelineTest {
         }
 
         String exp = "inventory";
-        assertEquals(exp, res);
-    }
-
-    @Test
-    void testFindEndErrorWord(){
-        String businessRule = "if inventory is 20 then order 20";
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(parserPipeline, "findEndErrorWord", businessRule,12);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        int exp = 11;
-        assertEquals(exp, res);
-    }
-
-    @Test
-    void testFindBeginErrorWord(){
-        String businessRule = "if inventory is 20 then order 20";
-        int res = -1;
-
-        try {
-            res = Whitebox.invokeMethod(parserPipeline, "findBeginErrorWord", businessRule,11);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        int exp = 3;
         assertEquals(exp, res);
     }
 

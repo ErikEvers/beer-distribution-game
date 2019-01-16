@@ -63,6 +63,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 	protected void configure() {
 		bind(AbstractModuleExtension.class).to(BootstrapModule.class);
 		bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
+		bind(IBusinessRuleStore.class).to(BusinessRuleStore.class);
 		bind(IConnectorForSetup.class).annotatedWith(Names.named("Connector")).to(Connector.class);
 		bind(IDatabaseConnection.class).to(DBConnection.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
