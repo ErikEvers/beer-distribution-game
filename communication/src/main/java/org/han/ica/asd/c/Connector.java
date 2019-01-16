@@ -30,6 +30,7 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,7 +49,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-
+@Singleton
 public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
     private static Connector instance = null;
     private static String leaderIp = null;
@@ -111,7 +112,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         GameMessageReceiver.setObservers(observers);
 
         messageDirector.setGameMessageReceiver(gameMessageReceiver);
-        messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
 
         socketServer.setServerObserver(messageDirector);
         socketServer.startThread();
@@ -231,6 +231,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     public void startFaultDetector() {
         initNodeInfoList();
+        messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
         Leader leader = persistence.getGameLog().getLeader();
 
         if (internalIP.equals(leader.getPlayer().getIpAddress())) {
