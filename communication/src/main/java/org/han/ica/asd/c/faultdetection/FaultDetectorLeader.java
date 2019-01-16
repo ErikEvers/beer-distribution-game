@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @see FaultDetectorPlayer
  */
 public class FaultDetectorLeader extends TimerTask {
-    @Inject
+
     private NodeInfoList nodeInfoList;
 
     @Inject
@@ -272,6 +272,7 @@ public class FaultDetectorLeader extends TimerTask {
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
         failLog.setNodeInfoList(nodeInfoList);
+        faultHandlerLeader.setNodeInfoList(nodeInfoList);
     }
 
     /**

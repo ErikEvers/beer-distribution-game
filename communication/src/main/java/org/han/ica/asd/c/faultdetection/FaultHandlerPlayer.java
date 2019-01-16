@@ -16,7 +16,7 @@ import java.util.List;
  * @author Tarik
  */
 public class FaultHandlerPlayer {
-    @Inject
+
     private NodeInfoList nodeInfoList;
 
     private List<IConnectorObserver> observers;
@@ -178,5 +178,9 @@ public class FaultHandlerPlayer {
      */
     int getAmountOfConnectionsWithLeader() {
         return amountOfConnectionsWithLeader;
+    }
+
+    void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
     }
 }

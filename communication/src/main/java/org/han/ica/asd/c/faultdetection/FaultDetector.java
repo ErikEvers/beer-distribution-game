@@ -52,6 +52,7 @@ public class FaultDetector {
         stopAllFaultDetectors();
 
         faultDetectorLeader = makeFaultDetectorLeader(nodeInfoList, observers);
+        faultDetectorLeader.setNodeInfoList(nodeInfoList);
         faultDetectorLeader.start();
     }
 
@@ -78,6 +79,7 @@ public class FaultDetector {
 
         faultResponder = makeFaultResponder();
         faultDetectorPlayer = makeFaultDetectorPlayer(nodeInfoList, observers);
+        faultDetectorPlayer.setNodeInfoList(nodeInfoList);
         faultDetectorPlayer.start();
         faultResponder.start();
     }

@@ -16,7 +16,7 @@ import java.util.List;
  * @author Oscar, Tarik
  */
 public class FaultHandlerLeader {
-    @Inject
+
     private NodeInfoList nodeInfoList;
 
     private HashMap<String, Integer> amountOfFailsPerIp;

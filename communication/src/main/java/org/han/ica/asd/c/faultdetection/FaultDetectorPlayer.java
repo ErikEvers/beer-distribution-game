@@ -28,7 +28,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private FaultDetectionClient faultDetectionClient;
     @Inject
     private FaultHandlerPlayer faultHandlerPlayer;
-    @Inject
+
     private NodeInfoList nodeInfoList;
 
     private static final long FIVE_MINUTES = 300000;
@@ -248,6 +248,7 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
+        faultHandlerPlayer.setNodeInfoList(nodeInfoList);
     }
 
     /**
