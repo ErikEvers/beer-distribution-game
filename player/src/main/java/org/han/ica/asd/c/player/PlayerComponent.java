@@ -52,6 +52,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private IGameAgentService gameAgentService;
 
     @Inject
+    private Provider<Agent> agentProvider;
+
+    @Inject
     public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
         this.roundProvider = roundProvider;
         this.facilityTurnOrderProvider = facilityTurnOrderProvider;
@@ -66,9 +69,14 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     }
 
     @Override
-    public void activateAgent(ProgrammedAgent agent) {
-        GameAgent gameAgent = gameAgentService.createGameAgentFromProgrammedAgent(getFacility(), agent);
-        gameLogic.letAgentTakeOverPlayer((Agent) gameAgent);
+    public void activateAgent(ProgrammedAgent programmedAgent) {
+        GameAgent gameAgent = gameAgentService.createGameAgentFromProgrammedAgent(getFacility(), programmedAgent);
+        Agent agent = this.agentProvider.get();
+        agent.setConfiguration(getBeerGame().getConfiguration());
+        agent.setGameAgentName(gameAgent.getGameAgentName());
+        agent.setFacility(gameAgent.getFacility());
+        agent.setGameBusinessRules(gameAgent.getGameBusinessRules());
+        gameLogic.letAgentTakeOverPlayer(agent);
     }
 
     @Override
