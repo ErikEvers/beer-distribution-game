@@ -49,7 +49,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-@Singleton
 public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
     private static Connector instance = null;
     private static String leaderIp = null;
@@ -59,10 +58,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     private IGameStore persistence;
 
-    @Inject
-    private NodeInfoList nodeInfoList;
+    private static NodeInfoList nodeInfoList;
 
-    @Inject
     private static FaultDetector faultDetector;
 
     @Inject
@@ -74,11 +71,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     private SocketServer socketServer;
 
-    @Inject
-    private MessageDirector messageDirector;
+    private static MessageDirector messageDirector;
 
-    @Inject
-    private GameMessageReceiver gameMessageReceiver;
+    private static GameMessageReceiver gameMessageReceiver;
 
     @Inject
     private IFinder finder;
@@ -91,9 +86,22 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     Provider<GameLeader> gameLeaderProvider;
 
     @Inject
-    public Connector(Provider<GameLeader> gameLeaderProvider) {
+    public Connector(Provider<GameLeader> gameLeaderProvider, Provider<GameMessageReceiver> gameMessageReceiverProvider,
+                     Provider<MessageDirector> messageDirectorProvider, Provider<FaultDetector> faultDetectorProvider,
+                     Provider<NodeInfoList> nodeInfoListProvider) {
         this.gameLeaderProvider = gameLeaderProvider;
-
+        if(gameMessageReceiver == null) {
+            gameMessageReceiver = gameMessageReceiverProvider.get();
+        }
+        if(messageDirector == null) {
+            messageDirector = messageDirectorProvider.get();
+        }
+        if(faultDetector == null) {
+            faultDetector = faultDetectorProvider.get();
+        }
+        if(nodeInfoList == null) {
+            nodeInfoList = nodeInfoListProvider.get();
+        }
     }
 
     public void start() {
@@ -108,7 +116,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
         internalIP = getInternalIP();
 
-        faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
         GameMessageReceiver.setConnector(this);
 

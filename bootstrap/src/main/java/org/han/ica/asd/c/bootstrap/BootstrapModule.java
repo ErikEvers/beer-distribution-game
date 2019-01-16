@@ -1,9 +1,6 @@
 package org.han.ica.asd.c.bootstrap;
 
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
-import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
@@ -60,7 +57,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 
 	@Override
 	protected void configure() {
-		bind(Connector.class).in(Singleton.class);
 		bind(AbstractModuleExtension.class).to(BootstrapModule.class);
 		bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
 		bind(IConnectorForSetup.class).annotatedWith(Names.named("Connector")).to(Connector.class);

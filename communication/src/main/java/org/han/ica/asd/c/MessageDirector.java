@@ -13,10 +13,8 @@ import java.io.InvalidObjectException;
 
 public class MessageDirector implements IServerObserver {
 
-    @Inject
-    private GameMessageReceiver gameMessageReceiver;
+    private static GameMessageReceiver gameMessageReceiver;
 
-    @Inject
     private static FaultDetectionMessageReceiver faultDetectionMessageReceiver;
 
 
@@ -50,7 +48,7 @@ public class MessageDirector implements IServerObserver {
         this.gameMessageReceiver = gameMessageReceiver;
     }
 
-    public static void setFaultDetectionMessageReceiver(FaultDetectionMessageReceiver faultDetectionMessageReceiver) {
+    public void setFaultDetectionMessageReceiver(FaultDetectionMessageReceiver faultDetectionMessageReceiver) {
         MessageDirector.faultDetectionMessageReceiver = faultDetectionMessageReceiver;
     }
 }
