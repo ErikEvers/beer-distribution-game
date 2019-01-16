@@ -60,7 +60,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     private NodeInfoList nodeInfoList;
 
     @Inject
-    private FaultDetector faultDetector;
+    private static FaultDetector faultDetector;
 
     @Inject
     private GameMessageClient gameMessageClient;
@@ -89,6 +89,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     public Connector(Provider<GameLeader> gameLeaderProvider) {
         this.gameLeaderProvider = gameLeaderProvider;
+
     }
 
     public void start() {
@@ -223,6 +224,11 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void startFaultDetector() {
         initNodeInfoList();
         Leader leader = persistence.getGameLog().getLeader();
+        try {
+            this.externalIP = getExternalIP();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         String ip = this.externalIP;
 
         if (externalIP.equals(leader.getPlayer().getIpAddress())) {
@@ -249,12 +255,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-        try {
-            this.externalIP = getExternalIP();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }

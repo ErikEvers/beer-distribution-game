@@ -40,9 +40,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private boolean active;
 
     FaultDetectorPlayer() {
-        this.lastReceived = System.currentTimeMillis();
-        leaderIsPinging = true;
-        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
+        //for inject purposes
     }
 
     /**
@@ -68,19 +66,15 @@ public class FaultDetectorPlayer extends TimerTask {
      *
      * @author Oscar, Tarik
      */
-    //From team2
-//    public void start() {
-//        timer = createTimer(true);
-//        timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
-//        faultHandlerPlayer.setObservers(observers);
-//        this.active = true;
-//    }
 
-    //from dev
     public void start() {
+        this.lastReceived = System.currentTimeMillis();
+        leaderIsPinging = true;
+        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
-        active = true;
+        faultHandlerPlayer.setObservers(observers);
+        this.active = true;
     }
 
     /**
@@ -214,7 +208,9 @@ public class FaultDetectorPlayer extends TimerTask {
      * @author Tarik
      */
     public void pingMessageReceived(PingMessage pingMessage) {
+        System.out.println("message received prev: " + lastReceived);
         lastReceived = System.currentTimeMillis();
+        System.out.println("message received : " + lastReceived);
         leaderIsPinging = true;
     }
 

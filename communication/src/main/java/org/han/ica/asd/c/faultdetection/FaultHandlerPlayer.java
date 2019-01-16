@@ -39,13 +39,16 @@ public class FaultHandlerPlayer {
     public String whoIsDead() {
         if (amountOfFailingIps == (amountOfActiveIps - filteredAmount)) {
             //TODO This should trigger Rejoin GUI and/or Request
+            System.out.println("imdead");
             return "imDead";
         } else {
             if (amountOfConnectionsWithLeader == 0) {
                 notifyObserversLeaderDied();
+                System.out.println("leaderdead");
                 return "leaderIsDead";
             } else {
                 //TODO This should start a relay
+                System.out.println("donnowhodead");
                 return "leaderIsNotCompletelyDead";
             }
         }
