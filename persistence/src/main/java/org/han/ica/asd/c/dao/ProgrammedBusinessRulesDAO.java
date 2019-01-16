@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,7 +102,7 @@ public class ProgrammedBusinessRulesDAO {
             }
         }
 
-        return programmedBusinessRules;
+        return removeSortingIndex(programmedBusinessRules);
     }
 
 
@@ -128,6 +130,46 @@ public class ProgrammedBusinessRulesDAO {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
             }
+        }
+    }
+
+    /**
+     * A method that removes the sorting index from all business rules it is given.
+     *
+     * @param businessRules Business rules that it needs to remove the sorting index (e.g. 1.) from
+     * @return Returns the Business rules without the sorting index
+     */
+    private List<ProgrammedBusinessRules> removeSortingIndex(List<ProgrammedBusinessRules> businessRules){
+        Map<Integer, String> map = new HashMap<>();
+        List<ProgrammedBusinessRules> returnBusinessRule = new ArrayList<>();
+
+        for (ProgrammedBusinessRules businessRule : businessRules) {
+            String[] strSplit = businessRule.getProgrammedBusinessRule().split(" ", 2);
+            map.put(Integer.parseInt(strSplit[0]), strSplit[1]);
+            for (Map.Entry<Integer, String> entry : map.entrySet()) {
+                fillAndSet(entry.getKey(), new ProgrammedBusinessRules(entry.getValue(),businessRule.getProgrammedAST()), returnBusinessRule);
+            }
+        }
+        return returnBusinessRule;
+    }
+
+    /**
+     * A method that adds the object to a specified index in the list.
+     *
+     * @param index Index that it needs to set the object on.
+     * @param object Object that has to be inserted in the list
+     * @param list List that Object is inserted in.
+     * @param <T> Generic Object that list consists of.
+     */
+    private static <T> void fillAndSet(int index, T object, List<T> list) {
+        if (index > (list.size() - 1)) {
+            for (int i = list.size(); i < index; i++) {
+                list.add(null);
+            }
+            list.add(object);
+        }
+        else {
+            list.set(index, object);
         }
     }
 }
