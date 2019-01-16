@@ -60,6 +60,7 @@ public class BootstrapModule extends AbstractModuleExtension {
 
 	@Override
 	protected void configure() {
+		bind(Connector.class).in(Singleton.class);
 		bind(AbstractModuleExtension.class).to(BootstrapModule.class);
 		bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStore.class);
 		bind(IConnectorForSetup.class).annotatedWith(Names.named("Connector")).to(Connector.class);
@@ -70,7 +71,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGameStore.class).to(Persistence.class);
 		bind(IFinder.class).to(RoomFinder.class);
 
-		bind(Connector.class).in(Singleton.class);
 		bind(IConnectedForPlayer.class).to(Connector.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
