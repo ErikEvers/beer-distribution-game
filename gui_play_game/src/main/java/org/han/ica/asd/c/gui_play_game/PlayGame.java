@@ -109,6 +109,9 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected Button deleteDeliveryButton;
 
+    @FXML
+    protected Button useAgentButton;
+
     protected static Alert currentAlert;
 
     /**
@@ -224,6 +227,7 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected void submitTurnButtonClicked() {
 				submitTurnButton.setDisable(true);
+				useAgentButton.setDisable(true);
         try {
             playerComponent.submitTurn();
 						currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
@@ -237,6 +241,7 @@ public abstract class PlayGame implements IPlayGame {
                 currentAlert.close();
                 submitTurnButtonClicked();
             }
+            useAgentButton.setDisable(false);
             submitTurnButton.setDisable(false);
         }
     }
