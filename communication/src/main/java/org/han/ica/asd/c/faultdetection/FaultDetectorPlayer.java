@@ -149,7 +149,7 @@ public class FaultDetectorPlayer extends TimerTask {
         HashMap<String, Long> filter = new HashMap<>(playersWhoAlreadyCouldntReachLeader);
 
         // filter out ips from ips that already send a message within the past 5 minutes
-        ips.removeIf(ip -> filter.containsKey(ip) && timestampIsRecentlyReceived(filter.get(ip)));
+        ips.removeIf(ip -> ip == nodeInfoList.getMyIp() || filter.containsKey(ip) && timestampIsRecentlyReceived(filter.get(ip)));
         faultHandlerPlayer.setFilteredAmount(filter.size());
         Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll(ips.toArray(new String[0]), new CanYouReachLeaderMessage());
 
