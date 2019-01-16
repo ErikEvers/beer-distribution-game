@@ -46,7 +46,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private IGUIHandler playGame;
 
     @Inject
-    @Named("ReplayGame")
+    @Named("ReplayGameRound")
     private IGUIHandler toEndScreen;
 
 
@@ -193,7 +193,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     public void endGame() {
         gameEnded = true;
 
-        Platform.runLater(() -> toEndScreen.setData(new Object[]{gameLogic.getBeerGame().getGameId()}));
+        Platform.runLater(() -> toEndScreen.setData(new Object[]{gameLogic.getBeerGame()}));
         Platform.runLater(() -> toEndScreen.setupScreen());
     }
 
