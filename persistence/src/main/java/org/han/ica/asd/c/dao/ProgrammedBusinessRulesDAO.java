@@ -151,7 +151,7 @@ public class ProgrammedBusinessRulesDAO {
                 fillAndSet(entry.getKey(), new ProgrammedBusinessRules(entry.getValue(),businessRule.getProgrammedAST()), returnBusinessRule);
             }
         }
-        
+
         returnBusinessRule.removeAll(Collections.singleton(null));
         return returnBusinessRule;
     }
