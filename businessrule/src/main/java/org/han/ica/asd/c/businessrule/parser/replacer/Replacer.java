@@ -24,13 +24,13 @@ public class Replacer {
 
     private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
     private NodeConverter nodeConverter;
-    private static  final Logger LOGGER = Logger.getLogger(Replacer.class.getName());
-    private static  final String THE_IDENTIFIER_IS_NOT_FOUND = "The identifier is not found";
-    private static  final String THE_FACILITY_IS_NOT_FOUND = "The facility is not found";
+    private static final Logger LOGGER = Logger.getLogger(Replacer.class.getName());
+    private static final String THE_IDENTIFIER_IS_NOT_FOUND = "The identifier is not found";
+    private static final String THE_FACILITY_IS_NOT_FOUND = "The facility is not found";
     private IBusinessRuleStore businessRuleStore;
 
     @Inject
-    public Replacer(NodeConverter nodeConverter, @Named("BusinessruleStore") IBusinessRuleStore businessRuleStore) {
+    public Replacer(NodeConverter nodeConverter, IBusinessRuleStore businessRuleStore) {
         this.nodeConverter = nodeConverter;
         this.businessRuleStore = businessRuleStore;
     }
