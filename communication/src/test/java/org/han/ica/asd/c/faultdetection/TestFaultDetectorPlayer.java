@@ -46,10 +46,11 @@ class TestFaultDetectorPlayer {
         faultDetectionClient = mock(FaultDetectionClient.class);
 
         faultDetectorPlayer = new FaultDetectorPlayer();
+        faultDetectorPlayer.setFaultHandlerPlayer(faultHandlerPlayer);
+
         faultDetectorPlayer.setNodeInfoList(nodeInfoList);
 
         faultDetectorPlayer.setFaultDetectionClient(faultDetectionClient);
-        faultDetectorPlayer.setFaultHandlerPlayer(faultHandlerPlayer);
         }
 
     @Test
@@ -64,8 +65,8 @@ class TestFaultDetectorPlayer {
         };
 
         faultDetectorPlayer.setObservers(observers);
-        faultDetectorPlayer.setNodeInfoList(nodeInfoList);
         faultDetectorPlayer.setFaultHandlerPlayer(faultHandlerPlayer);
+        faultDetectorPlayer.setNodeInfoList(nodeInfoList);
 
         faultDetectorPlayer.start();
         verify(toTest, times(1)).scheduleAtFixedRate(faultDetectorPlayer, 0, 10000);
@@ -81,7 +82,7 @@ class TestFaultDetectorPlayer {
         assertEquals(nodeInfoList, faultDetectorPlayer.getNodeInfoList());
 
         faultDetectorPlayer.setLastReceived(0);
-        faultDetectorPlayer.setLeaderIsPinging(true);
+        faultDetectorPlayer.setLeaderWasPinging(true);
         faultDetectorPlayer.setPlayersWhoAlreadyCouldntReachLeader(new HashMap<>());
 
         faultDetectorPlayer.run();
@@ -89,7 +90,7 @@ class TestFaultDetectorPlayer {
         verify(faultHandlerPlayer).reset();
         verify(faultHandlerPlayer).whoIsDead();
 
-        assertFalse(faultDetectorPlayer.getLeaderIsPinging());
+        assertFalse(faultDetectorPlayer.getLeaderWasPinging());
     }
 
     @Test

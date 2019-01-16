@@ -33,7 +33,7 @@ public class FaultDetectorPlayer extends TimerTask {
 
     private static final long FIVE_MINUTES = 300000;
     private long lastReceived;
-    private boolean leaderIsPinging;
+    private boolean leaderWasPinging;
     private Timer timer;
     private List<IConnectorObserver> observers;
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
@@ -46,13 +46,13 @@ public class FaultDetectorPlayer extends TimerTask {
     /**
      * Checks if leader didn't ping for a long time and asks other players whether they can connect with the leader.
      * After the players respond or timeout it decides who died.
-     * It also checks if the leaderIsPinging variable is already set to false so it won't run it twice.
+     * It also checks if the leaderWasPinging variable is already set to false so it won't run it twice.
      *
      * @author Tarik
      */
     public void run() {
-        if (leaderIsPinging && leaderIsNotPinging()) {
-            leaderIsPinging = false;
+        if (leaderWasPinging && leaderIsNotPinging()) {
+            leaderWasPinging = false;
             faultHandlerPlayer.reset();
             askOtherPlayers();
             faultHandlerPlayer.whoIsDead();
@@ -69,7 +69,7 @@ public class FaultDetectorPlayer extends TimerTask {
 
     public void start() {
         this.lastReceived = System.currentTimeMillis();
-        leaderIsPinging = true;
+        leaderWasPinging = true;
         playersWhoAlreadyCouldntReachLeader = new HashMap<>();
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
@@ -211,7 +211,7 @@ public class FaultDetectorPlayer extends TimerTask {
         System.out.println("message received prev: " + lastReceived);
         lastReceived = System.currentTimeMillis();
         System.out.println("message received : " + lastReceived);
-        leaderIsPinging = true;
+        leaderWasPinging = true;
     }
 
     /**
@@ -224,12 +224,12 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     /**
-     * Sets new leaderIsPinging.
+     * Sets new leaderWasPinging.
      *
-     * @param leaderIsPinging New value of leaderIsPinging.
+     * @param leaderWasPinging New value of leaderWasPinging.
      */
-    public void setLeaderIsPinging(boolean leaderIsPinging) {
-        this.leaderIsPinging = leaderIsPinging;
+    public void setLeaderWasPinging(boolean leaderWasPinging) {
+        this.leaderWasPinging = leaderWasPinging;
     }
 
     /**
@@ -288,12 +288,12 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     /**
-     * Gets leaderIsPinging.
+     * Gets leaderWasPinging.
      *
-     * @return Value of leaderIsPinging.
+     * @return Value of leaderWasPinging.
      */
-    boolean getLeaderIsPinging() {
-        return leaderIsPinging;
+    boolean getLeaderWasPinging() {
+        return leaderWasPinging;
     }
 
     /**
