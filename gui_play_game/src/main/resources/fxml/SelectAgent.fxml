@@ -35,10 +35,9 @@
                     </rowConstraints>
                     <children>
                         <Button fx:id="selectAgentButton" mnemonicParsing="false" onAction="#selectAgentButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Select Agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
-                        <Button fx:id="rejoinGame" mnemonicParsing="false" onAction="#rejoinGameButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Rejoin Game" textFill="WHITE" visible="false" wrapText="true" GridPane.columnIndex="3" />
                     </children>
                 </GridPane>
-                <ListView fx:id="list" onMouseClicked="#handleMouseClickOnList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <ListView fx:id="list" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label fx:id="headerText" alignment="BOTTOM_LEFT" prefHeight="73.0" prefWidth="854.0" text="Agents" textFill="#ff8000" GridPane.columnIndex="1">
                     <font>
                         <Font size="50.0" />

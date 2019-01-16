@@ -44,24 +44,14 @@ public class SelectAgentController {
             items.addAll(agents);
         }
     }
+
     @FXML
     public void selectAgentButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
         iPlayerComponent.activateAgent(iBusinessRuleStore.getProgrammedGameAgent(selectedAgent.toString()));
-        headerText.setText("Agent selected: " +selectedAgent.toString());
+        headerText.setText("Agent selected: " + selectedAgent.toString());
         list.setVisible(false);
         selectAgentButton.setVisible(false);
-        rejoinGame.setVisible(true);
-    }
-
-    @FXML
-    public void handleMouseClickOnList() {
-        if (list.getSelectionModel().getSelectedItem() != null) {
-        }
-    }
-
-    public void rejoinGameButtonAction() {
-        iPlayerComponent.activatePlayer();
         playGameFactory.setData(new Object[]{true});
         playGameFactory.setupScreen();
     }

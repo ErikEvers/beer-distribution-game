@@ -192,6 +192,11 @@
                   <Font size="50.0" />
                </font>
             </Label>
+            <Button fx:id="rejoinButton" mnemonicParsing="false" onMouseClicked="#rejoinButtonAction" style="-fx-background-color: #ff8000;" text="Rejoin game" textFill="WHITE" visible="false" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="20.0" />
+               </GridPane.margin>
+            </Button>
             </children>
         </GridPane>
     </children>

@@ -55,8 +55,11 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected Button submitTurnButton;
 
-	@FXML
-	protected Button seeOtherFacilitiesButton;
+    @FXML
+    protected Button seeOtherFacilitiesButton;
+
+    @FXML
+    protected Button rejoinButton;
 
     @Inject
     @Named("SeeOtherFacilities")
@@ -68,11 +71,11 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected Label backOrders;
 
-		@FXML
-		protected Label stockHoldingCost;
+    @FXML
+    protected Label stockHoldingCost;
 
-		@FXML
-		protected Label openOrderCost;
+    @FXML
+    protected Label openOrderCost;
 
     @Inject
     @Named("PlayerComponent")
@@ -117,11 +120,14 @@ public abstract class PlayGame implements IPlayGame {
 
     protected static Alert currentAlert;
 
+    protected boolean agentInUse;
+
 
     /**
      * superInitialization of the two controller subclasses. Has code needed for both initializations.
      */
     protected void superInitialize() {
+        agentInUse = false;
         mainContainer.getChildren().addAll();
         playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
 
@@ -129,9 +135,9 @@ public abstract class PlayGame implements IPlayGame {
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
 
         outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
-        if(playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
-					seeOtherFacilitiesButton.setDisable(false);
-				}
+        if (playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
+            seeOtherFacilitiesButton.setDisable(false);
+        }
         playerComponent.setUi(this);
         orderFacilities = FXCollections.observableArrayList();
         deliverFacilities = FXCollections.observableArrayList();
@@ -139,12 +145,12 @@ public abstract class PlayGame implements IPlayGame {
 
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
         return change -> {
-                String newText = change.getControlNewText();
-                if (newText.matches("-?([0-9]*)?")){
-                    return change;
-                }
-                return null;
-            };
+            String newText = change.getControlNewText();
+            if (newText.matches("-?([0-9]*)?")) {
+                return change;
+            }
+            return null;
+        };
     }
 
     public void seeOtherFacilitiesButtonClicked() {
@@ -152,46 +158,46 @@ public abstract class PlayGame implements IPlayGame {
     }
 
 
-		public void handleSeeActivityLogButtonClicked() {
-    	Parent parent;
-    	try {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ActivityLogPopup.fxml"));
-				parent = loader.load();
-				ActivityLogPopupController activityLogPopupController = loader.getController();
-				activityLogPopupController.setLogContent(playerComponent.getBeerGame(), playerComponent.getPlayer().getFacility().getFacilityId());
-				Stage stage = new Stage();
-				stage.setScene(new Scene(parent));
-				stage.show();
-			} catch (IOException e) {
-				currentAlert = new Alert(Alert.AlertType.ERROR, "Can't display activity log", ButtonType.CLOSE);
-				currentAlert.show();
-			}
-		}
+    public void handleSeeActivityLogButtonClicked() {
+        Parent parent;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ActivityLogPopup.fxml"));
+            parent = loader.load();
+            ActivityLogPopupController activityLogPopupController = loader.getController();
+            activityLogPopupController.setLogContent(playerComponent.getBeerGame(), playerComponent.getPlayer().getFacility().getFacilityId());
+            Stage stage = new Stage();
+            stage.setScene(new Scene(parent));
+            stage.show();
+        } catch (IOException e) {
+            currentAlert = new Alert(Alert.AlertType.ERROR, "Can't display activity log", ButtonType.CLOSE);
+            currentAlert.show();
+        }
+    }
 
     public abstract void fillComboBox();
 
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
         List<Facility> facilities = new ArrayList<>();
 
-				int facilityPlayedByPlayerId = playerComponent.getPlayer().getFacility().getFacilityId();
-				playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(f -> {
-					if (f.getFacilityId() != facilityPlayedByPlayerId) {
-						List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(f.getFacilityId());
-						if (facilitiesLinkedToFacilities != null && facilitiesLinkedToFacilities.stream().anyMatch(facility -> facility.getFacilityId() == facilityPlayedByPlayerId)) {
-							facilities.add(f);
-						}
-					}
-				});
+        int facilityPlayedByPlayerId = playerComponent.getPlayer().getFacility().getFacilityId();
+        playerComponent.getBeerGame().getConfiguration().getFacilities().forEach(f -> {
+            if (f.getFacilityId() != facilityPlayedByPlayerId) {
+                List<Facility> facilitiesLinkedToFacilities = playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(f.getFacilityId());
+                if (facilitiesLinkedToFacilities != null && facilitiesLinkedToFacilities.stream().anyMatch(facility -> facility.getFacilityId() == facilityPlayedByPlayerId)) {
+                    facilities.add(f);
+                }
+            }
+        });
 
-				ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-				facilityListView.addAll(facilities);
-				comboBox.setItems(facilityListView);
+        ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
+        facilityListView.addAll(facilities);
+        comboBox.setItems(facilityListView);
     }
 
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
-				facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
-				comboBox.setItems(facilityListView);
+        facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
+        comboBox.setItems(facilityListView);
     }
 
     /**
@@ -209,7 +215,7 @@ public abstract class PlayGame implements IPlayGame {
     }
 
     @FXML
-    protected void handleUseAgentButtonAction(){
+    protected void handleUseAgentButtonAction() {
         selectAgent.setupScreen();
     }
 
@@ -230,14 +236,14 @@ public abstract class PlayGame implements IPlayGame {
 
     @FXML
     protected void submitTurnButtonClicked() {
-				submitTurnButton.setDisable(true);
-				useAgentButton.setDisable(true);
+        submitTurnButton.setDisable(true);
+        useAgentButton.setDisable(true);
         try {
             playerComponent.submitTurn();
-						currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
-						currentAlert.show();
-						orderFacilities.clear();
-						deliverFacilities.clear();
+            currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
+            currentAlert.show();
+            orderFacilities.clear();
+            deliverFacilities.clear();
         } catch (SendGameMessageException e) {
             currentAlert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.OK, ButtonType.CLOSE);
             Optional<ButtonType> result = currentAlert.showAndWait();
@@ -256,36 +262,38 @@ public abstract class PlayGame implements IPlayGame {
         Facility facility = playerComponent.getPlayer().getFacility();
         int budget = 0;
         List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
-        for (FacilityTurn f: facilityTurns) {
-            if(f.getFacilityId() == facility.getFacilityId()){
-								inventory.setText(Integer.toString(f.getStock()));
-								backOrders.setText(Integer.toString(f.getBackorders()));
+        for (FacilityTurn f : facilityTurns) {
+            if (f.getFacilityId() == facility.getFacilityId()) {
+                inventory.setText(Integer.toString(f.getStock()));
+                backOrders.setText(Integer.toString(f.getBackorders()));
 
-								stockHoldingCost.setText("€" + Integer.toString(facility.getFacilityType().getStockHoldingCosts()) + "/pc/week");
-								openOrderCost.setText("€" + Integer.toString(facility.getFacilityType().getOpenOrderCosts()) + "/pc/week");
+                stockHoldingCost.setText("€" + Integer.toString(facility.getFacilityType().getStockHoldingCosts()) + "/pc/week");
+                openOrderCost.setText("€" + Integer.toString(facility.getFacilityType().getOpenOrderCosts()) + "/pc/week");
 
-								budget = f.getRemainingBudget();
+                budget = f.getRemainingBudget();
             }
         }
 
         int incomingOrders = 0;
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
-        for (FacilityTurnOrder f: facilityTurnOrders) {
-            if(f.getFacilityIdOrderTo() == facility.getFacilityId()){
+        for (FacilityTurnOrder f : facilityTurnOrders) {
+            if (f.getFacilityIdOrderTo() == facility.getFacilityId()) {
                 incomingOrders += f.getOrderAmount();
             }
         }
         final int incomingOrdersDisplay = incomingOrders;
-				incomingOrdersTextField.setText(Integer.toString(incomingOrdersDisplay));
-				outgoingOrderTextField.setText(Integer.toString(0));
-				if(currentAlert != null && currentAlert.isShowing()) {
-					currentAlert.close();
-				}
-				currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
-				currentAlert.show();
-				submitTurnButton.setDisable(false);
-				useAgentButton.setDisable(false);
-				roundLabel.setText("Round: "+roundId);
+        incomingOrdersTextField.setText(Integer.toString(incomingOrdersDisplay));
+        outgoingOrderTextField.setText(Integer.toString(0));
+        if (currentAlert != null && currentAlert.isShowing()) {
+            currentAlert.close();
+        }
+        currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
+        currentAlert.show();
+        if (!agentInUse) {
+            submitTurnButton.setDisable(false);
+            useAgentButton.setDisable(false);
+        }
+        roundLabel.setText("Round: " + roundId);
 
     }
 
@@ -322,10 +330,21 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
-    public void setRejoined(boolean rejoined){
-        if (rejoined){
+    public void setAgentInUse(boolean setInAgent) {
+        if (setInAgent) {
+            agentInUse = true;
             useAgentButton.setDisable(true);
             submitTurnButton.setDisable(true);
+            rejoinButton.setVisible(true);
         }
+    }
+
+    @FXML
+    public void rejoinButtonAction() {
+        agentInUse = false;
+        playerComponent.activatePlayer();
+        rejoinButton.setVisible(false);
+        currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your agent already did a turn. Please wait for the next round.", ButtonType.CLOSE);
+        currentAlert.show();
     }
 }
