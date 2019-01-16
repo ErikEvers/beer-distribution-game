@@ -162,7 +162,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void gameStartReceived(BeerGame beerGame) {
         persistence.saveGameLog(beerGame,false);
         if (isBotGame()) {
-            seeOtherFacilities.setupScreen();
+            //seeOtherFacilities.setupScreen();
         } else {
             player.startGame();
         }
