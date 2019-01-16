@@ -50,7 +50,10 @@ public class Agent extends GameAgent implements IParticipant {
         this.configuration = configuration;
     }
 
-    public Agent() {
+	/**
+	 * Empty constructor for Guice.
+	 */
+	public Agent() {
 	}
 
 	/**

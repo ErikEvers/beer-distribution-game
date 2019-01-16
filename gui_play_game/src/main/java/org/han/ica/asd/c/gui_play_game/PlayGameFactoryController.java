@@ -36,7 +36,6 @@ public class PlayGameFactoryController extends PlayGame {
         refillOrdersList();
     }
 
-    @Override
     protected void refillOrdersList() {
         orderFacilities.clear();
         Facility ownFacility = playerComponent.getPlayer().getFacility();

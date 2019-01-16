@@ -187,7 +187,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
-        if (game.getRounds().size() >= game.getConfiguration().getAmountOfRounds() && game.getGameEndDate() == null) {
+        if (game.getRounds().size() >= game.getConfiguration().getAmountOfRounds() && (game.getGameEndDate() == null || game.getGameEndDate().isEmpty())) {
             endGame();
         }
         if (game.getGameEndDate() == null) {

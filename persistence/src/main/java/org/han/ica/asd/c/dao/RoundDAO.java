@@ -385,7 +385,7 @@ public class RoundDAO {
 				conn.setAutoCommit(false);
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
 				try (ResultSet rs = pstmt.executeQuery()) {
-					while(rs.next()) {
+					while(!rs.isClosed() && rs.next()) {
 						round = createRoundModel(rs);
 						rounds.add(round);
 					}
