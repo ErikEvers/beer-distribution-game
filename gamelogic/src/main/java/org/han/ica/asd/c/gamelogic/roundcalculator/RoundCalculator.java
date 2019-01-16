@@ -6,8 +6,8 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.Round;
+
 import java.util.List;
-import java.util.Random;
 
 public class RoundCalculator {
 
@@ -28,14 +28,15 @@ public class RoundCalculator {
             FacilityType facilityType = beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType();
 
             if(facilityType.getFacilityName().equals("Retailer")) {
-                outcome.getFacilityOrders().add(new FacilityTurnOrder(
+                round.getFacilityOrders().add(new FacilityTurnOrder(
                     facilityTurn.getFacilityId(),
                     facilityTurn.getFacilityId(),
                     ((int)(Math.random() * (upper - lower)) + lower)
                 ));
 
+                //TODO: move to prevent costs
                 if(facilityTurn.getBackorders() > 0) {
-                    outcome.getFacilityTurnDelivers().add(new FacilityTurnDeliver(
+                    round.getFacilityTurnDelivers().add(new FacilityTurnDeliver(
                         facilityTurn.getFacilityId(),
                         facilityTurn.getFacilityId(),
                         0,
@@ -69,19 +70,17 @@ public class RoundCalculator {
 
         for(FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
             FacilityTurn curFacility = outcomeList.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityTurnOrder.getFacilityIdOrderTo()).findFirst().orElse(null);
-            if(facilityTurnOrder.getFacilityId() != facilityTurnOrder.getFacilityIdOrderTo()) {
+            if((facilityTurnOrder.getFacilityId() != facilityTurnOrder.getFacilityIdOrderTo()) || beerGame.getFacilityById(facilityTurnOrder.getFacilityId()).getFacilityType().getFacilityName().equals("Retailer")) {
                 curFacility.setBackorders(curFacility.getBackorders() + facilityTurnOrder.getOrderAmount());
             } else {
-                curFacility.setBackorders(curFacility.getStock() + facilityTurnOrder.getOrderAmount());
+                curFacility.setStock(curFacility.getStock() + facilityTurnOrder.getOrderAmount());
             }
         }
 
 
         for(FacilityTurn facilityTurn : outcomeList) {
 
-            int remainingBudget = facilityTurn.getRemainingBudget() + 3;
-
-            facilityTurn.setBankrupt(remainingBudget > 0);
+            facilityTurn.setBankrupt(facilityTurn.getRemainingBudget() > 0);
 
             FacilityType facilityType = beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType();
 

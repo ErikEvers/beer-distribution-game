@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -46,6 +47,16 @@
             <Button mnemonicParsing="false" onAction="#programAgentButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="%create_agent_business_rules" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
             <Button mnemonicParsing="false" onAction="#replayButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="%replay_game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
             <Button fx:id="close" mnemonicParsing="false" onAction="#closeButtonAction" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="%close_game" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+            <ComboBox fx:id="chooseIpComboBox" onAction="#onSelectionChanged" prefWidth="150.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="50.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="%choose_ip" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="20.0" />
+               </GridPane.margin>
+            </Label>
          </children>
       </GridPane>
    </children>

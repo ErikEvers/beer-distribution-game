@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.socketrpc;
 
 
+import org.han.ica.asd.c.Connector;
+
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,7 +17,8 @@ import java.util.logging.Logger;
 
 public class SocketClient {
 
-    @Inject private static Logger logger;
+    @Inject
+    private static Logger logger;
 
     /**
      * Tries to make a connection with the specified ipAddress.
@@ -46,6 +49,9 @@ public class SocketClient {
      * @throws ClassNotFoundException
      */
     public Object sendObjectWithResponse(String ip, Object object) throws IOException, ClassNotFoundException {
+        if(ip.equals(Connector.internalIP)) {
+            return SocketServer.serverObserver.serverObjectReceived(object, ip);
+        }
         try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(object);
@@ -58,31 +64,25 @@ public class SocketClient {
      * This generic version of sendObjectWithResponse enforces the rule the kind of object that is returned.
      * This way you dont need a switch to determine which object was returned.
      *
-     * @author Oscar
      * @param ip    The ip to send to.
      * @param input The message object that needs to be send.
      * @param <T>   The type of the object that was send, and has to be returned.
      * @return The type of message that was send with either the exception or the desired response filled in.
-     * @throws IOException When it is unable to send the object to the specified IP.
+     * @throws IOException            When it is unable to send the object to the specified IP.
      * @throws ClassNotFoundException When it is unable to find the specific class.
+     * @author Oscar
      * @see org.han.ica.asd.c.messagehandler.sending.GameMessageClient
      */
     @SuppressWarnings("unchecked")
     public <T> T sendObjectWithResponseGeneric(String ip, T input) throws IOException, ClassNotFoundException {
-        try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            objectOutputStream.writeObject(input);
-
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            Object object = objectInputStream.readObject();
-
-            T result = null;
-            if (object != null) {
-                result = (T) object;
-            }
-            return result;
+        Object response = sendObjectWithResponse(ip, input);
+        T result = null;
+        if (response != null) {
+            result = (T) response;
         }
+        return result;
     }
+
 
     /**
      * This method tried to make a new socket with the given IP and sends an object. This method, however, does not expect something back.
@@ -124,7 +124,7 @@ public class SocketClient {
         Map<String, Object> map = new HashMap<>();
 
         for (String ip : ips) {
-					if(ip.equals("25.0.21.80")) {
+					if(ip.equals(Connector.internalIP)) {
 						SocketServer.serverObserver.serverObjectReceived(object, ip);
 						cdl.countDown();
 					} else {

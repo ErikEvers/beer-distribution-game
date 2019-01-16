@@ -8,67 +8,68 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultHandlerLeader {
-	FaultHandlerLeader faultHandlerLeader;
+    FaultHandlerLeader faultHandlerLeader;
 
+    @Mock
+    NodeInfoList nodeInfoList;
 
-	@Mock
-	NodeInfoList nodeInfoList;
+    ArrayList<IConnectorObserver> observers = new ArrayList<>();
 
-	ArrayList<IConnectorObserver> observers = spy(ArrayList.class);
+    @BeforeEach
+    void setUp() {
+        initMocks(this);
+        faultHandlerLeader = new FaultHandlerLeader();
+        faultHandlerLeader.setNodeInfoList(nodeInfoList);
+        faultHandlerLeader.setObservers(observers);
+    }
 
-	@BeforeEach
-	void setUp(){
-		initMocks(this);
-		faultHandlerLeader = new FaultHandlerLeader();
-		faultHandlerLeader.setNodeInfoList(nodeInfoList);
-		faultHandlerLeader.setObservers(observers);
-	}
+    @Test
+    void TestIncrementFailureHappyFlow() {
+        List<IConnectorObserver> observersMock = new ArrayList<>();
 
-	@Test
-	void TestIncrementFailure() {
+        doNothing().when(nodeInfoList).updateIsConnected("1234", false);
+        faultHandlerLeader.setObservers(observersMock);
 
-		when(nodeInfoList.size()).thenReturn(10);
-		faultHandlerLeader.incrementFailure("1234");
+        faultHandlerLeader.incrementFailure("1234");
+        verify(nodeInfoList).updateIsConnected("1234", false);
 
-		HashMap<String, Integer> amountOfFailsPerIp = faultHandlerLeader.getAmountOfFailsPerIp();
+        HashMap<String, Integer> amountOfFailsPerIp = faultHandlerLeader.getAmountOfFailsPerIp();
 
-		int incrementedValue = amountOfFailsPerIp.get("1234");
-		assertEquals(1,incrementedValue);
+        int incrementedValue = amountOfFailsPerIp.get("1234");
+        assertEquals(1, incrementedValue);
+    }
 
-	}
+    @Test
+    void TestIncrementFailureUnHappyFlow() {
+        HashMap<String, Integer> listMock = new HashMap<>();
+        listMock.put("Cool", -1);
+        faultHandlerLeader.setAmountOfFailsPerIp(listMock);
+        assertNull(faultHandlerLeader.incrementFailure("Cool"));
+    }
 
-	@Test
-	void TestIsLeaderAliveAndIAmDisconnected() {
-		assertFalse(faultHandlerLeader.isLeaderAlive());
-		faultHandlerLeader.iAmDisconnected();
-		assertTrue(faultHandlerLeader.isLeaderAlive());
-	}
+    @Test
+    void TestIsLeaderAliveAndIAmDisconnected() {
+        assertFalse(faultHandlerLeader.isLeaderAlive());
+        faultHandlerLeader.iAmDisconnected();
+        assertTrue(faultHandlerLeader.isLeaderAlive());
+    }
 
-//	@Test
-//	void TestIsPeerAlive() {
-//
-//		faultHandlerLeader.isPeerAlive("");
-//		verify(nodeInfoList).getStatusOfOneNode("");
-//	}
-
-	@Test
-	void TestReset() {
-
-		faultHandlerLeader.incrementFailure("1234");
-		faultHandlerLeader.reset("1234");
-		int actual = faultHandlerLeader.getAmountOfFailsPerIp().get("1234");
-		assertEquals(0, actual);
-	}
-
+    @Test
+    void TestReset() {
+        faultHandlerLeader.incrementFailure("1234");
+        faultHandlerLeader.reset("1234");
+        int actual = faultHandlerLeader.getAmountOfFailsPerIp().get("1234");
+        assertEquals(0, actual);
+    }
 }

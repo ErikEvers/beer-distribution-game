@@ -2,6 +2,7 @@ package org.han.ica.asd.c.messagehandler;
 
 import org.han.ica.asd.c.messagehandler.messagetypes.ResponseMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TransactionMessage;
+import org.han.ica.asd.c.messagehandler.sending.GameMessageSender;
 import org.han.ica.asd.c.messagehandler.sending.SendInTransaction;
 import org.han.ica.asd.c.socketrpc.SocketClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,8 @@ public class SendInTransactionTest {
         List<String> ips = new ArrayList<>();
         ips.add("Test");
 
-        sendInTransaction = new SendInTransaction(ips.toArray(new String[0]), transactionMessage, socketClient);
+        GameMessageSender gameMessageSender = new GameMessageSender(socketClient);
+        sendInTransaction = new SendInTransaction(ips.toArray(new String[0]), transactionMessage, gameMessageSender);
     }
 
     @Test
