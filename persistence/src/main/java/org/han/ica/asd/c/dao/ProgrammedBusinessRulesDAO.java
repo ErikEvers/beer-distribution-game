@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -138,10 +140,40 @@ public class ProgrammedBusinessRulesDAO {
      * @return Returns the Business rules without the sorting index
      */
     private List<ProgrammedBusinessRules> removeSortingIndex(List<ProgrammedBusinessRules> businessRules){
+        Map<Integer, String> map = new HashMap<>();
+        List<ProgrammedBusinessRules> returnBusinessRule = new ArrayList<>();
+
         for (ProgrammedBusinessRules businessRule : businessRules) {
             String[] strSplit = businessRule.getProgrammedBusinessRule().split(" ", 2);
-            businessRule.setProgrammedBusinessRule(strSplit[1]);
+            map.put(Integer.parseInt(strSplit[0]), strSplit[1]);
+            for (Map.Entry<Integer, String> entry : map.entrySet()) {
+                fillAndSet(entry.getKey(), new ProgrammedBusinessRules(entry.getValue(),businessRule.getProgrammedAST()), returnBusinessRule);
+            }
         }
-        return businessRules;
+        return returnBusinessRule;
+    }
+
+    /**
+     * A method that adds the object to a specified index in the list.
+     *
+     * @param index Index that it needs to set the object on.
+     * @param object Object that has to be inserted in the list
+     * @param list List that Object is inserted in.
+     * @param <T> Generic Object that list consists of.
+     */
+    private static <T> void fillAndSet(int index, T object, List<T> list)
+    {
+        if (index > (list.size() - 1))
+        {
+            for (int i = list.size(); i < index; i++)
+            {
+                list.add(null);
+            }
+            list.add(object);
+        }
+        else
+        {
+            list.set(index, object);
+        }
     }
 }

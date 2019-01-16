@@ -66,8 +66,6 @@ public class ProgramAgentController {
 
             agentNameInput.setText(name);
             List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
-            // TODO: Remove reverse
-            //Collections.reverse(rules);
             for (String rule: rules) {
                 businessRuleInput.appendText(rule + "\n");
             }

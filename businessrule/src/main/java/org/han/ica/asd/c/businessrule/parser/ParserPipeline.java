@@ -164,7 +164,7 @@ public class ParserPipeline {
                 if (businessRulesInput.get(i).getBusinessRule().isEmpty() || ParseErrorListener.INSTANCE.getExceptions().contains(i + 1) || !businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)) {
                     newLineCounter.addOne();
                 } else {
-                    businessRulesMap.put(i + ". " + businessRulesInput.get(i).getBusinessRule(), businessRulesParsed.get(i - newLineCounter.getCountedValue()).encode());
+                    businessRulesMap.put(i + " " + businessRulesInput.get(i).getBusinessRule(), businessRulesParsed.get(i - newLineCounter.getCountedValue()).encode());
                 }
             }
         }
