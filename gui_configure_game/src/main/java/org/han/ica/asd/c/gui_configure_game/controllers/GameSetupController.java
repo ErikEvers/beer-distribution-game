@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_configure_game.graph.EdgeLine;
@@ -21,14 +22,16 @@ import org.han.ica.asd.c.gui_configure_game.graph.Wholesale;
 import org.han.ica.asd.c.gui_configure_game.graphutil.GraphConverterToDomain;
 import org.han.ica.asd.c.gui_configure_game.graphutil.GraphToFacilityChecker;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
-import org.han.ica.asd.c.model.domain_objects.Facility;
+
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +45,7 @@ public class GameSetupController implements Initializable {
     private ArrayList<FacilityRectangle> warehouses = new ArrayList<>();
     private ArrayList<FacilityRectangle> retailers = new ArrayList<>();
     private ObservableList<GraphFacility> graphFacilityListView = FXCollections.observableArrayList();
+    private ObservableList<String> presetStrings = FXCollections.observableArrayList();
 
 
     private int mouseClickedCount = 0;
@@ -52,6 +56,7 @@ public class GameSetupController implements Initializable {
 
     private double firstRectangleX;
     private double firstRectangleY;
+
 
 
     @Inject
@@ -84,6 +89,9 @@ public class GameSetupController implements Initializable {
     private ComboBox<GraphFacility> comboBox;
 
     @FXML
+    private ComboBox<String> presetBox;
+
+    @FXML
     private AnchorPane mainContainer;
 
     @FXML
@@ -97,6 +105,7 @@ public class GameSetupController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         mainContainer.getChildren().addAll();
         fillComboBox();
+        fillPresetBox();
     }
 
     void setConfiguration(Configuration configuration) {
@@ -239,6 +248,18 @@ public class GameSetupController implements Initializable {
         graphFacilityListView.add(retailer);
         comboBox.setItems(graphFacilityListView);
     }
+
+    private void fillPresetBox() {
+        String linear = "Linear";
+        String piramide = "Pyramid";
+        String custom = "Custom";
+        presetStrings.addAll(custom);
+        presetStrings.add(linear);
+        presetStrings.add(piramide);
+        presetBox.setItems(presetStrings);
+        presetBox.getSelectionModel().select(presetStrings.get(0));
+    }
+
 
     /**
      * Method creates a new FacilityRectangle based on the graphFacility that is selected in the combobox.
@@ -511,7 +532,23 @@ public class GameSetupController implements Initializable {
 
     }
 
-    public void linearPreset() throws GraphException {
+    public void loadPreset() throws GraphException {
+        if (presetBox.getSelectionModel().getSelectedItem().equals("Linear")) {
+            linearPreset();
+        }
+        if (presetBox.getSelectionModel().getSelectedItem().equals("Pyramid")) {
+            pyramidPreeset();
+        }
+        if (presetBox.getSelectionModel().getSelectedItem().equals("Custom")) {
+            clear();
+        }
+    }
+
+    public void clearScreen() {
+        clear();
+    }
+
+    public void clear() {
         if (graph.getFacilities() != null) {
             graph.getFacilities().clear();
         }
@@ -520,6 +557,10 @@ public class GameSetupController implements Initializable {
         wholesalers.clear();
         retailers.clear();
         facilitiesContainer.getChildren().clear();
+    }
+
+    private void linearPreset() throws GraphException {
+        clear();
 
         for (int i = 0; i <= 3; i++) {
             comboBox.getSelectionModel().select(graphFacilityListView.get(i));
@@ -530,16 +571,8 @@ public class GameSetupController implements Initializable {
         facilitiesContainer.getChildren().add(createLine(wholesalers.get(0), retailers.get(0), retailers.get(0).getTranslateX(), wholesalers.get(0).getTranslateY()));
     }
 
-    public void pyramidPreeset() throws GraphException {
-        if (graph.getFacilities() != null) {
-            graph.getFacilities().clear();
-        }
-        factories.clear();
-        warehouses.clear();
-        wholesalers.clear();
-        retailers.clear();
-        facilitiesContainer.getChildren().clear();
-
+    private void pyramidPreeset() throws GraphException {
+        clear();
 
         int factoryAmount = 1;
         int warehouseAmount = 2;
@@ -589,7 +622,13 @@ public class GameSetupController implements Initializable {
     }
 
 
-    public void drawPresetFactories(int amount) {
+    public void drawPresetSelected() throws IOException {
+
+
+    }
+
+
+    private void drawPresetFactories(int amount) {
         for (int i = 1; i <= amount; i++) {
             comboBox.getSelectionModel().select(graphFacilityListView.get(0));
             handleAddFacilityButtonClick();
@@ -597,7 +636,7 @@ public class GameSetupController implements Initializable {
 
     }
 
-    public void drawPresetWarehouse(int amount) {
+    private void drawPresetWarehouse(int amount) {
         for (int i = 1; i <= amount; i++) {
             comboBox.getSelectionModel().select(graphFacilityListView.get(1));
             handleAddFacilityButtonClick();
@@ -605,18 +644,17 @@ public class GameSetupController implements Initializable {
 
     }
 
-    public void drawPresetWholesale(int amount) {
+    private void drawPresetWholesale(int amount) {
         for (int i = 1; i <= amount; i++) {
             comboBox.getSelectionModel().select(graphFacilityListView.get(2));
             handleAddFacilityButtonClick();
         }
     }
 
-    public void drawPresetRetailer(int amount) {
+    private void drawPresetRetailer(int amount) {
         for (int i = 1; i <= amount; i++) {
             comboBox.getSelectionModel().select(graphFacilityListView.get(3));
             handleAddFacilityButtonClick();
         }
     }
-
 }
