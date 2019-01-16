@@ -61,7 +61,7 @@ public class SelectAgentController {
     }
 
     public void backButtonAction() {
-        playGameFactory.setData(new Object[]{false,roundId});
+        playGameFactory.setData(new Object[]{false,roundId,true});
         playGameFactory.setupScreen();
     }
 }

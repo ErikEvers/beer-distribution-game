@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 public class PlayGameSetupScreen implements IGUIHandler {
     private boolean setInAgent;
+    private boolean isBackAction;
     private int roundId;
     private static final String RESOURCE_BUNDLE = "languageResources";
 
@@ -22,6 +23,7 @@ public class PlayGameSetupScreen implements IGUIHandler {
     public void setData(Object[] data) {
         setInAgent = (boolean) data[0];
         roundId = (int) data[1];
+        isBackAction = (boolean) data[2];
 
     }
 
@@ -42,7 +44,7 @@ public class PlayGameSetupScreen implements IGUIHandler {
             playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
             ((PlayGameFacilitiesController) playGame).setLblFacilitiesText(facilityNamePlayedByPlayer);
         }
-        playGame.setAgentInUse(setInAgent,roundId);
+        playGame.setAgentInUse(setInAgent,roundId,isBackAction);
         playerComponent.setUi(playGame);
     }
 }

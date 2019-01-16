@@ -334,8 +334,8 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
-    public void setAgentInUse(boolean setInAgent,int roundId) {
-        if (roundId != 0) {
+    public void setAgentInUse(boolean setInAgent,int roundId,boolean isBackAction) {
+        if (roundId != 0 && (setInAgent || isBackAction)) {
             refreshInterfaceWithCurrentStatus(roundId);
         }
         if (setInAgent) {
