@@ -12,13 +12,14 @@ import java.util.ResourceBundle;
 public class PlayGameSetupScreen implements IGUIHandler {
 
     private static final String RESOURCE_BUNDLE = "languageResources";
+    private boolean rejoined;
 
     @Inject @Named("PlayerComponent")
     IPlayerComponent playerComponent;
 
     @Override
     public void setData(Object[] data) {
-        // not used in this handler
+        rejoined = (boolean)data[0];
     }
 
     @Override
@@ -38,7 +39,7 @@ public class PlayGameSetupScreen implements IGUIHandler {
             playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
             ((PlayGameFacilitiesController)playGame).setLblFacilitiesText(facilityNamePlayedByPlayer);
         }
-
+        playGame.setRejoined(rejoined);
         playerComponent.setUi(playGame);
     }
 }

@@ -62,6 +62,7 @@ public class SelectAgentController {
 
     public void rejoinGameButtonAction() {
         iPlayerComponent.activatePlayer();
+        playGameFactory.setData(new Object[]{true});
         playGameFactory.setupScreen();
     }
 }

@@ -114,6 +114,7 @@ public abstract class PlayGame implements IPlayGame {
 
     protected static Alert currentAlert;
 
+
     /**
      * superInitialization of the two controller subclasses. Has code needed for both initializations.
      */
@@ -313,6 +314,13 @@ public abstract class PlayGame implements IPlayGame {
         if (index >= 0) {
             playerComponent.getRound().getFacilityTurnDelivers().remove(index);
             deliverList.getItems().remove(index);
+        }
+    }
+
+    public void setRejoined(boolean rejoined){
+        if (rejoined){
+            useAgentButton.setDisable(true);
+            submitTurnButton.setDisable(true);
         }
     }
 }
