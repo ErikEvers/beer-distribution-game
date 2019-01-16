@@ -57,10 +57,7 @@ public class GameSetupController implements Initializable {
     private double firstRectangleX;
     private double firstRectangleY;
 
-    private static final Path currentDir = Paths.get("");
 
-    private static final String PRESETS = currentDir.toAbsolutePath().toString() + File.separator + "gui_configure_game" + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-    private static final String PRESETFILE = PRESETS + "Presets.ini";
 
     @Inject
     GraphConverterToDomain graphConverterToDomain;
