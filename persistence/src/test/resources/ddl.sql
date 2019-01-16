@@ -132,11 +132,12 @@ CREATE TABLE IF NOT EXISTS GameBusinessRulesInFacilityTurn (
   GameId varchar(36) NOT NULL,
   GameAgentName varchar(255) NOT NULL,
   GameBusinessRule varchar NOT NULL,
-  CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityId, GameId, GameAgentName, GameBusinessRule),
-  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule) REFERENCES GameBusinessRules(GameAgentName, GameBusinessRule)
-  ON UPDATE CASCADE ON DELETE RESTRICT,
+  GameAST varchar NOT NULL,
+  CONSTRAINT PK_GameBusinessRulesInFacilityTurn PRIMARY KEY (RoundId, FacilityId, GameId, GameAgentName, GameBusinessRule, GameAST),
+  CONSTRAINT FK_GameBusinessRulesInFacilityTurn_GameBusinessRules FOREIGN KEY (GameAgentName, GameBusinessRule, GameAST) REFERENCES GameBusinessRules(GameAgentName, GameBusinessRule, GameAST)
+  ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT FK_GameBusinessRulesInFacilityTurn_FacilityTurn FOREIGN KEY (RoundId, FacilityId, GameId) REFERENCES FacilityTurn(RoundId, FacilityId, GameId)
-  ON UPDATE CASCADE ON DELETE RESTRICT
+  ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS FacilityTurnOrder (
