@@ -1,6 +1,8 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
+import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
