@@ -41,7 +41,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -81,7 +83,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     private IFinder finder;
 
     private String externalIP;
-    private String internalIP;
+    public static String internalIP;
 
 
     Provider<GameLeader> gameLeaderProvider;
@@ -94,8 +96,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     public void start() {
         observers = new ArrayList<>();
-        finder = new RoomFinder();
-        nodeInfoList = new NodeInfoList();
 
         faultDetector.setObservers(observers);
         try {
@@ -116,6 +116,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         socketServer.startThread();
     }
 
+    public void start(String ip){
+        start();
+        internalIP = ip;
+    }
+
+
     public List<String> getAvailableRooms() {
         try {
             return finder.getAvailableRooms();
@@ -128,9 +134,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     public RoomModel createRoom(String roomName, String password, BeerGame beerGame) {
         try {
-            RoomModel createdRoom = finder.createGameRoomModel(roomName, externalIP, password);
+            RoomModel createdRoom = finder.createGameRoomModel(roomName, internalIP, password);
             GameLeader leader = gameLeaderProvider.get();
-            leader.init(externalIP, createdRoom, beerGame);
+            leader.init(internalIP, createdRoom, beerGame);
 
             return createdRoom;
         } catch (DiscoveryException e) {
@@ -140,10 +146,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     public RoomModel joinRoom(String roomName, String password) throws RoomException, DiscoveryException {
-        RoomModel joinedRoom = finder.joinGameRoomModel(roomName, externalIP, password);
-        if (makeConnection(joinedRoom.getLeaderIP())) {
+        RoomModel r = new RoomModel();
+        r.setRoomName(roomName);
+        if (makeConnection(finder.getRoom(r).getLeaderIP())) {
+            RoomModel joinedRoom = finder.joinGameRoomModel(roomName, internalIP, password);
             Connector.leaderIp = joinedRoom.getLeaderIP();
-            return joinedRoom;
+            return  joinedRoom;
         } else {
             throw new DiscoveryException("Can't connect to leader");
         }
@@ -187,7 +195,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Override
     public void removeYourselfFromRoom(RoomModel room) {
         try {
-            finder.removeHostFromRoom(room, externalIP);
+            finder.removeHostFromRoom(room, internalIP);
             Connector.leaderIp = null;
         } catch (DiscoveryException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -220,16 +228,14 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         nodeInfoList.init(playerList, leader);
     }
 
-    @Override
     public void startFaultDetector() {
         initNodeInfoList();
         Leader leader = persistence.getGameLog().getLeader();
         try {
             this.externalIP = getExternalIP();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
         }
-        String ip = this.externalIP;
 
         if (externalIP.equals(leader.getPlayer().getIpAddress())) {
             faultDetector.startFaultDetectorLeader(nodeInfoList);
@@ -280,7 +286,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
-        return "169.254.156.128";
+        return ip;
     }
 
     /**
@@ -289,14 +295,17 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @return The IP.
      */
     private String getInternalIP() {
-        String ip = null;
+        Map<String, String> ips = listAllIPs();
 
-        try {
-            ip = getIpOfInterFace(NetworkInterface.getNetworkInterfaces());
-        } catch (SocketException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+
+        for (Map.Entry<String, String> interfaceIP : ips.entrySet())
+        {
+            if(interfaceIP.getKey().contains("eth")){
+                return interfaceIP.getValue();
+            }
         }
-        return ip;
+
+        return null;
     }
 
     /**
@@ -320,6 +329,65 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             }
         }
         return ip;
+    }
+
+    public Map<String, String> listAllIPs(){
+        Map<String, String> ips = new LinkedHashMap<String, String>();
+        Enumeration<NetworkInterface> interfaces = getInterfaceEnem();
+        if(interfaces == null){
+            return null;
+        }
+        while(interfaces.hasMoreElements()){
+            NetworkInterface networkInterface = interfaces.nextElement();
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+            if(!checkIfLoopBackAddres(networkInterface)) {
+                checkInterfacesAndGiveIP(ips, networkInterface, addresses);
+            }
+        }
+        try {
+            ips.put("external", getExternalIP());
+        } catch (IOException e) {
+            logger.log(Level.INFO, "No external ip available", e);
+        }
+        return ips;
+    }
+
+    @Override
+    public void setMyIp(String ip) {
+        internalIP = ip;
+    }
+
+    private void checkInterfacesAndGiveIP(Map<String, String> ips, NetworkInterface networkInterface, Enumeration<InetAddress> addresses) {
+        while (addresses.hasMoreElements()) {
+            InetAddress ip = addresses.nextElement();
+            if (ip instanceof Inet4Address) {
+                String displayName = networkInterface.getDisplayName();
+                if(!displayName.contains("Virtual")) {
+                    String ipAddress = ip.getHostAddress();
+                    ips.put(networkInterface.getName(), ipAddress);
+                }
+
+            }
+        }
+    }
+
+    public boolean checkIfLoopBackAddres(NetworkInterface networkInterface){
+        try {
+            return networkInterface.isLoopback();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Enumeration<NetworkInterface> getInterfaceEnem() {
+        Enumeration<NetworkInterface> interfaces = null;
+        try {
+            interfaces = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+        return interfaces;
     }
 
     public void setPersistence(IGameStore persistence) {

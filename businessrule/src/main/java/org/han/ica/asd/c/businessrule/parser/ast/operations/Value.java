@@ -106,10 +106,11 @@ public class Value extends OperationValue {
      */
     public Integer getIntegerValue() {
         String firstPartVariable = getFirstPartVariable();
-        if(firstPartVariable.endsWith("%")) {
+        if (firstPartVariable.isEmpty()) {
+            return 0;
+        } else if(firstPartVariable.endsWith("%")) {
             return (int)(Integer.parseInt(firstPartVariable.replaceFirst("%", "")) / 100.0f * Integer.parseInt(getSecondPartVariable()) + 0.5f);
         }
-
         return Integer.parseInt(firstPartVariable);
     }
 

@@ -154,7 +154,7 @@ public class FaultDetectorLeader extends TimerTask {
      * @see FaultHandlerLeader
      */
     public void checkIfThisMachineIsDisconnected() {
-        if (failLog.getSuccessSize() < 1) {
+        if (failLog.getSuccessSize() == 0) {
             //If the Leader can only reach himself and noone else, he is probably disconnected so no longer leader.
             faultHandlerLeader.iAmDisconnected();
             timer.cancel();
