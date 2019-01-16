@@ -36,7 +36,7 @@
                     </rowConstraints>
                     <children>
                         <Button fx:id="selectAgentButton" mnemonicParsing="false" onAction="#selectAgentButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Select Agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
-                  <Button fx:id="backButton" onMouseClicked="#backButtonAction" mnemonicParsing="false" onAction="#selectAgentButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Back" textFill="WHITE" wrapText="true" />
+                  <Button fx:id="backButton" onAction="#backButtonAction" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Back" textFill="WHITE" wrapText="true" />
                     </children>
                 </GridPane>
                 <ListView fx:id="list" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
