@@ -51,7 +51,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private Round previousRoundData;
     private Round currentRoundData;
 
-    private int highestPlayerId = 0;
+    private int highestPlayerId = 1;
     private int turnsExpectedPerRound;
     private int turnsReceivedInCurrentRound = 0;
     private int roundId = 1;
@@ -71,7 +71,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         game = beerGame;
 				GameLeader.roomModel = roomModel;
 
-				Player player = new Player("0", leaderIp, null, "Yarno", true);
+				Player player = new Player("1", leaderIp, null, "Yarno", true);
 				game.getPlayers().add(player);
 				game.setLeader(new Leader(player));
 				playerComponent.setPlayer(player);

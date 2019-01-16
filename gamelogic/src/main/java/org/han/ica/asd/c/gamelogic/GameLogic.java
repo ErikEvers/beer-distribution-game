@@ -161,7 +161,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void gameStartReceived(BeerGame beerGame) {
-        persistence.saveGameLog(beerGame,false);
+        if (!isBotGame()) {
+            persistence.saveGameLog(beerGame, false);
+        }
         if (isBotGame()) {
             //seeOtherFacilities.setupScreen();
         } else {
@@ -195,9 +197,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         );
     }
 
-    private boolean isBotGame() {
-        BeerGame beerGame = getBeerGame();
-        return beerGame.getPlayers().size() == 1 && beerGame.getPlayers().stream().findFirst().get().getFacility() == null;
+    public boolean isBotGame() {
+        return getBeerGame().getPlayers().stream().filter(player1 -> player1.getPlayerId().equals("1")).findFirst().get().getFacility() == null;
     }
 
 
