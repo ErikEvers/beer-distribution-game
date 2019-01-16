@@ -89,7 +89,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 		//Check if record is created in the database
 		Assert.assertNotNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
 
-		gameBusinessRulesInFacilityTurnDAO.deleteTurn(GAME_ID,1,1);
+		gameBusinessRulesInFacilityTurnDAO.deleteTurn(1,1);
 		Assert.assertNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
 
 	}

@@ -2,6 +2,7 @@ package org.han.ica.asd.c.persistence;
 
 
 import org.han.ica.asd.c.dao.BeergameDAO;
+import org.han.ica.asd.c.dao.FacilityDAO;
 import org.han.ica.asd.c.dao.GameBusinessRulesInFacilityTurnDAO;
 import org.han.ica.asd.c.dao.LeaderDAO;
 import org.han.ica.asd.c.dao.PlayerDAO;
@@ -10,17 +11,19 @@ import org.han.ica.asd.c.interfaces.agent.IBusinessRuleLogger;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.leadermigration.IPersistenceLeaderMigration;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
+import org.han.ica.asd.c.interfaces.replay.IRetrieveReplayData;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
 
-
-public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistence, IPersistenceLeaderMigration {
+public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistence, IPersistenceLeaderMigration, IRetrieveReplayData {
 
 
 	@Inject
@@ -37,6 +40,9 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 
 	@Inject
 	private LeaderDAO leaderDAO;
+
+	@Inject
+	private FacilityDAO facilityDAO;
 
 
 	public Persistence(){
@@ -110,6 +116,22 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	@Override
 	public void createRound(Round round) {
 		roundDAO.createRound(round);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public List<Facility> getAllFacilities() {
+		return facilityDAO.readAllFacilitiesInGame();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public List<BeerGame> getAllBeerGames(){
+		return beergameDAO.readBeergames();
 	}
 }
 
