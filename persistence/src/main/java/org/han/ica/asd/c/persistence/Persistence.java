@@ -99,7 +99,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 
 	@Override
 	public void saveNewLeader(Player newLeader) {
-		leaderDAO.insertLeader(newLeader);
+		leaderDAO.insertLeader(new Leader(newLeader));
 	}
 
 	@Override
