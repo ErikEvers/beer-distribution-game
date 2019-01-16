@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @Singleton
 public class DBConnection implements IDatabaseConnection {
 	private static final String currentDir = System.getProperty("user.home");
-	private static final String PATH = currentDir+File.separator+"Documents"+File.separator+"Beer%20Distribution%20Game"+File.separator+"resources"+File.separator;
+	private static final String PATH = currentDir+File.separator+"Documents"+File.separator+"Beer Distribution Game"+File.separator+"resources"+File.separator;
 	private static final String DATABASENAME = "BeerGameDB.db";
 	private static final String CONNECTIONSTRING = "jdbc:sqlite:" + PATH;
 	private static final Logger LOGGER = Logger.getLogger(org.han.ica.asd.c.dbconnection.DBConnection.class.getName());
@@ -48,7 +48,7 @@ public class DBConnection implements IDatabaseConnection {
 		try {
 			Files.copy(in, Paths.get(PATH + scriptname), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, e.toString(),e);
 		}
 
 		try(FileReader fr = new FileReader(new File(PATH + scriptname))){
