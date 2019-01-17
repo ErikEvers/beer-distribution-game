@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.interfaces.player;
 
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerRoundListener {
@@ -7,4 +8,5 @@ public interface IPlayerRoundListener {
     int getFacilityId();
     void startGame();
     void endGame(Round lastround);
+    Player getPlayer();
 }
