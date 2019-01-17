@@ -199,12 +199,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
 
-        if (game.getRounds().size() >= game.getConfiguration().getAmountOfRounds() && (game.getGameEndDate() == null || game.getGameEndDate().isEmpty())) {
-            endGame();
+        for (FacilityTurn facilityTurn : currentRoundData.getFacilityTurns()) {
+            if(!game.getConfiguration().isContinuePlayingWhenBankrupt() && facilityTurn.isBankrupt()) {
+                endGame();
+                return;
+            }
         }
-        if (game.getGameEndDate() == null) {
-            startNextRound();
-        }
+        startNextRound();
     }
 
     public void startGame() throws BeerGameException, TransactionException {
@@ -242,12 +243,14 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() throws TransactionException {
-        roundId++;
-        currentRoundData.setRoundId(roundId);
+        System.out.println(getBeerGame().getConfiguration().getAmountOfRounds());
+        System.out.println("roundID " + roundId);
         if (roundId > getBeerGame().getConfiguration().getAmountOfRounds() ) {
             endGame();
             return;
         }
+        roundId++;
+        currentRoundData.setRoundId(roundId);
 				turnsReceivedInCurrentRound = 0;
 				try {
 						connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
