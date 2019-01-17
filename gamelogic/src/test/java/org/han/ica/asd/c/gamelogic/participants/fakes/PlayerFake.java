@@ -29,4 +29,9 @@ public class PlayerFake implements IPlayerRoundListener {
 
     }
 
+    @Override
+    public Player getPlayer() {
+        return null;
+    }
+
 }

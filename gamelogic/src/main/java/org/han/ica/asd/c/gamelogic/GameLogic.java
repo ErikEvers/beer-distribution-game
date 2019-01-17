@@ -15,7 +15,6 @@ import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.GameRoundAction;
@@ -108,10 +107,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 		 * @return
 		 */
 		@Override
-		public Round calculateRound(Round round, BeerGame game) {
+		public Round calculateRound(Round previousRound, Round round, BeerGame game) {
 			RoundCalculator roundCalculator = new RoundCalculator();
 
-			return  roundCalculator.calculateRound(round, game);
+			return  roundCalculator.calculateRound(previousRound, round, game);
 		}
 
     /**
@@ -166,6 +165,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void roundEndRecieved(Round previousRound) {
+        persistence.updateRound(previousRound);
         persistence.updateEndGame();
         player.endGame(previousRound);
 
@@ -193,7 +193,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
             }
         }
         if (isBotGame()) {
-            Platform.runLater(() -> seeOtherFacilities.setupScreen());
+            //Platform.runLater(() -> seeOtherFacilities.setupScreen());
         } else {
             player.roundStarted();
         }
@@ -208,7 +208,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     public boolean isBotGame() {
-        return getBeerGame().getPlayers().stream().filter(player1 -> player1.getPlayerId().equals("1")).findFirst().get().getFacility() == null;
+        return getBeerGame().getPlayers().stream().filter(player1 -> player1.getPlayerId().equals(player.getPlayer().getPlayerId())).findFirst().get().getFacility() == null;
     }
 
 

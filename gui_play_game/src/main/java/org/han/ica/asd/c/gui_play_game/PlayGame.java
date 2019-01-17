@@ -294,12 +294,12 @@ public abstract class PlayGame implements IPlayGame {
      * The round to use for the refresh
      */
     @Override
-    public void refreshInterfaceWithCurrentStatus(int roundId, boolean gameEnded) {
+    public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
         int budget = 0;
-        List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
-        for (FacilityTurn f: facilityTurns) {
+        List<FacilityTurn> status = beerGame.getRoundById(previousRoundId).getFacilityTurns();
+        for (FacilityTurn f: status) {
             if(f.getFacilityId() == facility.getFacilityId()){
 								inventory.setText(Integer.toString(f.getStock()));
 								backOrders.setText(Integer.toString(f.getBackorders()));
@@ -312,7 +312,7 @@ public abstract class PlayGame implements IPlayGame {
         }
 
         int incomingOrders = 0;
-        List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
+        List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(previousRoundId).getFacilityOrders();
         for (FacilityTurnOrder f: facilityTurnOrders) {
             if(f.getFacilityIdOrderTo() == facility.getFacilityId()){
                 incomingOrders += f.getOrderAmount();

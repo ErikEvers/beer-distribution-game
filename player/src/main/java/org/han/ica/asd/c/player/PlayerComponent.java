@@ -211,7 +211,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         }
         if (!gameEnded) {
             Platform.runLater(() ->
-                    ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId(), gameEnded));
+                    ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId() - 1, gameLogic.getRoundId(), gameEnded));
         }
     }
     /**
