@@ -36,4 +36,6 @@ public interface IPlayerGameLogic {
     int getRoundId();
 
     void setPlayer(IPlayerRoundListener player);
+
+    void setLastTurn(Round lastround);
 }

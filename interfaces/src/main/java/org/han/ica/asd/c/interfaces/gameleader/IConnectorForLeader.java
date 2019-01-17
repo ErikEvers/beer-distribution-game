@@ -26,7 +26,7 @@ public interface IConnectorForLeader {
 
     void sendGameStart(BeerGame beerGame) throws TransactionException;
 
-    void sendGameEnd(BeerGame beerGame) throws TransactionException;
+    void sendGameEnd(BeerGame beerGame, Round previousRoundData) throws TransactionException;
 
     void startRoom(RoomModel roomModel);
 }

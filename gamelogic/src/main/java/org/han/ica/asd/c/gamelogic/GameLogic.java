@@ -147,6 +147,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.setPlayer(player);
     }
 
+    @Override
+    public void setLastTurn(Round lastround) {
+        persistence.updateRound(lastround);
+    }
+
     /**
 		 * @param previousRound The previous round to save.
      * @param newRound The current round to save.
@@ -160,9 +165,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     @Override
-    public void roundEndRecieved() {
+    public void roundEndRecieved(Round previousRound) {
         persistence.updateEndGame();
-        player.endGame();
+        player.endGame(previousRound);
 
     }
 

@@ -25,7 +25,7 @@ public class CommunicationStub implements IConnectorForLeader {
     }
 
     @Override
-    public void sendGameEnd(BeerGame beerGame) throws TransactionException {
+    public void sendGameEnd(BeerGame beerGame, Round previousRoundData) throws TransactionException {
 
     }
 

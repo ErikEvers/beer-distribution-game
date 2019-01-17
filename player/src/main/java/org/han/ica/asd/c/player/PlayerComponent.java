@@ -190,8 +190,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     }
 
     @Override
-    public void endGame() {
+    public void endGame(Round lastround) {
         gameEnded = true;
+        gameLogic.setLastTurn(lastround);
 
         Platform.runLater(() -> toEndScreen.setData(new Object[]{gameLogic.getBeerGame()}));
         Platform.runLater(() -> toEndScreen.setupScreen());

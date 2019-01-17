@@ -1,8 +1,6 @@
 package org.han.ica.asd.c.gameleader;
 
 
-import com.sun.org.apache.xpath.internal.operations.Equals;
-import javafx.scene.control.Alert;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
@@ -29,7 +27,6 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -201,7 +198,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
         for (FacilityTurn facilityTurn : currentRoundData.getFacilityTurns()) {
             if(!game.getConfiguration().isContinuePlayingWhenBankrupt() && facilityTurn.isBankrupt()) {
-                endGame();
+                endGame(previousRoundData);
                 return;
             }
         }
@@ -243,10 +240,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() throws TransactionException {
-        System.out.println(getBeerGame().getConfiguration().getAmountOfRounds());
-        System.out.println("roundID " + roundId);
         if (roundId > getBeerGame().getConfiguration().getAmountOfRounds() ) {
-            endGame();
+            endGame(previousRoundData);
             return;
         }
         roundId++;
@@ -261,8 +256,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
 
 
-    private void endGame() throws TransactionException {
-            connectorForLeader.sendGameEnd(game);
+    private void endGame(Round previousRoundData) throws TransactionException {
+            connectorForLeader.sendGameEnd(game, previousRoundData);
 
     }
 
