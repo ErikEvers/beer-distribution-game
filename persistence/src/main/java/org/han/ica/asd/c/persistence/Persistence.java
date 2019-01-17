@@ -23,80 +23,82 @@ import javax.inject.Inject;
 import java.util.List;
 
 
+
 public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistence, IPersistenceLeaderMigration, IRetrieveReplayData {
 
 
-	@Inject
-	private RoundDAO roundDAO;
+    @Inject
+    private RoundDAO roundDAO;
 
-	@Inject
-	private BeergameDAO beergameDAO;
+    @Inject
+    private BeergameDAO beergameDAO;
 
-	@Inject
-	private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
+    @Inject
+    private GameBusinessRulesInFacilityTurnDAO gameBusinessRulesInFacilityTurnDAO;
 
-	@Inject
-	private PlayerDAO playerDAO;
+    @Inject
+    private PlayerDAO playerDAO;
 
-	@Inject
-	private LeaderDAO leaderDAO;
+    @Inject
+    private LeaderDAO leaderDAO;
 
 	@Inject
 	private FacilityDAO facilityDAO;
 
 
-	public Persistence(){
-		//Empty constructor for Guice
-	}
+    public Persistence() {
+        //Empty constructor for Guice
+    }
 
-	@Override
-	public void saveFacilityTurn(Round data) {
-		saveRoundData(data);
-	}
+    @Override
+    public void saveFacilityTurn(Round data) {
+        saveRoundData(data);
+    }
 
-	@Override
-	public Round fetchFacilityTurn(int roundId) {
-		return fetchRoundData(roundId);
-	}
+    @Override
+    public Round fetchFacilityTurn(int roundId) {
+        return fetchRoundData(roundId);
+    }
 
-	@Override
-	public void saveRoundData(Round rounddata)
-	{
-		roundDAO.createRound(rounddata);
-	}
+    @Override
+    public void saveRoundData(Round rounddata) {
+        roundDAO.createRound(rounddata);
+    }
 
+    @Override
+    public void updateEndGame() {
+        beergameDAO.updateEnddate();
 
-	@Override
-	public Round fetchRoundData(int roundId) {
-		return roundDAO.getRound(roundId);
-	}
+    }
 
-	@Override
-	public BeerGame getGameLog()
-	{
-		return beergameDAO.getGameLog();
-	}
+    @Override
+    public Round fetchRoundData(int roundId) {
+        return roundDAO.getRound(roundId);
+    }
 
-	@Override
-	public void saveGameLog(BeerGame beerGame, boolean isStarted) {
-		if(isStarted){
-			roundDAO.createRound(beerGame.getRoundById(beerGame.getRounds().size()-1));
-		}
-		else {
-			beergameDAO.createBeergame(beerGame);
-		}
-	}
+    @Override
+    public BeerGame getGameLog() {
+        return beergameDAO.getGameLog();
+    }
 
-	@Override
-	public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn)
-	{
-		gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
-	}
+    @Override
+    public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+        if (isStarted) {
+            roundDAO.createRound(beerGame.getRoundById(beerGame.getRounds().size() - 1));
+        } else {
+            beergameDAO.createBeergame(beerGame);
+        }
+    }
 
-	@Override
-	public Player getPlayerById(String playerId) {
-		return playerDAO.getPlayer(playerId);
-	}
+    @Override
+    public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+        gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
+    }
+
+    @Override
+    public Player getPlayerById(String playerId) {
+        return playerDAO.getPlayer(playerId);
+    }
 
 	@Override
 	public void saveSelectedAgent(ProgrammedAgent agent) {
@@ -118,6 +120,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 		roundDAO.createRound(round);
 	}
 
+
 	/**
 	 * @inheritDoc
 	 */
@@ -133,6 +136,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	public List<BeerGame> getAllBeerGames(){
 		return beergameDAO.readBeergames();
 	}
+
 }
 
 

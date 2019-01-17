@@ -30,6 +30,7 @@ import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +67,7 @@ public abstract class PlayGame implements IPlayGame {
     @Inject
     @Named("SeeOtherFacilities")
     private IGUIHandler seeOtherFacilities;
+
 
     @FXML
     protected Label inventory;
@@ -319,16 +321,15 @@ public abstract class PlayGame implements IPlayGame {
      * The round to use for the refresh
      */
     @Override
-    public void refreshInterfaceWithCurrentStatus(int roundId) {
-        this.roundId =roundId;
+    public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
         int budget = 0;
-        List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
-        for (FacilityTurn f : facilityTurns) {
-            if (f.getFacilityId() == facility.getFacilityId()) {
-                inventory.setText(Integer.toString(f.getStock()));
-                backOrders.setText(Integer.toString(f.getBackorders()));
+        List<FacilityTurn> status = beerGame.getRoundById(previousRoundId).getFacilityTurns();
+        for (FacilityTurn f: status) {
+            if(f.getFacilityId() == facility.getFacilityId()){
+								inventory.setText(Integer.toString(f.getStock()));
+								backOrders.setText(Integer.toString(f.getBackorders()));
 
                 stockHoldingCost.setText("€" + Integer.toString(facility.getFacilityType().getStockHoldingCosts()) + "/pc/week");
                 openOrderCost.setText("€" + Integer.toString(facility.getFacilityType().getOpenOrderCosts()) + "/pc/week");
@@ -338,9 +339,10 @@ public abstract class PlayGame implements IPlayGame {
         }
 
         int incomingOrders = 0;
-        List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
-        for (FacilityTurnOrder f : facilityTurnOrders) {
-            if (f.getFacilityIdOrderTo() == facility.getFacilityId()) {
+
+        List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(previousRoundId).getFacilityOrders();
+        for (FacilityTurnOrder f: facilityTurnOrders) {
+            if(f.getFacilityIdOrderTo() == facility.getFacilityId()){
                 incomingOrders += f.getOrderAmount();
             }
         }
@@ -350,16 +352,21 @@ public abstract class PlayGame implements IPlayGame {
         if(currentAlert != null && currentAlert.isShowing()) {
             currentAlert.close();
         }
-        currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
-        currentAlert.show();
+        if(!gameEnded) {
+            currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
+            currentAlert.show();
+        } else{
+            currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your game has ended! well played!", ButtonType.OK);
+            currentAlert.show();
+        }
         if (!agentInUse) {
             submitTurnButton.setDisable(false);
             useAgentButton.setDisable(false);
         }
         roundLabel.setText("Round: " + roundId);
-        submitTurnButton.setDisable(false);
-        refillOrdersList();
-        refillDeliveriesList();
+				submitTurnButton.setDisable(false);
+				refillOrdersList();
+				refillDeliveriesList();
     }
 
     /**
@@ -407,7 +414,7 @@ public abstract class PlayGame implements IPlayGame {
 
     public void setAgentInUse(boolean setInAgent,int roundId,boolean isBackAction) {
         if (roundId != 0 && (setInAgent || isBackAction)) {
-            refreshInterfaceWithCurrentStatus(roundId);
+            refreshInterfaceWithCurrentStatus(roundId - 1, roundId, false);
         }
         if (setInAgent) {
             agentInUse = true;

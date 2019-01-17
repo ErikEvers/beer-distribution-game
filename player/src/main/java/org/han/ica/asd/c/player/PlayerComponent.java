@@ -3,13 +3,11 @@ package org.han.ica.asd.c.player;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
@@ -37,6 +35,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private static Player player;
     private static Round round;
     private static IPlayGame ui;
+    boolean gameEnded = false;
 
     @Inject
     IPlayerGameLogic gameLogic;
@@ -50,6 +49,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
 
     @Inject
     private IGameAgentService gameAgentService;
+
+    @Named("ReplayGameRound")
+    private IGUIHandler toEndScreen;
 
     @Inject
     public PlayerComponent(Provider<Round> roundProvider, Provider<FacilityTurnOrder> facilityTurnOrderProvider, Provider<FacilityTurnDeliver> facilityTurnDeliverProvider, IPlayerGameLogic gameLogic) {
@@ -143,6 +145,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         try {
             communication.chooseFacility(facility, player.getPlayerId());
             player.setFacility(facility);
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
             alert.show();
         } catch (FacilityNotAvailableException | SendGameMessageException e) {
@@ -188,6 +191,15 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         Platform.runLater(() -> playGame.setupScreen());
     }
 
+    @Override
+    public void endGame(Round lastround) {
+        gameEnded = true;
+        gameLogic.setLastTurn(lastround);
+
+        Platform.runLater(() -> toEndScreen.setData(new Object[]{gameLogic.getBeerGame()}));
+        Platform.runLater(() -> toEndScreen.setupScreen());
+    }
+
     /**
      * doOrder will notify the  participant to make an order.
      *
@@ -199,10 +211,12 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
             round = roundProvider.get();
             round.setRoundId(gameLogic.getRoundId());
         }
-        Platform.runLater(() ->
-                ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
-    }
 
+        if (!gameEnded) {
+            Platform.runLater(() ->
+                    ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId() - 1, gameLogic.getRoundId(), gameEnded));
+        }
+    }
     /**
      * Returns the facility for the ParticipantPool to compare with other participants.
      *

@@ -12,4 +12,5 @@ public class MessageIds {
     public static final int CHOOSE_FACILITY_MESSAGE = 5;
     public static final int REQUEST_GAME_DATA_MESSAGE = 6;
     public static final int GAME_START_MESSAGE = 7;
+    public static final int GAME_END_MESSAGE = 8;
 }
