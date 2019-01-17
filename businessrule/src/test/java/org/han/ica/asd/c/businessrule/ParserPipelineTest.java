@@ -90,7 +90,7 @@ class ParserPipelineTest {
 
         Map<String, String> res = parserPipeline.getBusinessRulesMap();
         Map<String, String> exp = new HashMap<>();
-        exp.put("default order 20","BR(D()A(AR(order)V(20)))");
+        exp.put("0 default order 20","BR(D()A(AR(order)V(20)))");
 
         assertEquals(exp,res);
     }
