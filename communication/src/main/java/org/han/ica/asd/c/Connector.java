@@ -283,7 +283,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Override
     public void sendGameEnd(BeerGame beerGame, Round previousRoundData) throws TransactionException {
         List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
-        gameMessageClient.sendGameEndToAllPlayers(ips.toArray(new String[0]), beerGame);
+        gameMessageClient.sendGameEndToAllPlayers(ips.toArray(new String[0]), previousRoundData);
     }
 
 

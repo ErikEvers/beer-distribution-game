@@ -125,8 +125,8 @@ public class GameMessageClient {
         gameMessageSender = new GameMessageSender(socketClient);
     }
 
-    public void sendGameEndToAllPlayers(String[] ips, BeerGame beerGame) throws TransactionException {
-        GameEndMessage gameStartMessage = new GameEndMessage(beerGame);
+    public void sendGameEndToAllPlayers(String[] ips, Round round) throws TransactionException {
+        GameEndMessage gameStartMessage = new GameEndMessage(round);
         new SendInTransaction(ips, gameStartMessage, gameMessageSender).sendToAllPlayers();
     }
 }

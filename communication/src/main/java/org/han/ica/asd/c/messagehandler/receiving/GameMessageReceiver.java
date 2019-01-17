@@ -192,7 +192,7 @@ public class GameMessageReceiver {
                     return gameStartMessage;
                 } else if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == GAME_END_MESSAGE){
                     GameEndMessage gameEndMessage = (GameEndMessage) transactionMessage;
-                    ((IRoundModelObserver) observer).roundEndRecieved();
+                    ((IRoundModelObserver) observer).roundEndRecieved(gameEndMessage.getPreviousRound());
                     gameEndMessage.createResponseMessage();
                     return gameEndMessage;
                 }

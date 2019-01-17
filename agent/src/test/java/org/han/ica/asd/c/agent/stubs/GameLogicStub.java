@@ -39,4 +39,9 @@ public class GameLogicStub implements IPlayerGameLogic {
     public void setPlayer(IPlayerRoundListener player) {
 
     }
+
+    @Override
+    public void setLastTurn(Round lastround) {
+
+    }
 }

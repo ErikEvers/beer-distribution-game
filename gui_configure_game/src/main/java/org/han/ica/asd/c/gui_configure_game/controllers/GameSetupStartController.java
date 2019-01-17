@@ -65,7 +65,7 @@ public class GameSetupStartController {
     public void initialize() {
         mainContainer.getChildren().addAll();
         backButton();
-        offlineGame.setSelected(true);
+        bankrupt.setSelected(true);
     }
 
     /**
