@@ -52,7 +52,7 @@ public class SelectAgentController {
     public void selectAgentButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
         iPlayerComponent.activateAgent(iBusinessRuleStore.getProgrammedGameAgent(selectedAgent.toString()));
-        playGameFactory.setData(new Object[]{true,roundId});
+        playGameFactory.setData(new Object[]{true,roundId,false});
         playGameFactory.setupScreen();
     }
 

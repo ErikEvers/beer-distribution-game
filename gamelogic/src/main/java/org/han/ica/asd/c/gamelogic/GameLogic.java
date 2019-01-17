@@ -56,8 +56,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     @Inject
     public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
         if(participantsPool == null) {
-					participantsPool = participantsPoolProvider.get();
-				}
+            participantsPool = participantsPoolProvider.get();
+        }
         this.communication = communication;
         initObserver();
     }
