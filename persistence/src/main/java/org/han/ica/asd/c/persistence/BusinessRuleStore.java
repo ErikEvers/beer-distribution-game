@@ -70,7 +70,6 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     @Override
     public List<List<String>> getAllFacilities() {
         List<List<String>> returnList = new ArrayList<>();
-
         facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
 
         switchCase();
