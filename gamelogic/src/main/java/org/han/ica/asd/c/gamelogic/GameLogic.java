@@ -101,8 +101,8 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         agent.setFacility(gameAgent.getFacility());
         agent.setGameBusinessRules(gameAgent.getGameBusinessRules());
 
-        sendRoundForAgent(agent);
         participantsPool.replacePlayerWithAgent(agent);
+        sendRoundForAgent(agent);
     }
 
     /**
