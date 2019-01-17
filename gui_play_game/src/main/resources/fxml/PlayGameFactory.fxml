@@ -177,12 +177,12 @@
                         <Insets bottom="170.0" />
                     </GridPane.margin>
                 </Label>
-                <Button fx:id="deleteDeliveryButton" mnemonicParsing="false" onAction="#deletePlacedDelivery" style="-fx-background-color: #ff8000 #ff8000;" text="Delete" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                <Button fx:id="deleteDeliveryButton" mnemonicParsing="false" onAction="#deletePlacedDelivery" style="-fx-background-color: #ff8000;" text="Delete" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets bottom="180.0" right="20.0" />
                     </GridPane.margin>
                 </Button>
-                <Button fx:id="deleteOrderButton" mnemonicParsing="false" onAction="#deletePlacedOrder" style="-fx-background-color: #ff8000 #ff8000 #ff8000 #ff8000;" text="Delete" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                <Button fx:id="deleteOrderButton" mnemonicParsing="false" onAction="#deletePlacedOrder" style="-fx-background-color: #ff8000;" text="Delete" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets right="20.0" top="260.0" />
                     </GridPane.margin>

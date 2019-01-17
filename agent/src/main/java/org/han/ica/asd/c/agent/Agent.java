@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.agent;
 
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
+import org.han.ica.asd.c.businessrule.parser.replacer.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -39,10 +39,6 @@ public class Agent extends GameAgent implements IParticipant {
 	@Inject
 	private IPersistence persistence;
 
-	public Agent(){
-
-	}
-
     /**
      * Constructor with default agent name and facility
      *
@@ -53,6 +49,10 @@ public class Agent extends GameAgent implements IParticipant {
         super(gameAgentName, facility, gameBusinessRulesList);
         this.configuration = configuration;
     }
+	
+	public Agent() {
+		//Empty constructor for Guice.
+	}
 
 	/**
 	 * Generates actions of an agent using the defined business rules.
@@ -95,7 +95,7 @@ public class Agent extends GameAgent implements IParticipant {
 				}
 			}
 		} catch (FacilityNotFound exception) {
-			LOGGER.log(Level.SEVERE, exception.getMessage(), exception);
+			LOGGER.log(Level.FINE, exception.getMessage(), exception);
 		}
 	}
 
@@ -123,9 +123,9 @@ public class Agent extends GameAgent implements IParticipant {
 		}
 
 		if(targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
-            Collections.sort(links);
-            return links.get(0);
-        }
+			Collections.sort(links);
+			return links.get(0);
+		}
 
 		for (Facility link : links) {
 			if (targetFacilityId == link.getFacilityId()) {
@@ -159,22 +159,22 @@ public class Agent extends GameAgent implements IParticipant {
 	 */
 	private Facility resolveHigherFacilityId(int targetFacilityId) throws FacilityNotFound {
 		if (targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
-		    List<Map.Entry<Facility, List<Facility>>> entryList = new ArrayList<>(configuration.getFacilitiesLinkedTo().entrySet());
+			List<Map.Entry<Facility, List<Facility>>> entryList = new ArrayList<>(configuration.getFacilitiesLinkedTo().entrySet());
 
-		    List<Facility> list = entryList.stream()
-                    .filter(this::entryContainsFacilityInValue)
-                    .map(Map.Entry::getKey)
-                    .sorted()
-                    .collect(Collectors.toList());
+			List<Facility> list = entryList.stream()
+					.filter(this::entryContainsFacilityInValue)
+					.map(Map.Entry::getKey)
+					.sorted()
+					.collect(Collectors.toList());
 
 			if (!list.isEmpty()) {
 				return list.get(0);
 			}
 		} else {
-		    Facility facility = getFacility();
-		    if (facility.getFacilityId() == targetFacilityId){
-		        return facility;
-            }
+			Facility facility = getFacility();
+			if (facility.getFacilityId() == targetFacilityId){
+				return facility;
+			}
 			for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
 				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == facility.getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
 					return link.getKey();
@@ -195,6 +195,6 @@ public class Agent extends GameAgent implements IParticipant {
     }
 
     public void setConfiguration(Configuration configuration) {
-	    this.configuration = configuration;
-    }
+		this.configuration = configuration;
+	}
 }

@@ -77,8 +77,7 @@ public class DBConnection implements IDatabaseConnection {
 	}
 
 	private static void executeSQLLine(String[] inst, Statement st) throws SQLException {
-		for (int i = 0; i < inst.length; i++) {
-			String strings = inst[i];
+		for (String strings : inst) {
 			if (!"".equals(strings)) {
 				st.executeUpdate(strings); //NOSONAR because the SQL Scripts are written by ourselves. SQLInjection not applicable
 			}

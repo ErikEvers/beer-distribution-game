@@ -75,7 +75,7 @@ public class AssignAgentsController {
 
 		public void handleChooseFacilityButtonClicked() {
     	try {
-				gameLeader.chooseFacility(lastClickedFacilityRectangle.getFacility(), "0");
+				gameLeader.chooseFacility(lastClickedFacilityRectangle.getFacility(), gameLeader.getBeerGame().getLeader().getPlayer().getPlayerId());
 			} catch (FacilityNotAvailableException e) {
 				Alert alert = new Alert(Alert.AlertType.ERROR, "Facility already taken", ButtonType.CLOSE);
 				alert.show();

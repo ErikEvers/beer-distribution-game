@@ -52,7 +52,6 @@ public class ProgramAgentController {
     IGUIHandler programAgentList;
 
     @Inject
-    @Named("BusinessruleStore")
     IBusinessRuleStore iBusinessRuleStore;
 
     private ObservableList<String> items;
@@ -67,7 +66,6 @@ public class ProgramAgentController {
 
             agentNameInput.setText(name);
             List<String> rules  = iBusinessRuleStore.readInputBusinessRules(name);
-            Collections.reverse(rules);
             for (String rule: rules) {
                 businessRuleInput.appendText(rule + "\n");
             }

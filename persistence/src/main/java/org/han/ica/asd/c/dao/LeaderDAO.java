@@ -17,7 +17,7 @@ public class LeaderDAO {
 	private static final String CREATE_LEADER = "INSERT INTO Leader VALUES (?,?,?);";
 	private static final String GET_LEADER = "SELECT * FROM Leader WHERE GameId = ? ORDER BY Timestamp DESC LIMIT 1;";
 	private static final Logger LOGGER = Logger.getLogger(LeaderDAO.class.getName());
-	private static final String UPDATE_LEADER = "UPDATE Leader SET PlayerId = ? AND TIMESTAMP = ? WHERE GameId = ?;";
+	private static final String UPDATE_LEADER = "UPDATE Leader SET PlayerId = ?, TIMESTAMP = ? WHERE GameId = ?;";
 
 	@Inject
 	IDatabaseConnection databaseConnection;
@@ -25,15 +25,19 @@ public class LeaderDAO {
 	@Inject
 	PlayerDAO playerDAO;
 
-	public void insertLeader(Player player) {
+	public void insertLeader(Leader leader) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_LEADER)) {
 				conn.setAutoCommit(false);
 
 				pstmt.setString(1, DaoConfig.getCurrentGameId());
-				pstmt.setString(2, player.getPlayerId());
-				pstmt.setString(3, new Date().toString());
+				pstmt.setString(2, leader.getPlayer().getPlayerId());
+				if(!leader.getTimestamp().equals("")) {
+					pstmt.setString(3, leader.getTimestamp());
+				} else {
+					pstmt.setString(3, new Date().toString());
+				}
 
 				pstmt.executeUpdate();
 				conn.commit();
@@ -70,14 +74,18 @@ public class LeaderDAO {
 		return leader;
 	}
 
-	public void updateLeader(Player player) {
+	public void updateLeader(Leader leader) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LEADER)) {
 				conn.setAutoCommit(false);
 
-				pstmt.setString(1, player.getPlayerId());
-				pstmt.setString(2, new Date().toString());
+				pstmt.setString(1, leader.getPlayer().getPlayerId());
+				if(!leader.getTimestamp().equals("")) {
+					pstmt.setString(2, leader.getTimestamp());
+				} else {
+					pstmt.setString(2, new Date().toString());
+				}
 				pstmt.setString(3, DaoConfig.getCurrentGameId());
 
 				pstmt.executeUpdate();
