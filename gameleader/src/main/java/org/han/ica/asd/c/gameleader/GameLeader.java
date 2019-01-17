@@ -244,12 +244,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private void startNextRound() throws TransactionException {
         roundId++;
         currentRoundData.setRoundId(roundId);
-        if (roundId == getBeerGame().getConfiguration().getAmountOfRounds() +1 ) {
+        if (roundId > getBeerGame().getConfiguration().getAmountOfRounds() ) {
             endGame();
             return;
         }
-				roundId++;
-				currentRoundData.setRoundId(roundId);
 				turnsReceivedInCurrentRound = 0;
 				try {
 						connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
