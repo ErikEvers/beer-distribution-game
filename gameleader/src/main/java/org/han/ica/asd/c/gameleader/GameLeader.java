@@ -246,7 +246,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() throws TransactionException {
-        if (roundId > getBeerGame().getConfiguration().getAmountOfRounds() ) {
+        if (roundId == getBeerGame().getConfiguration().getAmountOfRounds() ) {
             endGame(previousRoundData);
             return;
         }
