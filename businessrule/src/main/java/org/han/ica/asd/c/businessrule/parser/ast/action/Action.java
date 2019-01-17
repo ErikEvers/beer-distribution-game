@@ -1,7 +1,7 @@
 package org.han.ica.asd.c.businessrule.parser.ast.action;
 
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
+import org.han.ica.asd.c.businessrule.parser.replacer.NodeConverter;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonStatement;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
@@ -20,6 +20,7 @@ public class Action extends ASTNode {
     private OperationValue operation;
     private Person person;
     private ComparisonStatement comparisonStatement;
+    private static final String ALREADY_FACILITY_ID = "\\d+";
 
     private NodeConverter nodeConverter;
 
@@ -137,6 +138,11 @@ public class Action extends ASTNode {
      */
     public int getFacilityId(int ownFacilityId) {
         if(person != null){
+
+            if(person.getPerson().matches(ALREADY_FACILITY_ID)){
+                return Integer.parseInt(person.getPerson());
+            }
+
             return nodeConverter.getFacilityId(person.getPerson());
         }
         return nodeConverter.getFacilityIdByAction(ownFacilityId, actionName);
@@ -171,11 +177,40 @@ public class Action extends ASTNode {
         return this.operation;
     }
 
+    /**
+     * checks if action has an comparison statement.
+     * @return true if action has an comparison statement
+     */
     public boolean hasComparisonStatement(){
         return this.comparisonStatement != null;
     }
 
+    /***
+     * gets the comparison statement
+     * @return returns the comparison statement
+     */
     public ASTNode getComparisonStatement(){
         return this.comparisonStatement;
+    }
+
+    /***
+     * checks if the person variable is set
+     * @return true if the variable is set
+     */
+    public boolean hasPerson() {
+        return person!=null;
+    }
+
+    /***
+     * replaces the person with facilityId
+     * @param facilityId
+     */
+    public void replacePerson(int facilityId) {
+        this.comparisonStatement = null;
+        this.person.addValue(String.valueOf(facilityId));
+    }
+
+    public Person getPerson() {
+        return person;
     }
 }

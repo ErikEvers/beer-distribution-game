@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.agent;
 
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
+import org.han.ica.asd.c.businessrule.parser.replacer.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -95,7 +95,7 @@ public class Agent extends GameAgent implements IParticipant {
 				}
 			}
 		} catch (FacilityNotFound exception) {
-			LOGGER.log(Level.SEVERE, exception.getMessage(), exception);
+			LOGGER.log(Level.FINE, exception.getMessage(), exception);
 		}
 	}
 

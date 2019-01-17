@@ -88,7 +88,7 @@ public class ActionTest {
         action.addChild(personProvider.get().addValue("retailer 1"));
 
         int exp = 10;
-        int res = action.getFacilityId(3);
+        int res = action.getFacilityId(10);
 
         assertEquals(exp, res);
     }

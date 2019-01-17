@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -545,7 +547,7 @@ class AgentIntegrationTest {
         Facility sourceFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(sourceFacilityIndex);
         Facility targetFacility = Fixtures.GraphConfiguration.getInstance().facilityList.get(targetFacilityIndex);
         String expectedMessage = "Facility with ID: 10 is not found.";
-        Level expectedLevel = Level.SEVERE;
+        Level expectedLevel = Level.FINE;
 
         List<GameBusinessRules> businessRulesList = Collections.unmodifiableList(Lists.newArrayList(
                 new GameBusinessRules("business rule 1", "BR(CS(C(CV(V(outgoing goods))ComO(==)CV(V(10))))A(AR(deliver)V(20)P(retail 1)))"),
@@ -563,9 +565,9 @@ class AgentIntegrationTest {
                         new FacilityTurnDeliver(sourceFacility.getFacilityId(), targetFacility.getFacilityId(), 10, 20)));
 
         Logger logger = Logger.getLogger(Agent.class.getName());
-        TestExceptionLogHandler testExceptionLogHandler = new TestExceptionLogHandler();
-
-        logger.addHandler(testExceptionLogHandler);
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.FINE);
+        logger.addHandler(consoleHandler);
 
         BeerGame beerGame = new BeerGame();
         beerGame.getRounds().add(round);
@@ -576,8 +578,7 @@ class AgentIntegrationTest {
         GameRoundAction gameRoundAction = participant.executeTurn();
         assertTrue(gameRoundAction.targetOrderMap.isEmpty());
         assertTrue(gameRoundAction.targetDeliverMap.isEmpty());
-        assertEquals(expectedLevel, testExceptionLogHandler.level);
-        assertEquals(expectedMessage, testExceptionLogHandler.message);
+        assertEquals(expectedLevel, consoleHandler.getLevel());
     }
 
     @Test
@@ -715,7 +716,6 @@ class AgentIntegrationTest {
         assertEquals(expectedDeliver, actualDeliver);
     }
 
-
     @Test
     void testGraphPlayMakeshiftGameOf10TurnsWith15AgentsContainingDefaultBusinessRules() {
         //Order business rules
@@ -784,20 +784,20 @@ class AgentIntegrationTest {
                 gameBusinessRulesDeliver5GoodsToRetail2
         )));
         listOfParticipants.add(6, Fixtures.GraphConfiguration.getInstance().createAgent(6, Arrays.asList(
-                gameBusinessRulesDeliver5GoodsToRegionalWarehouse1,
+                gameBusinessRulesOrder5GoodsFromRegionalWarehouse1,
                 gameBusinessRulesDeliver5GoodsToRetail1,
                 gameBusinessRulesDeliver5GoodsToRetail3,
                 gameBusinessRulesDeliver5GoodsToRetail4
         )));
         listOfParticipants.add(7, Fixtures.GraphConfiguration.getInstance().createAgent(7, Arrays.asList(
-                gameBusinessRulesDeliver5GoodsToRegionalWarehouse1,
+                gameBusinessRulesOrder5GoodsFromRegionalWarehouse1,
                 gameBusinessRulesDeliver5GoodsToRetail1,
                 gameBusinessRulesDeliver5GoodsToRetail3,
                 gameBusinessRulesDeliver5GoodsToRetail4,
                 gameBusinessRulesDeliver5GoodsToRetail6
         )));
         listOfParticipants.add(8, Fixtures.GraphConfiguration.getInstance().createAgent(8, Arrays.asList(
-                gameBusinessRulesDeliver5GoodsToRegionalWarehouse2,
+                gameBusinessRulesOrder5GoodsFromRegionalWarehouse2,
                 gameBusinessRulesDeliver5GoodsToRetail5
         )));
 
@@ -888,7 +888,6 @@ class AgentIntegrationTest {
                     listOfFacilityTurnDelivers);
 
             List<FacilityTurn>          listOfTemporaryFacilityTurns            = new ArrayList<>(listOfFacilityTurns);
-
             listOfFacilityTurns         = new ArrayList<>();
             listOfFacilityTurnOrders    = new ArrayList<>();
             listOfFacilityTurnDelivers  = new ArrayList<>();
@@ -953,9 +952,9 @@ class AgentIntegrationTest {
         assertEquals(30, listOfFacilityTurns.get(3).getStock());
         assertEquals(30, listOfFacilityTurns.get(4).getStock());
         assertEquals(30, listOfFacilityTurns.get(5).getStock());
-        assertEquals(-20, listOfFacilityTurns.get(6).getStock());
-        assertEquals(-20, listOfFacilityTurns.get(7).getStock());
-        assertEquals(-20, listOfFacilityTurns.get(8).getStock());
+        assertEquals(30, listOfFacilityTurns.get(6).getStock());
+        assertEquals(30, listOfFacilityTurns.get(7).getStock());
+        assertEquals(30, listOfFacilityTurns.get(8).getStock());
         assertEquals(80, listOfFacilityTurns.get(9).getStock());
         assertEquals(80, listOfFacilityTurns.get(10).getStock());
         assertEquals(80, listOfFacilityTurns.get(11).getStock());

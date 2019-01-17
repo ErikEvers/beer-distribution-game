@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 class ProgrammedBusinessRulesDAOIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(ProgrammedBusinessRulesDAOIntegrationTest.class.getName());
     private static final String PROGRAMMED_AGENT = "programmedAgentName";
-    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES = new ProgrammedBusinessRules("businessrule1", "ast1");
-    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES2 = new ProgrammedBusinessRules("BusinessRule2", "ast2");
+    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES = new ProgrammedBusinessRules("0 businessrule1", "ast1");
+    private static final ProgrammedBusinessRules PROGRAMMED_BUSINESS_RULES2 = new ProgrammedBusinessRules("1 BusinessRule2", "ast2");
 
     private ProgrammedBusinessRulesDAO programmedBusinessRulesDAO;
 
@@ -48,7 +48,7 @@ class ProgrammedBusinessRulesDAOIntegrationTest {
 
         ProgrammedBusinessRules programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
 
-        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedBusinessRule(), programmedBusinessRulesDb.getProgrammedBusinessRule());
+        Assert.assertEquals("businessrule1", programmedBusinessRulesDb.getProgrammedBusinessRule());
         Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedAST(), programmedBusinessRulesDb.getProgrammedAST());
     }
 
@@ -65,7 +65,7 @@ class ProgrammedBusinessRulesDAOIntegrationTest {
 
         ProgrammedBusinessRules programmedBusinessRulesDb = programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(PROGRAMMED_AGENT).get(0);
 
-        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES2.getProgrammedBusinessRule(), programmedBusinessRulesDb.getProgrammedBusinessRule());
+        Assert.assertEquals("BusinessRule2", programmedBusinessRulesDb.getProgrammedBusinessRule());
         Assert.assertEquals(PROGRAMMED_BUSINESS_RULES2.getProgrammedAST(), programmedBusinessRulesDb.getProgrammedAST());
     }
 
