@@ -30,7 +30,7 @@ public class ConfigurationDAO {
     private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
     private static final String GET_LOWER_LINKED_FACILITIES = "SELECT FacilityIdOrdering, FacilityIdDelivering FROM FacilityLinkedTo WHERE GameId = ?;";
     private static final String SET_LOWER_LINKED_FACILITIES = "INSERT INTO FacilityLinkedTo VALUES (?,?,?)";
-    private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdOrdering = ?, FacilityIdDelivering = ? WHERE GameId = ?;";
+    private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdDelivering = ? WHERE GameId = ? AND FacilityIdOrdering = ?;";
     private static final String DELETE_FACILITY_LINKS = "DELETE FROM FacilityLinkedTo WHERE GameId = ?;";
     private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
 
@@ -179,7 +179,6 @@ public class ConfigurationDAO {
 
                 pstmt.execute();
                 conn.commit();
-                updateFacilityLinks(configuration.getFacilitiesLinkedTo());
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -290,9 +289,9 @@ public class ConfigurationDAO {
                 try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LOWER_LINKED_FACILITIES)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, higherFacility.getFacilityId());
-                    pstmt.setInt(2, lowerFacility.getFacilityId());
-                    DaoConfig.gameIdNotSetCheck(pstmt, 3);
+                    pstmt.setInt(1, lowerFacility.getFacilityId());
+                    DaoConfig.gameIdNotSetCheck(pstmt, 2);
+                    pstmt.setInt(3, higherFacility.getFacilityId());
 
                     pstmt.executeUpdate();
                     conn.commit();
