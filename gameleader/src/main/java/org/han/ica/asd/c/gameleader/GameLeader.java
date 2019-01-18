@@ -81,6 +81,19 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
 
+    public void init2(BeerGame beerGame) {
+        connectorForLeader.addObserver(this);
+
+        game = beerGame;
+
+        this.currentRoundData = beerGame.getRounds().get(beerGame.getRounds().size()-1);
+        roundId = currentRoundData.getRoundId();
+        if(roundId > 0) {
+            previousRoundData = beerGame.getRoundById(roundId - 1);
+        }
+        this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
+    }
+
     /**
      * This method is called when the fault detection component detects that this machine is disconnected from all other players for whatever reason.
      * When this happens, an agent is added for each player except the local player.

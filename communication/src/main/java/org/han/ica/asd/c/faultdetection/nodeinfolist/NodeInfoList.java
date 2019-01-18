@@ -94,7 +94,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * @see Condition
      * @see NodeInfoList
      */
-    public List<String> getIpsFromPlayerList(Condition condition) {
+    private List<String> getIpsFromPlayerList(Condition condition) {
         ArrayList<String> list = new ArrayList<>();
         Player leaderPlayer = this.leader.getPlayer();
         playerList.forEach((node) -> {

@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.faultdetection;
 
+import org.han.ica.asd.c.ConnectorProvider;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.ILeaderMigration;
@@ -43,7 +44,8 @@ public class FaultHandlerPlayer {
      */
     public String whoIsDead() {
         if (amountOfFailingIps == (amountOfActiveIps - filteredAmount)) {
-            //TODO This should trigger Rejoin GUI and/or Request
+            //TODO This should trigger Rejoin GUI and/or Request now it sets this machine as leader so it starts agents
+            notifyObserversThisMachineDied();
             logger.log(Level.INFO, "Deze machine kan niemand bereiken");
             return "imDead";
         } else {
@@ -52,8 +54,12 @@ public class FaultHandlerPlayer {
                 logger.log(Level.INFO, "De leider kan niet worden bereikt, en is dus uitgevallen.");
                 return "leaderIsDead";
             } else {
-                //TODO This should start a relay
+                //TODO This should start a relay or netwok segmentations choosing a leader between players who say they cannot connect with the leader
 
+                //Because this machine cant reach leader
+                // and there is no relay or segmentation system the leader replaces this player with an agent
+                // so this machine should also become a leader and start agents
+                notifyObserversThisMachineDied();
                 return "leaderIsNotCompletelyDead";
             }
         }
@@ -70,6 +76,27 @@ public class FaultHandlerPlayer {
                 if (observer instanceof ILeaderMigration) {
                     Player[] players = nodeInfoList.getPlayersWithoutLeader();
                     ((ILeaderMigration) observer).startMigration(players, nodeInfoList.getMyIp());
+                }
+            }
+        }
+    }
+
+    /**
+     * Notifies leadermigration that this machine is disconnected disconnected.
+     *
+     * @author Tarik
+     */
+    private void notifyObserversThisMachineDied() {
+        if (observers != null && !observers.isEmpty()) {
+            for (IConnectorObserver observer : observers) {
+                if (observer instanceof ILeaderMigration) {
+                    List<Player> list = nodeInfoList.getPlayerList();
+                    for (Player player:list) {
+                        player.setConnected(false);
+                        if(player.getIpAddress().equals(nodeInfoList.getMyIp())) {
+                            ((ILeaderMigration) observer).receiveVictoryMessage(player);
+                        }
+                    }
                 }
             }
         }
@@ -150,6 +177,23 @@ public class FaultHandlerPlayer {
     }
 
     /**
+     * Sets new nodeInfoList.
+     *
+     * @param nodeInfoList New value of nodeInfoList.
+     */
+    void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
+    }
+
+    /**
+     * Sets new logger.
+     *
+     * @param logger New value of logger.
+     */
+    public void setLogger(Logger logger) {
+        FaultHandlerPlayer.logger = logger;
+    }
+    /**
      * Sets new observers.
      *
      * @param observers New value of observers.
@@ -183,9 +227,5 @@ public class FaultHandlerPlayer {
      */
     int getAmountOfConnectionsWithLeader() {
         return amountOfConnectionsWithLeader;
-    }
-
-    void setNodeInfoList(NodeInfoList nodeInfoList) {
-        this.nodeInfoList = nodeInfoList;
     }
 }

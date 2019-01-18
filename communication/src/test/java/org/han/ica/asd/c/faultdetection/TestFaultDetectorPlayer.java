@@ -83,7 +83,7 @@ class TestFaultDetectorPlayer {
 
         faultDetectorPlayer.setLastReceived(0);
         faultDetectorPlayer.setLeaderWasPinging(true);
-        faultDetectorPlayer.setPlayersWhoAlreadyCouldntReachLeader(new HashMap<>());
+        faultDetectorPlayer.setPlayersWhoAlreadyCouldNotReachLeader(new HashMap<>());
 
         faultDetectorPlayer.run();
 
@@ -118,7 +118,7 @@ class TestFaultDetectorPlayer {
     @Test
     void TestCanYouReachLeaderMessageReceived() {
         HashMap<String, Long> mock = spy(HashMap.class);
-        faultDetectorPlayer.setPlayersWhoAlreadyCouldntReachLeader(mock);
+        faultDetectorPlayer.setPlayersWhoAlreadyCouldNotReachLeader(mock);
 
         Object result = faultDetectorPlayer.canYouReachLeaderMessageReceived(new CanYouReachLeaderMessage(), "ip");
 

@@ -175,6 +175,15 @@ public class FaultHandlerLeader {
     }
 
     /**
+     * Sets new logger.
+     *
+     * @param logger New value of logger.
+     */
+    public void setLogger(Logger logger) {
+        FaultHandlerLeader.logger = logger;
+    }
+
+    /**
      * Gets amountOfFailsPerIp.
      *
      * @return Value of amountOfFailsPerIp.

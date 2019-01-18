@@ -181,6 +181,18 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
     }
 
+    public void changeLeader(){
+        Leader leader = persistence.getGameLog().getLeader();
+
+        //Initialize gameLeader component
+        if (internalIP.equals(leader.getPlayer().getIpAddress())) {
+            GameLeader gameLeader = gameLeaderProvider.get();
+            gameLeader.init2(persistence.getGameLog());
+        }
+        //Start fault detector
+            startFaultDetector();
+    }
+
     public RoomModel updateRoom(RoomModel room) {
         try {
             return finder.getRoom(room);

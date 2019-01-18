@@ -36,7 +36,7 @@ public class FaultDetectorPlayer extends TimerTask {
     private boolean leaderWasPinging;
     private Timer timer;
     private List<IConnectorObserver> observers;
-    private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
+    private HashMap<String, Long> playersWhoAlreadyCouldNotReachLeader;
     private boolean active;
 
     FaultDetectorPlayer() {
@@ -70,7 +70,7 @@ public class FaultDetectorPlayer extends TimerTask {
     public void start() {
         this.lastReceived = System.currentTimeMillis();
         leaderWasPinging = true;
-        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
+        playersWhoAlreadyCouldNotReachLeader = new HashMap<>();
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerPlayer.setObservers(observers);
@@ -139,17 +139,18 @@ public class FaultDetectorPlayer extends TimerTask {
 
     /**
      * This method sends a 'CanYouReachLeaderMessage' to players from which i didn't already received the same message.
-     * It waits for the responses and increments/sets the values in the 'FaultHandlerPlayer' so it can decide who died.
+     * It waits for the responses and increments/sets the values in the 'FaultHandlerPlayer' so it can decide who is disconnected.
      *
      * @author Tarik
      */
     private void askOtherPlayers() {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
         faultHandlerPlayer.setAmountOfActiveIps(ips.size()-1);
-        HashMap<String, Long> filter = new HashMap<>(playersWhoAlreadyCouldntReachLeader);
+        HashMap<String, Long> filter = new HashMap<>(playersWhoAlreadyCouldNotReachLeader);
 
-        // filter out ips from ips that already send a message within the past 5 minutes
+        // filters out IPs from ips that already send a message within the past 5 minutes
         ips.removeIf(ip -> ip == nodeInfoList.getMyIp() || filter.containsKey(ip) && timestampIsRecentlyReceived(filter.get(ip)));
+
         faultHandlerPlayer.setFilteredAmount(filter.size());
         Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll(ips.toArray(new String[0]), new CanYouReachLeaderMessage());
 
@@ -178,7 +179,7 @@ public class FaultDetectorPlayer extends TimerTask {
     public Object canYouReachLeaderMessageReceived(CanYouReachLeaderMessage canYouReachLeaderMessage, String senderIp) {
         boolean leaderIsAlive;
         // put senderIp in local list with currentTime
-        playersWhoAlreadyCouldntReachLeader.put(senderIp, System.currentTimeMillis());
+        playersWhoAlreadyCouldNotReachLeader.put(senderIp, System.currentTimeMillis());
 
         String leaderIp = nodeInfoList.getLeaderIp();
 
@@ -264,8 +265,8 @@ public class FaultDetectorPlayer extends TimerTask {
      *
      * @param playersWhoAlreadyCouldNotReachLeader New value of playersWhoAlreadyCouldNotReachLeader.
      */
-    public void setPlayersWhoAlreadyCouldntReachLeader(HashMap<String, Long> playersWhoAlreadyCouldNotReachLeader) {
-        this.playersWhoAlreadyCouldntReachLeader = playersWhoAlreadyCouldNotReachLeader;
+    public void setPlayersWhoAlreadyCouldNotReachLeader(HashMap<String, Long> playersWhoAlreadyCouldNotReachLeader) {
+        this.playersWhoAlreadyCouldNotReachLeader = playersWhoAlreadyCouldNotReachLeader;
     }
 
     /**
@@ -313,7 +314,4 @@ public class FaultDetectorPlayer extends TimerTask {
         return timer;
     }
 
-    public void setPlayersWhoAlreadyCouldntReachLeader(Map<String, Long> playersWhoAlreadyCouldntReachLeader) {
-        this.playersWhoAlreadyCouldntReachLeader = (HashMap<String, Long>) playersWhoAlreadyCouldntReachLeader;
-    }
 }
