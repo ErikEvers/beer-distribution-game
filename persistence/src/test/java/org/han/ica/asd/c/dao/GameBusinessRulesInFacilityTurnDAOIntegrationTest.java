@@ -29,17 +29,18 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 
 	private static final String GAME_ID = "BeerGameZutphen";
 	private static final String GAME_AGENT_NAME = "Henk";
-	
+
 
 	@BeforeEach
 	void setUp() {
-		DBConnectionTest.getInstance().cleanup();
 		GameBusinessRules businessRules = new GameBusinessRules("als voorraad minder dan 10 dan bestellen bij frits","gameAST");
 		rounds = new ArrayList<>();
 		gameBusinessRules = new ArrayList<>();
 		gameBusinessRules.add(businessRules);
 		rounds.add(new Round());
+
 		DBConnectionTest.getInstance().createNewDatabase();
+
 		Injector injector = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -47,7 +48,9 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 			}
 		});
 		gameBusinessRulesDAO = injector.getInstance(GameBusinessRulesDAO.class);
+
 		DaoConfig.setCurrentGameId(GAME_ID);
+
 		Injector injector1 = Guice.createInjector(new AbstractModule() {
 			@Override
 			protected void configure() {
@@ -86,7 +89,7 @@ class GameBusinessRulesInFacilityTurnDAOIntegrationTest {
 		//Check if record is created in the database
 		Assert.assertNotNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
 
-		gameBusinessRulesInFacilityTurnDAO.deleteTurn(GAME_ID,1,1);
+		gameBusinessRulesInFacilityTurnDAO.deleteTurn(1,1);
 		Assert.assertNull(gameBusinessRulesInFacilityTurnDAO.readTurn(1,1,GAME_AGENT_NAME));
 
 	}

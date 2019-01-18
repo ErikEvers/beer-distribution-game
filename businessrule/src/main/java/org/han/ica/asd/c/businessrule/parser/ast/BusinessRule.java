@@ -2,38 +2,39 @@ package org.han.ica.asd.c.businessrule.parser.ast;
 
 
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
+import org.han.ica.asd.c.businessrule.parser.ast.action.Person;
 import org.han.ica.asd.c.businessrule.parser.ast.comparison.ComparisonValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.OperationValue;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
+import org.han.ica.asd.c.businessrule.parser.replacer.Replacer;
 import org.han.ica.asd.c.gamevalue.GameValue;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class BusinessRule extends ASTNode {
+    private Replacer replacer;
     private Condition condition;
     private Action action;
     private static final String PREFIX = "BR(";
-    private static final String HAS_CHARACTERS = "[a-zA-Z ]+";
 
-    private NodeConverter nodeConverter;
+    private GameValue attribute;
+    private GameValue highestOrLowest;
+    private GameValue facilityType;
 
     public BusinessRule() {
     }
 
     @Inject
-    public BusinessRule(Provider<NodeConverter> nodeConverterProvider) {
-        nodeConverter = nodeConverterProvider.get();
+    public BusinessRule(Provider<Replacer> replacer) {
+        this.replacer = replacer.get();
     }
 
     /**
@@ -106,6 +107,14 @@ public class BusinessRule extends ASTNode {
             if (operationValue instanceof Operation) {
                 Operation operation = (Operation) operationValue;
                 comparisonValue.setOperationValue(operation.resolveOperation());
+            }
+        }
+
+        if(node instanceof Action){
+            Action actionNode = (Action) node;
+            OperationValue operationValue = actionNode.getOperationValue();
+            if (operationValue instanceof Operation) {
+                actionNode.setOperationValue(((Operation) operationValue).resolveOperation());
             }
         }
 
@@ -188,8 +197,24 @@ public class BusinessRule extends ASTNode {
      * @param facilityId identifier of the facility
      */
     public void substituteTheVariablesOfBusinessruleWithGameData(Round round, int facilityId) {
-        findLeafAndReplace(condition, round, facilityId);
-        findLeafAndReplace(action, round, facilityId);
+        findLeafAndReplaceComparisonStatement(condition, round, facilityId);
+        if(action.hasPerson()) {
+            facilityType = getFacilityType(action.getPerson());
+        }
+        findAttributes(action.getComparisonStatement());
+        if (action.hasPerson() && this.attribute != null && this.facilityType != null && this.highestOrLowest != null) {
+            replacePerson(round);
+        } else {
+            findLeafAndReplaceComparisonStatement(action.getComparisonStatement(), round, facilityId);
+            findLeafAndReplaceComparisonStatement(action.getRightChild(), round, facilityId);
+        }
+    }
+
+    private void replacePerson(Round round) {
+
+        if (this.attribute != null && this.highestOrLowest != null && this.facilityType != null) {
+            replacer.replacePerson(action, round, facilityType, attribute, highestOrLowest);
+        }
     }
 
     /***
@@ -199,20 +224,62 @@ public class BusinessRule extends ASTNode {
      * @param round the game data, used to replace data in function replace(Value value, int facilityId)
      * @param facilityId the id of the facility
      */
-    private void findLeafAndReplace(ASTNode astNode, Round round, int facilityId) {
+    private void findLeafAndReplaceComparisonStatement(ASTNode astNode, Round round, int facilityId) {
         if (astNode instanceof Value) {
-            replace((Value) astNode, round, facilityId);
+            replacer.replace((Value) astNode, round, facilityId);
         }
         if (astNode != null) {
-            findLeafAndReplace(astNode.getLeftChild(), round, facilityId);
+            findLeafAndReplaceComparisonStatement(astNode.getLeftChild(), round, facilityId);
             if (hasMultipleChildren(astNode)) {
-                findLeafAndReplace(astNode.getRightChild(), round, facilityId);
-
-                if (astNode instanceof Action && ((Action) astNode).hasComparisonStatement()){
-                    findLeafAndReplace(((Action) astNode).getComparisonStatement(), round, facilityId);
-                }
+                findLeafAndReplaceComparisonStatement(astNode.getRightChild(), round, facilityId);
             }
         }
+    }
+
+
+    /***
+     * finds the leaf and replaces the action
+     * @param astNode a node of the tree
+     */
+    private void findAttributes(ASTNode astNode) {
+        if (astNode instanceof Value) {
+            GameValue foundAttribute = getAttribute((Value) astNode);
+            GameValue foundHighestOrLowest = getHighestOrLowest((Value) astNode);
+            if (this.attribute == null) {
+                this.attribute = foundAttribute;
+            }
+            if (this.highestOrLowest == null) {
+                this.highestOrLowest = foundHighestOrLowest;
+            }
+        }
+        if (astNode != null) {
+            findAttributes(astNode.getLeftChild());
+            if (hasMultipleChildren(astNode)) {
+                findAttributes(astNode.getRightChild());
+            }
+        }
+    }
+
+    /***
+     * The value that probably contains an attribute
+     * @param value
+     * @return the corresponding game value
+     */
+    private GameValue getAttribute(Value value) {
+        if (containsAttribute(value, GameValue.STOCK.getValue())) {
+            return GameValue.STOCK;
+        } else if (containsAttribute(value, GameValue.ORDERED.getValue())) {
+            return GameValue.ORDERED;
+        } else if (containsAttribute(value, GameValue.OUTGOINGGOODS.getValue())) {
+            return GameValue.OUTGOINGGOODS;
+        } else if (containsAttribute(value, GameValue.BACKLOG.getValue())) {
+            return GameValue.BACKLOG;
+        } else if (containsAttribute(value, GameValue.INCOMINGORDER.getValue())) {
+            return GameValue.INCOMINGORDER;
+        } else if (containsAttribute(value, GameValue.BUDGET.getValue())) {
+            return GameValue.BUDGET;
+        }
+        return null;
     }
 
     /***
@@ -224,181 +291,6 @@ public class BusinessRule extends ASTNode {
         return astNode.getChildren().size() > 1;
     }
 
-    /***
-     * Gets one part of the value replaces it with game data
-     *
-     * @param value the value
-     * @param round the previous round
-     * @param facilityId the id of the facility
-     */
-    private void replace(Value value, Round round, int facilityId) {
-        String replacementValue;
-        if (value.getValue().size() > 1) {
-            String secondVariable = value.getSecondPartVariable();
-            if (GameValue.checkIfFacility(secondVariable) || Pattern.matches(HAS_CHARACTERS, value.getSecondPartVariable())) {
-                replaceOnVariable(value, round, facilityId, secondVariable);
-            }
-        }
-        replacementValue = value.getFirstPartVariable();
-        if (Pattern.matches(HAS_CHARACTERS, value.getFirstPartVariable())) {
-            replaceOnVariable(value, round, facilityId, replacementValue);
-        }
-    }
-
-    /***
-     * Replaces exactly one part of the variable
-     *
-     * @param value the value
-     * @param round the previous round
-     * @param facilityId the id of the facility
-     * @param variable one part of value
-     */
-    private void replaceOnVariable(Value value, Round round, int facilityId, String variable) {
-        GameValue gameValue = getGameValue(variable);
-        String newReplacementValue;
-        if (GameValue.checkIfFacility(variable)) {
-            newReplacementValue = String.valueOf(nodeConverter.getFacilityId(variable));
-            value.replaceValueWithValue(newReplacementValue);
-        } else if (gameValue != null) {
-            newReplacementValue = getReplacementValue(gameValue, round, facilityId);
-            value.replaceValueWithValue(newReplacementValue);
-        }
-    }
-
-    /***
-     * If the variable is a variable then it returns the corresponding game value
-     *
-     * @param variable one part of the value
-     * @return the corresponding game value
-     */
-    private GameValue getGameValue(String variable) {
-        for (GameValue gameValue : GameValue.values()) {
-            if (gameValue.contains(variable)) {
-                return gameValue;
-            }
-        }
-        return null;
-    }
-
-    /***
-     * Gets the replacementValue from the previous round
-     *
-     * @param gameValue the type of game value
-     * @param round from the previous round
-     * @param facilityId the id of the facility
-     * @return the replacement Value
-     */
-    private String getReplacementValue(GameValue gameValue, Round round, int facilityId) {
-        switch (gameValue) {
-            case ORDERED:
-                return getOrder(round, facilityId);
-            case STOCK:
-                return getStock(round, facilityId);
-            case BUDGET:
-                return getBudget(round, facilityId);
-            case BACKLOG:
-                return getBacklog(round, facilityId);
-            case INCOMINGORDER:
-                return getIncomingOrder(round, facilityId);
-            case OUTGOINGGOODS:
-                return getOutgoingGoods(round, facilityId);
-            case ROUND:
-                return String.valueOf(round.getRoundId() + 1);
-            default:
-                return "";
-        }
-    }
-
-    /***
-     * Gets the number of orders of an facility
-     * @param round the given round
-     * @param facilityId the id of the given facility
-     * @return the order amount
-     */
-    private String getOrder(Round round, int facilityId) {
-        for (FacilityTurnOrder facilityTurnOrder : round.getFacilityOrders()) {
-            if (facilityTurnOrder.getFacilityId() == facilityId) {
-                return String.valueOf(facilityTurnOrder.getOrderAmount());
-            }
-        }
-        return "";
-    }
-
-    /***
-     * Gets the stock of an facility
-     * @param round the given round
-     * @param facilityId the id of the given facility
-     * @return stock
-     */
-    private String getStock(Round round, int facilityId) {
-        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
-            if (facilityTurn.getFacilityId() == facilityId) {
-                return String.valueOf(facilityTurn.getStock());
-            }
-        }
-        return "";
-    }
-
-    /***
-     * Gets the remaining budget of an facility
-     * @param round the given round
-     * @param facilityId the id of the given facility
-     * @return budget
-     */
-    private String getBudget(Round round, int facilityId) {
-        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
-            if (facilityTurn.getFacilityId() == facilityId) {
-                return String.valueOf(facilityTurn.getRemainingBudget());
-            }
-        }
-        return "";
-    }
-
-    /***
-     * Gets the number of open orders of an facility
-     * @param round the given round
-     * @param facilityId the id of the given facility
-     * @return budget
-     */
-    private String getBacklog(Round round, int facilityId) {
-        for (FacilityTurn facilityTurn : round.getFacilityTurns()) {
-            if (facilityTurn.getFacilityId() == facilityId) {
-                return String.valueOf(facilityTurn.getBackorders());
-            }
-        }
-        return "";
-    }
-
-    /***
-     * Gets the incoming order of an facility
-     * @param round the given round
-     * @param facilityId the id of the given facility
-     * @return incoming order amount
-     */
-    private String getIncomingOrder(Round round, int facilityId) {
-        for (FacilityTurnOrder facilityTurn : round.getFacilityOrders()) {
-            if (facilityTurn.getFacilityIdOrderTo() == facilityId) {
-                return String.valueOf(facilityTurn.getOrderAmount());
-            }
-        }
-        return "";
-    }
-
-    /***
-     * Gets the outgoing order of an facility
-     * @param round the given round
-     * @param facilityId the id of the given facility
-     * @return outgoing goods amount
-     */
-    private String getOutgoingGoods(Round round, int facilityId) {
-        for (FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
-            if (facilityTurnDeliver.getFacilityId() == facilityId) {
-                return String.valueOf(facilityTurnDeliver.getDeliverAmount());
-            }
-        }
-        return "";
-    }
-
     /**
      * States if the business rule is triggered
      *
@@ -406,5 +298,62 @@ public class BusinessRule extends ASTNode {
      */
     public boolean isTriggered() {
         return ((BooleanLiteral) this.condition).getValue();
+    }
+
+    /***
+     * The given facility type
+     * @param person the person which contains the facility type
+     * @return the corresponding facility
+     */
+    private GameValue getFacilityType(Person person) {
+        if (containsGameValue(person.getPerson(), GameValue.FACTORY.getValue())) {
+            return GameValue.FACTORY;
+        } else if (containsGameValue(person.getPerson(), GameValue.WHOLESALER.getValue())) {
+            return GameValue.WHOLESALER;
+        } else if (containsGameValue(person.getPerson(), GameValue.REGIONALWAREHOUSE.getValue())) {
+            return GameValue.REGIONALWAREHOUSE;
+        } else if (containsGameValue(person.getPerson(), GameValue.RETAILER.getValue())) {
+            return GameValue.RETAILER;
+        }
+        return null;
+    }
+
+    /***
+     * Checks if the given value contains an attribute
+     * @param value the given value
+     * @param items the collection which holds the attributes
+     * @return true if the value contains an attribute
+     */
+    private boolean containsAttribute(Value value, String[] items) {
+        String part1 = value.getFirstPartVariable();
+        String part2 = "";
+        if (value.getValue().size() > 1) {
+            part2 = value.getSecondPartVariable();
+        }
+        return containsGameValue(part1, items) || containsGameValue(part2, items);
+    }
+
+    /***
+     * Checks if the string is an game value
+     * @param inputStr the string to check
+     * @param items the collection of gamevalues
+     * @return returns true if the game value has been found
+     */
+    private boolean containsGameValue(String inputStr, String[] items) {
+        return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
+    }
+
+    /***
+     * Checks if the value has the game value highest or lowest
+     * @param value the given value
+     * @returns highest if value has highest, returns lowest if the value has lowest and returns null of it doesn't contain highest or lowest.
+     */
+    private GameValue getHighestOrLowest(Value value) {
+        if (containsAttribute(value, GameValue.HIGHEST.getValue())) {
+            return GameValue.HIGHEST;
+        } else if (containsAttribute(value, GameValue.LOWEST.getValue())) {
+            return GameValue.LOWEST;
+        }
+        return null;
     }
 }

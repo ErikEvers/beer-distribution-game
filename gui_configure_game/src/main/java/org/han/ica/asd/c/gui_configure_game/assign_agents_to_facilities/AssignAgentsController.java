@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
-
 import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
@@ -15,10 +14,11 @@ import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
-
 import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
-import org.han.ica.asd.c.model.domain_objects.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -75,7 +75,7 @@ public class AssignAgentsController {
 
 		public void handleChooseFacilityButtonClicked() {
     	try {
-				gameLeader.chooseFacility(lastClickedFacilityRectangle.getFacility(), "0");
+				gameLeader.chooseFacility(lastClickedFacilityRectangle.getFacility(), gameLeader.getBeerGame().getLeader().getPlayer().getPlayerId());
 			} catch (FacilityNotAvailableException e) {
 				Alert alert = new Alert(Alert.AlertType.ERROR, "Facility already taken", ButtonType.CLOSE);
 				alert.show();
@@ -135,7 +135,9 @@ public class AssignAgentsController {
     }
 
     public void handleStartGameButtonClick() {
-        gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame());
+        for (GameAgent agent : gameAgentService.fillEmptyFacilitiesWithDefaultAgents(gameLeader.getBeerGame())) {
+            gameLeader.getBeerGame().getAgents().add(agent);
+        }
         initTree();
 				try {
 					gameLeader.startGame();

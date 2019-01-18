@@ -39,7 +39,6 @@ public class ProgramAgentListController {
     IGUIHandler mainMenu;
 
     @Inject
-    @Named("BusinessruleStore")
     IBusinessRuleStore iBusinessRuleStore;
 
     private ObservableList<String> items = FXCollections.observableArrayList();

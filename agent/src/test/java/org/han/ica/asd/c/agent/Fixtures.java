@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
-import org.han.ica.asd.c.agent.stubs.GameLogicStub;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
@@ -18,6 +16,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityType;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRules;
 import org.han.ica.asd.c.model.domain_objects.GameBusinessRulesInFacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.util.Arrays;
@@ -78,9 +77,9 @@ class Fixtures {
             participantInjector = Guice.createInjector(new AbstractModule() {
                 @Override
                 protected void configure() {
-                    bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
+                    bind(IBusinessRules.class).to(BusinessRuleHandler.class);
                     bind(IPlayerGameLogic.class).toInstance(gameLogic);
-                    bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
+                    bind(IPersistence.class).toInstance(new IPersistence() {
                         @Override
                         public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
@@ -108,8 +107,13 @@ class Fixtures {
                         @Override
                         public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
                         }
+
+                        @Override
+                        public void updateRound(Round round) {
+
+                        }
                     });
-                    bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).toInstance(new IBusinessRuleStore() {
+                    bind(IBusinessRuleStore.class).toInstance(new IBusinessRuleStore() {
                         @Override
                         public List<String> readInputBusinessRules(String agentName) {
                             return Collections.emptyList();
@@ -131,6 +135,11 @@ class Fixtures {
 
                         @Override
                         public void deleteProgrammedAgent(String agentName) {
+                        }
+
+                        @Override
+                        public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+                            return null;
                         }
                     });
                 }
@@ -256,9 +265,9 @@ class Fixtures {
             participantInjector = Guice.createInjector(new AbstractModule() {
                 @Override
                 protected void configure() {
-                    bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
+                    bind(IBusinessRules.class).to(BusinessRuleHandler.class);
                     bind(IPlayerGameLogic.class).toInstance(gameLogic);
-                    bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
+                    bind(IPersistence.class).toInstance(new IPersistence() {
                         @Override
                         public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
@@ -286,8 +295,13 @@ class Fixtures {
                         @Override
                         public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
                         }
+
+                        @Override
+                        public void updateRound(Round round) {
+
+                        }
                     });
-                    bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).toInstance(new IBusinessRuleStore() {
+                    bind(IBusinessRuleStore.class).toInstance(new IBusinessRuleStore() {
                         @Override
                         public List<String> readInputBusinessRules(String agentName) {
                             return Collections.emptyList();
@@ -309,6 +323,11 @@ class Fixtures {
 
                         @Override
                         public void deleteProgrammedAgent(String agentName) {
+                        }
+
+                        @Override
+                        public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+                            return null;
                         }
                     });
                 }
@@ -439,9 +458,9 @@ class Fixtures {
             participantInjector = Guice.createInjector(new AbstractModule() {
                 @Override
                 protected void configure() {
-                    bind(IBusinessRules.class).annotatedWith(Names.named("businessRules")).to(BusinessRuleHandler.class);
+                    bind(IBusinessRules.class).to(BusinessRuleHandler.class);
                     bind(IPlayerGameLogic.class).toInstance(gameLogic);
-                    bind(IPersistence.class).annotatedWith(Names.named("persistence")).toInstance(new IPersistence() {
+                    bind(IPersistence.class).toInstance(new IPersistence() {
                         @Override
                         public void saveGameLog(BeerGame beerGame, boolean isStarted) {
 
@@ -469,8 +488,13 @@ class Fixtures {
                         @Override
                         public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
                         }
+
+                        @Override
+                        public void updateRound(Round round) {
+
+                        }
                     });
-                    bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).toInstance(new IBusinessRuleStore() {
+                    bind(IBusinessRuleStore.class).toInstance(new IBusinessRuleStore() {
                         @Override
                         public List<String> readInputBusinessRules(String agentName) {
                             return Collections.emptyList();
@@ -492,6 +516,11 @@ class Fixtures {
 
                         @Override
                         public void deleteProgrammedAgent(String agentName) {
+                        }
+
+                        @Override
+                        public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+                            return null;
                         }
                     });
                 }

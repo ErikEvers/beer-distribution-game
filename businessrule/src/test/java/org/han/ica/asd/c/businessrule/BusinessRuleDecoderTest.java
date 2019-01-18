@@ -43,7 +43,7 @@ class BusinessRuleDecoderTest {
         Injector businessRuleFactoryInjector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
         }});
         businessRuleFactory = businessRuleFactoryInjector.getInstance(BusinessRuleFactory.class);
 
@@ -51,7 +51,7 @@ class BusinessRuleDecoderTest {
             @Override
             protected void configure() {
                 bind(BusinessRuleFactory.class).toInstance(businessRuleFactory);
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
             }
         });
 

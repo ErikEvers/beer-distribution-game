@@ -84,6 +84,7 @@ public class SocketClient {
         return result;
     }
 
+
     /**
      * This method tried to make a new socket with the given IP and sends an object. This method, however, does not expect something back.
      * No need for socket.close() because of the use of 'try-with'

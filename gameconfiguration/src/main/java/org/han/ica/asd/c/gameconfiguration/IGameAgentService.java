@@ -6,6 +6,7 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +16,5 @@ public interface IGameAgentService {
 
   GameAgent createGameAgentFromProgrammedAgent(Facility facility, ProgrammedAgent programmedAgent);
 
-  BeerGame fillEmptyFacilitiesWithDefaultAgents(BeerGame beerGame);
+  List<GameAgent> fillEmptyFacilitiesWithDefaultAgents(BeerGame beerGame);
 }

@@ -35,7 +35,7 @@ public class ActionTest {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
             }
         });
         actionProvider = injector.getProvider(Action.class);
@@ -88,7 +88,7 @@ public class ActionTest {
         action.addChild(personProvider.get().addValue("retailer 1"));
 
         int exp = 10;
-        int res = action.getFacilityId(3);
+        int res = action.getFacilityId(10);
 
         assertEquals(exp, res);
     }

@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.agent;
 
-import org.han.ica.asd.c.businessrule.parser.ast.NodeConverter;
+import org.han.ica.asd.c.businessrule.parser.replacer.NodeConverter;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
@@ -16,13 +16,12 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.interface_models.ActionModel;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -32,14 +31,12 @@ public class Agent extends GameAgent implements IParticipant {
 	private Configuration configuration;
 
 	@Inject
-	@Named("businessRules")
 	private IBusinessRules businessRules;
 
 	@Inject
 	private IPlayerGameLogic gameLogic;
 
 	@Inject
-	@Named("persistence")
 	private IPersistence persistence;
 
     /**
@@ -52,6 +49,10 @@ public class Agent extends GameAgent implements IParticipant {
         super(gameAgentName, facility, gameBusinessRulesList);
         this.configuration = configuration;
     }
+	
+	public Agent() {
+		//Empty constructor for Guice.
+	}
 
 	/**
 	 * Generates actions of an agent using the defined business rules.
@@ -73,7 +74,7 @@ public class Agent extends GameAgent implements IParticipant {
 		persistence.logUsedBusinessRuleToCreateOrder(new GameBusinessRulesInFacilityTurn(
 				getFacility().getFacilityId(),
 				round.getRoundId(),
-				getGameAgentName() + 1,
+				getGameAgentName(),
 				actionCollector.businessRulesList));
 		return new GameRoundAction(actionCollector.orderMap, actionCollector.deliverMap);
 	}
@@ -94,12 +95,14 @@ public class Agent extends GameAgent implements IParticipant {
 				}
 			}
 		} catch (FacilityNotFound exception) {
-			LOGGER.log(Level.SEVERE, exception.getMessage(), exception);
+			LOGGER.log(Level.FINE, exception.getMessage(), exception);
 		}
 	}
 
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
+	 *
+	 * ORDER
 	 *
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility below the current facility that needs to be resolved. NULL when facility is not found.
@@ -108,12 +111,21 @@ public class Agent extends GameAgent implements IParticipant {
 		if(getFacility().getFacilityId() == targetFacilityId)
 			return getFacility();
 
-		List<Facility> links = new ArrayList<>(configuration.getFacilitiesLinkedTo().get(getFacility()));
+		Facility facility = getFacility();
+		Optional<Map.Entry<Facility, List<Facility>>> value = configuration.getFacilitiesLinkedTo().entrySet().stream()
+				.filter(m -> m.getKey().getFacilityId() == facility.getFacilityId()).findFirst();
+
+		List<Facility> links;
+		if (value.isPresent()) {
+			links = value.get().getValue();
+		} else {
+			links = new ArrayList<>();
+		}
 
 		if(targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
-            Collections.sort(links);
-            return links.get(0);
-        }
+			Collections.sort(links);
+			return links.get(0);
+		}
 
 		for (Facility link : links) {
 			if (targetFacilityId == link.getFacilityId()) {
@@ -124,29 +136,47 @@ public class Agent extends GameAgent implements IParticipant {
 		throw new FacilityNotFound(targetFacilityId);
 	}
 
+	private boolean entryContainsFacilityInValue(Map.Entry<Facility, List<Facility>> entry){
+	    Facility facility = getFacility();
+
+	    List<Facility> list = entry.getValue();
+
+	    for(Facility f : list){
+	        if (f.getFacilityId() == facility.getFacilityId()){
+	            return true;
+            }
+        }
+	    return false;
+    }
+
 	/**
 	 * Returns the facility of the identifying integer. When the facility is not found, it'll return NULL.
+	 *
+	 * DELIVER
 	 *
 	 * @param   targetFacilityId The identifying integer of the facility that needs to be resolved
 	 * @return  The facility above the current facility that needs to be resolved. NULL when facility is not found.
 	 */
 	private Facility resolveHigherFacilityId(int targetFacilityId) throws FacilityNotFound {
 		if (targetFacilityId == NodeConverter.FIRST_FACILITY_ABOVE_BELOW){
+			List<Map.Entry<Facility, List<Facility>>> entryList = new ArrayList<>(configuration.getFacilitiesLinkedTo().entrySet());
 
-			Map<Facility, List<Facility>> map = configuration.getFacilitiesLinkedTo().entrySet().stream()
-					.filter(m -> m.getValue().contains(getFacility()))
-					.collect(
-							Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-									LinkedHashMap::new));
-
-			List<Facility> list = map.keySet().stream().sorted().collect(Collectors.toList());
+			List<Facility> list = entryList.stream()
+					.filter(this::entryContainsFacilityInValue)
+					.map(Map.Entry::getKey)
+					.sorted()
+					.collect(Collectors.toList());
 
 			if (!list.isEmpty()) {
 				return list.get(0);
 			}
 		} else {
+			Facility facility = getFacility();
+			if (facility.getFacilityId() == targetFacilityId){
+				return facility;
+			}
 			for (Map.Entry<Facility, List<Facility>> link : configuration.getFacilitiesLinkedTo().entrySet()) {
-				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == getFacility().getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
+				if (link.getValue().stream().anyMatch(f -> f.getFacilityId() == facility.getFacilityId()) && link.getKey().getFacilityId() == targetFacilityId) {
 					return link.getKey();
 				}
 			}
@@ -163,4 +193,8 @@ public class Agent extends GameAgent implements IParticipant {
     public Facility getParticipant() {
         return getFacility();
     }
+
+    public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+	}
 }

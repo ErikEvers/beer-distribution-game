@@ -50,7 +50,6 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
   /**
    * Register this object as an observer of the communication component.
    */
-	//TODO integrate with comm
   public void initialize() {
     communicator.addObserver(this);
   }

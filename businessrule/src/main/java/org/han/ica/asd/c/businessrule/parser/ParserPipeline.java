@@ -17,7 +17,6 @@ import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ import java.util.Map;
 public class ParserPipeline {
     private List<UserInputBusinessRule> businessRulesInput;
     private List<BusinessRule> businessRulesParsed;
-    private Map<String, String> businessRulesMap = new HashMap<>();
+    private Map<String, String> businessRulesMap = new LinkedHashMap<>();
     private static final String DELETE_EMPTY_LINES = "(?m)^[ \t]*\r?\n";
     private static final String REGEX_SPLIT_ON_NEW_LINE = "\\r?\\n";
     private static final String REGEX_START_WITH_IF_OR_DEFAULT = "(if|default|If|Default)[A-Za-z 0-9*/+\\-%=<>!\\t]+.";
@@ -165,7 +164,7 @@ public class ParserPipeline {
                 if (businessRulesInput.get(i).getBusinessRule().isEmpty() || ParseErrorListener.INSTANCE.getExceptions().contains(i + 1) || !businessRulesInput.get(i).getBusinessRule().matches(REGEX_START_WITH_IF_OR_DEFAULT)) {
                     newLineCounter.addOne();
                 } else {
-                    businessRulesMap.put(businessRulesInput.get(i).getBusinessRule(), businessRulesParsed.get(i - newLineCounter.getCountedValue()).encode());
+                    businessRulesMap.put(i + " " + businessRulesInput.get(i).getBusinessRule(), businessRulesParsed.get(i - newLineCounter.getCountedValue()).encode());
                 }
             }
         }

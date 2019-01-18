@@ -4,6 +4,16 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
+import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.han.ica.asd.c.businessrule.parser.ast.ASTNode;
 import org.han.ica.asd.c.businessrule.parser.ast.BusinessRule;
 import org.han.ica.asd.c.businessrule.parser.ast.action.Action;
@@ -16,10 +26,15 @@ import org.han.ica.asd.c.businessrule.parser.ast.operations.Operation;
 import org.han.ica.asd.c.businessrule.parser.ast.operations.Value;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.BooleanOperator;
 import org.han.ica.asd.c.businessrule.parser.ast.operators.ComparisonOperator;
+import org.han.ica.asd.c.businessrule.parser.replacer.Replacer;
+import org.han.ica.asd.c.businessrule.parser.walker.ASTListener;
 import org.han.ica.asd.c.businessrule.stubs.BusinessRuleStoreStub;
 import org.han.ica.asd.c.gamevalue.GameValue;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
-import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
+import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -32,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -40,11 +56,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 class BusinessRuleTest {
     private BusinessRule businessRule = new BusinessRule();
     private Round round;
-    private Facility facility;
-    private FacilityTurn facilityTurn;
-    private FacilityTurnDeliver facilityTurnDeliver;
-    private FacilityTurnOrder facilityTurnOrder;
-    private int facilityId = 10;
+
+    private int facilityIdReplace = 0;
 
     private Provider<BusinessRule> businessRuleProvider;
     private Provider<Comparison> comparisonProvider;
@@ -56,13 +69,14 @@ class BusinessRuleTest {
     private Provider<DivideOperation> divideOperationProvider;
     private Provider<Action> actionProvider;
     private Provider<ActionReference> actionReferenceProvider;
+    private Provider<ASTListener> astListenerProvider;
 
     @BeforeEach
     void setup() {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
             }
         });
 
@@ -76,33 +90,50 @@ class BusinessRuleTest {
         booleanOperatorProvider = injector.getProvider(BooleanOperator.class);
         comparisonOperatorProvider = injector.getProvider(ComparisonOperator.class);
         divideOperationProvider = injector.getProvider(DivideOperation.class);
+        astListenerProvider = injector.getProvider(ASTListener.class);
 
         List<FacilityTurn> facilityTurns = new ArrayList<>();
         List<FacilityTurnOrder> facilityTurnOrders = new ArrayList<>();
         List<FacilityTurnDeliver> facilityTurnDelivers = new ArrayList<>();
         round = Mockito.mock(Round.class);
-        facilityTurn = Mockito.mock(FacilityTurn.class);
-        facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
-        facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
-        facilityTurns.add(facilityTurn);
-        facilityTurnOrders.add(facilityTurnOrder);
-        facilityTurnDelivers.add(facilityTurnDeliver);
+
+        for (int i = 0; i < 20; i++) {
+            createTurnDeliver(i, facilityTurnDelivers);
+            createTurnOrder(i, facilityTurnOrders);
+            createTurn(i, facilityTurns);
+        }
         when(round.getFacilityTurnDelivers()).thenReturn(facilityTurnDelivers);
         when(round.getFacilityOrders()).thenReturn(facilityTurnOrders);
         when(round.getFacilityTurns()).thenReturn(facilityTurns);
         when(round.getRoundId()).thenReturn(4);
+    }
 
-        when(facilityTurn.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurn.getStock()).thenReturn(facilityId);
-        when(facilityTurn.getRemainingBudget()).thenReturn(21);
-        when(facilityTurn.getBackorders()).thenReturn(28);
 
-        when(facilityTurnOrder.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurnOrder.getOrderAmount()).thenReturn(15);
-        when(facilityTurnOrder.getFacilityIdOrderTo()).thenReturn(facilityId);
 
-        when(facilityTurnDeliver.getFacilityId()).thenReturn(facilityId);
-        when(facilityTurnDeliver.getDeliverAmount()).thenReturn(facilityId);
+
+    void createTurnDeliver(int id, List<FacilityTurnDeliver> facilityTurnDelivers) {
+        FacilityTurnDeliver facilityTurnDeliver = Mockito.mock(FacilityTurnDeliver.class);
+        when(facilityTurnDeliver.getFacilityId()).thenReturn(id);
+        when(facilityTurnDeliver.getDeliverAmount()).thenReturn(id);
+        facilityTurnDelivers.add(facilityTurnDeliver);
+    }
+
+    void createTurnOrder(int id, List<FacilityTurnOrder> facilityTurnOrders) {
+        FacilityTurnOrder facilityTurnOrder = Mockito.mock(FacilityTurnOrder.class);
+        when(facilityTurnOrder.getFacilityId()).thenReturn(id);
+        when(facilityTurnOrder.getOrderAmount()).thenReturn(id);
+        when(facilityTurnOrder.getFacilityIdOrderTo()).thenReturn(id);
+        facilityTurnOrders.add(facilityTurnOrder);
+    }
+
+    void createTurn(int id, List<FacilityTurn> facilityTurns) {
+        FacilityTurn facilityTurn = Mockito.mock(FacilityTurn.class);
+
+        when(facilityTurn.getFacilityId()).thenReturn(id);
+        when(facilityTurn.getStock()).thenReturn(id);
+        when(facilityTurn.getRemainingBudget()).thenReturn(id);
+        when(facilityTurn.getBackorders()).thenReturn(id);
+        facilityTurns.add(facilityTurn);
     }
 
     @Test
@@ -195,12 +226,112 @@ class BusinessRuleTest {
                                 .addChild(valueProvider.get().addValue("40%").addValue("inventory"))
                                 .addChild(valueProvider.get().addValue("20%").addValue("outgoing goods"))));
 
-        String expected = "BR(CS(CS(C(CV(V(15))ComO(==)CV(V(28))))BoolO(||)CS(C(CV(V(21))ComO(!=)CV(V(15)))))A(AR(order)Div(V(40% 10)CalO(/)V(20% 10))))";
+        String expected = "BR(CS(CS(C(CV(V(0))ComO(==)CV(V(0))))BoolO(||)CS(C(CV(V(0))ComO(!=)CV(V(0)))))A(AR(order)Div(V(40% 0)CalO(/)V(20% 0))))";
 
-        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
 
         String result = businessRule.encode();
         assertEquals(expected, result);
+    }
+
+    @Test
+    void replaceFactoryWithHighest() {
+        String input = "if inventory is 20 then order 20 from factory where inventory is highest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(3)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+    @Test
+    void replaceRetailerWithLowest() {
+        String input = "if inventory is 20 then order 20 from retailer where ordered is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+
+    @Test
+    void replaceWholesalerWithHighest() {
+        String input = "if inventory is 20 then order 20 from regional warehouse where outgoing goods is highest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(9)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+    @Test
+    void replaceRegionalWarehouseWithLowest() {
+        String input = "if inventory is 20 then order 20 from retailer where back orders is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+    @Test
+    void replaceRegionalWarehouseWithLowestIncomingOrder() {
+        String input = "if inventory is 20 then order 20 from retailer where incoming order is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+    @Test
+    void replaceRegionalWarehouseWithLowestOutGoingGoodsOrder() {
+        String input = "if inventory is 20 then order 20 from wholesaler where outgoing goods is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(4)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+    @Test
+    void replaceRegionalWarehouseWithLowestBudget() {
+        String input = "if inventory is 20 then order 20 from retailer where budget is lowest";
+        String expected = "BR(CS(C(CV(V(0))ComO(==)CV(V(20))))A(AR(order)V(20)P(10)))";
+        BusinessRule businessRule = parseString(input);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
+        assertEquals(expected, businessRule.encode());
+    }
+
+
+    BusinessRule parseString(String input) {
+        CharStream inputStream = CharStreams.fromString(input);
+        BusinessRuleLexer lexer = new BusinessRuleLexer(inputStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        BusinessRuleParser parser = new BusinessRuleParser(tokens);
+        parser.setErrorHandler(new BailErrorStrategy());
+
+        //Setup collection of the parse error messages
+        BaseErrorListener errorListener = new BaseErrorListener() {
+            private String message;
+
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                message = msg;
+            }
+
+            public String toString() {
+                return message;
+            }
+        };
+        parser.removeErrorListeners();
+        parser.addErrorListener(errorListener);
+
+        //Parse & extract AST
+        ASTListener listener = astListenerProvider.get();
+        try {
+            ParseTree parseTree = parser.businessrule();
+            ParseTreeWalker walker = new ParseTreeWalker();
+            walker.walk(listener, parseTree);
+        } catch (ParseCancellationException e) {
+            fail(errorListener.toString());
+        }
+
+        return listener.getBusinessRules().get(0);
     }
 
     @Test
@@ -211,14 +342,14 @@ class BusinessRuleTest {
                                 .addChild(comparisonProvider.get()
                                         .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("round")))
                                         .addChild(comparisonOperatorProvider.get().addValue("equal"))
-                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("5"))))))
+                                        .addChild(comparisonValueProvider.get().addChild(valueProvider.get().addValue("4"))))))
                 .addChild(actionProvider.get()
                         .addChild(actionReferenceProvider.get().addValue("order"))
                         .addChild(valueProvider.get().addValue("20")));
 
-        String expected = "BR(CS(CS(C(CV(V(5))ComO(==)CV(V(5)))))A(AR(order)V(20)))";
+        String expected = "BR(CS(CS(C(CV(V(4))ComO(==)CV(V(4)))))A(AR(order)V(20)))";
 
-        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityId);
+        businessRule.substituteTheVariablesOfBusinessruleWithGameData(round, facilityIdReplace);
 
         String result = businessRule.encode();
         assertEquals(expected, result);
@@ -238,60 +369,60 @@ class BusinessRuleTest {
 
     @Test
     void testBusinessRuleGetOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getOrderMethod = BusinessRule.class.getDeclaredMethod("getOrder", Round.class, int.class);
+        Method getOrderMethod = Replacer.class.getDeclaredMethod("getOrder", Round.class, int.class);
         getOrderMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String order = (String) getOrderMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String order = (String) getOrderMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(order.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetStockEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getStockMethod = BusinessRule.class.getDeclaredMethod("getStock", Round.class, int.class);
+        Method getStockMethod = Replacer.class.getDeclaredMethod("getStock", Round.class, int.class);
         getStockMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String stock = (String) getStockMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String stock = (String) getStockMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(stock.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetBudgetEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getBudgetMethod = BusinessRule.class.getDeclaredMethod("getBudget", Round.class, int.class);
+        Method getBudgetMethod = Replacer.class.getDeclaredMethod("getBudget", Round.class, int.class);
         getBudgetMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String budget = (String) getBudgetMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String budget = (String) getBudgetMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(budget.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetBacklogEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getBacklogMethod = BusinessRule.class.getDeclaredMethod("getBacklog", Round.class, int.class);
+        Method getBacklogMethod = Replacer.class.getDeclaredMethod("getBacklog", Round.class, int.class);
         getBacklogMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String backlog = (String) getBacklogMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String backlog = (String) getBacklogMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(backlog.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetIncomingOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getIncomingOrderMethod = BusinessRule.class.getDeclaredMethod("getIncomingOrder", Round.class, int.class);
+        Method getIncomingOrderMethod = Replacer.class.getDeclaredMethod("getIncomingOrder", Round.class, int.class);
         getIncomingOrderMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String incomingOrder = (String) getIncomingOrderMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String incomingOrder = (String) getIncomingOrderMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(incomingOrder.isEmpty());
     }
 
     @Test
     void testBusinessRuleGetOutgoingOrderEmptyReturn() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method getOutgoingGoodsMethod = BusinessRule.class.getDeclaredMethod("getOutgoingGoods", Round.class, int.class);
+        Method getOutgoingGoodsMethod = Replacer.class.getDeclaredMethod("getOutgoingGoods", Round.class, int.class);
         getOutgoingGoodsMethod.setAccessible(true);
-        BusinessRule businessRule = new BusinessRule();
-        String outgoingOrder = (String) getOutgoingGoodsMethod.invoke(businessRule, new Round(), 0);
+        Replacer replacer = new Replacer();
+        String outgoingOrder = (String) getOutgoingGoodsMethod.invoke(replacer, new Round(), 0);
 
         assertTrue(outgoingOrder.isEmpty());
     }

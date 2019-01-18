@@ -24,10 +24,7 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class BusinessRuleStoreTest {
 
@@ -42,7 +39,7 @@ class BusinessRuleStoreTest {
     private static final ProgrammedAgent PROGRAMMED_AGENT = new ProgrammedAgent(PROGRAMMED_AGENT_NAME, programmedBusinessRules);
     private static Map<String, String> businessRuleMap = new HashMap<>();
     private static final FacilityType FACTORYTYPE = new FacilityType("Factory", 1, 1, 1, 1, 1, 1, 1);
-    private static final FacilityType DISTRIBUTORTYPE = new FacilityType("Distributor", 1, 1, 1, 1, 1, 1, 1);
+    private static final FacilityType DISTRIBUTORTYPE = new FacilityType("Regional Warehouse", 1, 1, 1, 1, 1, 1, 1);
     private static final FacilityType WHOLESALERTYPE = new FacilityType("Wholesaler", 1, 1, 1, 1, 1, 1, 1);
     private static final FacilityType RETAILERTYPE = new FacilityType("Retailer", 1, 1, 1, 1, 1, 1, 1);
     private static final Facility FACTORY = new Facility(FACTORYTYPE, 1);
@@ -137,5 +134,10 @@ class BusinessRuleStoreTest {
         Assert.assertEquals(Integer.toString(DISTRIBUTOR.getFacilityId()), facilities.get(1).get(0));
         Assert.assertEquals(Integer.toString(WHOLESALER.getFacilityId()), facilities.get(2).get(0));
         Assert.assertEquals(Integer.toString(RETAILER.getFacilityId()), facilities.get(3).get(0));
+    }
+    @Test
+    void getProgrammedGameAgent() {
+        ProgrammedAgent programmedAgentDb = businessRuleStore.getProgrammedGameAgent(PROGRAMMED_AGENT_NAME);
+        Assert.assertEquals(PROGRAMMED_BUSINESS_RULES.getProgrammedBusinessRule(), programmedAgentDb.getProgrammedBusinessRules().get(0).getProgrammedBusinessRule());
     }
 }

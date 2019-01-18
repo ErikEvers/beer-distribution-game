@@ -3,6 +3,8 @@ package org.han.ica.asd.c.dao;
 
 import org.han.ica.asd.c.dbconnection.IDatabaseConnection;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.FacilityType;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -111,17 +113,16 @@ public class BeergameDAO {
 				conn.commit();
 				DaoConfig.setCurrentGameId(beerGame.getGameId());
 
-				configurationDAO.createConfiguration(beerGame.getConfiguration());
-
 				beerGame.getConfiguration().getFacilities().forEach(facility -> {
 					facilityDAO.createFacility(facility);
 					facilityTypeDAO.createFacilityType(facility.getFacilityType());
 				});
 
+				configurationDAO.createConfiguration(beerGame.getConfiguration());
 				roundDAO.insertRounds(beerGame.getRounds());
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
-				leaderDAO.insertLeader(beerGame.getLeader().getPlayer());
+				leaderDAO.insertLeader(beerGame.getLeader());
 
 				} catch (SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -137,8 +138,8 @@ public class BeergameDAO {
 		playerDAO.updatePlayers(beerGame.getPlayers());
 		//playerDAO.insertPlayers(beerGame.getPlayers());
 		gameAgentDAO.updateGameagents(beerGame.getAgents());
-		leaderDAO.updateLeader(beerGame.getLeader().getPlayer());
-		}
+		leaderDAO.updateLeader(beerGame.getLeader());
+	}
 
 
 	/**

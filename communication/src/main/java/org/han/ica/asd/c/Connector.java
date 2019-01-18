@@ -1,30 +1,30 @@
 package org.han.ica.asd.c;
 
 import org.han.ica.asd.c.discovery.RoomFinder;
-import org.han.ica.asd.c.interfaces.persistence.IGameStore;
-import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.Leader;
-import org.han.ica.asd.c.model.domain_objects.Player;
-import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
-import org.han.ica.asd.c.gameleader.GameLeader;
-import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.exceptions.communication.TransactionException;
-import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
-import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
+import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
+import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
+import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
@@ -90,16 +90,16 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
                      Provider<MessageDirector> messageDirectorProvider, Provider<FaultDetector> faultDetectorProvider,
                      Provider<NodeInfoList> nodeInfoListProvider) {
         this.gameLeaderProvider = gameLeaderProvider;
-        if(gameMessageReceiver == null) {
+        if (gameMessageReceiver == null) {
             gameMessageReceiver = gameMessageReceiverProvider.get();
         }
-        if(messageDirector == null) {
+        if (messageDirector == null) {
             messageDirector = messageDirectorProvider.get();
         }
-        if(faultDetector == null) {
+        if (faultDetector == null) {
             faultDetector = faultDetectorProvider.get();
         }
-        if(nodeInfoList == null) {
+        if (nodeInfoList == null) {
             nodeInfoList = nodeInfoListProvider.get();
         }
     }
@@ -114,8 +114,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
-        internalIP = getInternalIP();
-
+        faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
         GameMessageReceiver.setConnector(this);
 
@@ -126,7 +125,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         socketServer.startThread();
     }
 
-    public void start(String ip){
+    public void start(String ip) {
         start();
         internalIP = ip;
     }
@@ -146,8 +145,24 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             RoomModel createdRoom = finder.createGameRoomModel(roomName, internalIP, password);
             GameLeader leader = gameLeaderProvider.get();
             leader.init(internalIP, createdRoom, beerGame);
+            leaderIp = internalIP;
 
             return createdRoom;
+        } catch (DiscoveryException e) {
+            logger.log(Level.INFO, e.getMessage());
+        }
+        return null;
+    }
+
+    public RoomModel createOfflineRoom(String roomName, String password, BeerGame beerGame) {
+        try {
+            setMyIp("127.0.0.1");
+            RoomModel createdOfflineRoom = finder.createGameRoomModel(roomName, "127.0.0.1", password);
+            GameLeader leader = gameLeaderProvider.get();
+            leader.init("127.0.0.1", createdOfflineRoom, beerGame);
+            leaderIp = "127.0.0.1";
+
+            return createdOfflineRoom;
         } catch (DiscoveryException e) {
             logger.log(Level.INFO, e.getMessage());
         }
@@ -160,7 +175,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         if (makeConnection(finder.getRoom(r).getLeaderIP())) {
             RoomModel joinedRoom = finder.joinGameRoomModel(roomName, internalIP, password);
             Connector.leaderIp = joinedRoom.getLeaderIP();
-            return  joinedRoom;
+            return joinedRoom;
         } else {
             throw new DiscoveryException("Can't connect to leader");
         }
@@ -211,6 +226,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
     }
 
+    @Override
+    public void sendTurnData(Round turn) throws SendGameMessageException {
+        Leader leader = persistence.getGameLog().getLeader();
+        gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
+    }
+
     public void addObserver(IConnectorObserver observer) {
         observers.add(observer);
         faultDetector.setObservers(observers);
@@ -224,9 +245,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      * @param newRound
      */
     @Override
-    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound, BeerGame beerGame) throws TransactionException {
+    public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
         //initNodeInfoList();
-        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
@@ -259,14 +280,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return false;
     }
 
-    public void sendTurn(Round turn) throws SendGameMessageException {
-        Leader leader = persistence.getGameLog().getLeader();
-        gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
-    }
-
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
@@ -295,25 +311,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     }
 
     /**
-     * Gets the local ip4 address from ethernet connection.
-     *
-     * @return The IP.
-     */
-    private String getInternalIP() {
-        Map<String, String> ips = listAllIPs();
-
-
-        for (Map.Entry<String, String> interfaceIP : ips.entrySet())
-        {
-            if(interfaceIP.getKey().contains("eth")){
-                return interfaceIP.getValue();
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Gets the ip4 address of an ethernet interface.
      *
      * @param nets List of network interfaces.
@@ -336,16 +333,16 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return ip;
     }
 
-    public Map<String, String> listAllIPs(){
+    public Map<String, String> listAllIPs() {
         Map<String, String> ips = new LinkedHashMap<String, String>();
         Enumeration<NetworkInterface> interfaces = getInterfaceEnem();
-        if(interfaces == null){
+        if (interfaces == null) {
             return null;
         }
-        while(interfaces.hasMoreElements()){
+        while (interfaces.hasMoreElements()) {
             NetworkInterface networkInterface = interfaces.nextElement();
             Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-            if(!checkIfLoopBackAddres(networkInterface)) {
+            if (!checkIfLoopBackAddres(networkInterface)) {
                 checkInterfacesAndGiveIP(ips, networkInterface, addresses);
             }
         }
@@ -367,7 +364,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             InetAddress ip = addresses.nextElement();
             if (ip instanceof Inet4Address) {
                 String displayName = networkInterface.getDisplayName();
-                if(!displayName.contains("Virtual")) {
+                if (!displayName.contains("Virtual")) {
                     String ipAddress = ip.getHostAddress();
                     ips.put(networkInterface.getName(), ipAddress);
                 }
@@ -376,7 +373,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
     }
 
-    public boolean checkIfLoopBackAddres(NetworkInterface networkInterface){
+    public boolean checkIfLoopBackAddres(NetworkInterface networkInterface) {
         try {
             return networkInterface.isLoopback();
         } catch (SocketException e) {

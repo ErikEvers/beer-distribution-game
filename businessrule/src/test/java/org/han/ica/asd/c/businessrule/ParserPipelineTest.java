@@ -43,7 +43,7 @@ class ParserPipelineTest {
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(IBusinessRuleStore.class).annotatedWith(Names.named("BusinessruleStore")).to(BusinessRuleStoreStub.class);
+                bind(IBusinessRuleStore.class).to(BusinessRuleStoreStub.class);
             }
         });
         parserPipelineProvider = injector.getProvider(ParserPipeline.class);
@@ -90,7 +90,7 @@ class ParserPipelineTest {
 
         Map<String, String> res = parserPipeline.getBusinessRulesMap();
         Map<String, String> exp = new HashMap<>();
-        exp.put("default order 20","BR(D()A(AR(order)V(20)))");
+        exp.put("0 default order 20","BR(D()A(AR(order)V(20)))");
 
         assertEquals(exp,res);
     }

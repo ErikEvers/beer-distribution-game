@@ -104,8 +104,9 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         }
     }
 
+		@Override
     public void submitTurn() throws SendGameMessageException {
-        gameLogic.submitTurn(round);
+    	gameLogic.submitTurn(round);
     }
 
     @Override

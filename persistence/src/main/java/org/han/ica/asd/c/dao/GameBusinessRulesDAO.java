@@ -65,12 +65,12 @@ public class GameBusinessRulesDAO {
                     pstmt.setString(2, gameAgent.getGameAgentName());
 
                     pstmt.executeUpdate();
-										conn.commit();
+                    conn.commit();
 
                 } catch (GameIdNotSetException | SQLException e) {
-									LOGGER.log(Level.SEVERE, e.toString(), e);
-									databaseConnection.rollBackTransaction(conn);
-								}
+					LOGGER.log(Level.SEVERE, e.toString(), e);
+					databaseConnection.rollBackTransaction(conn);
+				}
             }
     }
 
@@ -93,9 +93,9 @@ public class GameBusinessRulesDAO {
 						pstmt.setString(2, gameAgent.getGameAgentName());
 
 						try (ResultSet rs = pstmt.executeQuery()) {
-								while (rs.next()) {
-										gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"), rs.getString("GameAST")));
-								}
+							while (rs.next()) {
+								gameBusinessRules.add(new GameBusinessRules(rs.getString("GameBusinessRule"), rs.getString("GameAST")));
+							}
 						}
 						conn.commit();
 				} catch (GameIdNotSetException | SQLException e) {

@@ -11,7 +11,6 @@ import org.han.ica.asd.c.model.interface_models.ActionModel;
 import org.han.ica.asd.c.model.interface_models.UserInputBusinessRule;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class BusinessRuleHandler implements IBusinessRules {
     private BusinessRuleDecoder businessRuleDecoder;
 
     @Inject
-    @Named("BusinessruleStore")
     public IBusinessRuleStore iBusinessRuleStore;
 
     @Inject

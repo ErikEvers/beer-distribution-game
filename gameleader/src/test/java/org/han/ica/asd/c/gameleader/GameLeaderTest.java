@@ -5,14 +5,24 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.agent.Agent;
+import org.han.ica.asd.c.gameleader.stubs.BusinessRulesStub;
+import org.han.ica.asd.c.gameleader.stubs.PlayerGameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
+import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
+import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.*;
+import org.han.ica.asd.c.model.domain_objects.BeerGame;
+import org.han.ica.asd.c.model.domain_objects.Configuration;
+import org.han.ica.asd.c.model.domain_objects.Facility;
+import org.han.ica.asd.c.model.domain_objects.Leader;
+import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.RoomModel;
+import org.han.ica.asd.c.model.domain_objects.Round;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +31,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.mockito.Mockito.*;
 
 public class GameLeaderTest {
@@ -106,6 +117,8 @@ public class GameLeaderTest {
                 bind(IPersistence.class).toInstance(iPersistence);
                 bind(TurnHandler.class).toInstance(turnHandlerMock);
                 bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).toInstance(iPlayerComponent);
+                bind(IBusinessRules.class).to(BusinessRulesStub.class);
+                bind(IPlayerGameLogic.class).to(PlayerGameLogicStub.class);
 
                 bind(BeerGame.class).toProvider(() -> gameTest);
             }
@@ -115,34 +128,11 @@ public class GameLeaderTest {
     }
 
     @Test
-    public void facilitiesIs2AndTurnModelReceivedIsCalledTwice_TurnsReceived_IS_Zero() {
-        gameLeader.init("", new RoomModel(), gameTest);
-        gameLeader.turnModelReceived(facilityTurnModel);
-        gameLeader.turnModelReceived(facilityTurnModel);
-
-        //Assertions.assertEquals(0, gameLeader.getTurnsReceivedInCurrentRound());
-    }
-
-    @Test
     public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() {
         gameLeader.init("", new RoomModel(), gameTest);
         gameLeader.turnModelReceived(facilityTurnModel);
 
         Assertions.assertNotEquals(0, gameLeader.getTurnsReceivedInCurrentRound());
-    }
-
-    @Test
-    public void verifyThatMethodsAreCalled() {
-        gameLeader.init("", new RoomModel(), gameTest);
-
-        gameLeader.turnModelReceived(facilityTurnModel);
-        gameLeader.turnModelReceived(facilityTurnModel);
-
-//        verify(gameLogic, times(1)).calculateRound(any(Round.class));
-//        verify(turnHandlerMock, times(2)).processFacilityTurn(any(Round.class), any(Round.class));
-//        verify(iPersistence, times(2)).saveFacilityTurn(any(Round.class));
-//        verify(iPersistence, times(1)).saveRoundData(any(Round.class));
-//        verify(iConnectorForLeader, times(1)).sendRoundDataToAllPlayers(any(Round.class));
     }
 
     @Test

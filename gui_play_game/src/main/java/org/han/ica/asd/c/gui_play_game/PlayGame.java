@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,17 +27,17 @@ import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnDeliver;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
-import org.han.ica.asd.c.model.domain_objects.Round;
 
 import java.io.IOException;
-import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+/**
+ * Standard class for all the facility interfaces when in-game
+ */
 public abstract class PlayGame implements IPlayGame {
     @FXML
     private GridPane playGridPane;
@@ -115,7 +114,7 @@ public abstract class PlayGame implements IPlayGame {
      */
     protected void superInitialize() {
         mainContainer.getChildren().addAll();
-        playGridPane.setStyle("-fx-border-style: solid inside;" + "-fx-border-color: black;" + "-fx-border-radius: 40;");
+        playGridPane.setStyle("-fx-border-style: solid inside; -fx-border-color: black; -fx-border-radius: 40;");
 
         //Make sure only numbers can be filled in the order textBox. This is done using a textFormatter
         UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
@@ -129,21 +128,31 @@ public abstract class PlayGame implements IPlayGame {
         deliverFacilities = FXCollections.observableArrayList();
     }
 
+    /**
+     * Retrieves a formatter that can be applied to text fields to ensure numbers only
+     * @return
+     * The text formatter
+     */
     protected UnaryOperator<TextFormatter.Change> getChangeUnaryOperator() {
         return change -> {
                 String newText = change.getControlNewText();
-                if (newText.matches("-?([0-9]*)?")){
+                if (newText.matches("([0-9]*)?")){
                     return change;
                 }
                 return null;
             };
     }
 
+    /**
+     * Replaces the current screen with the graph view of the facilities in the current game
+     */
     public void seeOtherFacilitiesButtonClicked() {
         seeOtherFacilities.setupScreen();
     }
 
-
+    /**
+     * Replaces the current screen with the activity log
+     */
 		public void handleSeeActivityLogButtonClicked() {
     	Parent parent;
     	try {
@@ -160,8 +169,28 @@ public abstract class PlayGame implements IPlayGame {
 			}
 		}
 
+    /**
+     * Fills the comboboxes with the correct facilities
+     */
     public abstract void fillComboBox();
 
+    private void initDeliverBox() {
+        if (cmbChooseOutgoingDelivery != null && !cmbChooseOutgoingDelivery.getItems().isEmpty() ) {
+            cmbChooseOutgoingDelivery.getSelectionModel().selectFirst();
+        }
+    }
+
+    private void initOrderBox() {
+        if (comboBox != null && !comboBox.getItems().isEmpty()) {
+            comboBox.getSelectionModel().selectFirst();
+        }
+    }
+
+    /**
+     * Fill the outgoing delivery combobox
+     * @param comboBox
+     * Combobox to be filled
+     */
     protected void fillOutGoingDeliveryFacilityComboBox(ComboBox comboBox) {
         List<Facility> facilities = new ArrayList<>();
 
@@ -178,12 +207,19 @@ public abstract class PlayGame implements IPlayGame {
 				ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
 				facilityListView.addAll(facilities);
 				comboBox.setItems(facilityListView);
+				initDeliverBox();
     }
 
+    /**
+     * Fill the outgoing order combobox
+     * @param comboBox
+     * Combobox to be filled
+     */
     protected void fillOutGoingOrderFacilityComboBox(ComboBox comboBox) {
         ObservableList<Facility> facilityListView = FXCollections.observableArrayList();
 				facilityListView.addAll(playerComponent.getBeerGame().getConfiguration().getFacilitiesLinkedToFacilitiesByFacilityId(playerComponent.getPlayer().getFacility().getFacilityId()));
 				comboBox.setItems(facilityListView);
+				initOrderBox();
     }
 
     /**
@@ -192,41 +228,51 @@ public abstract class PlayGame implements IPlayGame {
     @FXML
     protected void handleSendOrderButtonClick() {
         if (!outgoingOrderTextField.getText().isEmpty() && comboBox.getValue() != null) {
-            int order = Integer.parseInt(outgoingOrderTextField.getText());
-            Facility facility = comboBox.getValue();
-            String facilityAndOrderAmount = concatFacilityAndIdAndOrder(facility.getFacilityType().getFacilityName(), facility.getFacilityId(), order);
+            playerComponent.placeOrder(comboBox.getValue(), Integer.parseInt(outgoingOrderTextField.getText()));
+            refillOrdersList();
             outgoingOrderTextField.clear();
-            playerComponent.placeOrder(facility, order);
-            orderFacilities.add(facilityAndOrderAmount);
         }
     }
 
+    /**
+     * Button event handling the delivery sending
+     */
     @FXML
     protected void handleSendDeliveryButtonClick() {
         if (!txtOutgoingDelivery.getText().isEmpty()) {
-            Facility chosenFacility = cmbChooseOutgoingDelivery.getValue();
-            int delivery = Integer.parseInt(txtOutgoingDelivery.getText());
-            String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(chosenFacility.getFacilityType().getFacilityName(), chosenFacility.getFacilityId(), delivery);
+            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), Integer.parseInt(txtOutgoingDelivery.getText()));
+            refillDeliveriesList();
             txtOutgoingDelivery.clear();
-            playerComponent.sendDelivery(chosenFacility, delivery);
-            deliverFacilities.add(facilityAndDeliverAmount);
-            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), delivery);
         }
     }
 
+    /**
+     * Concatenates the facility and order/delivery
+     * @param facilityName
+     * The facility where the order/delivery is going to
+     * @param facilityid
+     * The ID of the facility the order/delivery is going to
+     * @param amount
+     * The amount to be delivered/ordered
+     * @return
+     * The concatenated string with the above data. Inteded for use in ListViews.
+     */
     protected String concatFacilityAndIdAndOrder(String facilityName, int facilityid, int amount) {
         return facilityName.concat(" id: " + Integer.toString(facilityid)).concat(" Amount: " + Integer.toString(amount));
     }
 
+    /**
+     * Button event that submits the current round to the gameleader
+     */
     @FXML
     protected void submitTurnButtonClicked() {
 				submitTurnButton.setDisable(true);
         try {
             playerComponent.submitTurn();
-            currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
-            currentAlert.show();
-            orderFacilities.clear();
-            deliverFacilities.clear();
+						currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your turn was successfully submitted, please wait for the new turn to begin", ButtonType.OK);
+						currentAlert.show();
+						orderFacilities.clear();
+						deliverFacilities.clear();
         } catch (SendGameMessageException e) {
             currentAlert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.OK, ButtonType.CLOSE);
             Optional<ButtonType> result = currentAlert.showAndWait();
@@ -238,11 +284,15 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    /**
+     * Refreshes the current view with the correct round data
+     * @param roundId
+     * The round to use for the refresh
+     */
     @Override
     public void refreshInterfaceWithCurrentStatus(int roundId) {
-    		BeerGame beerGame = playerComponent.getBeerGame();
+        BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
-        Round round = playerComponent.getRound();
         int budget = 0;
         List<FacilityTurn> facilityTurns = beerGame.getRoundById(roundId).getFacilityTurns();
         for (FacilityTurn f: facilityTurns) {
@@ -256,8 +306,6 @@ public abstract class PlayGame implements IPlayGame {
 								budget = f.getRemainingBudget();
             }
         }
-
-
 
         int incomingOrders = 0;
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
@@ -275,26 +323,34 @@ public abstract class PlayGame implements IPlayGame {
 				currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
 				currentAlert.show();
 				submitTurnButton.setDisable(false);
+				refillOrdersList();
+				refillDeliveriesList();
     }
 
-    private void initLijst() {
-        for(FacilityTurnOrder facilityTurnOrder : playerComponent.getRound().getFacilityOrders()) {
-            if(facilityTurnOrder.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
-                String facilityAndOrderAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnOrder.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), facilityTurnOrder.getFacilityIdOrderTo(), facilityTurnOrder.getOrderAmount());
-                orderFacilities.add(facilityAndOrderAmount);
-            }
-        }
+    /**
+     * Refills the orders list with the current orders for this turn
+     */
+    protected void refillOrdersList() {
+        orderFacilities.clear();
 
-        for(FacilityTurnDeliver facilityTurnDeliver : playerComponent.getRound().getFacilityTurnDelivers()) {
-            if(facilityTurnDeliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()) {
-                String facilityAndDeliverAmount = concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(facilityTurnDeliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), facilityTurnDeliver.getFacilityIdDeliverTo(), facilityTurnDeliver.getDeliverAmount());
-                deliverFacilities.add(facilityAndDeliverAmount);
-            }
-        }
+        playerComponent.getRound().getFacilityOrders().stream().filter(order -> order.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()).forEach(order ->
+                orderFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(order.getFacilityIdOrderTo()).getFacilityType().getFacilityName(), order.getFacilityIdOrderTo(), order.getOrderAmount())));
     }
 
+    /**
+     * Refills the deliveries list with the current deliveries for this turn
+     */
+    protected void refillDeliveriesList() {
+        deliverFacilities.clear();
+        playerComponent.getRound().getFacilityTurnDelivers().stream().filter(deliver -> deliver.getFacilityId() == playerComponent.getPlayer().getFacility().getFacilityId()).forEach(deliver ->
+                deliverFacilities.add(concatFacilityAndIdAndOrder(playerComponent.getBeerGame().getFacilityById(deliver.getFacilityIdDeliverTo()).getFacilityType().getFacilityName(), deliver.getFacilityIdDeliverTo(), deliver.getDeliverAmount())));
+    }
+
+    /**
+     * Deletes an order from the order list view
+     */
     @FXML
-    public void deletePlacedOrder(ActionEvent actionEvent) {
+    protected void deletePlacedOrder() {
         int index = orderList.getItems().indexOf(orderList.getSelectionModel().getSelectedItem());
         if (index >= 0) {
             playerComponent.getRound().getFacilityOrders().remove(index);
@@ -302,8 +358,11 @@ public abstract class PlayGame implements IPlayGame {
         }
     }
 
+    /**
+     * Deletes a delivery from the list view
+     */
     @FXML
-    public void deletePlacedDelivery(ActionEvent actionEvent) {
+    protected void deletePlacedDelivery() {
         int index = deliverList.getItems().indexOf(deliverList.getSelectionModel().getSelectedItem());
         if (index >= 0) {
             playerComponent.getRound().getFacilityTurnDelivers().remove(index);

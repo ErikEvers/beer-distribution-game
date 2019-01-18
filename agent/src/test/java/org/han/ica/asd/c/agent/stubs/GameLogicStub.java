@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GameLogicStub implements IPlayerGameLogic {
     @Override
-    public void submitTurn(Round turn) {
+    public void submitTurn(Round round) {
 
     }
 

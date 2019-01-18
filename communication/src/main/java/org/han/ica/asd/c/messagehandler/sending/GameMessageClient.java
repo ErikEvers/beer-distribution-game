@@ -48,7 +48,7 @@ public class GameMessageClient {
         TurnModelMessage turnModelMessage = new TurnModelMessage(turn);
         TurnModelMessage response = gameMessageSender.sendGameMessageGeneric(ip, turnModelMessage);
         if (response.getException() != null) {
-            SendGameMessageException sgme = new SendGameMessageException("Message was arrived, but the receiver encountered an error");
+            SendGameMessageException sgme = new SendGameMessageException("Message was received, but the receiver encountered an error");
             sgme.addException(response.getException());
             throw sgme;
         }

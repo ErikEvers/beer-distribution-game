@@ -12,7 +12,7 @@ import java.util.List;
 public class CommunicationStub implements IConnectedForPlayer {
 
 	@Override
-	public void sendTurn(Round turn) throws SendGameMessageException {
+	public void sendTurnData(Round turn) throws SendGameMessageException {
 
 	}
 
