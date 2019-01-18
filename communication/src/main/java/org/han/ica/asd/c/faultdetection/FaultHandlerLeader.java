@@ -85,9 +85,11 @@ public class FaultHandlerLeader {
      * @author Oscar
      */
     public void iAmDisconnected() {
-        iAmDisconnected = true;
-        logger.log(Level.INFO, "Deze machine kan niemand bereiken");
-        notifyObserversIDied();
+        if(!iAmDisconnected) {
+            iAmDisconnected = true;
+            logger.log(Level.INFO, "Deze machine kan niemand bereiken");
+            notifyObserversIDied();
+        }
     }
 
     /**
