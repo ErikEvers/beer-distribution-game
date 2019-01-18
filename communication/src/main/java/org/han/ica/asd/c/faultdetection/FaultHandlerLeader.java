@@ -7,6 +7,8 @@ import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class will call methods on external interfaces when needed. Example: a node is disconnected from the game, this
@@ -22,6 +24,9 @@ public class FaultHandlerLeader {
     private HashMap<String, Integer> amountOfFailsPerIp;
     private boolean iAmDisconnected;
     private List<IConnectorObserver> observers;
+
+    @Inject
+    private static Logger logger;
 
     FaultHandlerLeader() {
         amountOfFailsPerIp = new HashMap<>();
@@ -44,7 +49,8 @@ public class FaultHandlerLeader {
             // Dit is om niet meer te pingen tot er een rejoin request gedaan word.
             // Dan moet het dus weer op true gezet worden
             nodeInfoList.updateIsConnected(ip, false);
-            System.out.println("PLAYER : " + ip + " Is Dood");
+            logger.log(Level.INFO, "Speler met ip : {0} is uitgevallen", new Object[]{ip});
+
             notifyObserversPlayerDied(ip);
             return ip;
         } else {
@@ -80,7 +86,7 @@ public class FaultHandlerLeader {
      */
     public void iAmDisconnected() {
         iAmDisconnected = true;
-        System.out.println("LEIDER DOOD " + iAmDisconnected);
+        logger.log(Level.INFO, "Deze machine kan niemand bereiken");
         notifyObserversIDied();
     }
 

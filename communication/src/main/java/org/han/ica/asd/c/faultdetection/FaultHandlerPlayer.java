@@ -7,6 +7,8 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class will call methods on external interfaces when needed. Example: The leader is disconnected from the game, this
@@ -25,6 +27,9 @@ public class FaultHandlerPlayer {
     private int amountOfActiveIps;
     private int filteredAmount;
 
+    @Inject
+     private static Logger logger;
+
     FaultHandlerPlayer() {
         amountOfConnectionsWithLeader = 0;
     }
@@ -39,16 +44,16 @@ public class FaultHandlerPlayer {
     public String whoIsDead() {
         if (amountOfFailingIps == (amountOfActiveIps - filteredAmount)) {
             //TODO This should trigger Rejoin GUI and/or Request
-            System.out.println("imdead");
+            logger.log(Level.INFO, "Deze machine kan niemand bereiken");
             return "imDead";
         } else {
             if (amountOfConnectionsWithLeader == 0) {
                 notifyObserversLeaderDied();
-                System.out.println("leaderdead");
+                logger.log(Level.INFO, "De leider kan niet worden bereikt, en is dus uitgevallen.");
                 return "leaderIsDead";
             } else {
                 //TODO This should start a relay
-                System.out.println("donnowhodead");
+
                 return "leaderIsNotCompletelyDead";
             }
         }
