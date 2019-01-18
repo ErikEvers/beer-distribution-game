@@ -184,7 +184,14 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         turnsReceivedInCurrentRound++;
 
         if (turnsReceivedInCurrentRound == turnsExpectedPerRound)
-            allTurnDataReceived();
+            try {
+                allTurnDataReceived();
+            } catch(TransactionException e){
+                throw e;
+            } catch(Exception e){
+                turnsReceivedInCurrentRound--;
+                throw new TransactionException(e.getMessage());
+            }
     }
 
     /**
