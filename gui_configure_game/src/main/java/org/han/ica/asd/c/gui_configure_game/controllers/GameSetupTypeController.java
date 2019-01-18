@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
@@ -116,6 +117,8 @@ public class GameSetupTypeController implements Initializable {
     private IGUIHandler assignAgents;
 
     @Inject
+    private IConnectorProvider connectorProvider;
+
     private IConnectorForSetup connector;
 
     @Inject
@@ -145,6 +148,7 @@ public class GameSetupTypeController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        connector = connectorProvider.forSetup();
         mainContainer.getChildren().addAll();
     }
 
@@ -198,10 +202,8 @@ public class GameSetupTypeController implements Initializable {
 
 
             if(onlineGame) {
-                connector.start();
                 connector.createRoom(gameName, "", beerGame);
             } else {
-                connector.start();
                 connector.createOfflineRoom(gameName, "", beerGame);
             }
             assignAgents.setData(new Object[]{beerGame});

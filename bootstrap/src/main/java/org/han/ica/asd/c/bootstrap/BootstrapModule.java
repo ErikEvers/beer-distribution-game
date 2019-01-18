@@ -1,17 +1,19 @@
 package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
+import org.han.ica.asd.c.ConnectorProvider;
 import org.han.ica.asd.c.faultdetection.FaultHandlerLeader;
 import org.han.ica.asd.c.faultdetection.FaultHandlerPlayer;
 import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.gamelogic.GameLogic;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectorForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.gui_play_game.PlayGameSetupScreen;
 import org.han.ica.asd.c.gui_replay_game.ReplayGameList;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.persistence.Persistence;
 import org.han.ica.asd.c.player.PlayerComponent;
@@ -72,17 +74,18 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IGameAgentService.class).to(GameAgentService.class);
 		bind(IGameStore.class).to(Persistence.class);
 		bind(IFinder.class).to(RoomFinder.class);
-		bind(IConnectedForPlayer.class).to(Connector.class);
+		bind(IConnectorForPlayer.class).to(Connector.class);
 		bind(IPlayerGameLogic.class).to(GameLogic.class);
 		bind(IRetrieveReplayData.class).to(Persistence.class);
 		bind(IVisualisedPlayedGameData.class).to(ReplayComponent.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IPersistence.class).to(Persistence.class);
-		bind(IConnectedForPlayer.class).to(Connector.class);
+		bind(IConnectorForPlayer.class).to(Connector.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
 		bind(ILeaderGameLogic.class).to(GameLogic.class);
 		bind(IFinder.class).to(RoomFinder.class);
 		bind(IGameStore.class).to(Persistence.class);
+		bind(IConnectorProvider.class).to(ConnectorProvider.class);
 		bind(IGameLeader.class).annotatedWith(Names.named("GameLeader")).to(GameLeader.class);
 
 		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);

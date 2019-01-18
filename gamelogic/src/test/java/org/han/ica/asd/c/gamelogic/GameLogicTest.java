@@ -10,11 +10,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
-import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectorForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class GameLogicTest {
     private GameLogic gameLogic;
     private ParticipantsPool participantsPool;
-    private IConnectedForPlayer communication;
+    private IConnectorForPlayer communication;
     private IGameStore persistence;
     private IPlayerRoundListener player;
     private Round round;
@@ -36,7 +34,7 @@ public class GameLogicTest {
     @BeforeEach
     void setup() {
         round = new Round();
-        communication = mock(IConnectedForPlayer.class);
+        communication = mock(IConnectorForPlayer.class);
         persistence = mock(IGameStore.class);
         participantsPool = mock(ParticipantsPool.class);
         player = mock(IPlayerRoundListener.class);
@@ -47,7 +45,7 @@ public class GameLogicTest {
             @Override
             protected void configure() {
                 bind(IGameStore.class).toInstance(persistence);
-                bind(IConnectedForPlayer.class).toInstance(communication);
+                bind(IConnectorForPlayer.class).toInstance(communication);
                 bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).toInstance(seeOtherFacilities);
                 //bind(ParticipantsPool.class).toInstance(participantsPool);
             }

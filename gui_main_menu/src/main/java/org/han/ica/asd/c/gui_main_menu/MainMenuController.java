@@ -10,6 +10,8 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Map;
@@ -49,7 +51,18 @@ public class MainMenuController {
     @Inject
     IConnectorForSetup connector;
 
+    @Inject
+    IConnectorProvider connectorProvider;
+
     public void initialize() {
+        connectorProvider.setInstance(connector);
+        connector = connectorProvider.forSetup();
+        connector.start();
+
+        fillIpComboBox();
+    }
+
+    private void fillIpComboBox(){
         ObservableList<String> ips = FXCollections.observableArrayList();
         for (Map.Entry e :connector.listAllIPs().entrySet()) {
             ips.add(e.getKey() + ": " + e.getValue());
@@ -59,7 +72,6 @@ public class MainMenuController {
         String value = chooseIpComboBox.getValue();
         connector.setMyIp(value.substring(value.indexOf(": ") + 2));
     }
-
 
     @FXML
     public void programAgentButtonAction() {

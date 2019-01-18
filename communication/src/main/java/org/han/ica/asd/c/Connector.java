@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
@@ -14,9 +13,8 @@ import org.han.ica.asd.c.gameleader.GameLeader;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
-import org.han.ica.asd.c.interfaces.gameconfiguration.IConnectorForGameConfiguration;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectorForPlayer;
 import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
@@ -33,7 +31,6 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,7 +49,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader, IConnectorForLeaderElection {
+public class Connector implements IConnectorForSetup, IConnectorForPlayer, IConnectorForLeader, IConnectorForLeaderElection {
     private static Connector instance = null;
     private static String leaderIp = null;
 
@@ -105,27 +102,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         if (nodeInfoList == null) {
             nodeInfoList = nodeInfoListProvider.get();
         }
-    }
-
-    private static Connector connectorInstance;
-    public static void setInstance(Connector connector){
-        connectorInstance = connector;
-    }
-
-    public static IConnectorForSetup forSetup(){
-        return connectorInstance;
-    }
-
-    public static IConnectedForPlayer forPlayer(){
-        return connectorInstance;
-    }
-
-    public static IConnectorForLeader forLeader(){
-        return connectorInstance;
-    }
-
-    public static IConnectorForLeaderElection forLeaderElection() {
-        return connectorInstance;
     }
 
     public void start() {
@@ -268,6 +244,13 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     public void addObserver(IConnectorObserver observer) {
         observers.add(observer);
+        faultDetector.setObservers(observers);
+        GameMessageReceiver.setObservers(observers);
+    }
+
+    @Override
+    public void removeObserver(IConnectorObserver observer) {
+        observers.remove(observer);
         faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
     }
