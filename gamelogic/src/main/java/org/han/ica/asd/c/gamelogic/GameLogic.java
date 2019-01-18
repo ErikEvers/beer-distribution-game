@@ -119,10 +119,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 		 * @return
 		 */
 		@Override
-		public Round calculateRound(Round round, BeerGame game) {
+		public Round calculateRound(Round previousRound, Round round, BeerGame game) {
 			RoundCalculator roundCalculator = new RoundCalculator();
 
-			return  roundCalculator.calculateRound(round, game);
+			return  roundCalculator.calculateRound(previousRound, round, game);
 		}
 
     /**
@@ -158,6 +158,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         participantsPool.setPlayer(player);
     }
 
+    @Override
+    public void setLastTurn(Round lastround) {
+        persistence.updateRound(lastround);
+    }
+
     /**
 		 * @param previousRound The previous round to save.
      * @param newRound The current round to save.
@@ -168,6 +173,14 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         persistence.updateRound(previousRound);
         persistence.createRound(newRound);
         sendRoundActionFromAgents();
+    }
+
+    @Override
+    public void roundEndRecieved(Round previousRound) {
+        persistence.updateRound(previousRound);
+        persistence.updateEndGame();
+        player.endGame(previousRound);
+
     }
 
     @Override
@@ -187,7 +200,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
            sendRoundForAgent(participant);
         }
         if (isBotGame()) {
-            Platform.runLater(() -> seeOtherFacilities.setupScreen());
+            //Platform.runLater(() -> seeOtherFacilities.setupScreen());
         } else {
             player.roundStarted();
         }
@@ -211,7 +224,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     }
 
     public boolean isBotGame() {
-        return getBeerGame().getPlayers().stream().filter(player1 -> player1.getPlayerId().equals("1")).findFirst().get().getFacility() == null;
+        return getBeerGame().getPlayers().stream().filter(player1 -> player1.getPlayerId().equals(player.getPlayer().getPlayerId())).findFirst().get().getFacility() == null;
     }
 
 

@@ -65,6 +65,7 @@ public class GameSetupStartController {
     public void initialize() {
         mainContainer.getChildren().addAll();
         backButton();
+        bankrupt.setSelected(true);
     }
 
     /**

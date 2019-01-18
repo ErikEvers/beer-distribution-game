@@ -319,7 +319,7 @@ public abstract class PlayGame implements IPlayGame {
      * The round to use for the refresh
      */
     @Override
-    public void refreshInterfaceWithCurrentStatus(int roundId) {
+    public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
         this.roundId =roundId;
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
@@ -345,21 +345,26 @@ public abstract class PlayGame implements IPlayGame {
             }
         }
         final int incomingOrdersDisplay = incomingOrders;
-        incomingOrdersTextField.setText(Integer.toString(incomingOrdersDisplay));
-        outgoingOrderTextField.setText(Integer.toString(0));
-        if(currentAlert != null && currentAlert.isShowing()) {
-            currentAlert.close();
-        }
-        currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
-        currentAlert.show();
-        if (!agentInUse) {
-            submitTurnButton.setDisable(false);
-            useAgentButton.setDisable(false);
-        }
-        roundLabel.setText("Round: " + roundId);
-        submitTurnButton.setDisable(false);
-        refillOrdersList();
-        refillDeliveriesList();
+				incomingOrdersTextField.setText(Integer.toString(incomingOrdersDisplay));
+				outgoingOrderTextField.setText(Integer.toString(0));
+				if(currentAlert != null && currentAlert.isShowing()) {
+					currentAlert.close();
+				}
+				if(!gameEnded) {
+                    currentAlert = new Alert(Alert.AlertType.INFORMATION, "Turn " + roundId + " has begun. Your budget is: " + budget, ButtonType.OK);
+                    currentAlert.show();
+                    if (!agentInUse) {
+                        submitTurnButton.setDisable(false);
+                        useAgentButton.setDisable(false);
+                    }
+                    roundLabel.setText("Round: " + roundId);
+                } else{
+                    currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your game has ended! well played!", ButtonType.OK);
+                    currentAlert.show();
+                }
+				submitTurnButton.setDisable(false);
+				refillOrdersList();
+				refillDeliveriesList();
     }
 
     /**
@@ -407,7 +412,7 @@ public abstract class PlayGame implements IPlayGame {
 
     public void setAgentInUse(boolean setInAgent,int roundId,boolean isBackAction) {
         if (roundId != 0 && (setInAgent || isBackAction)) {
-            refreshInterfaceWithCurrentStatus(roundId);
+            refreshInterfaceWithCurrentStatus(roundId - 1, roundId, false);
         }
         if (setInAgent) {
             agentInUse = true;

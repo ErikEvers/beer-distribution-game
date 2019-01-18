@@ -73,8 +73,8 @@ public class PlayGameFactoryController extends PlayGame {
     }
 
     @Override
-    public void refreshInterfaceWithCurrentStatus(int roundId) {
-        super.refreshInterfaceWithCurrentStatus(roundId);
+    public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
+        super.refreshInterfaceWithCurrentStatus(previousRoundId, roundId, gameEnded);
         fillComboBox();
     }
 }

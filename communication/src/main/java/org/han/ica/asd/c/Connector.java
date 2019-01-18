@@ -280,6 +280,13 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
+    @Override
+    public void sendGameEnd(BeerGame beerGame, Round previousRoundData) throws TransactionException {
+        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        gameMessageClient.sendGameEndToAllPlayers(ips.toArray(new String[0]), previousRoundData);
+    }
+
+
     public NodeInfoList getIps() {
         return nodeInfoList;
     }
@@ -301,6 +308,23 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
+        return ip;
+    }
+
+    /**
+     * Gets the local ip4 address from ethernet connection.
+     *
+     * @return The IP.
+     */
+    private String getInternalIP() {
+        String ip = null;
+
+        try {
+            ip = getIpOfInterFace(NetworkInterface.getNetworkInterfaces());
+        } catch (SocketException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
         return ip;
     }
 

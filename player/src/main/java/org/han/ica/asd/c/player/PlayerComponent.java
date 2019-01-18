@@ -11,8 +11,8 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
-import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -37,6 +37,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     private static Player player;
     private static Round round;
     private static IPlayGame ui;
+    boolean gameEnded = false;
 
     @Inject
     IPlayerGameLogic gameLogic;
@@ -47,6 +48,11 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     @Inject
     @Named("PlayGame")
     private IGUIHandler playGame;
+
+    @Inject
+    @Named("ReplayGameRound")
+    private IGUIHandler toEndScreen;
+
 
     @Inject
     private IGameAgentService gameAgentService;
@@ -188,6 +194,15 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         Platform.runLater(() -> playGame.setupScreen());
     }
 
+    @Override
+    public void endGame(Round lastround) {
+        gameEnded = true;
+        gameLogic.setLastTurn(lastround);
+
+        Platform.runLater(() -> toEndScreen.setData(new Object[]{gameLogic.getBeerGame()}));
+        Platform.runLater(() -> toEndScreen.setupScreen());
+    }
+
     /**
      * doOrder will notify the  participant to make an order.
      *
@@ -199,8 +214,10 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
             round = roundProvider.get();
             round.setRoundId(gameLogic.getRoundId());
         }
-        Platform.runLater(() ->
-                ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId()));
+        if (!gameEnded) {
+            Platform.runLater(() ->
+                    ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId() - 1, gameLogic.getRoundId(), gameEnded));
+        }
     }
 
     /**

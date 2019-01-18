@@ -153,7 +153,7 @@ public class ConfigurationDAO {
                 rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"),
                 facilityDAO.readAllFacilitiesInGame(),
                 readFacilityLinks()
-                );
+        );
     }
 
     /**
@@ -213,23 +213,28 @@ public class ConfigurationDAO {
      */
     public void createFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         facilitiesLinkedTo.forEach((higherFacility, lowerFacilityList) -> lowerFacilityList.forEach(lowerFacility -> {
-            Connection conn = databaseConnection.connect();
-            if (conn != null) {
+            if (readFacilityLinks().keySet().stream().anyMatch(facility -> facility.getFacilityId() == higherFacility.getFacilityId())) {
+                Connection conn = databaseConnection.connect();
+                if (conn != null) {
+                    try (PreparedStatement pstmt = conn.prepareStatement(SET_LOWER_LINKED_FACILITIES)) {
+                        conn.setAutoCommit(false);
 
-                try (PreparedStatement pstmt = conn.prepareStatement(SET_LOWER_LINKED_FACILITIES)) {
-                    conn.setAutoCommit(false);
+                        DaoConfig.gameIdNotSetCheck(pstmt, 1);
+                        pstmt.setInt(2, higherFacility.getFacilityId());
+                        pstmt.setInt(3, lowerFacility.getFacilityId());
 
-                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
-                    pstmt.setInt(2, higherFacility.getFacilityId());
-                    pstmt.setInt(3, lowerFacility.getFacilityId());
+                        pstmt.execute();
+                        conn.commit();
+                    } catch (SQLException | GameIdNotSetException e) {
+                        LOGGER.log(Level.SEVERE, e.toString(), e);
+                        databaseConnection.rollBackTransaction(conn);
+                    }
 
-                    pstmt.execute();
-                    conn.commit();
-                } catch (SQLException | GameIdNotSetException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
-                    databaseConnection.rollBackTransaction(conn);
                 }
-
+            } else {
+                Map<Facility, List<Facility>> link = new HashMap<>();
+                link.put(higherFacility, lowerFacilityList);
+                updateFacilityLinks(link);
             }
         }));
     }
@@ -255,8 +260,8 @@ public class ConfigurationDAO {
 
     /**
      * Takes all facility links from the database
-     * @return
-     * Returns a map of facility links
+     *
+     * @return Returns a map of facility links
      */
     public Map<Facility, List<Facility>> readFacilityLinks() {
         Connection conn = databaseConnection.connect();
@@ -280,6 +285,7 @@ public class ConfigurationDAO {
 
     /**
      * Updates the already existing facility links with the ones in the given Map
+     *
      * @param facilitiesLinkedTo Map with the updated facility links
      */
     public void updateFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
