@@ -208,9 +208,8 @@ public class FaultDetectorPlayer extends TimerTask {
      * @author Tarik
      */
     public void pingMessageReceived(PingMessage pingMessage) {
-        System.out.println("message received prev: " + lastReceived);
         lastReceived = System.currentTimeMillis();
-        System.out.println("message received : " + lastReceived);
+        System.out.println("ping received : " + lastReceived);
         leaderWasPinging = true;
     }
 
