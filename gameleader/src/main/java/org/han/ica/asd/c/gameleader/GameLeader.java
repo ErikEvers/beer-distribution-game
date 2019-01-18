@@ -5,6 +5,7 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
@@ -35,12 +36,14 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
-    @Inject private IConnectorForLeader connectorForLeader;
+    @Inject IConnectorProvider connectorProvider;
     @Inject private ILeaderGameLogic gameLogic;
     @Inject private IPersistence persistence;
     @Inject private TurnHandler turnHandler;
     @Inject @Named("PlayerComponent") private IPlayerComponent playerComponent;
     @Inject private static Logger logger; //NOSONAR
+
+    private IConnectorForLeader connectorForLeader;
 
     private final Provider<Player> playerProvider;
     private final Provider<Agent> agentProvider;
@@ -66,6 +69,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
      */
     public void init(String leaderIp, RoomModel roomModel, BeerGame beerGame) {
+        connectorForLeader = connectorProvider.forLeader();
         connectorForLeader.addObserver(this);
 
         game = beerGame;

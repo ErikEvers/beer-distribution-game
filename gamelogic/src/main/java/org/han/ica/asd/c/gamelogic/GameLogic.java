@@ -6,6 +6,7 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
  */
 
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
+
+
     private IConnectorForPlayer communication;
 
     @Inject
@@ -49,11 +52,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private IGUIHandler seeOtherFacilities;
 
     @Inject
-    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectorForPlayer communication){
+    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectorProvider connectorProvider){
         if(participantsPool == null) {
 					participantsPool = participantsPoolProvider.get();
 				}
-        this.communication = communication;
+        this.communication = connectorProvider.forPlayer();
         initObserver();
     }
 
