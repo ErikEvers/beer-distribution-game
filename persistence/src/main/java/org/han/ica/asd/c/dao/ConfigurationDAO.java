@@ -213,29 +213,25 @@ public class ConfigurationDAO {
      */
     public void createFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         facilitiesLinkedTo.forEach((higherFacility, lowerFacilityList) -> lowerFacilityList.forEach(lowerFacility -> {
-            if (readFacilityLinks().keySet().stream().anyMatch(facility -> facility.getFacilityId() == higherFacility.getFacilityId())) {
-                Connection conn = databaseConnection.connect();
-                if (conn != null) {
-                    try (PreparedStatement pstmt = conn.prepareStatement(SET_LOWER_LINKED_FACILITIES)) {
-                        conn.setAutoCommit(false);
 
-                        DaoConfig.gameIdNotSetCheck(pstmt, 1);
-                        pstmt.setInt(2, higherFacility.getFacilityId());
-                        pstmt.setInt(3, lowerFacility.getFacilityId());
+            Connection conn = databaseConnection.connect();
+            if (conn != null) {
+                try (PreparedStatement pstmt = conn.prepareStatement(SET_LOWER_LINKED_FACILITIES)) {
+                    conn.setAutoCommit(false);
 
-                        pstmt.execute();
-                        conn.commit();
-                    } catch (SQLException | GameIdNotSetException e) {
-                        LOGGER.log(Level.SEVERE, e.toString(), e);
-                        databaseConnection.rollBackTransaction(conn);
-                    }
+                    DaoConfig.gameIdNotSetCheck(pstmt, 1);
+                    pstmt.setInt(2, higherFacility.getFacilityId());
+                    pstmt.setInt(3, lowerFacility.getFacilityId());
 
+                    pstmt.execute();
+                    conn.commit();
+                } catch (SQLException | GameIdNotSetException e) {
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
+                    databaseConnection.rollBackTransaction(conn);
                 }
-            } else {
-                Map<Facility, List<Facility>> link = new HashMap<>();
-                link.put(higherFacility, lowerFacilityList);
-                updateFacilityLinks(link);
+
             }
+                
         }));
     }
 

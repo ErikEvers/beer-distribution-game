@@ -338,6 +338,7 @@ public abstract class PlayGame implements IPlayGame {
         }
 
         int incomingOrders = 0;
+
         List<FacilityTurnOrder> facilityTurnOrders = beerGame.getRoundById(roundId).getFacilityOrders();
         for (FacilityTurnOrder f : facilityTurnOrders) {
             if (f.getFacilityIdOrderTo() == facility.getFacilityId()) {
@@ -362,6 +363,7 @@ public abstract class PlayGame implements IPlayGame {
                     currentAlert = new Alert(Alert.AlertType.INFORMATION, "Your game has ended! well played!", ButtonType.OK);
                     currentAlert.show();
                 }
+
 				submitTurnButton.setDisable(false);
 				refillOrdersList();
 				refillDeliveriesList();

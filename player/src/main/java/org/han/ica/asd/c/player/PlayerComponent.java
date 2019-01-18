@@ -3,16 +3,15 @@ package org.han.ica.asd.c.player;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
-import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
+import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -52,7 +51,6 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     @Inject
     @Named("ReplayGameRound")
     private IGUIHandler toEndScreen;
-
 
     @Inject
     private IGameAgentService gameAgentService;
@@ -149,6 +147,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
         try {
             communication.chooseFacility(facility, player.getPlayerId());
             player.setFacility(facility);
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Facility assigned, please wait for the game to start", ButtonType.CLOSE);
             alert.show();
         } catch (FacilityNotAvailableException | SendGameMessageException e) {
@@ -214,6 +213,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
             round = roundProvider.get();
             round.setRoundId(gameLogic.getRoundId());
         }
+
         if (!gameEnded) {
             Platform.runLater(() ->
                     ui.refreshInterfaceWithCurrentStatus(gameLogic.getRoundId() - 1, gameLogic.getRoundId(), gameEnded));
