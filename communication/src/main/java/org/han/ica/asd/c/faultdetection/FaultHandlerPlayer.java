@@ -28,7 +28,7 @@ public class FaultHandlerPlayer {
     private int filteredAmount;
 
     @Inject
-     private static Logger logger;
+    private static Logger logger;
 
     FaultHandlerPlayer() {
         amountOfConnectionsWithLeader = 0;
