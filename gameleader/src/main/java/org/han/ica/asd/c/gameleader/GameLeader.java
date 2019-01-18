@@ -182,6 +182,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      */
     private void allTurnDataReceived() {
         this.previousRoundData = this.currentRoundData;
+
         this.currentRoundData = gameLogic.calculateRound(this.previousRoundData, game);
         persistence.updateRound(this.previousRoundData);
         persistence.saveRoundData(this.currentRoundData);

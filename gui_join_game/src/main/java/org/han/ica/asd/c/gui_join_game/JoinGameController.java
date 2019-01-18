@@ -60,8 +60,11 @@ public class JoinGameController {
                 GamePlayerId gameData = iConnectorForSetup.getGameData(output.get());
                 gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
                 gameRoom.setupScreen();
-            } catch (RoomException | DiscoveryException | SendGameMessageException e) {
+            } catch (RoomException | DiscoveryException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
+                alert.show();
+            } catch (SendGameMessageException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
                 alert.show();
             }
         } else {

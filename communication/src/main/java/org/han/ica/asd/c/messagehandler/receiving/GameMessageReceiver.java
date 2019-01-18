@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 
+import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
@@ -32,7 +33,7 @@ public class GameMessageReceiver {
     private GameMessageFilterer gameMessageFilterer;
 
     @Inject
-    private MessageProcessor messageProcessor;
+    private static MessageProcessor messageProcessor;
 
     private static ArrayList<IConnectorObserver> gameMessageObservers;
 
@@ -40,6 +41,10 @@ public class GameMessageReceiver {
 
     public GameMessageReceiver() {
         //inject purposes
+    }
+
+    public static void setConnector(Connector connector) {
+        MessageProcessor.setConnector(connector);
     }
 
     /**

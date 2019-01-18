@@ -124,7 +124,6 @@ public class BeergameDAO {
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
 				leaderDAO.insertLeader(beerGame.getLeader());
 
-
 				} catch (SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
 					databaseConnection.rollBackTransaction(conn);
@@ -137,6 +136,7 @@ public class BeergameDAO {
 		configurationDAO.updateConfigurations(beerGame.getConfiguration());
 		roundDAO.updateRounds(beerGame.getRounds());
 		playerDAO.updatePlayers(beerGame.getPlayers());
+		//playerDAO.insertPlayers(beerGame.getPlayers());
 		gameAgentDAO.updateGameagents(beerGame.getAgents());
 		leaderDAO.updateLeader(beerGame.getLeader());
 	}

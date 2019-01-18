@@ -116,10 +116,10 @@ public class GameSetupTypeController implements Initializable {
     private IGUIHandler assignAgents;
 
     @Inject
-		private IConnectorForSetup connector;
+    private IConnectorForSetup connector;
 
     @Inject
-		private IGameStore persistence;
+    private IGameStore persistence;
 
     @FXML
     private AnchorPane mainContainer;
@@ -136,9 +136,9 @@ public class GameSetupTypeController implements Initializable {
     private boolean onlineGame = true;
 
     @Inject
-		private GameSetupTypeController(Provider<Round> roundProvider) {
-    	this.roundProvider = roundProvider;
-		}
+    private GameSetupTypeController(Provider<Round> roundProvider) {
+        this.roundProvider = roundProvider;
+    }
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
@@ -195,6 +195,7 @@ public class GameSetupTypeController implements Initializable {
             beerGame.setGameId(uuid);
             beerGame.setGameDate(new Date().toString());
             createFirstTurn();
+
 
             if(onlineGame) {
                 connector.start();
@@ -257,24 +258,24 @@ public class GameSetupTypeController implements Initializable {
     }
 
     private void createFirstTurn() {
-			Round firstRound = roundProvider.get();
-			firstRound.setRoundId(1);
+        Round firstRound = roundProvider.get();
+        firstRound.setRoundId(1);
 
-			List<FacilityTurn> turns = new ArrayList<>();
-			for(Facility facility: beerGame.getConfiguration().getFacilities()) {
-				turns.add(
-						new FacilityTurn(
-								facility.getFacilityId(),
-								1,
-								facility.getFacilityType().getStartingStock(),
-								0,
-								facility.getFacilityType().getStartingBudget(),
-								false));
-			}
+        List<FacilityTurn> turns = new ArrayList<>();
+        for (Facility facility : beerGame.getConfiguration().getFacilities()) {
+            turns.add(
+                    new FacilityTurn(
+                            facility.getFacilityId(),
+                            1,
+                            facility.getFacilityType().getStartingStock(),
+                            0,
+                            facility.getFacilityType().getStartingBudget(),
+                            false));
+        }
 
-			firstRound.setFacilityTurns(turns);
-			beerGame.getRounds().add(firstRound);
-		}
+        firstRound.setFacilityTurns(turns);
+        beerGame.getRounds().add(firstRound);
+    }
 
     /**
      * Sets the facilityType for the child of a node

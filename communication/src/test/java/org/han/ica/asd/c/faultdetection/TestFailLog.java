@@ -190,7 +190,7 @@ public class TestFailLog {
         mockList.add("TestIp2");
         mockList.add("TestIp3");
 
-        when(nodeInfoList.getActiveIps()).thenReturn(mockList);
+        when(nodeInfoList.getActiveIpsWithoutLeader()).thenReturn(mockList);
 
         assertEquals(3, failLog.getSuccessSize());
     }
@@ -207,7 +207,7 @@ public class TestFailLog {
         failLog.increment("TestIpThatHasFailed3Times");
         failLog.increment("TestIpThatHasFailed3Times");
 
-        when(nodeInfoList.getActiveIps()).thenReturn(mockList);
+        when(nodeInfoList.getActiveIpsWithoutLeader()).thenReturn(mockList);
 
         assertEquals(2, failLog.getSuccessSize());
     }
@@ -232,6 +232,6 @@ public class TestFailLog {
 
         when(nodeInfoList.getActiveIps()).thenReturn(mockList);
 
-        assertEquals(1, failLog.getSuccessSize());
+        assertEquals(0, failLog.getSuccessSize());
     }
 }

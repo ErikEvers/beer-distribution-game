@@ -30,6 +30,7 @@ import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,7 +49,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-
 public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
     private static Connector instance = null;
     private static String leaderIp = null;
@@ -58,11 +58,9 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     private IGameStore persistence;
 
-    @Inject
-    private NodeInfoList nodeInfoList;
+    private static NodeInfoList nodeInfoList;
 
-    @Inject
-    private FaultDetector faultDetector;
+    private static FaultDetector faultDetector;
 
     @Inject
     private GameMessageClient gameMessageClient;
@@ -73,30 +71,41 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     @Inject
     private SocketServer socketServer;
 
-    @Inject
-    private MessageDirector messageDirector;
+    private static MessageDirector messageDirector;
 
-    @Inject
-    private GameMessageReceiver gameMessageReceiver;
+    private static GameMessageReceiver gameMessageReceiver;
 
     @Inject
     private IFinder finder;
 
     private String externalIP;
+
     public static String internalIP;
 
 
     Provider<GameLeader> gameLeaderProvider;
 
     @Inject
-    public Connector(Provider<GameLeader> gameLeaderProvider) {
+    public Connector(Provider<GameLeader> gameLeaderProvider, Provider<GameMessageReceiver> gameMessageReceiverProvider,
+                     Provider<MessageDirector> messageDirectorProvider, Provider<FaultDetector> faultDetectorProvider,
+                     Provider<NodeInfoList> nodeInfoListProvider) {
         this.gameLeaderProvider = gameLeaderProvider;
+        if (gameMessageReceiver == null) {
+            gameMessageReceiver = gameMessageReceiverProvider.get();
+        }
+        if (messageDirector == null) {
+            messageDirector = messageDirectorProvider.get();
+        }
+        if (faultDetector == null) {
+            faultDetector = faultDetectorProvider.get();
+        }
+        if (nodeInfoList == null) {
+            nodeInfoList = nodeInfoListProvider.get();
+        }
     }
 
     public void start() {
         observers = new ArrayList<>();
-        finder = new RoomFinder();
-        nodeInfoList = new NodeInfoList();
 
         faultDetector.setObservers(observers);
         try {
@@ -107,6 +116,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
         faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
+        GameMessageReceiver.setConnector(this);
 
         messageDirector.setGameMessageReceiver(gameMessageReceiver);
         messageDirector.setFaultDetectionMessageReceiver(faultDetector.getFaultDetectionMessageReceiver());
@@ -115,7 +125,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         socketServer.startThread();
     }
 
-    public void start(String ip){
+    public void start(String ip) {
         start();
         internalIP = ip;
     }
@@ -129,7 +139,6 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
         return new ArrayList<>();
     }
-
 
     public RoomModel createRoom(String roomName, String password, BeerGame beerGame) {
         try {
@@ -166,7 +175,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         if (makeConnection(finder.getRoom(r).getLeaderIP())) {
             RoomModel joinedRoom = finder.joinGameRoomModel(roomName, internalIP, password);
             Connector.leaderIp = joinedRoom.getLeaderIP();
-            return  joinedRoom;
+            return joinedRoom;
         } else {
             throw new DiscoveryException("Can't connect to leader");
         }
@@ -237,8 +246,8 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
      */
     @Override
     public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
-			//initNodeInfoList();
-			List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        //initNodeInfoList();
+        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
 
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
     }
@@ -247,16 +256,18 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         List<Player> playerList = persistence.getGameLog().getPlayers();
         Leader leader = persistence.getGameLog().getLeader();
         nodeInfoList.init(playerList, leader);
+        nodeInfoList.setMyIp(internalIP);
     }
 
     public void startFaultDetector() {
-//        initNodeInfoList();
-//        Leader leader = persistence.getGameLog().getLeader();
-//        if (internalIP.equals(leader.getPlayer().getIpAddress())) {
-//            faultDetector.startFaultDetectorLeader(nodeInfoList);
-//        } else {
-//            faultDetector.startFaultDetectorPlayer(nodeInfoList);
-//        }
+        initNodeInfoList();
+        Leader leader = persistence.getGameLog().getLeader();
+
+        if (internalIP.equals(leader.getPlayer().getIpAddress())) {
+            faultDetector.startFaultDetectorLeader(nodeInfoList);
+        } else {
+            faultDetector.startFaultDetectorPlayer(nodeInfoList);
+        }
     }
 
     public boolean makeConnection(String destinationIP) {
@@ -271,12 +282,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
 
     @Override
     public void sendGameStart(BeerGame beerGame) throws TransactionException {
-        try {
-            this.externalIP = getExternalIP();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-				List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
@@ -327,16 +333,16 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         return ip;
     }
 
-    public Map<String, String> listAllIPs(){
+    public Map<String, String> listAllIPs() {
         Map<String, String> ips = new LinkedHashMap<String, String>();
         Enumeration<NetworkInterface> interfaces = getInterfaceEnem();
-        if(interfaces == null){
+        if (interfaces == null) {
             return null;
         }
-        while(interfaces.hasMoreElements()){
+        while (interfaces.hasMoreElements()) {
             NetworkInterface networkInterface = interfaces.nextElement();
             Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-            if(!checkIfLoopBackAddres(networkInterface)) {
+            if (!checkIfLoopBackAddres(networkInterface)) {
                 checkInterfacesAndGiveIP(ips, networkInterface, addresses);
             }
         }
@@ -358,7 +364,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             InetAddress ip = addresses.nextElement();
             if (ip instanceof Inet4Address) {
                 String displayName = networkInterface.getDisplayName();
-                if(!displayName.contains("Virtual")) {
+                if (!displayName.contains("Virtual")) {
                     String ipAddress = ip.getHostAddress();
                     ips.put(networkInterface.getName(), ipAddress);
                 }
@@ -367,7 +373,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         }
     }
 
-    public boolean checkIfLoopBackAddres(NetworkInterface networkInterface){
+    public boolean checkIfLoopBackAddres(NetworkInterface networkInterface) {
         try {
             return networkInterface.isLoopback();
         } catch (SocketException e) {

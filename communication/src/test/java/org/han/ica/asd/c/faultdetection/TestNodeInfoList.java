@@ -79,10 +79,12 @@ public class TestNodeInfoList {
     void TestGetAllActiveIpsThatAreNotLeader() {
         Player player1 = new Player();
         player1.setIpAddress(testIp1);
+        player1.setPlayerId("1");
         player1.setConnected(true);
 
         Player player2 = new Player();
         player2.setIpAddress(testIp2);
+        player2.setPlayerId("2");
         player2.setConnected(true);
 
         nodeInfoList.add(player1);
@@ -115,10 +117,12 @@ public class TestNodeInfoList {
     void TestGetAllActiveIpsThatAreNotLeaderUnHappyFlow2() {
         Player player1 = new Player();
         player1.setIpAddress(testIp1);
+        player1.setPlayerId("1");
         player1.setConnected(true);
 
         Player player2 = new Player();
         player2.setIpAddress(testIp2);
+        player2.setPlayerId("2");
         player2.setConnected(true);
 
         nodeInfoList.add(player1);

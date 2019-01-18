@@ -28,33 +28,31 @@ public class FaultDetectorPlayer extends TimerTask {
     private FaultDetectionClient faultDetectionClient;
     @Inject
     private FaultHandlerPlayer faultHandlerPlayer;
-    @Inject
+
     private NodeInfoList nodeInfoList;
 
     private static final long FIVE_MINUTES = 300000;
     private long lastReceived;
-    private boolean leaderIsPinging;
+    private boolean leaderWasPinging;
     private Timer timer;
     private List<IConnectorObserver> observers;
     private HashMap<String, Long> playersWhoAlreadyCouldntReachLeader;
     private boolean active;
 
     FaultDetectorPlayer() {
-        this.lastReceived = System.currentTimeMillis();
-        leaderIsPinging = true;
-        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
+        //for inject purposes
     }
 
     /**
      * Checks if leader didn't ping for a long time and asks other players whether they can connect with the leader.
      * After the players respond or timeout it decides who died.
-     * It also checks if the leaderIsPinging variable is already set to false so it won't run it twice.
+     * It also checks if the leaderWasPinging variable is already set to false so it won't run it twice.
      *
      * @author Tarik
      */
     public void run() {
-        if (leaderIsPinging && leaderIsNotPinging()) {
-            leaderIsPinging = false;
+        if (leaderWasPinging && leaderIsNotPinging()) {
+            leaderWasPinging = false;
             faultHandlerPlayer.reset();
             askOtherPlayers();
             faultHandlerPlayer.whoIsDead();
@@ -68,19 +66,15 @@ public class FaultDetectorPlayer extends TimerTask {
      *
      * @author Oscar, Tarik
      */
-    //From team2
-//    public void start() {
-//        timer = createTimer(true);
-//        timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
-//        faultHandlerPlayer.setObservers(observers);
-//        this.active = true;
-//    }
 
-    //from dev
     public void start() {
+        this.lastReceived = System.currentTimeMillis();
+        leaderWasPinging = true;
+        playersWhoAlreadyCouldntReachLeader = new HashMap<>();
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
-        active = true;
+        faultHandlerPlayer.setObservers(observers);
+        this.active = true;
     }
 
     /**
@@ -151,11 +145,11 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     private void askOtherPlayers() {
         List<String> ips = nodeInfoList.getActiveIpsWithoutLeader();
-        faultHandlerPlayer.setAmountOfActiveIps(ips.size());
+        faultHandlerPlayer.setAmountOfActiveIps(ips.size()-1);
         HashMap<String, Long> filter = new HashMap<>(playersWhoAlreadyCouldntReachLeader);
 
         // filter out ips from ips that already send a message within the past 5 minutes
-        ips.removeIf(ip -> filter.containsKey(ip) && timestampIsRecentlyReceived(filter.get(ip)));
+        ips.removeIf(ip -> ip == nodeInfoList.getMyIp() || filter.containsKey(ip) && timestampIsRecentlyReceived(filter.get(ip)));
         faultHandlerPlayer.setFilteredAmount(filter.size());
         Map<String, Object> response = faultDetectionClient.sendCanYouReachLeaderMessageToAll(ips.toArray(new String[0]), new CanYouReachLeaderMessage());
 
@@ -214,8 +208,10 @@ public class FaultDetectorPlayer extends TimerTask {
      * @author Tarik
      */
     public void pingMessageReceived(PingMessage pingMessage) {
+        System.out.println("message received prev: " + lastReceived);
         lastReceived = System.currentTimeMillis();
-        leaderIsPinging = true;
+        System.out.println("message received : " + lastReceived);
+        leaderWasPinging = true;
     }
 
     /**
@@ -228,12 +224,12 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     /**
-     * Sets new leaderIsPinging.
+     * Sets new leaderWasPinging.
      *
-     * @param leaderIsPinging New value of leaderIsPinging.
+     * @param leaderWasPinging New value of leaderWasPinging.
      */
-    public void setLeaderIsPinging(boolean leaderIsPinging) {
-        this.leaderIsPinging = leaderIsPinging;
+    public void setLeaderWasPinging(boolean leaderWasPinging) {
+        this.leaderWasPinging = leaderWasPinging;
     }
 
     /**
@@ -252,6 +248,7 @@ public class FaultDetectorPlayer extends TimerTask {
      */
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
+        faultHandlerPlayer.setNodeInfoList(nodeInfoList);
     }
 
     /**
@@ -291,12 +288,12 @@ public class FaultDetectorPlayer extends TimerTask {
     }
 
     /**
-     * Gets leaderIsPinging.
+     * Gets leaderWasPinging.
      *
-     * @return Value of leaderIsPinging.
+     * @return Value of leaderWasPinging.
      */
-    boolean getLeaderIsPinging() {
-        return leaderIsPinging;
+    boolean getLeaderWasPinging() {
+        return leaderWasPinging;
     }
 
     /**

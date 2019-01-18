@@ -7,6 +7,8 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class will call methods on external interfaces when needed. Example: The leader is disconnected from the game, this
@@ -16,7 +18,7 @@ import java.util.List;
  * @author Tarik
  */
 public class FaultHandlerPlayer {
-    @Inject
+
     private NodeInfoList nodeInfoList;
 
     private List<IConnectorObserver> observers;
@@ -24,6 +26,9 @@ public class FaultHandlerPlayer {
     private int amountOfFailingIps;
     private int amountOfActiveIps;
     private int filteredAmount;
+
+    @Inject
+     private static Logger logger;
 
     FaultHandlerPlayer() {
         amountOfConnectionsWithLeader = 0;
@@ -39,13 +44,16 @@ public class FaultHandlerPlayer {
     public String whoIsDead() {
         if (amountOfFailingIps == (amountOfActiveIps - filteredAmount)) {
             //TODO This should trigger Rejoin GUI and/or Request
+            logger.log(Level.INFO, "Deze machine kan niemand bereiken");
             return "imDead";
         } else {
             if (amountOfConnectionsWithLeader == 0) {
                 notifyObserversLeaderDied();
+                logger.log(Level.INFO, "De leider kan niet worden bereikt, en is dus uitgevallen.");
                 return "leaderIsDead";
             } else {
                 //TODO This should start a relay
+
                 return "leaderIsNotCompletelyDead";
             }
         }
@@ -57,7 +65,7 @@ public class FaultHandlerPlayer {
      * @author Tarik
      */
     private void notifyObserversLeaderDied() {
-        if (!observers.isEmpty()) {
+        if (observers != null && !observers.isEmpty()) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof ILeaderMigration) {
                     Player[] players = nodeInfoList.getPlayersWithoutLeader();
@@ -175,5 +183,9 @@ public class FaultHandlerPlayer {
      */
     int getAmountOfConnectionsWithLeader() {
         return amountOfConnectionsWithLeader;
+    }
+
+    void setNodeInfoList(NodeInfoList nodeInfoList) {
+        this.nodeInfoList = nodeInfoList;
     }
 }

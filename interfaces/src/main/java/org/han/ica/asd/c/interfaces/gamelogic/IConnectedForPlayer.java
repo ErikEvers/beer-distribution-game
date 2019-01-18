@@ -11,4 +11,5 @@ import java.util.List;
 public interface IConnectedForPlayer {
     void sendTurnData(Round turn) throws SendGameMessageException;
     void addObserver(IConnectorObserver observer);
+    void startFaultDetector();
 }
