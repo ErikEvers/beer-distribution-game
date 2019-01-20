@@ -80,7 +80,6 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IVisualisedPlayedGameData.class).to(ReplayComponent.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IPersistence.class).to(Persistence.class);
-		bind(IConnectorForPlayer.class).to(Connector.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
 		bind(ILeaderGameLogic.class).to(GameLogic.class);
 		bind(IFinder.class).to(RoomFinder.class);
