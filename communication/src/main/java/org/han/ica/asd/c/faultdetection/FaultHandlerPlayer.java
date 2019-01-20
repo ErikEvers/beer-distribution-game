@@ -36,8 +36,9 @@ public class FaultHandlerPlayer {
     }
 
     /**
-     * This method decides whether the leader died or the machine running this application died.
-     * It also knows if there is a different problem where both didn't die but still can't connect.
+     * This method decides whether the leader died or the machine running this application
+     * died based on the connection data.
+     * It also knows if there is another problem where both didn't die but still can't connect.
      *
      * @return who died for tests
      * @author Tarik
@@ -54,11 +55,11 @@ public class FaultHandlerPlayer {
                 logger.log(Level.INFO, "De leider kan niet worden bereikt, en is dus uitgevallen.");
                 return "leaderIsDead";
             } else {
-                //TODO This should start a relay or netwok segmentations choosing a leader between players who say they cannot connect with the leader
+                //TODO This should start a relay or netwok segmentations choosing a leader between players who can't connect with the leader
 
                 //Because this machine cant reach leader
-                // and there is no relay or segmentation system the leader replaces this player with an agent
-                // so this machine should also become a leader and start agents
+                // and there is no relay or segmentation system, the leader replaces this player with an agent
+                // this means this machine also becomes a game leader and starts agents.
                 notifyObserversThisMachineDied();
                 return "leaderIsNotCompletelyDead";
             }
@@ -82,7 +83,7 @@ public class FaultHandlerPlayer {
     }
 
     /**
-     * Notifies leadermigration that this machine is disconnected disconnected.
+     * Notifies leadermigration that this machine is disconnected.
      *
      * @author Tarik
      */
