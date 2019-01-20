@@ -61,7 +61,8 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
    */
   public void receiveVictoryMessage(Player electedPlayer){
       persistence.saveNewLeader(electedPlayer);
-      connectorProvider.get().changeLeader();
+      //TODO implement when Rogier merges provider
+      //connectorProvider.get().changeLeader();
   }
 
 }
