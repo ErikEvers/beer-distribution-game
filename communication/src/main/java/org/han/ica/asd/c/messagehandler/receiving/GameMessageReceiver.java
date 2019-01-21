@@ -181,7 +181,13 @@ public class GameMessageReceiver {
                 if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == ROUND_MESSAGE) {
                     //noinspection ConstantConditions
                     RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
-                    ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getPreviousRound(), roundModelMessage.getNewRound());
+
+                    Thread t = new Thread(() -> {
+                        ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getPreviousRound(), roundModelMessage.getNewRound());
+                    });
+                    t.setDaemon(true);
+                    t.start();
+                    
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
                 } else if (observer instanceof IGameStartObserver && transactionMessage.getMessageType() == GAME_START_MESSAGE) {
