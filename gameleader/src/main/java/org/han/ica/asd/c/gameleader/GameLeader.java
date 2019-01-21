@@ -199,8 +199,12 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      */
 
     private void allTurnDataReceived() throws TransactionException {
+        this.previousRoundData = this.currentRoundData;
         this.previousRoundData = gameLogic.calculateRound(this.previousRoundData, this.currentRoundData, game);
+        this.previousRoundData.setFacilityOrders(currentRoundData.getFacilityOrders());
+        this.previousRoundData.setFacilityTurnDelivers(currentRoundData.getFacilityTurnDelivers());
         this.currentRoundData = roundProvider.get();
+        this.currentRoundData.setFacilityTurns(previousRoundData.getFacilityTurns());
         persistence.updateRound(this.previousRoundData);
         persistence.saveRoundData(this.currentRoundData);
         game.getRounds().add(this.currentRoundData);
@@ -238,6 +242,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
             }
         }
         previousRoundData = game.getRounds().get(0);
+        currentRoundData = game.getRounds().get(0);
         generateCustomerOrders();
         connectorForLeader.startRoom(roomModel);
         connectorForLeader.sendGameStart(game);
@@ -270,12 +275,6 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private void generateCustomerOrders() {
         int lower = game.getConfiguration().getMinimalOrderRetail();
         int upper = game.getConfiguration().getMaximumOrderRetail();
-
-        if(currentRoundData == null) {
-            currentRoundData = roundProvider.get();
-            currentRoundData.setRoundId(previousRoundData.getRoundId() + 1);
-            game.getRounds().add(currentRoundData);
-        }
 
         for(FacilityTurn turn : previousRoundData.getFacilityTurns()) {
             FacilityType facilityType = game.getFacilityById(turn.getFacilityId()).getFacilityType();

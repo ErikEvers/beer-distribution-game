@@ -191,7 +191,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         } else {
             player.startGame();
         }
-        curRoundId = 1;
+        curRoundId = 0;
         sendRoundActionFromAgents();
     }
 
