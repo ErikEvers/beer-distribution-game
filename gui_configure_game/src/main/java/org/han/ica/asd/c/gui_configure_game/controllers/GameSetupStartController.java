@@ -58,6 +58,12 @@ public class GameSetupStartController {
     @FXML
     private Button back;
 
+    @FXML
+    private CheckBox usePassword;
+
+    @FXML
+    private TextField passwordField;
+
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
@@ -72,16 +78,16 @@ public class GameSetupStartController {
      */
     @FXML
     public void nextScreenButton() {
-
-        Object[] data = new Object[3];
+        Object[] data = new Object[4];
         fillConfiguration();
         data[0] = configuration;
         if (gameName.getText() != null && !gameName.getText().isEmpty()) {
             data[1] = gameName.getText();
         }
-        if (offlineGame.isSelected()) {
-            data[2] = false;
-        } else data[2] = true;
+				data[2] = !offlineGame.isSelected();
+        if(usePassword.isSelected() && !passwordField.getText().isEmpty()) {
+					data[3] = passwordField.getText();
+				}
         gameSetup.setData(data);
         gameSetup.setupScreen();
     }
@@ -93,6 +99,28 @@ public class GameSetupStartController {
     @FXML
     private void backButton() {
         back.setOnAction(event -> mainMenu.setupScreen());
+    }
+
+    @FXML
+    private void handleOfflineGameClicked() {
+        if(offlineGame.isSelected()) {
+            usePassword.setDisable(true);
+            passwordField.setDisable(true);
+        } else {
+            usePassword.setDisable(false);
+            if(usePassword.isSelected()) {
+                passwordField.setDisable(false);
+            }
+        }
+    }
+
+    @FXML
+    private void handleUsePasswordClicked() {
+        if(usePassword.isSelected()) {
+            passwordField.setDisable(false);
+        } else {
+            passwordField.setDisable(true);
+        }
     }
 
 
@@ -125,6 +153,11 @@ public class GameSetupStartController {
     void setGameName(String gamename) {
         gameName.setText(gamename);
     }
+
+    void setPassword(String password) {
+			usePassword.setSelected(true);
+			passwordField.setText(password);
+		}
 
     void setConfigurationInScreen(Configuration configuration) {
         roundNumber.setText(String.valueOf(configuration.getAmountOfRounds()));

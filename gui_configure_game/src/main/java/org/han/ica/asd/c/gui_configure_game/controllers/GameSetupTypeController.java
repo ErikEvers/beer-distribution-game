@@ -133,6 +133,7 @@ public class GameSetupTypeController implements Initializable {
     private BeerGame beerGame;
     private Configuration configuration;
     private String gameName = "";
+    private String password = "";
     private boolean onlineGame = true;
 
     @Inject
@@ -177,6 +178,10 @@ public class GameSetupTypeController implements Initializable {
         this.gameName = gameName;
     }
 
+    void setPassword(String password) {
+        this.password = password;
+    }
+
     void isOnlineGame(boolean onlineGame) {
         this.onlineGame = onlineGame;
     }
@@ -198,10 +203,10 @@ public class GameSetupTypeController implements Initializable {
 
             if(onlineGame) {
                 connector.start();
-                connector.createRoom(gameName, "", beerGame);
+                connector.createRoom(gameName, password, beerGame);
             } else {
                 connector.start();
-                connector.createOfflineRoom(gameName, "", beerGame);
+                connector.createOfflineRoom(gameName, password, beerGame);
             }
             assignAgents.setData(new Object[]{beerGame});
             assignAgents.setupScreen();

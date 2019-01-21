@@ -51,13 +51,13 @@ public class JoinGameController {
     }
 
     public void handleJoinGameButtonClick() {
-        TextInputDialog nameInput = new TextInputDialog();
-        nameInput.setHeaderText("Enter the name you want to use:");
-        Optional<String> output = nameInput.showAndWait();
+        TextInputDialog passwordInput = new TextInputDialog();
+        passwordInput.setHeaderText("Enter the password (leave blank if there is no password):");
+        Optional<String> output = passwordInput.showAndWait();
         if(output.isPresent()) {
             try {
-                RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(), "");
-                GamePlayerId gameData = iConnectorForSetup.getGameData(output.get());
+                RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(), output.get());
+                GamePlayerId gameData = iConnectorForSetup.getGameData("henk");
                 gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
                 gameRoom.setupScreen();
             } catch (RoomException | DiscoveryException | SendGameMessageException e) {
@@ -65,7 +65,7 @@ public class JoinGameController {
                 alert.show();
             }
         } else {
-            nameInput.close();
+            passwordInput.close();
         }
     }
 
