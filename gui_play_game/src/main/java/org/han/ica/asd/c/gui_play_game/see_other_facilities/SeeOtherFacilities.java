@@ -4,14 +4,12 @@ import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 
 public class SeeOtherFacilities implements IGUIHandler {
+    @Override
+    public void setData(Object[] data) {
+    }
 
-	@Override
-	public void setData(Object[] data) {
-		// stub
-	}
-
-	@Override
-	public void setupScreen() {
-		FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/SeeOtherFacilities.fxml"));
-	}
+    @Override
+    public void setupScreen() {
+        SeeOtherFacilitiesController seeOtherFacilitiesController = FXMLLoaderOnSteroids.getPopupScreen(null, getClass().getResource("/fxml/SeeOtherFacilities.fxml"));
+    }
 }

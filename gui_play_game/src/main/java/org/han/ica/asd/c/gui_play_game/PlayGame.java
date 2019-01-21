@@ -5,9 +5,6 @@ import com.google.inject.name.Named;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -18,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
@@ -29,7 +25,6 @@ import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurn;
 import org.han.ica.asd.c.model.domain_objects.FacilityTurnOrder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +61,10 @@ public abstract class PlayGame implements IPlayGame {
     @Inject
     @Named("SeeOtherFacilities")
     private IGUIHandler seeOtherFacilities;
+
+    @Inject
+    @Named("ActivityLogPopup")
+    private IGUIHandler activityLogPopup;
 
     @FXML
     protected Label inventory;
@@ -174,19 +173,8 @@ public abstract class PlayGame implements IPlayGame {
      * Replaces the current screen with the activity log
      */
     public void handleSeeActivityLogButtonClicked() {
-    Parent parent;
-    try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ActivityLogPopup.fxml"));
-            parent = loader.load();
-            ActivityLogPopupController activityLogPopupController = loader.getController();
-            activityLogPopupController.setLogContent(playerComponent.getBeerGame(), playerComponent.getPlayer().getFacility().getFacilityId());
-            Stage stage = new Stage();
-            stage.setScene(new Scene(parent));
-            stage.show();
-        } catch (IOException e) {
-            currentAlert = new Alert(Alert.AlertType.ERROR, "Can't display activity log", ButtonType.CLOSE);
-            currentAlert.show();
-        }
+        activityLogPopup.setData(new Object[]{playerComponent.getBeerGame(),playerComponent.getPlayer().getFacility().getFacilityId()});
+        activityLogPopup.setupScreen();
     }
 
     /**
