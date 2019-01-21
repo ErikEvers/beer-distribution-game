@@ -59,8 +59,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private static RoomModel roomModel;
     private static BeerGame game;
 
-    private Round previousRoundData;
-    private Round currentRoundData;
+    private static Round previousRoundData;
+    private static Round currentRoundData;
 
     private int highestPlayerId = 1;
     private int turnsExpectedPerRound;
@@ -203,7 +203,6 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         this.currentRoundData = roundProvider.get();
         persistence.updateRound(this.previousRoundData);
         persistence.saveRoundData(this.currentRoundData);
-        game.getRounds().add(this.currentRoundData);
 
         for (FacilityTurn facilityTurn : previousRoundData.getFacilityTurns()) {
             if(!game.getConfiguration().isContinuePlayingWhenBankrupt() && facilityTurn.isBankrupt()) {
@@ -251,15 +250,14 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() throws TransactionException {
-        if (roundId == getBeerGame().getConfiguration().getAmountOfRounds() ) {
+        if (previousRoundData.getRoundId() == getBeerGame().getConfiguration().getAmountOfRounds() ) {
             endGame(previousRoundData);
             return;
         }
-        roundId++;
-        currentRoundData.setRoundId(roundId);
 
         generateCustomerOrders();
         turnsReceivedInCurrentRound = 0;
+
         try {
                 connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
         } catch (TransactionException e) {
@@ -271,11 +269,9 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         int lower = game.getConfiguration().getMinimalOrderRetail();
         int upper = game.getConfiguration().getMaximumOrderRetail();
 
-        if(currentRoundData == null) {
             currentRoundData = roundProvider.get();
             currentRoundData.setRoundId(previousRoundData.getRoundId() + 1);
             game.getRounds().add(currentRoundData);
-        }
 
         for(FacilityTurn turn : previousRoundData.getFacilityTurns()) {
             FacilityType facilityType = game.getFacilityById(turn.getFacilityId()).getFacilityType();

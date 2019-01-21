@@ -85,6 +85,8 @@ public class RoundCalculator {
                 facilityTurn.isBankrupt()
             ));
         }
+        outcome.setFacilityTurnDelivers(round.getFacilityTurnDelivers());
+        outcome.setFacilityOrders(round.getFacilityOrders());
 
         return outcome;
     }

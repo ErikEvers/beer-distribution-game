@@ -146,10 +146,7 @@ public class ProgrammedBusinessRulesDAO {
 
         for (ProgrammedBusinessRules businessRule : businessRules) {
             String[] strSplit = businessRule.getProgrammedBusinessRule().split(" ", 2);
-            map.put(Integer.parseInt(strSplit[0]), strSplit[1]);
-            for (Map.Entry<Integer, String> entry : map.entrySet()) {
-                fillAndSet(entry.getKey(), new ProgrammedBusinessRules(entry.getValue(),businessRule.getProgrammedAST()), returnBusinessRule);
-            }
+            fillAndSet(Integer.parseInt(strSplit[0]), new ProgrammedBusinessRules(strSplit[1], businessRule.getProgrammedAST()), returnBusinessRule);
         }
 
         returnBusinessRule.removeAll(Collections.singleton(null));
