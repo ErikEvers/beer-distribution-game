@@ -50,9 +50,10 @@ public class FacilityDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
+				conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
-								databaseConnection.rollBackTransaction(conn);
+                databaseConnection.rollBackTransaction(conn);
             }
         }
     }
@@ -75,6 +76,7 @@ public class FacilityDAO {
 
 								pstmt.executeUpdate();
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);
@@ -98,6 +100,7 @@ public class FacilityDAO {
 
 								pstmt.executeUpdate();
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);
@@ -119,6 +122,7 @@ public class FacilityDAO {
 
 								pstmt.executeUpdate();
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);
@@ -147,6 +151,7 @@ public class FacilityDAO {
 								}
 						}
 						conn.commit();
+						conn.close();
 				} catch (GameIdNotSetException | SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
 					databaseConnection.rollBackTransaction(conn);
@@ -181,6 +186,7 @@ public class FacilityDAO {
 									}
 								}
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);

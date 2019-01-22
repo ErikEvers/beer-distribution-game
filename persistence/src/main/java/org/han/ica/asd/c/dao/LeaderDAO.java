@@ -41,6 +41,7 @@ public class LeaderDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -66,6 +67,7 @@ public class LeaderDAO {
 				}
 			}
 			conn.commit();
+			conn.close();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
 			databaseConnection.rollBackTransaction(conn);
@@ -90,6 +92,7 @@ public class LeaderDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);

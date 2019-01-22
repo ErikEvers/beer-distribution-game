@@ -66,7 +66,7 @@ public class GameBusinessRulesDAO {
 
                     pstmt.executeUpdate();
                     conn.commit();
-
+					conn.close();
                 } catch (GameIdNotSetException | SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
 					databaseConnection.rollBackTransaction(conn);
@@ -98,6 +98,7 @@ public class GameBusinessRulesDAO {
 							}
 						}
 						conn.commit();
+						conn.close();
 				} catch (GameIdNotSetException | SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
 					databaseConnection.rollBackTransaction(conn);
@@ -132,6 +133,7 @@ public class GameBusinessRulesDAO {
 						gameAST = rs.getString("GameAST");
 				}
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -164,7 +166,7 @@ public class GameBusinessRulesDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
-
+				conn.close();
 			} catch (GameIdNotSetException | SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);

@@ -220,9 +220,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     public void sendRoundForAgent(IParticipant participant){
         Round round = makeRoundFromGameRoundAction(participant.executeTurn(), participant.getParticipant().getFacilityId());
         try {
-            if (round.getRoundId() == 7){
-                System.out.println("You must stop here");
-            }
             communication.sendTurnData(round);
         } catch (SendGameMessageException e) {
             //No error should be thrown if the agent runs locally

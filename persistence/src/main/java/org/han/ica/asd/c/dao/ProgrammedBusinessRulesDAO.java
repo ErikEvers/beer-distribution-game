@@ -67,6 +67,7 @@ public class ProgrammedBusinessRulesDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -97,6 +98,7 @@ public class ProgrammedBusinessRulesDAO {
                     }
                 }
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -126,7 +128,7 @@ public class ProgrammedBusinessRulesDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
-
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);

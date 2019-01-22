@@ -60,6 +60,7 @@ public class PlayerDAO {
 
             pstmt.executeUpdate();
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -79,6 +80,7 @@ public class PlayerDAO {
 
             pstmt.executeUpdate();
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -112,7 +114,7 @@ public class PlayerDAO {
             pstmt.executeUpdate();
 
             conn.commit();
-
+            conn.close();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -137,7 +139,7 @@ public class PlayerDAO {
                 player = buildPlayer(rs);
             }
             conn.commit();
-            return player;
+            conn.close();
 
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -164,7 +166,7 @@ public class PlayerDAO {
                 buildPlayerArray(rs, players);
             }
             conn.commit();
-
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -189,6 +191,7 @@ public class PlayerDAO {
             pstmt.executeUpdate();
 
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -201,16 +204,14 @@ public class PlayerDAO {
      * @param rs      Result set containing the player data
      * @param players List to add the created player objects into
      */
-    private void buildPlayerArray(ResultSet rs, List<Player> players) {
-        try {
-            if (!rs.isClosed()) {
-                while (rs.next()) {
-                    players.add(buildPlayer(rs));
-                }
+    private void buildPlayerArray(ResultSet rs, List<Player> players) throws SQLException{
+
+        if (!rs.isClosed()) {
+            while (rs.next()) {
+                players.add(buildPlayer(rs));
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
+
     }
 
     /**
