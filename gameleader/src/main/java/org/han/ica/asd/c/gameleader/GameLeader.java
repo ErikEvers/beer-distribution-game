@@ -198,7 +198,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Then it starts a new round.
      */
 
-    private void allTurnDataReceived() throws TransactionException {
+    private synchronized void allTurnDataReceived() throws TransactionException {
         this.previousRoundData = gameLogic.calculateRound(this.previousRoundData, this.currentRoundData, game);
         this.currentRoundData = roundProvider.get();
         persistence.updateRound(this.previousRoundData);
