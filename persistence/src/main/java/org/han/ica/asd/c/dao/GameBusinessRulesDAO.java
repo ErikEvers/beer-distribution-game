@@ -80,7 +80,7 @@ public class GameBusinessRulesDAO {
      * @param gameAgent Contains the identifier of the GameAgent from which the GameBusinessRules have to be deleted.
      * @return A list containing all the GameBusinessRules from a specific GameAgent in a specific BeerGame.
      */
-    public List<GameBusinessRules> readAllGameBusinessRulesForGameAgentInAGame(GameAgent gameAgent) {
+    public synchronized List<GameBusinessRules> readAllGameBusinessRulesForGameAgentInAGame(GameAgent gameAgent) {
         List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
         Connection conn = databaseConnection.connect();
 				if(conn == null) {

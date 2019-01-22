@@ -48,7 +48,7 @@ public class LeaderDAO {
 		}
 	}
 
-	public Leader getLeader() {
+	public synchronized Leader getLeader() {
 		Leader leader = null;
 		Connection conn = databaseConnection.connect();
 
