@@ -20,6 +20,11 @@ public class CommunicationStub implements IConnectorForLeader {
     }
 
     @Override
+    public void notifyNextRoundStart() {
+
+    }
+
+    @Override
     public void sendGameStart(BeerGame beerGame) {
 
     }

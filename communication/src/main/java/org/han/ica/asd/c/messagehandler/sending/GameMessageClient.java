@@ -8,6 +8,7 @@ import org.han.ica.asd.c.exceptions.communication.LeaderNotPresentException;
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameEndMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.NextRoundMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
@@ -128,5 +129,10 @@ public class GameMessageClient {
     public void sendGameEndToAllPlayers(String[] ips, Round round) throws TransactionException {
         GameEndMessage gameStartMessage = new GameEndMessage(round);
         new SendInTransaction(ips, gameStartMessage, gameMessageSender).sendToAllPlayers();
+    }
+
+    public void sendNextRoundStart(String[] ips) {
+        NextRoundMessage nextRoundMessage = new NextRoundMessage();
+        new SendInTransaction(ips, nextRoundMessage, gameMessageSender);
     }
 }
