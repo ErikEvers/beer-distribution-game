@@ -183,7 +183,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      *
      * @param turnModel an incoming turn from a facility
      */
-    public void turnModelReceived(Round turnModel) throws TransactionException {
+    public synchronized void turnModelReceived(Round turnModel) throws TransactionException {
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
@@ -264,6 +264,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
         try {
                 connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+                connectorForLeader.notifyNextRoundStart();
         } catch (TransactionException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
         }

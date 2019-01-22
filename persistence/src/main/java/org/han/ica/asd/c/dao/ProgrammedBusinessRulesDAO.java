@@ -37,7 +37,7 @@ public class ProgrammedBusinessRulesDAO {
      * @param programmedBusinessRules The data required to create a new ProgrammedBusinessRule in the database.
      * @param programmedAgentName The data required to know from which ProgrammedAgent the data needs to be deleted.
      */
-    public void createProgrammedbusinessRule(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName) {
+    public synchronized void createProgrammedbusinessRule(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName) {
         executePreparedStatement(programmedBusinessRules, programmedAgentName, CREATE_PROGRAMMEDBUSINESSRULE);
     }
 
@@ -47,7 +47,7 @@ public class ProgrammedBusinessRulesDAO {
      * @param programmedBusinessRules The data required to delete a specific ProgrammedBusinessRule from the database.
      * @param programmedAgentName The data required to know from which ProgrammedAgent the data needs to be deleted.
      */
-    public void deleteSpecificProgrammedBusinessRule(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName) {
+    public synchronized void deleteSpecificProgrammedBusinessRule(ProgrammedBusinessRules programmedBusinessRules, String programmedAgentName) {
         executePreparedStatement(programmedBusinessRules, programmedAgentName, DELETE_SPECIFIC_PROGRAMMEDBUSINESSRULE);
 
     }
@@ -57,7 +57,7 @@ public class ProgrammedBusinessRulesDAO {
      *
      * @param programmedAgentName The data required to delete all the ProgrammedBusinessRules from a specific ProgrammedAgent.
      */
-    public void deleteAllProgrammedBusinessRulesForAProgrammedAgent(String programmedAgentName) {
+    public synchronized void deleteAllProgrammedBusinessRulesForAProgrammedAgent(String programmedAgentName) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_PROGRAMMEDBUSINESSRULES_FOR_A_PROGRAMMEDAGENT)) {
@@ -80,7 +80,7 @@ public class ProgrammedBusinessRulesDAO {
      * @param programmedAgentName The ProgrammedAgent from whom the ProgrammedBusinessRules have to be retrieved.
      * @return A list from all the ProgrammedBusinessRules from the ProgrammedAgent.
      */
-    public List<ProgrammedBusinessRules> readAllProgrammedBusinessRulesFromAProgrammedAgent(String programmedAgentName) {
+    public synchronized List<ProgrammedBusinessRules> readAllProgrammedBusinessRulesFromAProgrammedAgent(String programmedAgentName) {
         Connection conn = databaseConnection.connect();
         List<ProgrammedBusinessRules> programmedBusinessRules = new ArrayList<>();
         if (conn != null) {
