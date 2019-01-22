@@ -68,13 +68,13 @@ public class FaultDetectorPlayer extends TimerTask {
      */
 
     public void start() {
-        this.lastReceived = System.currentTimeMillis();
+        lastReceived = System.currentTimeMillis();
         leaderWasPinging = true;
         playersWhoAlreadyCouldntReachLeader = new HashMap<>();
         timer = createTimer(true);
         timer.scheduleAtFixedRate(this, 0, Global.FAULT_DETECTION_INTERVAL);
         faultHandlerPlayer.setObservers(observers);
-        this.active = true;
+        active = true;
     }
 
     /**
