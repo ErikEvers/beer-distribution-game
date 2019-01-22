@@ -10,6 +10,7 @@ import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.gameleader.GameLeader;
+import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
@@ -243,6 +244,9 @@ public class Connector implements IConnectorForSetup, IConnectorForPlayer, IConn
     }
 
     public void addObserver(IConnectorObserver observer) {
+        if (observer instanceof GameLogic){
+            observers = (ArrayList<IConnectorObserver>) observers.stream().filter(i -> !(i instanceof GameLogic)).collect(Collectors.toList());
+        }
         observers.add(observer);
         faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
