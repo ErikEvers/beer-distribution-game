@@ -41,30 +41,7 @@ public class GameMessageSender {
     }
 
     Map<String, Object> sendToAll(String[] ips, TransactionMessage transactionMessage) {
-        CountDownLatch cdl = new CountDownLatch(ips.length);
-        Map<String, Object> map = new HashMap<>();
-
-        for (String ip : ips) {
-            Thread t = new Thread(() -> {
-                try {
-                    Object response = sendGameMessage(ip, transactionMessage);
-                    map.put(ip, response);
-                } catch (SendGameMessageException e) {
-                    map.put(ip, e);
-                }
-                cdl.countDown();
-            });
-            t.setDaemon(false);
-            t.start();
-        }
-
-        try {
-            cdl.await();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        return map;
-
+        return socketClient.sendToAll(ips,transactionMessage);
     }
 
     private Object sendGameMessage(String ip, GameMessage gameMessage) throws SendGameMessageException {
