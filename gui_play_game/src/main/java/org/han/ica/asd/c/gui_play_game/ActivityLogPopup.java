@@ -7,6 +7,7 @@ import org.han.ica.asd.c.model.domain_objects.BeerGame;
 public class ActivityLogPopup implements IGUIHandler {
     BeerGame beerGame;
     int facilityId;
+    ActivityLogPopupController activityLogPopupController;
     @Override
     public void setData(Object[] data) {
         beerGame = (BeerGame) data[0];
@@ -15,7 +16,12 @@ public class ActivityLogPopup implements IGUIHandler {
 
     @Override
     public void setupScreen() {
-        ActivityLogPopupController activityLogPopupController = FXMLLoaderOnSteroids.getPopupScreen(null, getClass().getResource("/fxml/ActivityLogPopup.fxml"));
+        activityLogPopupController = FXMLLoaderOnSteroids.getPopupScreen(null, getClass().getResource("/fxml/ActivityLogPopup.fxml"),null);
+        activityLogPopupController.setLogContent(beerGame,facilityId);
+    }
+
+    @Override
+    public void updateScreen() {
         activityLogPopupController.setLogContent(beerGame,facilityId);
     }
 }

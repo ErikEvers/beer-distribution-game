@@ -5,4 +5,6 @@ public interface IGUIHandler {
     void setData(Object[] data);
 
     void setupScreen();
+
+    void updateScreen();
 }

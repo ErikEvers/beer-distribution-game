@@ -19,4 +19,9 @@ public class MainMenu implements IGUIHandler {
 		FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiMainMenu"), getClass().getResource("/fxml/MainMenu.fxml"));
 	}
 
+	@Override
+	public void updateScreen() {
+
+	}
+
 }

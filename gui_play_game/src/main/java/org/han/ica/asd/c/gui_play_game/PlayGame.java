@@ -125,6 +125,9 @@ public abstract class PlayGame implements IPlayGame {
 
     protected int roundId;
 
+    private boolean seeOtherFacilitiesOpen;
+    private boolean activityLogOpen;
+
 
     /**
      * superInitialization of the two controller subclasses. Has code needed for both initializations.
@@ -166,7 +169,17 @@ public abstract class PlayGame implements IPlayGame {
      * Replaces the current screen with the graph view of the facilities in the current game
      */
     public void seeOtherFacilitiesButtonClicked() {
-        seeOtherFacilities.setupScreen();
+        if(roundId > 0) {
+            ArrayList<Double> coordinates = new ArrayList<>();
+            coordinates.add(mainContainer.getWidth() + 350);
+            coordinates.add((double) 67);
+            seeOtherFacilities.setData(new Object[]{coordinates});
+            seeOtherFacilities.setupScreen();
+            seeOtherFacilitiesOpen = true;
+        }else {
+            currentAlert = new Alert(Alert.AlertType.INFORMATION, "Next turn you can see the other facilities", ButtonType.OK);
+            currentAlert.show();
+        }
     }
 
     /**
@@ -175,6 +188,7 @@ public abstract class PlayGame implements IPlayGame {
     public void handleSeeActivityLogButtonClicked() {
         activityLogPopup.setData(new Object[]{playerComponent.getBeerGame(),playerComponent.getPlayer().getFacility().getFacilityId()});
         activityLogPopup.setupScreen();
+        activityLogOpen = true;
     }
 
     /**
@@ -308,6 +322,7 @@ public abstract class PlayGame implements IPlayGame {
      */
     @Override
     public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
+        refreshPopupScreens();
         this.roundId =roundId;
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
@@ -355,6 +370,16 @@ public abstract class PlayGame implements IPlayGame {
 				submitTurnButton.setDisable(false);
 				refillOrdersList();
 				refillDeliveriesList();
+    }
+
+    private void refreshPopupScreens() {
+        if(seeOtherFacilitiesOpen) {
+            seeOtherFacilities.updateScreen();
+        }
+        if(activityLogOpen) {
+            activityLogPopup.setData(new Object[]{playerComponent.getBeerGame(), playerComponent.getPlayer().getFacility().getFacilityId()});
+            activityLogPopup.updateScreen();
+        }
     }
 
     /**

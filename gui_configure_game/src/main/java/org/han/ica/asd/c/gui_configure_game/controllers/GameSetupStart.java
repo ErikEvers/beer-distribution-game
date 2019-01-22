@@ -29,4 +29,9 @@ public class GameSetupStart implements IGUIHandler {
 
         }
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

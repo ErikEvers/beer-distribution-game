@@ -18,4 +18,9 @@ public class ManagePlayers implements IGUIHandler {
 	public void setupScreen() {
 		FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesManagePlayers"), getClass().getResource("/fxml/ManagePlayersScreen.fxml"));
 	}
+
+	@Override
+	public void updateScreen() {
+
+	}
 }

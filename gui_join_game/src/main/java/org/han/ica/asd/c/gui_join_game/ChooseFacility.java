@@ -15,4 +15,9 @@ public class ChooseFacility implements IGUIHandler {
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/ChooseFacility.fxml"));
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

@@ -35,4 +35,8 @@ public class SeeOtherFacilitiesController {
         Stage stage = (Stage) facilitiesContainer.getScene().getWindow();
         stage.close();
     }
+
+    public void updateTreeBuilder() {
+        new TreeBuilder().loadFacilityView(playerComponent.getBeerGame(), facilitiesContainer, true);
+    }
 }

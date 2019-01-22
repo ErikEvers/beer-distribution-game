@@ -31,4 +31,9 @@ public class GameSetup implements IGUIHandler {
         gameSetupController.setGameName(gamename);
         gameSetupController.setOnlineGame(onlinegame);
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

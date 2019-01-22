@@ -13,6 +13,7 @@ import javax.inject.Provider;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -39,10 +40,10 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
     }
 
     public static <T> T getScreen(ResourceBundle resourceBundle, URL fxmlPath) {
-        return setScreen(resourceBundle, fxmlPath, false).getController();
+        return setScreen(resourceBundle, fxmlPath, false,null).getController();
     }
 
-    private static FXMLLoaderOnSteroids setScreen(ResourceBundle resourceBundle, URL fxmlPath, boolean isPopup) {
+    private static FXMLLoaderOnSteroids setScreen(ResourceBundle resourceBundle, URL fxmlPath, boolean isPopup, ArrayList<Double> coordinates) {
         FXMLLoaderOnSteroids loader = loaderProvider.get();
         loader.setResources(resourceBundle);
         loader.setLocation(fxmlPath);
@@ -52,10 +53,13 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
             if (!ComponentOrientation.getOrientation(new Locale(System.getProperty("user.language"))).isLeftToRight()) {
                 root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
             }
-
             if (isPopup) {
                 Stage stage = new Stage();
                 setStage(stage, root);
+                if(coordinates != null){
+                    stage.setX(coordinates.get(0));
+                    stage.setY(coordinates.get(1));
+                }
             } else {
                 setStage(primaryStage, root);
             }
@@ -72,7 +76,7 @@ public class FXMLLoaderOnSteroids extends FXMLLoader {
         stage.show();
     }
 
-    public static <T> T getPopupScreen(ResourceBundle resourceBundle, URL fxmlPath) {
-        return setScreen(resourceBundle, fxmlPath, true).getController();
+    public static <T> T getPopupScreen(ResourceBundle resourceBundle, URL fxmlPath,ArrayList<Double> coordinates) {
+        return setScreen(resourceBundle, fxmlPath, true,coordinates).getController();
     }
 }
