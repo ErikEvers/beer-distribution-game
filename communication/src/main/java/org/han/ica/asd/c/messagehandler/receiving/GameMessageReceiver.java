@@ -182,11 +182,8 @@ public class GameMessageReceiver {
                     //noinspection ConstantConditions
                     RoundModelMessage roundModelMessage = (RoundModelMessage) transactionMessage;
 
-                    Thread t = new Thread(() -> {
                         ((IRoundModelObserver) observer).roundModelReceived(roundModelMessage.getPreviousRound(), roundModelMessage.getNewRound());
-                    });
-                    t.setDaemon(true);
-                    t.start();
+
 
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
