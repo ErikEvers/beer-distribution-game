@@ -242,6 +242,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         }
         previousRoundData = game.getRounds().get(0);
         generateCustomerOrders();
+        connectorForLeader = connectorProvider.forLeader();
         connectorForLeader.startRoom(roomModel);
         connectorForLeader.sendGameStart(game);
 
