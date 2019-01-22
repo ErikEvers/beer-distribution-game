@@ -73,31 +73,9 @@ public class GameSetupStartController {
         UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
         roundNumber.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEROUNDNUMBER, textFieldFilter));
         minOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMINNUMBER, textFieldFilter));
-				minOrder.textProperty().addListener((observable, oldValue, newValue) -> {
-					maxInputTimer = new Timer();
-					maxInputTimer.schedule(
-							new java.util.TimerTask() {
-								@Override
-								public void run() {
-									checkMaxInputValue();
-								}
-							},
-							500
-					);
-				});
+				minOrder.textProperty().addListener((observable, oldValue, newValue) -> checkMaxInputValue());
         maxOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMAXNUMBER, textFieldFilter));
-				maxOrder.textProperty().addListener((observable, oldValue, newValue) -> {
-					maxInputTimer = new Timer();
-					maxInputTimer.schedule(
-						new java.util.TimerTask() {
-							@Override
-							public void run() {
-								checkMaxInputValue();
-							}
-						},
-						500
-					);
-				});
+				maxOrder.textProperty().addListener((observable, oldValue, newValue) -> checkMaxInputValue());
 
 
         mainContainer.getChildren().addAll();
@@ -105,10 +83,19 @@ public class GameSetupStartController {
     }
 
     private void checkMaxInputValue() {
-			if(Integer.parseInt(maxOrder.getText()) < Integer.parseInt(minOrder.getText())) {
-				maxOrder.setText(minOrder.getText());
-				maxOrder.positionCaret(maxOrder.getText().length());
-			}
+			maxInputTimer = new Timer();
+			maxInputTimer.schedule(
+				new java.util.TimerTask() {
+					@Override
+					public void run() {
+						if(Integer.parseInt(maxOrder.getText()) < Integer.parseInt(minOrder.getText())) {
+							maxOrder.setText(minOrder.getText());
+							maxOrder.positionCaret(maxOrder.getText().length());
+						}
+					}
+				},
+				500
+			);
 		}
 
     /**
