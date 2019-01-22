@@ -38,7 +38,7 @@ public class FacilityDAO {
      *
      * @param facility A domain_objects of FacilityDB with all the data required to create a new facility.
      */
-    public void createFacility(Facility facility) {
+    public synchronized void createFacility(Facility facility) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITY)) {
@@ -62,7 +62,7 @@ public class FacilityDAO {
      *
      * @param facility A domain_objects of FacilityDB with all the data required to update an existing facility.
      */
-    public void updateFacility(Facility facility) {
+    public synchronized void updateFacility(Facility facility) {
         Connection conn = databaseConnection.connect();
 				if (conn != null) {
 						try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITY)) {
@@ -87,7 +87,7 @@ public class FacilityDAO {
      *
      * @param facility The data required to delete a specific facility.
      */
-    public void deleteSpecificFacility(Facility facility) {
+    public synchronized void deleteSpecificFacility(Facility facility) {
         Connection conn = databaseConnection.connect();
 				if (conn != null) {
 						try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITY)) {
@@ -109,7 +109,7 @@ public class FacilityDAO {
     /**
      * A method to delete all facilities within a specific game.
      */
-    public void deleteAllFacilitiesInGame() {
+    public synchronized void deleteAllFacilitiesInGame() {
         Connection conn = databaseConnection.connect();
 				if (conn != null) {
 						try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITIES_IN_GAME)) {

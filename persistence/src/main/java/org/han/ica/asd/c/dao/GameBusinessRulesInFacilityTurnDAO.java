@@ -35,7 +35,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 * A method which creates a GameBusinessRulesInFacilityTurnDB object in the SQLite Database
 	 * @param gameBusinessRulesInFacilityTurn A GameBusinessRuleInFacilityTurn object which contains data which needs to be inserted in to the SQLite Database
 	 */
-	public void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+	public synchronized void createTurn(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_BUSINESSRULETURN)) {
@@ -65,7 +65,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 	 * @param roundId The Id of the round where the specific turns are located
 	 * @return A GameBusinessRulesInFacilityTurnDB object which contains data from the database according to the search parameters
 	 */
-	public GameBusinessRulesInFacilityTurn readTurn(int roundId, int facilityId, String gameAgentName) {
+	public synchronized GameBusinessRulesInFacilityTurn readTurn(int roundId, int facilityId, String gameAgentName) {
 		Connection conn = databaseConnection.connect();
 		GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn = null;
 		List<GameBusinessRules> gameBusinessRules = new ArrayList<>();
@@ -102,27 +102,28 @@ public class GameBusinessRulesInFacilityTurnDAO {
 
 
 	/**
-		 * A method which deletes a specific turn from the SQLite Database
-		 * @param roundId           The Id of the round where the specific turns are located
-		 * @param facilityId  The Id of the FacilityDB which did the action
-		 */
-		public void deleteTurn (int roundId, int facilityId){
-			Connection conn = databaseConnection.connect();
-			if (conn != null) {
-				try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
+	 * A method which deletes a specific turn from the SQLite Database
+	 *
+	 * @param roundId    The Id of the round where the specific turns are located
+	 * @param facilityId The Id of the FacilityDB which did the action
+	 */
+	public synchronized void deleteTurn(int roundId, int facilityId) {
+		Connection conn = databaseConnection.connect();
+		if (conn != null) {
+			try (PreparedStatement pstmt = conn.prepareStatement(DELETE_BUSINESSRULETURN)) {
 
-					conn.setAutoCommit(false);
+				conn.setAutoCommit(false);
 
-					pstmt.setString(1, DaoConfig.getCurrentGameId());
-					pstmt.setInt(2, roundId);
-					pstmt.setInt(3, facilityId);
+				pstmt.setString(1, DaoConfig.getCurrentGameId());
+				pstmt.setInt(2, roundId);
+				pstmt.setInt(3, facilityId);
 
-					pstmt.executeUpdate();
-					conn.commit();
-				} catch (SQLException e) {
-					LOGGER.log(Level.SEVERE, e.toString(), e);
-					databaseConnection.rollBackTransaction(conn);
-				}
+				pstmt.executeUpdate();
+				conn.commit();
+			} catch (SQLException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
+				databaseConnection.rollBackTransaction(conn);
 			}
 		}
 	}
+}

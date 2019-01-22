@@ -89,7 +89,7 @@ public class PlayerDAO {
      * A method which inserts multiple players in a database
      * @param players A list of players which needs to be inserted
      */
-    public void insertPlayers(List<Player> players) {
+    public synchronized void insertPlayers(List<Player> players) {
         players.forEach(this::createPlayer);
     }
 
@@ -98,7 +98,7 @@ public class PlayerDAO {
      *
      * @param player Specifies the player to update
      */
-    public void updatePlayer(Player player) {
+    public synchronized void updatePlayer(Player player) {
         Connection conn = conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PLAYER)) {
 
@@ -124,7 +124,7 @@ public class PlayerDAO {
      * @param playerId Primary identifier for a player
      * @return Returns the specified player
      */
-    public Player getPlayer(String playerId) {
+    public synchronized Player getPlayer(String playerId) {
         Player player = null;
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(GET_SPECIFIC)) {
@@ -177,7 +177,7 @@ public class PlayerDAO {
      *
      * @param playerId The primary identifier of the player to be removed
      */
-    public void deletePlayer(String playerId) {
+    public synchronized void deletePlayer(String playerId) {
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(DELETE_PLAYER)) {
 
@@ -222,7 +222,7 @@ public class PlayerDAO {
      * @throws SQLException
      * Thrown when the resultset is empty
      */
-    private synchronized Player buildPlayer(ResultSet rs) throws SQLException {
+    private Player buildPlayer(ResultSet rs) throws SQLException {
         Player player = null;
         if (!rs.isClosed()) {
             player = new Player(
@@ -236,7 +236,7 @@ public class PlayerDAO {
         return player;
     }
 
-	public void updatePlayers(List<Player> players) {
+	public synchronized void updatePlayers(List<Player> players) {
         for (Player player: players) {
             updatePlayer(player);
         }

@@ -202,7 +202,7 @@ public class BeergameDAO {
 	 * A method which returns a list of ongoing beergame
 	 * @return A beergame object
 	 */
-	public List<BeerGame> getGameLogFromOngoingGame() {
+	public synchronized List<BeerGame> getGameLogFromOngoingGame() {
 		Connection conn = databaseConnection.connect();
 		return getBeerGames(conn, READ_ONGOING_BEERGAME);
 
@@ -211,7 +211,7 @@ public class BeergameDAO {
 	/**
 	 * A method which updates the GameEndDate of a game.
 	 */
-	public void updateEnddate(){
+	public synchronized void updateEnddate(){
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_ENDDATE)) {
@@ -266,7 +266,7 @@ public class BeergameDAO {
 	 * @param readOngoingBeergame
 	 * @return
 	 */
-	private List<BeerGame> getBeerGames(Connection conn, String readOngoingBeergame) {
+	private synchronized List<BeerGame> getBeerGames(Connection conn, String readOngoingBeergame) {
 		List<BeerGame> beergames = new ArrayList<>();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
@@ -285,7 +285,7 @@ public class BeergameDAO {
 	 * @param pstmt
 	 * @throws SQLException
 	 */
-	private void executePrepareStatment(Connection conn, List<BeerGame> beergames, PreparedStatement pstmt) throws SQLException {
+	private synchronized void executePrepareStatment(Connection conn, List<BeerGame> beergames, PreparedStatement pstmt) throws SQLException {
 		BeerGame beerGame;
 		conn.setAutoCommit(false);
 		try (ResultSet rs = pstmt.executeQuery()) {

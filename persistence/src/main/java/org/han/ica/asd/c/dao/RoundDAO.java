@@ -53,7 +53,7 @@ public class RoundDAO {
 	 *
 	 * @param round The round that the players have played
 	 */
-	public void createRound(Round round) {
+	public synchronized void createRound(Round round) {
 		if(getRound(round.getRoundId()) != null){
 			updateRound(round);
 		}
@@ -73,7 +73,7 @@ public class RoundDAO {
 	 * A method which inserts multiple rounds into the database
 	 * @param rounds
 	 */
-	public void insertRounds(List<Round> rounds) {
+	public synchronized void insertRounds(List<Round> rounds) {
 		rounds.forEach(this::createRound);
 	}
 
@@ -81,7 +81,7 @@ public class RoundDAO {
 	 * Updates a list with rounds in the database
 	 * @param rounds
 	 */
-	public void updateRounds(List<Round> rounds) {
+	public synchronized void updateRounds(List<Round> rounds) {
 		rounds.forEach(this::createRound);
 	}
 
@@ -148,7 +148,7 @@ public class RoundDAO {
 		}
 	}
 
-	private synchronized void updateFacilityTurn(int roundId, FacilityTurn facilityTurn) {
+	private void updateFacilityTurn(int roundId, FacilityTurn facilityTurn) {
 		if (getFacilitiesInRound(roundId).stream().map(FacilityTurn::getFacilityId).collect(Collectors.toList()).contains(facilityTurn.getFacilityId())) {
 			Connection conn = databaseConnection.connect();
 			if (conn != null) {
@@ -403,7 +403,7 @@ public class RoundDAO {
 		return rounds;
 	}
 
-	private synchronized Round createRoundModel(ResultSet rs) throws SQLException {
+	private Round createRoundModel(ResultSet rs) throws SQLException {
 		Round round = new Round();
 		round.setRoundId(rs.getInt(ROUND_ID));
 		round.setFacilityOrders(getFacilityOrdersInRound(round.getRoundId()));

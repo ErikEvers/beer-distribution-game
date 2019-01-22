@@ -36,7 +36,7 @@ public class GameBusinessRulesDAO {
      * @param gameAgent         The data required to insert the GameAgentName and FacilityId.
      * @param gameBusinessRules The data required to insert the GameBusinessRule and GameAST.
      */
-    public void createGameBusinessRule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
+    public synchronized void createGameBusinessRule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
         executePreparedStatement(gameAgent, gameBusinessRules, CREATE_GAMEBUSINESSRULE);
     }
 
@@ -46,7 +46,7 @@ public class GameBusinessRulesDAO {
      * @param gameAgent         The data required to delete the GameAgentName and FacilityId.
      * @param gameBusinessRules The data required to delete the GameBusinessRule and GameAST.
      */
-    public void deleteSpecificGamebusinessrule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
+    public synchronized void deleteSpecificGamebusinessrule(GameAgent gameAgent, GameBusinessRules gameBusinessRules) {
         executePreparedStatement(gameAgent, gameBusinessRules, DELETE_SPECIFIC_GAMEBUSINESSRULE);
     }
 
@@ -55,7 +55,7 @@ public class GameBusinessRulesDAO {
      *
      * @param gameAgent Contains the identifier of tje GameAgent from which the GameBusinessRules have to be deleted.
      */
-    public void deleteAllGamebusinessrulesForGameagentInAGame(GameAgent gameAgent) {
+    public synchronized void deleteAllGamebusinessrulesForGameagentInAGame(GameAgent gameAgent) {
         Connection conn = databaseConnection.connect();
             if (conn != null) {
                 try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEBUSINESSRULES_FOR_GAMEAGENT_IN_A_GAME)) {
@@ -115,7 +115,7 @@ public class GameBusinessRulesDAO {
      * @param facilityId The Facility from which the GameAST needs to be collected.
      * @return The linked GameAST will be returned.
      */
-	public String getGameAST(String businessRule, String gameAgentName, int facilityId) {
+	public synchronized String getGameAST(String businessRule, String gameAgentName, int facilityId) {
 		String gameAST = "";
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {

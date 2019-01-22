@@ -25,7 +25,7 @@ public class LeaderDAO {
 	@Inject
 	PlayerDAO playerDAO;
 
-	public void insertLeader(Leader leader) {
+	public synchronized void insertLeader(Leader leader) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_LEADER)) {
@@ -74,7 +74,7 @@ public class LeaderDAO {
 		return leader;
 	}
 
-	public void updateLeader(Leader leader) {
+	public synchronized void updateLeader(Leader leader) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LEADER)) {
