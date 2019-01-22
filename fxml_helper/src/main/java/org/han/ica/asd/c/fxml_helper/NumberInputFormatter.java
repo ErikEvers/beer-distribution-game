@@ -18,6 +18,7 @@ public class NumberInputFormatter {
 			}
 			if (newText.length() < 1) {
 				change.setText("0");
+				change.setCaretPosition(change.getText().length());
 				return change;
 			}
 			return null;

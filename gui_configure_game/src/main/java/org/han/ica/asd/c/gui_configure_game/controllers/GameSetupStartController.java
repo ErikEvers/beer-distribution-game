@@ -14,6 +14,7 @@ import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Timer;
 import java.util.function.UnaryOperator;
 
 
@@ -62,6 +63,8 @@ public class GameSetupStartController {
     @FXML
     private Button back;
 
+    private Timer maxInputTimer;
+
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
@@ -70,10 +73,43 @@ public class GameSetupStartController {
         UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
         roundNumber.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEROUNDNUMBER, textFieldFilter));
         minOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMINNUMBER, textFieldFilter));
+				minOrder.textProperty().addListener((observable, oldValue, newValue) -> {
+					maxInputTimer = new Timer();
+					maxInputTimer.schedule(
+							new java.util.TimerTask() {
+								@Override
+								public void run() {
+									checkMaxInputValue();
+								}
+							},
+							500
+					);
+				});
         maxOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMAXNUMBER, textFieldFilter));
+				maxOrder.textProperty().addListener((observable, oldValue, newValue) -> {
+					maxInputTimer = new Timer();
+					maxInputTimer.schedule(
+						new java.util.TimerTask() {
+							@Override
+							public void run() {
+								checkMaxInputValue();
+							}
+						},
+						500
+					);
+				});
+
+
         mainContainer.getChildren().addAll();
         backButton();
     }
+
+    private void checkMaxInputValue() {
+			if(Integer.parseInt(maxOrder.getText()) < Integer.parseInt(minOrder.getText())) {
+				maxOrder.setText(minOrder.getText());
+				maxOrder.positionCaret(maxOrder.getText().length());
+			}
+		}
 
     /**
      * Button function to proceed to the next screen it will parse the configuration to the next screen.
