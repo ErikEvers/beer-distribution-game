@@ -3,6 +3,7 @@ package org.han.ica.asd.c.gamelogic;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_play_game.see_other_facilities.SeeOtherFacilities;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.model.domain_objects.Round;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import com.google.inject.AbstractModule;
@@ -18,6 +19,8 @@ import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
 import static org.mockito.Mockito.*;
 
 
@@ -30,22 +33,25 @@ public class GameLogicTest {
     private Round round;
     private BeerGame beerGame;
     private IGUIHandler seeOtherFacilities;
+    private IConnectorProvider connectorProvider;
 
     @BeforeEach
     void setup() {
         round = new Round();
+        connectorProvider = mock(IConnectorProvider.class);
         communication = mock(IConnectorForPlayer.class);
         persistence = mock(IGameStore.class);
         participantsPool = mock(ParticipantsPool.class);
         player = mock(IPlayerRoundListener.class);
         seeOtherFacilities = mock(SeeOtherFacilities.class);
         beerGame = mock(BeerGame.class);
+        when(connectorProvider.forPlayer()).thenReturn(communication);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {
                 bind(IGameStore.class).toInstance(persistence);
-                bind(IConnectorForPlayer.class).toInstance(communication);
+                bind(IConnectorProvider.class).toInstance(connectorProvider);
                 bind(IGUIHandler.class).annotatedWith(Names.named("SeeOtherFacilities")).toInstance(seeOtherFacilities);
                 //bind(ParticipantsPool.class).toInstance(participantsPool);
             }
