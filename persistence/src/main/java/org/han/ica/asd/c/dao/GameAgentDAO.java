@@ -76,6 +76,7 @@ public class GameAgentDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -100,6 +101,7 @@ public class GameAgentDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -130,6 +132,7 @@ public class GameAgentDAO{
                     }
             }
             conn.commit();
+            conn.close();
         } catch (GameIdNotSetException | SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -162,6 +165,7 @@ public class GameAgentDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);

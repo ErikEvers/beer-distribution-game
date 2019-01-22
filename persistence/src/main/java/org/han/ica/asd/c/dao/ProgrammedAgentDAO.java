@@ -52,6 +52,7 @@ public class ProgrammedAgentDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -85,6 +86,7 @@ public class ProgrammedAgentDAO {
                 programmedAgents.add(new ProgrammedAgent(rs.getString("ProgrammedAgentName"), programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(rs.getString("ProgrammedAgentName"))));
             }
             conn.commit();
+            conn.close();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -109,6 +111,7 @@ public class ProgrammedAgentDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
