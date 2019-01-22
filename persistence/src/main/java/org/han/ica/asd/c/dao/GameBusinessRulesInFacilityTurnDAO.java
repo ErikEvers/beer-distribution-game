@@ -53,6 +53,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 				}
 
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -80,6 +81,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 					gameBusinessRulesInFacilityTurn = createGameBusinessRulesInFacilityTurnModel(facilityId, gameAgentName, gameBusinessRules, rs);
 				}
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -120,6 +122,7 @@ public class GameBusinessRulesInFacilityTurnDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);

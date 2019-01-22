@@ -60,6 +60,7 @@ public class FacilityTypeDAO{
 
                     pstmt.executeUpdate();
                     conn.commit();
+                    conn.close();
                 } catch (SQLException e) {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                     databaseConnection.rollBackTransaction(conn);
@@ -90,6 +91,7 @@ public class FacilityTypeDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -111,6 +113,7 @@ public class FacilityTypeDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -133,6 +136,7 @@ public class FacilityTypeDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -160,6 +164,7 @@ public class FacilityTypeDAO{
                     }
                 }
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -182,6 +187,7 @@ public class FacilityTypeDAO{
                             rs.getInt("StartingBudget"), rs.getInt("StartingOrder"),rs.getInt("StartingStock"));
                 }
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);

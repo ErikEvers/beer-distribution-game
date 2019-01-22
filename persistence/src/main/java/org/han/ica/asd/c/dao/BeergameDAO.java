@@ -84,6 +84,7 @@ public class BeergameDAO {
 				pstmt.executeUpdate();
 				DaoConfig.setCurrentGameId(uuid);
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -123,7 +124,7 @@ public class BeergameDAO {
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
 				leaderDAO.insertLeader(beerGame.getLeader());
-
+				conn.close();
 
 				} catch (SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -157,6 +158,7 @@ public class BeergameDAO {
 					beerGames.add(new BeerGame(rs.getString(GAME_ID), rs.getString(GAME_NAME), rs.getString(GAME_DATE), rs.getString(GAME_END_DATE)));
 				}
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 				databaseConnection.rollBackTransaction(conn);
@@ -180,6 +182,7 @@ public class BeergameDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 				databaseConnection.rollBackTransaction(conn);
@@ -223,6 +226,7 @@ public class BeergameDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 				databaseConnection.rollBackTransaction(conn);
@@ -253,6 +257,7 @@ public class BeergameDAO {
 					}
 				}
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 			}
@@ -302,6 +307,7 @@ public class BeergameDAO {
 			}
 		}
 		conn.commit();
+		conn.close();
 	}
 
 

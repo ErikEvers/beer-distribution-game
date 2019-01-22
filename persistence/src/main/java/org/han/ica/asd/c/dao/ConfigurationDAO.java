@@ -66,6 +66,7 @@ public class ConfigurationDAO {
                 pstmt.executeUpdate();
 
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -102,6 +103,7 @@ public class ConfigurationDAO {
                         configurations.add(createConfigurationObject(rs));
                     }
                     conn.commit();
+                    conn.close();
                 }
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -130,6 +132,7 @@ public class ConfigurationDAO {
                     }
                 }
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -179,6 +182,7 @@ public class ConfigurationDAO {
 
                 pstmt.execute();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -199,6 +203,7 @@ public class ConfigurationDAO {
                 pstmt.setString(1, DaoConfig.getCurrentGameId());
                 pstmt.execute();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -225,6 +230,7 @@ public class ConfigurationDAO {
 
                     pstmt.execute();
                     conn.commit();
+                    conn.close();
                 } catch (SQLException | GameIdNotSetException e) {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                     databaseConnection.rollBackTransaction(conn);
@@ -248,6 +254,7 @@ public class ConfigurationDAO {
 
             pstmt.executeUpdate();
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -271,6 +278,7 @@ public class ConfigurationDAO {
                 packageLinkedFacilities(facilitiesLinkedTo, pstmt.executeQuery());
 
                 conn.commit();
+                conn.close();
             } catch (SQLException | GameIdNotSetException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -297,6 +305,7 @@ public class ConfigurationDAO {
 
                     pstmt.executeUpdate();
                     conn.commit();
+                    conn.close();
                 } catch (SQLException | GameIdNotSetException e) {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                     databaseConnection.rollBackTransaction(conn);
