@@ -40,7 +40,7 @@ public class FacilityTypeDAO{
      *
      * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to create a new FacilityTypeDB.
      */
-    public void createFacilityType(FacilityType facilityType) {
+    public synchronized void createFacilityType(FacilityType facilityType) {
         if (!readAllFacilityTypes().stream().anyMatch(type -> type.getFacilityName().equals(facilityType.getFacilityName()))) {
             Connection conn = databaseConnection.connect();
             if (conn != null) {
@@ -73,7 +73,7 @@ public class FacilityTypeDAO{
      *
      * @param facilityType A FacilityTypeDB domain_objects that contains all the data needed to update an existing FacilityTypeDB.
      */
-    public void updateFacilityType(FacilityType facilityType) {
+    public synchronized void updateFacilityType(FacilityType facilityType) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITYTYPE)) {
@@ -102,7 +102,7 @@ public class FacilityTypeDAO{
      *
      * @param gameId The identifier of the game from which all FacilityTypes have to be deleted.
      */
-    public void deleteAllFacilitytypesForABeergame(String gameId) {
+    public synchronized void deleteAllFacilitytypesForABeergame(String gameId) {
         Connection conn = databaseConnection.connect();
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITYTYPES_FOR_A_BEERGAME)) {
                 conn.setAutoCommit(false);
@@ -122,7 +122,7 @@ public class FacilityTypeDAO{
      *
      * @param facilityName The second part of the identifier of the FacilityTypeDB from witch a FacilityTypes has to be deleted.
      */
-    public void deleteSpecificFacilityType(String facilityName) {
+    public synchronized void deleteSpecificFacilityType(String facilityName) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITYTYPE)) {
@@ -145,7 +145,7 @@ public class FacilityTypeDAO{
      *
      * @return A list of FacilityTypes from a specific game.
      */
-    public List<FacilityType> readAllFacilityTypes() {
+    public synchronized List<FacilityType> readAllFacilityTypes() {
         Connection conn = databaseConnection.connect();
         ArrayList<FacilityType> types = new ArrayList<>();
         if (conn != null) {
@@ -168,7 +168,7 @@ public class FacilityTypeDAO{
         return types;
     }
 
-    public FacilityType readSpecificFacilityType(String facilityName) {
+    public synchronized FacilityType readSpecificFacilityType(String facilityName) {
         Connection conn = databaseConnection.connect();
         FacilityType type = null;
         if (conn != null) {
