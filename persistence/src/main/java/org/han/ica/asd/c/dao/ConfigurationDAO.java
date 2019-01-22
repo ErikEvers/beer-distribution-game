@@ -116,7 +116,7 @@ public class ConfigurationDAO {
      *
      * @return A configuration according to the gameId
      */
-    public Configuration readConfiguration() {
+    public synchronized Configuration readConfiguration() {
         Configuration configuration = null;
         Connection conn = databaseConnection.connect();
         if (conn != null) {

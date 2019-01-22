@@ -132,7 +132,7 @@ public class FacilityDAO {
      *
      * @return The facilities that have been retrieved from the database.
      */
-    public List<Facility> readAllFacilitiesInGame() {
+    public synchronized List<Facility> readAllFacilitiesInGame() {
         Connection conn = databaseConnection.connect();
         List<Facility> facilities = new ArrayList<>();
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_FACILITIES_IN_GAME)) {
