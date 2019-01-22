@@ -5,19 +5,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.function.UnaryOperator;
 
 
 public class GameSetupStartController {
 
     private static final int BASEROUNDNUMBER = 20;
-    private static final int BASEMINNUMBER = 1;
-    private static final int BASEMAXNUMBER = 50;
+    private static final int BASEMINNUMBER = 0;
+    private static final int BASEMAXNUMBER = 40;
 
     @Inject
     @Named("GameSetup")
@@ -63,6 +67,10 @@ public class GameSetupStartController {
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
      */
     public void initialize() {
+        UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
+        roundNumber.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEROUNDNUMBER, textFieldFilter));
+        minOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMINNUMBER, textFieldFilter));
+        maxOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMAXNUMBER, textFieldFilter));
         mainContainer.getChildren().addAll();
         backButton();
     }

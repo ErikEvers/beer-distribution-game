@@ -5,8 +5,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -124,6 +127,9 @@ public class GameSetupTypeController implements Initializable {
     @FXML
     private AnchorPane mainContainer;
 
+    @FXML
+		private AnchorPane facilitiesContainer;
+
     private Provider<Round> roundProvider;
 
     /**
@@ -146,6 +152,12 @@ public class GameSetupTypeController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         mainContainer.getChildren().addAll();
+        this.facilitiesContainer.getChildren().forEach(node -> {
+        	if(node instanceof TextField) {
+        		TextField field = ((TextField) node);
+						field.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), Integer.parseInt(field.getText()), NumberInputFormatter.getChangeUnaryOperator()));
+					}
+				});
     }
 
     /**
