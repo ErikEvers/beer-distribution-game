@@ -24,7 +24,7 @@ public interface IConnectorForLeader {
      */
     void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException;
 
-    void notifyNextRoundStart();
+    void notifyNextRoundStart() throws TransactionException;
 
     void sendGameStart(BeerGame beerGame) throws TransactionException;
 

@@ -131,8 +131,8 @@ public class GameMessageClient {
         new SendInTransaction(ips, gameStartMessage, gameMessageSender).sendToAllPlayers();
     }
 
-    public void sendNextRoundStart(String[] ips) {
+    public void sendNextRoundStart(String[] ips) throws TransactionException {
         NextRoundMessage nextRoundMessage = new NextRoundMessage();
-        new SendInTransaction(ips, nextRoundMessage, gameMessageSender);
+        new SendInTransaction(ips, nextRoundMessage, gameMessageSender).sendToAllPlayers();
     }
 }

@@ -260,6 +260,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
 
         try {
                 connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+                connectorForLeader.notifyNextRoundStart();
         } catch (TransactionException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
         }

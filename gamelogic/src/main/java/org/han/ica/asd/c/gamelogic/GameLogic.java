@@ -172,9 +172,6 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         curRoundId = newRound.getRoundId();
         persistence.updateRound(previousRound);
         persistence.createRound(newRound);
-        Thread thread = new Thread(this::sendRoundActionFromAgents);
-        thread.setDaemon(true);
-        thread.start();
     }
 
     @Override
@@ -187,7 +184,9 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
 
     @Override
     public void nextRoundStarted() {
-
+        Thread thread = new Thread(this::sendRoundActionFromAgents);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @Override
