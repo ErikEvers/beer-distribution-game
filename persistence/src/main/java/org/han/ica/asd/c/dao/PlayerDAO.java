@@ -152,7 +152,7 @@ public class PlayerDAO {
      *
      * @return Returns a list of the players found in the current game
      */
-    public List<Player> getAllPlayers() {
+    public synchronized List<Player> getAllPlayers() {
         List<Player> players = new ArrayList<>();
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(GET_ALL)) {
@@ -222,7 +222,7 @@ public class PlayerDAO {
      * @throws SQLException
      * Thrown when the resultset is empty
      */
-    private Player buildPlayer(ResultSet rs) throws SQLException {
+    private synchronized Player buildPlayer(ResultSet rs) throws SQLException {
         Player player = null;
         if (!rs.isClosed()) {
             player = new Player(

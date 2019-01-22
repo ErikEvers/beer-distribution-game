@@ -199,7 +199,7 @@ public class TreeBuilder {
 	 * @author Yarno Boelens
 	 */
 	private void installTooltip(Facility facility, FacilityRectangle rectangle) {
-		Round round = beerGame.getRounds().get(beerGame.getRounds().size()-1);
+		Round round = beerGame.getRounds().get(beerGame.getRounds().size()-2);
 		FacilityTurn facilityTurn = round.getFacilityTurnByFacilityId(facility.getFacilityId());
 		StringBuilder builder = new StringBuilder();
 		builder.append(facility.getFacilityType().getFacilityName());

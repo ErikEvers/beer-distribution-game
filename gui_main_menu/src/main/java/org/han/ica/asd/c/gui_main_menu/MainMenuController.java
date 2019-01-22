@@ -97,6 +97,5 @@ public class MainMenuController {
     public void onSelectionChanged(ActionEvent actionEvent) {
         String value = chooseIpComboBox.getValue();
         connector.setMyIp(value.substring(value.indexOf(": ") + 2));
-        System.out.println(value.substring(value.indexOf(": ") + 2));
     }
 }

@@ -161,7 +161,7 @@ public class FacilityDAO {
      * @param facilityId The data required to retrieve a specific Facility.
      * @return The retrieved facility from the database.
      */
-    public Facility readSpecificFacility(int facilityId) {
+    public synchronized Facility readSpecificFacility(int facilityId) {
     	if(facilityId == 0) {
     		return null;
 		}

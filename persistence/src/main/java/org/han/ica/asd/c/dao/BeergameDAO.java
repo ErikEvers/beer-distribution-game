@@ -191,7 +191,7 @@ public class BeergameDAO {
 	 * A method which returns a single beergame
 	 * @return A beergame object
 	 */
-	public BeerGame getGameLog() {
+	public synchronized BeerGame getGameLog() {
 		Connection conn = databaseConnection.connect();
 		BeerGame beergame = null;
 		beergame = getBeerGame(conn, beergame, READ_BEERGAME);
@@ -237,7 +237,7 @@ public class BeergameDAO {
 	 * @param readOngoingBeergame
 	 * @return
 	 */
-	private BeerGame getBeerGame(Connection conn, BeerGame beergame, String readOngoingBeergame) {
+	private synchronized BeerGame getBeerGame(Connection conn, BeerGame beergame, String readOngoingBeergame) {
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
 				conn.setAutoCommit(false);

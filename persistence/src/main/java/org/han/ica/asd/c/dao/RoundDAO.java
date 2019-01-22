@@ -89,13 +89,13 @@ public class RoundDAO {
 	 * Updates a single round in the database
 	 * @param round
 	 */
-	public void updateRound(Round round) {
-		round.getFacilityTurnDelivers().forEach(facilityTurnDeliver -> updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver));
+	public synchronized void updateRound(Round round) {
+		round.getFacilityTurns().forEach(facilityTurn -> updateFacilityTurn(round.getRoundId(), facilityTurn));
 		round.getFacilityOrders().forEach(facilityTurnOrder -> updateFacilityOrder(round.getRoundId(),facilityTurnOrder));
 		round.getFacilityTurnDelivers().forEach(facilityTurnDeliver -> updateFacilityDeliver(round.getRoundId(),facilityTurnDeliver));
 	}
 
-	private void updateFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
+	private synchronized void updateFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
 		if(getFacilityDeliversInRound(roundId).stream().filter(turn -> turn.getFacilityId() == facilityTurnDeliver.getFacilityId() && turn.getFacilityIdDeliverTo() == facilityTurnDeliver.getFacilityIdDeliverTo()).findFirst().isPresent()) {
 			Connection conn = databaseConnection.connect();
 			if (conn != null) {
@@ -122,7 +122,7 @@ public class RoundDAO {
 		}
 	}
 
-	private void updateFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder) {
+	private synchronized void updateFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder) {
 		if(getFacilityOrdersInRound(roundId).stream().filter(turn -> turn.getFacilityId() == facilityTurnOrder.getFacilityId() && turn.getFacilityIdOrderTo() == facilityTurnOrder.getFacilityIdOrderTo()).findFirst().isPresent()) {
 			Connection conn = databaseConnection.connect();
 			if (conn != null) {
@@ -148,7 +148,7 @@ public class RoundDAO {
 		}
 	}
 
-	private void updateFacilityTurn(int roundId, FacilityTurn facilityTurn) {
+	private synchronized void updateFacilityTurn(int roundId, FacilityTurn facilityTurn) {
 		if (getFacilitiesInRound(roundId).stream().map(FacilityTurn::getFacilityId).collect(Collectors.toList()).contains(facilityTurn.getFacilityId())) {
 			Connection conn = databaseConnection.connect();
 			if (conn != null) {
@@ -182,7 +182,7 @@ public class RoundDAO {
 	 *
 	 * @param roundId The id of the round which needs to be deleted
 	 */
-	public void deleteRound(int roundId) {
+	public synchronized void deleteRound(int roundId) {
 		deleteFacilityDelivers(roundId);
 		deleteFacilityOrders(roundId);
 		deleteFacilityTurns(roundId);
@@ -198,7 +198,7 @@ public class RoundDAO {
 	 * @param roundId The id of the specific round which needs to be returned
 	 * @return A round object
 	 */
-	public Round getRound(int roundId) {
+	public synchronized Round getRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		Round round = null;
 		if (conn != null) {
@@ -226,7 +226,7 @@ public class RoundDAO {
 		return round;
 	}
 
-	public List<FacilityTurnOrder> getFacilityOrdersInRound(int roundId) {
+	public synchronized List<FacilityTurnOrder> getFacilityOrdersInRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		List<FacilityTurnOrder> orders = new ArrayList<>();
 		if (conn != null) {
@@ -253,7 +253,7 @@ public class RoundDAO {
 		return orders;
 	}
 
-	public List<FacilityTurnDeliver> getFacilityDeliversInRound(int roundId) {
+	public synchronized List<FacilityTurnDeliver> getFacilityDeliversInRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		List<FacilityTurnDeliver> delivers = new ArrayList<>();
 		if (conn != null) {
@@ -282,7 +282,7 @@ public class RoundDAO {
 		return delivers;
 	}
 
-	public List<FacilityTurn> getFacilitiesInRound(int roundId) {
+	public synchronized List<FacilityTurn> getFacilitiesInRound(int roundId) {
 		Connection conn = databaseConnection.connect();
 		List<FacilityTurn> facilities = new ArrayList<>();
 		if (conn != null) {
@@ -309,7 +309,7 @@ public class RoundDAO {
 		return facilities;
 	}
 
-	public void createFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder) {
+	public synchronized void createFacilityOrder(int roundId, FacilityTurnOrder facilityTurnOrder) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYORDER)) {
@@ -331,7 +331,7 @@ public class RoundDAO {
 		}
 	}
 
-	public void createFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
+	public synchronized void createFacilityDeliver(int roundId, FacilityTurnDeliver facilityTurnDeliver) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYDELIVER)) {
@@ -354,7 +354,7 @@ public class RoundDAO {
 		}
 	}
 
-	public void createFacilityTurn(int roundId, FacilityTurn facilityTurn) {
+	public synchronized void createFacilityTurn(int roundId, FacilityTurn facilityTurn) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITYTURN)) {
@@ -378,7 +378,7 @@ public class RoundDAO {
 		}
 	}
 
-	public List<Round> getRounds() {
+	public synchronized List<Round> getRounds() {
 		Connection conn = databaseConnection.connect();
 		List<Round> rounds = new ArrayList<>();
 		Round round;
@@ -403,7 +403,7 @@ public class RoundDAO {
 		return rounds;
 	}
 
-	private Round createRoundModel(ResultSet rs) throws SQLException {
+	private synchronized Round createRoundModel(ResultSet rs) throws SQLException {
 		Round round = new Round();
 		round.setRoundId(rs.getInt(ROUND_ID));
 		round.setFacilityOrders(getFacilityOrdersInRound(round.getRoundId()));
@@ -412,18 +412,18 @@ public class RoundDAO {
 		return round;
 	}
 
-	public void deleteFacilityOrders(int roundId) {
+	public synchronized void deleteFacilityOrders(int roundId) {
 		Connection conn = databaseConnection.connect();
 		executePreparedStatement(roundId, conn, DELETE_ORDERS);
 
 	}
 
-	public void deleteFacilityDelivers(int roundId) {
+	public synchronized void deleteFacilityDelivers(int roundId) {
 		Connection conn = databaseConnection.connect();
 		executePreparedStatement(roundId, conn, DELETE_DELIVERS);
 	}
 
-	public void deleteFacilityTurns(int roundId) {
+	public synchronized void deleteFacilityTurns(int roundId) {
 		Connection conn = databaseConnection.connect();
 		executePreparedStatement(roundId, conn, DELETE_FACILITIES);
 	}

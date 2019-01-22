@@ -10,15 +10,21 @@ import org.han.ica.asd.c.model.domain_objects.Player;
 import java.util.ResourceBundle;
 
 public class PlayGameSetupScreen implements IGUIHandler {
-
+    private boolean setInAgent;
+    private boolean isBackAction;
+    private int roundId;
     private static final String RESOURCE_BUNDLE = "languageResources";
 
-    @Inject @Named("PlayerComponent")
+    @Inject
+    @Named("PlayerComponent")
     IPlayerComponent playerComponent;
 
     @Override
     public void setData(Object[] data) {
-        // not used in this handler
+        setInAgent = (boolean) data[0];
+        roundId = (int) data[1];
+        isBackAction = (boolean) data[2];
+
     }
 
     @Override
@@ -36,9 +42,9 @@ public class PlayGameSetupScreen implements IGUIHandler {
             playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameRetailer.fxml"));
         } else {
             playGame = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle(RESOURCE_BUNDLE), getClass().getResource("/fxml/PlayGameFacilities.fxml"));
-            ((PlayGameFacilitiesController)playGame).setLblFacilitiesText(facilityNamePlayedByPlayer);
+            ((PlayGameFacilitiesController) playGame).setLblFacilitiesText(facilityNamePlayedByPlayer);
         }
-
+        playGame.setAgentInUse(setInAgent,roundId,isBackAction);
         playerComponent.setUi(playGame);
     }
 }

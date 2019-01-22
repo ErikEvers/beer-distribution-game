@@ -6,10 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
-import org.han.ica.asd.c.model.domain_objects.Facility;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,12 +21,11 @@ public class SelectAgentController {
     @FXML
     Button selectAgentButton;
     @FXML
-    Button rejoinGame;
-    @FXML
     Label headerText;
+    @FXML
+    Button backButton;
 
     @Inject
-    @Named("BusinessruleStore")
     IBusinessRuleStore iBusinessRuleStore;
 
     @Inject
@@ -37,9 +36,9 @@ public class SelectAgentController {
     @Named("PlayGame")
     IGUIHandler playGameFactory;
 
-    private ObservableList<String> items = FXCollections.observableArrayList();
+    private int roundId;
 
-    private Facility facility;
+    private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
         list.setItems(items);
@@ -48,28 +47,21 @@ public class SelectAgentController {
             items.addAll(agents);
         }
     }
+
     @FXML
     public void selectAgentButtonAction() {
         Object selectedAgent = list.getSelectionModel().getSelectedItem();
-        iPlayerComponent.activateAgent();
-        headerText.setText("Agent selected: " +selectedAgent.toString());
-        list.setVisible(false);
-        selectAgentButton.setVisible(false);
-        rejoinGame.setVisible(true);
-    }
-
-    @FXML
-    public void handleMouseClickOnList() {
-        if (list.getSelectionModel().getSelectedItem() != null) {
-        }
-    }
-
-    public void rejoinGameButtonAction() {
-        iPlayerComponent.activatePlayer();
+        iPlayerComponent.activateAgent(iBusinessRuleStore.getProgrammedGameAgent(selectedAgent.toString()));
+        playGameFactory.setData(new Object[]{true,roundId,false});
         playGameFactory.setupScreen();
     }
 
-    public void setFacility(Facility facility){
-        this.facility = facility;
+    public void setRoundId(int roundId) {
+        this.roundId = roundId;
+    }
+
+    public void backButtonAction() {
+        playGameFactory.setData(new Object[]{false,roundId,true});
+        playGameFactory.setupScreen();
     }
 }

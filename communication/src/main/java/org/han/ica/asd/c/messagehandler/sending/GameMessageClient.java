@@ -4,12 +4,14 @@ import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.exceptions.communication.LeaderNotPresentException;
+
 import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameEndMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
+import org.han.ica.asd.c.messagehandler.messagetypes.NextRoundMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RequestGameDataMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.RoundModelMessage;
 import org.han.ica.asd.c.messagehandler.messagetypes.TurnModelMessage;
-import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
-
 import org.han.ica.asd.c.messagehandler.messagetypes.WhoIsTheLeaderMessage;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -66,7 +68,7 @@ public class GameMessageClient {
     public String sendWhoIsTheLeaderMessage(String ip) throws SendGameMessageException, LeaderNotPresentException {
         WhoIsTheLeaderMessage whoIsTheLeaderMessage = new WhoIsTheLeaderMessage();
         WhoIsTheLeaderMessage response = gameMessageSender.sendGameMessageGeneric(ip, whoIsTheLeaderMessage);
-        if (response.getException() != null){
+        if (response.getException() != null) {
             throw (LeaderNotPresentException) response.getException();
         }
         return response.getResponse();
@@ -95,7 +97,7 @@ public class GameMessageClient {
     /**
      * This method sends the handled round data back to every peer.
      *
-     * @param ips        The ips to send the round to.
+     * @param ips       The ips to send the round to.
      * @param prevRound The previous round object.
      * @param prevRound The new round object.
      */
@@ -122,5 +124,15 @@ public class GameMessageClient {
      */
     public void linkGameMessageSenderToSocketClient(SocketClient socketClient) {
         gameMessageSender = new GameMessageSender(socketClient);
+    }
+
+    public void sendGameEndToAllPlayers(String[] ips, Round round) throws TransactionException {
+        GameEndMessage gameStartMessage = new GameEndMessage(round);
+        new SendInTransaction(ips, gameStartMessage, gameMessageSender).sendToAllPlayers();
+    }
+
+    public void sendNextRoundStart(String[] ips) {
+        NextRoundMessage nextRoundMessage = new NextRoundMessage();
+        new SendInTransaction(ips, nextRoundMessage, gameMessageSender);
     }
 }

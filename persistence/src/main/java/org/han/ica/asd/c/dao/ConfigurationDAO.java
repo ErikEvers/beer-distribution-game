@@ -30,7 +30,7 @@ public class ConfigurationDAO {
     private static final String DELETE_CONFIGURATION = "DELETE FROM Configuration WHERE GameId = ?;";
     private static final String GET_LOWER_LINKED_FACILITIES = "SELECT FacilityIdOrdering, FacilityIdDelivering FROM FacilityLinkedTo WHERE GameId = ?;";
     private static final String SET_LOWER_LINKED_FACILITIES = "INSERT INTO FacilityLinkedTo VALUES (?,?,?)";
-    private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdOrdering = ?, FacilityIdDelivering = ? WHERE GameId = ?;";
+    private static final String UPDATE_LOWER_LINKED_FACILITIES = "UPDATE FacilityLinkedTo SET FacilityIdDelivering = ? WHERE GameId = ? AND FacilityIdOrdering = ?;";
     private static final String DELETE_FACILITY_LINKS = "DELETE FROM FacilityLinkedTo WHERE GameId = ?;";
     private static final Logger LOGGER = Logger.getLogger(ConfigurationDAO.class.getName());
 
@@ -153,7 +153,7 @@ public class ConfigurationDAO {
                 rs.getBoolean("ContinuePlayingWhenBankrupt"), rs.getBoolean("InsightFacilities"),
                 facilityDAO.readAllFacilitiesInGame(),
                 readFacilityLinks()
-                );
+        );
     }
 
     /**
@@ -179,7 +179,6 @@ public class ConfigurationDAO {
 
                 pstmt.execute();
                 conn.commit();
-                updateFacilityLinks(configuration.getFacilitiesLinkedTo());
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -214,9 +213,9 @@ public class ConfigurationDAO {
      */
     public void createFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         facilitiesLinkedTo.forEach((higherFacility, lowerFacilityList) -> lowerFacilityList.forEach(lowerFacility -> {
+
             Connection conn = databaseConnection.connect();
             if (conn != null) {
-
                 try (PreparedStatement pstmt = conn.prepareStatement(SET_LOWER_LINKED_FACILITIES)) {
                     conn.setAutoCommit(false);
 
@@ -232,6 +231,7 @@ public class ConfigurationDAO {
                 }
 
             }
+                
         }));
     }
 
@@ -256,8 +256,8 @@ public class ConfigurationDAO {
 
     /**
      * Takes all facility links from the database
-     * @return
-     * Returns a map of facility links
+     *
+     * @return Returns a map of facility links
      */
     public Map<Facility, List<Facility>> readFacilityLinks() {
         Connection conn = databaseConnection.connect();
@@ -281,6 +281,7 @@ public class ConfigurationDAO {
 
     /**
      * Updates the already existing facility links with the ones in the given Map
+     *
      * @param facilitiesLinkedTo Map with the updated facility links
      */
     public void updateFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
@@ -290,9 +291,9 @@ public class ConfigurationDAO {
                 try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LOWER_LINKED_FACILITIES)) {
                     conn.setAutoCommit(false);
 
-                    pstmt.setInt(1, higherFacility.getFacilityId());
-                    pstmt.setInt(2, lowerFacility.getFacilityId());
-                    DaoConfig.gameIdNotSetCheck(pstmt, 3);
+                    pstmt.setInt(1, lowerFacility.getFacilityId());
+                    DaoConfig.gameIdNotSetCheck(pstmt, 2);
+                    pstmt.setInt(3, higherFacility.getFacilityId());
 
                     pstmt.executeUpdate();
                     conn.commit();
