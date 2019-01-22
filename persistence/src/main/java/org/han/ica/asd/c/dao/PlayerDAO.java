@@ -222,7 +222,7 @@ public class PlayerDAO {
      * @throws SQLException
      * Thrown when the resultset is empty
      */
-    private Player buildPlayer(ResultSet rs) throws SQLException {
+    private synchronized Player buildPlayer(ResultSet rs) throws SQLException {
         Player player = null;
         if (!rs.isClosed()) {
             player = new Player(
