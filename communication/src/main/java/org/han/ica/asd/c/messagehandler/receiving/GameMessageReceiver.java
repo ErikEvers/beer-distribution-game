@@ -187,7 +187,7 @@ public class GameMessageReceiver {
                     });
                     t.setDaemon(true);
                     t.start();
-                    
+
                     roundModelMessage.createResponseMessage();
                     return roundModelMessage;
                 } else if (observer instanceof IGameStartObserver && transactionMessage.getMessageType() == GAME_START_MESSAGE) {

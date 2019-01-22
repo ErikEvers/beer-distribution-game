@@ -51,38 +51,38 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
     }
 
     @Override
-    public void saveFacilityTurn(Round data) {
+    public synchronized void saveFacilityTurn(Round data) {
         saveRoundData(data);
     }
 
     @Override
-    public Round fetchFacilityTurn(int roundId) {
+    public synchronized Round fetchFacilityTurn(int roundId) {
         return fetchRoundData(roundId);
     }
 
     @Override
-    public void saveRoundData(Round rounddata) {
+    public synchronized void saveRoundData(Round rounddata) {
         roundDAO.createRound(rounddata);
     }
 
     @Override
-    public void updateEndGame() {
+    public synchronized void updateEndGame() {
         beergameDAO.updateEnddate();
 
     }
 
     @Override
-    public Round fetchRoundData(int roundId) {
+    public synchronized Round fetchRoundData(int roundId) {
         return roundDAO.getRound(roundId);
     }
 
     @Override
-    public BeerGame getGameLog() {
+    public synchronized BeerGame getGameLog() {
         return beergameDAO.getGameLog();
     }
 
     @Override
-    public void saveGameLog(BeerGame beerGame, boolean isStarted) {
+    public synchronized void saveGameLog(BeerGame beerGame, boolean isStarted) {
         if (isStarted) {
             roundDAO.createRound(beerGame.getRoundById(beerGame.getRounds().size() - 1));
         } else {
@@ -91,32 +91,32 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
     }
 
     @Override
-    public void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
+    public synchronized void logUsedBusinessRuleToCreateOrder(GameBusinessRulesInFacilityTurn gameBusinessRulesInFacilityTurn) {
         gameBusinessRulesInFacilityTurnDAO.createTurn(gameBusinessRulesInFacilityTurn);
     }
 
     @Override
-    public Player getPlayerById(String playerId) {
+    public synchronized Player getPlayerById(String playerId) {
         return playerDAO.getPlayer(playerId);
     }
 
 	@Override
-	public void saveSelectedAgent(ProgrammedAgent agent) {
+	public synchronized void saveSelectedAgent(ProgrammedAgent agent) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void saveNewLeader(Player newLeader) {
+	public synchronized void saveNewLeader(Player newLeader) {
 		leaderDAO.insertLeader(new Leader(newLeader));
 	}
 
 	@Override
-	public void updateRound(Round round) {
+	public synchronized void updateRound(Round round) {
 		roundDAO.updateRound(round);
 	}
 
 	@Override
-	public void createRound(Round round) {
+	public synchronized void createRound(Round round) {
 		roundDAO.createRound(round);
 	}
 
@@ -125,7 +125,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	 * @inheritDoc
 	 */
 	@Override
-	public List<Facility> getAllFacilities() {
+	public synchronized List<Facility> getAllFacilities() {
 		return facilityDAO.readAllFacilitiesInGame();
 	}
 
@@ -133,7 +133,7 @@ public class Persistence implements IBusinessRuleLogger, IGameStore, IPersistenc
 	 * @inheritDoc
 	 */
 	@Override
-	public List<BeerGame> getAllBeerGames(){
+	public synchronized List<BeerGame> getAllBeerGames(){
 		return beergameDAO.readBeergames();
 	}
 
