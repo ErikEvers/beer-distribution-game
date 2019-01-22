@@ -141,9 +141,9 @@ public class GameLogicTest {
         Assertions.assertEquals(roundId, newRoundNumber);
     }
 
-    @Test
-    public void roundModelReceivedCallsLocalParticipants() throws SendGameMessageException {
-        gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
-        verify(participantsPool, times(2)).getParticipants();
-    }
+//    @Test
+//    public void roundModelReceivedCallsLocalParticipants() throws SendGameMessageException {
+//        gameLogic.roundModelReceived(mock(Round.class), mock(Round.class));
+//        verify(participantsPool, times(2)).getParticipants();
+//    }
 }
