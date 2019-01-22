@@ -456,6 +456,7 @@ public class RoundDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
