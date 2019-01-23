@@ -25,7 +25,7 @@ public class LeaderDAO {
 	@Inject
 	PlayerDAO playerDAO;
 
-	public void insertLeader(Leader leader) {
+	public synchronized void insertLeader(Leader leader) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(CREATE_LEADER)) {
@@ -41,6 +41,7 @@ public class LeaderDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -48,7 +49,7 @@ public class LeaderDAO {
 		}
 	}
 
-	public Leader getLeader() {
+	public synchronized Leader getLeader() {
 		Leader leader = null;
 		Connection conn = databaseConnection.connect();
 
@@ -66,6 +67,7 @@ public class LeaderDAO {
 				}
 			}
 			conn.commit();
+			conn.close();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.toString(), e);
 			databaseConnection.rollBackTransaction(conn);
@@ -74,7 +76,7 @@ public class LeaderDAO {
 		return leader;
 	}
 
-	public void updateLeader(Leader leader) {
+	public synchronized void updateLeader(Leader leader) {
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_LEADER)) {
@@ -90,6 +92,7 @@ public class LeaderDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);

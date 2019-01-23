@@ -25,8 +25,7 @@ public class FaultHandlerLeader {
     private boolean iAmDisconnected;
     private List<IConnectorObserver> observers;
 
-    @Inject
-    private static Logger logger;
+    private static final Logger logger = Logger.getLogger(FaultHandlerLeader.class.getName());
 
     FaultHandlerLeader() {
         amountOfFailsPerIp = new HashMap<>();

@@ -8,6 +8,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_configure_game.graph.EdgeLine;
@@ -83,8 +84,11 @@ public class GameSetupController implements Initializable {
     private Configuration configuration;
     private String gameName = "";
     private boolean onlineGame = true;
+    private String password = "";
 
 
+    @FXML
+    private TextField presetName;
     @FXML
     private ComboBox<GraphFacility> comboBox;
 
@@ -118,6 +122,10 @@ public class GameSetupController implements Initializable {
 
     void setGameName(String gameName) {
         this.gameName = gameName;
+    }
+
+    void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -448,10 +456,13 @@ public class GameSetupController implements Initializable {
      */
     @FXML
     private void setBackButtonAction() {
-        Object[] data = new Object[3];
+        Object[] data = new Object[4];
         data[0] = configuration;
         data[1] = gameName;
         data[2] = onlineGame;
+        if (password.equals("")) {
+           data[3] = password;
+        }
         gameSetupStart.setData(data);
         gameSetupStart.setupScreen();
     }
@@ -470,10 +481,13 @@ public class GameSetupController implements Initializable {
     private void setNextScreen() {
         if (graphToFacilityChecker.oneOfEverything(graph) && graphToFacilityChecker.graphChecker(graph.getFacilities())) {
             fillConfiguration();
-            Object[] data = new Object[3];
+            Object[] data = new Object[4];
             data[0] = configuration;
             data[1] = gameName;
             data[2] = onlineGame;
+            if(!password.equals("")) {
+            	data[3] = password;
+						}
             gameSetupType.setData(data);
             gameSetupType.setupScreen();
         } else {
@@ -624,6 +638,10 @@ public class GameSetupController implements Initializable {
 
     public void drawPresetSelected() throws IOException {
 
+
+    }
+
+    public void savePreset(){
 
     }
 

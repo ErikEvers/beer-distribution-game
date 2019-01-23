@@ -14,37 +14,12 @@ public class RoundCalculator {
     public RoundCalculator() {
     }
 
-    public Round calculateRound(Round round, BeerGame beerGame) {
+    public Round calculateRound(Round previousRound, Round round, BeerGame beerGame) {
         Round outcome = new Round();
 
-        outcome.setRoundId(round.getRoundId() + 1);
+        outcome.setRoundId(round.getRoundId());
 
-        List<FacilityTurn> outcomeList = round.getFacilityTurns();
-
-        int lower = beerGame.getConfiguration().getMinimalOrderRetail();
-        int upper = beerGame.getConfiguration().getMaximumOrderRetail();
-
-        for(FacilityTurn facilityTurn : outcomeList) {
-            FacilityType facilityType = beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType();
-
-            if(facilityType.getFacilityName().equals("Retailer")) {
-                round.getFacilityOrders().add(new FacilityTurnOrder(
-                    facilityTurn.getFacilityId(),
-                    facilityTurn.getFacilityId(),
-                    ((int)(Math.random() * (upper - lower)) + lower)
-                ));
-
-                //TODO: move to prevent costs
-                if(facilityTurn.getBackorders() > 0) {
-                    round.getFacilityTurnDelivers().add(new FacilityTurnDeliver(
-                        facilityTurn.getFacilityId(),
-                        facilityTurn.getFacilityId(),
-                        0,
-                        facilityTurn.getBackorders()
-                    ));
-                }
-            }
-        }
+        List<FacilityTurn> outcomeList = previousRound.getFacilityTurns();
 
         for(FacilityTurnDeliver facilityTurnDeliver : round.getFacilityTurnDelivers()) {
             FacilityTurn curDeliverer = outcomeList.stream().filter(facilityTurn -> facilityTurn.getFacilityId() == facilityTurnDeliver.getFacilityId()).findFirst().orElse(null);
@@ -77,6 +52,21 @@ public class RoundCalculator {
             }
         }
 
+        for(FacilityTurn facilityTurn : outcomeList) {
+            FacilityType facilityType = beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType();
+
+            if(facilityType.getFacilityName().equals("Retailer")) {
+                if(facilityTurn.getBackorders() > 0) {
+                    int delivery = facilityTurn.getBackorders() - (facilityTurn.getBackorders() - facilityTurn.getStock());
+                    if(delivery < 0) {
+                        delivery = facilityTurn.getBackorders();
+                    }
+                    facilityTurn.setStock(facilityTurn.getStock() - delivery);
+                    facilityTurn.setBackorders(facilityTurn.getBackorders() - delivery);
+                    facilityTurn.setRemainingBudget(calculateIncomingGoodsCosts(facilityTurn, beerGame.getFacilityById(facilityTurn.getFacilityId()).getFacilityType(), delivery));
+                }
+            }
+        }
 
         for(FacilityTurn facilityTurn : outcomeList) {
 
@@ -95,6 +85,8 @@ public class RoundCalculator {
                 facilityTurn.isBankrupt()
             ));
         }
+        outcome.setFacilityTurnDelivers(round.getFacilityTurnDelivers());
+        outcome.setFacilityOrders(round.getFacilityOrders());
 
         return outcome;
     }

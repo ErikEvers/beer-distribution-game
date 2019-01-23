@@ -1,6 +1,5 @@
 package org.han.ica.asd.c;
 
-import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.exceptions.communication.DiscoveryException;
 import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
@@ -11,11 +10,13 @@ import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.exceptions.NodeCantBeReachedException;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.gameleader.GameLeader;
+import org.han.ica.asd.c.gamelogic.GameLogic;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
-import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectorForPlayer;
+import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.messagehandler.receiving.GameMessageReceiver;
 import org.han.ica.asd.c.messagehandler.sending.GameMessageClient;
@@ -26,11 +27,11 @@ import org.han.ica.asd.c.model.domain_objects.Leader;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import org.han.ica.asd.c.model.domain_objects.Round;
+import org.han.ica.asd.c.model.interface_models.ElectionModel;
 import org.han.ica.asd.c.socketrpc.SocketServer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,7 +50,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConnectorForLeader {
+public class Connector implements IConnectorForSetup, IConnectorForPlayer, IConnectorForLeader, IConnectorForLeaderElection {
     private static Connector instance = null;
     private static String leaderIp = null;
 
@@ -244,8 +245,28 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         gameMessageClient.sendTurnModel(leader.getPlayer().getIpAddress(), turn);
     }
 
+    @Override
+    public ElectionModel sendElectionMessage(ElectionModel election, Player player) {
+        return null;
+    }
+
+    @Override
+    public void sendVictoryMessage(Player victory, Player player) {
+
+    }
+
     public void addObserver(IConnectorObserver observer) {
+        if (observer instanceof GameLogic){
+            observers = (ArrayList<IConnectorObserver>) observers.stream().filter(i -> !(i instanceof GameLogic)).collect(Collectors.toList());
+        }
         observers.add(observer);
+        faultDetector.setObservers(observers);
+        GameMessageReceiver.setObservers(observers);
+    }
+
+    @Override
+    public void removeObserver(IConnectorObserver observer) {
+        observers.remove(observer);
         faultDetector.setObservers(observers);
         GameMessageReceiver.setObservers(observers);
     }
@@ -260,8 +281,12 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
     public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
         //initNodeInfoList();
         List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
-
         gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
+    }
+
+    public void notifyNextRoundStart() throws TransactionException {
+        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        gameMessageClient.sendNextRoundStart(ips.toArray(new String[0]));
     }
 
     public void initNodeInfoList() {
@@ -298,6 +323,13 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         gameMessageClient.sendStartGameToAllPlayers(ips.toArray(new String[0]), beerGame);
     }
 
+    @Override
+    public void sendGameEnd(BeerGame beerGame, Round previousRoundData) throws TransactionException {
+        List<String> ips = beerGame.getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        gameMessageClient.sendGameEndToAllPlayers(ips.toArray(new String[0]), previousRoundData);
+    }
+
+
     public NodeInfoList getIps() {
         return nodeInfoList;
     }
@@ -319,6 +351,23 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
         try (BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()))) {
             ip = in.readLine();
         }
+        return ip;
+    }
+
+    /**
+     * Gets the local ip4 address from ethernet connection.
+     *
+     * @return The IP.
+     */
+    private String getInternalIP() {
+        String ip = null;
+
+        try {
+            ip = getIpOfInterFace(NetworkInterface.getNetworkInterfaces());
+        } catch (SocketException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
         return ip;
     }
 
@@ -376,7 +425,7 @@ public class Connector implements IConnectorForSetup, IConnectedForPlayer, IConn
             InetAddress ip = addresses.nextElement();
             if (ip instanceof Inet4Address) {
                 String displayName = networkInterface.getDisplayName();
-                if (!displayName.contains("Virtual")) {
+                if(!displayName.contains("Virtual") || "LogMeIn Hamachi Virtual Ethernet Adapter".equals(displayName)) {
                     String ipAddress = ip.getHostAddress();
                     ips.put(networkInterface.getName(), ipAddress);
                 }

@@ -85,11 +85,11 @@ public class FailLog {
     int getSuccessSize() {
         List<String> list = nodeInfoList.getActiveIpsWithoutLeader();
         successSize = list.size();
-            for (String ip : list) {
-                if (checkIfIpIsFailed(ip)) {
-                    successSize--;
-                }
+        for (String ip : list) {
+            if (checkIfIpIsFailed(ip)) {
+                successSize--;
             }
+        }
         return successSize;
     }
 
