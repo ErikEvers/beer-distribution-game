@@ -58,22 +58,24 @@
                       <Insets left="5.0" />
                     </GridPane.margin>
                   </Rectangle>
-                  <Label prefHeight="17.0" prefWidth="87.0" text="Warehouse">
+                  <Label prefHeight="17.0" prefWidth="87.0" text="%regional_warehouse">
+                    <GridPane.margin>
+                      <Insets left="66.0" />
+                    </GridPane.margin>
+
+                  </Label>
+                  <Label prefHeight="17.0" prefWidth="104.0" text="%factory" GridPane.rowIndex="1">
+                    <GridPane.margin>
+                      <Insets left="66.0" />
+                    </GridPane.margin>
+
+                  </Label>
+                  <Label text="%wholesale" GridPane.columnIndex="1">
                     <GridPane.margin>
                       <Insets left="66.0" />
                     </GridPane.margin>
                   </Label>
-                  <Label prefHeight="17.0" prefWidth="104.0" text="Factory" GridPane.rowIndex="1">
-                    <GridPane.margin>
-                      <Insets left="66.0" />
-                    </GridPane.margin>
-                  </Label>
-                  <Label text="Wholesaler" GridPane.columnIndex="1">
-                    <GridPane.margin>
-                      <Insets left="66.0" />
-                    </GridPane.margin>
-                  </Label>
-                  <Label text="Retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label text="%retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <GridPane.margin>
                       <Insets left="66.0" />
                     </GridPane.margin>

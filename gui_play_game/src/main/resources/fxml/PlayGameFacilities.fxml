@@ -35,12 +35,12 @@
                         <Font size="50.0" />
                     </font>
                 </Label>
-                <Label text="Incoming goods next round:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <Label text="%incoming_goods_next_round" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets bottom="50.0" left="30.0" />
                     </GridPane.margin>
                 </Label>
-                <Label text="Incoming orders next round:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                <Label text="%incoming_orders_next_round" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="30.0" top="60.0" />
                     </GridPane.margin>
@@ -58,15 +58,15 @@
                     </rowConstraints>
                     <children>
 
-                        <Button mnemonicParsing="false" onAction="#handleSendOrderButtonClick" style="-fx-background-color: #ff8000;" text="Send order" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                        <Button mnemonicParsing="false" onAction="#handleSendDeliveryButtonClick" style="-fx-background-color: #ff8000;" text="Send delivery" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#handleSendOrderButtonClick" style="-fx-background-color: #ff8000;" text="%send_order" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#handleSendDeliveryButtonClick" style="-fx-background-color: #ff8000;" text="%send_delivery" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
 
                         <TextField fx:id="txtOutgoingDelivery" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                         <TextField fx:id="outgoingOrderTextField" layoutX="39.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets bottom="60.0" />
                             </GridPane.margin></TextField>
-                        <Label text="Choose outgoing delivery:" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                        <Label text="%choose_outgoing_delivery" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                             <GridPane.margin>
                                 <Insets bottom="60.0" left="30.0" />
                             </GridPane.margin>
@@ -79,12 +79,12 @@
                                 <Insets left="50.0" top="125.0" />
                             </GridPane.margin>
                         </ComboBox>
-                        <Label text="To:">
+                        <Label text="%to">
                             <padding>
                                 <Insets left="30.0" top="75.0" />
                             </padding>
                         </Label>
-                        <Label text="Outgoing order:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                        <Label text="%outgoing_order" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                             <GridPane.margin>
                                 <Insets left="30.0" top="25.0" />
                             </GridPane.margin>
@@ -94,12 +94,12 @@
                                 <Insets bottom="55.0" left="50.0" />
                             </GridPane.margin>
                         </ComboBox>
-                        <Label text="To:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                        <Label text="%to" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                             <GridPane.margin>
                                 <Insets bottom="80.0" left="30.0" />
                             </GridPane.margin>
                         </Label>
-                        <Label text="Inventory:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <Label text="%inventory" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                             <font>
                                 <Font size="21.0" />
                             </font>
@@ -115,7 +115,7 @@
                                 <Font size="21.0" />
                             </font>
                         </Label>
-                        <Label text="Back orders:" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <Label text="%back_orders" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                             <font>
                                 <Font size="21.0" />
                             </font>
@@ -151,14 +151,14 @@
                      </GridPane.margin>
                   </ListView>
                   <ListView fx:id="deliverList" maxHeight="150.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-                  <Label text="Placed orders" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                  <Label text="Placed deliveries" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                  <Button fx:id="deleteOrderButton" mnemonicParsing="false" onAction="#deletePlacedOrder" style="-fx-background-color: #ff8000;" text="Delete" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                  <Label text="%placed_orders" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                  <Label text="%placed_deliveries" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                  <Button fx:id="deleteOrderButton" mnemonicParsing="false" onAction="#deletePlacedOrder" style="-fx-background-color: #ff8000;" text="%delete" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets top="15.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="deleteDeliveryButton" onAction="#deletePlacedDelivery" mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="Delete" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                  <Button fx:id="deleteDeliveryButton" onAction="#deletePlacedDelivery" mnemonicParsing="false" style="-fx-background-color: #ff8000;" text="%delete" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets top="15.0" />
                      </GridPane.margin>
@@ -173,19 +173,19 @@
                     <GridPane.margin>
                         <Insets left="30.0" top="285.0" />
                     </GridPane.margin></TextField>
-                <Button mnemonicParsing="false" onMouseClicked="#handleSeeActivityLogButtonClicked" style="-fx-background-color: #ff8000;" text="See active log" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button mnemonicParsing="false" onMouseClicked="#handleSeeActivityLogButtonClicked" style="-fx-background-color: #ff8000;" text="%see_activity_log" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets top="20.0" />
                     </GridPane.margin></Button>
-                <Button fx:id="useAgentButton" mnemonicParsing="false" onAction="#handleUseAgentButtonAction" style="-fx-background-color: #ff8000;" text="Use agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="useAgentButton" mnemonicParsing="false" onAction="#handleUseAgentButtonAction" style="-fx-background-color: #ff8000;" text="%use_agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="150.0" top="20.0" />
                     </GridPane.margin></Button>
-                <Button fx:id="seeOtherFacilitiesButton" disable="true" mnemonicParsing="false" onMouseClicked="#seeOtherFacilitiesButtonClicked" style="-fx-background-color: #ff8000;" text="See other facilities" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="seeOtherFacilitiesButton" disable="true" mnemonicParsing="false" onMouseClicked="#seeOtherFacilitiesButtonClicked" style="-fx-background-color: #ff8000;" text="%see_other_facilities" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="300.0" top="20.0" />
                     </GridPane.margin></Button>
-                <Button fx:id="submitTurnButton" mnemonicParsing="false" onMouseClicked="#submitTurnButtonClicked" style="-fx-background-color: #ff8000;" text="Submit turn" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="submitTurnButton" mnemonicParsing="false" onMouseClicked="#submitTurnButtonClicked" style="-fx-background-color: #ff8000;" text="%submit_turn" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets left="0.0" top="20.0" />
                     </GridPane.margin></Button>

@@ -32,9 +32,9 @@
                 </AnchorPane>
               </content>
             </ScrollPane>
-            <Label text="Houd de muis boven een faciliteit om diens status weer te geven" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-            <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#handleBackToGameButtonClicked" prefHeight="27.0" prefWidth="135.0" style="-fx-background-color: ff8000;" text="Close" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <Label text="Andere Faciliteiten" GridPane.columnIndex="1">
+            <Label text="%mouse_over" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onMouseClicked="#handleBackToGameButtonClicked" prefHeight="27.0" prefWidth="135.0" style="-fx-background-color: ff8000;" text="%back_to_game" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label text="%other_facilities" GridPane.columnIndex="1">
                <font>
                   <Font size="50.0" />
                </font>
@@ -72,22 +72,22 @@
                           <Insets left="5.0" top="50.0" />
                       </GridPane.margin>
                   </Rectangle>
-                  <Label prefHeight="17.0" prefWidth="87.0" text="Warehouse">
+                  <Label prefHeight="17.0" prefWidth="87.0" text="%regional_warehouse">
                      <GridPane.margin>
                         <Insets left="66.0" top="50.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label prefHeight="17.0" prefWidth="104.0" text="Factory" GridPane.rowIndex="1">
+                  <Label prefHeight="17.0" prefWidth="104.0" text="%factory" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="66.0" top="50.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label text="Wholesaler" GridPane.columnIndex="1">
+                  <Label text="%wholesale" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="66.0" top="50.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label text="Retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label text="%retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="66.0" top="50.0" />
                      </GridPane.margin>
