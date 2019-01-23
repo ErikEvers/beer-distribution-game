@@ -34,8 +34,8 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="selectAgentButton" mnemonicParsing="false" onAction="#selectAgentButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Select Agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
-                        <Button fx:id="rejoinGame" mnemonicParsing="false" onAction="#rejoinGameButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="Rejoin Game" textFill="WHITE" visible="false" wrapText="true" GridPane.columnIndex="3" />
+                        <Button fx:id="selectAgentButton" mnemonicParsing="false" onAction="#selectAgentButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="%select_agent" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
+                        <Button fx:id="rejoinGame" mnemonicParsing="false" onAction="#rejoinGameButtonAction" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="%rejoin_game" textFill="WHITE" visible="false" wrapText="true" GridPane.columnIndex="3" />
                     </children>
                 </GridPane>
                 <ListView fx:id="list" onMouseClicked="#handleMouseClickOnList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
