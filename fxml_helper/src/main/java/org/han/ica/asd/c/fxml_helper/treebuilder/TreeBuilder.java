@@ -20,6 +20,7 @@ import java.util.*;
  * @author Yarno Boelens
  */
 public class TreeBuilder {
+    private static final int COLUMNS = 180; // Columns variable that determines distance between visualised facilities
 
 	private List<FacilityRectangle> factories;
 	private List<FacilityRectangle> wholesalers;
@@ -158,12 +159,11 @@ public class TreeBuilder {
 	 */
 	private void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
 		double rows = (container.getPrefHeight()/4);
-		double columns = 180;
 		container.getChildren().removeAll(facilityList);
 		facilityList.add(createRectangle(facility));
 		for (int i = 0; i < facilityList.size(); i++) {
 			FacilityRectangle node = facilityList.get(i);
-			node.setTranslateX(columns * i);
+			node.setTranslateX(COLUMNS * i);
 			node.setTranslateY(rows * y);
 			if ((node.getTranslateX() + node.getWidth()) > container.getMinWidth()){
 				container.setMinWidth(node.getTranslateX() + node.getWidth());
