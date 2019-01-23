@@ -97,6 +97,19 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
     }
 
+    public void init2(BeerGame beerGame) {
+        connectorForLeader.addObserver(this);
+
+        game = beerGame;
+
+        this.currentRoundData = beerGame.getRounds().get(beerGame.getRounds().size()-1);
+        roundId = currentRoundData.getRoundId();
+        if(roundId > 0) {
+            previousRoundData = beerGame.getRoundById(roundId - 1);
+        }
+        this.turnsExpectedPerRound = game.getConfiguration().getFacilities().size();
+    }
+
     /**
      * This method is called when the fault detection component detects that this machine is disconnected from all other players for whatever reason.
      * When this happens, an agent is added for each player except the local player.
@@ -122,6 +135,23 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
                 Agent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
                 if (agent != null) {
                     gameLogic.addLocalParticipant(agent);
+
+                    Facility facility = game.getPlayerById(playerId).getFacility();
+
+                    boolean facilityHasTurn = false;
+                    for (FacilityTurnOrder order : currentRoundData.getFacilityOrders()) {
+                        if (order.getFacilityId() == facility.getFacilityId()) {
+                            facilityHasTurn = true;
+                            break;
+                        }
+                    }
+                    if (!facilityHasTurn){
+                        Thread thread = new Thread(() -> gameLogic.sendRoundForAgent(agent));
+                        thread.setDaemon(true);
+                        thread.start();
+                    }
+
+
                     return;
                 }
             }
@@ -324,7 +354,12 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     Agent getAgentByFacility(int facilityId) {
         for (GameAgent agent : game.getAgents()) {
             if (agent.getFacility().getFacilityId() == facilityId) {
-                return new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
+                Agent newAgent = agentProvider.get();
+                newAgent.setConfiguration(game.getConfiguration());
+                newAgent.setGameAgentName(agent.getGameAgentName());
+                newAgent.setFacility(agent.getFacility());
+                newAgent.setGameBusinessRules(agent.getGameBusinessRules());
+                return newAgent;
             }
         }
         return null;

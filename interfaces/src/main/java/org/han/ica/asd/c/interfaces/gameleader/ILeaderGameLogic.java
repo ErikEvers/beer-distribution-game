@@ -27,4 +27,6 @@ public interface ILeaderGameLogic {
      * @param playerId the Id of the player that has reconnected.
      */
     void removeAgentByPlayerId(String playerId);
+
+    void sendRoundForAgent(IParticipant participant);
 }

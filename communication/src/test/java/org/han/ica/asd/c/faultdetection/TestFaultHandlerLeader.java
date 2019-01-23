@@ -1,5 +1,8 @@
 package org.han.ica.asd.c.faultdetection;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.han.ica.asd.c.faultdetection.nodeinfolist.NodeInfoList;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -24,14 +28,19 @@ public class TestFaultHandlerLeader {
     @Mock
     NodeInfoList nodeInfoList;
 
+    @Mock
+    Logger logger;
+
     ArrayList<IConnectorObserver> observers = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         initMocks(this);
+
         faultHandlerLeader = new FaultHandlerLeader();
         faultHandlerLeader.setNodeInfoList(nodeInfoList);
         faultHandlerLeader.setObservers(observers);
+        faultHandlerLeader.setLogger(logger);
     }
 
     @Test

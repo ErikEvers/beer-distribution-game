@@ -198,4 +198,51 @@ public class TestFaultDetector {
 
         assertEquals(nodeInfoList, result.getNodeInfoList());
     }
+
+    @Test
+    @DisplayName("Should call IAmDisconnected()")
+    void ShouldCallIAmDisconnectedWhenLeaderCantReachAnyone(){
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                requestStaticInjection(FailLog.class);
+                requestStaticInjection(FaultDetectorLeader.class);
+            }
+        });
+        faultDetector = injector.getInstance(FaultDetector.class);
+        faultDetectorLeader = spy(FaultDetectorLeader.class);
+
+        List<Player> playerList = new ArrayList<>();
+
+        Player player1 = new Player();
+        player1.setIpAddress("0.0.0.0");
+        player1.setPlayerId("1");
+        player1.setConnected(true);
+        playerList.add(player1);
+
+        Player player2 = new Player();
+        player2.setIpAddress("0.0.0.0");
+        player2.setPlayerId("1");
+        player2.setConnected(true);
+        playerList.add(player2);
+
+        Player player3 = new Player();
+        player3.setIpAddress("0.0.0.0");
+        player3.setPlayerId("1");
+        player3.setConnected(true);
+        playerList.add(player3);
+
+        Leader leader = new Leader(player1);
+        NodeInfoList nodeInfoList = new NodeInfoList();
+        nodeInfoList.init(playerList, leader);
+        nodeInfoList.setMyIp(player1.getIpAddress());
+
+        faultDetector.setFaultDetectorLeader(faultDetectorLeader);
+        faultDetectorLeader.setFaultHandlerLeader(mock(FaultHandlerLeader.class));
+        faultDetectorLeader.setFailLog(mock(FailLog.class));
+        faultDetector.startFaultDetectorLeader(nodeInfoList);
+
+        verify(faultDetectorLeader).start();
+
+    }
 }

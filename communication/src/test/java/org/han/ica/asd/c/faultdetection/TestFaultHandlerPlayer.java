@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +26,8 @@ public class TestFaultHandlerPlayer {
 	@Mock
 	ArrayList<IConnectorObserver> observers;
 
+	@Mock
+	Logger logger;
 
 	@BeforeEach
 	void setUp() {
@@ -34,6 +35,7 @@ public class TestFaultHandlerPlayer {
 
 		faultHandlerPlayer = spy(FaultHandlerPlayer.class);
 		faultHandlerPlayer.setObservers(new ArrayList<>());
+		faultHandlerPlayer.setLogger(logger);
 	}
 
 	@Test

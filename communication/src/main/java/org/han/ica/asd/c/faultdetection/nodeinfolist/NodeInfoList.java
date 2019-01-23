@@ -26,6 +26,14 @@ public class NodeInfoList extends ArrayList<Player> {
         //inject
     }
 
+    public String getIdByIp(String ip){
+        for (Player player : playerList) {
+            if (player.getIpAddress() == ip);
+            return player.getPlayerId();
+        }
+        return null;
+    }
+
     public NodeInfoList(Leader leader, List<Player> playerList) {
         this.leader = leader;
         this.playerList = playerList;
@@ -94,7 +102,7 @@ public class NodeInfoList extends ArrayList<Player> {
      * @see Condition
      * @see NodeInfoList
      */
-    public List<String> getIpsFromPlayerList(Condition condition) {
+    private List<String> getIpsFromPlayerList(Condition condition) {
         ArrayList<String> list = new ArrayList<>();
         Player leaderPlayer = this.leader.getPlayer();
         playerList.forEach((node) -> {

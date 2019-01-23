@@ -1,6 +1,6 @@
 package org.han.ica.asd.c.leadermigration;
 
-import org.han.ica.asd.c.exceptions.leadermigration.PlayerNotFoundException;
+import org.han.ica.asd.c.ConnectorProvider;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.leadermigration.IConnectorForLeaderElection;
 import org.han.ica.asd.c.interfaces.communication.ILeaderMigration;
@@ -18,6 +18,7 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
   @Inject IConnectorForLeaderElection communicator;
   @Inject IPersistenceLeaderMigration persistence;
   @Inject ElectionHandler electionHandler;
+  @Inject ConnectorProvider connectorProvider;
 
   /**
    * Start the bully algorithm to get new Leader of the network.
@@ -55,11 +56,13 @@ public class LeaderMigration implements ILeaderMigration, IConnectorObserver{
   }
 
 	/**
-   * Receiving the player who won the bully algorithm and calls the database.
+   * Receiving the player who won the bully algorithm and calls the database and the connector.
    * @param electedPlayer -> The elected player.
    */
   public void receiveVictoryMessage(Player electedPlayer){
-		persistence.saveNewLeader(electedPlayer);
+      persistence.saveNewLeader(electedPlayer);
+      //TODO implement when Rogier merges provider
+      //connectorProvider.get().changeLeader();
   }
 
 }

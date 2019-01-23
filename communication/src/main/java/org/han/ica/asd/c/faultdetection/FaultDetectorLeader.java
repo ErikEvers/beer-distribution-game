@@ -69,6 +69,10 @@ public class FaultDetectorLeader extends TimerTask {
     public void run() {
         //Tries to make the connection once every set interval.
         ips = nodeInfoList.getActiveIpsWithoutLeader();
+        if(ips.size() == 0){
+            faultHandlerLeader.iAmDisconnected();
+        }
+
         for (String ip : ips) {
             logger.log(Level.INFO, "Sending Ping to : {0} : {1}", new Object[]{ip, new Date()});
             makeConnection(ip);

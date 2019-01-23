@@ -204,6 +204,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         Thread thread = new Thread(this::sendRoundActionFromAgents);
         thread.setDaemon(true);
         thread.start();
+        communication.startFaultDetector();
     }
 
     private void sendRoundActionFromAgents() {
