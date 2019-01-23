@@ -280,13 +280,13 @@ public class Connector implements IConnectorForSetup, IConnectorForPlayer, IConn
     @Override
     public void sendRoundDataToAllPlayers(Round previousRound, Round newRound) throws TransactionException {
         //initNodeInfoList();
-        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
-        gameMessageClient.sendRoundToAllPlayers(ips.toArray(new String[0]), previousRound, newRound);
+        //List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        gameMessageClient.sendRoundToAllPlayers(nodeInfoList.getActiveIps().toArray(new String[0]), previousRound, newRound);
     }
 
     public void notifyNextRoundStart() throws TransactionException {
-        List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
-        gameMessageClient.sendNextRoundStart(ips.toArray(new String[0]));
+        //List<String> ips = persistence.getGameLog().getPlayers().stream().map(Player::getIpAddress).collect(Collectors.toList());
+        gameMessageClient.sendNextRoundStart(nodeInfoList.getActiveIps().toArray(new String[0]));
     }
 
     public void initNodeInfoList() {
