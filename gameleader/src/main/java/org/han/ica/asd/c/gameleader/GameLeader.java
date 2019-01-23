@@ -135,6 +135,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
                 Agent agent = getAgentByFacility(game.getPlayers().get(i).getFacility().getFacilityId());
                 if (agent != null) {
                     gameLogic.addLocalParticipant(agent);
+
+                    Thread thread = new Thread(() -> gameLogic.sendRoundForAgent(agent));
+                    thread.setDaemon(true);
+                    thread.start();
                     return;
                 }
             }
