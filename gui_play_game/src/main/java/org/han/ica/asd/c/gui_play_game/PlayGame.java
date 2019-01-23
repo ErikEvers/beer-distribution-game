@@ -98,9 +98,6 @@ public abstract class PlayGame implements IPlayGame {
     protected ComboBox<Facility> cmbChooseOutgoingDelivery;
 
     @FXML
-    protected TextField txtOutgoingDelivery;
-
-    @FXML
     protected ListView<String> deliverList;
     @FXML
     protected ListView<String> orderList;
@@ -138,7 +135,6 @@ public abstract class PlayGame implements IPlayGame {
 
         UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
         outgoingOrderTextField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, textFieldFilter));
-        txtOutgoingDelivery.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, textFieldFilter));
 
         if(playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
 					seeOtherFacilitiesButton.setDisable(false);
@@ -264,15 +260,6 @@ public abstract class PlayGame implements IPlayGame {
     protected void handleUseAgentButtonAction() {
         selectAgent.setData(new Object[]{roundId});
         selectAgent.setupScreen();
-    }
-
-    @FXML
-    protected void handleSendDeliveryButtonClick() {
-        if (!txtOutgoingDelivery.getText().isEmpty()) {
-            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), Integer.parseInt(txtOutgoingDelivery.getText()));
-            refillDeliveriesList();
-            txtOutgoingDelivery.clear();
-        }
     }
 
     /**

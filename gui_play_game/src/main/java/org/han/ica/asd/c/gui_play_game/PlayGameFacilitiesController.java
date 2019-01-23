@@ -2,6 +2,7 @@ package org.han.ica.asd.c.gui_play_game;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -11,6 +12,9 @@ public class PlayGameFacilitiesController extends PlayGame {
 
     @FXML
     private Label lblFacilities;
+
+    @FXML
+    protected TextField txtOutgoingDelivery;
 
 
     /**
@@ -22,6 +26,15 @@ public class PlayGameFacilitiesController extends PlayGame {
         txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
         deliverList.setItems(deliverFacilities);
         orderList.setItems(orderFacilities);
+    }
+
+    @FXML
+    protected void handleSendDeliveryButtonClick() {
+        if (!txtOutgoingDelivery.getText().isEmpty()) {
+            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), Integer.parseInt(txtOutgoingDelivery.getText()));
+            refillDeliveriesList();
+            txtOutgoingDelivery.clear();
+        }
     }
 
     /**
