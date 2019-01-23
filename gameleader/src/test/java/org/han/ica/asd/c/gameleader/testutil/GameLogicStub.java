@@ -20,4 +20,9 @@ public class GameLogicStub implements ILeaderGameLogic {
 	public void removeAgentByPlayerId(String playerId) {
 
 	}
+
+	@Override
+	public void sendRoundForAgent(IParticipant participant) {
+
+	}
 }
