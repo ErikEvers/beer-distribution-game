@@ -3,6 +3,8 @@ package org.han.ica.asd.c.model.domain_objects;
 import java.io.Serializable;
 
 public class Player implements IDomainModel, Serializable {
+    public static String globalUsername;
+
     private String playerId;
     private String ipAddress;
     private Facility facility;

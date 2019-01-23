@@ -15,11 +15,11 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
+import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.IOException;
 import java.util.Optional;
 
 public class JoinGameController {
@@ -53,13 +53,13 @@ public class JoinGameController {
     }
 
     public void handleJoinGameButtonClick() {
-        TextInputDialog nameInput = new TextInputDialog();
-        nameInput.setHeaderText("Enter the name you want to use:");
-        Optional<String> output = nameInput.showAndWait();
+        TextInputDialog passwordInput = new TextInputDialog();
+        passwordInput.setHeaderText("Enter the password (leave blank if there is no password):");
+        Optional<String> output = passwordInput.showAndWait();
         if(output.isPresent()) {
             try {
-                RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(), "");
-                GamePlayerId gameData = iConnectorForSetup.getGameData(output.get());
+                RoomModel result = iConnectorForSetup.joinRoom(list.getSelectionModel().getSelectedItem().toString(), output.get());
+                GamePlayerId gameData = iConnectorForSetup.getGameData(Player.globalUsername);
                 gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
                 gameRoom.setupScreen();
             } catch (RoomException | DiscoveryException e) {
@@ -70,7 +70,7 @@ public class JoinGameController {
                 alert.show();
             }
         } else {
-            nameInput.close();
+            passwordInput.close();
         }
     }
 

@@ -87,7 +87,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
         game = beerGame;
         GameLeader.roomModel = roomModel;
 
-				Player player = new Player("1", leaderIp, null, "Yarno", true);
+				Player player = new Player("1", leaderIp, null, Player.globalUsername, true);
 				game.getPlayers().add(player);
 				game.setLeader(new Leader(player));
 				playerComponent.setPlayer(player);

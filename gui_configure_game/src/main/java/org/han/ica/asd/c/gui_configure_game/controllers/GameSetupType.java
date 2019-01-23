@@ -14,6 +14,7 @@ public class GameSetupType implements IGUIHandler {
     private Configuration configuration;
     private String gamename;
     private boolean onlinegame;
+    private String password;
 
 
     @Override
@@ -21,7 +22,9 @@ public class GameSetupType implements IGUIHandler {
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
         this.onlinegame = (boolean) data[2];
-
+        if(data.length > 3) {
+            this.password = (String) data[3];
+        }
     }
 
     @Override
@@ -30,5 +33,8 @@ public class GameSetupType implements IGUIHandler {
         gameSetupTypeController.setConfiguration(configuration);
         gameSetupTypeController.setGameName(gamename);
         gameSetupTypeController.isOnlineGame(onlinegame);
+        if(password != null) {
+            gameSetupTypeController.setPassword(password);
+        }
     }
 }
