@@ -136,9 +136,22 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
                 if (agent != null) {
                     gameLogic.addLocalParticipant(agent);
 
-                    Thread thread = new Thread(() -> gameLogic.sendRoundForAgent(agent));
-                    thread.setDaemon(true);
-                    thread.start();
+                    Facility facility = game.getPlayerById(playerId).getFacility();
+
+                    boolean facilityHasTurn = false;
+                    for (FacilityTurnOrder order : currentRoundData.getFacilityOrders()) {
+                        if (order.getFacilityId() == facility.getFacilityId()) {
+                            facilityHasTurn = true;
+                            break;
+                        }
+                    }
+                    if (!facilityHasTurn){
+                        Thread thread = new Thread(() -> gameLogic.sendRoundForAgent(agent));
+                        thread.setDaemon(true);
+                        thread.start();
+                    }
+
+
                     return;
                 }
             }
@@ -341,7 +354,12 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     Agent getAgentByFacility(int facilityId) {
         for (GameAgent agent : game.getAgents()) {
             if (agent.getFacility().getFacilityId() == facilityId) {
-                return new Agent(game.getConfiguration(), agent.getGameAgentName(), agent.getFacility(), agent.getGameBusinessRules());
+                Agent newAgent = agentProvider.get();
+                newAgent.setConfiguration(game.getConfiguration());
+                newAgent.setGameAgentName(agent.getGameAgentName());
+                newAgent.setFacility(agent.getFacility());
+                newAgent.setGameBusinessRules(agent.getGameBusinessRules());
+                return newAgent;
             }
         }
         return null;
