@@ -48,9 +48,10 @@ public class FaultHandlerLeader {
             // Dit is om niet meer te pingen tot er een rejoin request gedaan word.
             // Dan moet het dus weer op true gezet worden
             nodeInfoList.updateIsConnected(ip, false);
+
             logger.log(Level.INFO, "Speler met ip : {0} is uitgevallen", new Object[]{ip});
 
-            notifyObserversPlayerDied(ip);
+            notifyObserversPlayerDied(nodeInfoList.getIdByIp(ip));
             return ip;
         } else {
             //TODO Call Relay system here when implemented.
@@ -112,11 +113,11 @@ public class FaultHandlerLeader {
      * @param ip The ip that was not reached.
      * @author Tarik
      */
-    private void notifyObserversPlayerDied(String ip) {
+    private void notifyObserversPlayerDied(String playerId) {
         if (!observers.isEmpty()) {
             for (IConnectorObserver observer : observers) {
                 if (observer instanceof IPlayerDisconnectedObserver) {
-                    ((IPlayerDisconnectedObserver) observer).playerIsDisconnected(ip);
+                    ((IPlayerDisconnectedObserver) observer).playerIsDisconnected(playerId);
                 }
             }
         }
