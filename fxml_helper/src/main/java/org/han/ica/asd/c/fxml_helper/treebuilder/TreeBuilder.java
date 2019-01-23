@@ -158,7 +158,7 @@ public class TreeBuilder {
 	 */
 	private void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
 		double rows = (container.getPrefHeight()/4);
-		double columns = 60;
+		double columns = 180;
 		container.getChildren().removeAll(facilityList);
 		facilityList.add(createRectangle(facility));
 		for (int i = 0; i < facilityList.size(); i++) {
