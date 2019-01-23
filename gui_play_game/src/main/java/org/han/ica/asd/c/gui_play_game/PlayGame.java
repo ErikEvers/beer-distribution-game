@@ -319,7 +319,7 @@ public abstract class PlayGame implements IPlayGame {
      * The round to use for the refresh
      */
     @Override
-    public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
+    public synchronized void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
         this.roundId =roundId;
         BeerGame beerGame = playerComponent.getBeerGame();
         Facility facility = playerComponent.getPlayer().getFacility();
