@@ -12,10 +12,7 @@ import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Class responsible for displaying the facility tree.
@@ -53,10 +50,9 @@ public class TreeBuilder {
 		warehouses = new ArrayList<>();
 		retailers = new ArrayList<>();
 		drawnFacilities = new ArrayList<>();
-
 		container.getChildren().clear();
 
-		Map<Facility, List<Facility>> links = beerGame.getConfiguration().getFacilitiesLinkedTo();
+		Map<Facility, List<Facility>> links = new TreeMap<>(beerGame.getConfiguration().getFacilitiesLinkedTo());
 
 		for (Map.Entry<Facility, List<Facility>> entry : links.entrySet()) {
 			for(Facility child: entry.getValue()){
