@@ -24,4 +24,9 @@ public class GameRoom implements IGUIHandler {
         GameRoomController gameRoomController = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/GameRoom.fxml"));
         gameRoomController.setGameData(roomModel, beerGame, playerId);
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

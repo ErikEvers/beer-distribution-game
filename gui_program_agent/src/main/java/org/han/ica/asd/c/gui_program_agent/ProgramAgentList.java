@@ -19,4 +19,9 @@ public class ProgramAgentList implements IGUIHandler {
 
         FXMLLoaderOnSteroids.getScreen(resourceBundle, getClass().getResource("/fxml/ProgramAgentList.fxml"));
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

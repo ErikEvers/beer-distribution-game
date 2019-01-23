@@ -17,4 +17,9 @@ public class AssignAgents implements IGUIHandler {
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesAssignAgents"), getClass().getResource("/fxml/AssignAgentsToFacilities.fxml"));
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

@@ -47,4 +47,9 @@ public class PlayGameSetupScreen implements IGUIHandler {
         playGame.setAgentInUse(setInAgent,roundId,isBackAction);
         playerComponent.setUi(playGame);
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

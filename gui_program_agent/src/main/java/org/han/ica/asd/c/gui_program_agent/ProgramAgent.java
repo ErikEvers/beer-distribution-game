@@ -25,4 +25,9 @@ public class ProgramAgent implements IGUIHandler {
         controller.setAgentName(agentName);
         controller.setItems(items);
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

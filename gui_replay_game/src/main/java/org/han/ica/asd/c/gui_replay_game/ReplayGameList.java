@@ -12,4 +12,9 @@ public class ReplayGameList implements IGUIHandler {
     public void setupScreen() {
          FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameListScreen.fxml"));
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }
