@@ -144,10 +144,16 @@
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="59.0" minWidth="0.0" prefWidth="0.0" />
                           </columnConstraints>
                           <rowConstraints>
-                            <RowConstraints maxHeight="257.0" minHeight="10.0" prefHeight="233.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="218.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="104.0" minHeight="0.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="257.0" minHeight="10.0" prefHeight="195.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="257.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="218.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="104.0" minHeight="0.0" prefHeight="63.0" vgrow="SOMETIMES" />
                           </rowConstraints>
+                           <children>
+                              <TextField fx:id="presetName" GridPane.rowIndex="2" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name :" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" onAction="#savePreset" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="Save preset" textFill="WHITE" GridPane.rowIndex="3" />
+                           </children>
                         </GridPane>
                         <Button mnemonicParsing="false" onAction="#loadPreset" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="Load preset" textFill="WHITE" />
                      </children>

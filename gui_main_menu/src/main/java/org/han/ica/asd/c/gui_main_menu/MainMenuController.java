@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.model.domain_objects.Player;
-
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Map;
@@ -55,7 +55,18 @@ public class MainMenuController {
     @Inject
     IConnectorForSetup connector;
 
+    @Inject
+    IConnectorProvider connectorProvider;
+
     public void initialize() {
+        connectorProvider.setInstance(connector);
+        connector = connectorProvider.forSetup();
+        connector.start();
+
+        fillIpComboBox();
+    }
+
+    private void fillIpComboBox(){
         ObservableList<String> ips = FXCollections.observableArrayList();
         for (Map.Entry e :connector.listAllIPs().entrySet()) {
             ips.add(e.getKey() + ": " + e.getValue());
@@ -69,7 +80,6 @@ public class MainMenuController {
 				}
 				usernameField.textProperty().addListener((observable, oldValue, newValue) -> Player.globalUsername = newValue);
     }
-
 
     @FXML
     public void programAgentButtonAction() {
@@ -95,6 +105,5 @@ public class MainMenuController {
     public void onSelectionChanged(ActionEvent actionEvent) {
         String value = chooseIpComboBox.getValue();
         connector.setMyIp(value.substring(value.indexOf(": ") + 2));
-        System.out.println(value.substring(value.indexOf(": ") + 2));
     }
 }

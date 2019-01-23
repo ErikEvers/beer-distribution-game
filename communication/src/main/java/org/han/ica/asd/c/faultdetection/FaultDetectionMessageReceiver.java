@@ -15,7 +15,7 @@ import javax.inject.Inject;
  * @author Oscar, Tarik
  */
 public class FaultDetectionMessageReceiver {
-    @Inject
+
     private FaultDetector faultDetector;
 
     public FaultDetectionMessageReceiver() {
@@ -35,20 +35,22 @@ public class FaultDetectionMessageReceiver {
      * @see FaultDetector
      */
     public Object receiveMessage(FaultDetectionMessage faultDetectionMessage, String senderIp) {
-        switch (faultDetectionMessage.getMessageId()) {
-            case 1:
-                faultDetector.faultMessageReceived((FaultMessage) faultDetectionMessage, senderIp);
-                break;
-            case 2:
-                faultDetector.faultMessageResponseReceived((FaultMessageResponse) faultDetectionMessage);
-                break;
-            case 3:
-                faultDetector.pingMessageReceived((PingMessage) faultDetectionMessage);
-                break;
-            case 4:
-                return faultDetector.canYouReachLeaderMessageReceived((CanYouReachLeaderMessage) faultDetectionMessage, senderIp);
-            default:
-                break;
+        if (faultDetector != null) {
+            switch (faultDetectionMessage.getMessageId()) {
+                case 1:
+                    faultDetector.faultMessageReceived((FaultMessage) faultDetectionMessage, senderIp);
+                    break;
+                case 2:
+                    faultDetector.faultMessageResponseReceived((FaultMessageResponse) faultDetectionMessage);
+                    break;
+                case 3:
+                    faultDetector.pingMessageReceived((PingMessage) faultDetectionMessage);
+                    break;
+                case 4:
+                    return faultDetector.canYouReachLeaderMessageReceived((CanYouReachLeaderMessage) faultDetectionMessage, senderIp);
+                default:
+                    break;
+            }
         }
         return null;
     }

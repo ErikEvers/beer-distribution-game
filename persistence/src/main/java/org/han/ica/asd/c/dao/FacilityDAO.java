@@ -38,7 +38,7 @@ public class FacilityDAO {
      *
      * @param facility A domain_objects of FacilityDB with all the data required to create a new facility.
      */
-    public void createFacility(Facility facility) {
+    public synchronized void createFacility(Facility facility) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(CREATE_FACILITY)) {
@@ -50,9 +50,10 @@ public class FacilityDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
+				conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
-								databaseConnection.rollBackTransaction(conn);
+                databaseConnection.rollBackTransaction(conn);
             }
         }
     }
@@ -62,7 +63,7 @@ public class FacilityDAO {
      *
      * @param facility A domain_objects of FacilityDB with all the data required to update an existing facility.
      */
-    public void updateFacility(Facility facility) {
+    public synchronized void updateFacility(Facility facility) {
         Connection conn = databaseConnection.connect();
 				if (conn != null) {
 						try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_FACILITY)) {
@@ -75,6 +76,7 @@ public class FacilityDAO {
 
 								pstmt.executeUpdate();
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);
@@ -87,7 +89,7 @@ public class FacilityDAO {
      *
      * @param facility The data required to delete a specific facility.
      */
-    public void deleteSpecificFacility(Facility facility) {
+    public synchronized void deleteSpecificFacility(Facility facility) {
         Connection conn = databaseConnection.connect();
 				if (conn != null) {
 						try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SPECIFIC_FACILITY)) {
@@ -98,6 +100,7 @@ public class FacilityDAO {
 
 								pstmt.executeUpdate();
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);
@@ -109,7 +112,7 @@ public class FacilityDAO {
     /**
      * A method to delete all facilities within a specific game.
      */
-    public void deleteAllFacilitiesInGame() {
+    public synchronized void deleteAllFacilitiesInGame() {
         Connection conn = databaseConnection.connect();
 				if (conn != null) {
 						try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_FACILITIES_IN_GAME)) {
@@ -119,6 +122,7 @@ public class FacilityDAO {
 
 								pstmt.executeUpdate();
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);
@@ -132,7 +136,7 @@ public class FacilityDAO {
      *
      * @return The facilities that have been retrieved from the database.
      */
-    public List<Facility> readAllFacilitiesInGame() {
+    public synchronized List<Facility> readAllFacilitiesInGame() {
         Connection conn = databaseConnection.connect();
         List<Facility> facilities = new ArrayList<>();
 				try (PreparedStatement pstmt = conn.prepareStatement(READ_ALL_FACILITIES_IN_GAME)) {
@@ -147,6 +151,7 @@ public class FacilityDAO {
 								}
 						}
 						conn.commit();
+						conn.close();
 				} catch (GameIdNotSetException | SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
 					databaseConnection.rollBackTransaction(conn);
@@ -161,7 +166,7 @@ public class FacilityDAO {
      * @param facilityId The data required to retrieve a specific Facility.
      * @return The retrieved facility from the database.
      */
-    public Facility readSpecificFacility(int facilityId) {
+    public synchronized Facility readSpecificFacility(int facilityId) {
     	if(facilityId == 0) {
     		return null;
 		}
@@ -181,6 +186,7 @@ public class FacilityDAO {
 									}
 								}
 								conn.commit();
+								conn.close();
 						} catch (GameIdNotSetException | SQLException e) {
 							LOGGER.log(Level.SEVERE, e.toString(), e);
 							databaseConnection.rollBackTransaction(conn);

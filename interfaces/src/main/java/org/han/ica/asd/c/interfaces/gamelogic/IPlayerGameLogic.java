@@ -3,10 +3,7 @@ package org.han.ica.asd.c.interfaces.gamelogic;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
-import org.han.ica.asd.c.model.domain_objects.Facility;
-import java.util.List;
-
-import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
+import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
 public interface IPlayerGameLogic {
@@ -26,7 +23,7 @@ public interface IPlayerGameLogic {
      * Replaces the player with the given agent.
      * @param agent Agent that will replace the player.
      */
-    void letAgentTakeOverPlayer(IParticipant agent);
+    void letAgentTakeOverPlayer(GameAgent agent);
 
     /**
      * Replaces the agent with the player.
@@ -36,4 +33,6 @@ public interface IPlayerGameLogic {
     int getRoundId();
 
     void setPlayer(IPlayerRoundListener player);
+
+    void setLastTurn(Round lastround);
 }

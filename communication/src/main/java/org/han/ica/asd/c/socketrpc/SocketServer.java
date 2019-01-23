@@ -81,10 +81,8 @@ public class SocketServer {
             else {
                 socket.close();
             }
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Something went wrong with the connection " + e);
-        } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "Something went wrong when trying to get an object " + e);
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Level.SEVERE, e.getMessage() , e);
         }
     }
 

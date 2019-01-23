@@ -1,5 +1,6 @@
 package org.han.ica.asd.c.gameleader.testutil;
 
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -14,12 +15,27 @@ public class CommunicationStub implements IConnectorForLeader {
     }
 
     @Override
+    public void removeObserver(IConnectorObserver observer) {
+
+    }
+
+    @Override
     public void sendRoundDataToAllPlayers(Round previousRound, Round currentRound) {
 
     }
 
     @Override
+    public void notifyNextRoundStart() {
+
+    }
+
+    @Override
     public void sendGameStart(BeerGame beerGame) {
+
+    }
+
+    @Override
+    public void sendGameEnd(BeerGame beerGame, Round previousRoundData) throws TransactionException {
 
     }
 

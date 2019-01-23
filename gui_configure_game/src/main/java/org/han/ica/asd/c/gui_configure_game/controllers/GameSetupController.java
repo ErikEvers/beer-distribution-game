@@ -8,6 +8,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_configure_game.graph.EdgeLine;
@@ -86,6 +87,8 @@ public class GameSetupController implements Initializable {
     private String password = "";
 
 
+    @FXML
+    private TextField presetName;
     @FXML
     private ComboBox<GraphFacility> comboBox;
 
@@ -635,6 +638,10 @@ public class GameSetupController implements Initializable {
 
     public void drawPresetSelected() throws IOException {
 
+
+    }
+
+    public void savePreset(){
 
     }
 

@@ -119,6 +119,8 @@ public class ReplayComponentTest {
         Assert.assertTrue(replayComponent.decrementCurrentRound());
         Assert.assertEquals("1", replayComponent.getCurrentRoundString());
 
+        Assert.assertTrue(replayComponent.decrementCurrentRound());
+        Assert.assertEquals("0", replayComponent.getCurrentRoundString());
         Assert.assertFalse(replayComponent.decrementCurrentRound());
     }
 }

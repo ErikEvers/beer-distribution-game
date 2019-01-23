@@ -5,12 +5,17 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.agent.Agent;
+
+import org.han.ica.asd.c.exceptions.communication.TransactionException;
+
 import org.han.ica.asd.c.gameleader.stubs.BusinessRulesStub;
 import org.han.ica.asd.c.gameleader.stubs.PlayerGameLogicStub;
+
 import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
@@ -35,6 +40,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class GameLeaderTest {
+
     @Mock
     private Facility facil;
 
@@ -69,6 +75,9 @@ public class GameLeaderTest {
     private GameLeader gameLeader;
 
     private IPlayerComponent iPlayerComponent;
+
+    @Mock
+    private IConnectorProvider connectorProvider;
 
     @BeforeEach
     public void init() {
@@ -108,6 +117,7 @@ public class GameLeaderTest {
         iPersistence = spy(PersistenceStub.class);
         turnHandlerMock = spy(TurnHandler.class);
         iPlayerComponent = spy(IPlayerComponent.class);
+        when(connectorProvider.forLeader()).thenReturn(iConnectorForLeader);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -119,7 +129,7 @@ public class GameLeaderTest {
                 bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).toInstance(iPlayerComponent);
                 bind(IBusinessRules.class).to(BusinessRulesStub.class);
                 bind(IPlayerGameLogic.class).to(PlayerGameLogicStub.class);
-
+                bind(IConnectorProvider.class).toInstance(connectorProvider);
                 bind(BeerGame.class).toProvider(() -> gameTest);
             }
         });
@@ -128,7 +138,8 @@ public class GameLeaderTest {
     }
 
     @Test
-    public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() {
+    public void facilitiesIs2AndTurnModelReceivedIsCalledOnce_TurnsReceivedIs_NOT_Zero() throws TransactionException {
+
         gameLeader.init("", new RoomModel(), gameTest);
         gameLeader.turnModelReceived(facilityTurnModel);
 

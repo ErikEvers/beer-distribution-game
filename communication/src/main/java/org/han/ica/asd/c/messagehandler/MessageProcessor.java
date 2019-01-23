@@ -13,8 +13,8 @@ import javax.inject.Inject;
  */
 
 public class MessageProcessor {
-    @Inject
-    Connector connector;
+
+    static Connector connector;
 
     /**
      * Gets the current 'NodeInfoList' from the connector instance.
@@ -53,7 +53,8 @@ public class MessageProcessor {
      *
      * @param connector New value of connector.
      */
-    public void setConnector(Connector connector) {
-        this.connector = connector;
+
+    public static void setConnector(Connector connector) {
+        MessageProcessor.connector = connector;
     }
 }

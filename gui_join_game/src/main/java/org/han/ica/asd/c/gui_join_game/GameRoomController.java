@@ -14,6 +14,7 @@ import org.han.ica.asd.c.fxml_helper.treebuilder.FacilitySelectedEvent;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilitySelectedEventHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
@@ -45,7 +46,8 @@ public class GameRoomController {
 	private IGUIHandler playGame;
 
 	@Inject
-	@Named("Connector")
+	private IConnectorProvider connectorProvider;
+
 	private IConnectorForSetup iConnectorForSetup;
 
 	@Inject
@@ -55,6 +57,7 @@ public class GameRoomController {
 	private Facility selectedFacility;
 
     public void initialize() {
+    	iConnectorForSetup = connectorProvider.forSetup();
     	facilitiesContainer.addEventHandler(FacilitySelectedEvent.FACILITY_SELECTED_EVENT, new FacilitySelectedEventHandler(){
 				@Override
 				public void handleFacilitySelection(FacilityRectangle facilityRectangle) {

@@ -13,7 +13,7 @@ import org.han.ica.asd.c.model.domain_objects.RoomModel;
 import java.util.List;
 import java.util.Map;
 
-public interface IConnectorForSetup {
+public interface IConnectorForSetup extends IConnector {
     void start();
     List<String> getAvailableRooms();
     RoomModel createRoom(String roomName, String password, BeerGame beerGame);

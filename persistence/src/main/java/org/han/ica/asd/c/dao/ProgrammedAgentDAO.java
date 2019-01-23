@@ -35,11 +35,11 @@ public class ProgrammedAgentDAO {
      *
      * @param programmedAgent The model with all the data required to create a new ProgrammedAgent in the database.
      */
-    public void createProgrammedAgent(ProgrammedAgent programmedAgent) {
+    public synchronized void createProgrammedAgent(ProgrammedAgent programmedAgent) {
         executePreparedStatement(programmedAgent, CREATE_PROGRAMMEDAGENT);
     }
 
-    public void updateProgrammedAgent(ProgrammedAgent programmedAgentOld, ProgrammedAgent programmedAgentNew) {
+    public synchronized void updateProgrammedAgent(ProgrammedAgent programmedAgentOld, ProgrammedAgent programmedAgentNew) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PROGRAMMEDAGENT)) {
@@ -52,6 +52,7 @@ public class ProgrammedAgentDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -64,7 +65,7 @@ public class ProgrammedAgentDAO {
      *
      * @param programmedAgent The data needed to delete a ProgrammedAgent from the database.
      */
-    public void deleteProgrammedAgent(ProgrammedAgent programmedAgent) {
+    public synchronized void deleteProgrammedAgent(ProgrammedAgent programmedAgent) {
         executePreparedStatement(programmedAgent, DELETE_PROGRAMMEDAGENT);
     }
 
@@ -73,7 +74,7 @@ public class ProgrammedAgentDAO {
      *
      * @return A list with all the ProgrammedAgents from the database.
      */
-    public List<ProgrammedAgent> readAllProgrammedAgents() {
+    public synchronized List<ProgrammedAgent> readAllProgrammedAgents() {
         List<ProgrammedAgent> programmedAgents = new ArrayList<>();
         Connection conn = databaseConnection.connect();
         if (conn == null) {
@@ -85,6 +86,7 @@ public class ProgrammedAgentDAO {
                 programmedAgents.add(new ProgrammedAgent(rs.getString("ProgrammedAgentName"), programmedBusinessRulesDAO.readAllProgrammedBusinessRulesFromAProgrammedAgent(rs.getString("ProgrammedAgentName"))));
             }
             conn.commit();
+            conn.close();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -109,6 +111,7 @@ public class ProgrammedAgentDAO {
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
