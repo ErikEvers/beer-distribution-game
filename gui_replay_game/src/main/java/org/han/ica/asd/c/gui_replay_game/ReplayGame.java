@@ -19,4 +19,9 @@ public class ReplayGame implements IGUIHandler {
         ReplayGameController replayGameController = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesReplayGame"), getClass().getResource("/fxml/ReplayGameScreen.fxml"));
         replayGameController.setCurrentRound(currentRound);
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

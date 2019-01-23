@@ -15,4 +15,9 @@ public class ChooseAgent implements IGUIHandler {
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/ChooseAgent.fxml"));
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

@@ -34,4 +34,9 @@ public class ReplayGameRound implements IGUIHandler {
         if (!gameIdNotNull)
             replayGameRoundController.setCurrentRound(currentRound);
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

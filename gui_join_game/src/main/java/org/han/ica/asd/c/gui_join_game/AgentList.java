@@ -16,4 +16,9 @@ public class AgentList implements IGUIHandler {
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/AgentList.fxml"));
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

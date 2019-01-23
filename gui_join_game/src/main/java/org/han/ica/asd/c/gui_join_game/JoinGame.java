@@ -15,4 +15,9 @@ public class JoinGame implements IGUIHandler {
     public void setupScreen() {
         FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesGuiJoinGame"), getClass().getResource("/fxml/JoinGame.fxml"));
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

@@ -38,4 +38,9 @@ public class GameSetup implements IGUIHandler {
             gameSetupController.setPassword(password);
         }
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }

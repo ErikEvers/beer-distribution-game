@@ -13,47 +13,70 @@ import javax.inject.Provider;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FXMLLoaderOnSteroids extends FXMLLoader {
-	private static final String GAME_TITLE = "Beer Distribution Game";
-	private static Stage primaryStage;
+    private static final String GAME_TITLE = "Beer Distribution Game";
+    private static Stage primaryStage;
 
-	@Inject private static Provider<FXMLLoaderOnSteroids> loaderProvider;
-	@Inject private static Logger logger; //NOSONAR
+    @Inject
+    private static Provider<FXMLLoaderOnSteroids> loaderProvider;
+    @Inject
+    private static Logger logger; //NOSONAR
 
-	@Inject
-	public FXMLLoaderOnSteroids(AbstractModuleExtension module) {
-		super();
-		Injector injector = Guice.createInjector(module);
-		this.setControllerFactory(injector::getInstance);
-	}
+    @Inject
+    public FXMLLoaderOnSteroids(AbstractModuleExtension module) {
+        super();
+        Injector injector = Guice.createInjector(module);
+        this.setControllerFactory(injector::getInstance);
+    }
 
-	public static void setPrimaryStage(Stage primaryStage) {
-		FXMLLoaderOnSteroids.primaryStage = primaryStage;
-	}
+    public static void setPrimaryStage(Stage primaryStage) {
+        FXMLLoaderOnSteroids.primaryStage = primaryStage;
+    }
 
-	public static <T> T getScreen(ResourceBundle resourceBundle, URL fxmlPath) {
-		FXMLLoaderOnSteroids loader = loaderProvider.get();
-		loader.setResources(resourceBundle);
-		loader.setLocation(fxmlPath);
-		try {
-			Parent root = loader.load();
+    public static <T> T getScreen(ResourceBundle resourceBundle, URL fxmlPath) {
+        return setScreen(resourceBundle, fxmlPath, false,null).getController();
+    }
 
-			if (!ComponentOrientation.getOrientation(new Locale(System.getProperty("user.language"))).isLeftToRight()) {
-				root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-			}
+    private static FXMLLoaderOnSteroids setScreen(ResourceBundle resourceBundle, URL fxmlPath, boolean isPopup, ArrayList<Double> coordinates) {
+        FXMLLoaderOnSteroids loader = loaderProvider.get();
+        loader.setResources(resourceBundle);
+        loader.setLocation(fxmlPath);
+        try {
+            Parent root = loader.load();
 
-			primaryStage.setTitle(GAME_TITLE);
-			primaryStage.setScene(new Scene(root));
-			primaryStage.show();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.toString(), e);
-		}
+            if (!ComponentOrientation.getOrientation(new Locale(System.getProperty("user.language"))).isLeftToRight()) {
+                root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            }
+            if (isPopup) {
+                Stage stage = new Stage();
+                setStage(stage, root);
+                if(coordinates != null){
+                    stage.setX(coordinates.get(0));
+                    stage.setY(coordinates.get(1));
+                }
+            } else {
+                setStage(primaryStage, root);
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
 
-		return loader.getController();
-	}
+        return loader;
+    }
+
+    private static void setStage(Stage stage, Parent root) {
+        stage.setTitle(GAME_TITLE);
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    public static <T> T getPopupScreen(ResourceBundle resourceBundle, URL fxmlPath,ArrayList<Double> coordinates) {
+        return setScreen(resourceBundle, fxmlPath, true,coordinates).getController();
+    }
 }

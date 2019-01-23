@@ -15,4 +15,9 @@ public class SelectAgent implements IGUIHandler {
         SelectAgentController controller = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/SelectAgent.fxml"));
         controller.setRoundId(roundId);
     }
+
+    @Override
+    public void updateScreen() {
+
+    }
 }
