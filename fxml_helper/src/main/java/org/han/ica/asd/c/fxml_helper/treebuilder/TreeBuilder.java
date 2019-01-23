@@ -20,7 +20,10 @@ import java.util.*;
  * @author Yarno Boelens
  */
 public class TreeBuilder {
-    private static final int COLUMNS = 180; // Columns variable that determines distance between visualised facilities
+    /**
+     * Columns constant that determines the distance between visualised facilities
+     */
+    private static final int COLUMNS = 180;
 
 	private List<FacilityRectangle> factories;
 	private List<FacilityRectangle> wholesalers;

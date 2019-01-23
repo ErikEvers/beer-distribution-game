@@ -20,7 +20,10 @@ import java.util.Map;
 
 
 public class MainMenuController {
-    private static final int USERNAMECHARACTERLIMIT = 10; //limit is 10 to prevent nodes from overlapping when viewing facility overview
+    /**
+     * User name character limit constant. Prevents nodes from overlapping when viewing facility overviews.
+     */
+    private static final int USERNAMECHARACTERLIMIT = 10;
 
     @FXML
     private Button close;
