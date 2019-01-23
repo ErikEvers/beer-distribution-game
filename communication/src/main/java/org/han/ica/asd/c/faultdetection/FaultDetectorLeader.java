@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @see FaultDetectorPlayer
  */
 public class FaultDetectorLeader extends TimerTask {
-    @Inject
+
     private NodeInfoList nodeInfoList;
 
     @Inject
@@ -154,7 +154,7 @@ public class FaultDetectorLeader extends TimerTask {
      * @see FaultHandlerLeader
      */
     public void checkIfThisMachineIsDisconnected() {
-        if (failLog.getSuccessSize() < 1) {
+        if (failLog.getSuccessSize() == 0) {
             //If the Leader can only reach himself and noone else, he is probably disconnected so no longer leader.
             faultHandlerLeader.iAmDisconnected();
             timer.cancel();
@@ -272,6 +272,7 @@ public class FaultDetectorLeader extends TimerTask {
     public void setNodeInfoList(NodeInfoList nodeInfoList) {
         this.nodeInfoList = nodeInfoList;
         failLog.setNodeInfoList(nodeInfoList);
+        faultHandlerLeader.setNodeInfoList(nodeInfoList);
     }
 
     /**

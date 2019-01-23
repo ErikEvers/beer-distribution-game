@@ -24,7 +24,7 @@
 //import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 //import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 //import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-//import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+//import org.han.ica.asd.c.interfaces.gamelogic.IConnectorForPlayer;
 //import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 //import org.han.ica.asd.c.messagehandler.messagetypes.ChooseFacilityMessage;
 //import org.han.ica.asd.c.messagehandler.messagetypes.GameStartMessage;
@@ -108,7 +108,7 @@
 //                //bind(IDatabaseConnection.class).toInstance(DBConnectionTest.getInstance());
 //                bind(ILeaderGameLogic.class).to(GameLogic.class);
 //                bind(IGameStore.class).to(Persistence.class);
-//                bind(IConnectedForPlayer.class).to(Connector.class);
+//                bind(IConnectorForPlayer.class).to(Connector.class);
 //            }
 //        });
 //        gameMessageReceiver = inject.getInstance(GameMessageReceiver.class);

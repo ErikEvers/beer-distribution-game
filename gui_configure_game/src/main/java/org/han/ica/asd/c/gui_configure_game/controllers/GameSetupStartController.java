@@ -80,6 +80,7 @@ public class GameSetupStartController {
 
         mainContainer.getChildren().addAll();
         backButton();
+        bankrupt.setSelected(true);
     }
 
     private void checkMaxInputValue() {

@@ -13,6 +13,7 @@ import org.han.ica.asd.c.exceptions.communication.RoomException;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.model.domain_objects.GamePlayerId;
 import org.han.ica.asd.c.model.domain_objects.RoomModel;
 
@@ -37,7 +38,8 @@ public class JoinGameController {
     private IGUIHandler mainMenu;
 
     @Inject
-    @Named("Connector")
+    private IConnectorProvider connectorProvider;
+
     private IConnectorForSetup iConnectorForSetup;
 
 
@@ -45,7 +47,7 @@ public class JoinGameController {
     private ObservableList<String> items = FXCollections.observableArrayList();
 
     public void initialize() {
-        iConnectorForSetup.start();
+        iConnectorForSetup = connectorProvider.forSetup();
         items.addAll(iConnectorForSetup.getAvailableRooms());
         list.setItems(items);
     }
@@ -60,8 +62,11 @@ public class JoinGameController {
                 GamePlayerId gameData = iConnectorForSetup.getGameData(output.get());
                 gameRoom.setData(new Object[]{result, gameData.getBeerGame(), gameData.getPlayerId()});
                 gameRoom.setupScreen();
-            } catch (RoomException | DiscoveryException | SendGameMessageException e) {
+            } catch (RoomException | DiscoveryException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
+                alert.show();
+            } catch (SendGameMessageException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
                 alert.show();
             }
         } else {

@@ -106,7 +106,7 @@ public class NodeInfoList extends ArrayList<Player> {
                     if (node.isConnected()) list.add(node.getIpAddress());
                     break;
                 case CONNECTEDWITHOUTLEADER:
-                    if (node.isConnected() && node != leaderPlayer) list.add(node.getIpAddress());
+                    if (node.isConnected() && (!node.getPlayerId().equals(leaderPlayer.getPlayerId()))) list.add(node.getIpAddress());
                     break;
                 default:
                     break;

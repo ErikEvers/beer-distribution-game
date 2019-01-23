@@ -11,6 +11,7 @@ import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
@@ -120,10 +121,12 @@ public class GameSetupTypeController implements Initializable {
     private IGUIHandler assignAgents;
 
     @Inject
-		private IConnectorForSetup connector;
+    private IConnectorProvider connectorProvider;
+
+    private IConnectorForSetup connector;
 
     @Inject
-		private IGameStore persistence;
+    private IGameStore persistence;
 
     @FXML
     private AnchorPane mainContainer;
@@ -145,15 +148,16 @@ public class GameSetupTypeController implements Initializable {
     private Timer inputCheckTimer;
 
     @Inject
-		private GameSetupTypeController(Provider<Round> roundProvider) {
-    	this.roundProvider = roundProvider;
-		}
+    private GameSetupTypeController(Provider<Round> roundProvider) {
+        this.roundProvider = roundProvider;
+    }
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        connector = connectorProvider.forSetup();
         mainContainer.getChildren().addAll();
         this.facilitiesContainer.getChildren().forEach(node -> {
         	if(node instanceof TextField) {
@@ -234,14 +238,14 @@ public class GameSetupTypeController implements Initializable {
             beerGame.setGameDate(new Date().toString());
             createFirstTurn();
 
+
             if(onlineGame) {
-                connector.start();
                 connector.createRoom(gameName, "", beerGame);
             } else {
-                connector.start();
                 connector.createOfflineRoom(gameName, "", beerGame);
             }
             assignAgents.setData(new Object[]{beerGame});
+
             assignAgents.setupScreen();
         }
     }
@@ -295,24 +299,24 @@ public class GameSetupTypeController implements Initializable {
     }
 
     private void createFirstTurn() {
-			Round firstRound = roundProvider.get();
-			firstRound.setRoundId(1);
+        Round firstRound = roundProvider.get();
+        firstRound.setRoundId(1);
 
-			List<FacilityTurn> turns = new ArrayList<>();
-			for(Facility facility: beerGame.getConfiguration().getFacilities()) {
-				turns.add(
-						new FacilityTurn(
-								facility.getFacilityId(),
-								1,
-								facility.getFacilityType().getStartingStock(),
-								0,
-								facility.getFacilityType().getStartingBudget(),
-								false));
-			}
+        List<FacilityTurn> turns = new ArrayList<>();
+        for (Facility facility : beerGame.getConfiguration().getFacilities()) {
+            turns.add(
+                    new FacilityTurn(
+                            facility.getFacilityId(),
+                            1,
+                            facility.getFacilityType().getStartingStock(),
+                            0,
+                            facility.getFacilityType().getStartingBudget(),
+                            false));
+        }
 
-			firstRound.setFacilityTurns(turns);
-			beerGame.getRounds().add(firstRound);
-		}
+        firstRound.setFacilityTurns(turns);
+        beerGame.getRounds().add(firstRound);
+    }
 
     /**
      * Sets the facilityType for the child of a node

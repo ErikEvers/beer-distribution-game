@@ -60,6 +60,7 @@ public class PlayerDAO {
 
             pstmt.executeUpdate();
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -79,6 +80,7 @@ public class PlayerDAO {
 
             pstmt.executeUpdate();
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -89,7 +91,7 @@ public class PlayerDAO {
      * A method which inserts multiple players in a database
      * @param players A list of players which needs to be inserted
      */
-    public void insertPlayers(List<Player> players) {
+    public synchronized void insertPlayers(List<Player> players) {
         players.forEach(this::createPlayer);
     }
 
@@ -98,7 +100,7 @@ public class PlayerDAO {
      *
      * @param player Specifies the player to update
      */
-    public void updatePlayer(Player player) {
+    public synchronized void updatePlayer(Player player) {
         Connection conn = conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_PLAYER)) {
 
@@ -112,7 +114,7 @@ public class PlayerDAO {
             pstmt.executeUpdate();
 
             conn.commit();
-
+            conn.close();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
@@ -124,7 +126,7 @@ public class PlayerDAO {
      * @param playerId Primary identifier for a player
      * @return Returns the specified player
      */
-    public Player getPlayer(String playerId) {
+    public synchronized Player getPlayer(String playerId) {
         Player player = null;
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(GET_SPECIFIC)) {
@@ -137,7 +139,7 @@ public class PlayerDAO {
                 player = buildPlayer(rs);
             }
             conn.commit();
-            return player;
+            conn.close();
 
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -152,7 +154,7 @@ public class PlayerDAO {
      *
      * @return Returns a list of the players found in the current game
      */
-    public List<Player> getAllPlayers() {
+    public synchronized List<Player> getAllPlayers() {
         List<Player> players = new ArrayList<>();
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(GET_ALL)) {
@@ -164,7 +166,7 @@ public class PlayerDAO {
                 buildPlayerArray(rs, players);
             }
             conn.commit();
-
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -177,7 +179,7 @@ public class PlayerDAO {
      *
      * @param playerId The primary identifier of the player to be removed
      */
-    public void deletePlayer(String playerId) {
+    public synchronized void deletePlayer(String playerId) {
         Connection conn = databaseConnection.connect();
         try (PreparedStatement pstmt = conn.prepareStatement(DELETE_PLAYER)) {
 
@@ -189,6 +191,7 @@ public class PlayerDAO {
             pstmt.executeUpdate();
 
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -201,16 +204,14 @@ public class PlayerDAO {
      * @param rs      Result set containing the player data
      * @param players List to add the created player objects into
      */
-    private void buildPlayerArray(ResultSet rs, List<Player> players) {
-        try {
-            if (!rs.isClosed()) {
-                while (rs.next()) {
-                    players.add(buildPlayer(rs));
-                }
+    private void buildPlayerArray(ResultSet rs, List<Player> players) throws SQLException{
+
+        if (!rs.isClosed()) {
+            while (rs.next()) {
+                players.add(buildPlayer(rs));
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
         }
+
     }
 
     /**
@@ -236,7 +237,7 @@ public class PlayerDAO {
         return player;
     }
 
-	public void updatePlayers(List<Player> players) {
+	public synchronized void updatePlayers(List<Player> players) {
         for (Player player: players) {
             updatePlayer(player);
         }

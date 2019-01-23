@@ -37,7 +37,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      * @inheritDoc
      */
     @Override
-    public List<String> readInputBusinessRules(String agentName) {
+    public synchronized List<String> readInputBusinessRules(String agentName) {
         List<String> returnBusinessRules = new ArrayList<>();
         List<ProgrammedBusinessRules> businessRules = programmedBusinessRulesDao.readAllProgrammedBusinessRulesFromAProgrammedAgent(agentName);
 
@@ -50,7 +50,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      * @inheritDoc
      */
     @Override
-    public void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap) {
+    public synchronized void synchronizeBusinessRules(String agentName, Map<String, String> businessRuleMap) {
         if(!this.getAllProgrammedAgents().contains(agentName)) {
             programmedAgentDAO.createProgrammedAgent(new ProgrammedAgent(agentName, null));
         }
@@ -68,7 +68,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      * @inheritDoc
      */
     @Override
-    public List<List<String>> getAllFacilities() {
+    public synchronized List<List<String>> getAllFacilities() {
         List<List<String>> returnList = new ArrayList<>();
         facilitiesInGame = facilityDAO.readAllFacilitiesInGame();
 
@@ -95,7 +95,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
     /**
      * A method that sees to what type a facility in a game belongs.
      */
-    private void switchCase() {
+    private synchronized void switchCase() {
         for (Facility facility: facilitiesInGame) {
             switch (facility.getFacilityType().getFacilityName()) {
                 case "Factory":
@@ -120,7 +120,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      * @inheritDoc
      */
     @Override
-    public List<String> getAllProgrammedAgents() {
+    public synchronized List<String> getAllProgrammedAgents() {
         List<String> programmedAgentNames = new ArrayList<>();
 
         List<ProgrammedAgent> dbProgrammedAgents = programmedAgentDAO.readAllProgrammedAgents();
@@ -134,7 +134,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      * @inheritDoc
      */
     @Override
-    public void deleteProgrammedAgent(String agentName) {
+    public synchronized void deleteProgrammedAgent(String agentName) {
         ProgrammedAgent programmedAgent = new ProgrammedAgent(agentName, null);
         programmedBusinessRulesDao.deleteAllProgrammedBusinessRulesForAProgrammedAgent(agentName);
         programmedAgentDAO.deleteProgrammedAgent(programmedAgent);
@@ -143,7 +143,7 @@ public class BusinessRuleStore implements IBusinessRuleStore {
      * @inheritDoc
      */
     @Override
-    public ProgrammedAgent getProgrammedGameAgent(String agentName) {
+    public synchronized ProgrammedAgent getProgrammedGameAgent(String agentName) {
         List<ProgrammedBusinessRules> programmedBusinessRulesList = programmedBusinessRulesDao.readAllProgrammedBusinessRulesFromAProgrammedAgent(agentName);
         return new ProgrammedAgent(agentName, programmedBusinessRulesList);
     }

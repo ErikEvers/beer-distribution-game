@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class FailLog {
     @Inject
     private static Logger logger;
-    @Inject
+
     NodeInfoList nodeInfoList;
 
     private HashMap<String, Integer> failLogHashMap = new HashMap<>();
@@ -83,9 +83,8 @@ public class FailLog {
      * @author Oscar
      */
     int getSuccessSize() {
-        List<String> list = nodeInfoList.getActiveIps();
+        List<String> list = nodeInfoList.getActiveIpsWithoutLeader();
         successSize = list.size();
-
         for (String ip : list) {
             if (checkIfIpIsFailed(ip)) {
                 successSize--;

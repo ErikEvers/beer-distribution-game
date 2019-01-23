@@ -28,6 +28,7 @@ public class SendGameMessageException extends Exception {
         errorMessage.append("Errors:\n");
         for (Exception innerException : this.getExceptions()) {
             errorMessage.append(innerException.getMessage());
+            errorMessage.append("\n");
         }
         return errorMessage.toString();
     }
