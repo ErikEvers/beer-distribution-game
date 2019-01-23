@@ -6,6 +6,8 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gui_replay_game.replay_game_controller.ReplayGameRoundController;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
+import java.util.ResourceBundle;
+
 public class ReplayGameRound implements IGUIHandler {
     private String gameId;
     private int currentRound;
@@ -27,7 +29,7 @@ public class ReplayGameRound implements IGUIHandler {
             DaoConfig.setCurrentGameId(gameId);
             gameIdNotNull = true;
         }
-        ReplayGameRoundController replayGameRoundController = FXMLLoaderOnSteroids.getScreen(null, getClass().getResource("/fxml/ReplayGameRoundScreen.fxml"));
+        ReplayGameRoundController replayGameRoundController = FXMLLoaderOnSteroids.getScreen(ResourceBundle.getBundle("languageResourcesReplayGame"), getClass().getResource("/fxml/ReplayGameRoundScreen.fxml"));
 
         if (!gameIdNotNull)
             replayGameRoundController.setCurrentRound(currentRound);

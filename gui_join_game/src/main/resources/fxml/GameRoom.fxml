@@ -38,17 +38,17 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           </rowConstraints>
           <children>
-            <Button fx:id="chooseFacilityButton" disable="true" mnemonicParsing="false" onMouseClicked="#handleChooseFacilityButtonClick" style="-fx-background-color: ff8000;" text="Choose facility" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Button fx:id="chooseFacilityButton" disable="true" mnemonicParsing="false" onMouseClicked="#handleChooseFacilityButtonClick" style="-fx-background-color: ff8000;" text="%choose_facility" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
               <GridPane.margin>
                 <Insets right="15.0" />
               </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#handleRefreshButtonClick" style="-fx-background-color: ff8000;" textFill="WHITE" text="Refresh" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Button mnemonicParsing="false" onMouseClicked="#handleRefreshButtonClick" style="-fx-background-color: ff8000;" textFill="WHITE" text="%refresh" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
               <GridPane.margin>
                 <Insets right="15.0" />
               </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#handleBackToJoinGameButtonClick" style="-fx-background-color: ff8000;" text="Leave game" textFill="WHITE" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onMouseClicked="#handleBackToJoinGameButtonClick" style="-fx-background-color: ff8000;" text="%leave_game" textFill="WHITE" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
           </children>
         </GridPane>
         <GridPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -81,22 +81,22 @@
                 <Insets left="5.0" />
               </GridPane.margin>
             </Rectangle>
-            <Label prefHeight="17.0" prefWidth="87.0" text="Warehouse">
+            <Label prefHeight="17.0" prefWidth="87.0" text="%regional_warehouse">
               <GridPane.margin>
                 <Insets left="66.0" />
               </GridPane.margin>
             </Label>
-            <Label prefHeight="17.0" prefWidth="104.0" text="Factory" GridPane.rowIndex="1">
+            <Label prefHeight="17.0" prefWidth="104.0" text="%factory" GridPane.rowIndex="1">
               <GridPane.margin>
                 <Insets left="66.0" />
               </GridPane.margin>
             </Label>
-            <Label text="Wholesaler" GridPane.columnIndex="1">
+            <Label text="%wholesale" GridPane.columnIndex="1">
               <GridPane.margin>
                 <Insets left="66.0" />
               </GridPane.margin>
             </Label>
-            <Label text="Retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="%retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <GridPane.margin>
                 <Insets left="66.0" />
               </GridPane.margin>

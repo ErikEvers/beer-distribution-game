@@ -43,13 +43,13 @@
                                     </font>
                                 </Label>
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1fff34" height="36.0" layoutX="22.0" layoutY="81.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label layoutX="93.0" layoutY="90.0" text="Factory" />
+                            <Label layoutX="93.0" layoutY="90.0" text="%factory" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffbc1f" height="36.0" layoutX="22.0" layoutY="355.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label layoutX="93.0" layoutY="364.0" text="Wholesale" />
+                            <Label layoutX="93.0" layoutY="364.0" text="%wholesale" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="22.0" layoutY="220.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label layoutX="103.0" layoutY="230.0" text="RegionalWharehouse" />
+                            <Label layoutX="103.0" layoutY="230.0" text="%regional_warehouse" />
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff2151" height="36.0" layoutX="22.0" layoutY="483.0" stroke="BLACK" strokeType="INSIDE" width="51.0" />
-                            <Label layoutX="92.0" layoutY="492.0" text="Retailer" />
+                            <Label layoutX="92.0" layoutY="492.0" text="%retailer" />
                         <Label layoutX="316.0" layoutY="26.0" text="%main_text_setuptype">
                            <font>
                               <Font size="17.0" />

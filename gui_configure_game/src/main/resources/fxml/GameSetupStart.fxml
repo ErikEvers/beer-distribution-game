@@ -55,7 +55,7 @@
                               <Font size="24.0" />
                            </font>
                         </Label>
-                        <Label layoutX="14.0" layoutY="14.0" text="Create game" textFill="#d78f48">
+                        <Label layoutX="14.0" layoutY="14.0" text="%create_game" textFill="#d78f48">
                            <font>
                               <Font name="Arial" size="43.0" />
                            </font>

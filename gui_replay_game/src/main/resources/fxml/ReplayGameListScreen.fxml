@@ -32,8 +32,8 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button fx:id="replay" mnemonicParsing="false" onAction="#replayButtonAction" visible="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="See Replay" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
-                        <Button mnemonicParsing="false" onAction="#backButtonAction" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: ff8000;" text="Back to menu" textFill="WHITE" wrapText="true" GridPane.columnIndex="2" />
+                        <Button fx:id="replay" mnemonicParsing="false" onAction="#replayButtonAction" visible="false" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ff8000;" text="%see_replay" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" />
+                        <Button mnemonicParsing="false" onAction="#backButtonAction" prefHeight="25.0" prefWidth="170.0" style="-fx-background-color: ff8000;" text="%back_to_menu" textFill="WHITE" wrapText="true" GridPane.columnIndex="2" />
                     </children>
                 </GridPane>
             <ListView fx:id="list" onMouseClicked="#handleMouseClickOnList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />

@@ -28,7 +28,7 @@
 					<font>
 						<Font size="24.0" />
 					</font></Label>
-				<Button fx:id="close" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: ff8000;" text="%close" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<Button fx:id="close" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" style="-fx-background-color: ff8000;" text="close" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 				<ListView fx:id="logTextArea" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 			</children>
 		</GridPane>

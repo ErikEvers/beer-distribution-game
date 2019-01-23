@@ -56,22 +56,22 @@
 								<Insets left="5.0" />
 							</GridPane.margin>
 						</Rectangle>
-						<Label prefHeight="17.0" prefWidth="87.0" text="Warehouse">
+						<Label prefHeight="17.0" prefWidth="87.0" text="%regional_warehouse">
 							<GridPane.margin>
 								<Insets left="66.0" />
 							</GridPane.margin>
 						</Label>
-						<Label prefHeight="17.0" prefWidth="104.0" text="Factory" GridPane.rowIndex="1">
+						<Label prefHeight="17.0" prefWidth="104.0" text="%factory" GridPane.rowIndex="1">
 							<GridPane.margin>
 								<Insets left="66.0" />
 							</GridPane.margin>
 						</Label>
-						<Label text="Wholesaler" GridPane.columnIndex="1">
+						<Label text="%wholesale" GridPane.columnIndex="1">
 							<GridPane.margin>
 								<Insets left="66.0" />
 							</GridPane.margin>
 						</Label>
-						<Label text="Retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
+						<Label text="%retailer" GridPane.columnIndex="1" GridPane.rowIndex="1">
 							<GridPane.margin>
 								<Insets left="66.0" />
 							</GridPane.margin>
@@ -101,8 +101,8 @@
               </rowConstraints>
                <children>
               <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleStartButtonClick" style="-fx-background-color: ff8000;" text="Start" textFill="WHITE" GridPane.columnIndex="4" />
-              <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleRefreshButtonClick" style="-fx-background-color: ff8000;" text="Refresh" textFill="WHITE" GridPane.columnIndex="2" />
-              <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleBackToJoinGameButtonClick" style="-fx-background-color: ff8000;" text="Leave game" textFill="WHITE" GridPane.columnIndex="0" />
+              <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleRefreshButtonClick" style="-fx-background-color: ff8000;" text="%refresh" textFill="WHITE" GridPane.columnIndex="2" />
+              <Button contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#handleBackToJoinGameButtonClick" style="-fx-background-color: ff8000;" text="%leave_game" textFill="WHITE" GridPane.columnIndex="0" />
                </children>
             </GridPane>
       </children>

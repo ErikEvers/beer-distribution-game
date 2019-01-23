@@ -47,22 +47,22 @@
                 <Insets left="5.0" top="10.0" />
             </GridPane.margin>
         </Rectangle>
-        <Label prefHeight="17.0" prefWidth="52.0" text="Factory" GridPane.rowIndex="1">
+        <Label prefHeight="17.0" prefWidth="52.0" text="%factory" GridPane.rowIndex="1">
             <GridPane.margin>
                 <Insets left="66.0" />
             </GridPane.margin>
         </Label>
-        <Label prefHeight="18.0" prefWidth="138.0" text="Regional Warehouse" GridPane.rowIndex="2">
+        <Label prefHeight="18.0" prefWidth="138.0" text="%regional_warehouse" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets left="66.0" />
             </GridPane.margin>
         </Label>
-        <Label layoutX="10.0" text="Wholesale" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <Label layoutX="10.0" text="%wholesale" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <GridPane.margin>
                 <Insets left="66.0" />
             </GridPane.margin>
         </Label>
-        <Label layoutX="207.0" layoutY="516.0" text="Retailer" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <Label layoutX="207.0" layoutY="516.0" text="%retailer" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets left="66.0" />
             </GridPane.margin>
@@ -74,15 +74,15 @@
         </ScrollPane>
         <Line endX="30.0" startX="-100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
         <Line endX="30.0" startX="-100.0" stroke="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Label text="Active connection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-        <Label text="Inacive connection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-        <Label text="Hold the mouse over a facility or connection for more information" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-        <Button fx:id="returnButton" mnemonicParsing="false" onAction="#handleReturnButton" prefHeight="42.0" prefWidth="118.0" style="-fx-background-color: ff8000;" text="Back to Menu" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
+        <Label text="%active_connection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+        <Label text="%inactive_connection" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+        <Label text="%mouse_over_connection" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+        <Button fx:id="returnButton" mnemonicParsing="false" onAction="#handleReturnButton" prefHeight="42.0" prefWidth="118.0" style="-fx-background-color: ff8000;" text="%back_to_menu" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
             <GridPane.margin>
                 <Insets left="10.0" />
             </GridPane.margin>
         </Button>
-        <Button fx:id="previousRoundButton" mnemonicParsing="false" onAction="#handlePreviousRoundButton" prefHeight="42.0" prefWidth="110.0" style="-fx-background-color: ff8000;" text="Previous round" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+        <Button fx:id="previousRoundButton" mnemonicParsing="false" onAction="#handlePreviousRoundButton" prefHeight="42.0" prefWidth="110.0" style="-fx-background-color: ff8000;" text="%previous_round" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
             <GridPane.margin>
                 <Insets left="5.0" />
             </GridPane.margin>
@@ -92,7 +92,7 @@
                 <Insets right="150.0" />
             </GridPane.margin>
         </TextField>
-        <Label fx:id="maxRoundId" prefHeight="44.0" prefWidth="115.0" text="Maximum round number" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+        <Label fx:id="maxRoundId" prefHeight="44.0" prefWidth="115.0" text="%max_round_number" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
             <GridPane.margin>
                 <Insets left="100.0" />
             </GridPane.margin>
@@ -100,7 +100,7 @@
                 <Font size="17.0" />
             </font>
         </Label>
-        <Button fx:id="NextRoundButton" mnemonicParsing="false" onAction="#handleNextRoundButton" prefHeight="42.0" prefWidth="98.0" style="-fx-background-color: ff8000;" text="Next round" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+        <Button fx:id="NextRoundButton" mnemonicParsing="false" onAction="#handleNextRoundButton" prefHeight="42.0" prefWidth="98.0" style="-fx-background-color: ff8000;" text="%next_round" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
             <GridPane.margin>
                 <Insets right="5.0" />
             </GridPane.margin>
@@ -112,7 +112,7 @@
         </Line>
     </GridPane>
     <HBox layoutX="14.0" layoutY="14.0" prefHeight="127.0" prefWidth="1000.0" AnchorPane.bottomAnchor="673.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <Label prefHeight="98.0" prefWidth="366.0" text="Replay Game">
+        <Label prefHeight="98.0" prefWidth="366.0" text="%replay_game">
             <font>
                 <Font size="50.0" />
             </font>
@@ -128,7 +128,7 @@
                 <Insets left="20.0" top="25.0" />
             </padding>
         </Label>
-        <Button fx:id="showGraph" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#showGraphHandler" style="-fx-background-color: ff8000;" text="Show graph" textFill="WHITE">
+        <Button fx:id="showGraph" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#showGraphHandler" style="-fx-background-color: ff8000;" text="%show_graph" textFill="WHITE">
             <font>
                 <Font size="20.0" />
             </font>

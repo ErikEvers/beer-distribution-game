@@ -72,22 +72,22 @@
                   <Insets bottom="15.0" left="10.0" />
                </GridPane.margin>
             </Rectangle>
-            <Label text="Wholesale" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label text="%wholesale" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="80.0" top="20.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Retailer" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Label text="%retailer" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="20.0" left="80.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Factory" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label text="%factory" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets right="20.0" top="20.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Regional&#10;Warehouse" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Label text="%regional_warehouse" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="20.0" />
                </GridPane.margin>
@@ -131,7 +131,7 @@
                             <RowConstraints maxHeight="104.0" minHeight="0.0" prefHeight="45.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                         </GridPane>
-                        <Button mnemonicParsing="false" onAction="#loadPreset" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="Load preset" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#loadPreset" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="%load_preset" textFill="WHITE" />
                      </children>
                   </GridPane>
                </children>
@@ -147,7 +147,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" onAction="#clearScreen" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="Clear" textFill="WHITE" GridPane.columnIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#clearScreen" prefHeight="25.0" prefWidth="125.0" style="-fx-background-color: ff8000;" text="%clear" textFill="WHITE" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </children>

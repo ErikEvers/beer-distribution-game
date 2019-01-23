@@ -48,22 +48,22 @@
                         <Insets left="5.0" top="15.0" />
                     </GridPane.margin>
                 </Rectangle>
-                <Label prefHeight="17.0" prefWidth="52.0" text="Fabriek" GridPane.rowIndex="1">
+                <Label prefHeight="17.0" prefWidth="52.0" text="%factory" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="66.0" />
                     </GridPane.margin>
                 </Label>
-                <Label prefHeight="17.0" prefWidth="65.0" text="Distributeur" GridPane.rowIndex="2">
+                <Label prefHeight="17.0" prefWidth="65.0" text="%regional_warehouse" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="66.0" />
                     </GridPane.margin>
                 </Label>
-                <Label text="Groothandel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="%wholesale" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="66.0" />
                     </GridPane.margin>
                 </Label>
-                <Label layoutX="207.0" layoutY="516.0" text="Detailhandel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label layoutX="207.0" layoutY="516.0" text="%retailer" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <GridPane.margin>
                         <Insets left="66.0" />
                     </GridPane.margin>
