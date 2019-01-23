@@ -192,7 +192,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
                 allTurnDataReceived();
             } catch(Exception e){
                 turnsReceivedInCurrentRound--;
-                throw new TransactionException(e.getMessage());
+                throw e;
             }
     }
 
@@ -267,7 +267,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
                 connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
                 connectorForLeader.notifyNextRoundStart();
         } catch (TransactionException e) {
-                logger.log(Level.SEVERE, e.getMessage(), e);
+                logger.log(Level.SEVERE, e.toString(), e);
         }
     }
 

@@ -55,7 +55,7 @@ public class SendInTransaction {
             transactionMessage.setPhaseToRollback();
             gameMessageSender.sendToAll(ips, transactionMessage);
 
-            throw new TransactionException("Something went wrong with transactional sending data");
+            throw new TransactionException("Something went wrong with transactional sending data", map);
         }
     }
 }

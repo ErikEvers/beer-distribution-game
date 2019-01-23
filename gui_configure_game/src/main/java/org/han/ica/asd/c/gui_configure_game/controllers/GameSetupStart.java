@@ -31,7 +31,7 @@ public class GameSetupStart implements IGUIHandler {
         if (configuration != null) {
             gameSetupStartController.setConfigurationInScreen(configuration);
         }
-        if(!password.equals("")) {
+        if(!"".equals(password)) {
             gameSetupStartController.setPassword(password);
         }
     }

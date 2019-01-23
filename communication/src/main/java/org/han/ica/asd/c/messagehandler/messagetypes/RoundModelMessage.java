@@ -22,4 +22,11 @@ public class RoundModelMessage extends TransactionMessage implements Serializabl
     public Round getPreviousRound() {
         return previousRound;
     }
+
+    @Override
+    public void createResponseMessage() {
+        super.createResponseMessage();
+        previousRound = null;
+        newRound = null;
+    }
 }

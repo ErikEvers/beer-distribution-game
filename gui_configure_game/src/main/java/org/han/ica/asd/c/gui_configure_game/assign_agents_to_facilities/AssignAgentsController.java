@@ -150,7 +150,7 @@ public class AssignAgentsController {
 					Alert alert = new Alert(Alert.AlertType.ERROR, "Can't start a game unless every player controls a facility", ButtonType.CLOSE);
 					alert.show();
 				} catch (TransactionException e) {
-					Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE);
+					Alert alert = new Alert(Alert.AlertType.ERROR, e.toString(), ButtonType.CLOSE);
 					alert.show();
 				}
     }
