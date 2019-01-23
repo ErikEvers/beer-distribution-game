@@ -12,10 +12,7 @@ import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.Player;
 import org.han.ica.asd.c.model.domain_objects.Round;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Class responsible for displaying the facility tree.
@@ -23,6 +20,15 @@ import java.util.Optional;
  * @author Yarno Boelens
  */
 public class TreeBuilder {
+    /**
+     * Columns constant that determines horizontal distance between visualised facilities
+     */
+    private static final int COLUMNS = 180;
+
+    /**
+     * Rows variable that determines vertical distance between visualised facilities
+     */
+    private double rows;
 
 	private List<FacilityRectangle> factories;
 	private List<FacilityRectangle> wholesalers;
@@ -53,10 +59,10 @@ public class TreeBuilder {
 		warehouses = new ArrayList<>();
 		retailers = new ArrayList<>();
 		drawnFacilities = new ArrayList<>();
-
 		container.getChildren().clear();
+		rows = container.getPrefHeight()/4;
 
-		Map<Facility, List<Facility>> links = beerGame.getConfiguration().getFacilitiesLinkedTo();
+		Map<Facility, List<Facility>> links = new TreeMap<>(beerGame.getConfiguration().getFacilitiesLinkedTo());
 
 		for (Map.Entry<Facility, List<Facility>> entry : links.entrySet()) {
 			for(Facility child: entry.getValue()){
@@ -161,13 +167,12 @@ public class TreeBuilder {
 	 * @author Yarno Boelens
 	 */
 	private void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
-		double rows = (container.getPrefHeight()/4);
-		double columns = 60;
+		rows = (container.getPrefHeight()/4);
 		container.getChildren().removeAll(facilityList);
 		facilityList.add(createRectangle(facility));
 		for (int i = 0; i < facilityList.size(); i++) {
 			FacilityRectangle node = facilityList.get(i);
-			node.setTranslateX(columns * i);
+			node.setTranslateX(COLUMNS * i);
 			node.setTranslateY(rows * y);
 			if ((node.getTranslateX() + node.getWidth()) > container.getMinWidth()){
 				container.setMinWidth(node.getTranslateX() + node.getWidth());

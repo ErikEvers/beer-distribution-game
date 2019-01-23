@@ -20,6 +20,10 @@ import java.util.Map;
 
 
 public class MainMenuController {
+    /**
+     * User name character limit constant. Prevents nodes from overlapping when viewing facility overviews.
+     */
+    private static final int USERNAMECHARACTERLIMIT = 10;
 
     @FXML
     private Button close;
@@ -64,6 +68,20 @@ public class MainMenuController {
         connector.start();
 
         fillIpComboBox();
+
+        addTextLimiter(usernameField);
+    }
+
+    private void addTextLimiter(final TextField tf) {
+        tf.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+                if (tf.getText().length() > USERNAMECHARACTERLIMIT) {
+                    String s = tf.getText().substring(0, USERNAMECHARACTERLIMIT);
+                    tf.setText(s);
+                }
+            }
+        });
     }
 
     private void fillIpComboBox(){
