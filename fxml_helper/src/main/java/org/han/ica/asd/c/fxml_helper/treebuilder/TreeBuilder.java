@@ -21,9 +21,14 @@ import java.util.*;
  */
 public class TreeBuilder {
     /**
-     * Columns constant that determines the distance between visualised facilities
+     * Columns constant that determines horizontal distance between visualised facilities
      */
     private static final int COLUMNS = 180;
+
+    /**
+     * Rows variable that determines vertical distance between visualised facilities
+     */
+    private double rows;
 
 	private List<FacilityRectangle> factories;
 	private List<FacilityRectangle> wholesalers;
@@ -55,6 +60,7 @@ public class TreeBuilder {
 		retailers = new ArrayList<>();
 		drawnFacilities = new ArrayList<>();
 		container.getChildren().clear();
+		rows = container.getPrefHeight()/4;
 
 		Map<Facility, List<Facility>> links = new TreeMap<>(beerGame.getConfiguration().getFacilitiesLinkedTo());
 
@@ -161,7 +167,7 @@ public class TreeBuilder {
 	 * @author Yarno Boelens
 	 */
 	private void drawFacilityOnScreen(Facility facility, List<FacilityRectangle> facilityList, int y) {
-		double rows = (container.getPrefHeight()/4);
+		rows = (container.getPrefHeight()/4);
 		container.getChildren().removeAll(facilityList);
 		facilityList.add(createRectangle(facility));
 		for (int i = 0; i < facilityList.size(); i++) {
