@@ -5,19 +5,24 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Timer;
+import java.util.function.UnaryOperator;
 
 
 public class GameSetupStartController {
 
     private static final int BASEROUNDNUMBER = 20;
-    private static final int BASEMINNUMBER = 1;
-    private static final int BASEMAXNUMBER = 50;
+    private static final int BASEMINNUMBER = 0;
+    private static final int BASEMAXNUMBER = 40;
 
     @Inject
     @Named("GameSetup")
@@ -58,14 +63,40 @@ public class GameSetupStartController {
     @FXML
     private Button back;
 
+    private Timer maxInputTimer;
+
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
      */
     public void initialize() {
+        UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
+        roundNumber.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEROUNDNUMBER, textFieldFilter));
+        minOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMINNUMBER, textFieldFilter));
+				minOrder.textProperty().addListener((observable, oldValue, newValue) -> checkMaxInputValue());
+        maxOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMAXNUMBER, textFieldFilter));
+				maxOrder.textProperty().addListener((observable, oldValue, newValue) -> checkMaxInputValue());
+
+
         mainContainer.getChildren().addAll();
         backButton();
     }
+
+    private void checkMaxInputValue() {
+			maxInputTimer = new Timer();
+			maxInputTimer.schedule(
+				new java.util.TimerTask() {
+					@Override
+					public void run() {
+						if(Integer.parseInt(maxOrder.getText()) < Integer.parseInt(minOrder.getText())) {
+							maxOrder.setText(minOrder.getText());
+							maxOrder.positionCaret(maxOrder.getText().length());
+						}
+					}
+				},
+				500
+			);
+		}
 
     /**
      * Button function to proceed to the next screen it will parse the configuration to the next screen.
