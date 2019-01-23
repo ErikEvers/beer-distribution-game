@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -135,13 +136,14 @@ public abstract class PlayGame implements IPlayGame {
         mainContainer.getChildren().addAll();
         playGridPane.setStyle("-fx-border-style: solid inside; -fx-border-color: black; -fx-border-radius: 40;");
 
-        //Make sure only numbers can be filled in the order textBox. This is done using a textFormatter
-        UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
+        UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
+        outgoingOrderTextField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, textFieldFilter));
+        txtOutgoingDelivery.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, textFieldFilter));
 
-        outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
-        if (playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
-            seeOtherFacilitiesButton.setDisable(false);
-        }
+        if(playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
+					seeOtherFacilitiesButton.setDisable(false);
+				}
+
         playerComponent.setUi(this);
         orderFacilities = FXCollections.observableArrayList();
         deliverFacilities = FXCollections.observableArrayList();

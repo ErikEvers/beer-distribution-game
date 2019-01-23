@@ -5,8 +5,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
 import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
@@ -27,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Timer;
 import java.util.UUID;
 
 public class GameSetupTypeController implements Initializable {
@@ -127,6 +131,9 @@ public class GameSetupTypeController implements Initializable {
     @FXML
     private AnchorPane mainContainer;
 
+    @FXML
+		private AnchorPane facilitiesContainer;
+
     private Provider<Round> roundProvider;
 
     /**
@@ -137,6 +144,8 @@ public class GameSetupTypeController implements Initializable {
     private Configuration configuration;
     private String gameName = "";
     private boolean onlineGame = true;
+
+    private Timer inputCheckTimer;
 
     @Inject
     private GameSetupTypeController(Provider<Round> roundProvider) {
@@ -150,7 +159,36 @@ public class GameSetupTypeController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         connector = connectorProvider.forSetup();
         mainContainer.getChildren().addAll();
+        this.facilitiesContainer.getChildren().forEach(node -> {
+        	if(node instanceof TextField) {
+        		TextField field = ((TextField) node);
+						field.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), Integer.parseInt(field.getText()), NumberInputFormatter.getChangeUnaryOperator()));
+					}
+				});
+
+        inGoodsRetailer.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsWholesale, inGoodsRetailer));
+				outGoodsWholesale.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsWholesale, inGoodsRetailer));
+				inGoodsWholesale.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsRegionalWharehouse, inGoodsWholesale));
+				outGoodsRegionalWharehouse.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsRegionalWharehouse, inGoodsWholesale));
+				inGoodsRegionalWharehouse.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsFactory, inGoodsRegionalWharehouse));
+				outGoodsFactory.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsFactory, inGoodsRegionalWharehouse));
     }
+
+    private void checkInput(TextField minInput, TextField valueInput) {
+			inputCheckTimer = new Timer();
+			inputCheckTimer.schedule(
+					new java.util.TimerTask() {
+						@Override
+						public void run() {
+							if(Integer.parseInt(valueInput.getText()) < Integer.parseInt(minInput.getText())) {
+								valueInput.setText(minInput.getText());
+								valueInput.positionCaret(valueInput.getText().length());
+							}
+						}
+					},
+					500
+			);
+		}
 
     /**
      * Button function to return to the previous screen

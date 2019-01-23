@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 
+import static org.han.ica.asd.c.fxml_helper.NumberInputFormatter.getChangeUnaryOperator;
+
 public class PlayGameFacilitiesController extends PlayGame {
 
     @FXML
