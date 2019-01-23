@@ -28,7 +28,7 @@ public class FaultHandlerPlayer {
     private int amountOfActiveIps;
     private int filteredAmount;
 
-    private static final Logger logger = Logger.getLogger(FaultHandlerPlayer.class.getName());
+    private static Logger logger = Logger.getLogger(FaultHandlerPlayer.class.getName());
 
     FaultHandlerPlayer() {
         amountOfConnectionsWithLeader = 0;
