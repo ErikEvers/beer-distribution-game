@@ -1,6 +1,7 @@
 package org.han.ica.asd.c.messagehandler.receiving;
 
 
+import org.han.ica.asd.c.Connector;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.han.ica.asd.c.interfaces.communication.IElectionObserver;
@@ -23,7 +24,7 @@ public class GameMessageReceiver {
     private GameMessageFilterer gameMessageFilterer;
 
     @Inject
-    private MessageProcessor messageProcessor;
+    private static MessageProcessor messageProcessor;
 
     private static ArrayList<IConnectorObserver> gameMessageObservers;
 
@@ -31,6 +32,10 @@ public class GameMessageReceiver {
 
     public GameMessageReceiver() {
         //inject purposes
+    }
+
+    public static void setConnector(Connector connector) {
+        MessageProcessor.setConnector(connector);
     }
 
     /**
@@ -46,6 +51,9 @@ public class GameMessageReceiver {
                     TurnModelMessage turnModelMessage = (TurnModelMessage) gameMessage;
                     return handleTurnMessage(turnModelMessage);
                 case ROUND_MESSAGE:
+                case GAME_START_MESSAGE:
+                case GAME_END_MESSAGE:
+                case NEXT_ROUND_MESSAGE:
                     TransactionMessage roundModelMessage = (TransactionMessage) gameMessage;
                     return handleTransactionMessage(roundModelMessage);
                 case ELECTION_MESSAGE:
@@ -57,14 +65,8 @@ public class GameMessageReceiver {
                 case CHOOSE_FACILITY_MESSAGE:
                     ChooseFacilityMessage chooseFacilityMessage = (ChooseFacilityMessage) gameMessage;
                     return handleFacilityMessage(chooseFacilityMessage);
-                case GAME_START_MESSAGE:
-                    TransactionMessage gameStartMessage = (TransactionMessage) gameMessage;
-                    return handleTransactionMessage(gameStartMessage);
                 case REQUEST_GAME_DATA_MESSAGE:
                     return handleRequestGameData(senderIp, ((RequestGameDataMessage) gameMessage).getUserName());
-                case GAME_END_MESSAGE:
-                    TransactionMessage gameEndMessage = (TransactionMessage) gameMessage;
-                    return handleTransactionMessage(gameEndMessage);
                 default:
                     break;
             }
@@ -192,9 +194,13 @@ public class GameMessageReceiver {
                     return gameStartMessage;
                 } else if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == GAME_END_MESSAGE){
                     GameEndMessage gameEndMessage = (GameEndMessage) transactionMessage;
-                    ((IRoundModelObserver) observer).roundEndRecieved(gameEndMessage.getPreviousRound());
+                    ((IRoundModelObserver) observer).roundEndReceived(gameEndMessage.getPreviousRound());
                     gameEndMessage.createResponseMessage();
                     return gameEndMessage;
+                } else if (observer instanceof IRoundModelObserver && transactionMessage.getMessageType() == NEXT_ROUND_MESSAGE){
+                    NextRoundMessage nextRoundMessage = (NextRoundMessage) transactionMessage;
+                    ((IRoundModelObserver) observer).nextRoundStarted();
+                    return nextRoundMessage;
                 }
             }
         }

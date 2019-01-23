@@ -53,7 +53,7 @@ public class ConfigurationDAO {
      *
      * @param configuration A ConfigurationDB Object which needs to be inserted in the SQLite Database
      */
-    public void createConfiguration(Configuration configuration) {
+    public synchronized void createConfiguration(Configuration configuration) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(CREATE_CONFIGURATION)) {
@@ -66,6 +66,7 @@ public class ConfigurationDAO {
                 pstmt.executeUpdate();
 
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -91,7 +92,7 @@ public class ConfigurationDAO {
      *
      * @return A list of configurations of the found configurations of a specific game
      */
-    public List<Configuration> readConfigurations() {
+    public synchronized List<Configuration> readConfigurations() {
         List<Configuration> configurations = new ArrayList<>();
         Connection conn = databaseConnection.connect();
         if (conn != null) {
@@ -102,6 +103,7 @@ public class ConfigurationDAO {
                         configurations.add(createConfigurationObject(rs));
                     }
                     conn.commit();
+                    conn.close();
                 }
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -116,7 +118,7 @@ public class ConfigurationDAO {
      *
      * @return A configuration according to the gameId
      */
-    public Configuration readConfiguration() {
+    public synchronized Configuration readConfiguration() {
         Configuration configuration = null;
         Connection conn = databaseConnection.connect();
         if (conn != null) {
@@ -130,6 +132,7 @@ public class ConfigurationDAO {
                     }
                 }
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -161,7 +164,7 @@ public class ConfigurationDAO {
      *
      * @param configuration A updated ConfigurationDB Object which is going to be the new configuration
      */
-    public void updateConfigurations(Configuration configuration) {
+    public synchronized void updateConfigurations(Configuration configuration) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_CONFIGURATION)) {
@@ -179,6 +182,7 @@ public class ConfigurationDAO {
 
                 pstmt.execute();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -190,7 +194,7 @@ public class ConfigurationDAO {
     /**
      * A method which deletes a specific configurations according to a specific gameId
      */
-    public void deleteConfigurations() {
+    public synchronized void deleteConfigurations() {
         deleteFacilityLinks();
         Connection conn = databaseConnection.connect();
         if (conn != null) {
@@ -199,6 +203,7 @@ public class ConfigurationDAO {
                 pstmt.setString(1, DaoConfig.getCurrentGameId());
                 pstmt.execute();
                 conn.commit();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -211,7 +216,7 @@ public class ConfigurationDAO {
      *
      * @param facilitiesLinkedTo The facilities that are linked
      */
-    public void createFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
+    public synchronized void createFacilityLinks(Map<Facility, List<Facility>> facilitiesLinkedTo) {
         facilitiesLinkedTo.forEach((higherFacility, lowerFacilityList) -> lowerFacilityList.forEach(lowerFacility -> {
 
             Connection conn = databaseConnection.connect();
@@ -225,6 +230,7 @@ public class ConfigurationDAO {
 
                     pstmt.execute();
                     conn.commit();
+                    conn.close();
                 } catch (SQLException | GameIdNotSetException e) {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                     databaseConnection.rollBackTransaction(conn);
@@ -238,7 +244,7 @@ public class ConfigurationDAO {
     /**
      * Deletes facility links
      */
-    public void deleteFacilityLinks() {
+    public synchronized void deleteFacilityLinks() {
         Connection conn = databaseConnection.connect();
         if (conn == null) return;
         try (PreparedStatement pstmt = conn.prepareStatement(DELETE_FACILITY_LINKS)) {
@@ -248,6 +254,7 @@ public class ConfigurationDAO {
 
             pstmt.executeUpdate();
             conn.commit();
+            conn.close();
         } catch (SQLException | GameIdNotSetException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -259,7 +266,7 @@ public class ConfigurationDAO {
      *
      * @return Returns a map of facility links
      */
-    public Map<Facility, List<Facility>> readFacilityLinks() {
+    public synchronized Map<Facility, List<Facility>> readFacilityLinks() {
         Connection conn = databaseConnection.connect();
         Map<Facility, List<Facility>> facilitiesLinkedTo = new HashMap<>();
         if (conn != null) {
@@ -271,6 +278,7 @@ public class ConfigurationDAO {
                 packageLinkedFacilities(facilitiesLinkedTo, pstmt.executeQuery());
 
                 conn.commit();
+                conn.close();
             } catch (SQLException | GameIdNotSetException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -297,6 +305,7 @@ public class ConfigurationDAO {
 
                     pstmt.executeUpdate();
                     conn.commit();
+                    conn.close();
                 } catch (SQLException | GameIdNotSetException e) {
                     LOGGER.log(Level.SEVERE, e.toString(), e);
                     databaseConnection.rollBackTransaction(conn);

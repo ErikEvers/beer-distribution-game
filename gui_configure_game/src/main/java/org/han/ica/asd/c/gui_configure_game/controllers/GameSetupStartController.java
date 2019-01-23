@@ -5,19 +5,24 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Timer;
+import java.util.function.UnaryOperator;
 
 
 public class GameSetupStartController {
 
     private static final int BASEROUNDNUMBER = 20;
-    private static final int BASEMINNUMBER = 1;
-    private static final int BASEMAXNUMBER = 50;
+    private static final int BASEMINNUMBER = 0;
+    private static final int BASEMAXNUMBER = 40;
 
     @Inject
     @Named("GameSetup")
@@ -58,31 +63,63 @@ public class GameSetupStartController {
     @FXML
     private Button back;
 
+    @FXML
+    private CheckBox usePassword;
+
+    @FXML
+    private TextField passwordField;
+
+    private Timer maxInputTimer;
+
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
      */
     public void initialize() {
+        UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
+        roundNumber.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEROUNDNUMBER, textFieldFilter));
+        minOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMINNUMBER, textFieldFilter));
+				minOrder.textProperty().addListener((observable, oldValue, newValue) -> checkMaxInputValue());
+        maxOrder.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), BASEMAXNUMBER, textFieldFilter));
+				maxOrder.textProperty().addListener((observable, oldValue, newValue) -> checkMaxInputValue());
+
+
         mainContainer.getChildren().addAll();
         backButton();
         bankrupt.setSelected(true);
     }
+
+    private void checkMaxInputValue() {
+			maxInputTimer = new Timer();
+			maxInputTimer.schedule(
+				new java.util.TimerTask() {
+					@Override
+					public void run() {
+						if(Integer.parseInt(maxOrder.getText()) < Integer.parseInt(minOrder.getText())) {
+							maxOrder.setText(minOrder.getText());
+							maxOrder.positionCaret(maxOrder.getText().length());
+						}
+					}
+				},
+				500
+			);
+		}
 
     /**
      * Button function to proceed to the next screen it will parse the configuration to the next screen.
      */
     @FXML
     public void nextScreenButton() {
-
-        Object[] data = new Object[3];
+        Object[] data = new Object[4];
         fillConfiguration();
         data[0] = configuration;
         if (gameName.getText() != null && !gameName.getText().isEmpty()) {
             data[1] = gameName.getText();
         }
-        if (offlineGame.isSelected()) {
-            data[2] = false;
-        } else data[2] = true;
+				data[2] = !offlineGame.isSelected();
+        if(usePassword.isSelected() && !passwordField.getText().isEmpty()) {
+					data[3] = passwordField.getText();
+				}
         gameSetup.setData(data);
         gameSetup.setupScreen();
     }
@@ -94,6 +131,28 @@ public class GameSetupStartController {
     @FXML
     private void backButton() {
         back.setOnAction(event -> mainMenu.setupScreen());
+    }
+
+    @FXML
+    private void handleOfflineGameClicked() {
+        if(offlineGame.isSelected()) {
+            usePassword.setDisable(true);
+            passwordField.setDisable(true);
+        } else {
+            usePassword.setDisable(false);
+            if(usePassword.isSelected()) {
+                passwordField.setDisable(false);
+            }
+        }
+    }
+
+    @FXML
+    private void handleUsePasswordClicked() {
+        if(usePassword.isSelected()) {
+            passwordField.setDisable(false);
+        } else {
+            passwordField.setDisable(true);
+        }
     }
 
 
@@ -126,6 +185,11 @@ public class GameSetupStartController {
     void setGameName(String gamename) {
         gameName.setText(gamename);
     }
+
+    void setPassword(String password) {
+			usePassword.setSelected(true);
+			passwordField.setText(password);
+		}
 
     void setConfigurationInScreen(Configuration configuration) {
         roundNumber.setText(String.valueOf(configuration.getAmountOfRounds()));

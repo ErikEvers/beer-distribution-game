@@ -15,7 +15,17 @@ public class CommunicationStub implements IConnectorForLeader {
     }
 
     @Override
+    public void removeObserver(IConnectorObserver observer) {
+
+    }
+
+    @Override
     public void sendRoundDataToAllPlayers(Round previousRound, Round currentRound) {
+
+    }
+
+    @Override
+    public void notifyNextRoundStart() {
 
     }
 

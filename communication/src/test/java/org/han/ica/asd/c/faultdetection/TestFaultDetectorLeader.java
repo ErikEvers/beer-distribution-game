@@ -78,8 +78,8 @@ public class TestFaultDetectorLeader {
 
         faultDetectorLeader.setObservers(observers);
         faultDetectorLeader.setFailLog(failLog);
-        faultDetectorLeader.setNodeInfoList(nodeInfoList);
         faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
+        faultDetectorLeader.setNodeInfoList(nodeInfoList);
 
         faultDetectorLeader.start();
         verify(toTest, times(1)).scheduleAtFixedRate(faultDetectorLeader, 0, 10000);
@@ -113,9 +113,9 @@ public class TestFaultDetectorLeader {
         };
         faultDetectorLeader.setObservers(observers);
         faultDetectorLeader.setFailLog(failLog);
+        faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
         faultDetectorLeader.setFaultDetectionClient(faultDetectionClientMock);
-        faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
 
         String testIp1 = "TestIp1";
         String testIp2 = "TestIp2";
@@ -163,11 +163,10 @@ public class TestFaultDetectorLeader {
 
         faultDetectorLeader.setObservers(observers);
         faultDetectorLeader.setFailLog(failLog);
+        faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
         faultDetectorLeader.setNodeInfoList(nodeInfoList);
-
         faultDetectorLeader.setFailLog(failLog);
         faultDetectorLeader.setFaultDetectionClient(faultDetectionClientMock);
-        faultDetectorLeader.setFaultHandlerLeader(faultHandlerLeader);
 
         String testIp1 = "TestIp1";
         String testIp2 = "TestIp2";

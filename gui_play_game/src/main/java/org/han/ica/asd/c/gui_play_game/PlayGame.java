@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.exceptions.communication.SendGameMessageException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayGame;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
@@ -96,9 +97,6 @@ public abstract class PlayGame implements IPlayGame {
     protected ComboBox<Facility> cmbChooseOutgoingDelivery;
 
     @FXML
-    protected TextField txtOutgoingDelivery;
-
-    @FXML
     protected ListView<String> deliverList;
     @FXML
     protected ListView<String> orderList;
@@ -137,13 +135,13 @@ public abstract class PlayGame implements IPlayGame {
         mainContainer.getChildren().addAll();
         playGridPane.setStyle("-fx-border-style: solid inside; -fx-border-color: black; -fx-border-radius: 40;");
 
-        //Make sure only numbers can be filled in the order textBox. This is done using a textFormatter
-        UnaryOperator<TextFormatter.Change> textFieldFilter = getChangeUnaryOperator();
+        UnaryOperator<TextFormatter.Change> textFieldFilter = NumberInputFormatter.getChangeUnaryOperator();
+        outgoingOrderTextField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, textFieldFilter));
 
-        outgoingOrderTextField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, textFieldFilter));
-        if (playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
-            seeOtherFacilitiesButton.setDisable(false);
-        }
+        if(playerComponent.getBeerGame().getConfiguration().isInsightFacilities()) {
+					seeOtherFacilitiesButton.setDisable(false);
+				}
+
         playerComponent.setUi(this);
         orderFacilities = FXCollections.observableArrayList();
         deliverFacilities = FXCollections.observableArrayList();
@@ -266,15 +264,6 @@ public abstract class PlayGame implements IPlayGame {
         selectAgent.setupScreen();
     }
 
-    @FXML
-    protected void handleSendDeliveryButtonClick() {
-        if (!txtOutgoingDelivery.getText().isEmpty()) {
-            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), Integer.parseInt(txtOutgoingDelivery.getText()));
-            refillDeliveriesList();
-            txtOutgoingDelivery.clear();
-        }
-    }
-
     /**
      * Concatenates the facility and order/delivery
      * @param facilityName
@@ -321,7 +310,7 @@ public abstract class PlayGame implements IPlayGame {
      * The round to use for the refresh
      */
     @Override
-    public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
+    public synchronized void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
         refreshPopupScreens();
         this.roundId =roundId;
         BeerGame beerGame = playerComponent.getBeerGame();

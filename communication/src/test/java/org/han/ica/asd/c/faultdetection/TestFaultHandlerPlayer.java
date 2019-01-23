@@ -5,25 +5,31 @@ import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Spy;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TestFaultHandlerPlayer {
-	FaultHandlerPlayer faultHandlerPlayer;
+	private FaultHandlerPlayer faultHandlerPlayer;
 	private NodeInfoList nodeInfoList = mock(NodeInfoList.class);
 
 	@Mock
 	ArrayList<IConnectorObserver> observers;
 
+
 	@BeforeEach
-	void setUp()
-	{
+	void setUp() {
 		initMocks(this);
 
 		faultHandlerPlayer = spy(FaultHandlerPlayer.class);
@@ -87,7 +93,7 @@ public class TestFaultHandlerPlayer {
 		faultHandlerPlayer.setAmountOfActiveIps(5);
 		faultHandlerPlayer.setAmountOfFailingIps(5);
 
-		assertEquals("imDead",faultHandlerPlayer.whoIsDead());
+        assertEquals("imDead",faultHandlerPlayer.whoIsDead());
 	}
 
 	@Test

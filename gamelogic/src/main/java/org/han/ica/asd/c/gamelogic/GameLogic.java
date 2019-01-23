@@ -7,10 +7,11 @@ import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.gamelogic.participants.ParticipantsPool;
 import org.han.ica.asd.c.gamelogic.roundcalculator.RoundCalculator;
 import org.han.ica.asd.c.interfaces.communication.IConnectorObserver;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.communication.IGameStartObserver;
 import org.han.ica.asd.c.interfaces.communication.IRoundModelObserver;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
-import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectorForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IParticipant;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
@@ -35,7 +36,9 @@ import java.util.stream.Collectors;
  */
 
 public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundModelObserver, IGameStartObserver {
-    private IConnectedForPlayer communication;
+
+
+    private IConnectorForPlayer communication;
 
     @Inject
     private IGameStore persistence;
@@ -54,11 +57,11 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
     private IGUIHandler seeOtherFacilities;
 
     @Inject
-    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectedForPlayer communication){
+    public GameLogic(Provider<ParticipantsPool> participantsPoolProvider, IConnectorProvider connectorProvider){
         if(participantsPool == null) {
             participantsPool = participantsPoolProvider.get();
         }
-        this.communication = communication;
+        this.communication = connectorProvider.forPlayer();
         initObserver();
     }
 
@@ -85,7 +88,7 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
      * @return The current state of the game.
      */
     @Override
-    public BeerGame getBeerGame() {
+    public synchronized BeerGame getBeerGame() {
         return persistence.getGameLog();
     }
 
@@ -172,15 +175,21 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         curRoundId = newRound.getRoundId();
         persistence.updateRound(previousRound);
         persistence.createRound(newRound);
-        sendRoundActionFromAgents();
     }
 
     @Override
-    public void roundEndRecieved(Round previousRound) {
+    public void roundEndReceived(Round previousRound) {
         persistence.updateRound(previousRound);
         persistence.updateEndGame();
         player.endGame(previousRound);
 
+    }
+
+    @Override
+    public void nextRoundStarted() {
+        Thread thread = new Thread(this::sendRoundActionFromAgents);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @Override
@@ -191,8 +200,10 @@ public class GameLogic implements IPlayerGameLogic, ILeaderGameLogic, IRoundMode
         } else {
             player.startGame();
         }
-        curRoundId = 0;
-        sendRoundActionFromAgents();
+        curRoundId = 1;
+        Thread thread = new Thread(this::sendRoundActionFromAgents);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void sendRoundActionFromAgents() {

@@ -5,6 +5,7 @@ import org.han.ica.asd.c.agent.Agent;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.communication.IFacilityMessageObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerDisconnectedObserver;
 import org.han.ica.asd.c.interfaces.communication.IPlayerReconnectedObserver;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisconnectedObserver, IPlayerReconnectedObserver, IFacilityMessageObserver {
 
     @Inject
-    private IConnectorForLeader connectorForLeader;
+    private IConnectorProvider connectorProvider;
     @Inject
     private ILeaderGameLogic gameLogic;
     @Inject
@@ -52,6 +53,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     @Inject
     private static Logger logger; //NOSONAR
 
+    private IConnectorForLeader connectorForLeader;
+
     private final Provider<Player> playerProvider;
     private final Provider<Agent> agentProvider;
     private final Provider<Round> roundProvider;
@@ -59,8 +62,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private static RoomModel roomModel;
     private static BeerGame game;
 
-    private Round previousRoundData;
-    private Round currentRoundData;
+    private static Round previousRoundData;
+    private static Round currentRoundData;
 
     private int highestPlayerId = 1;
     private int turnsExpectedPerRound;
@@ -78,12 +81,13 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Sets up initial variables of this class and adds the instance as an observer for incoming messages.
      */
     public void init(String leaderIp, RoomModel roomModel, BeerGame beerGame) {
+        connectorForLeader = connectorProvider.forLeader();
         connectorForLeader.addObserver(this);
 
         game = beerGame;
         GameLeader.roomModel = roomModel;
 
-				Player player = new Player("1", leaderIp, null, "Yarno", true);
+				Player player = new Player("1", leaderIp, null, Player.globalUsername, true);
 				game.getPlayers().add(player);
 				game.setLeader(new Leader(player));
 				playerComponent.setPlayer(player);
@@ -179,7 +183,7 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      *
      * @param turnModel an incoming turn from a facility
      */
-    public void turnModelReceived(Round turnModel) throws TransactionException {
+    public synchronized void turnModelReceived(Round turnModel) throws TransactionException {
         currentRoundData = turnHandler.processFacilityTurn(turnModel, currentRoundData);
         turnsReceivedInCurrentRound++;
 
@@ -198,16 +202,11 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Then it starts a new round.
      */
 
-    private void allTurnDataReceived() throws TransactionException {
-        this.previousRoundData = this.currentRoundData;
+    private synchronized void allTurnDataReceived() throws TransactionException {
         this.previousRoundData = gameLogic.calculateRound(this.previousRoundData, this.currentRoundData, game);
-        this.previousRoundData.setFacilityOrders(currentRoundData.getFacilityOrders());
-        this.previousRoundData.setFacilityTurnDelivers(currentRoundData.getFacilityTurnDelivers());
         this.currentRoundData = roundProvider.get();
-        this.currentRoundData.setFacilityTurns(previousRoundData.getFacilityTurns());
         persistence.updateRound(this.previousRoundData);
         persistence.saveRoundData(this.currentRoundData);
-        game.getRounds().add(this.currentRoundData);
 
         for (FacilityTurn facilityTurn : previousRoundData.getFacilityTurns()) {
             if(!game.getConfiguration().isContinuePlayingWhenBankrupt() && facilityTurn.isBankrupt()) {
@@ -242,8 +241,8 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
             }
         }
         previousRoundData = game.getRounds().get(0);
-        currentRoundData = game.getRounds().get(0);
         generateCustomerOrders();
+        connectorForLeader = connectorProvider.forLeader();
         connectorForLeader.startRoom(roomModel);
         connectorForLeader.sendGameStart(game);
 
@@ -256,17 +255,17 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
      * Creates a new Round for the beer game.
      */
     private void startNextRound() throws TransactionException {
-        if (roundId == getBeerGame().getConfiguration().getAmountOfRounds() ) {
+        if (previousRoundData.getRoundId() == getBeerGame().getConfiguration().getAmountOfRounds() ) {
             endGame(previousRoundData);
             return;
         }
-        roundId++;
-        currentRoundData.setRoundId(roundId);
 
         generateCustomerOrders();
         turnsReceivedInCurrentRound = 0;
+
         try {
                 connectorForLeader.sendRoundDataToAllPlayers(previousRoundData, currentRoundData);
+                connectorForLeader.notifyNextRoundStart();
         } catch (TransactionException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -275,6 +274,10 @@ public class GameLeader implements IGameLeader, ITurnModelObserver, IPlayerDisco
     private void generateCustomerOrders() {
         int lower = game.getConfiguration().getMinimalOrderRetail();
         int upper = game.getConfiguration().getMaximumOrderRetail();
+
+            currentRoundData = roundProvider.get();
+            currentRoundData.setRoundId(previousRoundData.getRoundId() + 1);
+            game.getRounds().add(currentRoundData);
 
         for(FacilityTurn turn : previousRoundData.getFacilityTurns()) {
             FacilityType facilityType = game.getFacilityById(turn.getFacilityId()).getFacilityType();

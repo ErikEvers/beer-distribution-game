@@ -41,7 +41,7 @@ public class GameAgentDAO{
      *
      * @param gameAgent The data required to create a new GameAgent.
      */
-    public void createGameAgent(GameAgent gameAgent) {
+    public synchronized void createGameAgent(GameAgent gameAgent) {
         executePreparedStatement(gameAgent, CREATE_GAMEAGENT);
     }
 
@@ -49,7 +49,7 @@ public class GameAgentDAO{
      * A method which inserts a list of GameAgents
      * @param agents A list of gameagents
      */
-    public void insertGameAgents(List<GameAgent> agents) {
+    public synchronized void insertGameAgents(List<GameAgent> agents) {
 
         agents.forEach(this::createGameAgent);
     }
@@ -59,14 +59,14 @@ public class GameAgentDAO{
      *
      * @param gameAgent The data required to delete a specific GameAgent.
      */
-    public void deleteSpecificGameagent(GameAgent gameAgent) {
+    public synchronized void deleteSpecificGameagent(GameAgent gameAgent) {
         executePreparedStatement(gameAgent, DELETE_SPECIFIC_GAMEAGENT);
     }
 
     /**
      * A method to delete all GameAgent within a BeerGame.
      */
-    public void deleteAllGameagentsInABeergame() {
+    public synchronized void deleteAllGameagentsInABeergame() {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(DELETE_ALL_GAMEAGENTS_IN_A_BEERGAME)) {
@@ -76,6 +76,7 @@ public class GameAgentDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -88,7 +89,7 @@ public class GameAgentDAO{
      *
      * @param gameAgent The data required to update the GameAgent.
      */
-    public void updateGameagent(GameAgent gameAgent) {
+    public synchronized void updateGameagent(GameAgent gameAgent) {
         Connection conn = databaseConnection.connect();
         if (conn != null) {
             try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_GAMEAGENT)) {
@@ -100,6 +101,7 @@ public class GameAgentDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -112,7 +114,7 @@ public class GameAgentDAO{
      *
      * @return A list of GameAgents from the BeerGame.
      */
-    public List<GameAgent> readGameAgentsForABeerGame() {
+    public synchronized List<GameAgent> readGameAgentsForABeerGame() {
         Connection conn = databaseConnection.connect();
         int i = 0;
         List<GameAgent> gameAgents = new ArrayList<>();
@@ -130,6 +132,7 @@ public class GameAgentDAO{
                     }
             }
             conn.commit();
+            conn.close();
         } catch (GameIdNotSetException | SQLException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             databaseConnection.rollBackTransaction(conn);
@@ -162,6 +165,7 @@ public class GameAgentDAO{
 
                 pstmt.executeUpdate();
                 conn.commit();
+                conn.close();
             } catch (GameIdNotSetException | SQLException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
                 databaseConnection.rollBackTransaction(conn);
@@ -169,7 +173,7 @@ public class GameAgentDAO{
         }
     }
 
-	public void updateGameagents(List<GameAgent> agents) {
+	public synchronized void updateGameagents(List<GameAgent> agents) {
         agents.forEach(this::updateGameagent);
 	}
 }

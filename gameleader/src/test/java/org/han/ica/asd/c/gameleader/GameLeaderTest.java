@@ -15,6 +15,7 @@ import org.han.ica.asd.c.gameleader.testutil.CommunicationStub;
 import org.han.ica.asd.c.gameleader.testutil.GameLogicStub;
 import org.han.ica.asd.c.gameleader.testutil.PersistenceStub;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
@@ -75,6 +76,9 @@ public class GameLeaderTest {
 
     private IPlayerComponent iPlayerComponent;
 
+    @Mock
+    private IConnectorProvider connectorProvider;
+
     @BeforeEach
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -113,6 +117,7 @@ public class GameLeaderTest {
         iPersistence = spy(PersistenceStub.class);
         turnHandlerMock = spy(TurnHandler.class);
         iPlayerComponent = spy(IPlayerComponent.class);
+        when(connectorProvider.forLeader()).thenReturn(iConnectorForLeader);
 
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
@@ -124,7 +129,7 @@ public class GameLeaderTest {
                 bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).toInstance(iPlayerComponent);
                 bind(IBusinessRules.class).to(BusinessRulesStub.class);
                 bind(IPlayerGameLogic.class).to(PlayerGameLogicStub.class);
-
+                bind(IConnectorProvider.class).toInstance(connectorProvider);
                 bind(BeerGame.class).toProvider(() -> gameTest);
             }
         });

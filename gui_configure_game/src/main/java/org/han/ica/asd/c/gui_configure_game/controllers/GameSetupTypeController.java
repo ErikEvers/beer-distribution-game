@@ -5,9 +5,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
+import org.han.ica.asd.c.fxml_helper.NumberInputFormatter;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.persistence.IGameStore;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Configuration;
@@ -26,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Timer;
 import java.util.UUID;
 
 public class GameSetupTypeController implements Initializable {
@@ -116,13 +121,18 @@ public class GameSetupTypeController implements Initializable {
     private IGUIHandler assignAgents;
 
     @Inject
-		private IConnectorForSetup connector;
+    private IConnectorProvider connectorProvider;
+
+    private IConnectorForSetup connector;
 
     @Inject
-		private IGameStore persistence;
+    private IGameStore persistence;
 
     @FXML
     private AnchorPane mainContainer;
+
+    @FXML
+		private AnchorPane facilitiesContainer;
 
     private Provider<Round> roundProvider;
 
@@ -133,20 +143,53 @@ public class GameSetupTypeController implements Initializable {
     private BeerGame beerGame;
     private Configuration configuration;
     private String gameName = "";
+    private String password = "";
     private boolean onlineGame = true;
 
+    private Timer inputCheckTimer;
+
     @Inject
-		private GameSetupTypeController(Provider<Round> roundProvider) {
-    	this.roundProvider = roundProvider;
-		}
+    private GameSetupTypeController(Provider<Round> roundProvider) {
+        this.roundProvider = roundProvider;
+    }
 
     /**
      * Method to initialize the controller. Will only be called once when the fxml is loaded.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        connector = connectorProvider.forSetup();
         mainContainer.getChildren().addAll();
+        this.facilitiesContainer.getChildren().forEach(node -> {
+        	if(node instanceof TextField) {
+        		TextField field = ((TextField) node);
+						field.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), Integer.parseInt(field.getText()), NumberInputFormatter.getChangeUnaryOperator()));
+					}
+				});
+
+        inGoodsRetailer.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsWholesale, inGoodsRetailer));
+				outGoodsWholesale.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsWholesale, inGoodsRetailer));
+				inGoodsWholesale.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsRegionalWharehouse, inGoodsWholesale));
+				outGoodsRegionalWharehouse.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsRegionalWharehouse, inGoodsWholesale));
+				inGoodsRegionalWharehouse.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsFactory, inGoodsRegionalWharehouse));
+				outGoodsFactory.textProperty().addListener((observable, oldValue, newValue) -> checkInput(outGoodsFactory, inGoodsRegionalWharehouse));
     }
+
+    private void checkInput(TextField minInput, TextField valueInput) {
+			inputCheckTimer = new Timer();
+			inputCheckTimer.schedule(
+					new java.util.TimerTask() {
+						@Override
+						public void run() {
+							if(Integer.parseInt(valueInput.getText()) < Integer.parseInt(minInput.getText())) {
+								valueInput.setText(minInput.getText());
+								valueInput.positionCaret(valueInput.getText().length());
+							}
+						}
+					},
+					500
+			);
+		}
 
     /**
      * Button function to return to the previous screen
@@ -177,6 +220,10 @@ public class GameSetupTypeController implements Initializable {
         this.gameName = gameName;
     }
 
+    void setPassword(String password) {
+        this.password = password;
+    }
+
     void isOnlineGame(boolean onlineGame) {
         this.onlineGame = onlineGame;
     }
@@ -196,12 +243,13 @@ public class GameSetupTypeController implements Initializable {
             beerGame.setGameDate(new Date().toString());
             createFirstTurn();
 
+
             if(onlineGame) {
                 connector.start();
-                connector.createRoom(gameName, "", beerGame);
+                connector.createRoom(gameName, password, beerGame);
             } else {
                 connector.start();
-                connector.createOfflineRoom(gameName, "", beerGame);
+                connector.createOfflineRoom(gameName, password, beerGame);
             }
             assignAgents.setData(new Object[]{beerGame});
 
@@ -258,24 +306,24 @@ public class GameSetupTypeController implements Initializable {
     }
 
     private void createFirstTurn() {
-			Round firstRound = roundProvider.get();
-			firstRound.setRoundId(1);
+        Round firstRound = roundProvider.get();
+        firstRound.setRoundId(1);
 
-			List<FacilityTurn> turns = new ArrayList<>();
-			for(Facility facility: beerGame.getConfiguration().getFacilities()) {
-				turns.add(
-						new FacilityTurn(
-								facility.getFacilityId(),
-								1,
-								facility.getFacilityType().getStartingStock(),
-								0,
-								facility.getFacilityType().getStartingBudget(),
-								false));
-			}
+        List<FacilityTurn> turns = new ArrayList<>();
+        for (Facility facility : beerGame.getConfiguration().getFacilities()) {
+            turns.add(
+                    new FacilityTurn(
+                            facility.getFacilityId(),
+                            1,
+                            facility.getFacilityType().getStartingStock(),
+                            0,
+                            facility.getFacilityType().getStartingBudget(),
+                            false));
+        }
 
-			firstRound.setFacilityTurns(turns);
-			beerGame.getRounds().add(firstRound);
-		}
+        firstRound.setFacilityTurns(turns);
+        beerGame.getRounds().add(firstRound);
+    }
 
     /**
      * Sets the facilityType for the child of a node

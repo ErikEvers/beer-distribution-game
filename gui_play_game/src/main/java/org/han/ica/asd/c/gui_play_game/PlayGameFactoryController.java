@@ -6,6 +6,8 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 
+import static org.han.ica.asd.c.fxml_helper.NumberInputFormatter.getChangeUnaryOperator;
+
 public class PlayGameFactoryController extends PlayGame {
 
     @FXML
@@ -14,6 +16,8 @@ public class PlayGameFactoryController extends PlayGame {
     @FXML
     private TextField step2TextField;
 
+    @FXML
+    protected TextField txtOutgoingDelivery;
     /**
      * Button event handling the order sending.
      */
@@ -23,6 +27,15 @@ public class PlayGameFactoryController extends PlayGame {
         txtOutgoingDelivery.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, getChangeUnaryOperator()));
         deliverList.setItems(deliverFacilities);
         orderList.setItems(orderFacilities);
+    }
+
+    @FXML
+    protected void handleSendDeliveryButtonClick() {
+        if (!txtOutgoingDelivery.getText().isEmpty()) {
+            playerComponent.sendDelivery(cmbChooseOutgoingDelivery.getValue(), Integer.parseInt(txtOutgoingDelivery.getText()));
+            refillDeliveriesList();
+            txtOutgoingDelivery.clear();
+        }
     }
 
     /**
@@ -73,7 +86,7 @@ public class PlayGameFactoryController extends PlayGame {
     }
 
     @Override
-    public void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
+    public synchronized void refreshInterfaceWithCurrentStatus(int previousRoundId, int roundId, boolean gameEnded) {
         super.refreshInterfaceWithCurrentStatus(previousRoundId, roundId, gameEnded);
         fillComboBox();
     }

@@ -2,6 +2,7 @@ package org.han.ica.asd.c.bootstrap;
 
 import com.google.inject.name.Names;
 import org.han.ica.asd.c.Connector;
+import org.han.ica.asd.c.ConnectorProvider;
 import org.han.ica.asd.c.MessageDirector;
 import org.han.ica.asd.c.businessrule.BusinessRuleHandler;
 import org.han.ica.asd.c.dbconnection.DBConnection;
@@ -10,6 +11,8 @@ import org.han.ica.asd.c.discovery.RoomFinder;
 import org.han.ica.asd.c.faultdetection.FailLog;
 import org.han.ica.asd.c.faultdetection.FaultDetectionClient;
 import org.han.ica.asd.c.faultdetection.FaultDetectorLeader;
+import org.han.ica.asd.c.faultdetection.FaultHandlerLeader;
+import org.han.ica.asd.c.faultdetection.FaultHandlerPlayer;
 import org.han.ica.asd.c.faultdetection.FaultResponder;
 import org.han.ica.asd.c.fxml_helper.AbstractModuleExtension;
 import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
@@ -38,13 +41,14 @@ import org.han.ica.asd.c.gui_replay_game.ReplayGameRound;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRuleStore;
 import org.han.ica.asd.c.interfaces.businessrule.IBusinessRules;
 import org.han.ica.asd.c.interfaces.communication.IConnectorForSetup;
+import org.han.ica.asd.c.interfaces.communication.IConnectorProvider;
 import org.han.ica.asd.c.interfaces.communication.IFinder;
 import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.interfaces.gameleader.IConnectorForLeader;
 import org.han.ica.asd.c.interfaces.gameleader.IGameLeader;
 import org.han.ica.asd.c.interfaces.gameleader.ILeaderGameLogic;
 import org.han.ica.asd.c.interfaces.gameleader.IPersistence;
-import org.han.ica.asd.c.interfaces.gamelogic.IConnectedForPlayer;
+import org.han.ica.asd.c.interfaces.gamelogic.IConnectorForPlayer;
 import org.han.ica.asd.c.interfaces.gamelogic.IPlayerGameLogic;
 import org.han.ica.asd.c.interfaces.gui_play_game.IPlayerComponent;
 import org.han.ica.asd.c.interfaces.gui_replay_game.IVisualisedPlayedGameData;
@@ -70,16 +74,19 @@ public class BootstrapModule extends AbstractModuleExtension {
 		bind(IDatabaseConnection.class).to(DBConnection.class);
 		bind(IBusinessRules.class).to(BusinessRuleHandler.class);
 		bind(IGameAgentService.class).to(GameAgentService.class);
+		bind(IGameStore.class).to(Persistence.class);
+		bind(IFinder.class).to(RoomFinder.class);
+		bind(IConnectorForPlayer.class).to(Connector.class);
 		bind(IPlayerGameLogic.class).to(GameLogic.class);
 		bind(IRetrieveReplayData.class).to(Persistence.class);
 		bind(IVisualisedPlayedGameData.class).to(ReplayComponent.class);
 		bind(IConnectorForLeader.class).to(Connector.class);
 		bind(IPersistence.class).to(Persistence.class);
-		bind(IConnectedForPlayer.class).to(Connector.class);
 		bind(IConnectorForSetup.class).to(Connector.class);
 		bind(ILeaderGameLogic.class).to(GameLogic.class);
 		bind(IFinder.class).to(RoomFinder.class);
 		bind(IGameStore.class).to(Persistence.class);
+		bind(IConnectorProvider.class).to(ConnectorProvider.class);
 		bind(IGameLeader.class).annotatedWith(Names.named("GameLeader")).to(GameLeader.class);
 
 		bind(IPlayerComponent.class).annotatedWith(Names.named("PlayerComponent")).to(PlayerComponent.class);
@@ -100,6 +107,8 @@ public class BootstrapModule extends AbstractModuleExtension {
 		requestStaticInjection(Connector.class);
 		requestStaticInjection(GameMessageClient.class);
 		requestStaticInjection(GameLeader.class);
+		requestStaticInjection(FaultHandlerLeader.class);
+		requestStaticInjection(FaultHandlerPlayer.class);
 	}
 
 	private void guiBinds(){

@@ -16,11 +16,15 @@ public class GameSetup implements IGUIHandler {
     private Configuration configuration;
     private String gamename;
     private boolean onlinegame;
+    private String password;
 
     public void setData(Object[] data) {
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
         this.onlinegame = (boolean) data[2];
+        if(data.length > 3) {
+            this.password = (String) data[3];
+        }
     }
 
 
@@ -30,6 +34,9 @@ public class GameSetup implements IGUIHandler {
         gameSetupController.setConfiguration(configuration);
         gameSetupController.setGameName(gamename);
         gameSetupController.setOnlineGame(onlinegame);
+        if(password != null) {
+            gameSetupController.setPassword(password);
+        }
     }
 
     @Override

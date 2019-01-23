@@ -76,7 +76,7 @@ public class PlayerComponent implements IPlayerComponent, IPlayerRoundListener {
     }
 
     @Override
-    public BeerGame getBeerGame() {
+    public synchronized BeerGame getBeerGame() {
         return gameLogic.getBeerGame();
     }
 
