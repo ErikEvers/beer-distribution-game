@@ -4,6 +4,8 @@ import org.han.ica.asd.c.fxml_helper.FXMLLoaderOnSteroids;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 
+import java.util.ResourceBundle;
+
 public class ActivityLogPopup implements IGUIHandler {
     BeerGame beerGame;
     int facilityId;
@@ -16,7 +18,7 @@ public class ActivityLogPopup implements IGUIHandler {
 
     @Override
     public void setupScreen() {
-        activityLogPopupController = FXMLLoaderOnSteroids.getPopupScreen(null, getClass().getResource("/fxml/ActivityLogPopup.fxml"),null);
+        activityLogPopupController = FXMLLoaderOnSteroids.getPopupScreen(ResourceBundle.getBundle("languageResources"), getClass().getResource("/fxml/ActivityLogPopup.fxml"),null);
         activityLogPopupController.setLogContent(beerGame,facilityId);
     }
 
