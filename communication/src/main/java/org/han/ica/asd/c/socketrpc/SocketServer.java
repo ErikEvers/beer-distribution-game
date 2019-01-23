@@ -66,8 +66,9 @@ public class SocketServer {
     }
 
     private void startListening(ServerSocket serverSocket) {
+        Socket socket = null;
         try {
-            Socket socket = serverSocket.accept();
+            socket = serverSocket.accept();
 
             ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
             Object receivedObject = inStream.readObject();
@@ -83,6 +84,15 @@ public class SocketServer {
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage() , e);
+        }
+        finally {
+            if (socket != null && !socket.isClosed()){
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    logger.log(Level.INFO, e.getMessage(), e);
+                }
+            }
         }
     }
 
