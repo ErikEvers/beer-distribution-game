@@ -132,8 +132,6 @@ public abstract class PlayGame implements IPlayGame {
      * superInitialization of the two controller subclasses. Has code needed for both initializations.
      */
     protected void superInitialize() {
-        orderFacilities = FXCollections.observableArrayList();
-        deliverFacilities = FXCollections.observableArrayList();
         agentInUse = false;
         mainContainer.getChildren().addAll();
         playGridPane.setStyle("-fx-border-style: solid inside; -fx-border-color: black; -fx-border-radius: 40;");
@@ -147,6 +145,8 @@ public abstract class PlayGame implements IPlayGame {
 				}
 
         playerComponent.setUi(this);
+        orderFacilities = FXCollections.observableArrayList();
+        deliverFacilities = FXCollections.observableArrayList();
     }
 
     /**
