@@ -66,7 +66,7 @@ public class FaultResponder {
             faultDetectionClient.sendFaultMessageResponse(new FaultMessageResponse(true, failingIp), senderIp);
 
         } catch (NodeCantBeReachedException e) {
-            logger.log(Level.INFO, e.getMessage(), e);
+            logger.log(Level.INFO, "Deze machine kan de speler : {0} ook niet bereiken.", new Object[]{failingIp});
             faultDetectionClient.sendFaultMessageResponse(new FaultMessageResponse(false, failingIp), senderIp);
         }
     }

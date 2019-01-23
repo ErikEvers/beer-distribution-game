@@ -84,6 +84,7 @@ public class BeergameDAO {
 				pstmt.executeUpdate();
 				DaoConfig.setCurrentGameId(uuid);
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
 				databaseConnection.rollBackTransaction(conn);
@@ -123,7 +124,7 @@ public class BeergameDAO {
 				playerDAO.insertPlayers(beerGame.getPlayers());
 				gameAgentDAO.insertGameAgents(beerGame.getAgents());
 				leaderDAO.insertLeader(beerGame.getLeader());
-
+				conn.close();
 
 				} catch (SQLException e) {
 					LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -157,6 +158,7 @@ public class BeergameDAO {
 					beerGames.add(new BeerGame(rs.getString(GAME_ID), rs.getString(GAME_NAME), rs.getString(GAME_DATE), rs.getString(GAME_END_DATE)));
 				}
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 				databaseConnection.rollBackTransaction(conn);
@@ -180,6 +182,7 @@ public class BeergameDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 				databaseConnection.rollBackTransaction(conn);
@@ -191,7 +194,7 @@ public class BeergameDAO {
 	 * A method which returns a single beergame
 	 * @return A beergame object
 	 */
-	public BeerGame getGameLog() {
+	public synchronized BeerGame getGameLog() {
 		Connection conn = databaseConnection.connect();
 		BeerGame beergame = null;
 		beergame = getBeerGame(conn, beergame, READ_BEERGAME);
@@ -202,7 +205,7 @@ public class BeergameDAO {
 	 * A method which returns a list of ongoing beergame
 	 * @return A beergame object
 	 */
-	public List<BeerGame> getGameLogFromOngoingGame() {
+	public synchronized List<BeerGame> getGameLogFromOngoingGame() {
 		Connection conn = databaseConnection.connect();
 		return getBeerGames(conn, READ_ONGOING_BEERGAME);
 
@@ -211,7 +214,7 @@ public class BeergameDAO {
 	/**
 	 * A method which updates the GameEndDate of a game.
 	 */
-	public void updateEnddate(){
+	public synchronized void updateEnddate(){
 		Connection conn = databaseConnection.connect();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_ENDDATE)) {
@@ -223,6 +226,7 @@ public class BeergameDAO {
 
 				pstmt.executeUpdate();
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 				databaseConnection.rollBackTransaction(conn);
@@ -237,7 +241,7 @@ public class BeergameDAO {
 	 * @param readOngoingBeergame
 	 * @return
 	 */
-	private BeerGame getBeerGame(Connection conn, BeerGame beergame, String readOngoingBeergame) {
+	private synchronized BeerGame getBeerGame(Connection conn, BeerGame beergame, String readOngoingBeergame) {
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
 				conn.setAutoCommit(false);
@@ -253,6 +257,7 @@ public class BeergameDAO {
 					}
 				}
 				conn.commit();
+				conn.close();
 			} catch (SQLException e) {
 				LOGGER.log(Level.SEVERE, e.toString(),e);
 			}
@@ -266,7 +271,7 @@ public class BeergameDAO {
 	 * @param readOngoingBeergame
 	 * @return
 	 */
-	private List<BeerGame> getBeerGames(Connection conn, String readOngoingBeergame) {
+	private synchronized List<BeerGame> getBeerGames(Connection conn, String readOngoingBeergame) {
 		List<BeerGame> beergames = new ArrayList<>();
 		if (conn != null) {
 			try (PreparedStatement pstmt = conn.prepareStatement(readOngoingBeergame)) {
@@ -285,7 +290,7 @@ public class BeergameDAO {
 	 * @param pstmt
 	 * @throws SQLException
 	 */
-	private void executePrepareStatment(Connection conn, List<BeerGame> beergames, PreparedStatement pstmt) throws SQLException {
+	private synchronized void executePrepareStatment(Connection conn, List<BeerGame> beergames, PreparedStatement pstmt) throws SQLException {
 		BeerGame beerGame;
 		conn.setAutoCommit(false);
 		try (ResultSet rs = pstmt.executeQuery()) {
@@ -302,6 +307,7 @@ public class BeergameDAO {
 			}
 		}
 		conn.commit();
+		conn.close();
 	}
 
 

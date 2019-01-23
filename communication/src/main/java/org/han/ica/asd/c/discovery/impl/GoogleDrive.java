@@ -21,6 +21,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,6 +40,7 @@ public class GoogleDrive implements IResourceManager {
     private static final String APPLICATION_NAME = "Beergame";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
+    private static final String PATH = System.getProperty("user.home") + java.io.File.separator + "Documents" + java.io.File.separator + "Beer Distribution Game" + java.io.File.separator + "resources" + java.io.File.separator;
 
     private static final java.util.Collection<String> SCOPES = DriveScopes.all();
     private String credentialsFilePath;
@@ -62,9 +68,16 @@ public class GoogleDrive implements IResourceManager {
 
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("StoredCredential");
+        try {
+            Files.copy(inputStream, Paths.get(PATH + "StoredCredential"), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(),e);
+        }
+        java.io.File file = new java.io.File(PATH);
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
+                .setDataStoreFactory(new FileDataStoreFactory(file))
                 .setAccessType("offline")
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();

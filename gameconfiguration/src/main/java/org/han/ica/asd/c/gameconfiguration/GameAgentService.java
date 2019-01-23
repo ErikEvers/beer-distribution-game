@@ -1,8 +1,9 @@
 package org.han.ica.asd.c.gameconfiguration;
 
 import javafx.scene.control.Alert;
-import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.dao.ProgrammedAgentDAO;
+import org.han.ica.asd.c.exceptions.gameconfiguration.NoProgrammedAgentsFoundException;
+import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;

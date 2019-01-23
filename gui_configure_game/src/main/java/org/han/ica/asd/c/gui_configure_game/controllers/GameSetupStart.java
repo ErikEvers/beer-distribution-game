@@ -11,12 +11,16 @@ public class GameSetupStart implements IGUIHandler {
     private String gamename = "";
     private boolean onlineGame = true;
     private Configuration configuration;
+    private String password = "";
 
     @Override
     public void setData(Object[] data) {
         this.configuration = (Configuration) data[0];
         this.gamename = (String) data[1];
         this.onlineGame = (boolean) data[2];
+        if(data.length > 3) {
+            this.password = (String) data[3];
+        }
     }
 
     @Override
@@ -26,7 +30,9 @@ public class GameSetupStart implements IGUIHandler {
         gameSetupStartController.setOnlineGame(onlineGame);
         if (configuration != null) {
             gameSetupStartController.setConfigurationInScreen(configuration);
-
+        }
+        if(!password.equals("")) {
+            gameSetupStartController.setPassword(password);
         }
     }
 }

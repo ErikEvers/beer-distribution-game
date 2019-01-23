@@ -52,6 +52,7 @@ public class SocketClient {
         if(ip.equals(Connector.internalIP)) {
             return SocketServer.serverObserver.serverObjectReceived(object, ip);
         }
+
         try (Socket socket = new Socket(ip, SocketSettings.PORT)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(object);

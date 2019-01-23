@@ -7,7 +7,7 @@ import org.han.ica.asd.c.model.domain_objects.Round;
 
 public class GameLogicStub implements ILeaderGameLogic {
 	@Override
-	public Round calculateRound(Round round, BeerGame beerGame) {
+	public Round calculateRound(Round previousRound, Round round, BeerGame beerGame) {
 		return round;
 	}
 

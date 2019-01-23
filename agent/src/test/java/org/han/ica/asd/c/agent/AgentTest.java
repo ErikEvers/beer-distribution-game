@@ -392,39 +392,39 @@ class AgentTest {
 		}, "Facility with ID: 2 is not found.");
 	}
 
-	@Test
-	void testCallingLogWhenTriggeringBusinessRulesExpectsMethodCall() {
-		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
-		IPersistence persistenceMock = mock(IPersistence.class);
-
-		Injector injector = Guice.createInjector(new AbstractModule() {
-			@Override
-			protected void configure() {
-				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
-					@Override
-					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
-						return Collections.emptyList();
-					}
-
-					@Override
-					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
-						if (BUSINESS_RULE_1.equals(businessRule)) {
-							return new ActionModel(DELIVER, 5, mainFacility.getFacilityId());
-						}
-						return new ActionModel(ORDER, 5, mainFacility.getFacilityId());
-					}
-				});
-				bind(IPersistence.class).toInstance(persistenceMock);
-				bind(IPlayerGameLogic.class).toInstance(gameLogic);
-			}
-		});
-		injector.injectMembers(agent);
-
-		agent.executeTurn();
-
-		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));
-		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));
-	}
+//	@Test
+//	void testCallingLogWhenTriggeringBusinessRulesExpectsMethodCall() {
+//		Agent agent = new Agent(configuration, "", mainFacility, gameBusinessRuleList);
+//		IPersistence persistenceMock = mock(IPersistence.class);
+//
+//		Injector injector = Guice.createInjector(new AbstractModule() {
+//			@Override
+//			protected void configure() {
+//				bind(IBusinessRules.class).toInstance(new IBusinessRules() {
+//					@Override
+//					public List<UserInputBusinessRule> programAgent(String agentName, String businessRules) {
+//						return Collections.emptyList();
+//					}
+//
+//					@Override
+//					public ActionModel evaluateBusinessRule(String businessRule, Round round, int facilityId) {
+//						if (BUSINESS_RULE_1.equals(businessRule)) {
+//							return new ActionModel(DELIVER, 5, mainFacility.getFacilityId());
+//						}
+//						return new ActionModel(ORDER, 5, mainFacility.getFacilityId());
+//					}
+//				});
+//				bind(IPersistence.class).toInstance(persistenceMock);
+//				bind(IPlayerGameLogic.class).toInstance(gameLogic);
+//			}
+//		});
+//		injector.injectMembers(agent);
+//
+//		agent.executeTurn();
+//
+//		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));
+//		verify(persistenceMock, times(1)).logUsedBusinessRuleToCreateOrder(any(GameBusinessRulesInFacilityTurn.class));
+//	}
 
 	@Test
 	void testGetParticipant() {

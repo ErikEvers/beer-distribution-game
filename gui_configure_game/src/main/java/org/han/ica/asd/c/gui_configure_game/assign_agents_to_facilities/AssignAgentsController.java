@@ -6,15 +6,16 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import org.han.ica.asd.c.Exceptions.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.exceptions.communication.TransactionException;
+import org.han.ica.asd.c.exceptions.gameconfiguration.NoProgrammedAgentsFoundException;
 import org.han.ica.asd.c.exceptions.gameleader.BeerGameException;
 import org.han.ica.asd.c.exceptions.gameleader.FacilityNotAvailableException;
 import org.han.ica.asd.c.fxml_helper.IGUIHandler;
 import org.han.ica.asd.c.fxml_helper.treebuilder.FacilityRectangle;
 import org.han.ica.asd.c.fxml_helper.treebuilder.TreeBuilder;
-import org.han.ica.asd.c.gameconfiguration.IGameAgentService;
+import org.han.ica.asd.c.interfaces.gameconfiguration.IGameAgentService;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.GameAgent;
 import org.han.ica.asd.c.model.domain_objects.ProgrammedAgent;
@@ -32,6 +33,9 @@ public class AssignAgentsController {
 
 		@FXML
 		private Button chooseFacilityButton;
+
+		@FXML
+		private Label gameRoom;
 
     @FXML
     private AnchorPane facilitiesContainer;
@@ -61,6 +65,7 @@ public class AssignAgentsController {
         } catch (NoProgrammedAgentsFoundException e) {
             agentComboBox.setPromptText(resourceBundle.getString("no_agents_found_warning"));
         }
+        gameRoom.setText(gameLeader.getRoomModel().getRoomName());
         initTree();
     }
 

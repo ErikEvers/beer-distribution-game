@@ -1,4 +1,4 @@
-package org.han.ica.asd.c.Exceptions;
+package org.han.ica.asd.c.exceptions.gameconfiguration;
 
 public class NoProgrammedAgentsFoundException extends Exception {
 

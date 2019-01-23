@@ -5,6 +5,7 @@ import org.han.ica.asd.c.interfaces.player.IPlayerRoundListener;
 import org.han.ica.asd.c.model.domain_objects.BeerGame;
 import org.han.ica.asd.c.model.domain_objects.Facility;
 import org.han.ica.asd.c.model.domain_objects.Player;
+import org.han.ica.asd.c.model.domain_objects.Round;
 
 public class PlayerFake implements IPlayerRoundListener {
 
@@ -22,4 +23,15 @@ public class PlayerFake implements IPlayerRoundListener {
     public void startGame() {
 
     }
+
+    @Override
+    public void endGame(Round lastround) {
+
+    }
+
+    @Override
+    public Player getPlayer() {
+        return null;
+    }
+
 }

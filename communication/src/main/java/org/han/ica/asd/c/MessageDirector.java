@@ -1,5 +1,6 @@
 package org.han.ica.asd.c;
 
+import org.han.ica.asd.c.faultdetection.FaultDetector;
 import org.han.ica.asd.c.faultdetection.messagetypes.FaultDetectionMessage;
 import org.han.ica.asd.c.faultdetection.FaultDetectionMessageReceiver;
 import org.han.ica.asd.c.messagehandler.messagetypes.GameMessage;
@@ -12,11 +13,10 @@ import java.io.InvalidObjectException;
 
 public class MessageDirector implements IServerObserver {
 
-    @Inject
-    private GameMessageReceiver gameMessageReceiver;
+    private static GameMessageReceiver gameMessageReceiver;
 
-    @Inject
-    private FaultDetectionMessageReceiver faultDetectionMessageReceiver;
+    private static FaultDetectionMessageReceiver faultDetectionMessageReceiver;
+
 
     public MessageDirector() {
         //for inject purposes
@@ -31,7 +31,6 @@ public class MessageDirector implements IServerObserver {
      */
     @Override
     public Object serverObjectReceived(Object receivedObject, String senderIp) {
-
         if (receivedObject instanceof GameMessage) {
             GameMessage gameMessage = (GameMessage) receivedObject;
             return gameMessageReceiver.gameMessageReceived(gameMessage, senderIp);
@@ -50,6 +49,6 @@ public class MessageDirector implements IServerObserver {
     }
 
     public void setFaultDetectionMessageReceiver(FaultDetectionMessageReceiver faultDetectionMessageReceiver) {
-        this.faultDetectionMessageReceiver = faultDetectionMessageReceiver;
+        MessageDirector.faultDetectionMessageReceiver = faultDetectionMessageReceiver;
     }
 }
